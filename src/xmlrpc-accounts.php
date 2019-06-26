@@ -277,6 +277,7 @@ function xmlrpc_send_reset_password_email($method, $args) {
 function xmlrpc_send_activation_email($method, $args) {
 	$user_or_email = $args[0];
 	mylog("[XMLRPC]xmlrpc_send_activation_email(" . $user_or_email . ")" );
+
 	if (!check_parameter($user_or_email, "username or email")) {
 		return "ERROR_USERNAME_PARAMETER_NOT_FOUND";
 	}
@@ -300,15 +301,18 @@ function xmlrpc_update_hash($method, $args) {
 	$hashed_old_password = $args[1];
 	$hashed_new_password = $args[2];
 	$domain = get_domain($args[3]);
-	$algo = $args[4];
+	$algo = get_algo($args[4]);
+
 	mylog("[XMLRPC] xmlrpc_update_hash(" . $user . ", " . $domain . ")");
 
 	if (!check_parameter($user)) {
 		return "ERROR_USERNAME_PARAMETER_NOT_FOUND";
 	}
-	if (!check_algo($algo)) {
+
+	if ($algo == NULL) {
 		return "ERROR_ALGO_NOT_SUPPORTED";
 	}
+	
 	if (db_account_is_existing($user, $domain)) {
 		$db_hashed_password = db_account_get_password($user, $domain, $algo);
 		if (strcmp($db_hashed_password, $hashed_old_password) != 0) {
@@ -329,13 +333,17 @@ function xmlrpc_update_hash($method, $args) {
 function xmlrpc_update_password($method, $args) {
 	$user = $args[0];
 	$domain = get_domain($args[3]);
-	$algo = $algo[4];
+	$algo = get_algo($algo[4]);
+
 	mylog("[XMLRPC] xmlrpc_update_password(" . $user . ", " . $domain . ")");
-	if (!check_algo($algo)) {
+
+	if ($algo == NULL) {
 		return "ERROR_ALGO_NOT_SUPPORTED";
 	}
+
 	$args[1] = hash_password($args[0], $args[1], $algo);
 	$args[2] = hash_password($args[0], $args[2], $algo);
+
 	return xmlrpc_update_hash("xmlrpc_update_password", $args);
 }
 
@@ -345,15 +353,18 @@ function xmlrpc_update_email($method, $args) {
 	$password = $args[1];
 	$new_email = $args[2];
 	$domain = get_domain($args[3]);
-	$algo = $args[4];
+	$algo = get_algo($args[4]);
+
 	mylog("[XMLRPC] xmlrpc_update_email(" . $user . ", " . $domain . ", " . $new_email . ")");
 
 	if (!check_parameter($user)) {
 		return "ERROR_USERNAME_PARAMETER_NOT_FOUND";
 	}
-	if (!check_algo($algo)) {
+
+	if ($algo == NULL) {
 		return "ERROR_ALGO_NOT_SUPPORTED";
 	}
+
 	if (db_account_is_existing($user, $domain)) {
 		$db_hashed_password = db_account_get_password($user, $domain, $algo);
 		$hashed_old_password = hash_password($user, $password, $domain, $algo);
@@ -446,16 +457,18 @@ function xmlrpc_activate_email_account($method, $args) {
 	$user = $args[0];
 	$key = $args[1];
 	$domain = get_domain($args[2]);
-	$algo = $args[3];
+	$algo = get_algo($args[3]);
 
 	mylog("[XMLRPC] xmlrpc_activate_account(" . $user . ", " . $domain . ", " . $key . ")");
 
 	if (!check_parameter($user)) {
 		return "ERROR_USERNAME_PARAMETER_NOT_FOUND";
 	}
-	if (!check_algo($algo)) {
+
+	if ($algo == NULL) {
 		return "ERROR_ALGO_NOT_SUPPORTED";
 	}
+
 	if (!db_account_is_existing($user, $domain)) {
 		mylog("[ERROR] User account " . $user . " / " . $domain . " doesn't exist");
 		return "ERROR_ACCOUNT_DOESNT_EXIST";
@@ -488,13 +501,13 @@ function xmlrpc_activate_email_account($method, $args) {
 	return $ha1;
 }
 
-// args = [phone, username, key, [domain],[algo]]
+// args = [phone, username, key, [domain], [algo]]
 function xmlrpc_activate_phone_account($method, $args) {
 	$phone = $args[0];
 	$user = $args[1];
 	$key = $args[2];
 	$domain = get_domain($args[3]);
-	$algo = $args[4];
+	$algo = get_algo($args[4]);
 
 	mylog("[XMLRPC] xmlrpc_activate_phone_account(" . $user . ", " . $domain . ", " . $key . ")");
 
@@ -506,7 +519,7 @@ function xmlrpc_activate_phone_account($method, $args) {
 		mylog("[ERROR] Phone doesn't start by +");
 		return "ERROR_PHONE_ISNT_E164";
 	}
-	if (!check_algo($algo)) {
+	if ($algo == NULL) {
 		return "ERROR_ALGO_NOT_SUPPORTED";
 	}
 	if (!db_account_is_existing($user, $domain)) {
@@ -547,7 +560,7 @@ function xmlrpc_create_email_account($method, $args) {
 	$user = $args[0];
 	$email = $args[1];
 	$domain = get_domain($args[4]);
-	$algo = $args[5];
+	$algo = get_algo($args[5]);
 
 	mylog("[XMLRPC] xmlrpc_create_account(" . $user . ", " . $domain . ", " . $email . ")");
 
@@ -564,7 +577,7 @@ function xmlrpc_create_email_account($method, $args) {
 		mylog("[XMLRPC] email already in use");
 		return "ERROR_EMAIL_ALREADY_IN_USE";
 	}
-	if (!check_algo($algo)) {
+	if ($algo == NULL) {
 		return "ERROR_ALGO_NOT_SUPPORTED";
 	}
 
@@ -604,7 +617,7 @@ function xmlrpc_create_phone_account($method, $args) {
 	$hashed_password = $args[2];
 	$domain = get_domain($args[4]);
 	$lang = get_lang($args[5]);
-	$algo = $args[6];
+	$algo = get_algo($args[6]);
 
 	mylog("[XMLRPC] xmlrpc_create_phone_account(" . $phone . ", " . $domain . ", " . $user . ")");
 
@@ -619,7 +632,7 @@ function xmlrpc_create_phone_account($method, $args) {
 		$user = $phone;
 	}
 
-	if (!check_algo($algo)) {
+	if ($algo == NULL) {
 		return "ERROR_ALGO_NOT_SUPPORTED";
 	}
 
@@ -685,7 +698,7 @@ function xmlrpc_get_confirmation_key($method, $args) {
 	$user = $args[0];
 	$password = $args[1];
 	$domain = get_domain($args[2]);
-	$algo = $args[3];
+	$algo = get_algo($args[3]);
 
 	mylog("[XMLRPC] xmlrpc_get_confirmation_key(" . $user . ", " . $domain . ")");
 
@@ -697,8 +710,7 @@ function xmlrpc_get_confirmation_key($method, $args) {
 		return "ERROR_NON_TEST_ACCOUNTS_UNAUTHORIZED";
 	}
 
-	if (!check_algo($algo)) {
-		mylog("[ERROR] Algo not supported");
+	if ($algo == NULL) {
 		return "ERROR_ALGO_NOT_SUPPORTED";
 	}
 
@@ -725,10 +737,10 @@ function xmlrpc_delete_account($method, $args) {
 	$user = $args[0];
 	$password = $args[1];
 	$domain = get_domain($args[2]);
-	$algo = $args[3];
+	$algo = get_algo($args[3]);
 
 	mylog("[XMLRPC] xmlrpc_delete_account(" . $user . ", " . $domain . ")");
-	if (!check_algo($algo)) {
+	if ($algo == NULL) {
 		return "ERROR_ALGO_NOT_SUPPORTED";
 	}
 

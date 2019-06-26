@@ -71,12 +71,15 @@ function check_parameter($param, $param_name = "username") {
 	return true;
 }
 	
-function check_algo($algo) {
-	if (strcmp($algo,"")==0 || strcmp($algo,"MD5")==0 || strcmp($algo,"SHA-256")==0 || strcmp($algo,"clrtxt")==0){
-		return true;
+function get_algo($algo) {
+	if ($algo == NULL || $algo == "") {
+		return "MD5";
+	}
+	if (strcmp($algo, "MD5") == 0 || strcmp($algo, "SHA-256") == 0 || strcmp($algo, "clrtxt") == 0) {
+		return $algo;
 	}
 	mylog("[ERROR] Algo " . $algo . " is not supported");
-	return false;
+	return NULL;
 }
 
 function get_domain($param) {
