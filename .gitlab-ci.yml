@@ -30,7 +30,9 @@ job-centos7-rpm-deploy:
   tags: [ "docker-centos7" ]
 
   only:
-    - schedules
+    changes:
+	- flexisip-account-manager.spec  
+
   dependencies:
     - job-centos7-rpm
 
