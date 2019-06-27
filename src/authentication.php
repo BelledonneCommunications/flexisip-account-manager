@@ -1,13 +1,30 @@
 <?php
 
+// Nonce are one-time usage, in order to avoid storing them in a table
+// The nonce is built using:
+// - timestamp : nonce is valid for MIN_NONCE_VALIDITY_PERIOD seconds at minimum and twice it at maximum (our goal is one time usage anyway, typical value shall be 10 )
+// - request content : the response uses only the URI, enforce the content to be the same so the nonce is actually a one time usage
+// 		a replay is not devastating (it would just be an actual replay, not a different command to server)
+// - secret key : avoid an attacker to be able to generate a valid nonce
+function auth_get_valid_nonces() {
+	$request = file_get_contents('php://input');
+	$time = time();
+	$time -= $time%MIN_NONCE_VALIDITY_PERIOD; // our nonce will be valid at leat MIN_NONCE_VALIDITY_PERIOD seconds and max twice it, so floor the timestamp
+	return array(
+		hash_hmac("sha256", $time.':'.$request, AUTH_NONCE_KEY),
+		hash_hmac("sha256", $time-MIN_NONCE_VALIDITY_PERIOD.':'.$request, AUTH_NONCE_KEY));
+}
+
 function request_authentication($realm = "sip.example.org") {
 	header('HTTP/1.1 401 Unauthorized');
 	header('WWW-Authenticate: Digest realm="' . $realm.
-		'",qop="auth",nonce="' . uniqid() . '",opaque="' . md5($realm) . '"');
+		'",qop="auth",nonce="' . auth_get_valid_nonces()[0] . '",opaque="' . md5($realm) . '"');
+
 	exit();
 }
 
 function authenticate($auth_digest, $realm = "sip.example.org") {
+	mylog("[DEBUG] Authenticate : Digest ".(print_r($auth_digest, true))." realm " . $realm);
 	// Parse the client authentication data
 	$default = array('nounce', 'nc', 'cnounce', 'qop', 'username', 'uri', 'response');
 	preg_match_all('~(\w+)="?([^",]+)"?~', $auth_digest, $matches); # $_SERVER['PHP_AUTH_DIGEST']
