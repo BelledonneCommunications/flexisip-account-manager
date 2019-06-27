@@ -36,7 +36,9 @@ function linphonedb_fetch($result) {
 }
 
 function linphonedb_clean($result) {
-	mysqli_free_result($result);
+	if (!is_bool($result)) { // some query may return a boolean, in that case we must not call free
+		mysqli_free_result($result);
+	}
 }
 
 function linphonedb_close($conn) {
