@@ -7,12 +7,7 @@ include "logging.php";
 include "utilities.php";
 include "hooks.php";
 include "authentication.php";
-
-if (USE_MYSQLI) {
-	include "mysqli-db.php";
-} else {
-	include "mysql-db.php";
-}
+include "mysqli-db.php";
 
 if (SMS_API_ENABLED) {
 	include "xmlrpc-sms.php";

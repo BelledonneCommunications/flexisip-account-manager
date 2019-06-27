@@ -3,12 +3,7 @@
 define("PATH_TO_CONFIG", "/etc/flexisip-account-manager/");
 include PATH_TO_CONFIG . "xmlrpc.conf";
 
-if (USE_MYSQLI) {
-	include "mysqli-db.php";
-} else {
-	include "mysql-db.php";
-}
-
+include "mysqli-db.php";
 include "xmlrpc-sms.php";
 include "xmlrpc-accounts.php";
 include "xmlrpc-aliases.php";
