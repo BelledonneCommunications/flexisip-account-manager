@@ -1,0 +1,44 @@
+#################################################
+# Base configuration
+#################################################
+
+variables:
+ DEPLOY_SERVER: buildbot@www.linphone.org
+ CENTOS7_DEPLOY_DIRECTORY: snapshots-private/centos7
+ 
+job-centos7-rpm:
+
+  tags: [ "docker-centos7" ]
+  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-centos:7
+    
+  stage: package
+  script:
+    - make rpm
+  artifacts:
+    paths:
+    - rpmbuild/x86_64/*.rpm
+    when: always
+    expire_in: 1 year
+
+job-centos7-rpm-deploy:
+
+  before_script:
+    - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then eval $(ssh-agent -s); fi
+    - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then echo "$SCP_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null; fi
+
+  stage: deploy
+  tags: [ "docker-centos7" ]
+
+  only:
+    - schedules
+  dependencies:
+    - job-centos7-rpm
+
+  script:
+   - cd rpmbuild/x86_64 && rsync -e "ssh -o StrictHostKeyChecking=no" -pr . $DEPLOY_SERVER:$CENTOS7_DEPLOY_DIRECTORY
+   - ssh $DEPLOY_SERVER "chmod a+r $CENTOS7_DEPLOY_DIRECTORY/*.rpm && createrepo_c --update $CENTOS7_DEPLOY_DIRECTORY/."
+
+
+stages:
+ - package
+ - deploy
