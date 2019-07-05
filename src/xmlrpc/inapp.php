@@ -1,94 +1,22 @@
 <?php
 
-function db_drop_inapp_table() {
-	$conn = linphonedb_connect();
-	$create_req = "DROP TABLE IF EXISTS " . INAPP_DB_TABLE;
-	$result = linphonedb_query($create_req, $conn);
-	linphonedb_clean($result);
-	linphonedb_close($conn);
-}
+/*
+	Flexisip Account Manager is a set of tools to manage SIP accounts.
+	Copyright (C) 2019 Belledonne Communications SARL, All rights reserved.
 
-function db_create_inapp_table() {
-	$conn = linphonedb_connect();
-	$create_req = "CREATE TABLE IF NOT EXISTS " . INAPP_DB_TABLE . " (
-					id INTEGER(11) UNSIGNED  NOT NULL AUTO_INCREMENT,
-					account_id INTEGER(11) UNSIGNED NOT NULL,
-					expire BIGINT(15) UNSIGNED DEFAULT 0,
-					trial TINYINT(1) NOT NULL DEFAULT 1,
-					last_used BIGINT(15) UNSIGNED DEFAULT 0,
-					PRIMARY KEY (id), UNIQUE KEY login (account_id))";
-	$result = linphonedb_query($create_req, $conn);
-	linphonedb_clean($result);
-	linphonedb_close($conn);
-}
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Affero General Public License as
+	published by the Free Software Foundation, either version 3 of the
+	License, or (at your option) any later version.
 
-function db_inapp_add_account($user, $domain, $expiration_date) {
-	$conn = linphonedb_connect();
-	$result = linphonedb_query("INSERT INTO " . INAPP_DB_TABLE . "(account_id, expire) VALUES((SELECT id FROM " . ACCOUNTS_DB_TABLE . " WHERE login='" . linphonedb_escape($conn, $user) . "' AND domain='" . linphonedb_escape($conn, $domain) . "')," . linphonedb_escape($conn, $expiration_date). ")", $conn);
-	linphonedb_clean($result);
-	linphonedb_close($conn);
-}
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Affero General Public License for more details.
 
-function db_inapp_update_last_used_field($user, $domain, $last_used) {
-	$conn = linphonedb_connect();
-	$result = linphonedb_query("UPDATE " . INAPP_DB_TABLE . " SET last_used=" . linphonedb_escape($conn, $last_used) . " WHERE account_id=(SELECT id FROM " . ACCOUNTS_DB_TABLE . " WHERE login='" . linphonedb_escape($conn, $user) . "' AND domain='" . linphonedb_escape($conn, $domain) . "')", $conn);
-	linphonedb_clean($result);
-	linphonedb_close($conn);
-}
-
-function db_inapp_update_expiration_date($user, $domain, $expiration_date) {
-	$conn = linphonedb_connect();
-	$result = linphonedb_query("UPDATE " . INAPP_DB_TABLE . " SET expire=" . linphonedb_escape($conn, $expiration_date)  . " WHERE account_id=(SELECT id FROM " . ACCOUNTS_DB_TABLE . " WHERE login='" . linphonedb_escape($conn, $user) . "' AND domain='" . linphonedb_escape($conn, $domain) . "')", $conn);
-	linphonedb_clean($result);
-	linphonedb_close($conn);
-}
-
-function db_inapp_update_trial($user, $domain, $trial) {
-	$conn = linphonedb_connect();
-	$result = linphonedb_query("UPDATE " . INAPP_DB_TABLE . " SET trial=" . linphonedb_escape($conn, $trial)  . " WHERE account_id=(SELECT id FROM " . ACCOUNTS_DB_TABLE . " WHERE login='" . linphonedb_escape($conn, $user) . "' AND domain='" . linphonedb_escape($conn, $domain) . "')", $conn);
-	linphonedb_clean($result);
-	linphonedb_close($conn);
-}
-
-function db_inapp_is_account($user, $domain) {
-	$conn = linphonedb_connect();
-	$result = linphonedb_query("SELECT count(*) FROM " . INAPP_DB_TABLE . " WHERE account_id=(SELECT id FROM " . ACCOUNTS_DB_TABLE . " WHERE login='" . linphonedb_escape($conn, $user) . "' AND domain='" . linphonedb_escape($conn, $domain) . "')", $conn);
-	$row = linphonedb_fetch($result);
-	$is_account = $row[0] >= 1;
-	linphonedb_clean($result);
-	linphonedb_close($conn);
-	return $is_account;
-}
-
-function db_inapp_is_account_trial($user, $domain) {
-	$conn = linphonedb_connect();
-	$result = linphonedb_query("SELECT trial FROM " . INAPP_DB_TABLE . " WHERE account_id=(SELECT id FROM " . ACCOUNTS_DB_TABLE . " WHERE login='" . linphonedb_escape($conn, $user) . "' AND domain='" . linphonedb_escape($conn, $domain) . "')", $conn);
-	$row = linphonedb_fetch($result);
-	$is_account_trial = $row[0] == 1;
-	linphonedb_clean($result);
-	linphonedb_close($conn);
-	return $is_account_trial;
-}
-
-function db_inapp_get_last_used_field($user, $domain) {
-	$conn = linphonedb_connect();
-	$result = linphonedb_query("SELECT last_used FROM " . INAPP_DB_TABLE . " WHERE account_id=(SELECT id FROM " . ACCOUNTS_DB_TABLE . " WHERE login='" . linphonedb_escape($conn, $user) . "' AND domain='" . linphonedb_escape($conn, $domain) . "')", $conn);
-	$row = linphonedb_fetch($result);
-	$last_used_field = $row[0];
-	linphonedb_clean($result);
-	linphonedb_close($conn);
-	return $last_used_field;
-}
-
-function db_inapp_get_expiration_date($user, $domain) {
-	$conn = linphonedb_connect();
-	$result = linphonedb_query("SELECT expire FROM " . INAPP_DB_TABLE . " WHERE account_id=(SELECT id FROM " . ACCOUNTS_DB_TABLE . " WHERE login='" . linphonedb_escape($conn, $user) . "' AND domain='" . linphonedb_escape($conn, $domain) . "')", $conn);
-	$row = linphonedb_fetch($result);
-	$expiration_date = $row[0];
-	linphonedb_clean($result);
-	linphonedb_close($conn);
-	return $expiration_date;
-}
+	You should have received a copy of the GNU Affero General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 // Google/Android specifics
 
@@ -415,9 +343,9 @@ function xmlrpc_update_expiration_date($method, $args) {
 				db_inapp_update_trial($user, $domain, 0);
 				db_inapp_update_expiration_date($user, $domain, $expiration_date);
 
-				if (CUSTOM_HOOKS) {
+				/*if (CUSTOM_HOOKS) {
 					hook_on_expiration_date_updated($user, $domain, $expiration_date, $payloadJson, $os);
-				}
+				}*/
 				return $expiration_date . "";
 			} else {
 				return db_inapp_get_expiration_date($user, $domain) . "";

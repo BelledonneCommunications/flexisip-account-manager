@@ -1,97 +1,73 @@
 ### 1. Install RPM package with dependencies
 --------------------------------------------
 
-# RPM package should install necessary dependencies automatically
-# Check that the PHP version is 5.4 or higher
+RPM package should install necessary dependencies automatically.
 
-yum install flexisip-account-manager-1.0-1.0.x86_64.rpm
+`yum install bc-flexisip-account-manager`
+
+This package depends on `rh-php71` which will be installed in `/opt/rh/rh-php71/`.
+If you don't have any other php installed on your server, use the following to be able to use php commands:
+
+`ln -s /opt/rh/rh-php71/root/usr/bin/php /usr/bin/php`
 
 ### 2. Configure Apache server
 ------------------------------
 
-# Edit factory apache configuration file and replace the following parameters with the correct values:
-# ServerName, ServerAdmin, ErrorLog, CustomLog, SSLCertificateFile, SSLCertificateKeyFile
-# Copy this file to the configuration folder of the apache server with a new name
+The RPM will create a `flexisip-account-manager.conf` file inside `/opt/rh/httpd24/root/etc/httpd/conf.d/`
 
-cp /etc/flexisip-account-manager/apache.conf /etc/httpd/conf.d/flexisip-account-manager.conf
+It simply contains an Alias directive, up to you to configure your virtual host correctly.
 
-# If your apache server is brand new you might need to add a ServerName in httpd.conf
-# Start the apache server with the root user
-
-systemctl start httpd
-
-# If the httpd service doesn't start properly it might be a log folder permission issue
-# Check that httpd can write logs in destination folder, if not you can use /var/log/httpd
+Once you're done, reload the configuration inside httpd: `service httpd24-httpd reload`
 
 ### 3. Install and setup MySQL database
 ---------------------------------------
 
-# Install the mariadb-server package and start the mariadb service
-
-yum install mariadb-server
-systemctl start mariadb
-
-# Configure the newly installed mariadb server
-# When asked for root password press Enter and create a new root password
-
-mysql_secure_installation
-
-# Create a database and a user with the rights to read and write
-# Replace <user> and <password> in the following command
-
-mysql -u root -p
-create database flexisip;
-grant all on flexisip.* to <username>@'localhost' identified by '<password>';
-flush privileges;
-exit
+For the account manager to work, you need a mysql database with a user that has read/write access.
 
 ### 4. Configure XMLRPC server
 ------------------------------
 
-# The RPM package has installed XMLRPC configuration files in /etc/flexisip-account-manager/
-# Edit these files with the correct values
+The RPM package has installed the configuration files in `/etc/flexisip-account-manager/`
 
-vim /etc/flexisip-account-manager/xmlrpc.conf
-vim /etc/flexisip-account-manager/internationalization.conf
+Each file name should be explicit on which settings it contains. If you have any doubt, leave the default value.
+At least you MUST edit the following file and fill the values you used in previous step:
 
-# Create the necessary tables in the database using our script
+`nano /etc/flexisip-account-manager/db.conf`
 
-cd /opt/belledonne-communications/share/flexisip-account-manager
-php xmlrpc.php create_tables
-php xmlrpc.php create_algo_table
+Now you can create the necessary tables in the database using our script:
 
-# For remote provisioning create a default.rc file on /opt/belledonne-communications/ and set the values you want
-# Client side, set the provisioning uri to the same host but to provisioning.php instead of xmlrpc.php
+`php /opt/belledonne-communications/share/flexisip-account-manager/tools/create_tables.php`
 
-### 5. Miscellaneous
+### 5. Install OVH SMS gateway dependency (optionnal)
+
+To install OVH SMS PHP API create a `composer.json` file in `/opt/belledonne-communications/`:
+
+`echo '{ "name": "XMLRPC SMS API", "description": "XMLRPC SMS API", "require": { "ovh/php-ovh-sms": "dev-master" } }' > /opt/belledonne-communications/share/flexisip-account-manager/composer.json`
+
+Then download and install [composer](https://getcomposer.org/download/).
+
+Finally start composer:
+
+`cd /opt/belledonne-communications/share/flexisip-account-manager/ && composer install`
+
+### 6. Miscellaneous
 --------------------
 
-# To install OVH SMS PHP API create composer.json in /opt/belledonne-communications/
+- For remote provisioning create a `default.rc` file in `/opt/belledonne-communications/` and set the values you want
+client side, set the provisioning uri to the same host but to `provisioning.php` instead of `xmlrpc.php`.
 
-echo '{ "name": "XMLRPC SMS API", "description": "XMLRPC SMS API", "require": { "ovh/php-ovh-sms": "dev-master" } }' > /var/www/html/composer.json
+- If SELinux forbids mail sending you can try this command:
+`setsebool -P httpd_can_sendmail=1`
 
-# Then execute the following command
+- On CentOS firewalld might be running:
+`firewall-cmd --state`
 
-cd /opt/belledonne-communications && composer install
+- If it is running you can add a rule to allow https traffic:
+`firewall-cmd --zone public --permanent --add-port=444/tcp && firewall-cmd --reload`
 
-# If you have not installed an OVH SMS API you might need to comment out the following lines in xmlrpc-sms.php
+- If you use the standard https port (443) or http (80) the following command might be better:
+`firewall-cmd --zone public --permanent --add-service={http,https} && firewall-cmd --reload`
 
-require __DIR__ . '/vendor/autoload.php';
-use \Ovh\Sms\SmsApi;
-
-# if SELinux forbids mail sending you can try this command
-
-setsebool -P httpd_can_sendmail=1
-
-# On CentOS firewalld might be running:
-firewall-cmd --state
-
-# If it is running you can add a rule to allow https traffic
-firewall-cmd --zone public --permanent --add-port=444/tcp && firewall-cmd --reload
-
-# If you use the standard https port (443) or http (80) the following command might be better
-firewall-cmd --zone public --permanent --add-service={http,https} && firewall-cmd --reload
-
-# Also it can listen on IPv6 only
-# To fix that, edit the ssl.conf in /etc/httpd/conf.d/ dir and add/set: Listen 0.0.0.0:444 https
+- Also it can listen on IPv6 only.
+To fix that, edit `/opt/rh/httpd24/root/etc/httpd/conf.d/ssl.conf` and add/set: `Listen 0.0.0.0:444 https`
 
