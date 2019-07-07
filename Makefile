@@ -5,8 +5,9 @@ rpm:
 	mkdir $(OUTPUT_DIR)/flexisip-account-manager
 	mkdir -p $(OUTPUT_DIR)/rpmbuild/SPECS
 	mkdir -p $(OUTPUT_DIR)/rpmbuild/SOURCES
-	cp -R src/ $(OUTPUT_DIR)/flexisip-account-manager/
-	cp -R conf/ $(OUTPUT_DIR)/flexisip-account-manager/
+	cp -R --parents src/**/*.php $(OUTPUT_DIR)/flexisip-account-manager/
+	cp -R --parents src/api/**/*.php $(OUTPUT_DIR)/flexisip-account-manager/
+	cp -R --parents conf/*.conf $(OUTPUT_DIR)/flexisip-account-manager/
 	cp README.md $(OUTPUT_DIR)/flexisip-account-manager/
 	cp -R httpd/ $(OUTPUT_DIR)/flexisip-account-manager/
 	cp flexisip-account-manager.spec $(OUTPUT_DIR)/rpmbuild/SPECS/
