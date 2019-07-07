@@ -24,11 +24,14 @@ include_once PATH_TO_CONFIG . '/accounts.conf';
 include_once PATH_TO_CONFIG . '/auth.conf';
 include_once PATH_TO_CONFIG . '/db.conf';
 include_once PATH_TO_CONFIG . '/emails.conf';
-include_once PATH_TO_CONFIG . '/hooks.conf';
 include_once PATH_TO_CONFIG . '/inapp.conf';
 include_once PATH_TO_CONFIG . '/logs.conf';
 include_once PATH_TO_CONFIG . '/provisioning.conf';
 include_once PATH_TO_CONFIG . '/sms.conf';
 include_once PATH_TO_CONFIG . '/tests.conf';
+
+// these two might include some of the scripts from the installation, so keep them last
+include_once PATH_TO_CONFIG . '/hooks.conf';
+include_once PATH_TO_CONFIG . '/overloads.conf';
 
 ?>

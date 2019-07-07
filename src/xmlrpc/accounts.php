@@ -587,6 +587,12 @@ function xmlrpc_get_phone_number_for_account($method, $args) {
 
 // args = [phone, [domain], [lang]]
 function xmlrpc_recover_phone_account($method, $args) {
+
+	// Is this function overloaded
+	if (XMLRPC_RECOVER_PHONE_ACCOUNT_OVERLOAD === TRUE) {
+		return xmlrpc_recover_phone_account_overload($method, $args);
+	}
+
 	$phone = $args[0];
 	$domain = get_domain($args[1]);
 	$lang = get_lang($args[2]);
