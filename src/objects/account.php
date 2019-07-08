@@ -82,7 +82,7 @@ class Account {
             id INTEGER(11) UNSIGNED NOT NULL AUTO_INCREMENT,
             username VARCHAR(64) NOT NULL,
             domain VARCHAR(64) NOT NULL,
-            email VARCHAR(64),
+            email VARCHAR(64) DEFAULT NULL,
             activated VARCHAR(1) NOT NULL DEFAULT '0',
             confirmation_key VARCHAR(14) DEFAULT NULL,
             ip_address VARCHAR(39) NOT NULL,

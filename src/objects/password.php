@@ -65,8 +65,8 @@ class Password {
         $query = "CREATE TABLE IF NOT EXISTS " . ACCOUNTS_ALGO_DB_TABLE . " (
             id INTEGER(11) UNSIGNED NOT NULL AUTO_INCREMENT,
             account_id INTEGER(11) UNSIGNED NOT NULL,
-            password VARCHAR(255),
-            algorithm VARCHAR(10),
+            password VARCHAR(255) NOT NULL,
+            algorithm VARCHAR(10) NOT NULL DEFAULT 'MD5',
             PRIMARY KEY (id), UNIQUE KEY account (account_id, algorithm))";
 
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
