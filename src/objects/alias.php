@@ -224,7 +224,7 @@ class Alias {
             $this->alias = $row['alias'];
             $this->domain = $row['domain'];
             return true;
-        }        
+        }
         Logger::getInstance()->error($stmt->errorInfo());
         return false;
     }

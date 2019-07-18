@@ -127,7 +127,9 @@ class Account {
             $this->expire_time = htmlspecialchars(strip_tags($this->expire_time));
         }
 
-        $this->creation_time = date('Y-m-d H:i:s');
+        if (empty($this->creation_time)) {
+            $this->creation_time = date('Y-m-d H:i:s');
+        }
 
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         $stmt = $this->conn->prepare($query);

@@ -81,7 +81,7 @@ class SMS {
     }
 
     function delete() {
-        $query = "DELETE FROM " . $this->table_name . " WHERE id = ?";
+        $query = "DELETE FROM " . SMS_DB_TABLE . " WHERE id = ?";
 
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         $stmt = $this->conn->prepare($query);
@@ -98,7 +98,7 @@ class SMS {
     }
 
     function create() {
-        $query = "INSERT INTO " . $this->table_name . " SET phone=:phone, last_sms=:last_sms, count=:count";
+        $query = "INSERT INTO " . SMS_DB_TABLE . " SET phone=:phone, last_sms=:last_sms, count=:count";
 
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         $stmt = $this->conn->prepare($query);
@@ -121,7 +121,7 @@ class SMS {
     }
 
     function update() {
-        $query = "UPDATE " . $this->table_name . " SET phone=:phone, last_sms=:last_sms, count=:count WHERE id=:id";
+        $query = "UPDATE " . SMS_DB_TABLE . " SET phone=:phone, last_sms=:last_sms, count=:count WHERE id=:id";
 
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         $stmt = $this->conn->prepare($query);
