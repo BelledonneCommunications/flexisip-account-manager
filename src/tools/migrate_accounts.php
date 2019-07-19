@@ -48,8 +48,10 @@ $start_time = time();
 
 Logger::getInstance()->message("Starting accounts migration");
 
-$query = "SELECT id, login, password, activated, email, confirmation_key, ip_address, date_last_update, user_agent FROM " . ACCOUNTS_DB_TABLE;
+$query = "SELECT ac.id, ac.login, ac.password, ac.activated, ac.email, ac.confirmation_key, ac.ip_address, ac.date_last_update, ac.user_agent, al.alias FROM " 
+	. ACCOUNTS_DB_TABLE . " ac LEFT JOIN " . ALIAS_DB_TABLE . " al ON ac.id = al.account_id";
 $old_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+$old_db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false); // For large sets this is mandatory
 $stmt = $old_db->prepare($query);
 $stmt->execute();
 
@@ -66,13 +68,13 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 	$account = new Account($db);
 	$account->username = $login;
-    $account->domain = SIP_DOMAIN;
-    $account->email = $email;
-    $account->activated = $activated;
-    $account->confirmation_key = $confirmation_key;
-    $account->ip_address = $ip_address;
-    $account->user_agent = $user_agent;
-    $account->creation_time = $date_last_update;
+	$account->domain = SIP_DOMAIN;
+	$account->email = $email;
+	$account->activated = $activated;
+	$account->confirmation_key = $confirmation_key;
+	$account->ip_address = $ip_address;
+	$account->user_agent = $user_agent;
+	$account->creation_time = $date_last_update;
 	$account->expire_time = null;
 
 	if ($account->create()) {
@@ -89,23 +91,18 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			$password_created_count += 1;
 		}
 
-		$alias_stmt = $old_db->prepare($alias_query);
-		$alias_stmt->bindParam(1, $id);
-		if ($alias_stmt->execute()) {
-            $alias_row = $alias_stmt->fetch(PDO::FETCH_ASSOC);
-            if ($alias_row != null) {
-                $alias = new Alias($db);
-				$alias->account_id = $account->id;
-				$alias->alias = $alias_row['alias'];
-				$alias->domain = $account->domain;
+		if (!empty($alias)) {
+			$al = new Alias($db);
+			$al->account_id = $account->id;
+			$al->alias = $alias;
+			$al->domain = $account->domain;
 
-				if (!$alias->create()) {
-					Logger::getInstance()->error("Failed to create alias !");
-				} else {
-					$alias_created_count += 1;
-				}
-            }
-        }
+			if (!$al->create()) {
+				Logger::getInstance()->error("Failed to create alias !");
+			} else {
+				$alias_created_count += 1;
+			}
+		}
 	} else {
 		Logger::getInstance()->error("Failed to create account !");
 	}
