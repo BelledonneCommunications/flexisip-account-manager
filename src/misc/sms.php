@@ -20,7 +20,7 @@
 
 // The following can't be put inside a function...
 // So comment it out if not using the OVH SMS API
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 use \Ovh\Sms\SmsApi;
 
 include_once __DIR__ . '/../config/config.php';
