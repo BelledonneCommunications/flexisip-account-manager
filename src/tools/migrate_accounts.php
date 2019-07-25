@@ -77,20 +77,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	$account->creation_time = $date_last_update;
 	$account->expire_time = null;
 
-	if ($account->create()) {
-		$account_created_count += 1;
-
-		$pwd = new Password($db);
-		$pwd->account_id = $account->id;
-		$pwd->algorithm = 'MD5';
-		$pwd->password = $password;
-
-		if (!$pwd->create()) {
-			Logger::getInstance()->error("Failed to create password !");
-		} else {
-			$password_created_count += 1;
-		}
-
+	if ($account->getOne()) {
+		// If an account as multiple aliases we will go here
 		if (!empty($alias)) {
 			$al = new Alias($db);
 			$al->account_id = $account->id;
@@ -104,7 +92,35 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			}
 		}
 	} else {
-		Logger::getInstance()->error("Failed to create account !");
+		if ($account->create()) {
+			$account_created_count += 1;
+	
+			$pwd = new Password($db);
+			$pwd->account_id = $account->id;
+			$pwd->algorithm = 'MD5';
+			$pwd->password = $password;
+	
+			if (!$pwd->create()) {
+				Logger::getInstance()->error("Failed to create password !");
+			} else {
+				$password_created_count += 1;
+			}
+	
+			if (!empty($alias)) {
+				$al = new Alias($db);
+				$al->account_id = $account->id;
+				$al->alias = $alias;
+				$al->domain = $account->domain;
+	
+				if (!$al->create()) {
+					Logger::getInstance()->error("Failed to create alias !");
+				} else {
+					$alias_created_count += 1;
+				}
+			}
+		} else {
+			Logger::getInstance()->error("Failed to create account !");
+		}
 	}
 }
 
