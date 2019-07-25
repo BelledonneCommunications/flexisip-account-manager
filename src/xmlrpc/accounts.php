@@ -398,7 +398,7 @@ function xmlrpc_create_phone_account($method, $args) {
 			// This is a hack to allow testing without sending SMS
 			return OK;
 		}
-		$ok = send_sms($phone, $key, $lang);
+		$ok = send_sms($phone, $account->confirmation_key, $lang);
 		return $ok;
 	} else if (AUTO_ACTIVATE_ACCOUNT) {
 		if (USE_IN_APP_PURCHASES) {
@@ -628,15 +628,14 @@ function xmlrpc_recover_phone_account($method, $args) {
 	}
 
 	if (SEND_ACTIVATION_SMS) {
-		$key = generate_4_digits_code();
-		$account->confirmation_key = $key;
+		$account->confirmation_key = generate_4_digits_code();
 		$account->update();
 
 		if (!SMS_API_ENABLED) {
 			// This is a hack to allow testing without sending SMS
 			return $account->username;
 		}
-		$ok = send_sms($phone, $key, $lang);
+		$ok = send_sms($phone, $account->confirmation_key, $lang);
 		if ($ok != OK) {
 			return $ok;
 		}

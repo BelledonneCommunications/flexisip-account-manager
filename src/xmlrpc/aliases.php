@@ -88,10 +88,9 @@ function xmlrpc_link_phone_number_with_account($method, $args) {
 			// This is a hack to allow testing without sending SMS
 			return OK;
 		}
-		$key = generate_4_digits_code();
-		$account->confirmation_key = $key;
+		$account->confirmation_key = generate_4_digits_code();
 		$account->update();
-		$ok = send_sms($phone, $key, $lang);
+		$ok = send_sms($phone, $account->confirmation_key, $lang);
 		return $ok;
 	}
 

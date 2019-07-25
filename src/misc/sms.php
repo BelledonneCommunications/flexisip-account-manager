@@ -23,7 +23,8 @@
 require __DIR__ . '/../vendor/autoload.php';
 use \Ovh\Sms\SmsApi;
 
-include_once __DIR__ . '/../config/config.php';
+include_once __DIR__ . '/../database/database.php';
+include_once __DIR__ . '/../objects/sms.php';
 include_once __DIR__ . '/../misc/logging.php';
 include_once __DIR__ . '/../xmlrpc/results_values.php';
 include_once __DIR__ . '/utilities.php';
@@ -120,7 +121,7 @@ function send_sms_legacy($phone, $password) {
 	curl_close($ch);
 }
 
-function send_sms($phone, $key, $lang, $password) {
+function send_sms($phone, $key, $lang) {
 	if (!SMS_API_ENABLED) {
 		Logger::getInstance()->warning("[SMS] SMS API disabled");
 		return SMS_DISABLED;
@@ -134,23 +135,29 @@ function send_sms($phone, $key, $lang, $password) {
 	$now_date = new DateTime('now');
 	$now = $now_date->getTimestamp() * 1000;
 	
-	if (db_has_sms_already_been_sent_to($phone)) {
-		$count = db_get_sms_count($phone);
-		$time = db_get_last_sms($phone);
-		$diff = $now - $time;
-		if ($count >= SMS_COUNT_LIMIT_IN_PERIOD and $diff < SMS_TIME_PERIOD) {
-			Logger::getInstance()->error("[SMS] Last sms was sent at " . $time . ", time elapsed since then is " . $diff . "ms which is less than the configured time period " . SMS_TIME_PERIOD);
+	$database = new Database();
+	$db = $database->getConnection();
+	$sms = new SMS($db);
+	$sms->phone = $phone;
+
+	if ($sms->getOne()) {
+		$diff = $now - $sms->last_sms;
+		if ($sms->count >= SMS_COUNT_LIMIT_IN_PERIOD and $diff < SMS_TIME_PERIOD) {
+			Logger::getInstance()->error("[SMS] Last sms was sent at " . $sms->last_sms . ", time elapsed since then is " . $diff . "ms which is less than the configured time period " . SMS_TIME_PERIOD);
 			return MAX_SMS_ALLOWED_EXCEEDED;
 		} else if ($diff >= SMS_TIME_PERIOD) {
-			db_update_sms($phone, $now, 1);
+			$sms->last_sms = $now;
+			$sms->count = 1;
+			$sms->update();
 		} else {
-			$count = $count + 1;
-			db_update_sms($phone, $now, $count);
+			$sms->count = $sms->count + 1;
+			$sms->update();
 		}
 	} else {
-		db_insert_sms($phone, $now);
+		$sms->last_sms = $now;
+		$sms->count = 1;
+		$sms->create();
 	}
-	
 	
 	if (SMS_OVH_API_KEY != NULL && SMS_OVH_API_KEY != "" && SMS_OVH_API_SECRET != NULL && SMS_OVH_API_SECRET != "" && SMS_OVH_CONSUMER_KEY != NULL && SMS_OVH_CONSUMER_KEY != "" && SMS_OVH_ENDPOINT != NULL && SMS_OVH_ENDPOINT != "") {
 		try {
@@ -160,7 +167,7 @@ function send_sms($phone, $key, $lang, $password) {
 			Logger::getInstance()->error("[OVH-SMS] Exception: " . $e->getMessage());
 		}
 	} else if (SMS_API_URL != NULL && SMS_API_URL != "" && SMS_API_USERNAME != NULL && SMS_API_USERNAME != "" && SMS_API_PASSWORD != NULL && SMS_API_PASSWORD != "") {
-		send_sms_legacy($phone, $password);
+		send_sms_legacy($phone, $key);
 		return OK;
 	} else {
 		Logger::getInstance()->error("[SMS] No SMS API configured, discarding sms...");
