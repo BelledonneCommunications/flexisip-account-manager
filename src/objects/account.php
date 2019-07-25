@@ -119,7 +119,7 @@ class Account {
     }
 
     function create() {
-        $query = "INSERT INTO " . ACCOUNTS_DB_TABLE . " SET username=:username, domain=:domain, email=:email, 
+        $query = "INSERT INTO " . ACCOUNTS_DB_TABLE . " SET username=:username, domain=:domain, email=:email, activated=:activated, 
             confirmation_key=:confirmation_key, ip_address=:ip_address, user_agent=:user_agent, creation_time=:creation_time";
 
         if (USE_IN_APP_PURCHASES) {
@@ -136,6 +136,7 @@ class Account {
 
         $this->username = htmlspecialchars(strip_tags($this->username));
         $this->domain = htmlspecialchars(strip_tags($this->domain));
+        $this->activated = htmlspecialchars(strip_tags($this->activated));
         $this->email = htmlspecialchars(strip_tags($this->email));
         $this->confirmation_key = htmlspecialchars(strip_tags($this->confirmation_key));
         $this->ip_address = htmlspecialchars(strip_tags($this->ip_address));
@@ -145,6 +146,7 @@ class Account {
         $stmt->bindParam(":username", $this->username);
         $stmt->bindParam(":domain", $this->domain);
         $stmt->bindParam(":email", $this->email);
+        $stmt->bindParam(":activated", $this->activated);
         $stmt->bindParam(":confirmation_key", $this->confirmation_key);
         $stmt->bindParam(":ip_address", $this->ip_address);
         $stmt->bindParam(":user_agent", $this->user_agent);
