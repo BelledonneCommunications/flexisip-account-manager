@@ -26,6 +26,7 @@ include_once __DIR__ . '/../objects/alias.php';
 include_once __DIR__ . '/../objects/device.php';
 include_once __DIR__ . '/../objects/password.php';
 include_once __DIR__ . '/../objects/sms.php';
+include_once __DIR__ . '/../objects/user-info.php';
 
 $database = new Database();
 $db = $database->getConnection();
@@ -53,6 +54,11 @@ if (!$password->dropTable()) {
 $sms = new SMS($db);
 if (!$sms->dropTable()) {
     Logger::getInstance()->error("Couldn't drop sms table");
+}
+ 
+$user_info = new UserInfo($db);
+if (!$user_info->dropTable()) {
+    Logger::getInstance()->error("Couldn't drop user_info table");
 }
 
 ?>

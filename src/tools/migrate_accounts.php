@@ -26,6 +26,7 @@ include_once __DIR__ . '/../objects/alias.php';
 include_once __DIR__ . '/../objects/device.php';
 include_once __DIR__ . '/../objects/password.php';
 include_once __DIR__ . '/../objects/sms.php';
+include_once __DIR__ . '/../objects/user-info.php';
 include_once __DIR__ . '/../misc/utilities.php';
 
 $database = new Database();
@@ -48,7 +49,7 @@ $start_time = time();
 
 Logger::getInstance()->message("Starting accounts migration");
 
-$query = "SELECT ac.id, ac.login, ac.password, ac.activated, ac.email, ac.confirmation_key, ac.ip_address, ac.date_last_update, ac.user_agent, al.alias FROM " 
+$query = "SELECT ac.id, ac.login, ac.password, ac.activated, ac.email, ac.confirmation_key, ac.ip_address, ac.date_last_update, ac.user_agent, ac.firstname, ac.name, ac.gender, ac.subscribe, al.alias FROM " 
 	. ACCOUNTS_DB_TABLE . " ac LEFT JOIN " . ALIAS_DB_TABLE . " al ON ac.id = al.account_id";
 $old_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 $old_db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false); // For large sets this is mandatory
@@ -59,8 +60,6 @@ $accounts_to_migrate_count = 0;
 $account_created_count = 0;
 $password_created_count = 0;
 $alias_created_count = 0;
-
-$alias_query = "SELECT alias FROM " . ALIAS_DB_TABLE . " WHERE account_id = ? LIMIT 0,1";
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	$accounts_to_migrate_count += 1;
@@ -94,6 +93,16 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	} else {
 		if ($account->create()) {
 			$account_created_count += 1;
+
+			$user_info = new UserInfo($db);
+			$user_info->account_id = $account->id;
+			$user_info->firstname = $firstname;
+			$user_info->lastname = $name;
+			$user_info->gender = $gender;
+			$user_info->subscribe = $subscribe;
+			if (!$user_info->create()) {
+				Logger::getInstance()->error("Failed to create user-info !");
+			}
 	
 			$pwd = new Password($db);
 			$pwd->account_id = $account->id;
