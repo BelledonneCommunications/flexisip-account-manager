@@ -134,7 +134,7 @@ class UserInfo {
     }
 
     function update() {
-        $query = "UPDATE " . USER_INFO_DB_TABLE . " SET firstname=:firstname, lastname=:lastname, subscribe=:subscribe";
+        $query = "UPDATE " . USER_INFO_DB_TABLE . " SET firstname=:firstname, lastname=:lastname, subscribe=:subscribe, gender=:gender";
 
         $query = $query . " WHERE id=:id";
 
@@ -144,11 +144,13 @@ class UserInfo {
         $this->id = htmlspecialchars(strip_tags($this->id));
         $this->firstname = htmlspecialchars(strip_tags($this->firstname));
         $this->lastname = htmlspecialchars(strip_tags($this->lastname));
+        $this->gender = htmlspecialchars(strip_tags($this->gender));
         $this->subscribe = htmlspecialchars(strip_tags($this->subscribe));
 
         $stmt->bindParam(":firstname", $this->firstname);
         $stmt->bindParam(":lastname", $this->lastname);
         $stmt->bindParam(":subscribe", $this->subscribe);
+        $stmt->bindParam(":gender", $this->gender);
         $stmt->bindParam(":id", $this->id);
 
         Logger::getInstance()->debug("Updating " . (string)$this);

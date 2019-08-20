@@ -63,7 +63,7 @@ function xmlrpc_get_email_account($method, $args) {
 
 	$user_info = new UserInfo($db);
 	$user_info->account_id = $account->id;
-	$user_info->GetOne();
+	$user_info->getOne();
 
 	$result = array(
         "id" => $account->id,
@@ -124,7 +124,7 @@ function xmlrpc_get_phone_account($method, $args) {
 
 	$user_info = new UserInfo($db);
 	$user_info->account_id = $account->id;
-	$user_info->GetOne();
+	$user_info->getOne();
 
 	$result = array(
         "id" => $account->id,
@@ -161,7 +161,7 @@ function xmlrpc_get_account_by_confirmation_key($method, $args) {
 
 	$user_info = new UserInfo($db);
 	$user_info->account_id = $account->id;
-	$user_info->GetOne();
+	$user_info->getOne();
 
 	$result = array(
         "id" => $account->id,
@@ -179,10 +179,66 @@ function xmlrpc_get_account_by_confirmation_key($method, $args) {
 	return $result;
 }
 
+// args = [username, ha1, firstname, lastname, gender, subscribe, [domain], [algo]]
+function xmlrpc_update_account_user_info($method, $args) {
+	$username = $args[0];
+	$ha1 = $args[1];
+	$firstname = $args[2];
+	$lastname = $args[3];
+	$gender = $args[4];
+	$subscribe = $args[5];
+	$domain = get_domain($args[6]);
+	$algo = get_algo($args[7]);
+
+	Logger::getInstance()->message("[XMLRPC] xmlrpc_update_account_user_info(" . $username . ", " . $domain . " : " . $firstname . ", " . $lastname . ", " . $gender . ", " . $subscribe . ")");
+
+	$database = new Database();
+	$db = $database->getConnection();
+
+	$account = new Account($db);
+	$account->username = $username;
+	$account->domain = $domain;
+
+	if (!$account->getOne()) {
+		return ACCOUNT_NOT_FOUND;
+	}
+	
+	$password = new Password($db);
+	$password->account_id = $account->id;
+	$password->algorithm = $algo;
+
+	if (!$password->getOne()) {
+		return PASSWORD_NOT_FOUND;
+	}
+
+	if (!password_match($ha1, $password->password)) {
+		return PASSWORD_DOESNT_MATCH;
+	}
+
+	$user_info = new UserInfo($db);
+	$user_info->account_id = $account->id;
+
+	$update = $user_info->getOne();
+
+	$user_info->firstname = $firstname;
+	$user_info->lastname = $lastname;
+	$user_info->gender = $gender;
+	$user_info->subscribe = $subscribe;
+
+	if ($update) {
+		$user_info->update();
+	} else {
+		$user_info->create();
+	}
+
+	return OK;
+}
+
 function xmlrpc_user_info_register_methods($server) {
 	xmlrpc_server_register_method($server, 'get_email_account', 'xmlrpc_get_email_account'); // args = [username, ha1, [domain], [algo]]
 	xmlrpc_server_register_method($server, 'get_phone_account', 'xmlrpc_get_phone_account'); // args = [tel, ha1, [domain], [algo]]
 	xmlrpc_server_register_method($server, 'get_account_by_confirmation_key', 'xmlrpc_get_account_by_confirmation_key'); // args = [confirmation_key, [algo]]
+	xmlrpc_server_register_method($server, 'update_account_user_info', 'xmlrpc_update_account_user_info'); // args = [username, ha1, firstname, lastname, gender, subscribe, [domain], [algo]]
 }
 
 ?>
