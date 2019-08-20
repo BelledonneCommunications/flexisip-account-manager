@@ -24,6 +24,7 @@ include_once __DIR__ . '/authentication.php';
 include_once __DIR__ . '/accounts.php';
 include_once __DIR__ . '/aliases.php';
 include_once __DIR__ . '/devices.php';
+include_once __DIR__ . '/user-info.php';
 include_once __DIR__ . '/compatibility.php';
 
 $request = file_get_contents("php://input");
@@ -95,6 +96,7 @@ xmlrpc_devices_register_methods($server);
 if (USE_IN_APP_PURCHASES) {
 	xmlrpc_inapp_register_methods($server);
 }
+xmlrpc_user_info_register_methods($server);
 xmlrpc_compatibility_register_methods($server);
 
 if ($request) {
