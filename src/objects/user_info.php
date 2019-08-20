@@ -24,7 +24,7 @@ class UserInfo {
     public $id;
     public $account_id;
     public $firstname;
-	public $lastname;
+    public $lastname;
     public $gender;
     public $subscribe;
     

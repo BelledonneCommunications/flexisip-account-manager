@@ -211,7 +211,7 @@ class Account {
     }
 
     function getAll() {
-        $query = "SELECT ac.id, ac.username, ac.domain, ac.activated, ac.confirmation_key, al.alias FROM " . ACCOUNTS_DB_TABLE . 
+        $query = "SELECT ac.id, ac.username, ac.domain, ac.activated, ac.confirmation_key, ac.email, al.alias FROM " . ACCOUNTS_DB_TABLE . 
             " ac LEFT JOIN " . ALIAS_DB_TABLE . " al ON ac.id = al.account_id";
         $stmt = $this->conn->prepare($query);
         Logger::getInstance()->debug("GetAll " . (string)$this);
@@ -220,7 +220,7 @@ class Account {
     }
 
     function getOne() {
-        $query = "SELECT ac.id, ac.username, ac.domain, ac.activated, ac.confirmation_key, al.alias FROM " . ACCOUNTS_DB_TABLE . 
+        $query = "SELECT ac.id, ac.username, ac.domain, ac.activated, ac.confirmation_key, ac.email, al.alias FROM " . ACCOUNTS_DB_TABLE . 
             " ac LEFT JOIN " . ALIAS_DB_TABLE . " al ON ac.id = al.account_id";
 
         if (!empty($this->id)) {
@@ -271,6 +271,7 @@ class Account {
             $this->id = $row['id'];
             $this->username = $row['username'];
             $this->domain = $row['domain'];
+            $this->email = $row['email'];
             $this->activated = $row['activated'];
             $this->confirmation_key = $row['confirmation_key'];
             $this->alias = $row['alias'];

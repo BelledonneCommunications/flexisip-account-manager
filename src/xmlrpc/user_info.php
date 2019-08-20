@@ -172,6 +172,8 @@ function xmlrpc_get_account_by_confirmation_key($method, $args) {
 		"gender" => $user_info->gender,
 		"subscribe" => $user_info->subscribe
 	);
+
+	return $result;
 }
 
 function xmlrpc_user_info_register_methods($server) {
