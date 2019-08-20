@@ -26,7 +26,7 @@ include_once __DIR__ . '/../objects/alias.php';
 include_once __DIR__ . '/../objects/device.php';
 include_once __DIR__ . '/../objects/password.php';
 include_once __DIR__ . '/../objects/sms.php';
-include_once __DIR__ . '/../objects/user-info.php';
+include_once __DIR__ . '/../objects/user_info.php';
 include_once __DIR__ . '/../misc/utilities.php';
 
 $database = new Database();
@@ -101,7 +101,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			$user_info->gender = $gender;
 			$user_info->subscribe = $subscribe;
 			if (!$user_info->create()) {
-				Logger::getInstance()->error("Failed to create user-info !");
+				Logger::getInstance()->error("Failed to create user_info !");
 			}
 	
 			$pwd = new Password($db);

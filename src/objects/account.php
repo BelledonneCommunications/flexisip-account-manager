@@ -236,6 +236,9 @@ class Account {
         } else if (!empty($this->email)) {
             $query = $query . " WHERE ac.email = ?";
             $this->email = htmlspecialchars(strip_tags($this->email));
+        } else if (!empty($this->confirmation_key)) {
+            $query = $query . " WHERE ac.confirmation_key = ?";
+            $this->confirmation_key = htmlspecialchars(strip_tags($this->confirmation_key));
         } else {
             return false;
         }
@@ -253,6 +256,8 @@ class Account {
             }
         } else if (!empty($this->email)) {
             $stmt->bindParam(1, $this->email);
+        } else if (!empty($this->confirmation_key)) {
+            $stmt->bindParam(1, $this->confirmation_key);
         } 
 
         Logger::getInstance()->debug("GetOne " . (string)$this);

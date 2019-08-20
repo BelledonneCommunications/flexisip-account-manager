@@ -26,7 +26,7 @@ include_once __DIR__ . '/../objects/alias.php';
 include_once __DIR__ . '/../objects/device.php';
 include_once __DIR__ . '/../objects/password.php';
 include_once __DIR__ . '/../objects/sms.php';
-include_once __DIR__ . '/../objects/user-info.php';
+include_once __DIR__ . '/../objects/user_info.php';
 
 $database = new Database();
 $db = $database->getConnection();

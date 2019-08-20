@@ -19,12 +19,14 @@
 */
 
 include_once __DIR__ . '/../database/database.php';
+
 include_once __DIR__ . '/../misc/utilities.php';
+
 include_once __DIR__ . '/authentication.php';
 include_once __DIR__ . '/accounts.php';
 include_once __DIR__ . '/aliases.php';
 include_once __DIR__ . '/devices.php';
-include_once __DIR__ . '/user-info.php';
+include_once __DIR__ . '/user_info.php';
 include_once __DIR__ . '/compatibility.php';
 
 $request = file_get_contents("php://input");
