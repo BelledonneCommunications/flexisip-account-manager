@@ -63,6 +63,7 @@ function xmlrpc_get_email_account($method, $args) {
 
 	$user_info = new UserInfo($db);
 	$user_info->account_id = $account->id;
+	$user_info->GetOne();
 
 	$result = array(
         "id" => $account->id,
@@ -123,6 +124,7 @@ function xmlrpc_get_phone_account($method, $args) {
 
 	$user_info = new UserInfo($db);
 	$user_info->account_id = $account->id;
+	$user_info->GetOne();
 
 	$result = array(
         "id" => $account->id,
@@ -159,6 +161,7 @@ function xmlrpc_get_account_by_confirmation_key($method, $args) {
 
 	$user_info = new UserInfo($db);
 	$user_info->account_id = $account->id;
+	$user_info->GetOne();
 
 	$result = array(
         "id" => $account->id,
