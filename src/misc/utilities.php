@@ -67,8 +67,8 @@ function check_parameter($param, $param_name = "username") {
 	
 function get_algo($algo) {
 	if ($algo == NULL || $algo == "") {
-		Logger::getInstance()->warning("Algo parameter wasn't found, assume MD5");
-		return "MD5";
+		Logger::getInstance()->warning("Algo parameter wasn't found, assume " . DEFAULT_ALGORITHM);
+		return DEFAULT_ALGORITHM;
 	}
 	if ($algo == "MD5" || $algo == "SHA-256" || $algo == "clrtxt") {
 		return $algo;
@@ -100,7 +100,8 @@ function get_lang($param) {
 function hash_password($user, $password, $domain, $algo) {
 	$hashed_password = $password;
 	if ($algo == "" || $algo == "MD5") $hashed_password = hash("md5", $user . ":" . $domain . ":" . $password);
-	if ($algo == "SHA-256") $hashed_password = hash("sha256", $user . ":" . $domain . ":" . $password);
+	else if ($algo == "SHA-256") $hashed_password = hash("sha256", $user . ":" . $domain . ":" . $password);
+	else Logger::getInstance()->error("Algorithm not supported: " . $algo);
 	return $hashed_password;
 }
 	
