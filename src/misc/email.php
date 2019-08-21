@@ -98,7 +98,7 @@ function send_email_with_recover_key($email, $key) {
 	$body_html = str_replace("%key%", $key, EMAIL_RECOVERY_BODY_HTML);
 	Logger::getInstance()->debug("[EMAIL] Recovery html body is " . $body_html);
 	
-	send_email($email, EMAIL_ACTIVATION_SUBJECT, $body, $body_html);
+	send_email($email, EMAIL_RECOVERY_SUBJECT, $body, $body_html);
 	Logger::getInstance()->message("[EMAIL] Email sent to email " . $email . " to recover the account");
 }
 

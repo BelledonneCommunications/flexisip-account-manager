@@ -665,7 +665,7 @@ function xmlrpc_recover_email_account($method, $args) {
 	$db = $database->getConnection();
 
 	$account = new Account($db);
-	$account->username = $user;
+	$account->username = $username;
 	$account->domain = $domain;
 
 	if (!$account->getOne()) {
