@@ -191,10 +191,10 @@ function xmlrpc_get_alias($method, $args) {
 }
 
 function xmlrpc_aliases_register_methods($server) {
-	xmlrpc_server_register_method($server, 'is_alias_used', 'xmlrpc_is_alias_used');// args = [phone], return OK
+	xmlrpc_server_register_method($server, 'is_alias_used', 'xmlrpc_is_alias_used');// args = [phone, [domain]], return OK
 	xmlrpc_server_register_method($server, 'link_phone_number_with_account', 'xmlrpc_link_phone_number_with_account');// args = [phone, account, [domain], [lang]], return OK
-	xmlrpc_server_register_method($server, 'activate_phone_number_link', 'xmlrpc_activate_phone_number_link');// args = [phone, user, key, ha1, [domain]], return OK
-	xmlrpc_server_register_method($server, 'get_alias', 'xmlrpc_get_alias');// args = [phone], return username
+	xmlrpc_server_register_method($server, 'activate_phone_number_link', 'xmlrpc_activate_phone_number_link');// args = [phone, user, key, ha1, [domain], [algo]], return OK
+	xmlrpc_server_register_method($server, 'get_alias', 'xmlrpc_get_alias');// args = [phone, [domain]], return username
 }
 
 ?>
