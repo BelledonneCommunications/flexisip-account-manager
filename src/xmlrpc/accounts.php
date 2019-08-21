@@ -861,8 +861,8 @@ function xmlrpc_update_email($method, $args) {
 function xmlrpc_accounts_register_methods($server) {
 	if (ALLOW_TEST_ACCOUNTS) {
 		// /!\ This methods must be used for tests purposes only /!\
-		xmlrpc_server_register_method($server, 'get_confirmation_key', 'xmlrpc_get_confirmation_key');// args = [user, pwd, [domain]], return confirmation_key
-		xmlrpc_server_register_method($server, 'delete_account', 'xmlrpc_delete_account');// args = [user, pwd, [domain]]
+		xmlrpc_server_register_method($server, 'get_confirmation_key', 'xmlrpc_get_confirmation_key');// args = [user, pwd, [domain], [algo]], return confirmation_key
+		xmlrpc_server_register_method($server, 'delete_account', 'xmlrpc_delete_account');// args = [user, pwd, [domain], [algo]]
 	}
 
  	xmlrpc_server_register_method($server, 'is_account_used', 'xmlrpc_is_account_used');// args = [username, [domain]], return OK or NOK
@@ -870,18 +870,18 @@ function xmlrpc_accounts_register_methods($server) {
 	xmlrpc_server_register_method($server, 'is_phone_number_used', 'xmlrpc_is_phone_number_used');// args = [phone], return OK_ACCOUNT, OK_ALIAS or NOK
 	xmlrpc_server_register_method($server, 'get_phone_number_for_account', 'xmlrpc_get_phone_number_for_account');// args = [username, [domain]], return a phone number or an error
 
-	xmlrpc_server_register_method($server, 'activate_phone_account', 'xmlrpc_activate_phone_account');// args = [phone, username, key, [domain]], return ha1_password
-	xmlrpc_server_register_method($server, 'create_phone_account', 'xmlrpc_create_phone_account');// args = [phone, [username], [password], useragent, [domain], [lang]], return OK
-	xmlrpc_server_register_method($server, 'activate_email_account', 'xmlrpc_activate_email_account');// args = [username, key, [domain]], return ha1_password
-	xmlrpc_server_register_method($server, 'create_email_account', 'xmlrpc_create_email_account');// args = [username, email, [hash], useragent, [domain]], return OK
+	xmlrpc_server_register_method($server, 'activate_phone_account', 'xmlrpc_activate_phone_account');// args = [phone, username, key, [domain], [algo]], return ha1_password
+	xmlrpc_server_register_method($server, 'create_phone_account', 'xmlrpc_create_phone_account');// args = [phone, [username], [password], useragent, [domain], [lang], [algo]], return OK
+	xmlrpc_server_register_method($server, 'activate_email_account', 'xmlrpc_activate_email_account');// args = [username, key, [domain], [algo]], return ha1_password
+	xmlrpc_server_register_method($server, 'create_email_account', 'xmlrpc_create_email_account');// args = [username, email, [hash], useragent, [domain], [algo]], return OK
 
 	xmlrpc_server_register_method($server, 'recover_phone_account', 'xmlrpc_recover_phone_account');// args = [phone, [domain], [lang]], return username
 	xmlrpc_server_register_method($server, 'recover_email_account', 'xmlrpc_recover_email_account');// args = [username, email, [domain]], return OK
 	xmlrpc_server_register_method($server, 'recover_account_from_confirmation_key', 'xmlrpc_recover_account_from_confirmation_key');// args = [username, key, [domain], [algo]]
 
-	xmlrpc_server_register_method($server, 'update_password', 'xmlrpc_update_password');// args = [username, old password, new password, [domain]], return OK
-	xmlrpc_server_register_method($server, 'update_hash', 'xmlrpc_update_hash');// args = [username, old hash, new hash, [domain]], return OK
-	xmlrpc_server_register_method($server, 'update_email', 'xmlrpc_update_email');// args = [username, password, new email, [domain]], return OK
+	xmlrpc_server_register_method($server, 'update_password', 'xmlrpc_update_password');// args = [username, old password, new password, [domain], [algo]], return OK
+	xmlrpc_server_register_method($server, 'update_hash', 'xmlrpc_update_hash');// args = [username, old hash, new hash, [domain], [algo]], return OK
+	xmlrpc_server_register_method($server, 'update_email', 'xmlrpc_update_email');// args = [username, password, new email, [domain], [algo]], return OK
 }
 
 ?>
