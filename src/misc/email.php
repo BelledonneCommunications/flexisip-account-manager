@@ -87,4 +87,19 @@ function send_email_with_activation_link($email, $key) {
 	Logger::getInstance()->message("[EMAIL] Email sent to email " . $email . " to activate the account");
 }
 
+function send_email_with_recover_key($email, $key) {
+	if( !EMAIL_ENABLED ){
+		Logger::getInstance()->warning("[EMAIL] Emails are disabled");
+		return "WARNING_EMAILS_DISABLED";
+	}
+	
+	$body = str_replace("%key%", $key, EMAIL_RECOVERY_BODY);
+	Logger::getInstance()->debug("[EMAIL] Recovery body is " . $body);
+	$body_html = str_replace("%key%", $key, EMAIL_RECOVERY_BODY_HTML);
+	Logger::getInstance()->debug("[EMAIL] Recovery html body is " . $body_html);
+	
+	send_email($email, EMAIL_ACTIVATION_SUBJECT, $body, $body_html);
+	Logger::getInstance()->message("[EMAIL] Email sent to email " . $email . " to recover the account");
+}
+
 ?>

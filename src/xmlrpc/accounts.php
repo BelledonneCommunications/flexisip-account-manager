@@ -28,6 +28,8 @@ include_once __DIR__ . '/../misc/utilities.php';
 
 include_once __DIR__ . '/results_values.php';
 
+define ("INVALID_CONFIRMATION_KEY", "ERROR");
+
 // args = [user, pwd, [domain], [algo]]
 // /!\ This method must be used for tests purposes only /!\
 function xmlrpc_get_confirmation_key($method, $args) {
@@ -257,15 +259,19 @@ function xmlrpc_activate_phone_account($method, $args) {
 	}
 
 	$key_db = $account->confirmation_key;
-	if ($key == "ERROR" || $key != $key_db) {
-		if ($key_db != "ERROR") {
-			$account->confirmation_key = "ERROR";
+	if ($key == INVALID_CONFIRMATION_KEY || $key != $key_db) {
+		if ($key_db != INVALID_CONFIRMATION_KEY) {
+			$account->confirmation_key = INVALID_CONFIRMATION_KEY;
 			$account->update();
 		}
 		
 		Logger::getInstance()->error("Key doesn't match");
 		return KEY_DOESNT_MATCH;
 	}
+
+	// Key is one time only
+	$account->confirmation_key = INVALID_CONFIRMATION_KEY;
+	$account->update();
 
 	// If this is a recovery, account is already activated, don't go through the following again
 	if (!is_activated($account->activated)) {
@@ -439,9 +445,9 @@ function xmlrpc_activate_email_account($method, $args) {
 	}
 
 	$key_db = $account->confirmation_key;
-	if ($key == "ERROR" || $key != $key_db) {
-		if ($key_db != "ERROR") {
-			$account->confirmation_key = "ERROR";
+	if ($key == INVALID_CONFIRMATION_KEY || $key != $key_db) {
+		if ($key_db != INVALID_CONFIRMATION_KEY) {
+			$account->confirmation_key = INVALID_CONFIRMATION_KEY;
 			$account->update();
 		}
 		Logger::getInstance()->error("Key doesn't match");
@@ -450,6 +456,8 @@ function xmlrpc_activate_email_account($method, $args) {
 
 	$expiration = NULL;
 	$account->activated = "1";
+	// Key is one time only
+	$account->confirmation_key = INVALID_CONFIRMATION_KEY;
 	$account->update();
 	
 	// TODO
@@ -607,6 +615,7 @@ function xmlrpc_recover_phone_account($method, $args) {
 
 	$database = new Database();
 	$db = $database->getConnection();
+
 	$account = new Account($db);
 	$account->username = $phone;
 	$account->domain = $domain;
@@ -642,6 +651,84 @@ function xmlrpc_recover_phone_account($method, $args) {
 	}
 
 	return $account->username;
+}
+
+// args = [username, email, [domain]]
+function xmlrpc_recover_email_account($method, $args) {
+	$username = $args[0];
+	$email = $args[1];
+	$domain = get_domain($args[2]);
+
+	Logger::getInstance()->message("[XMLRPC] xmlrpc_recover_email_account(" . $username . ", " . $email . ", " . $domain . ")");
+
+	$database = new Database();
+	$db = $database->getConnection();
+
+	$account = new Account($db);
+	$account->username = $user;
+	$account->domain = $domain;
+
+	if (!$account->getOne()) {
+		return ACCOUNT_NOT_FOUND;
+	}
+
+	if ($email != $account->email) {
+		return EMAIL_DOESNT_MATCH;
+	}
+
+	$account->confirmation_key = uniqid();
+	$account->update();
+
+	if (SEND_ACTIVATION_EMAIL && EMAIL_ENABLED) {
+		send_email_with_recover_key($email, $account->confirmation_key);
+	}
+
+	return OK;
+}
+
+// args = [username, key, [domain], [algo]]
+function xmlrpc_recover_account_from_confirmation_key($method, $args) {
+	$username = $args[0];
+	$key = $args[1];
+	$domain = get_domain($args[2]);
+	$algo = get_algo($args[3]);
+
+	Logger::getInstance()->message("[XMLRPC] xmlrpc_recover_account_from_confirmation_key(" . $username . ", " . $domain . ", " . $key . ", " . $algo . ")");
+
+	$database = new Database();
+	$db = $database->getConnection();
+	$account = new Account($db);
+	$account->username = $username;
+	$account->domain = $domain;
+
+	if (!$account->getOne()) {
+		return ACCOUNT_NOT_FOUND;
+	}
+
+	$key_db = $account->confirmation_key;
+	if ($key == INVALID_CONFIRMATION_KEY || $key != $key_db) {
+		if ($key_db != INVALID_CONFIRMATION_KEY) {
+			$account->confirmation_key = INVALID_CONFIRMATION_KEY;
+			$account->update();
+		}
+		
+		Logger::getInstance()->error("Key doesn't match");
+		return KEY_DOESNT_MATCH;
+	}
+
+	// Key is one time only
+	$account->confirmation_key = INVALID_CONFIRMATION_KEY;
+	$account->update();
+
+	$password = new Password($db);
+	$password->account_id = $account->id;
+	$password->algorithm = $algo;
+
+	if ($password->getOne()) {
+		return $password->password;
+	}
+
+	return PASSWORD_NOT_FOUND;
 }
 
 // args = [username, old password, new password, [domain], [algo]]
@@ -781,12 +868,16 @@ function xmlrpc_accounts_register_methods($server) {
  	xmlrpc_server_register_method($server, 'is_account_used', 'xmlrpc_is_account_used');// args = [username, [domain]], return OK or NOK
 	xmlrpc_server_register_method($server, 'is_account_activated', 'xmlrpc_is_account_activated');// args = [username, [domain]], return OK or NOK
 	xmlrpc_server_register_method($server, 'is_phone_number_used', 'xmlrpc_is_phone_number_used');// args = [phone], return OK_ACCOUNT, OK_ALIAS or NOK
+	xmlrpc_server_register_method($server, 'get_phone_number_for_account', 'xmlrpc_get_phone_number_for_account');// args = [username, [domain]], return a phone number or an error
+
 	xmlrpc_server_register_method($server, 'activate_phone_account', 'xmlrpc_activate_phone_account');// args = [phone, username, key, [domain]], return ha1_password
 	xmlrpc_server_register_method($server, 'create_phone_account', 'xmlrpc_create_phone_account');// args = [phone, [username], [password], useragent, [domain], [lang]], return OK
 	xmlrpc_server_register_method($server, 'activate_email_account', 'xmlrpc_activate_email_account');// args = [username, key, [domain]], return ha1_password
 	xmlrpc_server_register_method($server, 'create_email_account', 'xmlrpc_create_email_account');// args = [username, email, [hash], useragent, [domain]], return OK
-	xmlrpc_server_register_method($server, 'get_phone_number_for_account', 'xmlrpc_get_phone_number_for_account');// args = [username, [domain]], return a phone number or an error
+
 	xmlrpc_server_register_method($server, 'recover_phone_account', 'xmlrpc_recover_phone_account');// args = [phone, [domain], [lang]], return username
+	xmlrpc_server_register_method($server, 'recover_email_account', 'xmlrpc_recover_email_account');// args = [username, email, [domain]], return OK
+	xmlrpc_server_register_method($server, 'recover_account_from_confirmation_key', 'xmlrpc_recover_account_from_confirmation_key');// args = [username, key, [domain], [algo]]
 
 	xmlrpc_server_register_method($server, 'update_password', 'xmlrpc_update_password');// args = [username, old password, new password, [domain]], return OK
 	xmlrpc_server_register_method($server, 'update_hash', 'xmlrpc_update_hash');// args = [username, old hash, new hash, [domain]], return OK

@@ -48,24 +48,26 @@ if (USE_DIGEST_AUTH) {
 		3 => 'activate_email_account',
 		4 => 'activate_phone_account',
 		5 => 'recover_phone_account',
-		6 => 'get_phone_number_for_account',
-		7 => 'is_account_activated',
+		6 => 'recover_email_account',
+		7 => 'recover_account_from_confirmation_key',
+		8 => 'get_phone_number_for_account',
+		9 => 'is_account_activated',
 	
 		// aliases
-		8 => 'is_alias_used',
+		10 => 'is_alias_used',
 	
 		// inapp
-		9 => 'check_payload_signature',
+		11 => 'check_payload_signature',
 	
 		// misc
-		10 => 'add_ec_calibration_result',
+		12 => 'add_ec_calibration_result',
 	
 		// compatibility
-		11 => 'create_account',
-		12 => 'create_account_with_useragent',
+		13 => 'create_account',
+		14 => 'create_account_with_useragent',
 
 		// user_info
-		13 => 'get_account_by_confirmation_key',
+		15 => 'get_account_by_confirmation_key',
 	);
 
 	// Get authentication header if there is one

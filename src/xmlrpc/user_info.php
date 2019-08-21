@@ -149,6 +149,10 @@ function xmlrpc_get_account_by_confirmation_key($method, $args) {
 
 	Logger::getInstance()->message("[XMLRPC] xmlrpc_get_account_by_confirmation_key(" . $confirmation_key . ")");
 
+	if ($confirmation_key == "ERROR") {
+		return KEY_DOESNT_MATCH;
+	}
+
 	$database = new Database();
 	$db = $database->getConnection();
 
