@@ -128,13 +128,10 @@ function xmlrpc_activate_phone_number_link($method, $args) {
 	if (!is_activated($account->activated)) {
 		return ACCOUNT_NOT_YET_ACTIVATED;
 	}
-	
+
 	if (!is_key_matching($key, $account)) {
 		return KEY_DOESNT_MATCH;
 	}
-	// Key is one time only
-	$account->confirmation_key = INVALID_CONFIRMATION_KEY;
-	$account->update();
 
 	$password = new Password($db);
 	$password->account_id = $account->id;

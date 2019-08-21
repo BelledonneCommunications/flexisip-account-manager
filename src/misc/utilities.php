@@ -136,6 +136,10 @@ function is_key_matching($key, $account) {
 		Logger::getInstance()->error("Key doesn't match");
 		return false;
 	}
+
+	// Key is one time only
+	$account->confirmation_key = INVALID_CONFIRMATION_KEY;
+	$account->update();
 	return true;
 }
 

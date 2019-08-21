@@ -260,9 +260,6 @@ function xmlrpc_activate_phone_account($method, $args) {
 	if (!is_key_matching($key, $account)) {
 		return KEY_DOESNT_MATCH;
 	}
-	// Key is one time only
-	$account->confirmation_key = INVALID_CONFIRMATION_KEY;
-	$account->update();
 
 	// If this is a recovery, account is already activated, don't go through the following again
 	if (!is_activated($account->activated)) {
@@ -439,12 +436,10 @@ function xmlrpc_activate_email_account($method, $args) {
 		return KEY_DOESNT_MATCH;
 	}
 
-	$expiration = NULL;
 	$account->activated = "1";
-	// Key is one time only
-	$account->confirmation_key = INVALID_CONFIRMATION_KEY;
 	$account->update();
 	
+	$expiration = NULL;
 	// TODO
 	/*if (USE_IN_APP_PURCHASES) {
 		$expiration = get_trial_expiration_date();
@@ -693,9 +688,6 @@ function xmlrpc_recover_account_from_confirmation_key($method, $args) {
 	if (!is_key_matching($key, $account)) {
 		return KEY_DOESNT_MATCH;
 	}
-	// Key is one time only
-	$account->confirmation_key = INVALID_CONFIRMATION_KEY;
-	$account->update();
 
 	$password = new Password($db);
 	$password->account_id = $account->id;
