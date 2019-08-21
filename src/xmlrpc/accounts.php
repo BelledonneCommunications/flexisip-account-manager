@@ -673,7 +673,7 @@ function xmlrpc_recover_email_account($method, $args) {
 		return ACCOUNT_NOT_FOUND;
 	}
 
-	if ($email != $account->email) {
+	if (strcasecmp($email, $account->email) != 0) { // Email case insensitive compare
 		return EMAIL_DOESNT_MATCH;
 	}
 
