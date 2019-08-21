@@ -142,47 +142,6 @@ function xmlrpc_get_phone_account($method, $args) {
 	return $result;
 }
 
-// args = [confirmation_key, [algo]]
-function xmlrpc_get_account_by_confirmation_key($method, $args) {
-	$confirmation_key = $args[0];
-	$algo = get_algo($args[1]);
-
-	Logger::getInstance()->message("[XMLRPC] xmlrpc_get_account_by_confirmation_key(" . $confirmation_key . ")");
-
-	if ($confirmation_key == "ERROR") {
-		return KEY_DOESNT_MATCH;
-	}
-
-	$database = new Database();
-	$db = $database->getConnection();
-
-	$account = new Account($db);
-	$account->confirmation_key = $confirmation_key;
-
-	if (!$account->getOne()) {
-		return ACCOUNT_NOT_FOUND;
-	}
-
-	$user_info = new UserInfo($db);
-	$user_info->account_id = $account->id;
-	$user_info->getOne();
-
-	$result = array(
-        "id" => $account->id,
-        "username" => $account->username,
-		"domain" => $account->domain,
-		"email" => $account->email,
-		"alias" => $account->alias,
-		"activated" => $account->activated,
-		"firstname" => $user_info->firstname,
-		"lastname" => $user_info->lastname,
-		"gender" => $user_info->gender,
-		"subscribe" => $user_info->subscribe
-	);
-
-	return $result;
-}
-
 // args = [username, ha1, firstname, lastname, gender, subscribe, [domain], [algo]]
 function xmlrpc_update_account_user_info($method, $args) {
 	$username = $args[0];
@@ -241,7 +200,6 @@ function xmlrpc_update_account_user_info($method, $args) {
 function xmlrpc_user_info_register_methods($server) {
 	xmlrpc_server_register_method($server, 'get_email_account', 'xmlrpc_get_email_account'); // args = [username, ha1, [domain], [algo]]
 	xmlrpc_server_register_method($server, 'get_phone_account', 'xmlrpc_get_phone_account'); // args = [tel, ha1, [domain], [algo]]
-	xmlrpc_server_register_method($server, 'get_account_by_confirmation_key', 'xmlrpc_get_account_by_confirmation_key'); // args = [confirmation_key, [algo]]
 	xmlrpc_server_register_method($server, 'update_account_user_info', 'xmlrpc_update_account_user_info'); // args = [username, ha1, firstname, lastname, gender, subscribe, [domain], [algo]]
 }
 

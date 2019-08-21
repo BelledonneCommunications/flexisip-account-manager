@@ -65,9 +65,6 @@ if (USE_DIGEST_AUTH) {
 		// compatibility
 		13 => 'create_account',
 		14 => 'create_account_with_useragent',
-
-		// user_info
-		15 => 'get_account_by_confirmation_key',
 	);
 
 	// Get authentication header if there is one
