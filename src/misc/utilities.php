@@ -19,7 +19,9 @@
 */
 
 include_once __DIR__ . '/../config/config.php';
+include_once __DIR__ . '/../objects/account.php';
 include_once __DIR__ . '/logging.php';
+
 if (EMAIL_ENABLED) {
 	include_once __DIR__ . '/email.php';
 }
@@ -118,6 +120,20 @@ function generate_4_digits_code() {
 function password_match($pwd1, $pwd2) {
 	if ($pwd1 != $pwd2) {
 		Logger::getInstance()->error("Password doesn't match");
+		return false;
+	}
+	return true;
+}
+
+function is_key_matching($key, $account) {
+	$key_db = $account->confirmation_key;
+	if ($key == INVALID_CONFIRMATION_KEY || $key != $key_db) {
+		if ($key_db != INVALID_CONFIRMATION_KEY) {
+			$account->confirmation_key = INVALID_CONFIRMATION_KEY;
+			$account->update();
+		}
+		
+		Logger::getInstance()->error("Key doesn't match");
 		return false;
 	}
 	return true;

@@ -29,8 +29,6 @@ include_once __DIR__ . '/../misc/utilities.php';
 
 include_once __DIR__ . '/results_values.php';
 
-define ("INVALID_CONFIRMATION_KEY", "ERROR");
-
 // args = [user, pwd, [domain], [algo]]
 // /!\ This method must be used for tests purposes only /!\
 function xmlrpc_get_confirmation_key($method, $args) {
@@ -259,17 +257,9 @@ function xmlrpc_activate_phone_account($method, $args) {
 		return ACCOUNT_NOT_FOUND;
 	}
 
-	$key_db = $account->confirmation_key;
-	if ($key == INVALID_CONFIRMATION_KEY || $key != $key_db) {
-		if ($key_db != INVALID_CONFIRMATION_KEY) {
-			$account->confirmation_key = INVALID_CONFIRMATION_KEY;
-			$account->update();
-		}
-		
-		Logger::getInstance()->error("Key doesn't match");
+	if (!is_key_matching($key, $account)) {
 		return KEY_DOESNT_MATCH;
 	}
-
 	// Key is one time only
 	$account->confirmation_key = INVALID_CONFIRMATION_KEY;
 	$account->update();
@@ -445,13 +435,7 @@ function xmlrpc_activate_email_account($method, $args) {
 		return ACCOUNT_ALREADY_ACTIVATED;
 	}
 
-	$key_db = $account->confirmation_key;
-	if ($key == INVALID_CONFIRMATION_KEY || $key != $key_db) {
-		if ($key_db != INVALID_CONFIRMATION_KEY) {
-			$account->confirmation_key = INVALID_CONFIRMATION_KEY;
-			$account->update();
-		}
-		Logger::getInstance()->error("Key doesn't match");
+	if (!is_key_matching($key, $account)) {
 		return KEY_DOESNT_MATCH;
 	}
 
@@ -706,17 +690,9 @@ function xmlrpc_recover_account_from_confirmation_key($method, $args) {
 		return ACCOUNT_NOT_FOUND;
 	}
 
-	$key_db = $account->confirmation_key;
-	if ($key == INVALID_CONFIRMATION_KEY || $key != $key_db) {
-		if ($key_db != INVALID_CONFIRMATION_KEY) {
-			$account->confirmation_key = INVALID_CONFIRMATION_KEY;
-			$account->update();
-		}
-		
-		Logger::getInstance()->error("Key doesn't match");
+	if (!is_key_matching($key, $account)) {
 		return KEY_DOESNT_MATCH;
 	}
-
 	// Key is one time only
 	$account->confirmation_key = INVALID_CONFIRMATION_KEY;
 	$account->update();
