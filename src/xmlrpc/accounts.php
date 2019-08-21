@@ -23,6 +23,7 @@ include_once __DIR__ . '/../database/database.php';
 include_once __DIR__ . '/../objects/account.php';
 include_once __DIR__ . '/../objects/password.php';
 include_once __DIR__ . '/../objects/alias.php';
+include_once __DIR__ . '/../objects/user_info.php';
 
 include_once __DIR__ . '/../misc/utilities.php';
 
@@ -858,6 +859,112 @@ function xmlrpc_update_email($method, $args) {
 	return NOK;
 }
 
+// args = [username, phone, ha1, [domain], [algo]]
+function xmlrpc_delete_phone_account($method, $args) {
+	$username = $args[0];
+	$phone = $args[1];
+	$ha1 = $args[2];
+	$domain = get_domain($args[3]);
+	$algo = get_algo($args[4]);
+
+	Logger::getInstance()->message("[XMLRPC] xmlrpc_delete_phone_account(" . $username . ", " . $phone . ", " . $domain . ", " . $algo . ")");
+
+	$database = new Database();
+	$db = $database->getConnection();
+	$account = new Account($db);
+	$account->username = $username;
+	$account->domain = $domain;
+	
+	if (!$account->getOne()) {
+		return ACCOUNT_NOT_FOUND;
+	}
+
+	if ($phone != $username && $phone != $account->alias) {
+		return ALIAS_DOESNT_MATCH;
+	}
+
+	$password = new Password($db);
+	$password->account_id = $account->id;
+	$password->algorithm = $algo;
+
+	if (!$password->getOne()) {
+		return PASSWORD_NOT_FOUND;
+	}
+
+	if ($ha1 != $password->password) {
+		return PASSWORD_DOESNT_MATCH;
+	}
+
+	if ($account->delete()) {
+		if ($password->delete()) {
+			$alias = new Alias($db);
+			$alias->account_id = $account->id;
+			$alias->delete();
+
+			$userinfo = new UserInfo($db);
+			$userinfo->account_id = $account->id;
+			$userinfo->delete();
+
+			return OK;
+		}
+	}
+
+	return NOK;
+}
+
+// args = [username, email, ha1, [domain], [algo]]
+function xmlrpc_delete_email_account($method, $args) {
+	$username = $args[0];
+	$email = $args[1];
+	$ha1 = $args[2];
+	$domain = get_domain($args[3]);
+	$algo = get_algo($args[4]);
+
+	Logger::getInstance()->message("[XMLRPC] xmlrpc_delete_email_account(" . $username . ", " . $email . ", " . $domain . ", " . $algo . ")");
+
+	$database = new Database();
+	$db = $database->getConnection();
+	$account = new Account($db);
+	$account->username = $username;
+	$account->domain = $domain;
+	
+	if (!$account->getOne()) {
+		return ACCOUNT_NOT_FOUND;
+	}
+
+	if ($email != $account->email) {
+		return EMAIL_DOESNT_MATCH;
+	}
+
+	$password = new Password($db);
+	$password->account_id = $account->id;
+	$password->algorithm = $algo;
+
+	if (!$password->getOne()) {
+		return PASSWORD_NOT_FOUND;
+	}
+
+	if ($ha1 != $password->password) {
+		return PASSWORD_DOESNT_MATCH;
+	}
+
+	if ($account->delete()) {
+		if ($password->delete()) {
+			$alias = new Alias($db);
+			$alias->account_id = $account->id;
+			$alias->delete();
+
+			$userinfo = new UserInfo($db);
+			$userinfo->account_id = $account->id;
+			$userinfo->delete();
+
+			return OK;
+		}
+	}
+
+	return NOK;
+}
+
 function xmlrpc_accounts_register_methods($server) {
 	if (ALLOW_TEST_ACCOUNTS) {
 		// /!\ This methods must be used for tests purposes only /!\
@@ -878,6 +985,9 @@ function xmlrpc_accounts_register_methods($server) {
 	xmlrpc_server_register_method($server, 'recover_phone_account', 'xmlrpc_recover_phone_account');// args = [phone, [domain], [lang]], return username
 	xmlrpc_server_register_method($server, 'recover_email_account', 'xmlrpc_recover_email_account');// args = [username, email, [domain]], return OK
 	xmlrpc_server_register_method($server, 'recover_account_from_confirmation_key', 'xmlrpc_recover_account_from_confirmation_key');// args = [username, key, [domain], [algo]]
+
+	xmlrpc_server_register_method($server, 'delete_phone_account', 'xmlrpc_delete_phone_account');// args = [username, phone, ha1, [domain], [algo]]
+	xmlrpc_server_register_method($server, 'delete_email_account', 'xmlrpc_delete_email_account');// args = [username, email, ha1, [domain], [algo]]
 
 	xmlrpc_server_register_method($server, 'update_password', 'xmlrpc_update_password');// args = [username, old password, new password, [domain], [algo]], return OK
 	xmlrpc_server_register_method($server, 'update_hash', 'xmlrpc_update_hash');// args = [username, old hash, new hash, [domain], [algo]], return OK
