@@ -65,6 +65,8 @@ if (USE_DIGEST_AUTH) {
 		// compatibility
 		13 => 'create_account',
 		14 => 'create_account_with_useragent',
+
+		15 => 'get_accounts_count',
 	);
 
 	// Get authentication header if there is one

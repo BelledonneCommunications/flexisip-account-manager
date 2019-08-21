@@ -965,6 +965,16 @@ function xmlrpc_delete_email_account($method, $args) {
 	return NOK;
 }
 
+// args = []
+function xmlrpc_get_accounts_count($method, $args) {
+	Logger::getInstance()->message("[XMLRPC] xmlrpc_get_accounts_count()");
+
+	$database = new Database();
+	$db = $database->getConnection();
+	$account = new Account($db);
+	return $account->getCount();
+}
+
 function xmlrpc_accounts_register_methods($server) {
 	if (ALLOW_TEST_ACCOUNTS) {
 		// /!\ This methods must be used for tests purposes only /!\
@@ -992,6 +1002,8 @@ function xmlrpc_accounts_register_methods($server) {
 	xmlrpc_server_register_method($server, 'update_password', 'xmlrpc_update_password');// args = [username, old password, new password, [domain], [algo]], return OK
 	xmlrpc_server_register_method($server, 'update_hash', 'xmlrpc_update_hash');// args = [username, old hash, new hash, [domain], [algo]], return OK
 	xmlrpc_server_register_method($server, 'update_email', 'xmlrpc_update_email');// args = [username, password, new email, [domain], [algo]], return OK
+
+	xmlrpc_server_register_method($server, 'get_accounts_count', 'xmlrpc_get_accounts_count');//args = []
 }
 
 ?>

@@ -210,6 +210,18 @@ class Account {
         return false;
     }
 
+    function getCount() {
+        $query = "SELECT count(*) FROM " . ACCOUNTS_DB_TABLE;
+        $stmt = $this->conn->prepare($query);
+        Logger::getInstance()->debug("GetCount " . (string)$this);
+        if ($stmt->execute()) {
+            $number_of_rows = $stmt->fetchColumn();
+            return $number_of_rows;
+        }
+        Logger::getInstance()->error($stmt->errorInfo());
+        return -1;
+    }
+
     function getAll() {
         $query = "SELECT ac.id, ac.username, ac.domain, ac.activated, ac.confirmation_key, ac.email, al.alias FROM " . ACCOUNTS_DB_TABLE . 
             " ac LEFT JOIN " . ALIAS_DB_TABLE . " al ON ac.id = al.account_id";
