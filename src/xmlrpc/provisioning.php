@@ -19,9 +19,33 @@
 */
 
 header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/xml; charset=UTF-8");
 
 include_once __DIR__ . '/../misc/utilities.php';
+
+if (isset($_GET['qrcode']) && $_GET['qrcode'] == 1) {
+    $query = $_GET;
+    $query['qrcode'] = 0;
+    $query_result = http_build_query($query);
+    $data = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://") . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . "?" . $query_result;
+
+    // https://github.com/tecnickcom/tc-lib-barcode GPLv3
+    require __DIR__ . '/../vendor/tecnickcom/tc-lib-barcode/resources/autoload.php';
+    $barcode = new \Com\Tecnick\Barcode\Barcode();
+    $bobj = $barcode->getBarcodeObj(
+        'QRCODE,H',                     // barcode type and additional comma-separated parameters
+        $data,                          // data string to encode
+        -4,                             // bar width (use absolute or negative value as multiplication factor)
+        -4,                             // bar height (use absolute or negative value as multiplication factor)
+        'black',                        // foreground color
+        array(-2, -2, -2, -2)           // padding (use absolute or negative values as multiplication factors)
+    )->setBackgroundColor('white');     // background color
+
+    header("Content-Type: text/html; charset=UTF-8");
+    echo $bobj->getHtmlDiv();
+    return;
+}
+
+header("Content-Type: application/xml; charset=UTF-8");
 
 $xml = '<?xml version="1.0" encoding="UTF-8"?>';
 $xml = $xml . '<config xmlns="http://www.linphone.org/xsds/lpconfig.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.linphone.org/xsds/lpconfig.xsd lpconfig.xsd">';
