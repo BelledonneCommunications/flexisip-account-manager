@@ -100,13 +100,14 @@ function xmlrpc_create_email_account($method, $args) {
 	return OK;
 }
 
-// args = [username, email, password, useragent, [domain]], return OK
+// args = [username, email, md5_hash, sha256_hash, useragent, [domain]], return OK
 function xmlrpc_create_email_md5_sha256_account($method, $args) {
 	$user = $args[0];
 	$email = $args[1];
-	$pwd = $args[2];
-	$user_agent = $args[3];
-	$domain = get_domain($args[4]);
+	$md5_hash = $args[2];
+	$sha256_hash = $args[3];
+	$user_agent = $args[4];
+	$domain = get_domain($args[5]);
 
 	Logger::getInstance()->message("[XMLRPC] xmlrpc_create_email_md5_sha256_account(" . $user . ", " . $domain . ", " . $email . ")");
 
@@ -136,6 +137,8 @@ function xmlrpc_create_email_md5_sha256_account($method, $args) {
 
 	if (GENERATE_PASSWORD_ENABLED) {
 		$pwd = generate_password();
+		$md5_hash = hash_password($user, $pwd, $domain, MD5);
+		$sha256_hash = hash_password($user, $pwd, $domain, SHA256);
 	}
 
 	$account->confirmation_key = uniqid();
@@ -147,13 +150,13 @@ function xmlrpc_create_email_md5_sha256_account($method, $args) {
 
 	$md5_password = new Password($db);
 	$md5_password->account_id = $account->id;
-	$md5_password->password = hash_password($user, $pwd, $domain, MD5);
+	$md5_password->password = $md5_hash;
 	$md5_password->algorithm = MD5;
 	$md5_password->create();
 
 	$sha256_password = new Password($db);
 	$sha256_password->account_id = $account->id;
-	$sha256_password->password = hash_password($user, $pwd, $domain, SHA256);
+	$sha256_password->password = $sha256_hash;
 	$sha256_password->algorithm = SHA256;
 	$sha256_password->create();
 
@@ -379,7 +382,7 @@ function xmlrpc_delete_email_account($method, $args) {
 
 function xmlrpc_accounts_email_register_methods($server) {
 	xmlrpc_server_register_method($server, 'create_email_account', 'xmlrpc_create_email_account');// args = [username, email, [hash], useragent, [domain], [algo]], return OK
-	xmlrpc_server_register_method($server, 'create_email_md5_sha256_account', 'xmlrpc_create_email_md5_sha256_account');// args = [username, email, password, useragent, [domain]], return OK
+	xmlrpc_server_register_method($server, 'create_email_md5_sha256_account', 'xmlrpc_create_email_md5_sha256_account');// args = [username, email, md5_hash, sha256_hash, useragent, [domain]], return OK
 	xmlrpc_server_register_method($server, 'activate_email_account', 'xmlrpc_activate_email_account');// args = [username, key, [domain], [algo]], return ha1_password
 	xmlrpc_server_register_method($server, 'recover_email_account', 'xmlrpc_recover_email_account');// args = [username, email, [domain]], return OK
 	xmlrpc_server_register_method($server, 'update_email', 'xmlrpc_update_email');// args = [username, password, new email, [domain], [algo]], return OK
