@@ -105,11 +105,11 @@ function xmlrpc_compatibility_create_account($method, $args) {
 	}
 	$account->create();
 
-	$crypted_password = hash_password($login, $args[1], $domain, "MD5");
+	$crypted_password = hash_password($login, $args[1], $domain, MD5);
 	$password = new Password($db);
 	$password->account_id = $account->id;
 	$password->password = $crypted_password;
-	$password->algorithm = "MD5";
+	$password->algorithm = MD5;
 	$password->create();
 	
 	if (SEND_ACTIVATION_EMAIL && EMAIL_ENABLED) {

@@ -62,7 +62,7 @@ if (!empty($username)) {
     $xml = $xml . '</section>';
 
     $ha1 = isset($_GET['ha1']) ? $_GET['ha1'] : null;
-    $algo = isset($_GET['algorithm']) ? $_GET['algorithm'] : "MD5";
+    $algo = isset($_GET['algorithm']) ? $_GET['algorithm'] : DEFAULT_ALGORITHM;
 
     if (!empty($ha1)) {
         $xml = $xml . '<section name="auth_info_' . $auth_info_index . '"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>';

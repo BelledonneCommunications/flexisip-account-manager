@@ -29,6 +29,10 @@ if (SMS_API_ENABLED) {
 	include_once __DIR__ . '/sms.php';
 }
 
+define('CLEAR', 'clrtxt');
+define('MD5', 'MD5');
+define('SHA256', 'SHA-256');
+
 function startswith($hay, $needle) {
 	return substr($hay, 0, strlen($needle)) === $needle;
 }
@@ -72,7 +76,7 @@ function get_algo($algo) {
 		Logger::getInstance()->warning("Algo parameter wasn't found, assume " . DEFAULT_ALGORITHM);
 		return DEFAULT_ALGORITHM;
 	}
-	if ($algo == "MD5" || $algo == "SHA-256" || $algo == "clrtxt") {
+	if ($algo == MD5 || $algo == SHA256 || $algo == CLEAR) {
 		return $algo;
 	}
 	Logger::getInstance()->error("Algo " . $algo . " is not supported");
@@ -101,8 +105,8 @@ function get_lang($param) {
 	
 function hash_password($user, $password, $domain, $algo) {
 	$hashed_password = $password;
-	if ($algo == "" || $algo == "MD5") $hashed_password = hash("md5", $user . ":" . $domain . ":" . $password);
-	else if ($algo == "SHA-256") $hashed_password = hash("sha256", $user . ":" . $domain . ":" . $password);
+	if ($algo == "" || $algo == MD5) $hashed_password = hash("md5", $user . ":" . $domain . ":" . $password);
+	else if ($algo == SHA256) $hashed_password = hash("sha256", $user . ":" . $domain . ":" . $password);
 	else Logger::getInstance()->error("Algorithm not supported: " . $algo);
 	return $hashed_password;
 }

@@ -26,6 +26,7 @@ include_once __DIR__ . '/authentication.php';
 include_once __DIR__ . '/accounts.php';
 include_once __DIR__ . '/aliases.php';
 include_once __DIR__ . '/devices.php';
+include_once __DIR__ . '/passwords.php';
 include_once __DIR__ . '/user_info.php';
 include_once __DIR__ . '/compatibility.php';
 
@@ -99,11 +100,13 @@ if (USE_DIGEST_AUTH) {
 xmlrpc_accounts_register_methods($server);
 xmlrpc_aliases_register_methods($server);
 xmlrpc_devices_register_methods($server);
+xmlrpc_passwords_register_methods($server);
+xmlrpc_user_info_register_methods($server);
+xmlrpc_compatibility_register_methods($server);
+
 if (USE_IN_APP_PURCHASES) {
 	xmlrpc_inapp_register_methods($server);
 }
-xmlrpc_user_info_register_methods($server);
-xmlrpc_compatibility_register_methods($server);
 
 if ($request) {
 	$options = array('output_type' => 'xml', 'version' => 'auto');

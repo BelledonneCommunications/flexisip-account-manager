@@ -1,0 +1,215 @@
+<?php
+
+/*
+	Flexisip Account Manager is a set of tools to manage SIP accounts.
+	Copyright (C) 2019 Belledonne Communications SARL, All rights reserved.
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Affero General Public License as
+	published by the Free Software Foundation, either version 3 of the
+	License, or (at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Affero General Public License for more details.
+
+	You should have received a copy of the GNU Affero General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+include_once __DIR__ . '/../database/database.php';
+
+include_once __DIR__ . '/../objects/account.php';
+include_once __DIR__ . '/../objects/password.php';
+include_once __DIR__ . '/../objects/alias.php';
+include_once __DIR__ . '/../objects/user_info.php';
+
+include_once __DIR__ . '/../misc/utilities.php';
+
+include_once __DIR__ . '/results_values.php';
+
+// args = [username, old hash, new hash, [domain], [algo]]
+function xmlrpc_update_hash($method, $args) {
+	$username = $args[0];
+	$hashed_old_password = $args[1];
+	$hashed_new_password = $args[2];
+	$domain = get_domain($args[3]);
+	$algo = get_algo($args[4]);
+
+	Logger::getInstance()->message("[XMLRPC] xmlrpc_update_hash(" . $username . ", " . $domain . ", " . $algo . ")");
+
+	if (!check_parameter($username)) {
+		return MISSING_USERNAME_PARAM;
+	} else if ($algo == NULL) {
+		return ALGO_NOT_SUPPORTED;
+	}
+
+	$database = new Database();
+	$db = $database->getConnection();
+	$account = new Account($db);
+	$account->username = $username;
+	$account->domain = $domain;
+	
+	if (!$account->getOne()) {
+		return ACCOUNT_NOT_FOUND;
+	}
+
+	$password = new Password($db);
+	$password->account_id = $account->id;
+	$password->password = $hashed_old_password;
+	$password->algorithm = $algo;
+
+	if (!$password->getOne()) {
+		return PASSWORD_DOESNT_MATCH;
+	}
+
+	$password->password = $hashed_new_password;
+	if ($password->update()) {
+		Logger::getInstance()->message("Password updated successfully");
+		return OK;
+	}
+	
+	return NOK;
+}
+
+// args = [username, old hash, new password, [domain]]
+function xmlrpc_upgrade_hash($method, $args) {
+	$username = $args[0];
+	$hashed_password = $args[1];
+	$new_password = $args[2];
+	$domain = get_domain($args[3]);
+
+	Logger::getInstance()->message("[XMLRPC] xmlrpc_upgrade_hash(" . $username . ", " . $domain . ")");
+
+	$database = new Database();
+	$db = $database->getConnection();
+	$account = new Account($db);
+	$account->username = $username;
+	$account->domain = $domain;
+
+	if (!$account->getOne()) {
+		return ACCOUNT_NOT_FOUND;
+	}
+
+	$password = new Password($db);
+	$password->account_id = $account->id;
+	$password->password = $hashed_password;
+
+	if (!$password->getOne()) {
+		return PASSWORD_DOESNT_MATCH;
+	}
+
+	// Old password is OK, now let's hash the new password for both MD5 and SHA-256
+
+	$md5_hashed_password = hash_password($username, $new_password, $domain, MD5);
+	if ($password->algorithm == MD5) {
+		$password->password = $md5_hashed_password;
+		$password->update();
+	} else {
+		$md5_password = new Password($db);
+		$md5_password->account_id = $account->id;
+		$md5_password->password = $md5_hashed_password;
+		$md5_password->algorithm = MD5;
+		$md5_password->create();
+	}
+
+	$sha256_hashed_password = hash_password($username, $new_password, $domain, SHA256);
+	if ($password->algorithm == SHA256) {
+		$password->password = $sha256_hashed_password;
+		$password->update();
+	} else {
+		$sha256_password = new Password($db);
+		$sha256_password->account_id = $account->id;
+		$sha256_password->password = $sha256_hashed_password;
+		$sha256_password->algorithm = SHA256;
+		$sha256_password->create();
+	}
+
+	return OK;
+}
+
+// args = [username, hash, [domain]]
+function xmlrpc_check_authentication($method, $args) {
+	$username = $args[0];
+	$hashed_password = $args[1];
+	$domain = get_domain($args[2]);
+
+	Logger::getInstance()->message("[XMLRPC] xmlrpc_check_authentication(" . $username . ", " . $domain . ")");
+
+	$database = new Database();
+	$db = $database->getConnection();
+	$account = new Account($db);
+	$account->username = $username;
+	$account->domain = $domain;
+
+	if (!$account->getOne()) {
+		return ACCOUNT_NOT_FOUND;
+	}
+
+	$password = new Password($db);
+	$password->account_id = $account->id;
+	$password->password = $hashed_password;
+
+	if (!$password->getOne()) {
+		return PASSWORD_DOESNT_MATCH;
+	}
+
+	return OK;
+}
+
+// args = [username, md5_hash, sha256_hash, [domain]]
+function xmlrpc_check_authentication_and_upgrade_password($method, $args) {
+	$username = $args[0];
+	$md5_hashed_password = $args[1];
+	$sha256_hashed_password = $args[2];
+	$domain = get_domain($args[3]);
+
+	Logger::getInstance()->message("[XMLRPC] xmlrpc_check_authentication_and_upgrade_password(" . $username . ", " . $domain . ")");
+
+	$database = new Database();
+	$db = $database->getConnection();
+	$account = new Account($db);
+	$account->username = $username;
+	$account->domain = $domain;
+
+	if (!$account->getOne()) {
+		return ACCOUNT_NOT_FOUND;
+	}
+
+	$sha256_password = new Password($db);
+	$sha256_password->account_id = $account->id;
+	$sha256_password->password = $sha256_hashed_password;
+	$sha256_password->algorithm = SHA256;
+
+	if (!$sha256_password->getOne()) {
+		// SHA-256 doesn't exists or doesn't match, let's try MD5
+		$md5_password = new Password($db);
+		$md5_password->account_id = $account->id;
+		$md5_password->password = $md5_hashed_password;
+		$md5_password->algorithm = MD5;
+
+		if (!$md5_password->getOne()) {
+			return PASSWORD_DOESNT_MATCH;
+		}
+
+		if ($sha256_password->id > 0) {
+			// SHA-256 exists, let's update it
+			$sha256_password->update();
+		} else {
+			$sha256_password->create();
+		}
+	}
+
+	return OK;
+}
+
+function xmlrpc_passwords_register_methods($server) {
+	xmlrpc_server_register_method($server, 'update_hash', 'xmlrpc_update_hash');// args = [username, old hash, new hash, [domain], [algo]], return OK
+	xmlrpc_server_register_method($server, 'upgrade_hash', 'xmlrpc_upgrade_hash');// args = [username, old hash, new password, [domain]], return OK
+
+	xmlrpc_server_register_method($server, 'check_authentication', 'xmlrpc_check_authentication');// args = [username, hash, [domain]]
+	xmlrpc_server_register_method($server, 'check_authentication_and_upgrade_password', 'xmlrpc_check_authentication_and_upgrade_password');// args = [username, md5_hash, sha256_hash, [domain]]
+}
+
+?>
