@@ -30,14 +30,14 @@ include_once __DIR__ . '/../misc/utilities.php';
 include_once __DIR__ . '/results_values.php';
 
 // args = [username, old hash, new hash, [domain], [algo]]
-function update_password($method, $args) {
+function xmlrpc_update_password($method, $args) {
 	$username = $args[0];
 	$hashed_old_password = $args[1];
 	$hashed_new_password = $args[2];
 	$domain = get_domain($args[3]);
 	$algo = get_algo($args[4]);
 
-	Logger::getInstance()->message("[XMLRPC] update_password(" . $username . ", " . $domain . ", " . $algo . ")");
+	Logger::getInstance()->message("[XMLRPC] xmlrpc_update_password(" . $username . ", " . $domain . ", " . $algo . ")");
 
 	if (!check_parameter($username)) {
 		return MISSING_USERNAME_PARAM;

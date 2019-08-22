@@ -28,7 +28,6 @@ include_once __DIR__ . '/aliases.php';
 include_once __DIR__ . '/devices.php';
 include_once __DIR__ . '/passwords.php';
 include_once __DIR__ . '/user_info.php';
-include_once __DIR__ . '/compatibility.php';
 
 $request = file_get_contents("php://input");
 if (empty($request)) Logger::getInstance()->error("Request is empty");
@@ -42,32 +41,33 @@ if (USE_DIGEST_AUTH) {
 	$request_type = $xml->methodName;
 
 	$unauthenticated_requests = array(
-		// account
+		// email accounts
 		0 => 'create_email_account',
-		1 => 'create_phone_account',
-		2 => 'get_confirmation_key',
-		3 => 'activate_email_account',
-		4 => 'activate_phone_account',
-		5 => 'recover_phone_account',
-		6 => 'recover_email_account',
-		7 => 'recover_account_from_confirmation_key',
+		1 => 'create_email_md5_sha256_account',
+		2 => 'activate_email_account',
+		3 => 'recover_email_account',
+
+		// phone accounts
+		4 => 'create_phone_account',
+		5 => 'activate_phone_account',
+		6 => 'recover_phone_account',
+		7 => 'is_phone_number_used',
 		8 => 'get_phone_number_for_account',
-		9 => 'is_account_activated',
+		
+		// accounts
+		9 => 'get_confirmation_key',
+		10 => 'is_account_used',
+		11 => 'is_account_activated',
+		12 => 'recover_account_from_confirmation_key',
+		13 => 'get_accounts_count',
 	
 		// aliases
-		10 => 'is_alias_used',
+		14 => 'is_alias_used',
+		15 => 'link_phone_number_with_account',
+		16 => 'get_alias',
 	
-		// inapp
-		11 => 'check_payload_signature',
-	
-		// misc
-		12 => 'add_ec_calibration_result',
-	
-		// compatibility
-		13 => 'create_account',
-		14 => 'create_account_with_useragent',
-
-		15 => 'get_accounts_count',
+		// devices
+		17 => 'add_ec_calibration_result',
 	);
 
 	// Get authentication header if there is one
@@ -102,7 +102,6 @@ xmlrpc_aliases_register_methods($server);
 xmlrpc_devices_register_methods($server);
 xmlrpc_passwords_register_methods($server);
 xmlrpc_user_info_register_methods($server);
-xmlrpc_compatibility_register_methods($server);
 
 if (USE_IN_APP_PURCHASES) {
 	xmlrpc_inapp_register_methods($server);
