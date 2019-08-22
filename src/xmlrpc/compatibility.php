@@ -113,7 +113,7 @@ function xmlrpc_compatibility_create_account($method, $args) {
 	$password->create();
 	
 	if (SEND_ACTIVATION_EMAIL && EMAIL_ENABLED) {
-		send_email_with_activation_link($account->email, $account->confirmation_key);
+		send_email_with_activation_link($account->email, $account->confirmation_key, $account->username);
 	}
 	
 	return 0;

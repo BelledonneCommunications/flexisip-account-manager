@@ -520,7 +520,7 @@ function xmlrpc_create_email_account($method, $args) {
 	}
 
 	if (SEND_ACTIVATION_EMAIL && EMAIL_ENABLED) {
-		send_email_with_activation_link($email, $account->confirmation_key);
+		send_email_with_activation_link($email, $account->confirmation_key, $account->username);
 	} else if (AUTO_ACTIVATE_ACCOUNT) {
 		//TODO
 		/*if (USE_IN_APP_PURCHASES) {
@@ -700,44 +700,11 @@ function xmlrpc_recover_account_from_confirmation_key($method, $args) {
 	return PASSWORD_NOT_FOUND;
 }
 
-// args = [username, old password, new password, [domain], [algo]]
-function xmlrpc_update_password($method, $args) {
-	$user = $args[0];
-	$domain = get_domain($args[3]);
-	$algo = get_algo($algo[4]);
-
-	Logger::getInstance()->message("[XMLRPC] xmlrpc_update_password(" . $user . ", " . $domain . ", " . $algo . ")");
-
-	if ($algo == NULL) {
-		return ALGO_NOT_SUPPORTED;
-	}
-
-	$args[1] = hash_password($args[0], $args[1], $algo);
-	$args[2] = hash_password($args[0], $args[2], $algo);
-
-	return xmlrpc_update_hash("xmlrpc_update_password", $args);
-}
-
-// args = [username, old hash, new hash, [domain], [algo]]
-function xmlrpc_update_hash($method, $args) {
-	$user = $args[0];
-	$hashed_old_password = $args[1];
-	$hashed_new_password = $args[2];
-	$domain = get_domain($args[3]);
-	$algo = get_algo($args[4]);
-
-	Logger::getInstance()->message("[XMLRPC] xmlrpc_update_hash(" . $user . ", " . $domain . ", " . $algo . ")");
-
-	if (!check_parameter($user)) {
-		return MISSING_USERNAME_PARAM;
-	} else if ($algo == NULL) {
-		return ALGO_NOT_SUPPORTED;
-	}
-
+function update_password($username, $domain, $hashed_old_password, $hashed_new_password, $algo) {
 	$database = new Database();
 	$db = $database->getConnection();
 	$account = new Account($db);
-	$account->username = $user;
+	$account->username = $username;
 	$account->domain = $domain;
 	
 	if (!$account->getOne()) {
@@ -764,6 +731,45 @@ function xmlrpc_update_hash($method, $args) {
 	}
 	
 	return NOK;
+}
+
+// args = [username, old password, new password, [domain], [algo]]
+function xmlrpc_update_password($method, $args) {
+	$username = $args[0];
+	$old_password = $args[1];
+	$new_password = $args[2];
+	$domain = get_domain($args[3]);
+	$algo = get_algo($algo[4]);
+
+	Logger::getInstance()->message("[XMLRPC] xmlrpc_update_password(" . $username . ", " . $domain . ", " . $algo . ")");
+
+	if ($algo == NULL) {
+		return ALGO_NOT_SUPPORTED;
+	}
+
+	$old_hash = hash_password($username, $old_password, $domain, $algo);
+	$new_hash = hash_password($username, $new_password, $domain, $algo);
+
+	return update_password($username, $domain, $old_hash, $new_hash, $algo);
+}
+
+// args = [username, old hash, new hash, [domain], [algo]]
+function xmlrpc_update_hash($method, $args) {
+	$ususernameer = $args[0];
+	$hashed_old_password = $args[1];
+	$hashed_new_password = $args[2];
+	$domain = get_domain($args[3]);
+	$algo = get_algo($args[4]);
+
+	Logger::getInstance()->message("[XMLRPC] xmlrpc_update_hash(" . $username . ", " . $domain . ", " . $algo . ")");
+
+	if (!check_parameter($username)) {
+		return MISSING_USERNAME_PARAM;
+	} else if ($algo == NULL) {
+		return ALGO_NOT_SUPPORTED;
+	}
+
+	return update_password($username, $domain, $hashed_old_password, $hashed_new_password, $algo);
 }
 
 // args = [username, password, new email, [domain], [algo]]
