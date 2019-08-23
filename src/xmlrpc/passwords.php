@@ -204,6 +204,8 @@ function xmlrpc_check_authentication_and_upgrade_password($method, $args) {
 }
 
 function xmlrpc_passwords_register_methods($server) {
+	// The below two methods are the same but with different names, update_hash was the previous one and is kept here for the time being for compatibility purposes
+	xmlrpc_server_register_method($server, 'update_hash', 'xmlrpc_update_password');// args = [username, old hash, new hash, [domain], [algo]], return OK
 	xmlrpc_server_register_method($server, 'update_password', 'xmlrpc_update_password');// args = [username, old hash, new hash, [domain], [algo]], return OK
 	xmlrpc_server_register_method($server, 'update_passwords', 'xmlrpc_update_passwords');// args = [username, old hash, md5_hash, sha256_hash, [domain]]
 

@@ -32,117 +32,6 @@ include_once __DIR__ . '/accounts_phone.php';
 
 include_once __DIR__ . '/results_values.php';
 
-// args = [user, pwd, [domain], [algo]]
-// /!\ This method must be used for tests purposes only /!\
-function xmlrpc_get_confirmation_key($method, $args) {
-	$user = $args[0];
-	$pwd = $args[1];
-	$domain = get_domain($args[2]);
-	$algo = get_algo($args[3]);
-
-	Logger::getInstance()->message("[XMLRPC] xmlrpc_get_confirmation_key(" . $user . ", " . $domain . ", " . $algo . ")");
-
-	if (!check_parameter($user)) {
-		return MISSING_USERNAME_PARAM;
-	} else if (!ALLOW_TEST_ACCOUNTS) {
-		Logger::getInstance()->error ("Non test account unauthorized");
-		return TEST_ACCOUNTS_DISABLED;
-	} else if ($algo == NULL) {
-		return ALGO_NOT_SUPPORTED;
-	}
-
-	$database = new Database();
-	$db = $database->getConnection();
-	$account = new Account($db);
-	$account->username = $user;
-	$account->domain = $domain;
-
-	if (!$account->getOne()) {
-		return ACCOUNT_NOT_FOUND;
-	}
-
-	$password = new Password($db);
-	$password->account_id = $account->id;
-	$password->algorithm = $algo;
-	
-	if (!$password->getOne()) {
-		return PASSWORD_NOT_FOUND;
-	}
-
-	if ($algo == CLEAR) {
-		$hashed_password = $pwd;
-	} else {
-		$hashed_password = hash_password($user, $pwd, $domain, $algo);
-	}
-
-	if (!password_match($hashed_password, $password->password) 
-		&& !password_match($pwd, $password->password)) { // This condition is specific for liblinphone tester....
-		return PASSWORD_DOESNT_MATCH;
-	}
-
-	$key = $account->confirmation_key;
-	Logger::getInstance()->debug("[XMLRPC] returning key = " . $key);
-	return $key;
-}
-
-// args = [user, pwd, [domain], [algo]]
-// /!\ This method must be used for tests purposes only /!\
-function xmlrpc_delete_account($method, $args) {
-	$user = $args[0];
-	$pwd = $args[1];
-	$domain = get_domain($args[2]);
-	$algo = get_algo($args[3]);
-
-	Logger::getInstance()->message("[XMLRPC] xmlrpc_delete_account(" . $user . ", " . $domain . ", " . $algo . ")");
-
-	if ($algo == NULL) {
-		return ALGO_NOT_SUPPORTED;
-	} else if (!check_parameter($user)) {
-		return MISSING_USERNAME_PARAM;
-	} else if (!ALLOW_TEST_ACCOUNTS) {
-		return TEST_ACCOUNTS_DISABLED;
-	}
-
-	$database = new Database();
-	$db = $database->getConnection();
-	$account = new Account($db);
-	$account->username = $user;
-	$account->domain = $domain;
-
-	if (!$account->getOne()) {
-		return ACCOUNT_NOT_FOUND;
-	}
-
-	$password = new Password($db);
-	$password->account_id = $account->id;
-	$password->algorithm = $algo;
-
-	if (!$password->getOne()) {
-		return PASSWORD_NOT_FOUND;
-	}
-
-	if ($algo == CLEAR) {
-		$hashed_password = $pwd;
-	} else {
-		$hashed_password = hash_password($user, $pwd, $domain, $algo);
-	}
-	if (!password_match($hashed_password, $password->password) 
-		&& !password_match($pwd, $password->password)) { // This condition is specific for liblinphone tester....
-		return PASSWORD_DOESNT_MATCH;
-	}
-
-	$alias = new Alias($db);
-	$alias->account_id = $account->id;
-
-	$account->delete();
-	$password->delete();
-	$alias->delete();
-
-	return OK;
-}
-
-/* ************************************************************************************************* */
-
 // args = [username, [domain]]
 function xmlrpc_is_account_used($method, $args) {
 	$user = $args[0];
@@ -262,12 +151,6 @@ function xmlrpc_get_accounts_count($method, $args) {
 }
 
 function xmlrpc_accounts_register_methods($server) {
-	if (ALLOW_TEST_ACCOUNTS) {
-		// /!\ This methods must be used for tests purposes only /!\
-		xmlrpc_server_register_method($server, 'get_confirmation_key', 'xmlrpc_get_confirmation_key');// args = [user, pwd, [domain], [algo]], return confirmation_key
-		xmlrpc_server_register_method($server, 'delete_account', 'xmlrpc_delete_account');// args = [user, pwd, [domain], [algo]]
-	}
-
  	xmlrpc_server_register_method($server, 'is_account_used', 'xmlrpc_is_account_used');// args = [username, [domain]], return OK or NOK
 	xmlrpc_server_register_method($server, 'is_account_activated', 'xmlrpc_is_account_activated');// args = [username, [domain]], return OK or NOK
 	xmlrpc_server_register_method($server, 'recover_account_from_confirmation_key', 'xmlrpc_recover_account_from_confirmation_key');// args = [username, key, [domain], [algo]]

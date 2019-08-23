@@ -104,7 +104,12 @@ xmlrpc_passwords_register_methods($server);
 xmlrpc_user_info_register_methods($server);
 
 if (USE_IN_APP_PURCHASES) {
+	include_once __DIR__ . '/inapp.php';
 	xmlrpc_inapp_register_methods($server);
+}
+if (ALLOW_TEST_ACCOUNTS) {
+	include_once __DIR__ . '/liblinphone_tester.php';
+	xmlrpc_liblinphone_tester_register_methods($server);		
 }
 
 if ($request) {
