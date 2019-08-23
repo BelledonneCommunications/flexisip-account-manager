@@ -48,7 +48,7 @@ if (isset($_GET['qrcode']) && $_GET['qrcode'] == 1) {
 header("Content-Type: application/xml; charset=UTF-8");
 
 $xml = '<?xml version="1.0" encoding="UTF-8"?>';
-$xml = $xml . '<config xmlns="http://www.linphone.org/xsds/lpconfig.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.linphone.org/xsds/lpconfig.xsd lpconfig.xsd">';
+$xml .= '<config xmlns="http://www.linphone.org/xsds/lpconfig.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.linphone.org/xsds/lpconfig.xsd lpconfig.xsd">';
 
 $proxy_config_index = 0;
 $auth_info_index = 0;
@@ -56,7 +56,7 @@ $auth_info_index = 0;
 if (file_exists(REMOTE_PROVISIONING_DEFAULT_CONFIG)) {
     $rc_array = parse_ini_file(REMOTE_PROVISIONING_DEFAULT_CONFIG, true);
     foreach ($rc_array as $section => $values) {
-        $xml = $xml . '<section name="' . $section . '"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>';
+        $xml .= '<section name="' . $section . '"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>';
         if (startswith($section, "proxy_config_")) {
             $proxy_config_index += 1;
         } else if (startswith($section, "auth_info_")) {
@@ -68,9 +68,9 @@ if (file_exists(REMOTE_PROVISIONING_DEFAULT_CONFIG)) {
             $value = str_replace("<", "&lt;", $value);
             $value = str_replace(">", "&gt;", $value);
             
-            $xml = $xml . '<entry name="' . $key . '">' . $value . '</entry>';
+            $xml .= '<entry name="' . $key . '">' . $value . '</entry>';
         }
-        $xml = $xml . '</section>';
+        $xml .= '</section>';
     }
 }
 
@@ -79,26 +79,27 @@ $domain = isset($_GET['domain']) ? $_GET['domain'] : SIP_DOMAIN;
 $transport = isset($_GET['transport']) ? $_GET['transport'] : REMOTE_PROVISIONING_DEFAULT_TRANSPORT;
 
 if (!empty($username)) {
-    $xml = $xml . '<section name="proxy_config_' . $proxy_config_index . '"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>';
-    $xml = $xml . '<entry name="reg_identity">&lt;sip:' . $username . '@' . $domain . '&gt;</entry>';
-    $xml = $xml . '<entry name="reg_proxy">&lt;sip:' . $domain . ';transport=' . $transport . '&gt;</entry>';
-    $xml = $xml . '<entry name="reg_route">&lt;sip:' . $domain . ';transport=' . $transport . '&gt;</entry>';
-    $xml = $xml . '</section>';
+    $xml .= '<section name="proxy_' . $proxy_config_index . '"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>';
+    $xml .= '<entry name="reg_identity">&lt;sip:' . $username . '@' . $domain . '&gt;</entry>';
+    $xml .= '<entry name="reg_proxy">&lt;sip:' . $domain . ';transport=' . $transport . '&gt;</entry>';
+    $xml .= '<entry name="reg_route">&lt;sip:' . $domain . ';transport=' . $transport . '&gt;</entry>';
+    $xml .= '<entry name="reg_sendregister">1</entry>';
+    $xml .= '</section>';
 
     $ha1 = isset($_GET['ha1']) ? $_GET['ha1'] : null;
     $algo = isset($_GET['algorithm']) ? $_GET['algorithm'] : DEFAULT_ALGORITHM;
 
     if (!empty($ha1)) {
-        $xml = $xml . '<section name="auth_info_' . $auth_info_index . '"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>';
-        $xml = $xml . '<entry name="username">' . $username . '</entry>';
-        $xml = $xml . '<entry name="ha1">' . $ha1 . '</entry>';
-        $xml = $xml . '<entry name="domain">' . $domain . '</entry>';
-        $xml = $xml . '<entry name="algorithm">' . $algo . '</entry>';
-        $xml = $xml . '</section>';
+        $xml .= '<section name="auth_info_' . $auth_info_index . '"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>';
+        $xml .= '<entry name="username">' . $username . '</entry>';
+        $xml .= '<entry name="ha1">' . $ha1 . '</entry>';
+        $xml .= '<entry name="realm">' . $domain . '</entry>';
+        $xml .= '<entry name="algorithm">' . $algo . '</entry>';
+        $xml .= '</section>';
     }
 }
 
-$xml = $xml . '</config>';
+$xml .= '</config>';
 
 http_response_code(200);
 echo $xml;
