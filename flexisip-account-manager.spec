@@ -8,7 +8,7 @@
 #%define _datadir           %{_datarootdir}
 #%define _docdir            %{_datadir}/doc
 
-%define build_number 7
+%define build_number 8
 #%if %{build_number}
 #%define build_number_ext -%{build_number}
 #%endif
