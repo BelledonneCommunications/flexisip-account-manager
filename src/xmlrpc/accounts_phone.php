@@ -411,7 +411,7 @@ function xmlrpc_accounts_phone_register_methods($server) {
 	xmlrpc_server_register_method($server, 'create_phone_account', 'xmlrpc_create_phone_account');// args = [phone, [username], [password], useragent, [domain], [lang], [algo]], return OK
 	xmlrpc_server_register_method($server, 'activate_phone_account', 'xmlrpc_activate_phone_account');// args = [phone, username, key, [domain], [algo]], return ha1_password
 	xmlrpc_server_register_method($server, 'recover_phone_account', 'xmlrpc_recover_phone_account');// args = [phone, [domain], [lang]], return username
-    xmlrpc_server_register_method($server, 'delete_phone_account', 'xmlrpc_delete_phone_account');// args = [username, phone, ha1, [domain], [algo]]
+	xmlrpc_server_register_method($server, 'delete_phone_account', 'xmlrpc_delete_phone_account');// args = [username, phone, ha1, [domain], [algo]]
     
 	xmlrpc_server_register_method($server, 'is_phone_number_used', 'xmlrpc_is_phone_number_used');// args = [phone], return OK_ACCOUNT, OK_ALIAS or NOK
 	xmlrpc_server_register_method($server, 'get_phone_number_for_account', 'xmlrpc_get_phone_number_for_account');// args = [username, [domain]], return a phone number or an error

@@ -196,14 +196,15 @@ class Password {
         $query = $query . " LIMIT 0,1";
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         $stmt = $this->conn->prepare($query);
+
         $stmt->bindParam(1, $this->account_id);
         if (!empty($this->algorithm)) {
-            $stmt->bindParam(1, $this->algorithm);
+            $stmt->bindParam(2, $this->algorithm);
             if (!empty($this->password)) {
-                $stmt->bindParam(2, $this->password);
+                $stmt->bindParam(3, $this->password);
             }
         } else if (!empty($this->password)) {
-            $stmt->bindParam(1, $this->password);
+            $stmt->bindParam(2, $this->password);
         }
 
         Logger::getInstance()->debug("GetOne " . (string)$this);
