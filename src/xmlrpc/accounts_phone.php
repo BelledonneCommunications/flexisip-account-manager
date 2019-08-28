@@ -112,11 +112,6 @@ function xmlrpc_create_phone_account($method, $args) {
 	$password->algorithm = $algo;
 	$password->create();
 
-	if ($user != $phone) {
-		$alias->account_id = $account->id;
-		$alias->create();
-	}
-
 	if (CUSTOM_HOOKS) {
 		hook_on_account_created($account);
 	}
