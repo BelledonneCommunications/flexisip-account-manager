@@ -64,7 +64,7 @@ function send_email($email, $subject, $text, $html) {
 	}
 }
 
-function send_email_with_activation_link($email, $key, $username) {
+function send_email_with_activation_link($email, $key, $username, $algo) {
 	if( !EMAIL_ENABLED ){
 		Logger::getInstance()->warning("[EMAIL] Emails are disabled");
 		return "WARNING_EMAILS_DISABLED";
@@ -77,6 +77,7 @@ function send_email_with_activation_link($email, $key, $username) {
 	$link = $pageURL . EMAIL_ACTIVATION_LINK;
 	$link = str_replace("%key%", $key, $link);
 	$link = str_replace("%username%", $username, $link);
+	$link = str_replace("%algo%", $algo, $link);
 	Logger::getInstance()->debug("[EMAIL] Activation link is " . $link);
 	
 	$body = str_replace("%link%", $link, EMAIL_ACTIVATION_BODY);
