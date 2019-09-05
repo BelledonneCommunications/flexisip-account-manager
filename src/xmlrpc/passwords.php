@@ -103,25 +103,25 @@ function xmlrpc_update_passwords($method, $args) {
 
 	// Old password is OK, now let's hash the new password for both MD5 and SHA-256
 
-	if ($password->algorithm == MD5) {
-		$password->password = $md5_hashed_password;
-		$password->update();
+	$md5_password = new Password($db);
+	$md5_password->account_id = $account->id;
+	$md5_password->algorithm = MD5;
+	$md5_exists = $md5_password->GetOne();
+	$md5_password->password = $md5_hashed_password;
+	if ($md5_exists) {
+		$md5_password->update();
 	} else {
-		$md5_password = new Password($db);
-		$md5_password->account_id = $account->id;
-		$md5_password->password = $md5_hashed_password;
-		$md5_password->algorithm = MD5;
 		$md5_password->create();
 	}
 
-	if ($password->algorithm == SHA256) {
-		$password->password = $sha256_hashed_password;
-		$password->update();
+	$sha256_password = new Password($db);
+	$sha256_password->account_id = $account->id;
+	$sha256_password->algorithm = SHA256;
+	$sha256_exists = $sha256_password->GetOne();
+	$sha256_password->password = $sha256_hashed_password;
+	if ($sha256_exists) {
+		$sha256_password->update();
 	} else {
-		$sha256_password = new Password($db);
-		$sha256_password->account_id = $account->id;
-		$sha256_password->password = $sha256_hashed_password;
-		$sha256_password->algorithm = SHA256;
 		$sha256_password->create();
 	}
 
