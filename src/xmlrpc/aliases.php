@@ -26,7 +26,7 @@ include_once __DIR__ . '/../objects/alias.php';
 
 include_once __DIR__ . '/../misc/utilities.php';
 
-include_once __DIR__ . '/results_values.php';
+include_once __DIR__ . '/../misc/results_values.php';
 
 // args = [phone, [domain]]
 function xmlrpc_is_alias_used($method, $args) {
@@ -46,7 +46,7 @@ function xmlrpc_is_alias_used($method, $args) {
 	$alias = new Alias($db);
 	$alias->alias = $phone;
 	$alias->domain = $domain;
-	
+
 	if (!$alias->getOne()) {
 		return ALIAS_NOT_FOUND;
 	}
@@ -72,7 +72,7 @@ function xmlrpc_link_phone_number_with_account($method, $args) {
 	/*} else if (db_alias_is_in_use($phone, $domain)) {
 		return PHONE_TAKEN;*/
 	}
-	
+
 	$database = new Database();
 	$db = $database->getConnection();
 	$account = new Account($db);
@@ -105,9 +105,9 @@ function xmlrpc_activate_phone_number_link($method, $args) {
 	$ha1 = $args[3];
 	$domain = get_domain($args[4]);
 	$algo = get_algo($args[5]);
-		
+
 	Logger::getInstance()->message("[XMLRPC] xmlrpc_activate_phone_number_link(" . $user . ", " . $domain . ", " . $phone . ", " . $key . ", " . $algo . ")");
-		
+
 	if (!check_parameter($phone, "phone")) {
 		return MISSING_PHONE_PARAM;
 	} else if (!check_parameter($user)) {
@@ -121,7 +121,7 @@ function xmlrpc_activate_phone_number_link($method, $args) {
 	$account = new Account($db);
 	$account->username = $user;
 	$account->domain = $domain;
-		
+
 	if (!$account->getOne()) {
 		return ACCOUNT_NOT_FOUND;
 	}
@@ -147,7 +147,7 @@ function xmlrpc_activate_phone_number_link($method, $args) {
 	$alias = new Alias($db);
 	$alias->alias = $phone;
 	$alias->domain = $domain;
-		
+
 	if ($alias->getOne()) {
 		$alias->account_id = $account->id;
 		$alias->update();
@@ -177,7 +177,7 @@ function xmlrpc_get_alias($method, $args) {
 	$alias = new Alias($db);
 	$alias->alias = $phone;
 	$alias->domain = $domain;
-	
+
 	if (!$alias->getOne()) {
 		return ALIAS_NOT_FOUND;
 	}

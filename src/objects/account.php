@@ -23,7 +23,7 @@ class Account {
 
     public $id;
     public $username;
-	public $domain;
+	  public $domain;
     public $email;
     public $activated;
     public $confirmation_key;
@@ -32,7 +32,7 @@ class Account {
     public $creation_time;
     public $expire_time;
     public $alias;
-    
+
     public function __construct($db) {
         $this->conn = $db;
     }
@@ -53,6 +53,9 @@ class Account {
         }
         if (!empty($this->activated)) {
             $to_string = $to_string . "activated=" . $this->activated . ", ";
+        }
+        if (!empty($this->ip_address)) {
+            $to_string = $to_string . "ip_address=" . $this->ip_address . ", ";
         }
         if (!empty($this->confirmation_key)) {
             $to_string = $to_string . "confirmation_key=" . $this->confirmation_key . ", ";
@@ -119,7 +122,7 @@ class Account {
     }
 
     function create() {
-        $query = "INSERT INTO " . ACCOUNTS_DB_TABLE . " SET username=:username, domain=:domain, email=:email, activated=:activated, 
+        $query = "INSERT INTO " . ACCOUNTS_DB_TABLE . " SET username=:username, domain=:domain, email=:email, activated=:activated,
             confirmation_key=:confirmation_key, ip_address=:ip_address, user_agent=:user_agent, creation_time=:creation_time";
 
         if (USE_IN_APP_PURCHASES) {
@@ -163,7 +166,7 @@ class Account {
 
     function update() {
         $query = "UPDATE " . ACCOUNTS_DB_TABLE . " SET username=:username, domain=:domain, activated=:activated";
-        
+
         if (!empty($this->email)) {
             $query = $query . ", email=:email";
         }
@@ -188,7 +191,7 @@ class Account {
         $stmt->bindParam(":domain", $this->domain);
         $stmt->bindParam(":activated", $this->activated);
         $stmt->bindParam(":id", $this->id);
-        
+
         if (!empty($this->email)) {
             $this->email = htmlspecialchars(strip_tags($this->email));
             $stmt->bindParam(":email", $this->email);
@@ -223,7 +226,7 @@ class Account {
     }
 
     function getAll() {
-        $query = "SELECT ac.id, ac.username, ac.domain, ac.activated, ac.confirmation_key, ac.email, al.alias FROM " . ACCOUNTS_DB_TABLE . 
+        $query = "SELECT ac.id, ac.username, ac.domain, ac.activated, ac.confirmation_key, ac.email, al.alias FROM " . ACCOUNTS_DB_TABLE .
             " ac LEFT JOIN " . ALIAS_DB_TABLE . " al ON ac.id = al.account_id";
         $stmt = $this->conn->prepare($query);
         Logger::getInstance()->debug("GetAll " . (string)$this);
@@ -232,7 +235,7 @@ class Account {
     }
 
     function getOne() {
-        $query = "SELECT ac.id, ac.username, ac.domain, ac.activated, ac.confirmation_key, ac.email, al.alias FROM " . ACCOUNTS_DB_TABLE . 
+        $query = "SELECT ac.id, ac.username, ac.domain, ac.activated, ac.confirmation_key, ac.email, ac.ip_address, al.alias FROM " . ACCOUNTS_DB_TABLE .
             " ac LEFT JOIN " . ALIAS_DB_TABLE . " al ON ac.id = al.account_id";
 
         if (!empty($this->id)) {
@@ -270,7 +273,7 @@ class Account {
             $stmt->bindParam(1, $this->email);
         } else if (!empty($this->confirmation_key)) {
             $stmt->bindParam(1, $this->confirmation_key);
-        } 
+        }
 
         Logger::getInstance()->debug("GetOne " . (string)$this);
         if ($stmt->execute()) {
@@ -286,7 +289,9 @@ class Account {
             $this->email = $row['email'];
             $this->activated = $row['activated'];
             $this->confirmation_key = $row['confirmation_key'];
+            $this->ip_address = $row['ip_address'];
             $this->alias = $row['alias'];
+
             return true;
         }
         Logger::getInstance()->error($stmt->errorInfo());

@@ -26,8 +26,10 @@ class UserInfo {
     public $firstname;
     public $lastname;
     public $gender;
+    public $country_code;
+    public $country_name;
     public $subscribe;
-    
+
     public function __construct($db) {
         $this->conn = $db;
     }
@@ -35,22 +37,28 @@ class UserInfo {
     public function __toString() {
         $to_string = "UserInfo: ";
         if (!empty($this->id)) {
-            $to_string = $to_string . "id=" . $this->id . ", ";
+            $to_string .= "id=" . $this->id . ", ";
         }
         if (!empty($this->account_id)) {
-            $to_string = $to_string . "account_id=" . $this->account_id . ", ";
+            $to_string .= "account_id=" . $this->account_id . ", ";
         }
         if (!empty($this->firstname)) {
-            $to_string = $to_string . "firstname=" . $this->firstname . ", ";
+            $to_string .= "firstname=" . $this->firstname . ", ";
         }
         if (!empty($this->lastname)) {
-            $to_string = $to_string . "lastname=" . $this->lastname . ", ";
+            $to_string .= "lastname=" . $this->lastname . ", ";
         }
         if (!empty($this->gender)) {
-            $to_string = $to_string . "gender=" . $this->gender . ", ";
+            $to_string .= "gender=" . $this->gender . ", ";
+        }
+        if (!empty($this->country_code)) {
+            $to_string .= "country_code=" . $this->country_code . ", ";
+        }
+        if (!empty($this->country_name)) {
+            $to_string .= "country_name=" . $this->country_name . ", ";
         }
         if (!empty($this->subscribe)) {
-            $to_string = $to_string . "subscribe=" . $this->subscribe . ", ";
+            $to_string .= "subscribe=" . $this->subscribe . ", ";
         }
         return substr($to_string, 0, -2);
     }
@@ -71,13 +79,15 @@ class UserInfo {
 
     function createTable() {
         $query = "CREATE TABLE IF NOT EXISTS " . USER_INFO_DB_TABLE . " (
-            id INTEGER(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-            account_id INTEGER(11) UNSIGNED NOT NULL,
-            firstname VARCHAR(128) NOT NULL,
-            lastname VARCHAR(128) NOT NULL,
-            gender enum('male','female') NOT NULL,
-            subscribe enum('0','1') NOT NULL DEFAULT '0',
-            PRIMARY KEY (id))";
+                    id INTEGER(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+                    account_id INTEGER(11) UNSIGNED NOT NULL,
+                    firstname VARCHAR(128) NOT NULL,
+                    lastname VARCHAR(128) NOT NULL,
+                    gender enum('male','female') NOT NULL,
+                    country_code VARCHAR(32),
+                    country_name VARCHAR(512),
+                    subscribe enum('0','1') NOT NULL DEFAULT '0',
+                    PRIMARY KEY (id))";
 
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         $stmt = $this->conn->prepare($query);
@@ -109,6 +119,10 @@ class UserInfo {
     function create() {
         $query = "INSERT INTO " . USER_INFO_DB_TABLE . " SET account_id=:account_id, firstname=:firstname, lastname=:lastname, gender=:gender, subscribe=:subscribe";
 
+        if(ENABLE_NEW_ACCOUNTS_GEOLOC){
+          $query .= ", country_code=:country_code, country_name=:country_name";
+        }
+
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         $stmt = $this->conn->prepare($query);
 
@@ -123,6 +137,15 @@ class UserInfo {
         $stmt->bindParam(":lastname", $this->lastname);
         $stmt->bindParam(":gender", $this->gender);
         $stmt->bindParam(":subscribe", $this->subscribe);
+
+        if(ENABLE_NEW_ACCOUNTS_GEOLOC){
+
+          $this->country_code = htmlspecialchars(strip_tags($this->country_code));
+          $this->country_name = htmlspecialchars(strip_tags($this->country_name));
+
+          $stmt->bindParam(":country_code", $this->country_code);
+          $stmt->bindParam(":country_name", $this->country_name);
+        }
 
         Logger::getInstance()->debug("Creating " . (string)$this);
         if ($stmt->execute()) {
@@ -217,6 +240,8 @@ class UserInfo {
             $this->firstname = $row['firstname'];
             $this->lastname = $row['lastname'];
             $this->gender = $row['gender'];
+            $this->country_code = $row['country_code'];
+            $this->country_name = $row['country_name'];
             $this->subscribe = $row['subscribe'];
             return true;
         }

@@ -27,7 +27,7 @@ include_once __DIR__ . '/../objects/user_info.php';
 
 include_once __DIR__ . '/../misc/utilities.php';
 
-include_once __DIR__ . '/results_values.php';
+include_once __DIR__ . '/../misc/results_values.php';
 
 // args = [username, old hash, new hash, [domain], [algo]]
 function xmlrpc_update_password($method, $args) {
@@ -50,7 +50,7 @@ function xmlrpc_update_password($method, $args) {
 	$account = new Account($db);
 	$account->username = $username;
 	$account->domain = $domain;
-	
+
 	if (!$account->getOne()) {
 		return ACCOUNT_NOT_FOUND;
 	}
@@ -69,7 +69,7 @@ function xmlrpc_update_password($method, $args) {
 		Logger::getInstance()->message("Password updated successfully");
 		return OK;
 	}
-	
+
 	return NOK;
 }
 

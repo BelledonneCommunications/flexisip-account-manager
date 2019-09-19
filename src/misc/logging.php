@@ -24,7 +24,7 @@ class Logger {
 	private static $instance = null;
 
     private $log_file;
-    
+
     public function __construct() {
         if (!LOGS_ENABLED) {
 			return;
@@ -38,17 +38,17 @@ class Logger {
 			$this->log_file = LOG_DIR . "/" . date('d-M-Y') . '.logs';
 		}
 	}
-	
+
 	public static function getInstance()
 	{
 		if (!self::$instance) {
 			self::$instance = new Logger();
 		}
-	
+
 		return self::$instance;
 	}
 
-	function mylog($level, $message) {
+	private function mylog($level, $message) {
 		if (!LOGS_ENABLED) {
 			return;
 		}

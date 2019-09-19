@@ -26,8 +26,11 @@ include_once __DIR__ . '/../objects/alias.php';
 include_once __DIR__ . '/../objects/user_info.php';
 
 include_once __DIR__ . '/../misc/utilities.php';
+include_once __DIR__ . '/../misc/geoloc.php';
 
-include_once __DIR__ . '/results_values.php';
+include_once __DIR__ . '/../misc/results_values.php';
+
+include_once __DIR__ . '/../misc/user_info.php';
 
 // args = [username, ha1, [domain], [algo]]
 function xmlrpc_get_email_account($method, $args) {
@@ -48,7 +51,7 @@ function xmlrpc_get_email_account($method, $args) {
 	if (!$account->getOne()) {
 		return ACCOUNT_NOT_FOUND;
 	}
-	
+
 	$password = new Password($db);
 	$password->account_id = $account->id;
 	$password->algorithm = $algo;
@@ -66,8 +69,8 @@ function xmlrpc_get_email_account($method, $args) {
 	$user_info->getOne();
 
 	$result = array(
-        "id" => $account->id,
-        "username" => $account->username,
+    "id" => $account->id,
+    "username" => $account->username,
 		"domain" => $account->domain,
 		"email" => $account->email,
 		"alias" => $account->alias,
@@ -77,7 +80,7 @@ function xmlrpc_get_email_account($method, $args) {
 		"gender" => $user_info->gender,
 		"subscribe" => $user_info->subscribe
 	);
-	
+
 	return $result;
 }
 
@@ -109,7 +112,7 @@ function xmlrpc_get_phone_account($method, $args) {
 	if (!$account->getOne()) {
 		return ACCOUNT_NOT_FOUND;
 	}
-	
+
 	$password = new Password($db);
 	$password->account_id = $account->id;
 	$password->algorithm = $algo;
@@ -127,8 +130,8 @@ function xmlrpc_get_phone_account($method, $args) {
 	$user_info->getOne();
 
 	$result = array(
-        "id" => $account->id,
-        "username" => $account->username,
+		"id" => $account->id,
+		"username" => $account->username,
 		"domain" => $account->domain,
 		"email" => $account->email,
 		"alias" => $account->alias,
@@ -138,7 +141,7 @@ function xmlrpc_get_phone_account($method, $args) {
 		"gender" => $user_info->gender,
 		"subscribe" => $user_info->subscribe
 	);
-	
+
 	return $result;
 }
 
@@ -154,47 +157,7 @@ function xmlrpc_update_account_user_info($method, $args) {
 	$algo = get_algo($args[7]);
 
 	Logger::getInstance()->message("[XMLRPC] xmlrpc_update_account_user_info(" . $username . ", " . $domain . " : " . $firstname . ", " . $lastname . ", " . $gender . ", " . $subscribe . ")");
-
-	$database = new Database();
-	$db = $database->getConnection();
-
-	$account = new Account($db);
-	$account->username = $username;
-	$account->domain = $domain;
-
-	if (!$account->getOne()) {
-		return ACCOUNT_NOT_FOUND;
-	}
-	
-	$password = new Password($db);
-	$password->account_id = $account->id;
-	$password->algorithm = $algo;
-
-	if (!$password->getOne()) {
-		return PASSWORD_NOT_FOUND;
-	}
-
-	if (!password_match($ha1, $password->password)) {
-		return PASSWORD_DOESNT_MATCH;
-	}
-
-	$user_info = new UserInfo($db);
-	$user_info->account_id = $account->id;
-
-	$update = $user_info->getOne();
-
-	$user_info->firstname = $firstname;
-	$user_info->lastname = $lastname;
-	$user_info->gender = $gender;
-	$user_info->subscribe = $subscribe;
-
-	if ($update) {
-		$user_info->update();
-	} else {
-		$user_info->create();
-	}
-
-	return OK;
+	return update_account_user_info($username, $ha1, $firstname, $lastname, $gender, $subscribe, $domain, $algo);
 }
 
 function xmlrpc_user_info_register_methods($server) {

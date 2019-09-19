@@ -27,7 +27,9 @@ include_once __DIR__ . '/../objects/user_info.php';
 
 include_once __DIR__ . '/../misc/utilities.php';
 
-include_once __DIR__ . '/results_values.php';
+include_once __DIR__ . '/../misc/user_info.php';
+
+include_once __DIR__ . '/../misc/results_values.php';
 
 // args = [phone, [username], [password], useragent, [domain], [lang], [algo]]
 function xmlrpc_create_phone_account($method, $args) {
@@ -44,7 +46,7 @@ function xmlrpc_create_phone_account($method, $args) {
 	if (!check_parameter($phone, "phone")) {
 		return MISSING_PHONE_PARAM;
 	} else if (!startswith($phone, "+")) {
-		mylog("[ERROR] Phone doesn't start by +");
+		Logger::getInstance()->error("Phone doesn't start by +");
 		return PHONE_NOT_E164;
 	} else if ($algo == NULL) {
 		return ALGO_NOT_SUPPORTED;
@@ -131,7 +133,15 @@ function xmlrpc_create_phone_account($method, $args) {
 		}
 	}
 
-	return OK;
+	//We call this function to set the geoloc if enabled
+	// args needed = [username, ha1, firstname, lastname, gender, subscribe, [domain], [algo]]
+	//need  username + domain
+	if (ENABLE_NEW_ACCOUNTS_GEOLOC){
+		return update_account_user_info($account->username, $hashed_password, NULL, NULL, "unknown", '0', $account->domain, $algo);
+	}
+	else {
+		return OK;
+	}
 }
 
 // args = [phone, username, key, [domain], [algo]]
@@ -288,7 +298,7 @@ function xmlrpc_delete_phone_account($method, $args) {
 	$account = new Account($db);
 	$account->username = $username;
 	$account->domain = $domain;
-	
+
 	if (!$account->getOne()) {
 		return ACCOUNT_NOT_FOUND;
 	}
@@ -345,11 +355,11 @@ function xmlrpc_is_phone_number_used($method, $args) {
 	$alias = new Alias($db);
 	$alias->alias = $phone;
 	$alias->domain = $domain;
-	
+
 	if ($alias->getOne()) {
 		return OK_ALIAS;
 	}
-	
+
 	$account = new Account($db);
 	$account->username = $phone;
 	$account->domain = $domain;
@@ -386,10 +396,10 @@ function xmlrpc_get_phone_number_for_account($method, $args) {
 		if ($alias->getOne()) {
 			return $user;
 		}
-		
+
 		return ACCOUNT_NOT_FOUND;
 	}
-	
+
 	$phone = $account->alias;
 	if ($phone == NULL) {
 		return ALIAS_NOT_FOUND;
@@ -399,7 +409,7 @@ function xmlrpc_get_phone_number_for_account($method, $args) {
 		return ACCOUNT_NOT_FOUND;
 	}
 
-	return $phone;
+		return $phone;
 }
 
 function xmlrpc_accounts_phone_register_methods($server) {
@@ -407,7 +417,7 @@ function xmlrpc_accounts_phone_register_methods($server) {
 	xmlrpc_server_register_method($server, 'activate_phone_account', 'xmlrpc_activate_phone_account');// args = [phone, username, key, [domain], [algo]], return ha1_password
 	xmlrpc_server_register_method($server, 'recover_phone_account', 'xmlrpc_recover_phone_account');// args = [phone, [domain], [lang]], return username
 	xmlrpc_server_register_method($server, 'delete_phone_account', 'xmlrpc_delete_phone_account');// args = [username, phone, ha1, [domain], [algo]]
-    
+
 	xmlrpc_server_register_method($server, 'is_phone_number_used', 'xmlrpc_is_phone_number_used');// args = [phone], return OK_ACCOUNT, OK_ALIAS or NOK
 	xmlrpc_server_register_method($server, 'get_phone_number_for_account', 'xmlrpc_get_phone_number_for_account');// args = [username, [domain]], return a phone number or an error
 }

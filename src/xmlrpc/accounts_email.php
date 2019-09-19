@@ -26,8 +26,8 @@ include_once __DIR__ . '/../objects/alias.php';
 include_once __DIR__ . '/../objects/user_info.php';
 
 include_once __DIR__ . '/../misc/utilities.php';
-
-include_once __DIR__ . '/results_values.php';
+include_once __DIR__ . '/../misc/user_info.php';
+include_once __DIR__ . '/../misc/results_values.php';
 
 // args = [username, email, [hash], useragent, [domain], [algo]]
 function xmlrpc_create_email_account($method, $args) {
@@ -53,7 +53,7 @@ function xmlrpc_create_email_account($method, $args) {
 	$account = new Account($db);
 	$account->username = $user;
 	$account->domain = $domain;
-	
+
 	if ($account->getOne()) {
 		return USERNAME_TAKEN;
 	}
@@ -74,6 +74,7 @@ function xmlrpc_create_email_account($method, $args) {
 	$account->email = $email;
 	$account->user_agent = $user_agent;
 	$account->ip_address = getIp();
+
 	$account->activated = AUTO_ACTIVATE_ACCOUNT ? "1" : "0";
 	$account->create();
 
@@ -97,7 +98,18 @@ function xmlrpc_create_email_account($method, $args) {
 		}*/
 	}
 
-	return OK;
+	// args = [username, email, [hash], useragent, [domain], [algo]]
+	// args needed = [username, ha1, firstname, lastname, gender, subscribe, [domain], [algo]]
+	//need  username + domain
+
+	//We call this function to set the geoloc if enabled
+	if(ENABLE_NEW_ACCOUNTS_GEOLOC){
+		return update_account_user_info($account->username, $hashed_password, NULL, NULL, "unknown", '0', $account->domain, $algo);
+	}
+	else {
+		return OK;
+	}
+
 }
 
 // args = [username, email, md5_hash, sha256_hash, useragent, [domain]], return OK
@@ -122,7 +134,7 @@ function xmlrpc_create_email_md5_sha256_account($method, $args) {
 	$account = new Account($db);
 	$account->username = $user;
 	$account->domain = $domain;
-	
+
 	if ($account->getOne()) {
 		return USERNAME_TAKEN;
 	}
@@ -174,7 +186,15 @@ function xmlrpc_create_email_md5_sha256_account($method, $args) {
 		}*/
 	}
 
-	return OK;
+	//We call this function to set the geoloc if enabled
+	// args needed = [username, ha1, firstname, lastname, gender, subscribe, [domain], [algo]]
+	//need  username + domain
+	if(ENABLE_NEW_ACCOUNTS_GEOLOC){
+		return update_account_user_info($account->username, $md5_hash, NULL, NULL, "unknown", '0', $account->domain, MD5);
+	}
+	else {
+		return OK;
+	}
 }
 
 // args = [username, key, [domain], [algo]]
@@ -210,7 +230,7 @@ function xmlrpc_activate_email_account($method, $args) {
 
 	$account->activated = "1";
 	$account->update();
-	
+
 	$expiration = NULL;
 	// TODO
 	/*if (USE_IN_APP_PURCHASES) {
@@ -287,7 +307,7 @@ function xmlrpc_update_email($method, $args) {
 	$account = new Account($db);
 	$account->username = $user;
 	$account->domain = $domain;
-	
+
 	if (!$account->getOne()) {
 		return ACCOUNT_NOT_FOUND;
 	}
@@ -342,7 +362,7 @@ function xmlrpc_delete_email_account($method, $args) {
 	$account = new Account($db);
 	$account->username = $username;
 	$account->domain = $domain;
-	
+
 	if (!$account->getOne()) {
 		return ACCOUNT_NOT_FOUND;
 	}

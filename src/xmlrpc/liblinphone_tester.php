@@ -26,7 +26,7 @@ include_once __DIR__ . '/../objects/alias.php';
 
 include_once __DIR__ . '/../misc/utilities.php';
 
-include_once __DIR__ . '/results_values.php';
+include_once __DIR__ . '/../misc/results_values.php';
 
 // args = [user, pwd, [domain], [algo]]
 // /!\ This method must be used for tests purposes only /!\
@@ -60,7 +60,7 @@ function xmlrpc_get_confirmation_key($method, $args) {
 	$password = new Password($db);
 	$password->account_id = $account->id;
 	$password->algorithm = $algo;
-	
+
 	if (!$password->getOne()) {
 		return PASSWORD_NOT_FOUND;
 	}
@@ -71,13 +71,13 @@ function xmlrpc_get_confirmation_key($method, $args) {
 		$hashed_password = hash_password($user, $pwd, $domain, $algo);
 	}
 
-	if (!password_match($hashed_password, $password->password) 
+	if (!password_match($hashed_password, $password->password)
 		&& !password_match($pwd, $password->password)) { // This condition is specific for liblinphone tester....
 		return PASSWORD_DOESNT_MATCH;
 	}
 
 	if ($account->confirmation_key == INVALID_CONFIRMATION_KEY) {
-		// We have to generate a new one because 
+		// We have to generate a new one because
 		$account->confirmation_key = uniqid();
 		$account->update();
 	}
@@ -128,7 +128,7 @@ function xmlrpc_delete_account($method, $args) {
 	} else {
 		$hashed_password = hash_password($user, $pwd, $domain, $algo);
 	}
-	if (!password_match($hashed_password, $password->password) 
+	if (!password_match($hashed_password, $password->password)
 		&& !password_match($pwd, $password->password)) { // This condition is specific for liblinphone tester....
 		return PASSWORD_DOESNT_MATCH;
 	}

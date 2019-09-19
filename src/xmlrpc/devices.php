@@ -20,7 +20,7 @@
 
 include_once __DIR__ . '/../database/database.php';
 include_once __DIR__ . '/../objects/device.php';
-include_once __DIR__ . '/results_values.php';
+include_once __DIR__ . '/../misc/results_values.php';
 
 // args = [manufacturer, model, status, delay, hasHEC]
 function xmlrpc_add_ec_calibration_result($method, $args) {
@@ -44,7 +44,7 @@ function xmlrpc_add_ec_calibration_result($method, $args) {
 	$device->delay = $delay;
 	$device->hardware_echo_canceller = $hasHEC;
 	$device->create();
-	
+
 	return OK;
 }
 

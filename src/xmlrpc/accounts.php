@@ -30,7 +30,7 @@ include_once __DIR__ . '/../misc/utilities.php';
 include_once __DIR__ . '/accounts_email.php';
 include_once __DIR__ . '/accounts_phone.php';
 
-include_once __DIR__ . '/results_values.php';
+include_once __DIR__ . '/../misc/results_values.php';
 
 // args = [username, [domain]]
 function xmlrpc_is_account_used($method, $args) {

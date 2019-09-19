@@ -26,7 +26,7 @@ use \Ovh\Sms\SmsApi;
 include_once __DIR__ . '/../database/database.php';
 include_once __DIR__ . '/../objects/sms.php';
 include_once __DIR__ . '/../misc/logging.php';
-include_once __DIR__ . '/../xmlrpc/results_values.php';
+include_once __DIR__ . '/results_values.php';
 include_once __DIR__ . '/utilities.php';
 
 // Internationalization
@@ -47,13 +47,13 @@ function send_sms_ovh($phone, $key, $lang) {
 		Logger::getInstance()->warning("[SMS] SMS API disabled");
 		return SMS_DISABLED;
 	}
-	
+
 	$sms = new SmsApi(SMS_OVH_API_KEY, SMS_OVH_API_SECRET, SMS_OVH_ENDPOINT, SMS_OVH_CONSUMER_KEY);
 	$accounts = $sms->getAccounts();
 	$sms->setAccount($accounts[0]);
 	if (SMS_USE_SENDER) {
 		$senders = $sms->getSenders();
-		
+
 		/* The account must be validated in the OVH interface and by OVH itself */
 		if (count($senders) == 0) {
 			Logger::getInstance()->warning("[SMS] No sender found, creating one " . SMS_OVH_SENDER . " / " . SMS_OVH_REASON . " : " . SMS_OVH_DESC);
@@ -83,7 +83,7 @@ function send_sms_ovh($phone, $key, $lang) {
 	$text = get_sms_string_for_lang($lang);
 	$text = str_replace("#CODE#", $key, $text);
 	$result = $message->send($text);
-	
+
 	$credits_removed = $result['totalCreditsRemoved'];
 	Logger::getInstance()->message("[SMS] " . $credits_removed . " credit removed");
 	$invalid_receiver = $result['invalidReceivers'];
@@ -126,15 +126,15 @@ function send_sms($phone, $key, $lang) {
 		Logger::getInstance()->warning("[SMS] SMS API disabled");
 		return SMS_DISABLED;
 	}
-	
+
 	if (startswith($phone, TESTS_PHONE_PREFIX)) {
 		Logger::getInstance()->error("[SMS] Not sending sms to fake number used for tests purposes: " . $phone);
 		return TEST_ACCOUNTS_DISABLED;
 	}
-	
+
 	$now_date = new DateTime('now');
 	$now = $now_date->getTimestamp() * 1000;
-	
+
 	$database = new Database();
 	$db = $database->getConnection();
 	$sms = new SMS($db);
@@ -158,7 +158,7 @@ function send_sms($phone, $key, $lang) {
 		$sms->count = 1;
 		$sms->create();
 	}
-	
+
 	if (SMS_OVH_API_KEY != NULL && SMS_OVH_API_KEY != "" && SMS_OVH_API_SECRET != NULL && SMS_OVH_API_SECRET != "" && SMS_OVH_CONSUMER_KEY != NULL && SMS_OVH_CONSUMER_KEY != "" && SMS_OVH_ENDPOINT != NULL && SMS_OVH_ENDPOINT != "") {
 		try {
 			send_sms_ovh($phone, $key, $lang);
