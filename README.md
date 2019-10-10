@@ -1,3 +1,16 @@
+### Introduction
+
+Flexisip Account Manager is a software product running on a server, dedicated to the creation and management of SIP accounts from Linphone-based apps.
+It supports user identity validation via email or SMS, secure user authentication with SHA-256 digest or TLS client certificates.
+
+Flexisip Account Manager also includes a remote provisioning server for static auto-configuration, compatible with Linphone URL / QR Code provisioning feature.
+
+### License
+
+Flexisip Account Manager is dual licensed, and can be licensed and distributed:
+* under an Affero GPLv3 license for free (see LICENSE.txt file for details)
+* under a proprietary license, for closed source projects. Contact sales@belledonne-communications.com for costs and other service information.
+
 ### 1. Install RPM package with dependencies
 --------------------------------------------
 
