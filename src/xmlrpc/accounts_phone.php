@@ -208,19 +208,6 @@ function xmlrpc_activate_phone_account($method, $args) {
 		return $password->password;
 	}
 
-    if ($algo == SHA256) {
-        // When trying to log in with a phone account on an app that only supports SHA-256, create a new password for it if it doesn't exists
-        // This won't prevent already logged in users with MD5 password to use their account
-        $pwd = generate_password();
-        $sha256_password = new Password($db);
-        $sha256_password->account_id = $account->id;
-        $sha256_password->password = hash_password($account->username, $pwd, $domain, SHA256);
-        $sha256_password->algorithm = SHA256;
-        $sha256_password->create();
-
-        return $sha256_password->password;
-    }
-
     return PASSWORD_NOT_FOUND;
 }
 

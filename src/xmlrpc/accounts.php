@@ -120,23 +120,6 @@ function xmlrpc_recover_account_from_confirmation_key($method, $args) {
 		return $result;
 	}
 
-	if ($algo == SHA256) {
-		// When trying to log in with a phone account on an app that only supports SHA-256, create a new password for it if it doesn't exists
-		// This won't prevent already logged in users with MD5 password to use their account
-		$pwd = generate_password();
-		$sha256_password = new Password($db);
-		$sha256_password->account_id = $account->id;
-		$sha256_password->password = hash_password($account->username, $pwd, $domain, SHA256);
-		$sha256_password->algorithm = SHA256;
-		$sha256_password->create();
-
-		$result = array(
-			"password" => $sha256_password->password,
-			"algorithm" => $sha256_password->algorithm
-		);
-		return $result;
-	}
-
 	return PASSWORD_NOT_FOUND;
 }
 
