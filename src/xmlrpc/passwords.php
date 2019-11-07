@@ -128,6 +128,59 @@ function xmlrpc_update_passwords($method, $args) {
 	return OK;
 }
 
+// args = [username, old md5 hash, sha256 hash, [domain]]
+function xmlrpc_upgrade_password($method, $args) {
+	$username = $args[0];
+	$md5_hash = $args[1];
+	$sha256_hash = $args[2];
+	$domain = get_domain($args[3]);
+
+	Logger::getInstance()->message("[XMLRPC] xmlrpc_upgrade_password(" . $username . ", " . $domain . ")");
+
+	if (!check_parameter($username)) {
+		return MISSING_USERNAME_PARAM;
+	}
+
+	$database = new Database();
+	$db = $database->getConnection();
+	$account = new Account($db);
+	$account->username = $username;
+	$account->domain = $domain;
+
+	if (!$account->getOne()) {
+		return ACCOUNT_NOT_FOUND;
+	}
+
+	$sha256_password = new Password($db);
+	$sha256_password->account_id = $account->id;
+	$sha256_password->algorithm = SHA256;
+
+	// There is already a SHA-256 password for this account, abort upgrade
+	if ($sha256_password->getOne()) {
+		return SHA256_PASSWORD_ALREADY_EXISTS;
+	}
+
+	$md5_password = new Password($db);
+	$md5_password->account_id = $account->id;
+	$md5_password->password = $md5_hash;
+	$md5_password->algorithm = MD5;
+
+	// No MD5 or wrong hash, abort
+	if (!$md5_password->getOne()) {
+		return PASSWORD_DOESNT_MATCH;
+	}
+
+	// Upgrade MD5 to SHA-256
+	$md5_password->password = $sha256_hash;
+	$md5_password->algorithm = SHA256;
+	if ($md5_password->update()) {
+		Logger::getInstance()->message("Password upgraded successfully");
+		return OK;
+	}
+
+	return NOK;
+}
+
 // args = [username, hash, [domain]]
 function xmlrpc_check_authentication($method, $args) {
 	$username = $args[0];
@@ -208,6 +261,7 @@ function xmlrpc_passwords_register_methods($server) {
 	xmlrpc_server_register_method($server, 'update_hash', 'xmlrpc_update_password');// args = [username, old hash, new hash, [domain], [algo]], return OK
 	xmlrpc_server_register_method($server, 'update_password', 'xmlrpc_update_password');// args = [username, old hash, new hash, [domain], [algo]], return OK
 	xmlrpc_server_register_method($server, 'update_passwords', 'xmlrpc_update_passwords');// args = [username, old hash, md5_hash, sha256_hash, [domain]]
+	xmlrpc_server_register_method($server, 'upgrade_password', 'xmlrpc_upgrade_password');// args = [username, old md5 hash, sha256 hash, [domain]]
 
 	xmlrpc_server_register_method($server, 'check_authentication', 'xmlrpc_check_authentication');// args = [username, hash, [domain]]
 	xmlrpc_server_register_method($server, 'check_authentication_and_upgrade_password', 'xmlrpc_check_authentication_and_upgrade_password');// args = [username, md5_hash, sha256_hash, [domain]]

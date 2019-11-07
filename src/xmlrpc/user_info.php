@@ -69,8 +69,8 @@ function xmlrpc_get_email_account($method, $args) {
 	$user_info->getOne();
 
 	$result = array(
-    "id" => $account->id,
-    "username" => $account->username,
+		"id" => $account->id,
+		"username" => $account->username,
 		"domain" => $account->domain,
 		"email" => $account->email,
 		"alias" => $account->alias,
