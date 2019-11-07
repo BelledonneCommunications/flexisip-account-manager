@@ -120,6 +120,18 @@ function xmlrpc_recover_account_from_confirmation_key($method, $args) {
 		return $result;
 	}
 
+	// If not found, try without algo
+	$password2 = new Password($db);
+	$password2->account_id = $account->id;
+
+	if ($password2->getOne()) {
+		$result = array(
+			"password" => $password2->password,
+			"algorithm" => $password2->algorithm
+		);
+		return $result;
+	}
+
 	return PASSWORD_NOT_FOUND;
 }
 
