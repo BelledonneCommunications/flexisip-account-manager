@@ -141,9 +141,11 @@ function is_key_matching($key, $account) {
 		return false;
 	}
 
-	// Key is one time only
-	$account->confirmation_key = INVALID_CONFIRMATION_KEY;
-	$account->update();
+	if (REMOVE_CONFIRMATION_KEY_AFTER_USE) {
+		// Key is one time only
+		$account->confirmation_key = INVALID_CONFIRMATION_KEY;
+		$account->update();
+	}
 	return true;
 }
 
