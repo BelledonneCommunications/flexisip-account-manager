@@ -103,13 +103,11 @@ function xmlrpc_create_email_account($method, $args) {
 	//need  username + domain
 
 	//We call this function to set the geoloc if enabled
-	if(ENABLE_NEW_ACCOUNTS_GEOLOC){
+	if (ENABLE_NEW_ACCOUNTS_GEOLOC){
 		return update_account_user_info($account->username, $hashed_password, NULL, NULL, "unknown", '0', $account->domain, $algo);
 	}
-	else {
-		return OK;
-	}
 
+	return OK;
 }
 
 // args = [username, email, md5_hash, sha256_hash, useragent, [domain]], return OK
@@ -189,12 +187,11 @@ function xmlrpc_create_email_md5_sha256_account($method, $args) {
 	//We call this function to set the geoloc if enabled
 	// args needed = [username, ha1, firstname, lastname, gender, subscribe, [domain], [algo]]
 	//need  username + domain
-	if(ENABLE_NEW_ACCOUNTS_GEOLOC){
+	if (ENABLE_NEW_ACCOUNTS_GEOLOC){
 		return update_account_user_info($account->username, $md5_hash, NULL, NULL, "unknown", '0', $account->domain, MD5);
 	}
-	else {
-		return OK;
-	}
+	
+	return OK;
 }
 
 // args = [username, key, [domain], [algo]]

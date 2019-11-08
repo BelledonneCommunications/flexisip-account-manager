@@ -139,9 +139,8 @@ function xmlrpc_create_phone_account($method, $args) {
 	if (ENABLE_NEW_ACCOUNTS_GEOLOC){
 		return update_account_user_info($account->username, $hashed_password, NULL, NULL, "unknown", '0', $account->domain, $algo);
 	}
-	else {
-		return OK;
-	}
+
+	return OK;
 }
 
 // args = [phone, username, key, [domain], [algo]]
@@ -396,7 +395,7 @@ function xmlrpc_get_phone_number_for_account($method, $args) {
 		return ACCOUNT_NOT_FOUND;
 	}
 
-		return $phone;
+	return $phone;
 }
 
 function xmlrpc_accounts_phone_register_methods($server) {
