@@ -74,7 +74,18 @@ function xmlrpc_is_account_activated($method, $args) {
 	$account->domain = $domain;
 
 	if (!$account->getOne()) {
-		return ACCOUNT_NOT_FOUND;
+		$alias = new Alias($db);
+		$alias->alias = $user;
+		$alias->domain = $domain;
+
+		if ($alias->getOne()) {
+			$account->id = $alias->account_id;
+			if (!$account->getOne()) {
+				return ACCOUNT_NOT_FOUND;
+			}
+		} else {
+			return ACCOUNT_NOT_FOUND;
+		}
 	}
 
 	Logger::getInstance()->message("Account activation status is " . $account->activated);
