@@ -48,8 +48,16 @@ function xmlrpc_is_account_used($method, $args) {
 	$account = new Account($db);
 	$account->username = $user;
 	$account->domain = $domain;
-
+	
 	if ($account->getOne()) {
+		return OK;
+	}
+
+	$alias = new Alias($db);
+	$alias->alias = $user;
+	$alias->domain = $domain;
+
+	if ($alias->getOne()) {
 		return OK;
 	}
 
@@ -117,6 +125,11 @@ function xmlrpc_recover_account_from_confirmation_key($method, $args) {
 
 	if (!is_key_matching($key, $account)) {
 		return KEY_DOESNT_MATCH;
+	}
+
+	if (!is_activated($account)) {
+		$account->activated = "1";
+		$account->update();
 	}
 
 	$password = new Password($db);
