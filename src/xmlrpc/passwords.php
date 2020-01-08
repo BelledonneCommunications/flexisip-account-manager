@@ -42,6 +42,10 @@ function xmlrpc_update_password($method, $args)
 
     if (!check_parameter($username)) {
         return MISSING_USERNAME_PARAM;
+    } elseif (!check_parameter($hashed_old_password, "old password")) {
+        return MISSING_OLD_HASH;
+    } elseif (!check_parameter($hashed_new_password, "md5 password")) {
+        return MISSING_NEW_HASH;
     } elseif ($algo == null) {
         return ALGO_NOT_SUPPORTED;
     }
@@ -82,6 +86,16 @@ function xmlrpc_update_passwords($method, $args)
     $md5_hashed_password = $args[2];
     $sha256_hashed_password = $args[3];
     $domain = get_domain($args[4]);
+
+    if (!check_parameter($username)) {
+        return MISSING_USERNAME_PARAM;
+    } elseif (!check_parameter($hashed_password, "old password")) {
+        return MISSING_OLD_HASH;
+    } elseif (!check_parameter($md5_hashed_password, "md5 password")) {
+        return MISSING_MD5_HASH;
+    } elseif (!check_parameter($sha256_hashed_password, "sha256 password")) {
+        return MISSING_SHA256_HASH;
+    }
 
     Logger::getInstance()->message("[XMLRPC] xmlrpc_update_passwords(" . $username . ", " . $domain . ")");
 
