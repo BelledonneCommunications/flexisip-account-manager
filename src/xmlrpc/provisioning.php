@@ -1,21 +1,21 @@
 <?php
 
 /*
-	Flexisip Account Manager is a set of tools to manage SIP accounts.
-	Copyright (C) 2019 Belledonne Communications SARL, All rights reserved.
+    Flexisip Account Manager is a set of tools to manage SIP accounts.
+    Copyright (C) 2019 Belledonne Communications SARL, All rights reserved.
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Affero General Public License as
-	published by the Free Software Foundation, either version 3 of the
-	License, or (at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Affero General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
 
-	You should have received a copy of the GNU Affero General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 header("Access-Control-Allow-Origin: *");
@@ -59,7 +59,7 @@ if (file_exists(REMOTE_PROVISIONING_DEFAULT_CONFIG)) {
         $xml .= '<section name="' . $section . '"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>';
         if (startswith($section, "proxy_config_")) {
             $proxy_config_index += 1;
-        } else if (startswith($section, "auth_info_")) {
+        } elseif (startswith($section, "auth_info_")) {
             $auth_info_index += 1;
         }
 
@@ -67,7 +67,7 @@ if (file_exists(REMOTE_PROVISIONING_DEFAULT_CONFIG)) {
             // We need to replace any < or > by &lt; and &gt; or the xml won't be valid !
             $value = str_replace("<", "&lt;", $value);
             $value = str_replace(">", "&gt;", $value);
-            
+
             $xml .= '<entry name="' . $key . '">' . $value . '</entry>';
         }
         $xml .= '</section>';
@@ -103,5 +103,3 @@ $xml .= '</config>';
 
 http_response_code(200);
 echo $xml;
-
-?>

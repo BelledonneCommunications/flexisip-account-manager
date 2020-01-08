@@ -1,38 +1,41 @@
 <?php
 
 /*
-	Flexisip Account Manager is a set of tools to manage SIP accounts.
-	Copyright (C) 2019 Belledonne Communications SARL, All rights reserved.
+    Flexisip Account Manager is a set of tools to manage SIP accounts.
+    Copyright (C) 2019 Belledonne Communications SARL, All rights reserved.
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Affero General Public License as
-	published by the Free Software Foundation, either version 3 of the
-	License, or (at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Affero General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
 
-	You should have received a copy of the GNU Affero General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Device {
+class Device
+{
     private $conn;
 
     public $id;
     public $manufacturer;
-	public $model;
-	public $status;
-	public $delay;
-	public $hardware_echo_canceller;
-    
-    public function __construct($db) {
+    public $model;
+    public $status;
+    public $delay;
+    public $hardware_echo_canceller;
+
+    public function __construct($db)
+    {
         $this->conn = $db;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         $to_string = "Device: ";
         if (!empty($this->id)) {
             $to_string = $to_string . "id=" . $this->id . ", ";
@@ -55,7 +58,8 @@ class Device {
         return substr($to_string, 0, -2);
     }
 
-    function dropTable() {
+    public function dropTable()
+    {
         $query = "DROP TABLE IF EXISTS " . DEVICES_DB_TABLE;
 
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
@@ -69,7 +73,8 @@ class Device {
         return false;
     }
 
-    function createTable() {
+    public function createTable()
+    {
         $query = "CREATE TABLE IF NOT EXISTS " . DEVICES_DB_TABLE . " (
             id INTEGER(11) UNSIGNED NOT NULL AUTO_INCREMENT,
             manufacturer VARCHAR(64) NOT NULL,
@@ -90,7 +95,8 @@ class Device {
         return false;
     }
 
-    function delete() {
+    public function delete()
+    {
         $query = "DELETE FROM " . DEVICES_DB_TABLE . " WHERE id = ?";
 
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
@@ -107,8 +113,9 @@ class Device {
         return false;
     }
 
-    function create() {
-        $query = "INSERT INTO " . DEVICES_DB_TABLE . " SET manufacturer=:manufacturer, model=:model, status=:status, 
+    public function create()
+    {
+        $query = "INSERT INTO " . DEVICES_DB_TABLE . " SET manufacturer=:manufacturer, model=:model, status=:status,
             delay=:delay, hardware_echo_canceller=:hardware_echo_canceller";
 
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
@@ -135,13 +142,14 @@ class Device {
         return false;
     }
 
-    function update() {
-        $query = "UPDATE " . DEVICES_DB_TABLE . " SET manufacturer=:manufacturer, model=:model, status=:status, 
+    public function update()
+    {
+        $query = "UPDATE " . DEVICES_DB_TABLE . " SET manufacturer=:manufacturer, model=:model, status=:status,
             delay=:delay, hardware_echo_canceller=:hardware_echo_canceller WHERE id=:id";
 
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         $stmt = $this->conn->prepare($query);
-        
+
         $this->id = htmlspecialchars(strip_tags($this->id));
         $this->manufacturer = htmlspecialchars(strip_tags($this->manufacturer));
         $this->model = htmlspecialchars(strip_tags($this->model));
@@ -164,7 +172,8 @@ class Device {
         return false;
     }
 
-    function getAll() {
+    public function getAll()
+    {
         $query = "SELECT id, manufacturer, model, status, delay, hardware_echo_canceller FROM " . DEVICES_DB_TABLE;
         $stmt = $this->conn->prepare($query);
         Logger::getInstance()->debug("GetAll " . (string)$this);
@@ -172,5 +181,3 @@ class Device {
         return $stmt;
     }
 }
-
-?>

@@ -1,36 +1,39 @@
 <?php
 
 /*
-	Flexisip Account Manager is a set of tools to manage SIP accounts.
-	Copyright (C) 2019 Belledonne Communications SARL, All rights reserved.
+    Flexisip Account Manager is a set of tools to manage SIP accounts.
+    Copyright (C) 2019 Belledonne Communications SARL, All rights reserved.
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Affero General Public License as
-	published by the Free Software Foundation, either version 3 of the
-	License, or (at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Affero General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
 
-	You should have received a copy of the GNU Affero General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Password {
+class Password
+{
     private $conn;
 
     public $id;
     public $account_id;
-	public $password;
-	public $algorithm;
-    
-    public function __construct($db) {
+    public $password;
+    public $algorithm;
+
+    public function __construct($db)
+    {
         $this->conn = $db;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         $to_string = "Password: ";
         if (!empty($this->id)) {
             $to_string = $to_string . "id=" . $this->id . ", ";
@@ -47,7 +50,8 @@ class Password {
         return substr($to_string, 0, -2);
     }
 
-    function dropTable() {
+    public function dropTable()
+    {
         $query = "DROP TABLE IF EXISTS " . ACCOUNTS_ALGO_DB_TABLE;
 
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
@@ -61,7 +65,8 @@ class Password {
         return false;
     }
 
-    function createTable() {
+    public function createTable()
+    {
         $query = "CREATE TABLE IF NOT EXISTS " . ACCOUNTS_ALGO_DB_TABLE . " (
             id INTEGER(11) UNSIGNED NOT NULL AUTO_INCREMENT,
             account_id INTEGER(11) UNSIGNED NOT NULL,
@@ -80,13 +85,14 @@ class Password {
         return false;
     }
 
-    function delete() {
+    public function delete()
+    {
         $query = "DELETE FROM " . ACCOUNTS_ALGO_DB_TABLE;
-        
+
         if (!empty($this->id)) {
             $query = $query . " WHERE id = ?";
             $this->id = htmlspecialchars(strip_tags($this->id));
-        } else if (!empty($this->account_id)) {
+        } elseif (!empty($this->account_id)) {
             $query = $query . " WHERE account_id = ?";
             $this->account_id = htmlspecialchars(strip_tags($this->account_id));
             if (!empty($this->algorithm)) {
@@ -99,11 +105,11 @@ class Password {
 
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         $stmt = $this->conn->prepare($query);
-        
+
         $this->id = htmlspecialchars(strip_tags($this->id));
         if (!empty($this->id)) {
             $stmt->bindParam(1, $this->id);
-        } else if (!empty($this->account_id)) {
+        } elseif (!empty($this->account_id)) {
             $stmt->bindParam(1, $this->account_id);
             if (!empty($this->algorithm)) {
                 $stmt->bindParam(2, $this->algorithm);
@@ -118,7 +124,8 @@ class Password {
         return false;
     }
 
-    function create() {
+    public function create()
+    {
         $query = "INSERT INTO " . ACCOUNTS_ALGO_DB_TABLE . " SET account_id=:account_id, password=:password, algorithm=:algorithm";
 
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
@@ -141,7 +148,8 @@ class Password {
         return false;
     }
 
-    function update() {
+    public function update()
+    {
         $query = "UPDATE " . ACCOUNTS_ALGO_DB_TABLE . " SET account_id=:account_id, password=:password, algorithm=:algorithm WHERE id=:id";
 
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
@@ -165,7 +173,8 @@ class Password {
         return false;
     }
 
-    function getAll() {
+    public function getAll()
+    {
         $query = "SELECT id, password, algorithm FROM " . ACCOUNTS_ALGO_DB_TABLE . " WHERE account_id = ?";
 
         $stmt = $this->conn->prepare($query);
@@ -177,7 +186,8 @@ class Password {
         return $stmt;
     }
 
-    function getOne() {
+    public function getOne()
+    {
         $query = "SELECT id, password, algorithm FROM " . ACCOUNTS_ALGO_DB_TABLE . " WHERE account_id = ?";
 
         $this->account_id = htmlspecialchars(strip_tags($this->account_id));
@@ -188,7 +198,7 @@ class Password {
                 $query = $query . " AND password = ?";
                 $this->password = htmlspecialchars(strip_tags($this->password));
             }
-        } else if (!empty($this->password)) {
+        } elseif (!empty($this->password)) {
             $query = $query . " AND password = ?";
             $this->password = htmlspecialchars(strip_tags($this->password));
         }
@@ -203,7 +213,7 @@ class Password {
             if (!empty($this->password)) {
                 $stmt->bindParam(3, $this->password);
             }
-        } else if (!empty($this->password)) {
+        } elseif (!empty($this->password)) {
             $stmt->bindParam(2, $this->password);
         }
 
@@ -219,10 +229,8 @@ class Password {
             $this->password = $row['password'];
             $this->algorithm = $row['algorithm'];
             return true;
-        }        
+        }
         Logger::getInstance()->error($stmt->errorInfo());
         return false;
     }
 }
-
-?>

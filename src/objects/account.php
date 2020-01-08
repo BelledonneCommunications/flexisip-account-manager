@@ -1,29 +1,30 @@
 <?php
 
 /*
-	Flexisip Account Manager is a set of tools to manage SIP accounts.
-	Copyright (C) 2019 Belledonne Communications SARL, All rights reserved.
+    Flexisip Account Manager is a set of tools to manage SIP accounts.
+    Copyright (C) 2019 Belledonne Communications SARL, All rights reserved.
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Affero General Public License as
-	published by the Free Software Foundation, either version 3 of the
-	License, or (at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Affero General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
 
-	You should have received a copy of the GNU Affero General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Account {
+class Account
+{
     private $conn;
 
     public $id;
     public $username;
-	  public $domain;
+    public $domain;
     public $email;
     public $activated;
     public $confirmation_key;
@@ -33,11 +34,13 @@ class Account {
     public $expire_time;
     public $alias;
 
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->conn = $db;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         $to_string = "Account: ";
         if (!empty($this->id)) {
             $to_string = $to_string . "id=" . $this->id . ", ";
@@ -66,7 +69,8 @@ class Account {
         return substr($to_string, 0, -2);
     }
 
-    function dropTable() {
+    public function dropTable()
+    {
         $query = "DROP TABLE IF EXISTS " . ACCOUNTS_DB_TABLE;
 
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
@@ -80,7 +84,8 @@ class Account {
         return false;
     }
 
-    function createTable() {
+    public function createTable()
+    {
         $query = "CREATE TABLE IF NOT EXISTS " . ACCOUNTS_DB_TABLE . " (
             id INTEGER(11) UNSIGNED NOT NULL AUTO_INCREMENT,
             username VARCHAR(64) NOT NULL,
@@ -105,7 +110,8 @@ class Account {
         return false;
     }
 
-    function delete() {
+    public function delete()
+    {
         $query = "DELETE FROM " . ACCOUNTS_DB_TABLE . " WHERE id = ?";
 
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
@@ -121,7 +127,8 @@ class Account {
         return false;
     }
 
-    function create() {
+    public function create()
+    {
         $query = "INSERT INTO " . ACCOUNTS_DB_TABLE . " SET username=:username, domain=:domain, email=:email, activated=:activated,
             confirmation_key=:confirmation_key, ip_address=:ip_address, user_agent=:user_agent, creation_time=:creation_time";
 
@@ -164,7 +171,8 @@ class Account {
         return false;
     }
 
-    function update() {
+    public function update()
+    {
         $query = "UPDATE " . ACCOUNTS_DB_TABLE . " SET username=:username, domain=:domain, activated=:activated";
 
         if (!empty($this->email)) {
@@ -213,7 +221,8 @@ class Account {
         return false;
     }
 
-    function getCount() {
+    public function getCount()
+    {
         $query = "SELECT count(*) FROM " . ACCOUNTS_DB_TABLE;
         $stmt = $this->conn->prepare($query);
         Logger::getInstance()->debug("GetCount " . (string)$this);
@@ -225,7 +234,8 @@ class Account {
         return -1;
     }
 
-    function getAll() {
+    public function getAll()
+    {
         $query = "SELECT ac.id, ac.username, ac.domain, ac.activated, ac.confirmation_key, ac.email, al.alias FROM " . ACCOUNTS_DB_TABLE .
             " ac LEFT JOIN " . ALIAS_DB_TABLE . " al ON ac.id = al.account_id";
         $stmt = $this->conn->prepare($query);
@@ -234,24 +244,25 @@ class Account {
         return $stmt;
     }
 
-    function getOne() {
+    public function getOne()
+    {
         $query = "SELECT ac.id, ac.username, ac.domain, ac.activated, ac.confirmation_key, ac.email, ac.ip_address, al.alias FROM " . ACCOUNTS_DB_TABLE .
             " ac LEFT JOIN " . ALIAS_DB_TABLE . " al ON ac.id = al.account_id";
 
         if (!empty($this->id)) {
             $query = $query . " WHERE ac.id = ?";
             $this->id = htmlspecialchars(strip_tags($this->id));
-        } else if (!empty($this->username)) {
+        } elseif (!empty($this->username)) {
             $query = $query . " WHERE ac.username = ?";
             $this->username = htmlspecialchars(strip_tags($this->username));
             if (!empty($this->domain)) {
                 $query = $query . " AND ac.domain = ?";
                 $this->domain = htmlspecialchars(strip_tags($this->domain));
             }
-        } else if (!empty($this->email)) {
+        } elseif (!empty($this->email)) {
             $query = $query . " WHERE ac.email = ?";
             $this->email = htmlspecialchars(strip_tags($this->email));
-        } else if (!empty($this->confirmation_key)) {
+        } elseif (!empty($this->confirmation_key)) {
             $query = $query . " WHERE ac.confirmation_key = ?";
             $this->confirmation_key = htmlspecialchars(strip_tags($this->confirmation_key));
         } else {
@@ -264,14 +275,14 @@ class Account {
 
         if (!empty($this->id)) {
             $stmt->bindParam(1, $this->id);
-        } else if (!empty($this->username)) {
+        } elseif (!empty($this->username)) {
             $stmt->bindParam(1, $this->username);
             if (!empty($this->domain)) {
                 $stmt->bindParam(2, $this->domain);
             }
-        } else if (!empty($this->email)) {
+        } elseif (!empty($this->email)) {
             $stmt->bindParam(1, $this->email);
-        } else if (!empty($this->confirmation_key)) {
+        } elseif (!empty($this->confirmation_key)) {
             $stmt->bindParam(1, $this->confirmation_key);
         }
 
@@ -298,5 +309,3 @@ class Account {
         return false;
     }
 }
-
-?>

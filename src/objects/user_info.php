@@ -1,24 +1,25 @@
 <?php
 
 /*
-	Flexisip Account Manager is a set of tools to manage SIP accounts.
-	Copyright (C) 2019 Belledonne Communications SARL, All rights reserved.
+    Flexisip Account Manager is a set of tools to manage SIP accounts.
+    Copyright (C) 2019 Belledonne Communications SARL, All rights reserved.
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Affero General Public License as
-	published by the Free Software Foundation, either version 3 of the
-	License, or (at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Affero General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
 
-	You should have received a copy of the GNU Affero General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-class UserInfo {
+class UserInfo
+{
     private $conn;
 
     public $id;
@@ -30,11 +31,13 @@ class UserInfo {
     public $country_name;
     public $subscribe;
 
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->conn = $db;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         $to_string = "UserInfo: ";
         if (!empty($this->id)) {
             $to_string .= "id=" . $this->id . ", ";
@@ -63,7 +66,8 @@ class UserInfo {
         return substr($to_string, 0, -2);
     }
 
-    function dropTable() {
+    public function dropTable()
+    {
         $query = "DROP TABLE IF EXISTS " . USER_INFO_DB_TABLE;
 
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
@@ -77,7 +81,8 @@ class UserInfo {
         return false;
     }
 
-    function createTable() {
+    public function createTable()
+    {
         $query = "CREATE TABLE IF NOT EXISTS " . USER_INFO_DB_TABLE . " (
                     id INTEGER(11) UNSIGNED NOT NULL AUTO_INCREMENT,
                     account_id INTEGER(11) UNSIGNED NOT NULL,
@@ -100,7 +105,8 @@ class UserInfo {
         return false;
     }
 
-    function delete() {
+    public function delete()
+    {
         $query = "DELETE FROM " . USER_INFO_DB_TABLE . " WHERE id = ?";
 
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
@@ -116,11 +122,12 @@ class UserInfo {
         return false;
     }
 
-    function create() {
+    public function create()
+    {
         $query = "INSERT INTO " . USER_INFO_DB_TABLE . " SET account_id=:account_id, firstname=:firstname, lastname=:lastname, gender=:gender, subscribe=:subscribe";
 
-        if(ENABLE_NEW_ACCOUNTS_GEOLOC){
-          $query .= ", country_code=:country_code, country_name=:country_name";
+        if (ENABLE_NEW_ACCOUNTS_GEOLOC) {
+            $query .= ", country_code=:country_code, country_name=:country_name";
         }
 
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
@@ -138,13 +145,12 @@ class UserInfo {
         $stmt->bindParam(":gender", $this->gender);
         $stmt->bindParam(":subscribe", $this->subscribe);
 
-        if(ENABLE_NEW_ACCOUNTS_GEOLOC){
+        if (ENABLE_NEW_ACCOUNTS_GEOLOC) {
+            $this->country_code = htmlspecialchars(strip_tags($this->country_code));
+            $this->country_name = htmlspecialchars(strip_tags($this->country_name));
 
-          $this->country_code = htmlspecialchars(strip_tags($this->country_code));
-          $this->country_name = htmlspecialchars(strip_tags($this->country_name));
-
-          $stmt->bindParam(":country_code", $this->country_code);
-          $stmt->bindParam(":country_name", $this->country_name);
+            $stmt->bindParam(":country_code", $this->country_code);
+            $stmt->bindParam(":country_name", $this->country_name);
         }
 
         Logger::getInstance()->debug("Creating " . (string)$this);
@@ -156,7 +162,8 @@ class UserInfo {
         return false;
     }
 
-    function update() {
+    public function update()
+    {
         $query = "UPDATE " . USER_INFO_DB_TABLE . " SET firstname=:firstname, lastname=:lastname, subscribe=:subscribe, gender=:gender";
 
         $query = $query . " WHERE id=:id";
@@ -184,7 +191,8 @@ class UserInfo {
         return false;
     }
 
-    function getAll() {
+    public function getAll()
+    {
         $query = "SELECT id, account_id, firstname, lastname, gender, subscribe FROM " . USER_INFO_DB_TABLE;
         $stmt = $this->conn->prepare($query);
         Logger::getInstance()->debug("GetAll " . (string)$this);
@@ -192,16 +200,17 @@ class UserInfo {
         return $stmt;
     }
 
-    function getOne() {
+    public function getOne()
+    {
         $query = "SELECT id, account_id, firstname, lastname, gender, subscribe FROM " . USER_INFO_DB_TABLE;
 
         if (!empty($this->id)) {
             $query = $query . " WHERE id = ?";
             $this->id = htmlspecialchars(strip_tags($this->id));
-        } else if (!empty($this->account_id)) {
+        } elseif (!empty($this->account_id)) {
             $query = $query . " WHERE account_id = ?";
             $this->account_id = htmlspecialchars(strip_tags($this->account_id));
-        } else if (!empty($this->lastname)) {
+        } elseif (!empty($this->lastname)) {
             $query = $query . " WHERE lastname = ?";
             $this->lastname = htmlspecialchars(strip_tags($this->lastname));
             if (!empty($this->firstname)) {
@@ -218,9 +227,9 @@ class UserInfo {
 
         if (!empty($this->id)) {
             $stmt->bindParam(1, $this->id);
-        }  else if (!empty($this->account_id)) {
+        } elseif (!empty($this->account_id)) {
             $stmt->bindParam(1, $this->account_id);
-        } else if (!empty($this->lastname)) {
+        } elseif (!empty($this->lastname)) {
             $stmt->bindParam(1, $this->lastname);
             if (!empty($this->firstname)) {
                 $stmt->bindParam(2, $this->firstname);
@@ -249,5 +258,3 @@ class UserInfo {
         return false;
     }
 }
-
-?>

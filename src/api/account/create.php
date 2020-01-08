@@ -1,21 +1,21 @@
 <?php
 
 /*
-	Flexisip Account Manager is a set of tools to manage SIP accounts.
-	Copyright (C) 2019 Belledonne Communications SARL, All rights reserved.
+    Flexisip Account Manager is a set of tools to manage SIP accounts.
+    Copyright (C) 2019 Belledonne Communications SARL, All rights reserved.
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Affero General Public License as
-	published by the Free Software Foundation, either version 3 of the
-	License, or (at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Affero General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
 
-	You should have received a copy of the GNU Affero General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 header("Access-Control-Allow-Origin: *");
@@ -29,7 +29,7 @@ include_once __DIR__ . '/../../misc/utilities.php';
 
 $database = new Database();
 $db = $database->getConnection();
- 
+
 $account = new Account($db);
 
 $data = json_decode(file_get_contents("php://input"));
@@ -53,7 +53,7 @@ if ((!empty($data->username) || !empty($data->phone)) && (!empty($data->password
                 $password->password = hash_password($account->username, generate_password(), $account->domain, $password->algorithm);
             } else {
                 $password->password = empty($data->password)
-                    ? hash_password($account->username, generate_password(), $account->domain, $password->algorithm) 
+                    ? hash_password($account->username, generate_password(), $account->domain, $password->algorithm)
                     : $data->password;
             }
             if (!$password->create()) {
@@ -88,5 +88,3 @@ if ((!empty($data->username) || !empty($data->phone)) && (!empty($data->password
     http_response_code(400);
     echo json_encode(array("message" => "Unable to create account, data is incomplete."));
 }
-
-?>
