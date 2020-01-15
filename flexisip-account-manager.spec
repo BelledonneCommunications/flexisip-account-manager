@@ -8,7 +8,7 @@
 #%define _datadir           %{_datarootdir}
 #%define _docdir            %{_datadir}/doc
 
-%define build_number 14
+%define build_number 16
 #%if %{build_number}
 #%define build_number_ext -%{build_number}
 #%endif
@@ -52,7 +52,7 @@ mkdir -p /var/opt/belledonne-communications/log
 touch /var/opt/belledonne-communications/log/account-manager.log
 chown apache:apache /var/opt/belledonne-communications/log/account-manager.log
 chcon -t httpd_sys_rw_content_t /var/opt/belledonne-communications/log/account-manager.log
-setsebool httpd_can_network_connect_db on
+setsebool -P httpd_can_network_connect_db on
 fi
 
 
