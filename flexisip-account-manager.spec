@@ -8,7 +8,7 @@
 #%define _datadir           %{_datarootdir}
 #%define _docdir            %{_datadir}/doc
 
-%define build_number 16
+%define build_number 17
 #%if %{build_number}
 #%define build_number_ext -%{build_number}
 #%endif
@@ -76,6 +76,6 @@ rm -rf $RPM_BUILD_ROOT
 * Thu Jul 4 2019 Sylvain Berfini <sylvain.berfini@belledonne-communications.com>
 - New files layout
 * Fri Jun 28 2019 Johan Pascal <johan.pascal@belledonne-communications.com>
-- 
+-
 * Fri May 18 2018 Matthieu TANON <matthieu.tanon@belledonne-communications.com>
 - Initial RPM release.

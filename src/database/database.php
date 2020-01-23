@@ -30,7 +30,7 @@ class Database
 
         try {
             if(!empty(DB_ENABLE_SSL) && !empty(ROOT_CA_PATH)){
-              if(!file_exists ( string ROOT_CA_PATH )){
+              if(!file_exists (ROOT_CA_PATH)){
                 Logger::getInstance()->error("MySQL connection error: the provided ROOT_CA_PATH does not exists!");
               }
               else{
