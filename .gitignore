@@ -1,2 +1,15 @@
 flexisip-account-manager/
 rpmbuild/
+
+flexiapi/node_modules
+flexiapi/public/hot
+flexiapi/public/storage
+flexiapi/storage/*.key
+flexiapi/vendor
+flexiapi/.env
+flexiapi/.env.backup
+flexiapi/.phpunit.result.cache
+flexiapi/Homestead.json
+flexiapi/Homestead.yaml
+flexiapi/npm-debug.log
+flexiapi/yarn-error.log
