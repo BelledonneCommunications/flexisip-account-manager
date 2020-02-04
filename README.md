@@ -63,7 +63,16 @@ Finally start composer:
 
 `cd /opt/belledonne-communications/share/flexisip-account-manager/ && composer install`
 
-### 6. Miscellaneous
+### 6. Packaging
+--------------------
+To build a rpm package on centos7:
+make rpm
+To build a rpm package with docker:
+docker run -v $PWD:/home/bc -it gitlab.linphone.org:4567/bc/public/flexisip-account-manager/bc-dev-centos:7 make rpm
+The flexisip-account-manager rpm package can be found in rpmbuild/RPMS/x86_64/bc-flexisip-account-manager*.rpm
+Installation requires package centos-release-scl-rh to be installed for php7.1
+
+### 7. Miscellaneous
 --------------------
 
 - For remote provisioning create a `default.rc` file in `/opt/belledonne-communications/` and set the values you want

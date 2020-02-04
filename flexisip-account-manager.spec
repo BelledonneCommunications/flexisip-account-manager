@@ -26,7 +26,7 @@ Source0:	flexisip-account-manager.tar.gz
 #BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 # dependencies
-Requires:	rh-php71-php rh-php71-php-xmlrpc rh-php71-php-pdo rh-php71-php-mysqlnd rh-php71-php-mbstring
+Requires:	rh-php73-php rh-php73-php-xmlrpc rh-php73-php-pdo rh-php73-php-mysqlnd rh-php73-php-mbstring
 
 %description
 PHP server for Linphone and Flexisip providing module for account creation.
@@ -39,6 +39,8 @@ PHP server for Linphone and Flexisip providing module for account creation.
 rm -rf "$RPM_BUILD_ROOT"
 mkdir -p "$RPM_BUILD_ROOT/opt/belledonne-communications/share/flexisip-account-manager"
 cp -R src/* "$RPM_BUILD_ROOT/opt/belledonne-communications/share/flexisip-account-manager/"
+mkdir -p "$RPM_BUILD_ROOT/opt/belledonne-communications/share/flexisip-account-manager/flexiapi"
+cp -R flexiapi/* "$RPM_BUILD_ROOT/opt/belledonne-communications/share/flexisip-account-manager/flexiapi"
 cp README* "$RPM_BUILD_ROOT/opt/belledonne-communications/share/flexisip-account-manager/"
 mkdir -p "$RPM_BUILD_ROOT/etc/flexisip-account-manager"
 cp -R conf/* "$RPM_BUILD_ROOT/etc/flexisip-account-manager/"
@@ -57,6 +59,7 @@ fi
 
 
 %files
+/opt/belledonne-communications/share/flexisip-account-manager/flexiapi/**/*
 /opt/belledonne-communications/share/flexisip-account-manager/api/account/*.php
 /opt/belledonne-communications/share/flexisip-account-manager/config/*.php
 /opt/belledonne-communications/share/flexisip-account-manager/database/*.php
