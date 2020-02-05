@@ -5,20 +5,47 @@
 variables:
  DEPLOY_SERVER: buildbot@www.linphone.org
  CENTOS7_DEPLOY_DIRECTORY: snapshots/centos7
- 
+
+stages:
+  - package
+  - deploy
+  - test
+
 job-centos7-rpm:
 
   tags: [ "docker-centos7" ]
-  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-centos:7
-    
+  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-centos7-php
+
   stage: package
   script:
-    - make rpm
+    - make rpm-dev
   artifacts:
     paths:
-    - rpmbuild/x86_64/*.rpm
+      - rpmbuild/x86_64/*.rpm
     when: always
     expire_in: 1 year
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - flexiapi/vendor/
+
+job-centos7-rpm-test:
+
+  tags: [ "docker-centos7" ]
+  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-centos7-php
+
+  stage: test
+  script:
+    - yum -y localinstall rpmbuild/x86_64/*.rpm
+    - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
+    - scl enable rh-php73 "php artisan key:generate"
+    - scl enable rh-php73 "vendor/bin/phpunit --log-junit $CI_PROJECT_DIR/flexiapi_phpunit.log"
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/flexiapi_phpunit.log
+      - flexiapi/storage/logs/
+    when: always
+    expire_in: 1 day
 
 job-centos7-rpm-deploy:
 
@@ -33,7 +60,7 @@ job-centos7-rpm-deploy:
     refs:
       - master
     changes:
-      - flexisip-account-manager.spec  
+      - flexisip-account-manager.spec
 
   dependencies:
     - job-centos7-rpm
@@ -41,8 +68,3 @@ job-centos7-rpm-deploy:
   script:
    - cd rpmbuild/x86_64 && rsync -e "ssh -o StrictHostKeyChecking=no" -pr . $DEPLOY_SERVER:$CENTOS7_DEPLOY_DIRECTORY
    - ssh $DEPLOY_SERVER "chmod a+r $CENTOS7_DEPLOY_DIRECTORY/*.rpm && createrepo_c --update $CENTOS7_DEPLOY_DIRECTORY/."
-
-
-stages:
- - package
- - deploy

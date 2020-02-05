@@ -6,7 +6,7 @@ This tool connects to the Flexisip CLI interface and exposes several endpoints t
 
 Clone the repository, install the dependencies and generate a key.
 
-    composer install
+    composer install --no-dev
     php artisan key:generate
 
 Then configure the two databases connections in the `.env` file (from the `.env.example` one). And migrate the tables.

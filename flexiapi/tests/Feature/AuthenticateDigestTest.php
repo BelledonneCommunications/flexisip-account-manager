@@ -30,7 +30,7 @@ class AuthenticateDigestTest extends TestCase
 {
     use RefreshDatabase;
 
-    const ROUTE = '/api/devices';
+    const ROUTE = '/api/ping';
     const METHOD = 'GET';
     const ALGORITHMS = ['md5' => 'MD5', 'sha256' => 'SHA-256'];
 

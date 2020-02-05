@@ -63,16 +63,29 @@ Finally start composer:
 
 `cd /opt/belledonne-communications/share/flexisip-account-manager/ && composer install`
 
-### 6. Packaging
+### 4. Configure the API
+------------------------------
+
+The FlexiAPI configuration is located in the same directory as for the XMLRPC server. You can find its whole configuration in `/etc/flexisip-account-manager/flexiapi.env`.
+
+You should normally only change the `DB_EXTERNAL` parameters then rollback and re-run the migrations (by default the API is assuming that it runs on two SQLite databases). To do so, find the root directory of `flexiapi` (normally under `/opt/belledonne-communications/share/flexisip-account-manager`), authenticate as your web user (`www-data` or `apache`) and run rollback and migrate (all the content will be destroyed, we recommend to do always do backup of your databases before running any migrations):
+
+    php artisan migrate:rollback
+    php artisan migrate
+
+### 5. Packaging
 --------------------
 To build a rpm package on centos7:
 make rpm
 To build a rpm package with docker:
-docker run -v $PWD:/home/bc -it gitlab.linphone.org:4567/bc/public/flexisip-account-manager/bc-dev-centos:7 make rpm
-The flexisip-account-manager rpm package can be found in rpmbuild/RPMS/x86_64/bc-flexisip-account-manager*.rpm
-Installation requires package centos-release-scl-rh to be installed for php7.1
 
-### 7. Miscellaneous
+    docker run -v $PWD:/home/bc -it gitlab.linphone.org:4567/bc/public/flexisip-account-manager/bc-dev-centos:7 make rpm
+
+GitLab is running the command above using `make rpm-dev`, this also install all the required dependencies to run `phpunit` properly (they are disabled by default to save space in the final rpm file).
+
+The flexisip-account-manager rpm package can be found in `rpmbuild/RPMS/x86_64/bc-flexisip-account-manager*.rpm`
+
+### 6. Miscellaneous
 --------------------
 
 - For remote provisioning create a `default.rc` file in `/opt/belledonne-communications/` and set the values you want
@@ -92,4 +105,3 @@ client side, set the provisioning uri to the same host but to `provisioning.php`
 
 - Also it can listen on IPv6 only.
 To fix that, edit `/opt/rh/httpd24/root/etc/httpd/conf.d/ssl.conf` and add/set: `Listen 0.0.0.0:444 https`
-

@@ -24,6 +24,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => ['auth.digest']], function () {
+    Route::get('ping', 'Api\PingController@ping');
     Route::get('devices', 'Api\DeviceController@index');
     Route::delete('devices/{uuid}', 'Api\DeviceController@destroy');
 });

@@ -19,6 +19,8 @@
 
 namespace App\Helpers;
 
+use Illuminate\Support\Str;
+
 use App\Account;
 use App\DigestNonce;
 
@@ -26,9 +28,7 @@ class Utils
 {
     public static function generateNonce(): string
     {
-        return base64_encode(random_bytes(
-            SODIUM_CRYPTO_SECRETBOX_NONCEBYTES
-        ));
+        return Str::random(32);
     }
 
     public static function generateValidNonce(Account $account): string

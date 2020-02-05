@@ -2,8 +2,11 @@ $(eval GIT_DESCRIBE = $(shell sh -c "git describe"))
 OUTPUT_DIR = ${CURDIR}
 prepare:
 	cd flexiapi && composer install --no-dev
-		
-rpm-only: 
+
+prepare-dev:
+	cd flexiapi && composer install
+
+rpm-only:
 	rm -rf $(OUTPUT_DIR)/flexisip-account-manager
 	mkdir $(OUTPUT_DIR)/flexisip-account-manager
 	mkdir -p $(OUTPUT_DIR)/rpmbuild/SPECS
@@ -11,7 +14,14 @@ rpm-only:
 	cp -R --parents src/**/*.php $(OUTPUT_DIR)/flexisip-account-manager/
 	cp -R --parents src/api/**/*.php $(OUTPUT_DIR)/flexisip-account-manager/
 	cp -R --parents conf/*.conf $(OUTPUT_DIR)/flexisip-account-manager/
+
 	cp -R --parents flexiapi/**/* $(OUTPUT_DIR)/flexisip-account-manager/
+	cp flexiapi/composer* $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
+	cp flexiapi/README.md $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
+	cp flexiapi/.env.example $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/.env.example
+	cp flexiapi/artisan $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
+	cp flexiapi/phpunit.xml $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
+
 	cp README.md $(OUTPUT_DIR)/flexisip-account-manager/
 	cp -R httpd/ $(OUTPUT_DIR)/flexisip-account-manager/
 	cp flexisip-account-manager.spec $(OUTPUT_DIR)/rpmbuild/SPECS/
@@ -21,5 +31,6 @@ rpm-only:
 	rm -rf $(OUTPUT_DIR)/flexisip-account-manager
 
 rpm: prepare rpm-only
+rpm-dev: prepare-dev rpm-only
 
 .PHONY: rpm
