@@ -1,11 +1,6 @@
 #################################################
 # Base configuration
 #################################################
-
-variables:
- DEPLOY_SERVER: buildbot@www.linphone.org
- CENTOS7_DEPLOY_DIRECTORY: snapshots/centos7
-
 stages:
   - package
   - deploy
