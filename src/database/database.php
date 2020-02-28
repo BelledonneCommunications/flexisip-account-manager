@@ -29,7 +29,7 @@ class Database
         $this->conn = null;
 
         try {
-            if(!empty(DB_ENABLE_SSL) && !empty(ROOT_CA_PATH)){
+            if(!empty(get_config_value("DB_ENABLE_SSL","")) && !empty(get_config_value("ROOT_CA_PATH",""))){
               if(!file_exists (ROOT_CA_PATH)){
                 Logger::getInstance()->error("MySQL connection error: the provided ROOT_CA_PATH does not exists!");
               }

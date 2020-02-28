@@ -188,3 +188,7 @@ function time_elapsed_as_string($secs)
 
     return join(' ', $ret);
 }
+function get_config_value($param_name, $default_value) {
+        return defined($param_name) ? constant($param_name) : $default_value;
+}
+
