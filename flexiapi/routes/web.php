@@ -17,4 +17,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-Route::get('/', 'DocumentationController@index');
+Route::get('/', 'HomeController@index')->name('home');
+Route::get('logout', 'HomeController@logout')->name('logout');
+
+Route::post('account/authenticate', 'AccountController@authenticate')->name('account.authenticate');
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('account', 'AccountController@index')->name('account.index');
+});

@@ -40,4 +40,11 @@ class Utils
 
         return $nonce->nonce;
     }
+
+    public static function bchash(string $username, string $domain, string $password, string $algorithm = 'MD5')
+    {
+        $algos = ['MD5' => 'md5', 'SHA-256' => 'sha256'];
+
+        return hash($algos[$algorithm], $username.':'.$domain.':'.$password);
+    }
 }
