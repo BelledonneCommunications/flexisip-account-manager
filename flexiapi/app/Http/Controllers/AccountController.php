@@ -18,6 +18,17 @@ class AccountController extends Controller
         ]);
     }
 
+    public function login(Request $request)
+    {
+        return view('account.login');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        return redirect()->route('account.login');
+    }
+
     public function authenticate(Request $request)
     {
         $request->validate([
@@ -34,8 +45,8 @@ class AccountController extends Controller
         // Try out the passwords
         foreach ($account->passwords as $password) {
             if (hash_equals(
-                    $password->password,
-                    Utils::bchash($username, $domain, $request->get('password'), $password->algorithm)
+                $password->password,
+                Utils::bchash($username, $domain, $request->get('password'), $password->algorithm)
             )) {
                 Auth::login($account);
                 return redirect()->route('account.index');

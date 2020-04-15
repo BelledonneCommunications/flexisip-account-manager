@@ -17,11 +17,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-Route::get('/', 'HomeController@index')->name('home');
-Route::get('logout', 'HomeController@logout')->name('logout');
+//Route::get('/', 'HomeController@index')->name('home');
 
-Route::post('account/authenticate', 'AccountController@authenticate')->name('account.authenticate');
+Route::get('login', 'AccountController@login')->name('account.login');
+Route::post('authenticate', 'AccountController@authenticate')->name('account.authenticate');
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('account', 'AccountController@index')->name('account.index');
+    Route::get('/', 'AccountController@index')->name('account.index');
+    Route::get('logout', 'AccountController@logout')->name('account.logout');
+
+    Route::get('email', 'AccountEmailController@show')->name('account.email');
+    Route::post('email', 'AccountEmailController@update')->name('account.email.update');
+    Route::get('password', 'AccountPasswordController@show')->name('account.password');
+    Route::post('password', 'AccountPasswordController@update')->name('account.password.update');
 });
