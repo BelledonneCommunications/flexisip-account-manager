@@ -22,6 +22,14 @@
 Route::get('login', 'AccountController@login')->name('account.login');
 Route::post('authenticate', 'AccountController@authenticate')->name('account.authenticate');
 
+Route::get('login/email', 'AccountController@loginEmail')->name('account.login_email');
+Route::post('authenticate/email', 'AccountController@authenticateEmail')->name('account.authenticate_email');
+Route::get('authenticate/email/{code}', 'AccountController@authenticateEmailConfirm')->name('account.authenticate_email_confirm');
+
+Route::get('login/phone', 'AccountController@loginPhone')->name('account.login_phone');
+Route::post('authenticate/phone', 'AccountController@authenticatePhone')->name('account.authenticate_phone');
+Route::post('authenticate/phone/confirm', 'AccountController@authenticatePhoneConfirm')->name('account.authenticate_phone_confirm');
+
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'AccountController@index')->name('account.index');
     Route::get('logout', 'AccountController@logout')->name('account.logout');

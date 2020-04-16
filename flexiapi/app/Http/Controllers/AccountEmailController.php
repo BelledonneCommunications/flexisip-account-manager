@@ -15,6 +15,7 @@ class AccountEmailController extends Controller
 
     public function update(Request $request)
     {
+        // TODO exists doesn't already exists
         $request->validate([
             'email' => 'required|email',
             'email_confirm' => 'required|same:email'

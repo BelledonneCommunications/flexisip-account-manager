@@ -2,10 +2,7 @@
 
 @section('content')
     @if (Auth::check())
-        <div class="alert alert-primary" role="alert">
-            <a class="float-right" href="{{ route('logout') }}">Logout</a>
-            You are already authenticated
-        </div>
+        @include('parts.already_auth')
     @else
         <div class="card mt-3">
             <div class="card-body">
@@ -20,6 +17,9 @@
                     </div>
                     {!! Form::submit('Authenticate', ['class' => 'btn btn-primary']) !!}
                 {!! Form::close() !!}
+
+                <br />
+                <p>You can also authenticate using your <a href="{{ route('account.login_email') }}">Email address</a> or your <a href="{{ route('account.login_phone') }}">Phone number</a></p>
             </div>
         </div>
     @endif
