@@ -13,6 +13,7 @@
         "laravel/framework": "^6.2",
         "laravel/tinker": "^2.0",
         "laravelcollective/html": "^6.1",
+        "ovh/ovh": "^2.0",
         "propaganistas/laravel-phone": "^4.2"
     },
     "require-dev": {

@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
 
 use App\Account;
 use App\Rules\SIP;
 use App\Helpers\Utils;
+use App\Libraries\OvhSMS;
+use App\Mail\PasswordAuthentication;
 
 class AccountController extends Controller
 {
@@ -83,7 +86,7 @@ class AccountController extends Controller
         $account->confirmation_key = Str::random($this->emailCodeSize);
         $account->save();
 
-        // TODO send email
+        Mail::to($account)->send(new PasswordAuthentication($account));
 
         return view('account.authenticate_email', [
             'account' => $account
@@ -125,7 +128,8 @@ class AccountController extends Controller
         $account->confirmation_key = mt_rand(1000, 9999);
         $account->save();
 
-        // TODO send SMS
+        $ovhSMS = new OvhSMS;
+        $ovhSMS->send($request->get('phone'), 'Your Linphone validation code is '.$account->confirmation_key);
 
         return view('account.authenticate_phone', [
             'account' => $account

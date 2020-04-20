@@ -5,7 +5,7 @@
         <div class="collapse navbar-collapse" >
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="{{ route('account.index') }}">FlexiAPI</a>
+                    <a class="nav-link" href="{{ route('account.index') }}">{{ config('app.name') }}</a>
                 </li>
             </ul>
             <ul class="navbar-nav">

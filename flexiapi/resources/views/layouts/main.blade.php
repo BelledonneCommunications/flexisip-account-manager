@@ -5,7 +5,7 @@
         <div class="collapse navbar-collapse" >
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="/">FlexiAPI</a>
+                    <a class="nav-link" href="/">{{ config('app.name') }}</a>
                 </li>
                 @if (isset($user) && get_class($user) == 'App\Account')
                     <li class="nav-item active">
