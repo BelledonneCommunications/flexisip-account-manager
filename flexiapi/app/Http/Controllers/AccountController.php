@@ -26,6 +26,23 @@ class AccountController extends Controller
         return view('account.login');
     }
 
+    public function delete(Request $request)
+    {
+        return view('account.delete', [
+            'account' => $request->user()
+        ]);
+    }
+
+    public function destroy(Request $request)
+    {
+        $request->validate(['identifier' => 'required|same:identifier_confirm']);
+
+        Auth::logout();
+        //$request->user()->delete();
+
+        return redirect()->route('account.login');
+    }
+
     public function authenticate(Request $request)
     {
         $request->validate([

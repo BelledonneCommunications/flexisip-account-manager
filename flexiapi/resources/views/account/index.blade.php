@@ -23,6 +23,12 @@
             <p class="mb-1">MD5 password only</p>
         @endif
     </a>
+    <a href="{{ route('account.delete') }}" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Delete my account</h5>
+        </div>
+        <p class="mb-1">Remove your account from our service</p>
+    </a>
 </div>
 
 @endsection

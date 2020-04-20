@@ -34,6 +34,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'AccountController@index')->name('account.index');
     Route::get('logout', 'AccountController@logout')->name('account.logout');
 
+    Route::get('delete', 'AccountController@delete')->name('account.delete');
+    Route::delete('delete', 'AccountController@destroy')->name('account.destroy');
+
     Route::get('email', 'AccountEmailController@show')->name('account.email');
     Route::post('email', 'AccountEmailController@update')->name('account.email.update');
     Route::get('password', 'AccountPasswordController@show')->name('account.password');
