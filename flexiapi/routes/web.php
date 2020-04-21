@@ -30,6 +30,9 @@ Route::get('login/phone', 'AccountController@loginPhone')->name('account.login_p
 Route::post('authenticate/phone', 'AccountController@authenticatePhone')->name('account.authenticate_phone');
 Route::post('authenticate/phone/confirm', 'AccountController@authenticatePhoneConfirm')->name('account.authenticate_phone_confirm');
 
+Route::get('register', 'AccountController@register')->name('account.register');
+Route::post('register', 'AccountController@store')->name('account.store');
+
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'AccountController@index')->name('account.index');
     Route::get('logout', 'AccountController@logout')->name('account.logout');

@@ -6,12 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 
 use App\Account;
+use App\Alias;
 use App\Rules\SIP;
 use App\Helpers\Utils;
 use App\Libraries\OvhSMS;
 use App\Mail\PasswordAuthentication;
+use App\Mail\RegisterConfirmation;
 
 class AccountController extends Controller
 {
@@ -27,6 +30,57 @@ class AccountController extends Controller
     public function login(Request $request)
     {
         return view('account.login');
+    }
+
+    public function register(Request $request)
+    {
+        return view('account.register');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|unique:external.accounts,username|min:6',
+            'phone' => 'required_without:email|nullable|unique:external.aliases,alias|unique:external.accounts,username|starts_with:+|phone:AUTO',
+            'email' => 'required_without:phone|nullable|email|confirmed'
+        ]);
+
+        $account = new Account;
+        $account->username = $request->get('username');
+        $account->email = $request->get('email');
+        $account->activated = false;
+        $account->domain = config('app.sip_domain');
+        $account->ip_address = $request->ip();
+        $account->creation_time = Carbon::now();
+        $account->user_agent = config('app.name');
+        $account->save();
+
+        if ($request->filled('phone')) {
+            $alias = new Alias;
+            $alias->alias = $request->get('phone');
+            $alias->domain = config('app.sip_domain');
+            $alias->account_id = $account->id;
+            $alias->save();
+
+            $account->confirmation_key = Utils::generatePin();
+            $account->save();
+
+            $ovhSMS = new OvhSMS;
+            $ovhSMS->send($request->get('phone'), 'Your '.config('app.name').' validation code is '.$account->confirmation_key);
+
+            return view('account.authenticate_phone', [
+                'account' => $account
+            ]);
+        }
+
+        $account->confirmation_key = Str::random($this->emailCodeSize);
+        $account->save();
+
+        Mail::to($account)->send(new RegisterConfirmation($account));
+
+        return view('account.authenticate_email', [
+            'account' => $account
+        ]);
     }
 
     public function delete(Request $request)
@@ -103,6 +157,12 @@ class AccountController extends Controller
         $account->save();
 
         Auth::login($account);
+
+        // Ask the user to set a password
+        if (!$account->activated) {
+            return redirect()->route('account.password');
+        }
+
         return redirect()->route('account.index');
     }
 
@@ -117,7 +177,14 @@ class AccountController extends Controller
 
         $account = Account::where('username', $request->get('phone'))->first();
 
-        // TODO add alias
+        // Try alias
+        if (!$account) {
+            $alias = Alias::where('alias', $request->get('phone'))->first();
+
+            if ($alias) {
+                $account = $alias->account;
+            }
+        }
 
         if (!$account) {
             return view('account.login_phone')->withErrors([
@@ -125,11 +192,16 @@ class AccountController extends Controller
             ]);
         }
 
-        $account->confirmation_key = mt_rand(1000, 9999);
+        $account->confirmation_key = Utils::generatePin();
         $account->save();
 
         $ovhSMS = new OvhSMS;
-        $ovhSMS->send($request->get('phone'), 'Your Linphone validation code is '.$account->confirmation_key);
+        $ovhSMS->send($request->get('phone'), 'Your '.config('app.name').' validation code is '.$account->confirmation_key);
+
+        // Ask the user to set a password
+        if (!$account->activated) {
+            return redirect()->route('account.password');
+        }
 
         return view('account.authenticate_phone', [
             'account' => $account

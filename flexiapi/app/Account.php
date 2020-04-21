@@ -26,10 +26,16 @@ class Account extends Authenticatable
 {
     protected $connection = 'external';
     protected $with = ['passwords'];
+    protected $dates = ['creation_time'];
 
     public function passwords()
     {
         return $this->hasMany('App\Password');
+    }
+
+    public function alias()
+    {
+        return $this->hasOne('App\Alias');
     }
 
     public function nonces()

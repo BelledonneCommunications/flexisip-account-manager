@@ -24,6 +24,9 @@ class AccountPasswordController extends Controller
         ]);
 
         $account = $request->user();
+        $account->activated = true;
+        $account->save();
+
         $algorithm = $request->has('password_sha256') ? 'SHA-256' : 'MD5';
 
         if ($account->passwords()->count() > 0) {

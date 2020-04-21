@@ -47,4 +47,9 @@ class Utils
 
         return hash($algos[$algorithm], $username.':'.$domain.':'.$password);
     }
+
+    public static function generatePin()
+    {
+        return mt_rand(1000, 9999);
+    }
 }
