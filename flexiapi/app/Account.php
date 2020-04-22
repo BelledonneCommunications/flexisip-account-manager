@@ -27,6 +27,7 @@ class Account extends Authenticatable
     protected $connection = 'external';
     protected $with = ['passwords'];
     protected $dates = ['creation_time'];
+    public $timestamps = false;
 
     public function passwords()
     {

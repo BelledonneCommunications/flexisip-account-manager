@@ -19,6 +19,27 @@ You can also run the test suit using `phpunit`.
 
 To know more about the web server configuration part, you can directly [visit the official Laravel installation documentation](https://laravel.com/docs/6.x).
 
+### Configure the .env file
+
+Complete all the other variables in the `.env` file:
+- The OVH SMS connector
+- SMTP configuration
+- App name, SIP domain…
+
+### SELinux
+
+If you are running on a CentOS/RedHat machine, please ensure that SELinux is correctly configured.
+
+Allow the webserver user to write in the `storage/` directory:
+
+    chcon -R -t httpd_sys_rw_content_t storage/
+
+If your external database is locate on a remote machine, you should also allow your webserver user to connect to remote hosts:
+
+    semanage port -a -t http_port_t -p tcp 3306 // Open remote connections on the MySQL port for example
+    setsebool httpd_can_network_connect 1 // Allow remote network connected
+    setsebool httpd_can_network_connect_db 1 // Allow remote database connection
+
 ### CRON job
 
 The DIGEST authentication method is saving some temporary information (nonces) in the database.

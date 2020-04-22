@@ -42,6 +42,7 @@ class AccountController extends Controller
         $request->validate([
             'username' => 'required|unique:external.accounts,username|min:6',
             'phone' => 'required_without:email|nullable|unique:external.aliases,alias|unique:external.accounts,username|starts_with:+|phone:AUTO',
+            'g-recaptcha-response'  => 'required|captcha',
             'email' => 'required_without:phone|nullable|email|confirmed'
         ]);
 

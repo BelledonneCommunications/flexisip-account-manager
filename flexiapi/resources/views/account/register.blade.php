@@ -32,6 +32,11 @@
     {!! Form::text('phone', old('phone'), ['class' => 'form-control', 'placeholder' => '+123456789']) !!}
 </div>
 
+<div class="form-group">
+    {!! NoCaptcha::renderJs() !!}
+    {!! NoCaptcha::display() !!}
+</div>
+
 {!! Form::submit('Register', ['class' => 'btn btn-primary float-right']) !!}
 {!! Form::close() !!}
 

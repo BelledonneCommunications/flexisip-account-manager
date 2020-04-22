@@ -8,11 +8,13 @@
                     <a class="nav-link" href="{{ route('account.index') }}">{{ config('app.name') }}</a>
                 </li>
             </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="{{ route('account.logout') }}">Logout</a>
-                </li>
-            </ul>
+            @if (Auth::check())
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ route('account.logout') }}">Logout</a>
+                    </li>
+                </ul>
+            @endif
         </div>
     </nav>
     <div class="container-lg pt-3">
