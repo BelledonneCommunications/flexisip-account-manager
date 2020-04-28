@@ -9,7 +9,7 @@
                 {!! Form::open(['route' => 'account.authenticate']) !!}
                     <div class="form-group">
                         {!! Form::label('username', 'Username') !!}
-                        {!! Form::text('username', old('username'), ['class' => 'form-control', 'placeholder' => 'username@sip.linphone.org', 'required']) !!}
+                        {!! Form::text('username', old('username'), ['class' => 'form-control', 'placeholder' => 'username@'.config('app.sip_domain'), 'required']) !!}
                     </div>
                     <div class="form-group">
                         {!! Form::label('password', 'Password') !!}

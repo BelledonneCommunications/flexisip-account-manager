@@ -16,6 +16,15 @@
                     <a class="nav-link" href="{{ route('api') }}">API</a>
                 </li>
             </ul>
+
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('account.register') }}">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('account.login') }}">Authenticate</a>
+                </li>
+            </ul>
         </div>
     </nav>
     <div class="container-lg pt-3">

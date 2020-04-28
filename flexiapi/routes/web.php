@@ -23,6 +23,7 @@ Route::get('login', 'AccountController@login')->name('account.login');
 Route::post('authenticate', 'AccountController@authenticate')->name('account.authenticate');
 
 Route::get('login/email', 'AccountController@loginEmail')->name('account.login_email');
+Route::get('terms', 'AccountController@terms')->name('account.terms');
 Route::post('authenticate/email', 'AccountController@authenticateEmail')->name('account.authenticate_email');
 Route::get('authenticate/email/{code}', 'AccountController@authenticateEmailConfirm')->name('account.authenticate_email_confirm');
 

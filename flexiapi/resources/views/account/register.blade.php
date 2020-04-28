@@ -1,6 +1,12 @@
-@extends('layouts.account')
+@extends('layouts.main')
 
 @section('content')
+<p>
+    You already have an account?
+    <a class="ml-2 btn btn-primary btn-sm" href="{{ route('account.login') }}">Authenticate</a>
+</p>
+
+<hr />
 
 <h2>Register a new account</h2>
 
@@ -10,7 +16,12 @@
 
 <div class="form-group">
     {!! Form::label('username', 'Username') !!}
-    {!! Form::text('username', old('username'), ['class' => 'form-control', 'placeholder' => 'username', 'required']) !!}
+    <div class=" input-group mb-3">
+        {!! Form::text('username', old('username'), ['class' => 'form-control', 'placeholder' => 'username', 'required']) !!}
+        <div class="input-group-append">
+            <span class="input-group-text" id="basic-addon2">{{ $domain }}</span>
+        </div>
+    </div>
 </div>
 
 <hr />
@@ -30,6 +41,11 @@
 <div class="form-group">
     {!! Form::label('phone', 'Phone number') !!}
     {!! Form::text('phone', old('phone'), ['class' => 'form-control', 'placeholder' => '+123456789']) !!}
+</div>
+
+<div class="form-check mb-3">
+    {!! Form::checkbox('terms', 'checked', false, ['class' => 'form-check-input']) !!}
+<label class="form-check-label" for="terms">I accept the <a href="{{ route('account.terms') }}">Terms and Conditions</a></label>
 </div>
 
 <div class="form-group">

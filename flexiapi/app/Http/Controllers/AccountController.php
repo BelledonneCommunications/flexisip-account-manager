@@ -27,6 +27,11 @@ class AccountController extends Controller
         ]);
     }
 
+    public function terms(Request $request)
+    {
+        return view('account.terms');
+    }
+
     public function login(Request $request)
     {
         return view('account.login');
@@ -34,12 +39,15 @@ class AccountController extends Controller
 
     public function register(Request $request)
     {
-        return view('account.register');
+        return view('account.register', [
+            'domain' => '@' . config('app.sip_domain')
+        ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
+            'terms' =>'accepted',
             'username' => 'required|unique:external.accounts,username|min:6',
             'phone' => 'required_without:email|nullable|unique:external.aliases,alias|unique:external.accounts,username|starts_with:+|phone:AUTO',
             'g-recaptcha-response'  => 'required|captcha',
