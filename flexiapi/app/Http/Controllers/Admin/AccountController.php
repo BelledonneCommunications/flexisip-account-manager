@@ -10,11 +10,23 @@ use App\Admin;
 
 class AccountController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $search = '')
     {
+        $accounts = Account::orderBy('creation_time', 'desc');
+
+        if (!empty($search)) {
+            $accounts = $accounts->where('username', 'like', '%'.$search.'%');
+        }
+
         return view('admin.account.index', [
-            'accounts' => Account::orderBy('creation_time', 'desc')->paginate(30)
+            'search' => $search,
+            'accounts' => $accounts->paginate(30)->appends($request->query())
         ]);
+    }
+
+    public function search(Request $request)
+    {
+        return redirect()->route('admin.account.index', $request->get('search'));
     }
 
     public function show(Request $request, $id)

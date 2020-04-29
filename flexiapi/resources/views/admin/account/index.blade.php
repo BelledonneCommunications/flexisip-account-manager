@@ -6,9 +6,26 @@
 
 @section('content')
 
-<h2>Accounts</h2>
+<div class="row mb-2">
+    <div class="col-6">
+        <h2>Accounts</h2>
+    </div>
+    <div class="col-6">
+        {!! Form::open(['route' => 'admin.account.search']) !!}
+            <div class="form-row">
+                <div class="col-9">
+                    {!! Form::text('search', $search, ['class' => 'form-control', 'placeholder' => 'Search by username: +1234, foo_bar…']) !!}
+                </div>
+                <div class="col-3">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        {!! Form::close() !!}
+    </div>
+</div>
 
-<table class="table">
+
+<table class="table table-responsive-md">
     <thead>
         <tr>
             <th scope="col">#</th>

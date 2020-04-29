@@ -36,13 +36,9 @@
     <div class="list-group">
         <a href="{{ route('admin.account.index') }}" class="list-group-item list-group-item-action">
             <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">Change my current account email</h5>
+                <h5 class="mb-1">Accounts</h5>
             </div>
-            @if (!empty($account->email))
-                <p class="mb-1">{{ $account->email }}</p>
-            @else
-                <p class="mb-1">No email yet</p>
-            @endif
+            <p class="mb-1">Manage the FlexiSIP accounts</p>
         </a>
     </div>
 @endif
