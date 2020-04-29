@@ -25,7 +25,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Account extends Authenticatable
 {
     protected $connection = 'external';
-    protected $with = ['passwords'];
+    protected $with = ['passwords', 'admin'];
     protected $dates = ['creation_time'];
     public $timestamps = false;
 
@@ -44,8 +44,18 @@ class Account extends Authenticatable
         return $this->hasMany('App\DigestNonce');
     }
 
+    public function admin()
+    {
+        return $this->hasOne('App\Admin');
+    }
+
     public function getIdentifierAttribute()
     {
         return $this->attributes['username'].'@'.$this->attributes['domain'];
+    }
+
+    public function isAdmin()
+    {
+        return ($this->admin);
     }
 }

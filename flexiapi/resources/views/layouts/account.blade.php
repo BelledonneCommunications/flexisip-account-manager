@@ -19,6 +19,7 @@
     </nav>
     <div class="container-lg pt-3">
         @include('parts.errors')
+        @include('parts.breadcrumb')
         @yield('content')
     </div>
 @endsection

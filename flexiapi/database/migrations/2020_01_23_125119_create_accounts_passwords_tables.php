@@ -68,7 +68,7 @@ class CreateAccountsPasswordsTables extends Migration
      */
     public function down()
     {
-        Schema::connection('external')->dropIfExists('passwords');
-        Schema::connection('external')->dropIfExists('accounts');
+        //Schema::connection('external')->dropIfExists('passwords');
+        //Schema::connection('external')->dropIfExists('accounts');
     }
 }

@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="list-group">
+<div class="list-group mb-3">
     <a href="{{ route('account.email') }}" class="list-group-item list-group-item-action">
         <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">Change my current account email</h5>
@@ -30,5 +30,21 @@
         <p class="mb-1">Remove your account from our service</p>
     </a>
 </div>
+
+@if($account->isAdmin())
+    <h3>Admin area</h3>
+    <div class="list-group">
+        <a href="{{ route('admin.account.index') }}" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Change my current account email</h5>
+            </div>
+            @if (!empty($account->email))
+                <p class="mb-1">{{ $account->email }}</p>
+            @else
+                <p class="mb-1">No email yet</p>
+            @endif
+        </a>
+    </div>
+@endif
 
 @endsection
