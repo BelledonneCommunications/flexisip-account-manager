@@ -34,6 +34,10 @@ Allow the webserver user to write in the `storage/` directory:
 
     chcon -R -t httpd_sys_rw_content_t storage/
 
+If you have your SQLite DB setup in another directory don't forget to allow write rights as well
+
+    chcon -R -t httpd_sys_rw_content_t db.sqlite
+
 If your external database is locate on a remote machine, you should also allow your webserver user to connect to remote hosts:
 
     semanage port -a -t http_port_t -p tcp 3306 // Open remote connections on the MySQL port for example

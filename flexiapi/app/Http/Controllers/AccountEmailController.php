@@ -19,7 +19,7 @@ class AccountEmailController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'email' => 'required|confirmed|email|unique:external.accounts,email',
+            'email' => 'required|confirmed|email',
         ]);
 
         $account = $request->user();

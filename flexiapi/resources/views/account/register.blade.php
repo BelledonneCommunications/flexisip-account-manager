@@ -44,8 +44,9 @@
 </div>
 
 <div class="form-check mb-3">
-    {!! Form::checkbox('terms', 'checked', false, ['class' => 'form-check-input']) !!}
-<label class="form-check-label" for="terms">I accept the <a href="{{ route('account.terms') }}">Terms and Conditions</a></label>
+    <a href="{{ route('account.terms') }}">Terms and Conditions</a><br />
+    {!! Form::checkbox('terms', 'checked', false, ['class' => 'form-check-input', 'id' => 'terms']) !!}
+    <label class="form-check-label" for="terms">I accept the Terms and Conditions</a></label>
 </div>
 
 <div class="form-group">
@@ -53,7 +54,7 @@
     {!! NoCaptcha::display() !!}
 </div>
 
-{!! Form::submit('Register', ['class' => 'btn btn-primary float-right']) !!}
+{!! Form::submit('Register', ['class' => 'btn btn-primary']) !!}
 {!! Form::close() !!}
 
 @endsection

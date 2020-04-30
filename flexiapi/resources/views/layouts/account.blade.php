@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
-@section('body')
-    <nav class="navbar navbar-expand navbar-light bg-light">
+@section('header')
+    <nav class="navbar navbar-expand">
         <div class="collapse navbar-collapse" >
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
@@ -17,6 +17,9 @@
             @endif
         </div>
     </nav>
+@endsection
+
+@section('body')
     <div class="container-lg pt-3">
         @include('parts.errors')
         @include('parts.breadcrumb')
