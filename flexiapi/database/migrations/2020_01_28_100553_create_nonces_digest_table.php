@@ -23,11 +23,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateNoncesDigestTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::connection('local')->create('nonces', function (Blueprint $table) {
@@ -39,11 +34,6 @@ class CreateNoncesDigestTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::connection('local')->dropIfExists('nonces');

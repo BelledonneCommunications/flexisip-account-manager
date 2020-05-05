@@ -32,14 +32,14 @@ body > footer::before {
     background-position: bottom center;
     background-repeat: repeat-x;
     display: block;
-    height: 20rem;
+    height: 10rem;
     width: 100%;
+    background-size: 40rem;
     content: '';
 }
 
 @media screen and (max-width: 991px) {
-    nav.navbar,
-    body > header::after {
+    nav.navbar {
         display: none;
     }
 }
@@ -48,13 +48,13 @@ h1, h2, h3, a, label {
     color: #ff733b;
 }
 
-nav a {
+nav ul li a {
     color: white;
     opacity: 0.8;
 }
 
-nav a:hover,
-nav li.active a {
+nav ul li a:hover,
+nav ul li.active a {
     color: white;
     opacity: 1;
 }
@@ -82,11 +82,11 @@ body > footer {
 }
 
 body > header::after {
-    margin-top: -5rem;
-    margin-bottom: -6rem;
+    background-position: top center;
+    margin-bottom: -4.5rem;
 }
 
 body > footer::before {
     background-image: url('/img/footer.svg');
-    height: 15rem;
+    height: 9rem;
 }

@@ -1,6 +1,10 @@
 @extends('layouts.main')
 
 @section('content')
+
+@if ($configuration && !empty($configuration->intro_registration))
+    <p>{!! nl2br($configuration->intro_registration) !!}</p>
+@endif
 <p>
     You already have an account?
     <a class="ml-2 btn btn-primary btn-sm" href="{{ route('account.login') }}">Authenticate</a>
@@ -27,7 +31,7 @@
 <hr />
 <div class="form-row">
     <div class="form-group col-md-6">
-        {!! Form::label('email', 'New email') !!}
+        {!! Form::label('email', 'Email') !!}
         {!! Form::email('email', old('email'), ['class' => 'form-control', 'placeholder' => 'username@server.com']) !!}
     </div>
     <div class="form-group col-md-6">

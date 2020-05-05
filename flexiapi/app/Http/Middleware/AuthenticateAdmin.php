@@ -15,6 +15,10 @@ class AuthenticateAdmin
      */
     public function handle($request, Closure $next)
     {
+        if (!$request->user()) {
+            return redirect()->route('account.login');
+        }
+
         if (!$request->user()->isAdmin()) {
             return abort(403, 'Unauthorized area');
         }

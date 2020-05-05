@@ -50,9 +50,13 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => 'auth.admin'], function () {
     Route::get('admin/accounts/{search?}', 'Admin\AccountController@index')->name('admin.account.index');
     Route::post('admin/search', 'Admin\AccountController@search')->name('admin.account.search');
+
     Route::get('admin/accounts/show/{id}', 'Admin\AccountController@show')->name('admin.account.show');
     Route::get('admin/accounts/{id}/activate', 'Admin\AccountController@activate')->name('admin.account.activate');
     Route::get('admin/accounts/{id}/deactivate', 'Admin\AccountController@deactivate')->name('admin.account.deactivate');
     Route::get('admin/accounts/{id}/admin', 'Admin\AccountController@admin')->name('admin.account.admin');
     Route::get('admin/accounts/{id}/unadmin', 'Admin\AccountController@unadmin')->name('admin.account.unadmin');
+
+    Route::get('admin/configuration', 'Admin\ConfigurationController@edit')->name('admin.configuration.edit');
+    Route::post('admin/configuration', 'Admin\ConfigurationController@update')->name('admin.configuration.update');
 });

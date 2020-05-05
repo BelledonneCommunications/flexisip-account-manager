@@ -23,11 +23,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateAccountsPasswordsTables extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         if (!Schema::connection('external')->hasTable('accounts')) {
@@ -61,11 +56,6 @@ class CreateAccountsPasswordsTables extends Migration
         }
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         //Schema::connection('external')->dropIfExists('passwords');

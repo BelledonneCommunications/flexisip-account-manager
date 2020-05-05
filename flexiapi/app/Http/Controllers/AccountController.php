@@ -10,6 +10,7 @@ use Carbon\Carbon;
 
 use App\Account;
 use App\Alias;
+use App\Configuration;
 use App\Rules\SIP;
 use App\Helpers\Utils;
 use App\Libraries\OvhSMS;
@@ -40,7 +41,8 @@ class AccountController extends Controller
     public function register(Request $request)
     {
         return view('account.register', [
-            'domain' => '@' . config('app.sip_domain')
+            'domain' => '@' . config('app.sip_domain'),
+            'configuration' => Configuration::first()
         ]);
     }
 
