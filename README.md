@@ -14,14 +14,36 @@ Flexisip Account Manager is dual licensed, and can be licensed and distributed:
 ### 1. Install RPM package with dependencies
 --------------------------------------------
 
+Enable Belledonne Communications repository:
+
+```bash
+cat > /etc/yum.repos.d/Belledonne.repo << EOF
+[Belledonne]
+name=Belledonne
+baseurl=https://www.linphone.org/snapshots/centos7/
+enabled=1
+gpgcheck=0
+EOF
+```
+
+CentOS-SCLo-scl-rh repository is also required for PHP 7.3:
+
+```bash
+yum install centos-release-scl-rh
+```
+
 RPM package should install necessary dependencies automatically.
 
-`yum install bc-flexisip-account-manager`
+```bash
+yum install bc-flexisip-account-manager
+```
 
-This package depends on `rh-php71` which will be installed in `/opt/rh/rh-php71/`.
+This package depends on `rh-php73` which will be installed in `/opt/rh/rh-php73/`.
 If you don't have any other php installed on your server, use the following to be able to use php commands:
 
-`ln -s /opt/rh/rh-php71/root/usr/bin/php /usr/bin/php`
+```bash
+ln -s /opt/rh/rh-php73/root/usr/bin/php /usr/bin/php
+```
 
 ### 2. Configure Apache server
 ------------------------------
@@ -45,23 +67,37 @@ The RPM package has installed the configuration files in `/etc/flexisip-account-
 Each file name should be explicit on which settings it contains. If you have any doubt, leave the default value.
 At least you MUST edit the following file and fill the values you used in previous step:
 
-`nano /etc/flexisip-account-manager/db.conf`
+```bash
+nano /etc/flexisip-account-manager/db.conf
+```
 
 Now you can create the necessary tables in the database using our script:
 
-`php /opt/belledonne-communications/share/flexisip-account-manager/tools/create_tables.php`
+```bash
+php /opt/belledonne-communications/share/flexisip-account-manager/tools/create_tables.php
+```
 
 ### 5. Install OVH SMS gateway dependency (optionnal)
 
 To install OVH SMS PHP API create a `composer.json` file in `/opt/belledonne-communications/`:
 
-`echo '{ "name": "XMLRPC SMS API", "description": "XMLRPC SMS API", "require": { "ovh/php-ovh-sms": "dev-master" } }' > /opt/belledonne-communications/share/flexisip-account-manager/composer.json`
+```bash
+cat > /opt/belledonne-communications/share/flexisip-account-manager/composer.json << EOF
+{
+	"name": "XMLRPC SMS API",
+	"description": "XMLRPC SMS API",
+	"require": { "ovh/php-ovh-sms": "dev-master" }
+}
+EOF
+```
 
 Then download and install [composer](https://getcomposer.org/download/).
 
 Finally start composer:
 
-`cd /opt/belledonne-communications/share/flexisip-account-manager/ && composer install`
+```bash
+cd /opt/belledonne-communications/share/flexisip-account-manager/ && composer install
+```
 
 ### 4. Configure the API
 ------------------------------
@@ -70,16 +106,24 @@ The FlexiAPI configuration is located in the same directory as for the XMLRPC se
 
 You should normally only change the `DB_EXTERNAL` parameters then rollback and re-run the migrations (by default the API is assuming that it runs on two SQLite databases). To do so, find the root directory of `flexiapi` (normally under `/opt/belledonne-communications/share/flexisip-account-manager`), authenticate as your web user (`www-data` or `apache`) and run rollback and migrate (all the content will be destroyed, we recommend to do always do backup of your databases before running any migrations):
 
-    php artisan migrate:rollback
-    php artisan migrate
+```bash
+php artisan migrate:rollback
+php artisan migrate
+```
 
 ### 5. Packaging
 --------------------
 To build a rpm package on centos7:
+
+```bash
 make rpm
+```
+
 To build a rpm package with docker:
 
-    docker run -v $PWD:/home/bc -it gitlab.linphone.org:4567/bc/public/flexisip-account-manager/bc-dev-centos:7 make rpm
+```bash
+docker run -v $PWD:/home/bc -it gitlab.linphone.org:4567/bc/public/flexisip-account-manager/bc-dev-centos:7 make rpm
+```
 
 GitLab is running the command above using `make rpm-dev`, this also install all the required dependencies to run `phpunit` properly (they are disabled by default to save space in the final rpm file).
 
