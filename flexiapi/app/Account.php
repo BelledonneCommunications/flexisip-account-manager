@@ -29,6 +29,13 @@ class Account extends Authenticatable
     protected $dates = ['creation_time'];
     public $timestamps = false;
 
+    protected static function booted()
+    {
+        static::addGlobalScope('domain', function (Builder $builder) {
+            $builder->where('domain', config('app.sip_domain'));
+        });
+    }
+
     public function passwords()
     {
         return $this->hasMany('App\Password');

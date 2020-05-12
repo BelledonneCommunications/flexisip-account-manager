@@ -106,7 +106,7 @@ class AccountController extends Controller
         $request->validate(['identifier' => 'required|same:identifier_confirm']);
 
         Auth::logout();
-        //$request->user()->delete();
+        $request->user()->delete();
 
         return redirect()->route('account.login');
     }
@@ -114,21 +114,18 @@ class AccountController extends Controller
     public function authenticate(Request $request)
     {
         $request->validate([
-            'username' => ['required', new SIP],
+            'username' => 'required',
             'password' => 'required'
         ]);
 
-        list($username, $domain) = explode('@', $request->get('username'));
-
-        $account = Account::where('username', $username)
-                          ->where('domain', $domain)
+        $account = Account::where('username', $request->get('username'))
                           ->firstOrFail();
 
         // Try out the passwords
         foreach ($account->passwords as $password) {
             if (hash_equals(
                 $password->password,
-                Utils::bchash($username, $domain, $request->get('password'), $password->algorithm)
+                Utils::bchash($request->get('username'), config('app.sip_domain'), $request->get('password'), $password->algorithm)
             )) {
                 Auth::login($account);
                 return redirect()->route('account.index');

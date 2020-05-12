@@ -7,7 +7,7 @@
         {!! Form::open(['route' => 'account.authenticate']) !!}
             <div class="form-group">
                 {!! Form::label('username', 'Username') !!}
-                {!! Form::text('username', old('username'), ['class' => 'form-control', 'placeholder' => 'username@'.config('app.sip_domain'), 'required']) !!}
+                {!! Form::text('username', old('username'), ['class' => 'form-control', 'placeholder' => 'username', 'required']) !!}
             </div>
             <div class="form-group">
                 {!! Form::label('password', 'Password') !!}
