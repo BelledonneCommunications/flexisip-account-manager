@@ -20,6 +20,7 @@
 
 include_once __DIR__ . '/../config/config.php';
 include_once __DIR__ . '/../misc/logging.php';
+include_once __DIR__ . '/../misc/utilities.php';
 
 class Database
 {
