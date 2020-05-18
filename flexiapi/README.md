@@ -26,6 +26,41 @@ Complete all the other variables in the `.env` file:
 - SMTP configuration
 - App name, SIP domain…
 
+### Multi instances environement
+
+FlexiAPI can also handle multi domains setup.
+
+To do so, configure several web servers virtualhosts and set a specific `APP_ENV` environement variable in each of them.
+
+With Apache, use the [mod_env](https://httpd.apache.org/docs/2.4/mod/mod_env.html) module.
+
+    SetEnv APP_ENV foobar
+
+On nginx use `fastcgi_param` to pass the parameter directly to PHP.
+
+    location ~ [^/]\.php(/|$) {
+        …
+        include /etc/nginx/fastcgi_params;
+        fastcgi_param  APP_ENV     foobar;
+    }
+
+Note that if `APP_ENV` is not set FlexiAPI will directly use the default `.env` file.
+
+FlexiAPI will then try to load a custom configuration file with the following name `.env.$APP_ENV`. So for the previous example `.env.foobar`.
+
+You can then configure your instances with specific values.
+
+    INSTANCE_COPYRIGHT="FooBar - Since 1997"
+    INSTANCE_INTRO_REGISTRATION="Welcome on the FooBar Server"
+    INSTANCE_CUSTOM_THEME=true
+    …
+
+#### Custom theme
+
+If you set `INSTANCE_CUSTOM_THEME` to true, FlexiAPI will try to load a CSS file located in `public/css/$APP_ENV.style.css`. If the file doesn't exists it will fallback to `public/css/style.css`.
+
+We advise you to copy the `style.css` file and rename it to make your custom CSS configurations for your instance.
+
 ### SELinux
 
 If you are running on a CentOS/RedHat machine, please ensure that SELinux is correctly configured.

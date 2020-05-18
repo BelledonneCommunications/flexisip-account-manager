@@ -2,8 +2,8 @@
 
 @section('content')
 
-@if ($configuration && !empty($configuration->intro_registration))
-    <p>{!! nl2br($configuration->intro_registration) !!}</p>
+@if (config('instance.intro_registration'))
+    <p>{!! nl2br(config('instance.intro_registration')) !!}</p>
 @endif
 <p>
     You already have an account?

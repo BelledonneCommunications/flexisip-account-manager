@@ -40,12 +40,6 @@
             </div>
             <p class="mb-1">Manage the FlexiSIP accounts</p>
         </a>
-        <a href="{{ route('admin.configuration.edit') }}" class="list-group-item list-group-item-action">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">Configuration</h5>
-            </div>
-            <p class="mb-1">Configure the layout and other parameters</p>
-        </a>
     </div>
 @endif
 

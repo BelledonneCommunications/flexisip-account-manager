@@ -1,9 +1,12 @@
 flexisip-account-manager/
 rpmbuild/
 
+.env.*
+
 flexiapi/node_modules
 flexiapi/public/hot
 flexiapi/public/storage
+flexiapi/public/css/*.style.css
 flexiapi/storage/*.key
 flexiapi/vendor
 flexiapi/.env

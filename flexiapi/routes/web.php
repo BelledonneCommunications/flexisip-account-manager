@@ -56,7 +56,4 @@ Route::group(['middleware' => 'auth.admin'], function () {
     Route::get('admin/accounts/{id}/deactivate', 'Admin\AccountController@deactivate')->name('admin.account.deactivate');
     Route::get('admin/accounts/{id}/admin', 'Admin\AccountController@admin')->name('admin.account.admin');
     Route::get('admin/accounts/{id}/unadmin', 'Admin\AccountController@unadmin')->name('admin.account.unadmin');
-
-    Route::get('admin/configuration', 'Admin\ConfigurationController@edit')->name('admin.configuration.edit');
-    Route::post('admin/configuration', 'Admin\ConfigurationController@update')->name('admin.configuration.update');
 });
