@@ -45,6 +45,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('email', 'AccountEmailController@update')->name('account.email.update');
     Route::get('password', 'AccountPasswordController@show')->name('account.password');
     Route::post('password', 'AccountPasswordController@update')->name('account.password.update');
+
+    Route::get('devices', 'Account\DeviceController@index')->name('account.device.index');
+    Route::get('devices/delete/{id}', 'Account\DeviceController@delete')->name('account.device.delete');
+    Route::delete('devices/{id}', 'Account\DeviceController@destroy')->name('account.device.destroy');
 });
 
 Route::group(['middleware' => 'auth.admin'], function () {

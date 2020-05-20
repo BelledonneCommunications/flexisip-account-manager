@@ -13,6 +13,12 @@
             <p class="mb-1">No email yet</p>
         @endif
     </a>
+    <a href="{{ route('account.device.index') }}" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Manage my devices</h5>
+        </div>
+        <p class="mb-1">See and delete the devices linked to your account</p>
+    </a>
     <a href="{{ route('account.password') }}" class="list-group-item list-group-item-action">
         <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">Change my password</h5>
