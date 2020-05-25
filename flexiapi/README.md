@@ -61,7 +61,14 @@ If you set `INSTANCE_CUSTOM_THEME` to true, FlexiAPI will try to load a CSS file
 
 We advise you to copy the `style.css` file and rename it to make your custom CSS configurations for your instance.
 
-### SELinux
+### systemd restrictions
+
+To retrieve the devices configuration, FlexiAPI connects to the UNIX socket opened by FlexiSIP. The socket is located in the `/tmp` directory.
+If you have issues connecting to that socket, please ensure that your PHP process have access to it (user, rights).
+
+The systemd service [PrivateTmp](https://access.redhat.com/blogs/766093/posts/1976243) setting might restrict that access.
+
+### SELinux restrictions
 
 If you are running on a CentOS/RedHat machine, please ensure that SELinux is correctly configured.
 
