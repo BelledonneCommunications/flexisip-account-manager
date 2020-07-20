@@ -125,6 +125,12 @@ function hash_password($user, $password, $domain, $algo)
     return $hashed_password;
 }
 
+function generate_username()
+{
+    $generated_username = substr(str_shuffle(GENERATED_USERNAME_CHARACTERS), 0, GENERATED_USERNAME_LENGTH);
+    return $generated_username;
+}
+
 function generate_password()
 {
     $generated_password = substr(str_shuffle(GENERATED_PASSWORD_CHARACTERS), 0, GENERATED_PASSWORD_LENGTH);

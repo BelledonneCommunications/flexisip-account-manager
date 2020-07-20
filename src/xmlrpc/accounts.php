@@ -173,13 +173,68 @@ function xmlrpc_get_accounts_count($method, $args)
     return $account->getCount();
 }
 
+// args = [user_agent, [domain], [algo]]
+function xmlrpc_create_push_account($method, $args)
+{
+    $user_agent = $args[0];
+    $domain = get_domain($args[1]);
+    $algo = get_algo($args[2]);
+
+    Logger::getInstance()->message("[XMLRPC] xmlrpc_create_push_account(" . $domain . ", " . $algo . ")");
+
+    if ($algo == null) {
+        return ALGO_NOT_SUPPORTED;
+    }
+
+    $database = new Database();
+    $db = $database->getConnection();
+    $account = new Account($db);
+    $account->domain = $domain;
+
+    do {
+        $user = generate_username();
+        $account->username = $user;
+    } while ($account->getOne());
+
+    Logger::getInstance()->message("[XMLRPC] Push account generated username is: " . $user);
+
+    $hashed_password = hash_password($user, generate_password(), $domain, $algo);
+
+    $account->user_agent = $user_agent;
+    $account->ip_address = getIp();
+    $account->activated = "1";
+    $account->create();
+
+    $password = new Password($db);
+    $password->account_id = $account->id;
+    $password->password = $hashed_password;
+    $password->algorithm = $algo;
+    $password->create();
+
+    if (CUSTOM_HOOKS) {
+        hook_on_account_created($account);
+    }
+
+    $result = array(
+        "username" => $account->username,
+        "domain" => $account->domain,
+        "password" => $password->password,
+        "algorithm" => $password->algorithm
+    );
+
+    return $result;
+}
+
+
 function xmlrpc_accounts_register_methods($server)
 {
     xmlrpc_server_register_method($server, 'is_account_used', 'xmlrpc_is_account_used');// args = [username, [domain]], return OK or NOK
     xmlrpc_server_register_method($server, 'is_account_activated', 'xmlrpc_is_account_activated');// args = [username, [domain]], return OK or NOK
     xmlrpc_server_register_method($server, 'recover_account_from_confirmation_key', 'xmlrpc_recover_account_from_confirmation_key');// args = [username, key, [domain], [algo]]
 
-    xmlrpc_server_register_method($server, 'get_accounts_count', 'xmlrpc_get_accounts_count');//args = []
+    xmlrpc_server_register_method($server, 'get_accounts_count', 'xmlrpc_get_accounts_count');// args = []
+
+    xmlrpc_server_register_method($server, 'create_push_account', 'xmlrpc_create_push_account');// args = [user_agent, [domain], [algo]]
 
     xmlrpc_accounts_email_register_methods($server);
     xmlrpc_accounts_phone_register_methods($server);
