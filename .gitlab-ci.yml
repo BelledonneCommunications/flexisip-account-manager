@@ -61,5 +61,8 @@ job-centos7-rpm-deploy:
     - job-centos7-rpm
 
   script:
-   - cd rpmbuild/x86_64 && rsync -e "ssh -o StrictHostKeyChecking=no" -pr . $DEPLOY_SERVER:$CENTOS7_DEPLOY_DIRECTORY
-   - ssh $DEPLOY_SERVER "chmod a+r $CENTOS7_DEPLOY_DIRECTORY/*.rpm && createrepo_c --update $CENTOS7_DEPLOY_DIRECTORY/."
+    - cd rpmbuild/x86_64
+    - for deploydir in $CENTOS7_DEPLOY_DIRECTORY $CENTOS7_LEGACY_DEPLOY_DIRECTORY; do
+        rsync -e "ssh -o StrictHostKeyChecking=no" -pr . $DEPLOY_SERVER:$deploydir;
+        ssh $DEPLOY_SERVER "chmod a+r $deploydir/*.rpm && createrepo_c --update $deploydir/.";
+      done
