@@ -18,20 +18,21 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-define("PATH_TO_CONFIG", "/etc/flexisip-account-manager");
+$path = isset($_SERVER['FLEXISIP_ACCOUNT_MANAGER_PATH_TO_CONFIG']) ? $_SERVER['FLEXISIP_ACCOUNT_MANAGER_PATH_TO_CONFIG'] : "/etc/flexisip-account-manager";
+define("FLEXISIP_ACCOUNT_MANAGER_PATH_TO_CONFIG", $path);
 
-include_once PATH_TO_CONFIG . '/accounts.conf';
-include_once PATH_TO_CONFIG . '/auth.conf';
-include_once PATH_TO_CONFIG . '/db.conf';
-include_once PATH_TO_CONFIG . '/emails.conf';
-include_once PATH_TO_CONFIG . '/inapp.conf';
-include_once PATH_TO_CONFIG . '/logs.conf';
-include_once PATH_TO_CONFIG . '/provisioning.conf';
-include_once PATH_TO_CONFIG . '/sms.conf';
-include_once PATH_TO_CONFIG . '/tests.conf';
+include_once FLEXISIP_ACCOUNT_MANAGER_PATH_TO_CONFIG . '/accounts.conf';
+include_once FLEXISIP_ACCOUNT_MANAGER_PATH_TO_CONFIG . '/auth.conf';
+include_once FLEXISIP_ACCOUNT_MANAGER_PATH_TO_CONFIG . '/db.conf';
+include_once FLEXISIP_ACCOUNT_MANAGER_PATH_TO_CONFIG . '/emails.conf';
+include_once FLEXISIP_ACCOUNT_MANAGER_PATH_TO_CONFIG . '/inapp.conf';
+include_once FLEXISIP_ACCOUNT_MANAGER_PATH_TO_CONFIG . '/logs.conf';
+include_once FLEXISIP_ACCOUNT_MANAGER_PATH_TO_CONFIG . '/provisioning.conf';
+include_once FLEXISIP_ACCOUNT_MANAGER_PATH_TO_CONFIG . '/sms.conf';
+include_once FLEXISIP_ACCOUNT_MANAGER_PATH_TO_CONFIG . '/tests.conf';
 
 // these two might include some of the scripts from the installation, so keep them last
-include_once PATH_TO_CONFIG . '/hooks.conf';
-include_once PATH_TO_CONFIG . '/overloads.conf';
+include_once FLEXISIP_ACCOUNT_MANAGER_PATH_TO_CONFIG . '/hooks.conf';
+include_once FLEXISIP_ACCOUNT_MANAGER_PATH_TO_CONFIG . '/overloads.conf';
 
 ?>
