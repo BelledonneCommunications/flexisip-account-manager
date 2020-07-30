@@ -90,7 +90,7 @@ function xmlrpc_create_email_account($method, $args)
     }
 
     if (SEND_ACTIVATION_EMAIL && EMAIL_ENABLED) {
-        send_email_with_activation_link($email, $account->confirmation_key, $account->username, $algo);
+        send_email_with_activation_link($email, $account->confirmation_key, $account->username, $account->domain, $algo);
     } elseif (AUTO_ACTIVATE_ACCOUNT) {
         //TODO
         /*if (USE_IN_APP_PURCHASES) {
@@ -177,7 +177,7 @@ function xmlrpc_create_email_md5_sha256_account($method, $args)
     }
 
     if (SEND_ACTIVATION_EMAIL && EMAIL_ENABLED) {
-        send_email_with_activation_link($email, $account->confirmation_key, $account->username, SHA256);
+        send_email_with_activation_link($email, $account->confirmation_key, $account->username, $account->domain, SHA256);
     } elseif (AUTO_ACTIVATE_ACCOUNT) {
         //TODO
         /*if (USE_IN_APP_PURCHASES) {
