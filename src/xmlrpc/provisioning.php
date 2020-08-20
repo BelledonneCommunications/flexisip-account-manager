@@ -21,6 +21,10 @@
 header("Access-Control-Allow-Origin: *");
 
 include_once __DIR__ . '/../misc/utilities.php';
+include_once __DIR__ . '/../objects/account.php';
+include_once __DIR__ . '/../objects/password.php';
+
+$logger = Logger::getInstance();
 
 if (isset($_GET['qrcode']) && $_GET['qrcode'] == 1) {
     $query = $_GET;
@@ -79,15 +83,49 @@ $domain = isset($_GET['domain']) ? $_GET['domain'] : SIP_DOMAIN;
 $transport = isset($_GET['transport']) ? $_GET['transport'] : REMOTE_PROVISIONING_DEFAULT_TRANSPORT;
 
 if (!empty($username)) {
+    $ha1 = isset($_GET['ha1']) ? $_GET['ha1'] : null;
+    $algo = isset($_GET['algorithm']) ? $_GET['algorithm'] : DEFAULT_ALGORITHM;
+
+    if (REMOTE_PROVISIONING_ONE_TIME_PASSWORD) {
+        $database = new Database();
+        $db = $database->getConnection();
+        $account = new Account($db);
+        $account->username = $username;
+        $account->domain = $domain;
+        
+        if ($account->getOne()) {
+            if (!is_activated($account->activated)) {
+                $password = new Password($db);
+                $password->account_id = $account->id;
+                $password->algorithm = $algo;
+
+                if ($password->getOne()) {
+                    $new_password = generate_password();
+                    $ha1 = hash_password($username, $new_password, $domain, $algo);
+                    $password->password = $ha1;
+                    if (!$password->update()) {
+                        $logger->error("Failed to update password for account id " . $account->id);
+                    }
+                } else {
+                    $logger->error("Password not found for account id " . $account->id);
+                }
+
+                $account->activated = "1";
+                if (!$account->update()) {
+                    $logger->error("Failed to activate account id " . $account->id);
+                }
+            } else {
+                $logger->message("Account id " . $account->id . " is already activated");
+            }
+        }
+    }
+
     $xml .= '<section name="proxy_' . $proxy_config_index . '"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>';
     $xml .= '<entry name="reg_identity">&lt;sip:' . $username . '@' . $domain . '&gt;</entry>';
     $xml .= '<entry name="reg_proxy">&lt;sip:' . $domain . ';transport=' . $transport . '&gt;</entry>';
     $xml .= '<entry name="reg_route">&lt;sip:' . $domain . ';transport=' . $transport . '&gt;</entry>';
     $xml .= '<entry name="reg_sendregister">1</entry>';
     $xml .= '</section>';
-
-    $ha1 = isset($_GET['ha1']) ? $_GET['ha1'] : null;
-    $algo = isset($_GET['algorithm']) ? $_GET['algorithm'] : DEFAULT_ALGORITHM;
 
     if (!empty($ha1)) {
         $xml .= '<section name="auth_info_' . $auth_info_index . '"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>';
