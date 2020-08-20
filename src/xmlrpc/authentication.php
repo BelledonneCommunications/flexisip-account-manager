@@ -53,9 +53,8 @@ function authenticate($auth_digest, $realm = "sip.example.org")
 {
     Logger::getInstance()->debug("Authenticate : Digest ".(print_r($auth_digest, true))." realm " . $realm);
     // Parse the client authentication data
-    $default = array('nounce', 'nc', 'cnounce', 'qop', 'username', 'uri', 'response');
-    preg_match_all('~(\w+)="?([^",]+)"?~', $auth_digest, $matches); # $_SERVER['PHP_AUTH_DIGEST']
-    $data = array_combine($matches[1] + $default, $matches[2]);
+    preg_match_all('@(realm|username|nonce|uri|nc|cnonce|qop|response|opaque|algorithm)=[\'"]?([^\'",]+)@', $auth_digest, $a);
+    $data = array_combine($a[1], $a[2]);
 
     // Get the password/hash from database
     $database = new Database();

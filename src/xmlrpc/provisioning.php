@@ -21,10 +21,40 @@
 header("Access-Control-Allow-Origin: *");
 
 include_once __DIR__ . '/../misc/utilities.php';
+
 include_once __DIR__ . '/../objects/account.php';
 include_once __DIR__ . '/../objects/password.php';
 
+include_once __DIR__ . '/authentication.php';
+
 $logger = Logger::getInstance();
+
+if (REMOTE_PROVISIONING_USE_DIGEST_AUTH) {
+    $headers = getallheaders();
+
+    // Get authentication header if there is one
+    if (!empty($headers['Auth-Digest'])) {
+        $logger->debug("Auth-Digest = " . $headers['Auth-Digest']);
+        $authorization = $headers['Auth-Digest'];
+    } elseif (!empty($headers['Authorization'])) {
+        $logger->debug("Authorization = " . $headers['Authorization']);
+        $authorization = $headers['Authorization'];
+    }
+
+    if (!empty($authorization)) {
+        $authentication_status = authenticate($authorization, AUTH_REALM);
+
+        if ($authentication_status == true) {
+            Logger::getInstance()->debug("Authentication successful");
+        } else {
+            Logger::getInstance()->debug("Authentication failed");
+            request_authentication(AUTH_REALM);
+        }
+    } else {
+        Logger::getInstance()->debug("No authentication header");
+        request_authentication(AUTH_REALM);
+    }
+}
 
 if (isset($_GET['qrcode']) && $_GET['qrcode'] == 1) {
     $query = $_GET;

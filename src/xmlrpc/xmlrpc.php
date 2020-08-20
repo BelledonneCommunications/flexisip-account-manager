@@ -86,16 +86,16 @@ if (USE_DIGEST_AUTH) {
     // Authentication
     if (in_array($request_type, $unauthenticated_requests) == false) {
         if (!empty($authorization)) {
-            $authentication_status = authenticate(AUTH_REALM);
+            $authentication_status = authenticate($authorization, AUTH_REALM);
 
             if ($authentication_status == true) {
-                Logger::getInstance()->debug("Authentication successful for " . $headers['From']);
+                Logger::getInstance()->debug("Authentication successful");
             } else {
-                Logger::getInstance()->debug("Authentication failed for " . $headers['From']);
+                Logger::getInstance()->debug("Authentication failed");
                 request_authentication(AUTH_REALM);
             }
         } else {
-            Logger::getInstance()->debug("No authentication header for " . $headers['From']);
+            Logger::getInstance()->debug("No authentication header");
             request_authentication(AUTH_REALM);
         }
     }
