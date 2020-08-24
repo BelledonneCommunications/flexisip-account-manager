@@ -5,13 +5,15 @@
         @include('parts.already_auth')
     @else
         {!! Form::open(['route' => 'account.authenticate']) !!}
-            <div class="form-group">
-                {!! Form::label('username', 'Username') !!}
-                {!! Form::text('username', old('username'), ['class' => 'form-control', 'placeholder' => 'username', 'required']) !!}
-            </div>
-            <div class="form-group">
-                {!! Form::label('password', 'Password') !!}
-                {!! Form::password('password', ['class' => 'form-control', 'placeholder' => 'myPassword', 'required']) !!}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {!! Form::label('username', 'Username') !!}
+                    {!! Form::text('username', old('username'), ['class' => 'form-control', 'placeholder' => 'username', 'required']) !!}
+                </div>
+                <div class="form-group col-md-6">
+                    {!! Form::label('password', 'Password') !!}
+                    {!! Form::password('password', ['class' => 'form-control', 'placeholder' => 'myPassword', 'required']) !!}
+                </div>
             </div>
 
             <div class="form-row">

@@ -20,7 +20,7 @@
     {!! Form::email('email_confirmation', old('email_confirm'), ['class' => 'form-control', 'placeholder' => 'username@server.com', 'required']) !!}
 </div>
 
-{!! Form::submit('Change', ['class' => 'btn btn-primary float-right']) !!}
+{!! Form::submit('Change', ['class' => 'btn btn-primary btn-centered']) !!}
 {!! Form::close() !!}
 
 @endsection

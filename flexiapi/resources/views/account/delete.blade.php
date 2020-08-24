@@ -16,7 +16,7 @@
 
 {!! Form::hidden('identifier_confirm', $account->identifier) !!}
 
-{!! Form::submit('Delete', ['class' => 'btn btn-danger float-right']) !!}
+{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-centered']) !!}
 {!! Form::close() !!}
 
 @endsection

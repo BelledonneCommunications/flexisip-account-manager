@@ -5,7 +5,7 @@
 @if (config('instance.intro_registration'))
     <p>{!! nl2br(config('instance.intro_registration')) !!}</p>
 @endif
-<p>
+<p class="text-center">
     You already have an account?
     <a class="ml-2 btn btn-primary btn-sm" href="{{ route('account.login') }}">Authenticate</a>
 </p>
@@ -58,7 +58,7 @@
     {!! NoCaptcha::display() !!}
 </div>
 
-{!! Form::submit('Register', ['class' => 'btn btn-primary']) !!}
+{!! Form::submit('Register', ['class' => 'btn btn-primary btn-centered']) !!}
 {!! Form::close() !!}
 
 @endsection

@@ -22,7 +22,7 @@
 
 {!! Form::hidden('uuid', $device->uuid) !!}
 
-{!! Form::submit('Delete', ['class' => 'btn btn-danger float-right']) !!}
+{!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
 {!! Form::close() !!}
 
 

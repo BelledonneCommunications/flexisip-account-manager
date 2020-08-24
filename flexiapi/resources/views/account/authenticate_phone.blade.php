@@ -12,7 +12,7 @@
                         {!! Form::hidden('account_id', $account->id) !!}
                         {!! Form::text('code', old('code'), ['class' => 'form-control', 'placeholder' => '1234', 'required']) !!}
                     </div>
-                    {!! Form::submit('Authenticate', ['class' => 'btn btn-primary']) !!}
+                    {!! Form::submit('Authenticate', ['class' => 'btn btn-primary btn-centered']) !!}
                 {!! Form::close() !!}
             </div>
         </div>

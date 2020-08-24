@@ -20,7 +20,7 @@
 @endsection
 
 @section('body')
-    <div class="container-lg pt-3">
+    <div class="container pt-4">
         @include('parts.errors')
         @include('parts.breadcrumb')
         @yield('content')

@@ -11,7 +11,7 @@
                         {!! Form::label('phone', 'Phone') !!}
                         {!! Form::text('phone', old('phone'), ['class' => 'form-control', 'placeholder' => '+123456789', 'required']) !!}
                     </div>
-                    {!! Form::submit('Send the authentication code by SMS', ['class' => 'btn btn-primary']) !!}
+                    {!! Form::submit('Send the authentication code by SMS', ['class' => 'btn btn-primary btn-centered']) !!}
                 {!! Form::close() !!}
             </div>
         </div>

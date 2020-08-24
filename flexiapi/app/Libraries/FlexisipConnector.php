@@ -27,7 +27,7 @@ class FlexisipConnector
 
     public function __construct()
     {
-        $pid = file_get_contents('/var/run/flexisip-proxy.pid');
+        $pid = file_get_contents(config('app.flexisip_proxy_pid'));
         $this->_socket = stream_socket_client('unix:///tmp/flexisip-proxy-'.$pid, $errno, $errstr);
     }
 

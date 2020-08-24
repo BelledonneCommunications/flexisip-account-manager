@@ -24,7 +24,7 @@
     {!! Form::label('password_sha256', 'Use a SHA-256 encrypted password. This stronger password might not work with some old SIP clients.', ['class' => 'form-check-label']) !!}
 </div>
 
-{!! Form::submit('Change', ['class' => 'btn btn-primary float-right']) !!}
+{!! Form::submit('Change', ['class' => 'btn btn-primary']) !!}
 {!! Form::close() !!}
 
 @endsection

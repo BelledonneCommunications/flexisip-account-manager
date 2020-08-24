@@ -17,6 +17,7 @@
 body {
     min-height: 100vh;
     display: flex;
+    color: #444;
     flex-direction: column;
     font-family: "Montserrat";
 }
@@ -28,28 +29,15 @@ body > div {
 .container {
     max-width: 960px;
 }
-
-body > header::after,
-body > footer::before {
-    background-image: url('/img/header.svg');
-    background-color: white;
-    background-position: bottom center;
-    background-repeat: repeat-x;
-    display: block;
-    height: 10rem;
-    width: 100%;
-    background-size: 40rem;
-    content: '';
-}
-
+/*
 @media screen and (max-width: 991px) {
     nav.navbar {
         display: none;
     }
-}
+}*/
 
 h1, h2, h3, a, label {
-    color: #ff733b;
+    color: #6081C9;
 }
 
 nav ul li a {
@@ -64,33 +52,63 @@ nav ul li.active a {
 }
 
 input.form-control {
-    border-color: #9ec6dc;
+    border-color: #DDD;
+    font-size: 15px;
+}
+
+.input-group-text {
+    font-size: 15px;
+}
+
+input.form-control:focus {
+    border-color: #FF5E00;
 }
 
 .btn {
-    border: 1px solid #ff733b;
+    border: 1px solid #FF5E00;
     background-color: transparent;
-    color: #ff733b;
-    border-radius: 10rem;
+    color: #FF5E00;
+    border-radius: .25rem;
+    font-size: 15px;
+    letter-spacing: 0.75px;
+}
+
+.btn.btn-centered {
+    display: block;
+    margin: 1rem auto;
+}
+
+.btn:hover {
+    background-color: #FF5E00;
+    color: white;
+    border-color: #FF5E00;
+}
+
+.btn:not(.disabled):not(:disabled):active,
+.btn:not(.disabled):not(:disabled):focus {
+    background-color: #6081C9;
+    border-color: #6081C9;
 }
 
 body > footer,
 body > header nav {
-    background-color: #ff733b;
+    background-color: #6081C9;
 }
 
 body > footer {
     color: white;
-    padding-bottom: 1rem;
+    padding: 1rem;
     text-align: center;
 }
-
-body > header::after {
-    background-position: top center;
-    margin-bottom: -4.5rem;
-}
-
+/*
 body > footer::before {
     background-image: url('/img/footer.svg');
     height: 9rem;
-}
+    background-color: white;
+    background-position: bottom center;
+    background-repeat: repeat-x;
+    display: block;
+    width: 100%;
+    background-size: 40rem;
+    content: '';
+}*/
