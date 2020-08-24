@@ -31,7 +31,8 @@ $logger = Logger::getInstance();
 
 if (REMOTE_PROVISIONING_USE_DIGEST_AUTH) {
     $headers = getallheaders();
-
+    $authorization = null;
+    
     // Get authentication header if there is one
     if (!empty($headers['Auth-Digest'])) {
         $logger->debug("Auth-Digest = " . $headers['Auth-Digest']);
@@ -44,7 +45,7 @@ if (REMOTE_PROVISIONING_USE_DIGEST_AUTH) {
     if (!empty($authorization)) {
         $authentication_status = authenticate($authorization, AUTH_REALM);
 
-        if ($authentication_status == true) {
+        if ($authentication_status != null) {
             Logger::getInstance()->debug("Authentication successful");
         } else {
             Logger::getInstance()->debug("Authentication failed");
@@ -113,6 +114,14 @@ $domain = isset($_GET['domain']) ? $_GET['domain'] : SIP_DOMAIN;
 $transport = isset($_GET['transport']) ? $_GET['transport'] : REMOTE_PROVISIONING_DEFAULT_TRANSPORT;
 
 if (!empty($username)) {
+    if (REMOTE_PROVISIONING_USE_DIGEST_AUTH) {
+        if ($username != $authentication_status) {
+            $logger->error("User " . $authentication_status . " is trying to impersonate another user: " . $username);
+            header('HTTP/1.1 403 Forbidden: Authenticated username and provisioning username mismatch');
+            exit();
+        }
+    }
+
     $ha1 = isset($_GET['ha1']) ? $_GET['ha1'] : null;
     $algo = isset($_GET['algorithm']) ? $_GET['algorithm'] : DEFAULT_ALGORITHM;
 

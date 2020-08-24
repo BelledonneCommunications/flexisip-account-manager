@@ -65,7 +65,7 @@ function authenticate($auth_digest, $realm = "sip.example.org")
 
     if (!$account->getOne()) {
         Logger::getInstance()->error("Couldn't find account " . (string)$account);
-        return false;
+        return null;
     }
     $pwd = new Password($db);
     $pwd->account_id = $account->id;
@@ -74,7 +74,7 @@ function authenticate($auth_digest, $realm = "sip.example.org")
     $num = $stmt->rowCount();
     if ($num <= 0) {
         Logger::getInstance()->error("Couldn't find password " . (string)$pwd);
-        return false;
+        return null;
     }
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -100,10 +100,10 @@ function authenticate($auth_digest, $realm = "sip.example.org")
 
         // Compare with the client response
         if ($data['response'] === $valid_response) {
-            return true;
+            return $data['username'];
         }
     }
 
     Logger::getInstance()->error("Failed to authenticate request");
-    return false;
+    return null;
 }

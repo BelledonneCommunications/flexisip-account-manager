@@ -88,7 +88,7 @@ if (USE_DIGEST_AUTH) {
         if (!empty($authorization)) {
             $authentication_status = authenticate($authorization, AUTH_REALM);
 
-            if ($authentication_status == true) {
+            if ($authentication_status != null) {
                 Logger::getInstance()->debug("Authentication successful");
             } else {
                 Logger::getInstance()->debug("Authentication failed");
