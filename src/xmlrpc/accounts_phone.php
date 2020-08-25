@@ -137,7 +137,7 @@ function xmlrpc_create_phone_account($method, $args)
     //We call this function to set the geoloc if enabled
     // args needed = [username, ha1, firstname, lastname, gender, subscribe, [domain], [algo]]
     //need  username + domain
-    if (ENABLE_NEW_ACCOUNTS_GEOLOC) {
+    if (get_config_value(ENABLE_NEW_ACCOUNTS_GEOLOC, FALSE)) {
         return update_account_user_info($account->username, $hashed_password, null, null, "unknown", '0', $account->domain, $algo);
     }
 

@@ -44,7 +44,7 @@ function update_account_user_info($username, $ha1, $firstname, $lastname, $gende
     $user_info = new UserInfo($db);
     $user_info->account_id = $account->id;
 
-    if (ENABLE_NEW_ACCOUNTS_GEOLOC) {
+    if (get_config_value(ENABLE_NEW_ACCOUNTS_GEOLOC, FALSE)) {
         Logger::getInstance()->debug("userInfo : Account ip after enable geoloc if " . $account->ip_address);
         $country_infos = Geoloc::getGeolocInfosFromIp($account->ip_address);
         if ($country_infos) {
