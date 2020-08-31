@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Account;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 use App\Mail\ChangedEmail;
 
-class AccountEmailController extends Controller
+class EmailController extends Controller
 {
     public function show(Request $request)
     {

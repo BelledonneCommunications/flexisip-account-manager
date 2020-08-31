@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Account;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
@@ -15,7 +16,7 @@ use App\Libraries\OvhSMS;
 use App\Mail\RegisterConfirmation;
 use App\Mail\NewsletterRegistration;
 
-class AccountRegisterController extends Controller
+class RegisterController extends Controller
 {
     private $emailCodeSize = 14;
 
@@ -47,7 +48,7 @@ class AccountRegisterController extends Controller
         $request->validate([
             'terms' => 'accepted',
             'username' => 'required|unique:external.accounts,username|min:6',
-            //'g-recaptcha-response'  => 'required|captcha',
+            'g-recaptcha-response'  => 'required|captcha',
             'email' => 'required|email|confirmed'
         ]);
 

@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Account;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Account;
 use App\Password;
 use App\Helpers\Utils;
 
-class AccountPasswordController extends Controller
+class PasswordController extends Controller
 {
     public function show(Request $request)
     {

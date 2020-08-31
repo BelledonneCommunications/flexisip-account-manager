@@ -22,38 +22,38 @@
 Route::get('/', 'AccountController@home')->name('account.home');
 Route::get('terms', 'AccountController@terms')->name('account.terms');
 
-Route::get('login', 'AccountAuthenticateController@login')->name('account.login');
-Route::post('authenticate', 'AccountAuthenticateController@authenticate')->name('account.authenticate');
+Route::get('login', 'Account\AuthenticateController@login')->name('account.login');
+Route::post('authenticate', 'Account\AuthenticateController@authenticate')->name('account.authenticate');
 
-Route::get('login/email', 'AccountAuthenticateController@loginEmail')->name('account.login_email');
-Route::post('authenticate/email', 'AccountAuthenticateController@authenticateEmail')->name('account.authenticate.email');
-Route::get('authenticate/email/{code}', 'AccountAuthenticateController@authenticateEmailConfirm')->name('account.authenticate.email_confirm');
+Route::get('login/email', 'Account\AuthenticateController@loginEmail')->name('account.login_email');
+Route::post('authenticate/email', 'Account\AuthenticateController@authenticateEmail')->name('account.authenticate.email');
+Route::get('authenticate/email/{code}', 'Account\AuthenticateController@authenticateEmailConfirm')->name('account.authenticate.email_confirm');
 
-Route::get('login/phone', 'AccountAuthenticateController@loginPhone')->name('account.login_phone');
-Route::post('authenticate/phone', 'AccountAuthenticateController@authenticatePhone')->name('account.authenticate.phone');
-Route::post('authenticate/phone/confirm', 'AccountAuthenticateController@authenticatePhoneConfirm')->name('account.authenticate.phone_confirm');
+Route::get('login/phone', 'Account\AuthenticateController@loginPhone')->name('account.login_phone');
+Route::post('authenticate/phone', 'Account\AuthenticateController@authenticatePhone')->name('account.authenticate.phone');
+Route::post('authenticate/phone/confirm', 'Account\AuthenticateController@authenticatePhoneConfirm')->name('account.authenticate.phone_confirm');
 
-Route::get('register', 'AccountRegisterController@register')->name('account.register');
+Route::get('register', 'Account\RegisterController@register')->name('account.register');
 
 if (config('app.phone_authentication')) {
-    Route::get('register/phone', 'AccountRegisterController@registerPhone')->name('account.register.phone');
-    Route::post('register/phone', 'AccountRegisterController@storePhone')->name('account.store.phone');
+    Route::get('register/phone', 'Account\RegisterController@registerPhone')->name('account.register.phone');
+    Route::post('register/phone', 'Account\RegisterController@storePhone')->name('account.store.phone');
 }
 
-Route::get('register/email', 'AccountRegisterController@registerEmail')->name('account.register.email');
-Route::post('register/email', 'AccountRegisterController@storeEmail')->name('account.store.email');
+Route::get('register/email', 'Account\RegisterController@registerEmail')->name('account.register.email');
+Route::post('register/email', 'Account\RegisterController@storeEmail')->name('account.store.email');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('panel', 'AccountController@panel')->name('account.panel');
-    Route::get('logout', 'AccountAuthenticateController@logout')->name('account.logout');
+    Route::get('logout', 'Account\AuthenticateController@logout')->name('account.logout');
 
     Route::get('delete', 'AccountController@delete')->name('account.delete');
     Route::delete('delete', 'AccountController@destroy')->name('account.destroy');
 
-    Route::get('email', 'AccountEmailController@show')->name('account.email');
-    Route::post('email', 'AccountEmailController@update')->name('account.email.update');
-    Route::get('password', 'AccountPasswordController@show')->name('account.password');
-    Route::post('password', 'AccountPasswordController@update')->name('account.password.update');
+    Route::get('email', 'Account\EmailController@show')->name('account.email');
+    Route::post('email', 'Account\EmailController@update')->name('account.email.update');
+    Route::get('password', 'Account\PasswordController@show')->name('account.password');
+    Route::post('password', 'Account\PasswordController@update')->name('account.password.update');
 
     Route::get('devices', 'Account\DeviceController@index')->name('account.device.index');
     Route::get('devices/delete/{id}', 'Account\DeviceController@delete')->name('account.device.delete');
