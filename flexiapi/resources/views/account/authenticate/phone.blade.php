@@ -6,7 +6,7 @@
     @else
         <div class="card mt-3">
             <div class="card-body">
-                {!! Form::open(['route' => 'account.authenticate_phone_confirm']) !!}
+                {!! Form::open(['route' => 'account.authenticate.phone_confirm']) !!}
                     <div class="form-group">
                         {!! Form::label('code', 'Code') !!}
                         {!! Form::hidden('account_id', $account->id) !!}

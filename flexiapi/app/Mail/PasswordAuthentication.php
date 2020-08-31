@@ -35,7 +35,7 @@ class PasswordAuthentication extends Mailable
         return $this->view('mails.authentication')
                     ->text('mails.authentication_text')
                     ->with([
-                        'link' => route('account.authenticate_email_confirm', [$this->_account->confirmation_key])
+                        'link' => route('account.authenticate.email_confirm', [$this->_account->confirmation_key])
                     ]);
     }
 }

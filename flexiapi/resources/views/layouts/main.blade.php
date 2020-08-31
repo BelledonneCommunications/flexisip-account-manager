@@ -9,7 +9,7 @@
                 </li>
                 @if (isset($user) && get_class($user) == 'App\Account')
                     <li class="nav-item active">
-                        <a class="nav-link" href="{{ route('account.index') }}">My Account</a>
+                        <a class="nav-link" href="{{ route('account.panel') }}">My Account</a>
                     </li>
                 @endif
                 <li class="nav-item @if (request()->routeIs('api')) active @endif">

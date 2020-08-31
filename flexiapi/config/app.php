@@ -16,6 +16,8 @@ return [
     'name' => env('APP_NAME', 'Laravel'),
     'sip_domain' => env('APP_SIP_DOMAIN', 'sip.domain.com'),
     'flexisip_proxy_pid' => env('APP_FLEXISIP_PROXY_PID', '/var/run/flexisip-proxy.pid'),
+    'newsletter_registration_address' => env('NEWSLETTER_REGISTRATION_ADDRESS', ''),
+    'phone_authentication' => env('PHONE_AUTHENTICATION', true),
 
     /*
     |--------------------------------------------------------------------------

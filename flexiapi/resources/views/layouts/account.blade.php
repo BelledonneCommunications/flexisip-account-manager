@@ -5,7 +5,7 @@
         <div class="collapse navbar-collapse" >
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="{{ route('account.index') }}">{{ config('app.name') }}</a>
+                    <a class="nav-link" href="{{ route('account.panel') }}">{{ config('app.name') }}</a>
                 </li>
             </ul>
             @if (Auth::check())

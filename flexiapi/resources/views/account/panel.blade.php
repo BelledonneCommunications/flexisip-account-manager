@@ -2,7 +2,9 @@
 
 @section('content')
 
-<div class="list-group mb-3">
+<h2>Manage your account</h2>
+
+<div class="list-group mb-3 pt-2">
     <a href="{{ route('account.email') }}" class="list-group-item list-group-item-action">
         <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">Change my current account email</h5>
@@ -21,7 +23,11 @@
     </a>
     <a href="{{ route('account.password') }}" class="list-group-item list-group-item-action">
         <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">Change my password</h5>
+            @if ($account->passwords()->count() > 0)
+                <h5 class="mb-1">Change my password</h5>
+            @else
+                <h5 class="mb-1">Set my password</h5>
+            @endif
         </div>
         @if ($account->passwords()->where('algorithm', 'SHA-256')->exists())
             <p class="mb-1">SHA-256 password configured</p>

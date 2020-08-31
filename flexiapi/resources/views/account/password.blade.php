@@ -2,7 +2,11 @@
 
 @section('content')
 
-<h2>Change my account password</h2>
+@if ($account->passwords()->count() > 0)
+    <h2>Change my account password</h2>
+@else
+    <h2>Set my account password</h2>
+@endif
 
 {!! Form::open(['route' => 'account.password.update']) !!}
 @if ($account->passwords()->count() > 0)
@@ -24,7 +28,7 @@
     {!! Form::label('password_sha256', 'Use a SHA-256 encrypted password. This stronger password might not work with some old SIP clients.', ['class' => 'form-check-label']) !!}
 </div>
 
-{!! Form::submit('Change', ['class' => 'btn btn-primary']) !!}
+{!! Form::submit('Change', ['class' => 'btn btn-primary btn-centered']) !!}
 {!! Form::close() !!}
 
 @endsection

@@ -1,14 +1,26 @@
 @extends('layouts.main')
 
 @section('content')
+    <p class="text-center">
+        No account yet?
+        <a class="btn btn-secondary ml-2" href="{{ route('account.register') }}">Register</a>
+    </p>
+
+    <hr />
+
     @if (Auth::check())
         @include('parts.already_auth')
     @else
         {!! Form::open(['route' => 'account.authenticate']) !!}
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    {!! Form::label('username', 'Username') !!}
-                    {!! Form::text('username', old('username'), ['class' => 'form-control', 'placeholder' => 'username', 'required']) !!}
+                    @if (config('app.phone_authentication'))
+                        {!! Form::label('username', 'Username or phone number') !!}
+                        {!! Form::text('username', old('username'), ['class' => 'form-control', 'placeholder' => 'username or phone number', 'required']) !!}
+                    @else
+                        {!! Form::label('username', 'Username') !!}
+                        {!! Form::text('username', old('username'), ['class' => 'form-control', 'placeholder' => 'username', 'required']) !!}
+                    @endif
                 </div>
                 <div class="form-group col-md-6">
                     {!! Form::label('password', 'Password') !!}
@@ -16,21 +28,10 @@
                 </div>
             </div>
 
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                {!! Form::submit('Authenticate', ['class' => 'btn btn-primary']) !!}
-                </div>
+            {!! Form::submit('Authenticate', ['class' => 'btn btn-primary btn-centered mt-1']) !!}
 
-                <div class="form-group col-md-6">
-                    <p class="mb-1 text-right">
-                        No account yet?
-                        <a class="btn btn-secondary ml-2" href="{{ route('account.register') }}">Register
-                    </a>
-                </p>
-                </div>
-            </div>
         {!! Form::close() !!}
 
-        <p>You can also authenticate using your <a href="{{ route('account.login_email') }}">Email address</a> or your <a href="{{ route('account.login_phone') }}">Phone number</a></p>
+        @include('parts.password_recovery')
     @endif
 @endsection

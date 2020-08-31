@@ -39,7 +39,7 @@ class AccountPasswordController extends Controller
                     Utils::bchash($account->username, $account->domain, $request->get('old_password'), $password->algorithm)
                 )) {
                     $this->updatePassword($account, $request->get('password'), $algorithm);
-                    return redirect()->route('account.index');
+                    return redirect()->route('account.panel');
                 }
             }
 

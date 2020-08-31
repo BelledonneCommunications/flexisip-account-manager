@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 
 use App\Account;
 
-class RegisterConfirmation extends Mailable
+class NewsletterRegistration extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -22,10 +22,8 @@ class RegisterConfirmation extends Mailable
 
     public function build()
     {
-        return $this->view('mails.register_confirmation')
-                    ->text('mails.register_confirmation_text')
-                    ->with([
-                        'link' => route('account.authenticate.email_confirm', [$this->_account->confirmation_key])
-                    ]);
+        return $this->view('mails.newsletter_registration')
+                    ->text('mails.newsletter_registration_text')
+                    ->with(['account' => $this->_account]);
     }
 }

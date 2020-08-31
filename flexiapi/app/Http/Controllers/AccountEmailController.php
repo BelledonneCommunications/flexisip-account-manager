@@ -28,6 +28,6 @@ class AccountEmailController extends Controller
 
         Mail::to($account)->send(new ChangedEmail());
 
-        return redirect()->route('account.index');
+        return redirect()->route('account.panel');
     }
 }

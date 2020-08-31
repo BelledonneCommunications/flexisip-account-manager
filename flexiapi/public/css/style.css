@@ -26,21 +26,22 @@ body > div {
 }
 
 .container {
-    max-width: 960px;
+    max-width: 800px;
 }
 
-body > header::after,
 body > footer::before {
-    background-image: url('/img/header.svg');
     background-color: white;
     background-position: bottom center;
     background-repeat: repeat-x;
     display: block;
     height: 10rem;
     width: 100%;
-    background-size: 40rem;
+    background-size: 50rem;
     content: '';
+    background-image: url('/img/footer.svg');
+    height: 9rem;
 }
+
 
 @media screen and (max-width: 991px) {
     nav.navbar {
@@ -72,10 +73,30 @@ input.form-control {
     background-color: transparent;
     color: #ff733b;
     border-radius: 10rem;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    line-height: 2.25rem;
+    padding: 0 1.5rem;
 }
 
-body > footer,
+.btn.btn-centered {
+    display: block;
+    margin: 1rem auto;
+}
+
+.btn:hover,
+.btn:not(.disabled):not(:disabled):active,
+.btn:not(.disabled):not(:disabled):focus {
+    background-color: black;
+    color: white;
+    border-color: black;
+}
+
 body > header nav {
+    background-color: #f44a26;
+}
+
+body > footer {
     background-color: #ff733b;
 }
 
@@ -88,9 +109,4 @@ body > footer {
 body > header::after {
     background-position: top center;
     margin-bottom: -4.5rem;
-}
-
-body > footer::before {
-    background-image: url('/img/footer.svg');
-    height: 9rem;
 }
