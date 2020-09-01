@@ -49,7 +49,7 @@ class RegisterController extends Controller
             'terms' => 'accepted',
             'username' => 'required|unique:external.accounts,username|min:6',
             'g-recaptcha-response'  => 'required|captcha',
-            'email' => 'required|email|confirmed'
+            'email' => 'required|email|unique:external.accounts,email|confirmed'
         ]);
 
         $account = new Account;

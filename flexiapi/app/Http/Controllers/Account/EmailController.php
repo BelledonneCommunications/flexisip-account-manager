@@ -20,7 +20,7 @@ class EmailController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'email' => 'required|confirmed|email',
+            'email' => 'required|unique:external.accounts,email|different:email_current|confirmed|email',
         ]);
 
         $account = $request->user();
