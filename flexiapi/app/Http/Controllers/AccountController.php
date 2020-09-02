@@ -46,8 +46,8 @@ class AccountController extends Controller
     {
         $request->validate(['identifier' => 'required|same:identifier_confirm']);
 
-        Auth::logout();
         $request->user()->delete();
+        Auth::logout();
 
         return redirect()->route('account.login');
     }

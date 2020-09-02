@@ -48,6 +48,7 @@ class PasswordController extends Controller
         } else {
             // No password yet
             $this->updatePassword($account, $request->get('password'), $algorithm);
+            $request->session()->flash('success', 'Password changed');
 
             return redirect()->back();
         }
