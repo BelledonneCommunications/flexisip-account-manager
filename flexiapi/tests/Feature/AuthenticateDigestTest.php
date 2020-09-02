@@ -19,7 +19,6 @@
 
 namespace Tests\Feature;
 
-use App\Helpers\Utils;
 use App\Password;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -30,14 +29,13 @@ class AuthenticateDigestTest extends TestCase
 {
     use RefreshDatabase;
 
-    const ROUTE = '/api/ping';
-    const METHOD = 'GET';
-    const ALGORITHMS = ['md5' => 'MD5', 'sha256' => 'SHA-256'];
+    protected $route = '/api/ping';
+    protected $method = 'GET';
 
     public function testMandatoryFrom()
     {
         $password = factory(Password::class)->create();
-        $response = $this->json(self::METHOD, self::ROUTE);
+        $response = $this->json($this->method, $this->route);
         $response->assertStatus(422);
     }
 
@@ -46,7 +44,7 @@ class AuthenticateDigestTest extends TestCase
         $password = factory(Password::class)->create();
         $response = $this->withHeaders([
             'From' => 'sip:missing@username',
-        ])->json(self::METHOD, self::ROUTE);
+        ])->json($this->method, $this->route);
 
         $response->assertStatus(404);
     }
@@ -56,7 +54,7 @@ class AuthenticateDigestTest extends TestCase
         $password = factory(Password::class)->create();
         $response = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier,
-        ])->json(self::METHOD, self::ROUTE);
+        ])->json($this->method, $this->route);
         $response->assertStatus(401);
     }
 
@@ -70,7 +68,7 @@ class AuthenticateDigestTest extends TestCase
 
         $response = $this->withHeaders([
             'From' => 'sip:'.$passwordMD5->account->identifier,
-        ])->json(self::METHOD, self::ROUTE);
+        ])->json($this->method, $this->route);
 
         $response->assertStatus(401);
 
@@ -83,12 +81,12 @@ class AuthenticateDigestTest extends TestCase
         $password = factory(Password::class)->create();
         $response0 = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier
-        ])->json(self::METHOD, self::ROUTE);
+        ])->json($this->method, $this->route);
 
         $response1 = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response0),
-        ])->json(self::METHOD, self::ROUTE);
+        ])->json($this->method, $this->route);
 
         $response1->assertStatus(200);
 
@@ -96,7 +94,7 @@ class AuthenticateDigestTest extends TestCase
         $response2 = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response1, 'md5', '00000002'),
-        ])->json(self::METHOD, self::ROUTE);
+        ])->json($this->method, $this->route);
 
         $response2->assertStatus(200);
 
@@ -104,7 +102,7 @@ class AuthenticateDigestTest extends TestCase
         $response3 = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response2, 'md5', '00000002'),
-        ])->json(self::METHOD, self::ROUTE);
+        ])->json($this->method, $this->route);
 
         $response3->assertSee('Nonce replayed');
         $response3->assertStatus(401);
@@ -115,12 +113,12 @@ class AuthenticateDigestTest extends TestCase
         $password = factory(Password::class)->create();
         $response1 = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier
-        ])->json(self::METHOD, self::ROUTE);
+        ])->json($this->method, $this->route);
 
         $response2 = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response1, 'md5', '00000001'),
-        ])->json(self::METHOD, self::ROUTE);
+        ])->json($this->method, $this->route);
 
         $response2->assertStatus(200);
 
@@ -130,7 +128,7 @@ class AuthenticateDigestTest extends TestCase
         $response3 = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response2, 'md5', '00000002'),
-        ])->json(self::METHOD, self::ROUTE);
+        ])->json($this->method, $this->route);
 
         $response3->assertSee('Nonce invalid');
         $response3->assertStatus(401);
@@ -142,12 +140,12 @@ class AuthenticateDigestTest extends TestCase
         $password = factory(Password::class)->create();
         $response = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier
-        ])->json(self::METHOD, self::ROUTE);
+        ])->json($this->method, $this->route);
 
         $response = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response),
-        ])->json(self::METHOD, self::ROUTE);
+        ])->json($this->method, $this->route);
 
         $this->assertStringContainsString('algorithm=MD5', $response->headers->all()['www-authenticate'][0]);
 
@@ -159,12 +157,12 @@ class AuthenticateDigestTest extends TestCase
         $password = factory(Password::class)->states('sha256')->create();
         $response = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier
-        ])->json(self::METHOD, self::ROUTE);
+        ])->json($this->method, $this->route);
 
         $response = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response, 'sha256'),
-        ])->json(self::METHOD, self::ROUTE);
+        ])->json($this->method, $this->route);
 
         $this->assertStringContainsString('algorithm=SHA-256', $response->headers->all()['www-authenticate'][0]);
 
@@ -176,7 +174,7 @@ class AuthenticateDigestTest extends TestCase
         $password = factory(Password::class)->states('clrtxt')->create();
         $response = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier
-        ])->json(self::METHOD, self::ROUTE);
+        ])->json($this->method, $this->route);
 
         // The server is generating all the available hash algorythms
         $this->assertStringContainsString('algorithm=MD5', $response->headers->all()['www-authenticate'][0]);
@@ -192,7 +190,7 @@ class AuthenticateDigestTest extends TestCase
         $response = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response, $hash),
-        ])->json(self::METHOD, self::ROUTE);
+        ])->json($this->method, $this->route);
 
         $this->assertStringContainsString('algorithm=MD5', $response->headers->all()['www-authenticate'][0]);
         $this->assertStringContainsString('algorithm=SHA-256', $response->headers->all()['www-authenticate'][1]);
@@ -205,63 +203,14 @@ class AuthenticateDigestTest extends TestCase
         $password = factory(Password::class)->create();
         $response = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier
-        ])->json(self::METHOD, self::ROUTE);
+        ])->json($this->method, $this->route);
         $password->password = 'wrong';
 
         $response = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response),
-        ])->json(self::METHOD, self::ROUTE);
+        ])->json($this->method, $this->route);
 
         $response->assertStatus(401);
-    }
-
-    private function generateDigest(Password $password, $response, $hash = 'md5', $nc = '00000001')
-    {
-        $challenge = \substr($response->headers->get('www-authenticate'), 7);
-        $extractedChallenge = $this->extractAuthenticateHeader($challenge);
-
-        $cnonce = Utils::generateNonce();
-
-        $A1 = $password->password;
-        $A2 = hash($hash, self::METHOD . ':' . self::ROUTE);
-        $response = hash($hash,
-            sprintf(
-                '%s:%s:%s:%s:%s:%s',
-                $A1,
-                $extractedChallenge['nonce'],
-                $nc,
-                $cnonce,
-                $extractedChallenge['qop'],
-                $A2
-            )
-        );
-
-        $digest = \sprintf(
-            'username="%s",realm="%s",nonce="%s",nc=%s,cnonce="%s",uri="%s",qop=%s,response="%s",opaque="%s",algorithm=%s',
-            $password->account->identifier,
-            $extractedChallenge['realm'],
-            $extractedChallenge['nonce'],
-            $nc,
-            $cnonce,
-            self::ROUTE,
-            $extractedChallenge['qop'],
-            $response,
-            $extractedChallenge['opaque'],
-            self::ALGORITHMS[$hash],
-        );
-
-        return 'Digest ' . $digest;
-    }
-
-    private function extractAuthenticateHeader(string $string): array
-    {
-        preg_match_all(
-            '@(realm|nonce|qop|opaque|algorithm)=[\'"]?([^\'",]+)@',
-            $string,
-            $array
-        );
-
-        return array_combine($array[1], $array[2]);
     }
 }

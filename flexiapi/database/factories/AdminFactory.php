@@ -17,20 +17,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use Illuminate\Http\Request;
+use App\Admin;
+use Faker\Generator as Faker;
 
-Route::get('/', 'Api\ApiController@documentation')->name('api');
+$factory->define(Admin::class, function (Faker $faker) use ($factory) {
+    $password = $factory->create(App\Password::class);
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::group(['middleware' => ['auth.digest']], function () {
-    Route::get('ping', 'Api\PingController@ping');
-    Route::get('devices', 'Api\DeviceController@index');
-    Route::delete('devices/{uuid}', 'Api\DeviceController@destroy');
-
-    Route::group(['middleware' => ['auth.admin']], function () {
-        Route::post('accounts', 'Api\AccountController@store');
-    });
+    return [
+        'account_id' => $password->account_id,
+    ];
 });

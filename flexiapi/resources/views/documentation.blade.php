@@ -32,7 +32,27 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
 
 <h2>Endpoints</h2>
 
-<p>Current implemented endpoints</p>
+<h3>Accounts</h3>
+
+<h4><code>POST /accounts</code></h4>
+
+<p>JSON parameters:</p>
+
+<ul>
+    <li><code>username</code> unique username, minimum 6 characters</li>
+    <li><code>password</code> required minimum 6 characters</li>
+    <li><code>algorithm</code> required, values can be <code>SHA-256</code> or <code>MD5</code></li>
+</ul>
+
+<p>To create an account directly from the API.<br />This endpoint is authenticated and requires an admin account.</p>
+
+<h3>Ping</h3>
+
+<h4><code>GET /ping</code></h4>
+
+<p>Returns <code>pong</code></p>
+
+<h3>Devices</h3>
 
 <h4><code>GET /devices</code></h4>
 
