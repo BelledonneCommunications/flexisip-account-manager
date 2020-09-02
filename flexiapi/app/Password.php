@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
 class Password extends Model
 {
     protected $connection = 'external';
+    public $timestamps = false;
 
     public function account()
     {
