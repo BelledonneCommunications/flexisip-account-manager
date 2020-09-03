@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
@@ -50,13 +51,21 @@ class AuthenticateController extends Controller
 
     public function loginEmail(Request $request)
     {
-        return view('account.login.email');
+        return view('account.login.email', [
+            'domain' => '@' . config('app.sip_domain')
+        ]);
     }
 
     public function authenticateEmail(Request $request)
     {
         $request->validate([
             'email' => 'required|email|exists:external.accounts,email',
+            'username' => [
+                'required',
+                Rule::exists('external.accounts', 'username')->where(function ($query) use ($request) {
+                    $query->where('email', $request->get('email'));
+                }),
+            ],
             'g-recaptcha-response'  => 'required|captcha',
         ]);
 
