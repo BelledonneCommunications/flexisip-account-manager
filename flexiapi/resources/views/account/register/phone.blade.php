@@ -6,7 +6,7 @@
 
 {!! Form::open(['route' => 'account.store.phone']) !!}
 
-<p>Fill a phone number and a username (optional) you will then be able to set a password to finish the registration process.</p>
+<p>Please enter your phone number and optionally a username. When the username is set, it will identify you on the service: other users won't need to know your phone number to call you.<br />The next step of the registration procedure will ask you to setup a password.</p>
 
 <div class="form-group">
     {!! Form::label('phone', 'Phone number') !!}

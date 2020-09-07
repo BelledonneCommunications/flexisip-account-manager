@@ -55,4 +55,19 @@
     </div>
 @endif
 
+<h3 class="mt-3">Account information</h3>
+
+<div class="list-group">
+<b>SIP address:</b> sip:{{ $account->identifier }}<br />
+<b>Username:</b> {{ $account->username }}<br />
+<b>Domain:</b> {{ $account->domain }}<br />
+<br />
+@if (!empty(config('app.proxy_registrar_address')))
+    <b>Proxy/registrar address: </b> sip:{{ config('app.proxy_registrar_address') }}<br />
+@endif
+@if (!empty(config('app.transport_protocol')))
+    <b>Transport: </b> {{ config('app.transport_protocol') }} <br />
+@endif
+</div>
+
 @endsection

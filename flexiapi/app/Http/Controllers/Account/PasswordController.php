@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 use App\Account;
 use App\Password;
 use App\Helpers\Utils;
+use App\Mail\ConfirmedRegistration;
 
 class PasswordController extends Controller
 {
@@ -21,7 +23,7 @@ class PasswordController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'password' => 'required|confirmed|min:6',
+            'password' => 'required|confirmed|filled',
         ]);
 
         $account = $request->user();
@@ -40,6 +42,8 @@ class PasswordController extends Controller
                     Utils::bchash($account->username, $account->domain, $request->get('old_password'), $password->algorithm)
                 )) {
                     $this->updatePassword($account, $request->get('password'), $algorithm);
+
+                    $request->session()->flash('success', 'Password successfully changed');
                     return redirect()->route('account.panel');
                 }
             }
@@ -48,9 +52,14 @@ class PasswordController extends Controller
         } else {
             // No password yet
             $this->updatePassword($account, $request->get('password'), $algorithm);
-            $request->session()->flash('success', 'Password changed');
 
-            return redirect()->back();
+            if (!empty($account->email)) {
+                Mail::to($account)->send(new ConfirmedRegistration($account));
+            }
+
+            $request->session()->flash('success', 'Password successfully set. Your SIP account creation process is now finished.');
+
+            return redirect()->route('account.panel');
         }
     }
 

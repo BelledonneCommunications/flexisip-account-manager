@@ -12,9 +12,6 @@
                         <a class="nav-link" href="{{ route('account.panel') }}">My Account</a>
                     </li>
                 @endif
-                <li class="nav-item @if (request()->routeIs('api')) active @endif">
-                    <a class="nav-link" href="{{ route('api') }}">API</a>
-                </li>
             </ul>
 
             <ul class="navbar-nav">
@@ -22,7 +19,7 @@
                     <a class="nav-link" href="{{ route('account.register') }}">Register</a>
                 </li>
                 <li class="nav-item @if (request()->routeIs('account.login')) active @endif">
-                    <a class="nav-link" href="{{ route('account.login') }}">Authenticate</a>
+                    <a class="nav-link" href="{{ route('account.login') }}">Login</a>
                 </li>
             </ul>
         </div>

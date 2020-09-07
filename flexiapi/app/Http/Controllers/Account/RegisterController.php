@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use App\Account;
 use App\Alias;
 use App\Rules\SIP;
+use App\Rules\WithoutSpaces;
 use App\Helpers\Utils;
 use App\Libraries\OvhSMS;
 use App\Mail\RegisterConfirmation;
@@ -47,7 +48,9 @@ class RegisterController extends Controller
     {
         $request->validate([
             'terms' => 'accepted',
-            'username' => 'required|unique:external.accounts,username|min:6',
+            'username' => [
+                'required', 'unique:external.accounts,username', 'filled', new WithoutSpaces
+            ],
             'g-recaptcha-response'  => 'required|captcha',
             'email' => 'required|email|confirmed'
         ]);
@@ -81,13 +84,17 @@ class RegisterController extends Controller
     {
         $request->validate([
             'terms' =>'accepted',
-            'username' => 'unique:external.accounts,username|nullable|min:6',
-            'phone' => 'required|unique:external.aliases,alias|unique:external.accounts,username|starts_with:+|phone:AUTO',
+            'username' => 'unique:external.accounts,username|nullable|filled',
+            'phone' => [
+                'required', 'unique:external.aliases,alias',
+                'unique:external.accounts,username',
+                new WithoutSpaces, 'starts_with:+', 'phone:AUTO'
+            ],
             'g-recaptcha-response'  => 'required|captcha',
         ]);
 
         $account = new Account;
-        $account->username = $request->has('username')
+        $account->username = !empty($request->get('username'))
             ? $request->get('username')
             : $request->get('phone');
 

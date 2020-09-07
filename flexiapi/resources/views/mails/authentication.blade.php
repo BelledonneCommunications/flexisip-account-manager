@@ -13,7 +13,7 @@
         </p>
         <p>
             Regards,<br />
-            The Linphone team.
+            {{ config('mail.signature') }}
         </p>
     </body>
 </html>

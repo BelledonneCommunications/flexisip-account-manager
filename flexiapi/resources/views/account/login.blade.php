@@ -28,7 +28,7 @@
                 </div>
             </div>
 
-            {!! Form::submit('Authenticate', ['class' => 'btn btn-primary btn-centered mt-1']) !!}
+            {!! Form::submit('Login', ['class' => 'btn btn-primary btn-centered mt-1']) !!}
 
         {!! Form::close() !!}
 

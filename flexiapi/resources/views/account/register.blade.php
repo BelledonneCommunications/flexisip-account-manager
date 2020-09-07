@@ -4,7 +4,7 @@
 
 <p class="text-center">
     You already have an account?
-    <a class="ml-2 btn btn-primary btn-sm" href="{{ route('account.login') }}">Authenticate</a>
+    <a class="ml-2 btn btn-primary btn-sm" href="{{ route('account.login') }}">Login</a>
 </p>
 
 <hr />

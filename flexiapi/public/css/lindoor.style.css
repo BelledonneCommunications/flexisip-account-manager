@@ -27,19 +27,14 @@ body > div {
 }
 
 .container {
-    max-width: 960px;
+    max-width: 800px;
 }
-/*
-@media screen and (max-width: 991px) {
-    nav.navbar {
-        display: none;
-    }
-}*/
 
 h1, h2, h3, a, label {
     color: #6081C9;
 }
 
+body > footer a,
 nav ul li a {
     color: white;
     opacity: 0.8;
@@ -100,15 +95,3 @@ body > footer {
     padding: 1rem;
     text-align: center;
 }
-/*
-body > footer::before {
-    background-image: url('/img/footer.svg');
-    height: 9rem;
-    background-color: white;
-    background-position: bottom center;
-    background-repeat: repeat-x;
-    display: block;
-    width: 100%;
-    background-size: 40rem;
-    content: '';
-}*/

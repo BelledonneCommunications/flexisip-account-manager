@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 
 use App\Account;
 
-class PasswordAuthentication extends Mailable
+class ConfirmedRegistration extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -22,10 +22,8 @@ class PasswordAuthentication extends Mailable
 
     public function build()
     {
-        return $this->view('mails.authentication')
-                    ->text('mails.authentication_text')
-                    ->with([
-                        'link' => route('account.authenticate.email_confirm', [$this->_account->confirmation_key])
-                    ]);
+        return $this->view('mails.confirmed_registration')
+                    ->text('mails.confirmed_registration_text')
+                    ->with(['account' => $this->_account]);
     }
 }

@@ -15,9 +15,10 @@ class AccountController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'username' => 'required|unique:external.accounts,username|min:6',
+            'username' => 'required|unique:external.accounts,username|filled',
             'algorithm' => 'required|in:SHA-256,MD5',
-            'password' => 'required|min:6',
+            'password' => 'required|filled',
+            'domain' => 'min:3',
         ]);
 
         $algorithm = $request->has('password_sha256') ? 'SHA-256' : 'MD5';
@@ -26,7 +27,9 @@ class AccountController extends Controller
         $account->username = $request->get('username');
         $account->email = $request->get('email');
         $account->activated = true;
-        $account->domain = config('app.sip_domain');
+        $account->domain = $request->has('domain')
+            ? $request->get('domain')
+            : config('app.sip_domain');
         $account->ip_address = $request->ip();
         $account->creation_time = Carbon::now();
         $account->user_agent = config('app.name');

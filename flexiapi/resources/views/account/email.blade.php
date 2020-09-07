@@ -13,11 +13,11 @@
 {!! Form::open(['route' => 'account.email.update']) !!}
 <div class="form-group">
     {!! Form::label('email', 'New email') !!}
-    {!! Form::email('email', old('email'), ['class' => 'form-control', 'placeholder' => 'username@server.com', 'required']) !!}
+    {!! Form::email('email', old('email'), ['class' => 'form-control', 'placeholder' => 'bob@example.net', 'required']) !!}
 </div>
 <div class="form-group">
     {!! Form::label('email_confirmation', 'Email confirmation') !!}
-    {!! Form::email('email_confirmation', old('email_confirm'), ['class' => 'form-control', 'placeholder' => 'username@server.com', 'required']) !!}
+    {!! Form::email('email_confirmation', old('email_confirm'), ['class' => 'form-control', 'placeholder' => 'bob@example.net', 'required']) !!}
 </div>
 
 {!! Form::hidden('email_current', $account->email) !!}

@@ -6,4 +6,4 @@ Please follow the unique link bellow to finish the authentication process.
 {{ $link }}
 
 Regards,
-The Linphone team.
+{{ config('mail.signature') }}

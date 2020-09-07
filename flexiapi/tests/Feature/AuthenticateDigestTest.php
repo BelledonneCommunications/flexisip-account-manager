@@ -79,14 +79,9 @@ class AuthenticateDigestTest extends TestCase
     public function testReplayNonce()
     {
         $password = factory(Password::class)->create();
-        $response0 = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier
-        ])->json($this->method, $this->route);
-
-        $response1 = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier,
-            'Authorization' => $this->generateDigest($password, $response0),
-        ])->json($this->method, $this->route);
+        $response0 = $this->generateFirstResponse($password);
+        $response1 = $this->generateSecondResponse($password, $response0)
+            ->json($this->method, $this->route);
 
         $response1->assertStatus(200);
 
@@ -111,10 +106,7 @@ class AuthenticateDigestTest extends TestCase
     public function testClearedNonce()
     {
         $password = factory(Password::class)->create();
-        $response1 = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier
-        ])->json($this->method, $this->route);
-
+        $response1 = $this->generateFirstResponse($password);
         $response2 = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response1, 'md5', '00000001'),
@@ -138,14 +130,9 @@ class AuthenticateDigestTest extends TestCase
     public function testAuthenticationMD5()
     {
         $password = factory(Password::class)->create();
-        $response = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier
-        ])->json($this->method, $this->route);
-
-        $response = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier,
-            'Authorization' => $this->generateDigest($password, $response),
-        ])->json($this->method, $this->route);
+        $response = $this->generateFirstResponse($password);
+        $response = $this->generateSecondResponse($password, $response)
+                         ->json($this->method, $this->route);
 
         $this->assertStringContainsString('algorithm=MD5', $response->headers->all()['www-authenticate'][0]);
 
@@ -155,10 +142,7 @@ class AuthenticateDigestTest extends TestCase
     public function testAuthenticationSHA265()
     {
         $password = factory(Password::class)->states('sha256')->create();
-        $response = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier
-        ])->json($this->method, $this->route);
-
+        $response = $this->generateFirstResponse($password);
         $response = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response, 'sha256'),
@@ -172,9 +156,7 @@ class AuthenticateDigestTest extends TestCase
     public function testAuthenticationSHA265FromCLRTXT()
     {
         $password = factory(Password::class)->states('clrtxt')->create();
-        $response = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier
-        ])->json($this->method, $this->route);
+        $response = $this->generateFirstResponse($password);;
 
         // The server is generating all the available hash algorythms
         $this->assertStringContainsString('algorithm=MD5', $response->headers->all()['www-authenticate'][0]);
@@ -201,15 +183,11 @@ class AuthenticateDigestTest extends TestCase
     public function testAuthenticationBadPassword()
     {
         $password = factory(Password::class)->create();
-        $response = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier
-        ])->json($this->method, $this->route);
+        $response = $this->generateFirstResponse($password);;
         $password->password = 'wrong';
 
-        $response = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier,
-            'Authorization' => $this->generateDigest($password, $response),
-        ])->json($this->method, $this->route);
+        $response = $this->generateSecondResponse($password, $response)
+                         ->json($this->method, $this->route);
 
         $response->assertStatus(401);
     }

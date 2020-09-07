@@ -28,7 +28,7 @@ class AuthenticateController extends Controller
     public function authenticate(Request $request)
     {
         $request->validate([
-            'username' => 'required',
+            'username' => 'required|exists:external.accounts,username',
             'password' => 'required'
         ]);
 

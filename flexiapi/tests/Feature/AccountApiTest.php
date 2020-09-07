@@ -26,14 +26,9 @@ class AccountApiTest extends TestCase
     public function testNotAdminForbidden()
     {
         $password = factory(Password::class)->create();
-        $response0 = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier
-        ])->json($this->method, $this->route);
-
-        $response1 = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier,
-            'Authorization' => $this->generateDigest($password, $response0),
-        ])->json($this->method, $this->route);
+        $response0 = $this->generateFirstResponse($password);
+        $response1 = $this->generateSecondResponse($password, $response0)
+                          ->json($this->method, $this->route);
 
         $response1->assertStatus(403);
     }
@@ -42,21 +37,15 @@ class AccountApiTest extends TestCase
     {
         $admin = factory(Admin::class)->create();
         $password = $admin->account->passwords()->first();
-
-        $response0 = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier
-        ])->json($this->method, $this->route);
-
         $username = 'foobar';
 
-        $response1 = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier,
-            'Authorization' => $this->generateDigest($password, $response0),
-        ])->json($this->method, $this->route, [
-            'username' => $username,
-            'algorithm' => 'SHA-256',
-            'password' => '123456',
-        ]);
+        $response0 = $this->generateFirstResponse($password);
+        $response1 = $this->generateSecondResponse($password, $response0)
+            ->json($this->method, $this->route, [
+                'username' => $username,
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+            ]);
 
         $response1
             ->assertStatus(200)
@@ -64,5 +53,72 @@ class AccountApiTest extends TestCase
                 'id' => 2,
                 'username' => $username
             ]);
+    }
+
+    public function testDomain()
+    {
+        $admin = factory(Admin::class)->create();
+        $password = $admin->account->passwords()->first();
+        $username = 'foobar';
+        $domain = 'example.com';
+
+        $response0 = $this->generateFirstResponse($password);
+        $response1 = $this->generateSecondResponse($password, $response0)
+            ->json($this->method, $this->route, [
+                'username' => $username,
+                'domain' => $domain,
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+            ]);
+
+        $response1
+            ->assertStatus(200)
+            ->assertJson([
+                'id' => 2,
+                'username' => $username,
+                'domain' => $domain,
+            ]);
+    }
+
+    public function testUsernameNoDomain()
+    {
+        $admin = factory(Admin::class)->create();
+        $password = $admin->account->passwords()->first();
+
+        $username = 'username';
+
+        $response0 = $this->generateFirstResponse($password);
+        $response1 = $this->generateSecondResponse($password, $response0)
+            ->json($this->method, $this->route, [
+                'username' => $username,
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+            ]);
+
+        $response1
+            ->assertStatus(200)
+            ->assertJson([
+                'id' => 2,
+                'username' => $username,
+                'domain' => config('app.sip_domain'),
+            ]);
+    }
+
+    public function testUsernameEmpty()
+    {
+        $admin = factory(Admin::class)->create();
+        $password = $admin->account->passwords()->first();
+
+        $username = 'username';
+
+        $response0 = $this->generateFirstResponse($password);
+        $response1 = $this->generateSecondResponse($password, $response0)
+            ->json($this->method, $this->route, [
+                'username' => '',
+                'algorithm' => 'SHA-256',
+                'password' => '2',
+            ]);
+
+        $response1->assertStatus(422);
     }
 }

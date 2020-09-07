@@ -3,9 +3,8 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Str;
 
-class SIP implements Rule
+class WithoutSpaces implements Rule
 {
     public function __construct()
     {
@@ -14,12 +13,11 @@ class SIP implements Rule
 
     public function passes($attribute, $value)
     {
-        // TODO complete me
-        return Str::contains($value, '@');
+        return preg_match('/^\S*$/u', $value);
     }
 
     public function message()
     {
-        return 'The :attribute must be a SIP address.';
+        return 'The :attribute contains spaces';
     }
 }

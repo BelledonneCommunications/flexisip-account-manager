@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'signature' => env('MAIL_SIGNATURE', 'The Linphone Team'),
 
     /*
     |--------------------------------------------------------------------------

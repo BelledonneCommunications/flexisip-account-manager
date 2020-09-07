@@ -4,7 +4,7 @@
 
 <h2>{{ config('app.name') }}</h2>
 
-<p>There are {{ $count }} users registered with this service.</p>
+<p>There are {{ number_format($count) }} users registered with this service.</p>
 
 @if (config('instance.intro_registration'))
     <p>{!! nl2br(config('instance.intro_registration')) !!}</p>

@@ -22,8 +22,9 @@
         @yield('body')
         <footer class="text-center mt-2">
             @if (config('instance.copyright'))
-                {{ config('instance.copyright') }}
+                {{ config('instance.copyright') }} |
             @endif
+            <a href="{{ route('api') }}">API</a>
         </footer>
     </body>
 </html>

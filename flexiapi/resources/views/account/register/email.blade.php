@@ -22,11 +22,11 @@
 <div class="form-row">
     <div class="form-group col-md-6">
         {!! Form::label('email', 'Email') !!}
-        {!! Form::email('email', old('email'), ['class' => 'form-control', 'placeholder' => 'username@server.com']) !!}
+        {!! Form::email('email', old('email'), ['class' => 'form-control', 'placeholder' => 'bob@example.net']) !!}
     </div>
     <div class="form-group col-md-6">
         {!! Form::label('email_confirmation', 'Email confirmation') !!}
-        {!! Form::email('email_confirmation', old('email_confirm'), ['class' => 'form-control', 'placeholder' => 'username@server.com']) !!}
+        {!! Form::email('email_confirmation', old('email_confirm'), ['class' => 'form-control', 'placeholder' => 'bob@example.net']) !!}
     </div>
 </div>
 

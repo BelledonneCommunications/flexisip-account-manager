@@ -13,6 +13,21 @@ abstract class TestCase extends BaseTestCase
 
     const ALGORITHMS = ['md5' => 'MD5', 'sha256' => 'SHA-256'];
 
+    protected function generateFirstResponse(Password $password)
+    {
+        return $this->withHeaders([
+            'From' => 'sip:'.$password->account->identifier
+        ])->json($this->method, $this->route);
+    }
+
+    protected function generateSecondResponse(Password $password, $firstResponse)
+    {
+        return $this->withHeaders([
+            'From' => 'sip:'.$password->account->identifier,
+            'Authorization' => $this->generateDigest($password, $firstResponse),
+        ]);
+    }
+
     protected function generateDigest(Password $password, $response, $hash = 'md5', $nc = '00000001')
     {
         $challenge = \substr($response->headers->get('www-authenticate'), 7);

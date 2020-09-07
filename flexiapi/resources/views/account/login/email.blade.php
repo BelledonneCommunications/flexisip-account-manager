@@ -9,7 +9,7 @@
                 {!! Form::open(['route' => 'account.authenticate.email']) !!}
                     <div class="form-group">
                         {!! Form::label('email', 'Email') !!}
-                        {!! Form::email('email', old('email'), ['class' => 'form-control', 'placeholder' => 'myemail@address.org', 'required']) !!}
+                        {!! Form::email('email', old('email'), ['class' => 'form-control', 'placeholder' => 'bob@example.com', 'required']) !!}
                     </div>
                     <div class="form-group">
                         {!! Form::label('username', 'SIP Username') !!}

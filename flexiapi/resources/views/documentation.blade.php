@@ -42,6 +42,7 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
     <li><code>username</code> unique username, minimum 6 characters</li>
     <li><code>password</code> required minimum 6 characters</li>
     <li><code>algorithm</code> required, values can be <code>SHA-256</code> or <code>MD5</code></li>
+    <li><code>domain</code> optional, the value is set to the default registration domain if not set</li>
 </ul>
 
 <p>To create an account directly from the API.<br />This endpoint is authenticated and requires an admin account.</p>

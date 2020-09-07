@@ -53,6 +53,7 @@ h1, h2, h3, a, label {
     color: #ff733b;
 }
 
+body > footer a,
 nav ul li a {
     color: white;
     opacity: 0.8;

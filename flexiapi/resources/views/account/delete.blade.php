@@ -11,7 +11,7 @@
 
 <div class="form-group">
     {!! Form::label('identifier', 'Username') !!}
-    {!! Form::text('identifier', old('identifier'), ['class' => 'form-control', 'placeholder' => 'username@server.com', 'required']) !!}
+    {!! Form::text('identifier', old('identifier'), ['class' => 'form-control', 'placeholder' => 'bob@example.net', 'required']) !!}
 </div>
 
 {!! Form::hidden('identifier_confirm', $account->identifier) !!}
