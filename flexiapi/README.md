@@ -2,6 +2,14 @@
 
 This tool connects to the Flexisip CLI interface and exposes several endpoints to request and manage it.
 
+## DotEnv configuration
+
+FlexiAPI relies on [DotEnv](https://github.com/vlucas/phpdotenv) to be configured. This configuration can be accessed using the existing `.env` file that can be itself overwritten by an environnement variables.
+
+Thoses variables can then be set using Docker-Compose, a bash script or a web-server for example.
+
+If you're installing FlexiAPI from the RPM package you can find the configuration file at `/etc/flexisip-account-manager/flexiapi.env`.
+
 ## Setup
 
 Clone the repository, install the dependencies and generate a key.

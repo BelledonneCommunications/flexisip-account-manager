@@ -25,7 +25,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Account extends Authenticatable
 {
     protected $connection = 'external';
-    protected $with = ['passwords', 'admin'];
+    protected $with = ['passwords', 'admin', 'emailChanged'];
     protected $dates = ['creation_time'];
     public $timestamps = false;
 
@@ -54,6 +54,11 @@ class Account extends Authenticatable
     public function admin()
     {
         return $this->hasOne('App\Admin');
+    }
+
+    public function emailChanged()
+    {
+        return $this->hasOne('App\EmailChanged');
     }
 
     public function getIdentifierAttribute()

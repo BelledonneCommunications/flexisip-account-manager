@@ -111,6 +111,8 @@ php artisan migrate:rollback
 php artisan migrate
 ```
 
+This API is having it's own README file in the `flexiapi` directory.
+
 ### 5. Packaging
 --------------------
 To build a rpm package on centos7:

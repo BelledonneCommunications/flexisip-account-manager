@@ -51,7 +51,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::delete('delete', 'AccountController@destroy')->name('account.destroy');
 
     Route::get('email', 'Account\EmailController@show')->name('account.email');
-    Route::post('email', 'Account\EmailController@update')->name('account.email.update');
+    Route::post('email/request', 'Account\EmailController@requestUpdate')->name('account.email.request_update');
+    Route::get('email/{hash}', 'Account\EmailController@update')->name('account.email.update');
     Route::get('password', 'Account\PasswordController@show')->name('account.password');
     Route::post('password', 'Account\PasswordController@update')->name('account.password.update');
 

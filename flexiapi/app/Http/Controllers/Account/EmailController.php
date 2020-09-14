@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Account;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
+use App\Http\Controllers\Controller;
+use App\Mail\ChangingEmail;
 use App\Mail\ChangedEmail;
+use App\EmailChanged;
 
 class EmailController extends Controller
 {
@@ -17,18 +20,46 @@ class EmailController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function requestUpdate(Request $request)
     {
         $request->validate([
-            'email' => 'required|unique:external.accounts,email|different:email_current|confirmed|email',
+            'email' => 'required|different:email_current|confirmed|email',
         ]);
 
-        $account = $request->user();
-        $account->email = $request->get('email');
-        $account->save();
+        // Remove all the old requests
+        EmailChanged::where('account_id', $request->user()->id)->delete();
 
-        Mail::to($account)->send(new ChangedEmail());
+        // Create a new one
+        $emailChanged = new EmailChanged;
+        $emailChanged->new_email = $request->get('email');
+        $emailChanged->hash = Str::random(16);
+        $emailChanged->account_id = $request->user()->id;
+        $emailChanged->save();
 
+        $request->user()->refresh();
+
+        Mail::to($request->user())->send(new ChangingEmail($request->user()));
+
+        $request->session()->flash('success', 'An email was sent with a confirmation link. Please click it to update your email address.');
         return redirect()->route('account.panel');
+    }
+
+    public function update(Request $request, string $hash)
+    {
+        $account = $request->user();
+
+        if ($account->emailChanged && $account->emailChanged->hash == $hash) {
+            $account->email = $account->emailChanged->new_email;
+            $account->save();
+
+            Mail::to($account)->send(new ChangedEmail());
+
+            $account->emailChanged->delete();
+
+            $request->session()->flash('success', 'Email successfully updated');
+            return redirect()->route('account.panel');
+        }
+
+        abort(404);
     }
 }

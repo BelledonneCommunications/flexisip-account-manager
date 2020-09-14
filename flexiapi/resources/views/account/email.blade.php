@@ -10,7 +10,7 @@
     <p>No email yet</p>
 @endif
 
-{!! Form::open(['route' => 'account.email.update']) !!}
+{!! Form::open(['route' => 'account.email.request_update']) !!}
 <div class="form-group">
     {!! Form::label('email', 'New email') !!}
     {!! Form::email('email', old('email'), ['class' => 'form-control', 'placeholder' => 'bob@example.net', 'required']) !!}
