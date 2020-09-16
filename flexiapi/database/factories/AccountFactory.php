@@ -1,7 +1,7 @@
 <?php
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
-    Copyright (C) 2019 Belledonne Communications SARL, All rights reserved.
+    Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -17,16 +17,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use App\Account;
-use Faker\Generator as Faker;
+namespace Database\Factories;
 
-$factory->define(Account::class, function (Faker $faker) {
-    return [
-        'username' => $faker->username,
-        'domain' => $faker->domainName,
-        'email' => $faker->email,
-        'user_agent' => $faker->userAgent,
-        'ip_address' => $faker->ipv4,
-        'creation_time' => $faker->dateTime,
-    ];
-});
+use App\Account;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
+
+class AccountFactory extends Factory
+{
+    protected $model = Account::class;
+
+    public function definition()
+    {
+        return [
+            'username' => $this->faker->username,
+            'domain' => config('app.sip_domain'),
+            'email' => $this->faker->email,
+            'user_agent' => $this->faker->userAgent,
+            'ip_address' => $this->faker->ipv4,
+            'creation_time' => $this->faker->dateTime,
+        ];
+    }
+}

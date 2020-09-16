@@ -1,7 +1,7 @@
 <?php
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
-    Copyright (C) 2019 Belledonne Communications SARL, All rights reserved.
+    Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -17,36 +17,50 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use App\Password;
+namespace Database\Factories;
+
 use App\Account;
-use Faker\Generator as Faker;
+use App\Password;
+use App\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
-$factory->define(Password::class, function (Faker $faker) use ($factory) {
-    $account = $factory->create(App\Account::class);
+class PasswordFactory extends Factory
+{
+    protected $model = Password::class;
 
-    return [
-        'password'   => hash('md5', $account->username.':'.$account->domain.':testtest'),
-        'account_id' => $account->id,
-        'algorithm'  => 'MD5',
-    ];
-});
+    public function definition()
+    {
+        $account = Account::factory()->create();
 
-$factory->state(Password::class, 'sha256', function (Faker $faker) use ($factory) {
-    $account = $factory->create(App\Account::class);
+        return [
+            'account_id' => $account->id,
+            'password'   => hash('md5', $account->username.':'.$account->domain.':testtest'),
+            'algorithm'  => 'MD5',
+        ];
+    }
 
-    return [
-        'password'   => hash('sha256', $account->username.':'.$account->domain.':testtest'),
-        'account_id' => $account->id,
-        'algorithm'  => 'SHA-256',
-    ];
-});
+    public function sha256()
+    {
+        return $this->state(function (array $attributes) {
+            $account = Account::find($attributes['account_id']);
 
-$factory->state(Password::class, 'clrtxt', function (Faker $faker) use ($factory) {
-    $account = $factory->create(App\Account::class);
+            return [
+                'password'   => hash('sha256', $account->username.':'.$account->domain.':testtest'),
+                'account_id' => $account->id,
+                'algorithm'  => 'SHA-256',
+            ];
+        });
+    }
 
-    return [
-        'password'   => 'testtest',
-        'account_id' => $account->id,
-        'algorithm'  => 'CLRTXT',
-    ];
-});
+    public function clrtxt()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'password'   => 'testtest',
+                'algorithm'  => 'CLRTXT',
+            ];
+        });
+    }
+}

@@ -1,7 +1,7 @@
 <?php
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
-    Copyright (C) 2019 Belledonne Communications SARL, All rights reserved.
+    Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -34,14 +34,14 @@ class AuthenticateDigestTest extends TestCase
 
     public function testMandatoryFrom()
     {
-        $password = factory(Password::class)->create();
+        $password = Password::factory()->create();
         $response = $this->json($this->method, $this->route);
         $response->assertStatus(422);
     }
 
     public function testWrongFrom()
     {
-        $password = factory(Password::class)->create();
+        $password = Password::factory()->create();
         $response = $this->withHeaders([
             'From' => 'sip:missing@username',
         ])->json($this->method, $this->route);
@@ -51,7 +51,7 @@ class AuthenticateDigestTest extends TestCase
 
     public function testAuthenticate()
     {
-        $password = factory(Password::class)->create();
+        $password = Password::factory()->create();
         $response = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier,
         ])->json($this->method, $this->route);
@@ -61,8 +61,8 @@ class AuthenticateDigestTest extends TestCase
     public function testMultiHash()
     {
         // Two password and we link the second to the first related account
-        $passwordMD5 = factory(Password::class)->create();
-        $passwordSHA256 = factory(Password::class)->states('sha256')->make();
+        $passwordMD5 = Password::factory()->create();
+        $passwordSHA256 = Password::factory()->sha256()->make();
         $passwordSHA256->account_id = $passwordMD5->account_id;
         $passwordSHA256->save();
 
@@ -78,7 +78,7 @@ class AuthenticateDigestTest extends TestCase
 
     public function testReplayNonce()
     {
-        $password = factory(Password::class)->create();
+        $password = Password::factory()->create();
         $response0 = $this->generateFirstResponse($password);
         $response1 = $this->generateSecondResponse($password, $response0)
             ->json($this->method, $this->route);
@@ -105,7 +105,7 @@ class AuthenticateDigestTest extends TestCase
 
     public function testClearedNonce()
     {
-        $password = factory(Password::class)->create();
+        $password = Password::factory()->create();
         $response1 = $this->generateFirstResponse($password);
         $response2 = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier,
@@ -129,7 +129,7 @@ class AuthenticateDigestTest extends TestCase
 
     public function testAuthenticationMD5()
     {
-        $password = factory(Password::class)->create();
+        $password = Password::factory()->create();
         $response = $this->generateFirstResponse($password);
         $response = $this->generateSecondResponse($password, $response)
                          ->json($this->method, $this->route);
@@ -141,7 +141,7 @@ class AuthenticateDigestTest extends TestCase
 
     public function testAuthenticationSHA265()
     {
-        $password = factory(Password::class)->states('sha256')->create();
+        $password = Password::factory()->sha256()->create();
         $response = $this->generateFirstResponse($password);
         $response = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier,
@@ -155,7 +155,7 @@ class AuthenticateDigestTest extends TestCase
 
     public function testAuthenticationSHA265FromCLRTXT()
     {
-        $password = factory(Password::class)->states('clrtxt')->create();
+        $password = Password::factory()->clrtxt()->create();
         $response = $this->generateFirstResponse($password);;
 
         // The server is generating all the available hash algorythms
@@ -182,7 +182,7 @@ class AuthenticateDigestTest extends TestCase
 
     public function testAuthenticationBadPassword()
     {
-        $password = factory(Password::class)->create();
+        $password = Password::factory()->create();
         $response = $this->generateFirstResponse($password);;
         $password->password = 'wrong';
 

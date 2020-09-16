@@ -2,7 +2,7 @@
 
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
-    Copyright (C) 2019 Belledonne Communications SARL, All rights reserved.
+    Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -32,7 +32,7 @@ $logger = Logger::getInstance();
 if (REMOTE_PROVISIONING_USE_DIGEST_AUTH) {
     $headers = getallheaders();
     $authorization = null;
-    
+
     // Get authentication header if there is one
     if (!empty($headers['Auth-Digest'])) {
         $logger->debug("Auth-Digest = " . $headers['Auth-Digest']);
@@ -131,7 +131,7 @@ if (!empty($username)) {
         $account = new Account($db);
         $account->username = $username;
         $account->domain = $domain;
-        
+
         if ($account->getOne()) {
             if (!is_activated($account->activated)) {
                 $password = new Password($db);
