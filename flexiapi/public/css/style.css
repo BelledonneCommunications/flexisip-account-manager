@@ -42,13 +42,8 @@ body > footer::before {
     height: 9rem;
 }
 
-
-@media screen and (max-width: 991px) {
-    nav.navbar {
-        display: none;
-    }
-}
-
+.page-link,
+.page-link:hover,
 h1, h2, h3, a, label {
     color: #ff733b;
 }
@@ -97,7 +92,9 @@ body > header nav {
     background-color: #f44a26;
 }
 
+.page-item.active .page-link,
 body > footer {
+    border-color: #ff733b;
     background-color: #ff733b;
 }
 

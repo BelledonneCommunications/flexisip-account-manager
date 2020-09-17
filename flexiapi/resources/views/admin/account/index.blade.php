@@ -7,16 +7,16 @@
 @section('content')
 
 <div class="row mb-2">
-    <div class="col-6">
+    <div class="col-sm">
         <h2>Accounts</h2>
     </div>
-    <div class="col-6">
+    <div class="col-sm">
         {!! Form::open(['route' => 'admin.account.search']) !!}
             <div class="form-row">
-                <div class="col-9">
+                <div class="col-8">
                     {!! Form::text('search', $search, ['class' => 'form-control', 'placeholder' => 'Search by username: +1234, foo_bar…']) !!}
                 </div>
-                <div class="col-3">
+                <div class="col-4">
                     <button type="submit" class="btn btn-primary">Search</button>
                 </div>
             </div>
@@ -60,6 +60,6 @@
     </tbody>
 </table>
 
-{{ $accounts->links() }}
+{{ $accounts->links('pagination::bootstrap-4') }}
 
 @endsection

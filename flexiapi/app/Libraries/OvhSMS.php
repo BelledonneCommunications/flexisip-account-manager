@@ -47,10 +47,11 @@ class OvhSMS
             'class'             => 'phoneDisplay',
             'coding'            => '7bit',
             'message'           => $message,
-            'noStopClause'      => false,
+            'noStopClause'      => true,
             'priority'          => 'high',
             'receivers'         => [ $to ],
-            'senderForResponse' => true,
+            'sender'            => config('ovh.app_sender'),
+            'senderForResponse' => false,
             'validityPeriod'    => 2880
         ];
 
