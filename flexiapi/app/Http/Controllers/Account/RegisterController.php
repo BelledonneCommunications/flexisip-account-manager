@@ -65,6 +65,7 @@ class RegisterController extends Controller
     {
         $request->validate([
             'terms' => 'accepted',
+            'privacy' => 'accepted',
             'username' => [
                 'required', 'unique:external.accounts,username', 'filled', new WithoutSpaces
             ],
@@ -101,6 +102,7 @@ class RegisterController extends Controller
     {
         $request->validate([
             'terms' =>'accepted',
+            'privacy' => 'accepted',
             'username' => 'unique:external.accounts,username|nullable|filled',
             'phone' => [
                 'required', 'unique:external.aliases,alias',

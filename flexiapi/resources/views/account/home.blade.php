@@ -4,10 +4,10 @@
 
 <h2>{{ config('app.name') }}</h2>
 
-<p>There are {{ number_format($count) }} users registered with this service.</p>
+<p>There are <b>{{ number_format($count) }} users</b> registered with this service.</p>
 
 @if (config('instance.intro_registration'))
-    <p>{!! nl2br(config('instance.intro_registration')) !!}</p>
+    @parsedown(config('instance.intro_registration'))
 @endif
 
 <hr />

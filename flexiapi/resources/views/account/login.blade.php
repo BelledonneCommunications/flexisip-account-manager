@@ -1,13 +1,6 @@
 @extends('layouts.main')
 
 @section('content')
-    <p class="text-center">
-        No account yet?
-        <a class="btn btn-secondary ml-2" href="{{ route('account.register') }}">Register</a>
-    </p>
-
-    <hr />
-
     @if (Auth::check())
         @include('parts.already_auth')
     @else
@@ -34,4 +27,12 @@
 
         @include('parts.password_recovery')
     @endif
+
+    <hr />
+
+    <p class="text-center">
+        No account yet?
+        <a class="btn btn-secondary ml-2" href="{{ route('account.register') }}">Register</a>
+    </p>
+
 @endsection

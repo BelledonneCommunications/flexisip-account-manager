@@ -49,8 +49,11 @@ class AuthenticateController extends Controller
             'password' => 'required'
         ]);
 
-        $account = Account::where('username', $request->get('username'))
-                          ->firstOrFail();
+        $account = Account::where('username', $request->get('username'))->first();
+
+        if (!$account) {
+            return redirect()->back()->withErrors(['authentication' => 'The account doesn\'t exists']);
+        }
 
         // Try out the passwords
         foreach ($account->passwords as $password) {

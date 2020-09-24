@@ -5,7 +5,7 @@
     <body>
         <p>Hello,</p>
         <p>
-            Your SIP account has been successfully created using {{ config('app.name') }}.<br />
+            Your SIP account has been successfully created.<br />
             You can now configure this account on any SIP-compatible application using the following parameters:<br />
             <br />
 

@@ -7,7 +7,7 @@
 {!! Form::open(['route' => 'account.destroy', 'method' => 'delete']) !!}
 
 <p>You are going to permanently delete your account.</p>
-<p>Please enter your username <b>{{ $account->identifier }}</b> to confirm.</p>
+<p>Please enter your complete username to confirm: <b>{{ $account->identifier }}</b>.</p>
 
 <div class="form-group">
     {!! Form::label('identifier', 'Username') !!}

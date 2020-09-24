@@ -52,6 +52,11 @@ class AccountController extends Controller
         return view('account.terms');
     }
 
+    public function privacy(Request $request)
+    {
+        return view('account.privacy');
+    }
+
     public function delete(Request $request)
     {
         return view('account.delete', [

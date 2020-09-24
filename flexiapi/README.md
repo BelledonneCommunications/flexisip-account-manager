@@ -71,7 +71,7 @@ We advise you to copy the `style.css` file and rename it to make your custom CSS
 
 ### systemd restrictions
 
-To retrieve the devices configuration, FlexiAPI connects to the UNIX socket opened by FlexiSIP. The socket is located in the `/tmp` directory.
+To retrieve the devices configuration, FlexiAPI connects to the UNIX socket opened by Flexisip. The socket is located in the `/tmp` directory.
 If you have issues connecting to that socket, please ensure that your PHP process have access to it (user, rights).
 
 The systemd service [PrivateTmp](https://access.redhat.com/blogs/766093/posts/1976243) setting might restrict that access.

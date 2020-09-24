@@ -4,4 +4,10 @@
     <p>Read the <a href="{{ route('account.terms') }}">Terms and Conditions</a></p>
 </div>
 
+<div class="form-check mb-3">
+    {!! Form::checkbox('privacy', 'true', false, ['class' => 'form-check-input', 'id' => 'privacy']) !!}
+    <label class="form-check-label" for="privacy">I accept the Privacy policy: </a></label>
+    <p>Read the <a href="{{ route('account.privacy') }}">Privacy policy</a></p>
+</div>
+
 @include('parts.captcha')

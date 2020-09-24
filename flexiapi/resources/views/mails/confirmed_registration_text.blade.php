@@ -2,7 +2,7 @@ Registration confirmed {{ config('app.name') }}
 
 Hello,
 
-Your SIP account has been successfully created using {{ config('app.name') }}.
+Your SIP account has been successfully created.
 You can now configure this account on any SIP-compatible application using the following parameters:
 
     SIP address: sip:{{ $account->identifier }}
