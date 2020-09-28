@@ -22,7 +22,7 @@ return [
     'devices_management' => env('DEVICES_MANAGEMENT', true),
 
     'proxy_registrar_address' => env('ACCOUNT_PROXY_REGISTRAR_ADDRESS', 'sip.domain.com'),
-    'transport_protocol' => env('ACCOUNT_TRANSPORT_PROTOCOL', 'TLS (recommended), TCP or UDP'),
+    'transport_protocol_text' => env('ACCOUNT_TRANSPORT_PROTOCOL_TEXT', 'TLS (recommended), TCP or UDP'),
 
     /*
     |--------------------------------------------------------------------------
