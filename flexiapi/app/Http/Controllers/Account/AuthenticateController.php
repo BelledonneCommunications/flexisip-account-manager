@@ -35,7 +35,7 @@ use App\Mail\PasswordAuthentication;
 
 class AuthenticateController extends Controller
 {
-    private $emailCodeSize = 14;
+    private $emailCodeSize = 12;
 
     public function login(Request $request)
     {
@@ -115,6 +115,8 @@ class AuthenticateController extends Controller
         if (!$account->activated) {
             return redirect()->route('account.password');
         }
+
+        $request->session()->flash('success', 'Your account creation process is now finished.');
 
         return redirect()->route('account.panel');
     }

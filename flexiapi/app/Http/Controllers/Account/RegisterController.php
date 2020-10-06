@@ -23,6 +23,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 
 use App\Account;
@@ -67,7 +68,12 @@ class RegisterController extends Controller
             'terms' => 'accepted',
             'privacy' => 'accepted',
             'username' => [
-                'required', 'unique:external.accounts,username', 'filled', new WithoutSpaces
+                'required',
+                Rule::unique('external.accounts', 'username')->where(function ($query) use ($request) {
+                    $query->where('domain', config('app.sip_domain'));
+                }),
+                'filled',
+                new WithoutSpaces
             ],
             'g-recaptcha-response'  => 'required|captcha',
             'email' => 'required|email|confirmed'

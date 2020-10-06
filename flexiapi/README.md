@@ -10,7 +10,7 @@ Thoses variables can then be set using Docker-Compose, a bash script or a web-se
 
 If you're installing FlexiAPI from the RPM package you can find the configuration file at `/etc/flexisip-account-manager/flexiapi.env`.
 
-## Setup
+## Manual setup
 
 Clone the repository, install the dependencies and generate a key.
 
@@ -25,11 +25,11 @@ The local one (that is by default using SQLite) is used to store authentications
 
 You can also run the test suit using `phpunit`.
 
-To know more about the web server configuration part, you can directly [visit the official Laravel installation documentation](https://laravel.com/docs/6.x).
+To know more about the web server configuration part, you can directly [visit the official Laravel installation documentation](https://laravel.com/docs/8.x).
 
 ### Configure the .env file
 
-Complete all the other variables in the `.env` file:
+Complete all the other variables in the `.env` file or by overwritting them in your Docker or web-server configuration:
 - The OVH SMS connector
 - SMTP configuration
 - App name, SIP domain…
@@ -104,4 +104,4 @@ To expire and/or clear old nonces a specific command should be called periodical
 
 ## Usage
 
-The root page contains all the required documentation to authenticate and request the API.
+The `/api` page contains all the required documentation to authenticate and request the API.
