@@ -37,7 +37,7 @@ use App\Mail\NewsletterRegistration;
 
 class RegisterController extends Controller
 {
-    private $emailCodeSize = 14;
+    private $emailCodeSize = 12;
 
     public function register(Request $request)
     {
