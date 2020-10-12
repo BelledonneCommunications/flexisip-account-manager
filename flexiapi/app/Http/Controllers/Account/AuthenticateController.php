@@ -35,7 +35,7 @@ use App\Mail\PasswordAuthentication;
 
 class AuthenticateController extends Controller
 {
-    private $emailCodeSize = 12;
+    private $emailCodeSize = 13;
 
     public function login(Request $request)
     {
@@ -107,6 +107,13 @@ class AuthenticateController extends Controller
 
         $account = Account::where('confirmation_key', $code)->firstOrFail();
         $account->confirmation_key = null;
+
+        // If there is already a password set, we directly activate the account
+        if ($account->passwords()->count() != 0) {
+            $account->activated = true;
+            $account->save();
+        }
+
         $account->save();
 
         Auth::login($account);
