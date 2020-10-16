@@ -91,7 +91,7 @@ function authenticate($auth_digest, $realm = "sip.example.org")
                 $A2 = md5(getenv('REQUEST_METHOD').':'.$data['uri']);
                 $valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
                 break;
-            case 'SHA256':
+            case 'SHA-256':
                 $A1 = $password; // username:realm:password
                 $A2 = hash('sha256', getenv('REQUEST_METHOD').':'.$data['uri']);
                 $valid_response = hash('sha256', $A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
