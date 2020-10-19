@@ -71,7 +71,8 @@ class AccountApiTest extends TestCase
             ->assertStatus(200)
             ->assertJson([
                 'id' => 2,
-                'username' => $username
+                'username' => $username,
+                'activated' => false,
             ]);
     }
 
@@ -97,6 +98,7 @@ class AccountApiTest extends TestCase
                 'id' => 2,
                 'username' => $username,
                 'domain' => $domain,
+                'activated' => false,
             ]);
     }
 
@@ -121,6 +123,7 @@ class AccountApiTest extends TestCase
                 'id' => 2,
                 'username' => $username,
                 'domain' => config('app.sip_domain'),
+                'activated' => false,
             ]);
     }
 
@@ -128,8 +131,6 @@ class AccountApiTest extends TestCase
     {
         $admin = Admin::factory()->create();
         $password = $admin->account->passwords()->first();
-
-        $username = 'username';
 
         $response0 = $this->generateFirstResponse($password);
         $response1 = $this->generateSecondResponse($password, $response0)
@@ -140,5 +141,31 @@ class AccountApiTest extends TestCase
             ]);
 
         $response1->assertStatus(422);
+    }
+
+    public function testActivated()
+    {
+        $admin = Admin::factory()->create();
+        $password = $admin->account->passwords()->first();
+
+        $username = 'username';
+
+        $response0 = $this->generateFirstResponse($password);
+        $response1 = $this->generateSecondResponse($password, $response0)
+            ->json($this->method, $this->route, [
+                'username' => $username,
+                'algorithm' => 'SHA-256',
+                'password' => '2',
+                'activated' => true,
+            ]);
+
+        $response1
+            ->assertStatus(200)
+            ->assertJson([
+                'id' => 2,
+                'username' => $username,
+                'domain' => config('app.sip_domain'),
+                'activated' => true,
+            ]);;
     }
 }

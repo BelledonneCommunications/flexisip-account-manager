@@ -17,20 +17,24 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use Illuminate\Http\Request;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-Route::get('/', 'Api\ApiController@documentation')->name('api');
+class CreateApiKeysTable extends Migration
+{
+    public function up()
+    {
+        Schema::connection('local')->create('api_keys', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->integer('account_id')->unsigned()->unique();
+            $table->string('key')->unique();
+            $table->timestamps();
+        });
+    }
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::group(['middleware' => ['auth.digest_or_key']], function () {
-    Route::get('ping', 'Api\PingController@ping');
-    Route::get('devices', 'Api\DeviceController@index');
-    Route::delete('devices/{uuid}', 'Api\DeviceController@destroy');
-
-    Route::group(['middleware' => ['auth.admin']], function () {
-        Route::post('accounts', 'Api\AccountController@store');
-    });
-});
+    public function down()
+    {
+        Schema::dropIfExists('api_keys');
+    }
+}

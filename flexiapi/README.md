@@ -105,3 +105,29 @@ To expire and/or clear old nonces a specific command should be called periodical
 ## Usage
 
 The `/api` page contains all the required documentation to authenticate and request the API.
+
+## Console commands
+
+FlexiAPI is shipped with several console commands that you can launch using the `artisan` executable available at the root of this project.
+
+### Clear Expired Nonces for DIGEST authentication
+
+This will remove the nonces stored that were not updated after `x minutes`.
+
+    php artisan digest:expired-nonces-clear {minutes}
+
+### Remove the unconfirmed accounts
+
+This request will remove the accounts that were not confirmed after `x days`. In the database an unconfirmed account is having the `activated` attribute set to `false`.
+
+    php artisan accounts:clear-unconfirmed {days} {--apply}
+
+The base request will not delete the related accounts by default. You need to add `--apply` to remove them.
+
+### Set an account admin
+
+This command will set the admin role to any available FlexiSIP account (the external FlexiSIP database need to be configured beforehand). You need to use the account DB id as a parameter in this command.
+
+    php artisan accounts:set-admin {account_id}
+
+Once one account is declared as administrator, you can directly configure the other ones using the web panel.

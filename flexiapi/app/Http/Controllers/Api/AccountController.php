@@ -36,6 +36,7 @@ class AccountController extends Controller
             'algorithm' => 'required|in:SHA-256,MD5',
             'password' => 'required|filled',
             'domain' => 'min:3',
+            'activated' => 'boolean|nullable',
         ]);
 
         $algorithm = $request->has('password_sha256') ? 'SHA-256' : 'MD5';
@@ -43,7 +44,9 @@ class AccountController extends Controller
         $account = new Account;
         $account->username = $request->get('username');
         $account->email = $request->get('email');
-        $account->activated = true;
+        $account->activated = $request->has('activated')
+            ? (bool)$request->get('activated')
+            : false;
         $account->domain = $request->has('domain')
             ? $request->get('domain')
             : config('app.sip_domain');

@@ -14,7 +14,23 @@
 > accept: application/json</code></pre>
 
 <h2>Authentication</h2>
-<p>Restricted endpoints are protected using a DIGEST authentication mechanism.</p>
+
+<p>Restricted endpoints are protected using a DIGEST authentication or an API Key mechanisms.</p>
+
+<h3>Using the API Key</h3>
+
+<p>To authenticate using an API Key, you need to <a href="{{ route('account.login') }}">authenticate to your account panel</a> and being an administrator.</p>
+<p>On your panel you will then find a form to generate your personnal key.</p>
+
+<p>You can then use your freshly generated key by adding a new <code>x-api-key</code> header to your API requests:</p>
+
+<pre>
+    <code>> GET /api/{endpoint}
+    > from: sip:foobar@sip.example.org
+    > x-api-key: {your-api-key}
+    > …</code></pre>
+
+<h3>Using DIGEST</h3>
 
 <p>To discover the available hashing algorythm you MUST send an unauthenticated request to one of the restricted endpoints.<br />
 For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the authentication layer.</p>
@@ -43,6 +59,7 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
     <li><code>password</code> required minimum 6 characters</li>
     <li><code>algorithm</code> required, values can be <code>SHA-256</code> or <code>MD5</code></li>
     <li><code>domain</code> optional, the value is set to the default registration domain if not set</li>
+    <li><code>activated</code> optional, a boolean, set to <code>false</code> by default</li>
 </ul>
 
 <p>To create an account directly from the API.<br />This endpoint is authenticated and requires an admin account.</p>

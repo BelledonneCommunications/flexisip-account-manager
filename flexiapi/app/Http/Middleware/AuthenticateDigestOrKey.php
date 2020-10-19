@@ -29,7 +29,7 @@ use Illuminate\Http\Response;
 use Closure;
 use Validator;
 
-class AuthenticateDigest
+class AuthenticateDigestOrKey
 {
     const ALGORITHMS = [
         'MD5'     => 'md5',
@@ -55,6 +55,21 @@ class AuthenticateDigest
         $account = Account::where('username', $username)
                           ->where('domain', $domain)
                           ->firstOrFail();
+
+        // Key authentication
+        if ($request->header('x-api-key')) {
+            if ($account->apiKey
+            && $account->apiKey->key == $request->header('x-api-key')) {
+                Auth::login($account);
+                $response = $next($request);
+
+                return $response;
+            }
+
+            return $this->generateUnauthorizedResponse($account);
+        }
+
+        // DIGEST authentication
 
         if ($request->header('Authorization')) {
             $auth = $this->extractAuthorizationHeader($request->header('Authorization'));

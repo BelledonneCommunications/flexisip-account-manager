@@ -47,7 +47,7 @@
 
 @if($account->isAdmin())
     <h3>Admin area</h3>
-    <div class="list-group">
+    <div class="list-group mb-3">
         <a href="{{ route('admin.account.index') }}" class="list-group-item list-group-item-action">
             <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1">Accounts</h5>
@@ -55,6 +55,25 @@
             <p class="mb-1">Manage the Flexisip accounts</p>
         </a>
     </div>
+
+    <h5>API Key</h5>
+
+    <p>As an administrator you can generate an API key and use it to request the different API endpoints, <a href="{{ route('api') }}">check the related API documentation</a> to know how to use that key.</p>
+
+    {!! Form::open(['route' => 'admin.api_key.generate']) !!}
+    <div class="form-row">
+        <div class="col-8">
+        <input readonly class="form-control" placeholder="No key yet, press Generate"
+            @if ($account->apiKey)
+                value="{{ $account->apiKey->key }}"
+            @endif
+        >
+        </div>
+        <div class="col-4">
+            <button type="submit" class="btn btn-primary">Generate</button>
+        </div>
+    </div>
+{!! Form::close() !!}
 @endif
 
 <h3 class="mt-3">Account information</h3>

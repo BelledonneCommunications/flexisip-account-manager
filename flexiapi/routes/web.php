@@ -66,6 +66,8 @@ Route::group(['middleware' => 'auth.admin'], function () {
     Route::get('admin/accounts/{search?}', 'Admin\AccountController@index')->name('admin.account.index');
     Route::post('admin/search', 'Admin\AccountController@search')->name('admin.account.search');
 
+    Route::post('admin/api_key', 'Admin\AccountController@generateApiKey')->name('admin.api_key.generate');
+
     Route::get('admin/accounts/show/{id}', 'Admin\AccountController@show')->name('admin.account.show');
     Route::get('admin/accounts/{id}/activate', 'Admin\AccountController@activate')->name('admin.account.activate');
     Route::get('admin/accounts/{id}/deactivate', 'Admin\AccountController@deactivate')->name('admin.account.deactivate');

@@ -25,7 +25,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class AuthenticateDigestTest extends TestCase
+class AuthenticateDigestAndKeyTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -56,6 +56,18 @@ class AuthenticateDigestTest extends TestCase
             'From' => 'sip:'.$password->account->identifier,
         ])->json($this->method, $this->route);
         $response->assertStatus(401);
+    }
+
+    public function testAuthenticateWithKey()
+    {
+        $password = Password::factory()->create();
+        $password->account->generateApiKey();
+
+        $response = $this->withHeaders([
+            'From' => 'sip:'.$password->account->identifier,
+            'x-api-key' => $password->account->apiKey->key,
+        ])->json($this->method, $this->route);
+        $response->assertStatus(200);
     }
 
     public function testMultiHash()

@@ -23,6 +23,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Str;
+
+use App\ApiKey;
 
 class Account extends Authenticatable
 {
@@ -60,6 +63,11 @@ class Account extends Authenticatable
         return $this->hasOne('App\Admin');
     }
 
+    public function apiKey()
+    {
+        return $this->hasOne('App\ApiKey');
+    }
+
     public function emailChanged()
     {
         return $this->hasOne('App\EmailChanged');
@@ -68,6 +76,16 @@ class Account extends Authenticatable
     public function getIdentifierAttribute()
     {
         return $this->attributes['username'].'@'.$this->attributes['domain'];
+    }
+
+    public function generateApiKey()
+    {
+        $this->apiKey()->delete();
+
+        $apiKey = new ApiKey;
+        $apiKey->account_id = $this->id;
+        $apiKey->key = Str::random(40);
+        $apiKey->save();
     }
 
     public function isAdmin()

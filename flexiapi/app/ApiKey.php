@@ -17,20 +17,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use Illuminate\Http\Request;
+namespace App;
 
-Route::get('/', 'Api\ApiController@documentation')->name('api');
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+class ApiKey extends Model
+{
+    use HasFactory;
 
-Route::group(['middleware' => ['auth.digest_or_key']], function () {
-    Route::get('ping', 'Api\PingController@ping');
-    Route::get('devices', 'Api\DeviceController@index');
-    Route::delete('devices/{uuid}', 'Api\DeviceController@destroy');
+    protected $connection = 'local';
+    protected $table = 'api_keys';
 
-    Route::group(['middleware' => ['auth.admin']], function () {
-        Route::post('accounts', 'Api\AccountController@store');
-    });
-});
+    public function account()
+    {
+        return $this->belongsTo('App\Account');
+    }
+}

@@ -93,4 +93,12 @@ class AccountController extends Controller
 
         return redirect()->back();
     }
+
+    public function generateApiKey(Request $request)
+    {
+        $account = $request->user();
+        $account->generateApiKey();
+
+        return redirect()->back();
+    }
 }
