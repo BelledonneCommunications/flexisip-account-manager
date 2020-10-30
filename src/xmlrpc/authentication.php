@@ -41,12 +41,73 @@ function auth_get_valid_nonces()
         hash_hmac("sha256", $time-MIN_NONCE_VALIDITY_PERIOD.':'.$request, AUTH_NONCE_KEY));
 }
 
-function request_authentication($realm = "sip.example.org")
+function request_authentication($realm = "sip.example.org", $username = null)
 {
-    header('HTTP/1.1 401 Unauthorized');
-    header('WWW-Authenticate: Digest realm="' . $realm.
-        '",qop="auth",nonce="' . auth_get_valid_nonces()[0] . '",opaque="' . md5($realm) . '"');
-    exit();
+	$has_md5 = false;
+	$has_sha256 = false;
+
+	if ($username != null) {
+		// Get the password/hash from database to include only available password hash in the authenticate header
+		$database = new Database();
+    $db = $database->getConnection();
+    $account = new Account($db);
+    $account->username = $username;
+
+    if (!$account->getOne()) {
+        Logger::getInstance()->error("Couldn't find account " . (string)$account);
+        return null;
+    }
+    $pwd = new Password($db);
+    $pwd->account_id = $account->id;
+
+    $stmt = $pwd->getAll();
+    $num = $stmt->rowCount();
+    if ($num <= 0) {
+        Logger::getInstance()->error("Couldn't find password " . (string)$pwd);
+        return null;
+    }
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        extract($row);
+        // Generate the valid response
+        switch ($algorithm) {
+            case 'CLRTXT':
+        			$has_md5 = true;
+        			$has_sha256 = true;
+              break;
+            case 'MD5':
+        			$has_md5 = true;
+              break;
+            case 'SHA-256':
+        			$has_sha256 = true;
+              break;
+            default:
+              Logger::getInstance()->error("Digest error : Given algorithm '" . $algorithm . "' is invalid (neither of 'CLRTXT', 'MD5', 'SHA-256')");
+        }
+    }
+	} else { // we don't have the username, authorize both MD5 and SHA256
+		$has_md5 = true;
+		$has_sha256 = true;
+    Logger::getInstance()->debug("Username not found, replying with both auth anyway");
+	}
+
+	if (($has_md5 || $has_sha256) == false) {
+		// reply anyway with both hash authorized
+		$has_md5 = true;
+		$has_sha256 = true;
+    Logger::getInstance()->debug("Doesn't have MD5 or SHA-256, replying with both auth anyway");
+	}
+
+	header('HTTP/1.1 401 Unauthorized');
+	if ($has_md5 == true) {
+		header('WWW-Authenticate: Digest realm="' . $realm.
+			'",qop="auth",algorithm=MD5,nonce="' . auth_get_valid_nonces()[0] . '",opaque="' . md5($realm) . '"');
+	}
+	if ($has_sha256 == true) {
+		header('WWW-Authenticate: Digest realm="' . $realm.
+			'",qop="auth",algorithm=SHA-256,nonce="' . auth_get_valid_nonces()[0] . '",opaque="' . md5($realm) . '"', false);
+	}
+	exit();
 }
 
 function authenticate($auth_digest, $realm = "sip.example.org")
@@ -96,6 +157,8 @@ function authenticate($auth_digest, $realm = "sip.example.org")
                 $A2 = hash('sha256', getenv('REQUEST_METHOD').':'.$data['uri']);
                 $valid_response = hash('sha256', $A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
                 break;
+            default:
+                Logger::getInstance()->error("Digest error : Given algorithm '" . $algorithm . "' is invalid (neither of 'CLRTXT', 'MD5', 'SHA-256')");
         }
 
         // Compare with the client response

@@ -29,8 +29,18 @@ include_once __DIR__ . '/authentication.php';
 
 $logger = Logger::getInstance();
 
+$username = isset($_GET['username']) ? $_GET['username'] : null;
+
 if (REMOTE_PROVISIONING_USE_DIGEST_AUTH) {
     $headers = getallheaders();
+    // From is the GRUU('sip:username@AUTH_REALM;gr=*;), we need to extract the username from it:
+    // from position 4(skip 'sip:') until the first occurence of @
+    // pass it through rawurldecode has GRUU may contain escaped characters
+    $from = rawurldecode(substr($headers['From'],4,strpos($headers['From'], '@')-4));
+    if (empty($from)) {
+        $from = $username;
+        $logger->debug("Empty From, using username = " . $username);
+    }
     $authorization = null;
 
     // Get authentication header if there is one
@@ -49,11 +59,11 @@ if (REMOTE_PROVISIONING_USE_DIGEST_AUTH) {
             Logger::getInstance()->debug("Authentication successful");
         } else {
             Logger::getInstance()->debug("Authentication failed");
-            request_authentication(AUTH_REALM);
+            request_authentication(AUTH_REALM, $from);
         }
     } else {
         Logger::getInstance()->debug("No authentication header");
-        request_authentication(AUTH_REALM);
+        request_authentication(AUTH_REALM, $from);
     }
 }
 
@@ -109,7 +119,6 @@ if (file_exists(REMOTE_PROVISIONING_DEFAULT_CONFIG)) {
     }
 }
 
-$username = isset($_GET['username']) ? $_GET['username'] : null;
 $domain = isset($_GET['domain']) ? $_GET['domain'] : SIP_DOMAIN;
 $transport = isset($_GET['transport']) ? $_GET['transport'] : REMOTE_PROVISIONING_DEFAULT_TRANSPORT;
 
