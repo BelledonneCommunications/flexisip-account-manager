@@ -113,7 +113,7 @@ if (file_exists(REMOTE_PROVISIONING_DEFAULT_CONFIG)) {
             $value = str_replace("<", "&lt;", $value);
             $value = str_replace(">", "&gt;", $value);
 
-            $xml .= '<entry name="' . $key . '">' . $value . '</entry>';
+            $xml .= '<entry name="' . $key . '"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>' . $value . '</entry>';
         }
         $xml .= '</section>';
     }
@@ -169,18 +169,19 @@ if (!empty($username)) {
     }
 
     $xml .= '<section name="proxy_' . $proxy_config_index . '"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>';
-    $xml .= '<entry name="reg_identity">&lt;sip:' . $username . '@' . $domain . '&gt;</entry>';
-    $xml .= '<entry name="reg_proxy">&lt;sip:' . $domain . ';transport=' . $transport . '&gt;</entry>';
+    $xml .= '<entry name="reg_identity"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>&lt;sip:' . $username . '@' . $domain . '&gt;</entry>';
+    $xml .= '<entry name="reg_proxy"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>&lt;sip:' . $domain . ';transport=' . $transport . '&gt;</entry>';
     $xml .= '<entry name="reg_route">&lt;sip:' . $domain . ';transport=' . $transport . '&gt;</entry>';
-    $xml .= '<entry name="reg_sendregister">1</entry>';
+    $xml .= '<entry name="reg_sendregister"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>1</entry>';
+    $xml .= '<entry name="refkey"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') .     '>push_notification</entry>';
     $xml .= '</section>';
 
     if (!empty($ha1)) {
         $xml .= '<section name="auth_info_' . $auth_info_index . '"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>';
-        $xml .= '<entry name="username">' . $username . '</entry>';
-        $xml .= '<entry name="ha1">' . $ha1 . '</entry>';
-        $xml .= '<entry name="realm">' . $domain . '</entry>';
-        $xml .= '<entry name="algorithm">' . $algo . '</entry>';
+        $xml .= '<entry name="username"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>' . $username . '</entry>';
+        $xml .= '<entry name="ha1"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>' . $ha1 . '</entry>';
+        $xml .= '<entry name="realm"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>' . $domain . '</entry>';
+        $xml .= '<entry name="algorithm"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>' . $algo . '</entry>';
         $xml .= '</section>';
     }
 }
