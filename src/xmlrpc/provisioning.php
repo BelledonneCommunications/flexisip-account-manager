@@ -101,7 +101,7 @@ $auth_info_index = 0;
 if (file_exists(REMOTE_PROVISIONING_DEFAULT_CONFIG)) {
     $rc_array = parse_ini_file(REMOTE_PROVISIONING_DEFAULT_CONFIG, true);
     foreach ($rc_array as $section => $values) {
-        $xml .= '<section name="' . $section . '"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>';
+        $xml .= '<section name="' . $section . '">';
         if (startswith($section, "proxy_config_")) {
             $proxy_config_index += 1;
         } elseif (startswith($section, "auth_info_")) {
@@ -121,6 +121,14 @@ if (file_exists(REMOTE_PROVISIONING_DEFAULT_CONFIG)) {
 
 $domain = isset($_GET['domain']) ? $_GET['domain'] : SIP_DOMAIN;
 $transport = isset($_GET['transport']) ? $_GET['transport'] : REMOTE_PROVISIONING_DEFAULT_TRANSPORT;
+	
+$request_params = array(
+	"username" => $username,
+	"domain" => $domain,
+	"transport" => $transport,
+	"ha1" => null,
+	"algo" => DEFAULT_ALGORITHM,
+);
 
 if (!empty($username)) {
     if (REMOTE_PROVISIONING_USE_DIGEST_AUTH) {
@@ -166,24 +174,37 @@ if (!empty($username)) {
                 $logger->message("Account id " . $account->id . " is already activated");
             }
         }
-    }
+	}
 
-    $xml .= '<section name="proxy_' . $proxy_config_index . '"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>';
+	$request_params["ha1"] = $ha1;
+	$request_params["algo"] = $algo;
+
+    $xml .= '<section name="proxy_' . $proxy_config_index . '">';
     $xml .= '<entry name="reg_identity"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>&lt;sip:' . $username . '@' . $domain . '&gt;</entry>';
     $xml .= '<entry name="reg_proxy"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>&lt;sip:' . $domain . ';transport=' . $transport . '&gt;</entry>';
     $xml .= '<entry name="reg_route">&lt;sip:' . $domain . ';transport=' . $transport . '&gt;</entry>';
     $xml .= '<entry name="reg_sendregister"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>1</entry>';
-    $xml .= '<entry name="refkey"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') .     '>push_notification</entry>';
+	$xml .= '<entry name="refkey"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') .     '>push_notification</entry>';
+	if (CUSTOM_HOOKS) {
+        provisioning_hook_on_proxy_config($xml, $request_params);
+    }
     $xml .= '</section>';
 
     if (!empty($ha1)) {
-        $xml .= '<section name="auth_info_' . $auth_info_index . '"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>';
+        $xml .= '<section name="auth_info_' . $auth_info_index . '">';
         $xml .= '<entry name="username"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>' . $username . '</entry>';
         $xml .= '<entry name="ha1"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>' . $ha1 . '</entry>';
         $xml .= '<entry name="realm"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>' . $domain . '</entry>';
-        $xml .= '<entry name="algorithm"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>' . $algo . '</entry>';
+		$xml .= '<entry name="algorithm"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>' . $algo . '</entry>';
+		if (CUSTOM_HOOKS) {
+			provisioning_hook_on_auth_info($xml, $request_params);
+		}
         $xml .= '</section>';
     }
+}
+
+if (CUSTOM_HOOKS) {
+	provisioning_hook_on_additional_section($xml, $request_params);
 }
 
 $xml .= '</config>';
