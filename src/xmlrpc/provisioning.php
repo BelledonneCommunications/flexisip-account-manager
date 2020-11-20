@@ -121,7 +121,7 @@ if (file_exists(REMOTE_PROVISIONING_DEFAULT_CONFIG)) {
 
 $domain = isset($_GET['domain']) ? $_GET['domain'] : SIP_DOMAIN;
 $transport = isset($_GET['transport']) ? $_GET['transport'] : REMOTE_PROVISIONING_DEFAULT_TRANSPORT;
-	
+
 $request_params = array(
 	"username" => $username,
 	"domain" => $domain,
@@ -185,7 +185,7 @@ if (!empty($username)) {
     $xml .= '<entry name="reg_route">&lt;sip:' . $domain . ';transport=' . $transport . '&gt;</entry>';
     $xml .= '<entry name="reg_sendregister"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>1</entry>';
 	$xml .= '<entry name="refkey"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') .     '>push_notification</entry>';
-	if (CUSTOM_HOOKS) {
+	if (get_config_value(CUSTOM_HOOKS, FALSE)) {
         provisioning_hook_on_proxy_config($xml, $request_params);
     }
     $xml .= '</section>';
@@ -196,14 +196,14 @@ if (!empty($username)) {
         $xml .= '<entry name="ha1"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>' . $ha1 . '</entry>';
         $xml .= '<entry name="realm"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>' . $domain . '</entry>';
 		$xml .= '<entry name="algorithm"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>' . $algo . '</entry>';
-		if (CUSTOM_HOOKS) {
+		if (get_config_value(CUSTOM_HOOKS, FALSE)) {
 			provisioning_hook_on_auth_info($xml, $request_params);
 		}
         $xml .= '</section>';
     }
 }
 
-if (CUSTOM_HOOKS) {
+if (get_config_value(CUSTOM_HOOKS, FALSE)) {
 	provisioning_hook_on_additional_section($xml, $request_params);
 }
 
