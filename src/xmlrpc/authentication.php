@@ -113,8 +113,11 @@ function request_authentication($realm = "sip.example.org", $username = null)
 function authenticate($auth_digest, $realm = "sip.example.org")
 {
     Logger::getInstance()->debug("Authenticate : Digest ".(print_r($auth_digest, true))." realm " . $realm);
-    // Parse the client authentication data
+    // Parse the client authentication data in 3 arrays.
+    // One containing raw auth_digest, the second containing keys and the third containing values
     preg_match_all('@(realm|username|nonce|uri|nc|cnonce|qop|response|opaque|algorithm)=[\'"]?([^\'",]+)@', $auth_digest, $a);
+
+    //Combining array of keys and array of values to get a dictionary
     $data = array_combine($a[1], $a[2]);
 
     // Get the password/hash from database
@@ -165,6 +168,19 @@ function authenticate($auth_digest, $realm = "sip.example.org")
         if ($data['response'] === $valid_response) {
             return $data['username'];
         }
+        Logger::getInstance()->debug("Digest : received username=" . $data['username']);
+        Logger::getInstance()->debug("Digest : received realm=" . $data['realm']);
+        Logger::getInstance()->debug("Digest : computed A1 hashed([username]:[realm]:[password])=" . $A1);
+        Logger::getInstance()->debug("Digest : received method=" . getenv('REQUEST_METHOD'));
+        Logger::getInstance()->debug("Digest : received uri=" . $data['uri']);
+        Logger::getInstance()->debug("Digest : computed A2 hashed([request_method]:[uri])='" . $A2);
+        Logger::getInstance()->debug("Digest : received nonce=" . $data['nonce']);
+        Logger::getInstance()->debug("Digest : received nc=" . $data['nc']);
+        Logger::getInstance()->debug("Digest : received cnonce=" . $data['cnonce']);
+        Logger::getInstance()->debug("Digest : received qop=" . $data['qop']);
+        Logger::getInstance()->debug("Digest : computed A2 hashed([request_method]:[uri])=" . $A2);
+        Logger::getInstance()->debug("Digest : expected response hashed([A1]:[nonce]:[nc]:[cnonce]:[qop]:[A2])=" . $valid_response);
+        Logger::getInstance()->debug("Digest : got instead response ([request_method]:[uri])=" . $data['response']);
     }
 
     Logger::getInstance()->error("Failed to authenticate request");

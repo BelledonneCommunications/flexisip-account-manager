@@ -30,6 +30,8 @@ include_once __DIR__ . '/authentication.php';
 $logger = Logger::getInstance();
 
 $username = isset($_GET['username']) ? $_GET['username'] : null;
+$domain = isset($_GET['domain']) ? $_GET['domain'] : SIP_DOMAIN;
+$realm = isset($_GET['domain']) ? $_GET['domain'] : AUTH_REALM;
 
 if (REMOTE_PROVISIONING_USE_DIGEST_AUTH) {
     $headers = getallheaders();
@@ -53,17 +55,17 @@ if (REMOTE_PROVISIONING_USE_DIGEST_AUTH) {
     }
 
     if (!empty($authorization)) {
-        $authentication_status = authenticate($authorization, AUTH_REALM);
+        $authentication_status = authenticate($authorization, $realm);
 
         if ($authentication_status != null) {
             Logger::getInstance()->debug("Authentication successful");
         } else {
             Logger::getInstance()->debug("Authentication failed");
-            request_authentication(AUTH_REALM, $from);
+            request_authentication($realm, $from);
         }
     } else {
         Logger::getInstance()->debug("No authentication header");
-        request_authentication(AUTH_REALM, $from);
+        request_authentication($realm, $from);
     }
 }
 
@@ -119,7 +121,7 @@ if (file_exists(REMOTE_PROVISIONING_DEFAULT_CONFIG)) {
     }
 }
 
-$domain = isset($_GET['domain']) ? $_GET['domain'] : SIP_DOMAIN;
+
 $transport = isset($_GET['transport']) ? $_GET['transport'] : REMOTE_PROVISIONING_DEFAULT_TRANSPORT;
 
 $request_params = array(
@@ -181,8 +183,6 @@ if (!empty($username)) {
 
     $xml .= '<section name="proxy_' . $proxy_config_index . '">';
     $xml .= '<entry name="reg_identity"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>&lt;sip:' . $username . '@' . $domain . '&gt;</entry>';
-    $xml .= '<entry name="reg_proxy"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>&lt;sip:' . $domain . ';transport=' . $transport . '&gt;</entry>';
-    $xml .= '<entry name="reg_route">&lt;sip:' . $domain . ';transport=' . $transport . '&gt;</entry>';
     $xml .= '<entry name="reg_sendregister"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>1</entry>';
 	$xml .= '<entry name="refkey"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') .     '>push_notification</entry>';
 	if (get_config_value(CUSTOM_HOOKS, FALSE)) {
