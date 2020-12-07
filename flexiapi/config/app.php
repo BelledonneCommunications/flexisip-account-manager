@@ -19,7 +19,7 @@ return [
 
     'newsletter_registration_address' => env('NEWSLETTER_REGISTRATION_ADDRESS', ''),
     'phone_authentication' => env('PHONE_AUTHENTICATION', true),
-    'devices_management' => env('DEVICES_MANAGEMENT', true),
+    'devices_management' => env('DEVICES_MANAGEMENT', false),
 
     'proxy_registrar_address' => env('ACCOUNT_PROXY_REGISTRAR_ADDRESS', 'sip.domain.com'),
     'transport_protocol_text' => env('ACCOUNT_TRANSPORT_PROTOCOL_TEXT', 'TLS (recommended), TCP or UDP'),

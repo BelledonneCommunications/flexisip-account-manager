@@ -36,7 +36,7 @@ class AccountController extends Controller
         }
 
         return view('account.home', [
-            'count' => Account::count()
+            'count' => Account::where('activated', true)->count()
         ]);
     }
 

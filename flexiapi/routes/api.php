@@ -30,7 +30,16 @@ Route::group(['middleware' => ['auth.digest_or_key']], function () {
     Route::get('devices', 'Api\DeviceController@index');
     Route::delete('devices/{uuid}', 'Api\DeviceController@destroy');
 
+    Route::get('accounts/me', 'Api\AccountController@show');
+    Route::post('accounts/email/request', 'Api\AccountController@requestEmailUpdate');
+    Route::post('accounts/password', 'Api\AccountController@passwordUpdate');
+
     Route::group(['middleware' => ['auth.admin']], function () {
-        Route::post('accounts', 'Api\AccountController@store');
+        Route::get('accounts/{id}/activate', 'Api\Admin\AccountController@activate');
+        Route::get('accounts/{id}/deactivate', 'Api\Admin\AccountController@deactivate');
+        Route::post('accounts', 'Api\Admin\AccountController@store');
+        Route::get('accounts', 'Api\Admin\AccountController@index');
+        Route::get('accounts/{id}', 'Api\Admin\AccountController@show');
+        Route::delete('accounts/{id}', 'Api\Admin\AccountController@destroy');
     });
 });

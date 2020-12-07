@@ -22,6 +22,7 @@ namespace App\Http\Controllers\Account;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 use App\Http\Controllers\Controller;
 use App\Mail\ChangingEmail;
@@ -40,22 +41,11 @@ class EmailController extends Controller
     public function requestUpdate(Request $request)
     {
         $request->validate([
+            'email_current' => ['required', Rule::in([$request->user()->email])],
             'email' => 'required|different:email_current|confirmed|email',
         ]);
 
-        // Remove all the old requests
-        EmailChanged::where('account_id', $request->user()->id)->delete();
-
-        // Create a new one
-        $emailChanged = new EmailChanged;
-        $emailChanged->new_email = $request->get('email');
-        $emailChanged->hash = Str::random(16);
-        $emailChanged->account_id = $request->user()->id;
-        $emailChanged->save();
-
-        $request->user()->refresh();
-
-        Mail::to($request->user())->send(new ChangingEmail($request->user()));
+        $request->user()->requestEmailUpdate($request->get('email'));
 
         $request->session()->flash('success', 'An email was sent with a confirmation link. Please click it to update your email address.');
         return redirect()->route('account.panel');

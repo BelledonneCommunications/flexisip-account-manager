@@ -58,8 +58,7 @@ class PasswordController extends Controller
                     $password->password,
                     Utils::bchash($account->username, $account->domain, $request->get('old_password'), $password->algorithm)
                 )) {
-                    $this->updatePassword($account, $request->get('password'), $algorithm);
-
+                    $account->updatePassword($request->get('password'), $algorithm);
                     $request->session()->flash('success', 'Password successfully changed');
                     return redirect()->route('account.panel');
                 }
@@ -68,7 +67,7 @@ class PasswordController extends Controller
             return redirect()->back()->withErrors(['old_password' => 'Old password not correct']);
         } else {
             // No password yet
-            $this->updatePassword($account, $request->get('password'), $algorithm);
+            $account->updatePassword($request->get('password'), $algorithm);
 
             if (!empty($account->email)) {
                 Mail::to($account)->send(new ConfirmedRegistration($account));
@@ -78,16 +77,5 @@ class PasswordController extends Controller
 
             return redirect()->route('account.panel');
         }
-    }
-
-    private function updatePassword(Account $account, $newPassword, $algorithm)
-    {
-        $account->passwords()->delete();
-
-        $password = new Password;
-        $password->account_id = $account->id;
-        $password->password = Utils::bchash($account->username, $account->domain, $newPassword, $algorithm);
-        $password->algorithm = $algorithm;
-        $password->save();
     }
 }

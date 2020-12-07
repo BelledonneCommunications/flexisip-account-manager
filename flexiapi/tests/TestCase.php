@@ -20,6 +20,7 @@
 namespace Tests;
 
 use App\Password;
+use App\Account;
 use App\Helpers\Utils;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -29,6 +30,14 @@ abstract class TestCase extends BaseTestCase
     use CreatesApplication;
 
     const ALGORITHMS = ['md5' => 'MD5', 'sha256' => 'SHA-256'];
+
+    protected function keyAuthenticated(Account $account)
+    {
+        return $this->withHeaders([
+            'From' => 'sip:'.$account->identifier,
+            'x-api-key' => $account->apiKey->key,
+        ]);
+    }
 
     protected function generateFirstResponse(Password $password)
     {

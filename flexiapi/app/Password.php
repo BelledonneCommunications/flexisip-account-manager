@@ -28,6 +28,7 @@ class Password extends Model
 
     protected $connection = 'external';
     public $timestamps = false;
+    protected $hidden = ['id', 'password', 'account_id', 'created_at', 'updated_at'];
 
     public function account()
     {

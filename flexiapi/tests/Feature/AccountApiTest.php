@@ -146,6 +146,7 @@ class AccountApiTest extends TestCase
     public function testActivated()
     {
         $admin = Admin::factory()->create();
+        $admin->account->generateApiKey();
         $password = $admin->account->passwords()->first();
 
         $username = 'username';
@@ -166,6 +167,219 @@ class AccountApiTest extends TestCase
                 'username' => $username,
                 'domain' => config('app.sip_domain'),
                 'activated' => true,
-            ]);;
+            ]);
+    }
+
+    public function testSimpleAccount()
+    {
+        $password = Password::factory()->create();
+        $password->account->generateApiKey();
+
+        $this->keyAuthenticated($password->account)
+            ->get($this->route.'/me')
+            ->assertStatus(200)
+            ->assertJson([
+                'username' => $password->account->username,
+                'activated' => false
+            ]);
+    }
+
+    public function testChangeEmail()
+    {
+        $password = Password::factory()->create();
+        $password->account->generateApiKey();
+        $newEmail = 'new_email@test.com';
+
+        // Bad email
+        $this->keyAuthenticated($password->account)
+            ->json($this->method, $this->route.'/email/request', [
+                'email' => 'gnap'
+            ])
+            ->assertStatus(422);
+
+        // Same email
+        $this->keyAuthenticated($password->account)
+            ->json($this->method, $this->route.'/email/request', [
+                'email' => $password->account->email
+            ])
+            ->assertStatus(422);
+
+        // Correct email
+        $this->keyAuthenticated($password->account)
+            ->json($this->method, $this->route.'/email/request', [
+                'email' => $newEmail
+            ])
+            ->assertStatus(200);
+
+        $this->keyAuthenticated($password->account)
+            ->get($this->route.'/me')
+            ->assertStatus(200)
+            ->assertJson([
+                'username' => $password->account->username,
+                'email_changed' => [
+                    'new_email' => $newEmail
+                ]
+            ]);
+    }
+
+    public function testChangePassword()
+    {
+        $account = Account::factory()->create();
+        $account->generateApiKey();
+        $password = 'password';
+        $algorithm = 'MD5';
+        $newPassword = 'new_password';
+        $newAlgorithm = 'SHA-256';
+
+        // Wrong algorithm
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->route.'/password', [
+                'algorithm' => '123',
+                'password' => $password
+            ])
+            ->assertStatus(422)
+            ->assertJson([
+                'errors' => ['algorithm' => true]
+            ]);
+
+        // Fresh password without an old one
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->route.'/password', [
+                'algorithm' => $algorithm,
+                'password' => $password
+            ])
+            ->assertStatus(200);
+
+        // First check
+        $this->keyAuthenticated($account)
+            ->get($this->route.'/me')
+            ->assertStatus(200)
+            ->assertJson([
+                'username' => $account->username,
+                'passwords' => [[
+                    'algorithm' => $algorithm
+                ]]
+            ]);
+
+        // Set new password without old one
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->route.'/password', [
+                'algorithm' => $newAlgorithm,
+                'password' => $newPassword
+            ])
+            ->assertStatus(422)
+            ->assertJson([
+                'errors' => ['old_password' => true]
+            ]);
+
+        // Set the new password with incorrect old password
+        $response = $this->keyAuthenticated($account)
+            ->json($this->method, $this->route.'/password', [
+                'algorithm' => $newAlgorithm,
+                'old_password' => 'blabla',
+                'password' => $newPassword
+            ])
+            ->assertJson([
+                'errors' => ['old_password' => true]
+            ])
+            ->assertStatus(422);
+
+        // Set the new password
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->route.'/password', [
+                'algorithm' => $newAlgorithm,
+                'old_password' => $password,
+                'password' => $newPassword
+            ])
+            ->assertStatus(200);
+
+        // Second check
+        $this->keyAuthenticated($account)
+            ->get($this->route.'/me')
+            ->assertStatus(200)
+            ->assertJson([
+                'username' => $account->username,
+                'passwords' => [[
+                    'algorithm' => $newAlgorithm
+                ]]
+            ]);
+    }
+
+    public function testActivateDeactivate()
+    {
+        $password = Password::factory()->create();
+
+        $admin = Admin::factory()->create();
+        $admin->account->generateApiKey();
+
+        // deactivate
+        $this->keyAuthenticated($admin->account)
+            ->get($this->route.'/'.$password->account->id.'/deactivate')
+            ->assertStatus(200)
+            ->assertJson([
+                'activated' => false
+            ]);
+
+        $this->keyAuthenticated($admin->account)
+            ->get($this->route.'/'.$password->account->id)
+            ->assertStatus(200)
+            ->assertJson([
+                'activated' => false
+            ]);
+
+        $this->keyAuthenticated($admin->account)
+            ->get($this->route.'/'.$password->account->id.'/activate')
+            ->assertStatus(200)
+            ->assertJson([
+                'activated' => true
+            ]);
+
+        $this->keyAuthenticated($admin->account)
+            ->get($this->route.'/'.$password->account->id)
+            ->assertStatus(200)
+            ->assertJson([
+                'activated' => true
+            ]);
+    }
+
+    public function testGetAll()
+    {
+        Password::factory()->create();
+
+        $admin = Admin::factory()->create();
+        $admin->account->generateApiKey();
+
+        // /accounts
+        $this->keyAuthenticated($admin->account)
+            ->get($this->route)
+            ->assertStatus(200)
+            ->assertJson([
+                'total' => 2
+            ]);
+
+        // /accounts/id
+        $this->keyAuthenticated($admin->account)
+            ->get($this->route.'/'.$admin->id)
+            ->assertStatus(200)
+            ->assertJson([
+                'id' => 1
+            ]);
+
+    }
+
+    public function testDelete()
+    {
+        $password = Password::factory()->create();
+
+        $admin = Admin::factory()->create();
+        $admin->account->generateApiKey();
+
+        $this->keyAuthenticated($admin->account)
+            ->delete($this->route.'/'.$password->account->id)
+            ->assertStatus(200);
+
+        $this->keyAuthenticated($admin->account)
+            ->get($this->route.'/'.$password->account->id)
+            ->assertStatus(404);
     }
 }

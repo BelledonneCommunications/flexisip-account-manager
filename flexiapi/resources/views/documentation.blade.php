@@ -48,10 +48,39 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
 
 <h2>Endpoints</h2>
 
-<h3>Accounts</h3>
+<h3>Accounts (User)</h3>
+
+<h4><code>GET /accounts/me</code></h4>
+
+<p>Retrieve the account information.</p>
+
+<h4><code>POST /accounts/email/request</code></h4>
+
+<p>Change the account email. An email will be sent to the new email address to confirm the operation.</p>
+<p>JSON parameters:</p>
+
+<ul>
+    <li><code>email</code> the new email address</li>
+</ul>
+
+<h4><code>POST /accounts/password</code></h4>
+
+<p>Change the account password.</p>
+<p>JSON parameters:</p>
+
+<ul>
+    <li><code>algorithm</code> required, values can be <code>SHA-256</code> or <code>MD5</code></li>
+    <li><code>old_password</code> required if the password is already set, the old password</li>
+    <li><code>password</code> required, the new password</li>
+</ul>
+
+<h3>Accounts (Administrator)</h3>
+
+<p>Those endpoints are authenticated and requires an admin account.</p>
 
 <h4><code>POST /accounts</code></h4>
 
+<p>To create an account directly from the API.</p>
 <p>JSON parameters:</p>
 
 <ul>
@@ -62,7 +91,25 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
     <li><code>activated</code> optional, a boolean, set to <code>false</code> by default</li>
 </ul>
 
-<p>To create an account directly from the API.<br />This endpoint is authenticated and requires an admin account.</p>
+<h4><code>GET /accounts</code></h4>
+
+<p>Retrieve all the accounts, paginated.</p>
+
+<h4><code>GET /accounts/{id}</code></h4>
+
+<p>Retrieve a specific account.</p>
+
+<h4><code>DELETE /accounts/{id}</code></h4>
+
+<p>Delete a specific account and its related information.</p>
+
+<h4><code>GET /accounts/{id}/activate</code></h4>
+
+<p>Activate an account.</p>
+
+<h4><code>GET /accounts/{id}/deactivate</code></h4>
+
+<p>Deactivate an account.</p>
 
 <h3>Ping</h3>
 

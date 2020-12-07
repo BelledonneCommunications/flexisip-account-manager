@@ -19,48 +19,67 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 
+use App\Http\Controllers\Controller;
+use App\Mail\ConfirmedRegistration;
+use App\Helpers\Utils;
 use App\Account;
 use App\Password;
-use App\Helpers\Utils;
 
 class AccountController extends Controller
 {
-    public function store(Request $request)
+    public function show(Request $request)
+    {
+        return Account::where('id', $request->user()->id)
+                      ->without(['api_key', 'email_changed.new_email'])
+                      ->first();
+    }
+
+    public function requestEmailUpdate(Request $request)
     {
         $request->validate([
-            'username' => 'required|unique:external.accounts,username|filled',
+            'email' => ['required', 'email', Rule::notIn([$request->user()->email])],
+        ]);
+        $request->user()->requestEmailUpdate($request->get('email'));
+    }
+
+    public function passwordUpdate(Request $request)
+    {
+        $request->validate([
             'algorithm' => 'required|in:SHA-256,MD5',
-            'password' => 'required|filled',
-            'domain' => 'min:3',
-            'activated' => 'boolean|nullable',
+            'password' => 'required',
         ]);
 
-        $algorithm = $request->has('password_sha256') ? 'SHA-256' : 'MD5';
-
-        $account = new Account;
-        $account->username = $request->get('username');
-        $account->email = $request->get('email');
-        $account->activated = $request->has('activated')
-            ? (bool)$request->get('activated')
-            : false;
-        $account->domain = $request->has('domain')
-            ? $request->get('domain')
-            : config('app.sip_domain');
-        $account->ip_address = $request->ip();
-        $account->creation_time = Carbon::now();
-        $account->user_agent = config('app.name');
+        $account = $request->user();
+        $account->activated = true;
         $account->save();
 
-        $password = new Password;
-        $password->account_id = $account->id;
-        $password->password = Utils::bchash($account->username, $account->domain, $request->get('password'), $request->get('algorithm'));
-        $password->algorithm = $request->get('algorithm');
-        $password->save();
+        $algorithm = $request->get('algorithm');
 
-        return response()->json($account);
+        if ($account->passwords()->count() > 0) {
+            $request->validate(['old_password' => 'required']);
+
+            foreach ($account->passwords as $password) {
+                if (hash_equals(
+                    $password->password,
+                    Utils::bchash($account->username, $account->domain, $request->get('old_password'), $password->algorithm)
+                )) {
+                    $account->updatePassword($request->get('password'), $algorithm);
+                    return response()->json();
+                }
+            }
+
+            return response()->json(['errors' => ['old_password' => 'Incorrect old password']], 422);
+        } else {
+            $account->updatePassword($request->get('password'), $algorithm);
+
+            if (!empty($account->email)) {
+                Mail::to($account)->send(new ConfirmedRegistration($account));
+            }
+        }
     }
 }
