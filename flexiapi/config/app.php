@@ -24,6 +24,13 @@ return [
     'proxy_registrar_address' => env('ACCOUNT_PROXY_REGISTRAR_ADDRESS', 'sip.domain.com'),
     'transport_protocol_text' => env('ACCOUNT_TRANSPORT_PROTOCOL_TEXT', 'TLS (recommended), TCP or UDP'),
 
+    /**
+     * Allow any accounts to request the API as an administrator
+     * This parameter is only the for debug purpose or running the tests
+     * DO NOT ENABLE IT IN PRODUCTION
+     */
+    'everyone_is_admin' => env('APP_EVERYONE_IS_ADMIN', false),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

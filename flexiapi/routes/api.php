@@ -25,8 +25,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('ping', 'Api\PingController@ping');
+
 Route::group(['middleware' => ['auth.digest_or_key']], function () {
-    Route::get('ping', 'Api\PingController@ping');
     Route::get('devices', 'Api\DeviceController@index');
     Route::delete('devices/{uuid}', 'Api\DeviceController@destroy');
 

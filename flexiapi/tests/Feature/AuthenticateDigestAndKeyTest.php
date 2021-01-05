@@ -29,7 +29,7 @@ class AuthenticateDigestAndKeyTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $route = '/api/ping';
+    protected $route = '/api/accounts/me';
     protected $method = 'GET';
 
     public function testMandatoryFrom()

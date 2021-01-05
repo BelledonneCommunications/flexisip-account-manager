@@ -92,14 +92,14 @@ class AuthenticateDigestOrKey
                 'opaque'    => 'required|in:'.$this->getOpaque(),
                 'uri'       => 'in:/'.$request->path(),
                 'qop'       => 'required|in:auth',
-                'realm'     => 'required',
+                'realm'     => 'required|in:'.$domain,
                 'nc'        => 'required',
                 'cnonce'    => 'required',
                 'algorithm' => [
                     'required',
                     Rule::in(array_keys(self::ALGORITHMS)),
                 ],
-                'username'  => 'required|email',
+                'username'  => 'required|in:'.$username,
             ])->validate();
 
             // Headers
@@ -195,14 +195,14 @@ class AuthenticateDigestOrKey
                 foreach (array_keys(self::ALGORITHMS) as $algorithm) {
                     array_push(
                         $headers,
-                        $this->generateAuthHeader($algorithm, $nonce)
+                        $this->generateAuthHeader($account->domain, $algorithm, $nonce)
                     );
                 }
                 break;
             } else if (\in_array($password->algorithm, array_keys(self::ALGORITHMS))) {
                 array_push(
                     $headers,
-                    $this->generateAuthHeader($password->algorithm, $nonce)
+                    $this->generateAuthHeader($account->domain, $password->algorithm, $nonce)
                 );
             }
         }
@@ -210,15 +210,15 @@ class AuthenticateDigestOrKey
         return $headers;
     }
 
-    private function generateAuthHeader(string $algorithm, string $nonce): string
+    private function generateAuthHeader(string $realm, string $algorithm, string $nonce): string
     {
-        return 'Digest realm=test,qop=auth,algorithm='.$algorithm.',nonce="'.$nonce.'",opaque="'.$this->getOpaque().'"';
+        return 'Digest realm="'.$realm.'",qop="auth",algorithm='.$algorithm.',nonce="'.$nonce.'",opaque="'.$this->getOpaque().'"';
     }
 
     private function extractFromHeader(string $string): string
     {
         list($from) = explode(';', \substr($string, 4));
-        return $from;
+        return \rawurldecode($from);
     }
 
     private function getOpaque(): string

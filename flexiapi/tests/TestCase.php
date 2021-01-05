@@ -77,7 +77,7 @@ abstract class TestCase extends BaseTestCase
 
         $digest = \sprintf(
             'username="%s",realm="%s",nonce="%s",nc=%s,cnonce="%s",uri="%s",qop=%s,response="%s",opaque="%s",algorithm=%s',
-            $password->account->identifier,
+            \strstr($password->account->identifier, '@', true),
             $extractedChallenge['realm'],
             $extractedChallenge['nonce'],
             $nc,

@@ -5,7 +5,7 @@
     <body>
         <p>Hello,</p>
         <p>
-            You requested to change your email address from {{ $account->email }} to {{ $account->emailChanged->email }} on {{ config('app.name') }}.
+            You requested to change your email address from {{ $account->email }} to {{ $account->emailChanged->new_email }} on {{ config('app.name') }}.
         </p>
         <p>
             To confirm this change please click on the following link:
