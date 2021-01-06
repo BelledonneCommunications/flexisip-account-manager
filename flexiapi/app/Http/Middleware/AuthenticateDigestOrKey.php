@@ -90,7 +90,7 @@ class AuthenticateDigestOrKey
             // Validation
             $validator = Validator::make($auth, [
                 'opaque'    => 'required|in:'.$this->getOpaque(),
-                'uri'       => 'in:/'.$request->path(),
+                //'uri'       => 'in:/'.$request->path(),
                 'qop'       => 'required|in:auth',
                 'realm'     => 'required|in:'.$domain,
                 'nc'        => 'required',
