@@ -19,20 +19,20 @@
 
 //Route::get('/', 'HomeController@index')->name('home');
 
-Route::get('/', 'AccountController@home')->name('account.home');
-Route::get('terms', 'AccountController@terms')->name('account.terms');
-Route::get('privacy', 'AccountController@privacy')->name('account.privacy');
+Route::get('/', 'Account\AccountController@home')->name('account.home');
+Route::get('terms', 'Account\AccountController@terms')->name('account.terms');
+Route::get('privacy', 'Account\AccountController@privacy')->name('account.privacy');
 
 Route::get('login', 'Account\AuthenticateController@login')->name('account.login');
 Route::post('authenticate', 'Account\AuthenticateController@authenticate')->name('account.authenticate');
 
 Route::get('login/email', 'Account\AuthenticateController@loginEmail')->name('account.login_email');
 Route::post('authenticate/email', 'Account\AuthenticateController@authenticateEmail')->name('account.authenticate.email');
-Route::get('authenticate/email/{code}', 'Account\AuthenticateController@authenticateEmailConfirm')->name('account.authenticate.email_confirm');
+Route::get('authenticate/email/{code}', 'Account\AuthenticateController@validateEmail')->name('account.authenticate.email_confirm');
 
 Route::get('login/phone', 'Account\AuthenticateController@loginPhone')->name('account.login_phone');
 Route::post('authenticate/phone', 'Account\AuthenticateController@authenticatePhone')->name('account.authenticate.phone');
-Route::post('authenticate/phone/confirm', 'Account\AuthenticateController@authenticatePhoneConfirm')->name('account.authenticate.phone_confirm');
+Route::post('authenticate/phone/confirm', 'Account\AuthenticateController@validatePhone')->name('account.authenticate.phone_confirm');
 
 Route::get('register', 'Account\RegisterController@register')->name('account.register');
 
@@ -45,11 +45,11 @@ Route::get('register/email', 'Account\RegisterController@registerEmail')->name('
 Route::post('register/email', 'Account\RegisterController@storeEmail')->name('account.store.email');
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('panel', 'AccountController@panel')->name('account.panel');
+    Route::get('panel', 'Account\AccountController@panel')->name('account.panel');
     Route::get('logout', 'Account\AuthenticateController@logout')->name('account.logout');
 
-    Route::get('delete', 'AccountController@delete')->name('account.delete');
-    Route::delete('delete', 'AccountController@destroy')->name('account.destroy');
+    Route::get('delete', 'Account\AccountController@delete')->name('account.delete');
+    Route::delete('delete', 'Account\AccountController@destroy')->name('account.destroy');
 
     Route::get('email', 'Account\EmailController@show')->name('account.email');
     Route::post('email/request', 'Account\EmailController@requestUpdate')->name('account.email.request_update');

@@ -20,18 +20,58 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Mail;
-use Carbon\Carbon;
-
 use App\Http\Controllers\Controller;
-use App\Mail\ConfirmedRegistration;
-use App\Helpers\Utils;
 use App\Account;
-use App\Password;
+
+use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 
 class AccountController extends Controller
 {
+    /**
+     * Public information on a specific account
+     */
+    public function info(Request $request, string $sip)
+    {
+        $account = Account::sip($sip)->firstOrFail();
+
+        return \response()->json([
+            'activated' => $account->activated
+        ]);
+    }
+
+    public function activateEmail(Request $request, string $sip)
+    {
+        $request->validate([
+            'code' => 'required|size:'.WebAuthenticateController::$emailCodeSize
+        ]);
+
+        $account = Account::sip($sip)
+                          ->where('confirmation_key', $request->get('code'))
+                          ->firstOrFail();
+        $account->activated = true;
+        $account->confirmation_key = null;
+
+        $account->save();
+
+        return $account;
+    }
+
+    public function activatePhone(Request $request, string $sip)
+    {
+        $request->validate([
+            'code' => 'required|digits:4'
+        ]);
+
+        $account = Account::sip($sip)
+                          ->where('confirmation_key', $request->get('code'))
+                          ->firstOrFail();
+        $account->activated = true;
+        $account->confirmation_key = null;
+        $account->save();
+
+        return $account;
+    }
+
     public function show(Request $request)
     {
         return Account::where('id', $request->user()->id)
@@ -39,47 +79,9 @@ class AccountController extends Controller
                       ->first();
     }
 
-    public function requestEmailUpdate(Request $request)
+    public function delete(Request $request)
     {
-        $request->validate([
-            'email' => ['required', 'email', Rule::notIn([$request->user()->email])],
-        ]);
-        $request->user()->requestEmailUpdate($request->get('email'));
-    }
-
-    public function passwordUpdate(Request $request)
-    {
-        $request->validate([
-            'algorithm' => 'required|in:SHA-256,MD5',
-            'password' => 'required',
-        ]);
-
-        $account = $request->user();
-        $account->activated = true;
-        $account->save();
-
-        $algorithm = $request->get('algorithm');
-
-        if ($account->passwords()->count() > 0) {
-            $request->validate(['old_password' => 'required']);
-
-            foreach ($account->passwords as $password) {
-                if (hash_equals(
-                    $password->password,
-                    Utils::bchash($account->username, $account->domain, $request->get('old_password'), $password->algorithm)
-                )) {
-                    $account->updatePassword($request->get('password'), $algorithm);
-                    return response()->json();
-                }
-            }
-
-            return response()->json(['errors' => ['old_password' => 'Incorrect old password']], 422);
-        } else {
-            $account->updatePassword($request->get('password'), $algorithm);
-
-            if (!empty($account->email)) {
-                Mail::to($account)->send(new ConfirmedRegistration($account));
-            }
-        }
+        return Account::where('id', $request->user()->id)
+                      ->delete();
     }
 }

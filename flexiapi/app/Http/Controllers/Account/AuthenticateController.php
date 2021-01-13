@@ -25,7 +25,6 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
-use Carbon\Carbon;
 
 use App\Account;
 use App\Alias;
@@ -35,7 +34,7 @@ use App\Mail\PasswordAuthentication;
 
 class AuthenticateController extends Controller
 {
-    private $emailCodeSize = 13;
+    public static $emailCodeSize = 13;
 
     public function login(Request $request)
     {
@@ -49,7 +48,8 @@ class AuthenticateController extends Controller
             'password' => 'required'
         ]);
 
-        $account = Account::where('username', $request->get('username'))->first();
+        $account = Account::where('username', $request->get('username'))
+                          ->first();
 
         if (!$account) {
             return redirect()->back()->withErrors(['authentication' => 'The account doesn\'t exists']);
@@ -89,8 +89,12 @@ class AuthenticateController extends Controller
             'g-recaptcha-response'  => 'required|captcha',
         ]);
 
-        $account = Account::where('email', $request->get('email'))->first();
-        $account->confirmation_key = Str::random($this->emailCodeSize);
+        /**
+         * Because several accounts can have the same email
+         */
+        $account = Account::where('email', $request->get('email'))
+                          ->first();
+        $account->confirmation_key = Str::random(self::$emailCodeSize);
         $account->save();
 
         Mail::to($account)->send(new PasswordAuthentication($account));
@@ -100,10 +104,10 @@ class AuthenticateController extends Controller
         ]);
     }
 
-    public function authenticateEmailConfirm(Request $request, string $code)
+    public function validateEmail(Request $request, string $code)
     {
         $request->merge(['code' => $code]);
-        $request->validate(['code' => 'required|size:'.$this->emailCodeSize]);
+        $request->validate(['code' => 'required|size:'.self::$emailCodeSize]);
 
         $account = Account::where('confirmation_key', $code)->firstOrFail();
         $account->confirmation_key = null;
@@ -111,7 +115,6 @@ class AuthenticateController extends Controller
         // If there is already a password set, we directly activate the account
         if ($account->passwords()->count() != 0) {
             $account->activated = true;
-            $account->save();
         }
 
         $account->save();
@@ -140,7 +143,8 @@ class AuthenticateController extends Controller
             'g-recaptcha-response'  => 'required|captcha',
         ]);
 
-        $account = Account::where('username', $request->get('phone'))->first();
+        $account = Account::where('username', $request->get('phone'))
+                          ->first();
 
         // Try alias
         if (!$account) {
@@ -173,14 +177,15 @@ class AuthenticateController extends Controller
         ]);
     }
 
-    public function authenticatePhoneConfirm(Request $request)
+    public function validatePhone(Request $request)
     {
         $request->validate([
             'account_id' => 'required',
             'code' => 'required|digits:4'
         ]);
 
-        $account = Account::where('id', $request->get('account_id'))->firstOrFail();
+        $account = Account::where('id', $request->get('account_id'))
+                          ->firstOrFail();
 
         if ($account->confirmation_key != $request->get('code')) {
             return view('account.login_phone')->withErrors([

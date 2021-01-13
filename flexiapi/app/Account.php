@@ -59,6 +59,18 @@ class Account extends Authenticatable
         });
     }
 
+    public function scopeSip($query, string $sip)
+    {
+        if (\str_contains($sip, '@')) {
+            list($usernane, $domain) = explode('@', $sip);
+
+            return $query->where('username', $usernane)
+                         ->where('domain', $domain);
+        };
+
+        return $query->where('id', '<', 0);
+    }
+
     public function passwords()
     {
         return $this->hasMany('App\Password');

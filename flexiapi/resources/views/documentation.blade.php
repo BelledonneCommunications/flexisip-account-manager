@@ -48,41 +48,66 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
 
 <h2>Endpoints</h2>
 
+<h3>Ping</h3>
+
+<h4><code>GET /ping</code></h4>
+<p>Returns <code>pong</code></p>
+
+<h4><code>GET /accounts/{sip}/info</code></h4>
+<p>Retrieve public information about the account.</p>
+<p>Return <code>404</code> if the account doesn't exists.</p>
+
+<h4><code>POST /accounts/{sip}/activate/email</code></h4>
+<p>Activate an account using a secret code received by email.</p>
+<p>Return <code>404</code> if the account doesn't exists or if the code is incorrect, the validated account otherwise.</p>
+<p>JSON parameters:</p>
+<ul>
+    <li><code>code</code> the code</li>
+</ul>
+
+<h4><code>POST /accounts/{sip}/activate/phone</code></h4>
+<p>Activate an account using a pin code received by phone.</p>
+<p>Return <code>404</code> if the account doesn't exists or if the code is incorrect, the validated account otherwise.</p>
+<p>JSON parameters:</p>
+<ul>
+    <li><code>code</code> the PIN code</li>
+</ul>
+
 <h3>Accounts (User)</h3>
 
 <h4><code>GET /accounts/me</code></h4>
-
 <p>Retrieve the account information.</p>
 
 <h4><code>POST /accounts/email/request</code></h4>
-
 <p>Change the account email. An email will be sent to the new email address to confirm the operation.</p>
 <p>JSON parameters:</p>
-
 <ul>
     <li><code>email</code> the new email address</li>
 </ul>
 
 <h4><code>POST /accounts/password</code></h4>
-
 <p>Change the account password.</p>
 <p>JSON parameters:</p>
-
 <ul>
     <li><code>algorithm</code> required, values can be <code>SHA-256</code> or <code>MD5</code></li>
     <li><code>old_password</code> required if the password is already set, the old password</li>
     <li><code>password</code> required, the new password</li>
 </ul>
 
-<h3>Accounts (Administrator)</h3>
+<h3>Devices</h3>
 
+<h4><code>GET /devices</code></h4>
+<p>Return the user registered devices.</p>
+
+<h4><code>DELETE /devices/{uuid}</code></h4>
+<p>Remove one of the user registered devices.</p>
+
+<h3>Accounts (Administrator)</h3>
 <p>Those endpoints are authenticated and requires an admin account.</p>
 
 <h4><code>POST /accounts</code></h4>
-
 <p>To create an account directly from the API.</p>
 <p>JSON parameters:</p>
-
 <ul>
     <li><code>username</code> unique username, minimum 6 characters</li>
     <li><code>password</code> required minimum 6 characters</li>
@@ -92,38 +117,18 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
 </ul>
 
 <h4><code>GET /accounts</code></h4>
-
 <p>Retrieve all the accounts, paginated.</p>
 
 <h4><code>GET /accounts/{id}</code></h4>
-
 <p>Retrieve a specific account.</p>
 
 <h4><code>DELETE /accounts/{id}</code></h4>
-
 <p>Delete a specific account and its related information.</p>
 
 <h4><code>GET /accounts/{id}/activate</code></h4>
-
 <p>Activate an account.</p>
 
 <h4><code>GET /accounts/{id}/deactivate</code></h4>
-
 <p>Deactivate an account.</p>
 
-<h3>Ping</h3>
-
-<h4><code>GET /ping</code></h4>
-
-<p>Returns <code>pong</code></p>
-
-<h3>Devices</h3>
-
-<h4><code>GET /devices</code></h4>
-
-<p>Return the user registered devices.</p>
-
-<h4><code>DELETE /devices/{uuid}</code></h4>
-
-<p>Remove one of the user registered devices.</p>
 @endsection

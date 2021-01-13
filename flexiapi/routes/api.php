@@ -26,14 +26,19 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('ping', 'Api\PingController@ping');
+Route::get('accounts/{sip}/info', 'Api\AccountController@info');
+Route::post('accounts/{sip}/activate/email', 'Api\AccountController@activateEmail');
+Route::post('accounts/{sip}/activate/phone', 'Api\AccountController@activatePhone');
 
 Route::group(['middleware' => ['auth.digest_or_key']], function () {
+    Route::get('accounts/me', 'Api\AccountController@show');
+    Route::delete('accounts/me', 'Api\AccountController@delete');
+
     Route::get('devices', 'Api\DeviceController@index');
     Route::delete('devices/{uuid}', 'Api\DeviceController@destroy');
 
-    Route::get('accounts/me', 'Api\AccountController@show');
-    Route::post('accounts/email/request', 'Api\AccountController@requestEmailUpdate');
-    Route::post('accounts/password', 'Api\AccountController@passwordUpdate');
+    Route::post('accounts/email/request', 'Api\EmailController@requestUpdate');
+    Route::post('accounts/password', 'Api\PasswordController@update');
 
     Route::group(['middleware' => ['auth.admin']], function () {
         Route::get('accounts/{id}/activate', 'Api\Admin\AccountController@activate');

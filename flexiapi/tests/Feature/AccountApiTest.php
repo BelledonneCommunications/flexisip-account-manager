@@ -184,12 +184,109 @@ class AccountApiTest extends TestCase
         $password = Password::factory()->create();
         $password->account->generateApiKey();
 
+        /**
+         * Public information
+         */
+        $this->get($this->route.'/'.$password->account->identifier.'/info')
+            ->assertStatus(200)
+            ->assertJson([
+                'activated' => false
+            ]);
+
+        /**
+         * Retrieve the authenticated account
+         */
         $this->keyAuthenticated($password->account)
             ->get($this->route.'/me')
             ->assertStatus(200)
             ->assertJson([
                 'username' => $password->account->username,
                 'activated' => false
+            ]);
+
+        /**
+         * Retrieve the authenticated account
+         */
+        $this->keyAuthenticated($password->account)
+            ->delete($this->route.'/me')
+            ->assertStatus(200);
+
+        /**
+         * Check again
+         */
+        $this->get($this->route.'/'.$password->account->identifier.'/info')
+             ->assertStatus(404);
+    }
+
+    public function testActivateEmail()
+    {
+        $confirmationKey = '0123456789abc';
+        $password = Password::factory()->create();
+        $password->account->generateApiKey();
+        $password->account->confirmation_key = $confirmationKey;
+        $password->account->save();
+
+        $this->get($this->route.'/'.$password->account->identifier.'/info')
+            ->assertStatus(200)
+            ->assertJson([
+                'activated' => false
+            ]);
+
+        $this->keyAuthenticated($password->account)
+            ->json($this->method, $this->route.'/blabla/activate/email', [
+                'code' => $confirmationKey
+            ])
+            ->assertStatus(404);
+
+        $this->keyAuthenticated($password->account)
+            ->json($this->method, $this->route.'/'.$password->account->identifier.'/activate/email', [
+                'code' => $confirmationKey.'longer'
+            ])
+            ->assertStatus(422);
+
+        $this->keyAuthenticated($password->account)
+            ->json($this->method, $this->route.'/'.$password->account->identifier.'/activate/email', [
+                'code' => 'X123456789abc'
+            ])
+            ->assertStatus(404);
+
+        $this->keyAuthenticated($password->account)
+            ->json($this->method, $this->route.'/'.$password->account->identifier.'/activate/email', [
+                'code' => $confirmationKey
+            ])
+            ->assertStatus(200);
+
+        $this->get($this->route.'/'.$password->account->identifier.'/info')
+            ->assertStatus(200)
+            ->assertJson([
+                'activated' => true
+            ]);
+    }
+
+    public function testActivatePhone()
+    {
+        $confirmationKey = '0123';
+        $password = Password::factory()->create();
+        $password->account->generateApiKey();
+        $password->account->confirmation_key = $confirmationKey;
+        $password->account->save();
+
+        $this->get($this->route.'/'.$password->account->identifier.'/info')
+            ->assertStatus(200)
+            ->assertJson([
+                'activated' => false
+            ]);
+
+        $this->keyAuthenticated($password->account)
+            ->json($this->method, $this->route.'/'.$password->account->identifier.'/activate/phone', [
+                'code' => $confirmationKey
+            ])
+            ->assertStatus(200);
+
+        $this->get($this->route.'/'.$password->account->identifier.'/info')
+            ->assertStatus(200)
+            ->assertJson([
+                'activated' => true
             ]);
     }
 
@@ -373,7 +470,6 @@ class AccountApiTest extends TestCase
             ->assertJson([
                 'id' => 1
             ]);
-
     }
 
     public function testDelete()
