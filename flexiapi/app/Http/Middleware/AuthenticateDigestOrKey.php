@@ -56,6 +56,11 @@ class AuthenticateDigestOrKey
                           ->where('domain', $domain)
                           ->firstOrFail();
 
+        // Check if activated
+        if (!$account->activated) {
+            return $this->generateUnauthorizedResponse($account);
+        }
+
         // Key authentication
         if ($request->header('x-api-key')) {
             if ($account->apiKey

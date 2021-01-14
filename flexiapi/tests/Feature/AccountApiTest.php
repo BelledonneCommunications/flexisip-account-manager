@@ -107,8 +107,10 @@ class AccountApiTest extends TestCase
                 'id' => 2,
                 'username' => $username,
                 'domain' => $domain,
-                'activated' => false,
+                'activated' => false
             ]);
+
+        $this->assertFalse(empty($response1['confirmation_key']));
     }
 
     public function testUsernameNoDomain()
@@ -177,12 +179,16 @@ class AccountApiTest extends TestCase
                 'domain' => config('app.sip_domain'),
                 'activated' => true,
             ]);
+
+        $this->assertTrue(empty($response1['confirmation_key']));
     }
 
     public function testSimpleAccount()
     {
         $password = Password::factory()->create();
+        $password->account->activated = false;
         $password->account->generateApiKey();
+        $password->account->save();
 
         /**
          * Public information
@@ -193,6 +199,9 @@ class AccountApiTest extends TestCase
                 'activated' => false
             ]);
 
+        $password->account->activated = true;
+        $password->account->save();
+
         /**
          * Retrieve the authenticated account
          */
@@ -201,7 +210,7 @@ class AccountApiTest extends TestCase
             ->assertStatus(200)
             ->assertJson([
                 'username' => $password->account->username,
-                'activated' => false
+                'activated' => true
             ]);
 
         /**
@@ -224,6 +233,7 @@ class AccountApiTest extends TestCase
         $password = Password::factory()->create();
         $password->account->generateApiKey();
         $password->account->confirmation_key = $confirmationKey;
+        $password->account->activated = false;
         $password->account->save();
 
         $this->get($this->route.'/'.$password->account->identifier.'/info')
@@ -269,6 +279,7 @@ class AccountApiTest extends TestCase
         $password = Password::factory()->create();
         $password->account->generateApiKey();
         $password->account->confirmation_key = $confirmationKey;
+        $password->account->activated = false;
         $password->account->save();
 
         $this->get($this->route.'/'.$password->account->identifier.'/info')
@@ -298,21 +309,21 @@ class AccountApiTest extends TestCase
 
         // Bad email
         $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route.'/email/request', [
+            ->json($this->method, $this->route.'/me/email/request', [
                 'email' => 'gnap'
             ])
             ->assertStatus(422);
 
         // Same email
         $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route.'/email/request', [
+            ->json($this->method, $this->route.'/me/email/request', [
                 'email' => $password->account->email
             ])
             ->assertStatus(422);
 
         // Correct email
         $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route.'/email/request', [
+            ->json($this->method, $this->route.'/me/email/request', [
                 'email' => $newEmail
             ])
             ->assertStatus(200);
@@ -339,7 +350,7 @@ class AccountApiTest extends TestCase
 
         // Wrong algorithm
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/password', [
+            ->json($this->method, $this->route.'/me/password', [
                 'algorithm' => '123',
                 'password' => $password
             ])
@@ -350,7 +361,7 @@ class AccountApiTest extends TestCase
 
         // Fresh password without an old one
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/password', [
+            ->json($this->method, $this->route.'/me/password', [
                 'algorithm' => $algorithm,
                 'password' => $password
             ])
@@ -369,7 +380,7 @@ class AccountApiTest extends TestCase
 
         // Set new password without old one
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/password', [
+            ->json($this->method, $this->route.'/me/password', [
                 'algorithm' => $newAlgorithm,
                 'password' => $newPassword
             ])
@@ -380,7 +391,7 @@ class AccountApiTest extends TestCase
 
         // Set the new password with incorrect old password
         $response = $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/password', [
+            ->json($this->method, $this->route.'/me/password', [
                 'algorithm' => $newAlgorithm,
                 'old_password' => 'blabla',
                 'password' => $newPassword
@@ -392,7 +403,7 @@ class AccountApiTest extends TestCase
 
         // Set the new password
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/password', [
+            ->json($this->method, $this->route.'/me/password', [
                 'algorithm' => $newAlgorithm,
                 'old_password' => $password,
                 'password' => $newPassword

@@ -36,6 +36,7 @@ class AccountFactory extends Factory
             'user_agent' => $this->faker->userAgent,
             'ip_address' => $this->faker->ipv4,
             'creation_time' => $this->faker->dateTime,
+            'activated' => true
         ];
     }
 }

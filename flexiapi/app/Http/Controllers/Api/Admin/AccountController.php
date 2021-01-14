@@ -21,11 +21,13 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 use App\Account;
 use App\Password;
 use App\Helpers\Utils;
+use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 
 class AccountController extends Controller
 {
@@ -87,6 +89,11 @@ class AccountController extends Controller
         $account->ip_address = $request->ip();
         $account->creation_time = Carbon::now();
         $account->user_agent = config('app.name');
+
+        if (!$request->has('activated') || !(bool)$request->has('activated')) {
+            $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
+        }
+
         $account->save();
 
         $password = new Password;

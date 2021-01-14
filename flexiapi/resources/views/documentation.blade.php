@@ -48,10 +48,12 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
 
 <h2>Endpoints</h2>
 
-<h3>Ping</h3>
+<h3>Public endpoints</h3>
 
 <h4><code>GET /ping</code></h4>
 <p>Returns <code>pong</code></p>
+
+<h4>Accounts</h4>
 
 <h4><code>GET /accounts/{sip}/info</code></h4>
 <p>Retrieve public information about the account.</p>
@@ -73,19 +75,23 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
     <li><code>code</code> the PIN code</li>
 </ul>
 
-<h3>Accounts (User)</h3>
+<h3>User authenticated endpoints</h3>
+<p>Those endpoints are authenticated and requires an activated account.</p>
 
 <h4><code>GET /accounts/me</code></h4>
 <p>Retrieve the account information.</p>
 
-<h4><code>POST /accounts/email/request</code></h4>
+<h4><code>DELETE /accounts/me</code></h4>
+<p>Delete the account.</p>
+
+<h4><code>POST /accounts/me/email/request</code></h4>
 <p>Change the account email. An email will be sent to the new email address to confirm the operation.</p>
 <p>JSON parameters:</p>
 <ul>
     <li><code>email</code> the new email address</li>
 </ul>
 
-<h4><code>POST /accounts/password</code></h4>
+<h4><code>POST /accounts/me/password</code></h4>
 <p>Change the account password.</p>
 <p>JSON parameters:</p>
 <ul>
@@ -94,19 +100,22 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
     <li><code>password</code> required, the new password</li>
 </ul>
 
-<h3>Devices</h3>
+<h4>Devices</h4>
 
-<h4><code>GET /devices</code></h4>
+<h4><code>GET /accounts/me/devices</code></h4>
 <p>Return the user registered devices.</p>
 
-<h4><code>DELETE /devices/{uuid}</code></h4>
+<h4><code>DELETE /accounts/me/devices/{uuid}</code></h4>
 <p>Remove one of the user registered devices.</p>
 
-<h3>Accounts (Administrator)</h3>
+<h3>Admin endpoints</h3>
+
 <p>Those endpoints are authenticated and requires an admin account.</p>
 
 <h4><code>POST /accounts</code></h4>
 <p>To create an account directly from the API.</p>
+<p>If <code>activated</code> is set to <code>false</code> a random generated <code>confirmation_key</code> will be returned to allow further activation using the public endpoints.</p>
+
 <p>JSON parameters:</p>
 <ul>
     <li><code>username</code> unique username, minimum 6 characters</li>
