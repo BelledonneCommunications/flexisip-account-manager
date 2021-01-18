@@ -90,7 +90,7 @@ class AccountController extends Controller
         $account->creation_time = Carbon::now();
         $account->user_agent = config('app.name');
 
-        if (!$request->has('activated') || !(bool)$request->has('activated')) {
+        if (!$request->has('activated') || !(bool)$request->get('activated')) {
             $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
         }
 

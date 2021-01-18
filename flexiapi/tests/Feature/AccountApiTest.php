@@ -183,6 +183,35 @@ class AccountApiTest extends TestCase
         $this->assertTrue(empty($response1['confirmation_key']));
     }
 
+    public function testNotActivated()
+    {
+        $admin = Admin::factory()->create();
+        $admin->account->generateApiKey();
+        $password = $admin->account->passwords()->first();
+
+        $username = 'username';
+
+        $response0 = $this->generateFirstResponse($password);
+        $response1 = $this->generateSecondResponse($password, $response0)
+            ->json($this->method, $this->route, [
+                'username' => $username,
+                'algorithm' => 'SHA-256',
+                'password' => '2',
+                'activated' => false,
+            ]);
+
+        $response1
+            ->assertStatus(200)
+            ->assertJson([
+                'id' => 2,
+                'username' => $username,
+                'domain' => config('app.sip_domain'),
+                'activated' => false,
+            ]);
+
+        $this->assertFalse(empty($response1['confirmation_key']));
+    }
+
     public function testSimpleAccount()
     {
         $password = Password::factory()->create();
