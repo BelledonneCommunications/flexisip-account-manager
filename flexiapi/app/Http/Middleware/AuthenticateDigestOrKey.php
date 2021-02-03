@@ -56,6 +56,8 @@ class AuthenticateDigestOrKey
                           ->where('domain', $domain)
                           ->firstOrFail();
 
+        $resolvedRealm = config('app.realm') ?? $domain;
+
         // Check if activated
         if (!$account->activated) {
             return $this->generateUnauthorizedResponse($account);
@@ -97,7 +99,7 @@ class AuthenticateDigestOrKey
                 'opaque'    => 'required|in:'.$this->getOpaque(),
                 //'uri'       => 'in:/'.$request->path(),
                 'qop'       => 'required|in:auth',
-                'realm'     => 'required|in:'.$domain,
+                'realm'     => 'required|in:'.$resolvedRealm,
                 'nc'        => 'required',
                 'cnonce'    => 'required',
                 'algorithm' => [
@@ -126,8 +128,8 @@ class AuthenticateDigestOrKey
 
             // Hashing and checking
             $A1 = $password->algorithm == 'CLRTXT'
-                ? hash($hash, $account->username.':'.$account->domain.':'.$password->password)
-                : $password->password; // username:domain:password
+                ? hash($hash, $account->username.':'.$resolvedRealm.':'.$password->password)
+                : $password->password; // username:realm/domain:password
             $A2 = hash($hash, $request->method().':'.$auth['uri']);
 
             $validResponse = hash($hash,
@@ -194,20 +196,21 @@ class AuthenticateDigestOrKey
     private function generateAuthHeaders(Account $account, string $nonce): array
     {
         $headers = [];
+        $resolvedRealm = config('app.realm') ?? $account->domain;
 
         foreach ($account->passwords as $password) {
             if ($password->algorithm == 'CLRTXT') {
                 foreach (array_keys(self::ALGORITHMS) as $algorithm) {
                     array_push(
                         $headers,
-                        $this->generateAuthHeader($account->domain, $algorithm, $nonce)
+                        $this->generateAuthHeader($resolvedRealm, $algorithm, $nonce)
                     );
                 }
                 break;
             } else if (\in_array($password->algorithm, array_keys(self::ALGORITHMS))) {
                 array_push(
                     $headers,
-                    $this->generateAuthHeader($account->domain, $password->algorithm, $nonce)
+                    $this->generateAuthHeader($resolvedRealm, $password->algorithm, $nonce)
                 );
             }
         }

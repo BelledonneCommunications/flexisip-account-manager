@@ -94,14 +94,6 @@ If your external database is locate on a remote machine, you should also allow y
     setsebool httpd_can_network_connect 1 // Allow remote network connected
     setsebool httpd_can_network_connect_db 1 // Allow remote database connection
 
-### CRON job
-
-The DIGEST authentication method is saving some temporary information (nonces) in the database.
-
-To expire and/or clear old nonces a specific command should be called periodically.
-
-    php artisan digest:expired-nonces-clear <minutes>
-
 ## Usage
 
 The `/api` page contains all the required documentation to authenticate and request the API.

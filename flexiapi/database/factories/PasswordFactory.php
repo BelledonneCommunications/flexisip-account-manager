@@ -33,10 +33,11 @@ class PasswordFactory extends Factory
     public function definition()
     {
         $account = Account::factory()->create();
+        $realm = config('app.realm') ?? $account->domain;
 
         return [
             'account_id' => $account->id,
-            'password'   => hash('md5', $account->username.':'.$account->domain.':testtest'),
+            'password'   => hash('md5', $account->username.':'.$realm.':testtest'),
             'algorithm'  => 'MD5',
         ];
     }
@@ -45,9 +46,10 @@ class PasswordFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             $account = Account::find($attributes['account_id']);
+            $realm = config('app.realm') ?? $account->domain;
 
             return [
-                'password'   => hash('sha256', $account->username.':'.$account->domain.':testtest'),
+                'password'   => hash('sha256', $account->username.':'.$realm.':testtest'),
                 'account_id' => $account->id,
                 'algorithm'  => 'SHA-256',
             ];

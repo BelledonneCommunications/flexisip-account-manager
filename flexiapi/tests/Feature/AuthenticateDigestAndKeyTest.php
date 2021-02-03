@@ -142,6 +142,7 @@ class AuthenticateDigestAndKeyTest extends TestCase
     public function testAuthenticationMD5()
     {
         $password = Password::factory()->create();
+
         $response = $this->generateFirstResponse($password);
         $response = $this->generateSecondResponse($password, $response)
                          ->json($this->method, $this->route);
@@ -168,7 +169,7 @@ class AuthenticateDigestAndKeyTest extends TestCase
     public function testAuthenticationSHA265FromCLRTXT()
     {
         $password = Password::factory()->clrtxt()->create();
-        $response = $this->generateFirstResponse($password);;
+        $response = $this->generateFirstResponse($password);
 
         // The server is generating all the available hash algorythms
         $this->assertStringContainsString('algorithm=MD5', $response->headers->all()['www-authenticate'][0]);
@@ -179,6 +180,32 @@ class AuthenticateDigestAndKeyTest extends TestCase
         $password->password = hash(
             $hash,
             $password->account->username.':'.$password->account->domain.':'.$password->password
+        );
+
+        $response = $this->withHeaders([
+            'From' => 'sip:'.$password->account->identifier,
+            'Authorization' => $this->generateDigest($password, $response, $hash),
+        ])->json($this->method, $this->route);
+
+        $this->assertStringContainsString('algorithm=MD5', $response->headers->all()['www-authenticate'][0]);
+        $this->assertStringContainsString('algorithm=SHA-256', $response->headers->all()['www-authenticate'][1]);
+
+        $response->assertStatus(200);
+    }
+
+    public function testAuthenticationSHA265FromCLRTXTWithRealm()
+    {
+        $realm = 'realm.com';
+        config()->set('app.realm', $realm);
+
+        $password = Password::factory()->clrtxt()->create();
+        $response = $this->generateFirstResponse($password);
+
+        // Let's simulate a local hash for the clear password
+        $hash = 'sha256';
+        $password->password = hash(
+            $hash,
+            $password->account->username.':'.$realm.':'.$password->password
         );
 
         $response = $this->withHeaders([

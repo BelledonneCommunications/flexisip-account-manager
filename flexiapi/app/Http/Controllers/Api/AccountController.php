@@ -35,7 +35,8 @@ class AccountController extends Controller
         $account = Account::sip($sip)->firstOrFail();
 
         return \response()->json([
-            'activated' => $account->activated
+            'activated' => $account->activated,
+            'realm' => $account->realm
         ]);
     }
 

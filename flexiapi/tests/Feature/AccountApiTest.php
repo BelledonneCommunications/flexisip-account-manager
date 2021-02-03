@@ -219,13 +219,17 @@ class AccountApiTest extends TestCase
         $password->account->generateApiKey();
         $password->account->save();
 
+        $realm = 'realm.com';
+        config()->set('app.realm', $realm);
+
         /**
          * Public information
          */
         $this->get($this->route.'/'.$password->account->identifier.'/info')
             ->assertStatus(200)
             ->assertJson([
-                'activated' => false
+                'activated' => false,
+                'realm' => $realm
             ]);
 
         $password->account->activated = true;
@@ -239,7 +243,8 @@ class AccountApiTest extends TestCase
             ->assertStatus(200)
             ->assertJson([
                 'username' => $password->account->username,
-                'activated' => true
+                'activated' => true,
+                'realm' => $realm
             ]);
 
         /**

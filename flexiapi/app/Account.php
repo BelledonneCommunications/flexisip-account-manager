@@ -41,6 +41,7 @@ class Account extends Authenticatable
     protected $connection = 'external';
     protected $with = ['passwords', 'admin', 'emailChanged'];
     protected $dateTimes = ['creation_time'];
+    protected $appends = ['realm'];
     protected $casts = [
         'activated' => 'boolean',
     ];
@@ -104,6 +105,11 @@ class Account extends Authenticatable
     public function getIdentifierAttribute()
     {
         return $this->attributes['username'].'@'.$this->attributes['domain'];
+    }
+
+    public function getRealmAttribute()
+    {
+        return config('app.realm');
     }
 
     public function requestEmailUpdate(string $newEmail)

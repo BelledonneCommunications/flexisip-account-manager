@@ -25,6 +25,12 @@ return [
     'transport_protocol_text' => env('ACCOUNT_TRANSPORT_PROTOCOL_TEXT', 'TLS (recommended), TCP or UDP'),
 
     /**
+     * Set a global realm for all the accounts, if not set, the account domain
+     * will be used as a fallback
+     */
+    'realm' => env('ACCOUNT_REALM', null),
+
+    /**
      * Allow any accounts to request the API as an administrator
      * This parameter is only the for debug purpose or running the tests
      * DO NOT ENABLE IT IN PRODUCTION
