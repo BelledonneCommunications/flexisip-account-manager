@@ -109,7 +109,13 @@ class RegisterController extends Controller
         $request->validate([
             'terms' =>'accepted',
             'privacy' => 'accepted',
-            'username' => 'unique:external.accounts,username|nullable|filled',
+            'username' => [
+                Rule::unique('external.accounts', 'username')->where(function ($query) use ($request) {
+                    $query->where('domain', config('app.sip_domain'));
+                }),
+                'nullable',
+                new WithoutSpaces
+            ],
             'phone' => [
                 'required', 'unique:external.aliases,alias',
                 'unique:external.accounts,username',
