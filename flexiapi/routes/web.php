@@ -20,8 +20,6 @@
 //Route::get('/', 'HomeController@index')->name('home');
 
 Route::get('/', 'Account\AccountController@home')->name('account.home');
-Route::get('terms', 'Account\AccountController@terms')->name('account.terms');
-Route::get('privacy', 'Account\AccountController@privacy')->name('account.privacy');
 
 Route::get('login', 'Account\AuthenticateController@login')->name('account.login');
 Route::post('authenticate', 'Account\AuthenticateController@authenticate')->name('account.authenticate');

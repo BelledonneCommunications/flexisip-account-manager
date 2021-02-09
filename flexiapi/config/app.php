@@ -17,6 +17,9 @@ return [
     'sip_domain' => env('APP_SIP_DOMAIN', 'sip.domain.com'),
     'flexisip_proxy_pid' => env('APP_FLEXISIP_PROXY_PID', '/var/run/flexisip-proxy.pid'),
 
+    'terms_of_use_url' => env('TERMS_OF_USE_URL', ''),
+    'privacy_policy_url' => env('PRIVACY_POLICY_URL', ''),
+
     'newsletter_registration_address' => env('NEWSLETTER_REGISTRATION_ADDRESS', ''),
     'phone_authentication' => env('PHONE_AUTHENTICATION', true),
     'devices_management' => env('DEVICES_MANAGEMENT', false),
