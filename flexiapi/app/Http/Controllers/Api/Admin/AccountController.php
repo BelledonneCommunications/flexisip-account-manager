@@ -22,10 +22,12 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 
 use App\Account;
 use App\Password;
+use App\Rules\WithoutSpaces;
 use App\Helpers\Utils;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 
@@ -68,7 +70,14 @@ class AccountController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'username' => 'required|unique:external.accounts,username|filled',
+            'username' => [
+                'required',
+                Rule::unique('external.accounts', 'username')->where(function ($query) use ($request) {
+                    $query->where('domain', config('app.sip_domain'));
+                }),
+                'filled',
+                new WithoutSpaces
+            ],
             'algorithm' => 'required|in:SHA-256,MD5',
             'password' => 'required|filled',
             'domain' => 'min:3',
