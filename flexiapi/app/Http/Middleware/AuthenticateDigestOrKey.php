@@ -51,7 +51,8 @@ class AuthenticateDigestOrKey
         $from = $this->extractFromHeader($request->header('From'));
         list($username, $domain) = explode('@', $from);
 
-        $account = Account::where('username', $username)
+        $account = Account::withoutGlobalScopes()
+                          ->where('username', $username)
                           ->where('domain', $domain)
                           ->firstOrFail();
 

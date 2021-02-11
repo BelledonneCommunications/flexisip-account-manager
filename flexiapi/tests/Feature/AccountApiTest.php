@@ -106,6 +106,8 @@ class AccountApiTest extends TestCase
                 'domain' => $domain,
                 'activated' => false
             ]);
+
+        $this->assertFalse(empty($response1['confirmation_key']));
     }
 
     public function testUsernameNoDomain()
@@ -174,6 +176,8 @@ class AccountApiTest extends TestCase
                 'domain' => config('app.sip_domain'),
                 'activated' => true,
             ]);
+
+        $this->assertTrue(empty($response1['confirmation_key']));
     }
 
     public function testNotActivated()
@@ -201,6 +205,8 @@ class AccountApiTest extends TestCase
                 'domain' => config('app.sip_domain'),
                 'activated' => false,
             ]);
+
+        $this->assertFalse(empty($response1['confirmation_key']));
     }
 
     public function testSimpleAccount()

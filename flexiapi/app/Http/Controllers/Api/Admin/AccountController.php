@@ -40,7 +40,7 @@ class AccountController extends Controller
 
     public function show(Request $request, $id)
     {
-        return Account::without(['passwords', 'admin'])->findOrFail($id);
+        return Account::without(['passwords', 'admin'])->findOrFail($id)->makeVisible(['confirmation_key']);
     }
 
     public function destroy(Request $request, $id)
@@ -111,6 +111,6 @@ class AccountController extends Controller
         $password->algorithm = $request->get('algorithm');
         $password->save();
 
-        return response()->json($account);
+        return response()->json($account->makeVisible(['confirmation_key']));
     }
 }
