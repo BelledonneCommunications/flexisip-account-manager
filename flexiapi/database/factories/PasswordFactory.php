@@ -21,10 +21,7 @@ namespace Database\Factories;
 
 use App\Account;
 use App\Password;
-use App\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 
 class PasswordFactory extends Factory
 {

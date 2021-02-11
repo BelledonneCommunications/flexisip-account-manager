@@ -100,6 +100,24 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
     <li><code>password</code> required, the new password</li>
 </ul>
 
+<h4>Phone number</h4>
+
+<h4><code>POST /accounts/me/phone/request</code></h4>
+<p>Request a specific code by SMS</p>
+<p>JSON parameters:</p>
+<ul>
+    <li><code>phone</code> the phone number to send the SMS</li>
+</ul>
+
+<h4><code>POST /accounts/me/phone</code></h4>
+<p>Confirm the code received and change the phone number</p>
+<p>JSON parameters:</p>
+<ul>
+    <li><code>code</code> the received SMS code</li>
+</ul>
+
+<p>Return the updated account</p>
+
 <h4>Devices</h4>
 
 <h4><code>GET /accounts/me/devices</code></h4>

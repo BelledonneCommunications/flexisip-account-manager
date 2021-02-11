@@ -107,7 +107,7 @@ class AccountController extends Controller
 
         $password = new Password;
         $password->account_id = $account->id;
-        $password->password = Utils::bchash($account->username, $account->domain, $request->get('password'), $request->get('algorithm'));
+        $password->password = Utils::bchash($account->username, $account->resolvedRealm, $request->get('password'), $request->get('algorithm'));
         $password->algorithm = $request->get('algorithm');
         $password->save();
 

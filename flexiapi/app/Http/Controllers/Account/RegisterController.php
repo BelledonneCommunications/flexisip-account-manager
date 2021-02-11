@@ -28,7 +28,6 @@ use Carbon\Carbon;
 
 use App\Account;
 use App\Alias;
-use App\Rules\SIP;
 use App\Rules\WithoutSpaces;
 use App\Helpers\Utils;
 use App\Libraries\OvhSMS;

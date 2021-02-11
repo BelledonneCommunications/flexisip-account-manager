@@ -19,7 +19,6 @@
 
 namespace App\Libraries;
 
-use App\Device;
 use Ovh\Api;
 
 class OvhSMS
@@ -55,9 +54,9 @@ class OvhSMS
             'validityPeriod'    => 2880
         ];
 
-        $resultPostJob = $this->_api->post('/sms/'. $this->_smsService . '/jobs', $content);
+        $this->_api->post('/sms/'. $this->_smsService . '/jobs', $content);
         // One credit removed
 
-        $smsJobs = $this->_api->get('/sms/'. $this->_smsService . '/jobs');
+        $this->_api->get('/sms/'. $this->_smsService . '/jobs');
     }
 }

@@ -34,6 +34,9 @@ Route::group(['middleware' => ['auth.digest_or_key']], function () {
     Route::get('accounts/me', 'Api\AccountController@show');
     Route::delete('accounts/me', 'Api\AccountController@delete');
 
+    Route::post('accounts/me/phone/request', 'Api\AccountPhoneController@requestUpdate');
+    Route::post('accounts/me/phone', 'Api\AccountPhoneController@update');
+
     Route::get('accounts/me/devices', 'Api\DeviceController@index');
     Route::delete('accounts/me/devices/{uuid}', 'Api\DeviceController@destroy');
 

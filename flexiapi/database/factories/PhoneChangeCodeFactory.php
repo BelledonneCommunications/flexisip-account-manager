@@ -19,23 +19,24 @@
 
 namespace Database\Factories;
 
-use App\Account;
+use App\Helpers\Utils;
+use App\Password;
+use App\PhoneChangeCode;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class AccountFactory extends Factory
+class PhoneChangeCodeFactory extends Factory
 {
-    protected $model = Account::class;
+    protected $model = PhoneChangeCode::class;
 
     public function definition()
     {
+        $password = Password::factory()->create();
+        $password->account->generateApiKey();
+
         return [
-            'username' => $this->faker->username,
-            'domain' => config('app.sip_domain'),
-            'email' => $this->faker->email,
-            'user_agent' => $this->faker->userAgent,
-            'ip_address' => $this->faker->ipv4,
-            'creation_time' => $this->faker->dateTime,
-            'activated' => true
+            'account_id' => $password->account->id,
+            'code'   => Utils::generatePin(),
+            'phone'  => '+3312341234',
         ];
     }
 }

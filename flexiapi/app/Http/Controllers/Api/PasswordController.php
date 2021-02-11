@@ -30,7 +30,7 @@ class PasswordController extends Controller
             foreach ($account->passwords as $password) {
                 if (hash_equals(
                     $password->password,
-                    Utils::bchash($account->username, $account->domain, $request->get('old_password'), $password->algorithm)
+                    Utils::bchash($account->username, $account->resolvedRealm, $request->get('old_password'), $password->algorithm)
                 )) {
                     $account->updatePassword($request->get('password'), $algorithm);
                     return response()->json();

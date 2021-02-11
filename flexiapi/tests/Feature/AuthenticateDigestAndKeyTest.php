@@ -22,7 +22,6 @@ namespace Tests\Feature;
 use App\Password;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class AuthenticateDigestAndKeyTest extends TestCase
@@ -34,14 +33,14 @@ class AuthenticateDigestAndKeyTest extends TestCase
 
     public function testMandatoryFrom()
     {
-        $password = Password::factory()->create();
+        Password::factory()->create();
         $response = $this->json($this->method, $this->route);
         $response->assertStatus(422);
     }
 
     public function testWrongFrom()
     {
-        $password = Password::factory()->create();
+        Password::factory()->create();
         $response = $this->withHeaders([
             'From' => 'sip:missing@username',
         ])->json($this->method, $this->route);

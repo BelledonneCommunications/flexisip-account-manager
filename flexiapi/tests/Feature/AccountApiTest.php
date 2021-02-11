@@ -22,12 +22,9 @@ namespace Tests\Feature;
 use App\Password;
 use App\Account;
 use App\Admin;
-use App\User;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Illuminate\Support\Facades\DB;
 
 class AccountApiTest extends TestCase
 {
@@ -38,7 +35,7 @@ class AccountApiTest extends TestCase
 
     public function testMandatoryFrom()
     {
-        $password = Password::factory()->create();
+        Password::factory()->create();
         $response = $this->json($this->method, $this->route);
         $response->assertStatus(422);
     }
@@ -109,8 +106,6 @@ class AccountApiTest extends TestCase
                 'domain' => $domain,
                 'activated' => false
             ]);
-
-        $this->assertFalse(empty($response1['confirmation_key']));
     }
 
     public function testUsernameNoDomain()
@@ -179,8 +174,6 @@ class AccountApiTest extends TestCase
                 'domain' => config('app.sip_domain'),
                 'activated' => true,
             ]);
-
-        $this->assertTrue(empty($response1['confirmation_key']));
     }
 
     public function testNotActivated()
@@ -208,8 +201,6 @@ class AccountApiTest extends TestCase
                 'domain' => config('app.sip_domain'),
                 'activated' => false,
             ]);
-
-        $this->assertFalse(empty($response1['confirmation_key']));
     }
 
     public function testSimpleAccount()
@@ -424,7 +415,7 @@ class AccountApiTest extends TestCase
             ]);
 
         // Set the new password with incorrect old password
-        $response = $this->keyAuthenticated($account)
+        $this->keyAuthenticated($account)
             ->json($this->method, $this->route.'/me/password', [
                 'algorithm' => $newAlgorithm,
                 'old_password' => 'blabla',
@@ -513,7 +504,8 @@ class AccountApiTest extends TestCase
             ->get($this->route.'/'.$admin->id)
             ->assertStatus(200)
             ->assertJson([
-                'id' => 1
+                'id' => 1,
+                'phone' => null
             ]);
     }
 

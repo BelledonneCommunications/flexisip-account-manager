@@ -39,9 +39,10 @@ class Account extends Authenticatable
     use HasFactory;
 
     protected $connection = 'external';
-    protected $with = ['passwords', 'admin', 'emailChanged'];
+    protected $with = ['passwords', 'admin', 'emailChanged', 'alias'];
+    protected $hidden = ['alias', 'expire_time', 'confirmation_key'];
     protected $dateTimes = ['creation_time'];
-    protected $appends = ['realm'];
+    protected $appends = ['realm', 'phone'];
     protected $casts = [
         'activated' => 'boolean',
     ];
@@ -70,6 +71,11 @@ class Account extends Authenticatable
         };
 
         return $query->where('id', '<', 0);
+    }
+
+    public function phoneChangeCode()
+    {
+        return $this->hasOne('App\PhoneChangeCode');
     }
 
     public function passwords()
@@ -112,6 +118,20 @@ class Account extends Authenticatable
         return config('app.realm');
     }
 
+    public function getResolvedRealmAttribute()
+    {
+        return config('app.realm') ?? $this->domain;
+    }
+
+    public function getPhoneAttribute()
+    {
+        if ($this->alias) {
+            return $this->alias->alias;
+        }
+
+        return null;
+    }
+
     public function requestEmailUpdate(string $newEmail)
     {
         // Remove all the old requests
@@ -150,7 +170,7 @@ class Account extends Authenticatable
 
         $password = new Password;
         $password->account_id = $this->id;
-        $password->password = Utils::bchash($this->username, $this->domain, $newPassword, $algorithm);
+        $password->password = Utils::bchash($this->username, $this->resolvedRealm, $newPassword, $algorithm);
         $password->algorithm = $algorithm;
         $password->save();
     }

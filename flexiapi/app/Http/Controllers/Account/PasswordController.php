@@ -23,8 +23,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
-use App\Account;
-use App\Password;
 use App\Helpers\Utils;
 use App\Mail\ConfirmedRegistration;
 
@@ -56,7 +54,7 @@ class PasswordController extends Controller
                 // If one of the password stored equals the one entered
                 if (hash_equals(
                     $password->password,
-                    Utils::bchash($account->username, $account->domain, $request->get('old_password'), $password->algorithm)
+                    Utils::bchash($account->username, $account->resolvedRealm, $request->get('old_password'), $password->algorithm)
                 )) {
                     $account->updatePassword($request->get('password'), $algorithm);
                     $request->session()->flash('success', 'Password successfully changed');

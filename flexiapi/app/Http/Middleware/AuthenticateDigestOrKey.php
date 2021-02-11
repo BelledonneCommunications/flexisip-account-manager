@@ -22,7 +22,6 @@ namespace App\Http\Middleware;
 use App\Account;
 use App\Helpers\Utils;
 
-use Fabiang\Sasl\Sasl;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
@@ -45,7 +44,7 @@ class AuthenticateDigestOrKey
      */
     public function handle($request, Closure $next)
     {
-        $validator = Validator::make(['from' => $request->header('From')], [
+        Validator::make(['from' => $request->header('From')], [
             'from'    => 'required',
         ])->validate();
 
@@ -95,7 +94,7 @@ class AuthenticateDigestOrKey
             $storedNonce->save();
 
             // Validation
-            $validator = Validator::make($auth, [
+            Validator::make($auth, [
                 'opaque'    => 'required|in:'.$this->getOpaque(),
                 //'uri'       => 'in:/'.$request->path(),
                 'qop'       => 'required|in:auth',
