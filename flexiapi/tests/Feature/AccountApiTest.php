@@ -151,6 +151,35 @@ class AccountApiTest extends TestCase
         $response1->assertStatus(422);
     }
 
+    public function testAdmin()
+    {
+        $admin = Admin::factory()->create();
+        $admin->account->generateApiKey();
+        $password = $admin->account->passwords()->first();
+
+        $username = 'username';
+
+        $response0 = $this->generateFirstResponse($password);
+        $response1 = $this->generateSecondResponse($password, $response0)
+            ->json($this->method, $this->route, [
+                'username' => $username,
+                'algorithm' => 'SHA-256',
+                'password' => '2',
+                'admin' => true,
+            ]);
+
+        $response1
+            ->assertStatus(200)
+            ->assertJson([
+                'id' => 2,
+                'username' => $username,
+                'domain' => config('app.sip_domain'),
+                'admin' => true, // Not a boolean but actually the admin JSON object
+            ]);
+
+        $this->assertTrue(!empty($response1['confirmation_key']));
+    }
+
     public function testActivated()
     {
         $admin = Admin::factory()->create();

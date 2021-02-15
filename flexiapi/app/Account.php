@@ -32,7 +32,6 @@ use App\EmailChanged;
 use App\Helpers\Utils;
 use App\Events\AccountDeleting;
 use App\Mail\ChangingEmail;
-use App\Mail\ChangedEmail;
 
 class Account extends Authenticatable
 {

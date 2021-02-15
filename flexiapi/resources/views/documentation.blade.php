@@ -141,6 +141,7 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
     <li><code>algorithm</code> required, values can be <code>SHA-256</code> or <code>MD5</code></li>
     <li><code>domain</code> optional, the value is set to the default registration domain if not set</li>
     <li><code>activated</code> optional, a boolean, set to <code>false</code> by default</li>
+    <li><code>admin</code> optional, a boolean, set to <code>false</code> by default, create an admin account</li>
 </ul>
 
 <h4><code>GET /accounts</code></h4>

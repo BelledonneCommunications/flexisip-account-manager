@@ -26,6 +26,7 @@ use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 
 use App\Account;
+use App\Admin;
 use App\Password;
 use App\Rules\WithoutSpaces;
 use App\Helpers\Utils;
@@ -81,10 +82,9 @@ class AccountController extends Controller
             'algorithm' => 'required|in:SHA-256,MD5',
             'password' => 'required|filled',
             'domain' => 'min:3',
+            'admin' => 'boolean|nullable',
             'activated' => 'boolean|nullable',
         ]);
-
-        $algorithm = $request->has('password_sha256') ? 'SHA-256' : 'MD5';
 
         $account = new Account;
         $account->username = $request->get('username');
@@ -110,6 +110,15 @@ class AccountController extends Controller
         $password->password = Utils::bchash($account->username, $account->resolvedRealm, $request->get('password'), $request->get('algorithm'));
         $password->algorithm = $request->get('algorithm');
         $password->save();
+
+        if ($request->has('admin') && (bool)$request->get('admin')) {
+            $admin = new Admin;
+            $admin->account_id = $account->id;
+            $admin->save();
+        }
+
+        // Full reload
+        $account = Account::withoutGlobalScopes()->find($account->id);
 
         return response()->json($account->makeVisible(['confirmation_key']));
     }

@@ -28,6 +28,7 @@ class Admin extends Model
 
     protected $connection = 'local';
     protected $table = 'admins';
+    protected $hidden = ['id', 'account_id'];
 
     public function account()
     {
