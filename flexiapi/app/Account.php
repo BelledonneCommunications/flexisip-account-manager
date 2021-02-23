@@ -38,10 +38,10 @@ class Account extends Authenticatable
     use HasFactory;
 
     protected $connection = 'external';
-    protected $with = ['passwords', 'admin', 'emailChanged', 'alias'];
+    protected $with = ['passwords', 'admin', 'emailChanged', 'alias', 'activationExpiration'];
     protected $hidden = ['alias', 'expire_time', 'confirmation_key'];
     protected $dateTimes = ['creation_time'];
-    protected $appends = ['realm', 'phone'];
+    protected $appends = ['realm', 'phone', 'confirmation_key_expires'];
     protected $casts = [
         'activated' => 'boolean',
     ];
@@ -97,6 +97,11 @@ class Account extends Authenticatable
         return $this->hasOne('App\Admin');
     }
 
+    public function activationExpiration()
+    {
+        return $this->hasOne('App\ActivationExpiration');
+    }
+
     public function apiKey()
     {
         return $this->hasOne('App\ApiKey');
@@ -129,6 +134,20 @@ class Account extends Authenticatable
         }
 
         return null;
+    }
+
+    public function getConfirmationKeyExpiresAttribute()
+    {
+        if ($this->activationExpiration) {
+            return $this->activationExpiration->expires->format('Y-m-d H:i:s');
+        }
+
+        return null;
+    }
+
+    public function activationExpired(): bool
+    {
+        return ($this->activationExpiration && $this->activationExpiration->isExpired());
     }
 
     public function requestEmailUpdate(string $newEmail)

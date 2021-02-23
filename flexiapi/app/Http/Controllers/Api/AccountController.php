@@ -100,9 +100,11 @@ class AccountController extends Controller
         $account = Account::sip($sip)
                           ->where('confirmation_key', $request->get('code'))
                           ->firstOrFail();
+
+        if ($account->activationExpired()) abort(403, 'Activation expired');
+
         $account->activated = true;
         $account->confirmation_key = null;
-
         $account->save();
 
         return $account;
@@ -117,6 +119,9 @@ class AccountController extends Controller
         $account = Account::sip($sip)
                           ->where('confirmation_key', $request->get('code'))
                           ->firstOrFail();
+
+        if ($account->activationExpired()) abort(403, 'Activation expired');
+
         $account->activated = true;
         $account->confirmation_key = null;
         $account->save();

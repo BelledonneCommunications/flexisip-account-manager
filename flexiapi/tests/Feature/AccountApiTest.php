@@ -21,8 +21,9 @@ namespace Tests\Feature;
 
 use App\Password;
 use App\Account;
+use App\ActivationExpiration;
 use App\Admin;
-
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -226,8 +227,7 @@ class AccountApiTest extends TestCase
                 'activated' => false,
             ]);
 
-        $response1
-            ->assertStatus(200)
+        $response1->assertStatus(200)
             ->assertJson([
                 'id' => 2,
                 'username' => $username,
@@ -296,6 +296,11 @@ class AccountApiTest extends TestCase
         $password->account->activated = false;
         $password->account->save();
 
+        $expiration = new ActivationExpiration;
+        $expiration->account_id = $password->account->id;
+        $expiration->expires = Carbon::now()->subYear();
+        $expiration->save();
+
         $this->get($this->route.'/'.$password->account->identifier.'/info')
             ->assertStatus(200)
             ->assertJson([
@@ -308,20 +313,31 @@ class AccountApiTest extends TestCase
             ])
             ->assertStatus(404);
 
+        $activateEmailRoute = $this->route.'/'.$password->account->identifier.'/activate/email';
+
         $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route.'/'.$password->account->identifier.'/activate/email', [
+            ->json($this->method, $activateEmailRoute, [
                 'code' => $confirmationKey.'longer'
             ])
             ->assertStatus(422);
 
         $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route.'/'.$password->account->identifier.'/activate/email', [
+            ->json($this->method, $activateEmailRoute, [
                 'code' => 'X123456789abc'
             ])
             ->assertStatus(404);
 
+        // Expired
         $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route.'/'.$password->account->identifier.'/activate/email', [
+            ->json($this->method, $activateEmailRoute, [
+                'code' => $confirmationKey
+            ])
+            ->assertStatus(403);
+
+        $expiration->delete();
+
+        $this->keyAuthenticated($password->account)
+            ->json($this->method, $activateEmailRoute, [
                 'code' => $confirmationKey
             ])
             ->assertStatus(200);
@@ -342,11 +358,25 @@ class AccountApiTest extends TestCase
         $password->account->activated = false;
         $password->account->save();
 
+        $expiration = new ActivationExpiration;
+        $expiration->account_id = $password->account->id;
+        $expiration->expires = Carbon::now()->subYear();
+        $expiration->save();
+
         $this->get($this->route.'/'.$password->account->identifier.'/info')
             ->assertStatus(200)
             ->assertJson([
                 'activated' => false
             ]);
+
+        // Expired
+        $this->keyAuthenticated($password->account)
+            ->json($this->method, $this->route.'/'.$password->account->identifier.'/activate/phone', [
+                'code' => $confirmationKey
+            ])
+            ->assertStatus(403);
+
+        $expiration->delete();
 
         $this->keyAuthenticated($password->account)
             ->json($this->method, $this->route.'/'.$password->account->identifier.'/activate/phone', [
@@ -542,6 +572,51 @@ class AccountApiTest extends TestCase
                 'id' => 1,
                 'phone' => null
             ]);
+    }
+
+    public function testCodeExpires()
+    {
+        $admin = Admin::factory()->create();
+        $admin->account->generateApiKey();
+
+        // Activated, no no confirmation_key
+        $this->keyAuthenticated($admin->account)
+            ->json($this->method, $this->route, [
+                'username' => 'foobar',
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+                'activated' => true,
+                'confirmation_key_expires' => '2040-12-12 12:12:12'
+            ])
+            ->assertStatus(200)
+            ->assertJson([
+                'confirmation_key_expires' => null
+            ]);
+
+        // Bad datetime format
+        $this->keyAuthenticated($admin->account)
+            ->json($this->method, $this->route, [
+                'username' => 'foobar2',
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+                'activated' => false,
+                'confirmation_key_expires' => 'abc'
+            ])
+            ->assertStatus(422);
+
+        // Bad datetime format
+        $this->keyAuthenticated($admin->account)
+            ->json($this->method, $this->route, [
+                'username' => 'foobar2',
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+                'activated' => false,
+                'confirmation_key_expires' => '2040-12-12 12:12:12'
+            ])
+            ->assertStatus(200)
+            ->assertJson([
+                'confirmation_key_expires' => '2040-12-12 12:12:12'
+            ]);;
     }
 
     public function testDelete()

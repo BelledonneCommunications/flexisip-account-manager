@@ -16,6 +16,7 @@ class AccountDeleting
     {
         $account->alias()->delete();
         $account->passwords()->delete();
+        $account->activationExpiration()->delete();
         $account->nonces()->delete();
         $account->admin()->delete();
         $account->apiKey()->delete();

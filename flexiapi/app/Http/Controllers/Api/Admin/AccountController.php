@@ -26,10 +26,9 @@ use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 
 use App\Account;
+use App\ActivationExpiration;
 use App\Admin;
-use App\Password;
 use App\Rules\WithoutSpaces;
-use App\Helpers\Utils;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 
 class AccountController extends Controller
@@ -84,6 +83,10 @@ class AccountController extends Controller
             'domain' => 'min:3',
             'admin' => 'boolean|nullable',
             'activated' => 'boolean|nullable',
+            'confirmation_key_expires' => [
+                'date_format:Y-m-d H:i:s',
+                'nullable',
+            ]
         ]);
 
         $account = new Account;
@@ -104,6 +107,14 @@ class AccountController extends Controller
         }
 
         $account->save();
+
+        if ((!$request->has('activated') || !(bool)$request->get('activated'))
+         && $request->has('confirmation_key_expires')) {
+            $actionvationExpiration = new ActivationExpiration;
+            $actionvationExpiration->account_id = $account->id;
+            $actionvationExpiration->expires = $request->get('confirmation_key_expires');
+            $actionvationExpiration->save();
+        }
 
         $account->updatePassword($request->get('password'), $request->get('algorithm'));
 

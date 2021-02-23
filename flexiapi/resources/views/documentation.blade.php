@@ -157,7 +157,7 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
 
 <h4><code>POST /accounts</code></h4>
 <p>To create an account directly from the API.</p>
-<p>If <code>activated</code> is set to <code>false</code> a random generated <code>confirmation_key</code> will be returned to allow further activation using the public endpoints.</p>
+<p>If <code>activated</code> is set to <code>false</code> a random generated <code>confirmation_key</code> will be returned to allow further activation using the public endpoints. Check <code>confirmation_key_expires</code> to also set an expiration date on that <code>confirmation_key</code>.</p>
 
 <p>JSON parameters:</p>
 <ul>
@@ -167,6 +167,7 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
     <li><code>domain</code> optional, the value is set to the default registration domain if not set</li>
     <li><code>activated</code> optional, a boolean, set to <code>false</code> by default</li>
     <li><code>admin</code> optional, a boolean, set to <code>false</code> by default, create an admin account</li>
+    <li><code>confirmation_key_expires</code> optional, a datetime of this format: Y-m-d H:i:s. Only used when <code>activated</code> is not used or <code>false</code>. Enforces an expiration date on the returned <code>confirmation_key</code>. After that datetime public email or phone activation endpoints will return <code>403</code>.</li>
 </ul>
 
 <h4><code>GET /accounts</code></h4>
