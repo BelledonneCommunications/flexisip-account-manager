@@ -16,6 +16,7 @@ return [
     'name' => env('APP_NAME', 'Laravel'),
     'sip_domain' => env('APP_SIP_DOMAIN', 'sip.domain.com'),
     'flexisip_proxy_pid' => env('APP_FLEXISIP_PROXY_PID', '/var/run/flexisip-proxy.pid'),
+    'flexisip_pusher_path' => env('APP_FLEXISIP_PUSHER_PATH', ''),
 
     'terms_of_use_url' => env('TERMS_OF_USE_URL', ''),
     'privacy_policy_url' => env('PRIVACY_POLICY_URL', ''),

@@ -59,7 +59,7 @@ class AuthenticateController extends Controller
         foreach ($account->passwords as $password) {
             if (hash_equals(
                 $password->password,
-                Utils::bchash($request->get('username'), $account->domain, $request->get('password'), $password->algorithm)
+                Utils::bchash($request->get('username'), $account->resolvedRealm, $request->get('password'), $password->algorithm)
             )) {
                 Auth::login($account);
                 return redirect()->route('account.panel');

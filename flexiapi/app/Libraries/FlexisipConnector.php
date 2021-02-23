@@ -56,7 +56,7 @@ class FlexisipConnector
 
     public function deleteDevice(string $from, string $uuid)
     {
-        $content = $this->request('REGISTRAR_DELETE', [
+        $this->request('REGISTRAR_DELETE', [
             'sip:'.$from,
             '"<'.$uuid.'>"',
         ]);

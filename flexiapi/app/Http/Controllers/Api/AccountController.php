@@ -20,9 +20,14 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
-use App\Account;
+use App\Rules\WithoutSpaces;
+use Carbon\Carbon;
 
+use App\Account;
+use App\Token;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 
 class AccountController extends Controller
@@ -38,6 +43,52 @@ class AccountController extends Controller
             'activated' => $account->activated,
             'realm' => $account->realm
         ]);
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'username' => [
+                'required',
+                Rule::unique('external.accounts', 'username')->where(function ($query) use ($request) {
+                    $query->where('domain', config('app.sip_domain'));
+                }),
+                'filled',
+                new WithoutSpaces
+            ],
+            'algorithm' => 'required|in:SHA-256,MD5',
+            'password' => 'required|filled',
+            'domain' => 'min:3',
+            'token' => [
+                'required',
+                Rule::exists('tokens', 'token')->where(function ($query) {
+                    $query->where('used', false);
+                }),
+                'size:'.WebAuthenticateController::$emailCodeSize
+            ]
+        ]);
+
+        $token = Token::where('token', $request->get('token'))->first();
+        $token->used = true;
+        $token->save();
+
+        $account = new Account;
+        $account->username = $request->get('username');
+        $account->email = $request->get('email');
+        $account->activated = false;
+        $account->domain = $request->has('domain')
+            ? $request->get('domain')
+            : config('app.sip_domain');
+        $account->ip_address = $request->ip();
+        $account->creation_time = Carbon::now();
+        $account->user_agent = config('app.name');
+        $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
+        $account->save();
+
+        $account->updatePassword($request->get('password'), $request->get('algorithm'));
+
+        // Full reload
+        return Account::withoutGlobalScopes()->find($account->id);
     }
 
     public function activateEmail(Request $request, string $sip)

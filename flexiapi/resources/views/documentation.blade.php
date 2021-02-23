@@ -55,6 +55,31 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
 
 <h4>Accounts</h4>
 
+<h4><code>POST /tokens</code></h4>
+<p>Send a token using a push notification to the device.</p>
+<p>Return <code>403</code> if a token was already sent, or if the tokens limit is reached for this device.</p>
+<p>Return <code>503</code> if the token was not successfully sent.</p>
+
+<p>JSON parameters:</p>
+<ul>
+    <li><code>pn_provider</code> the push notification provider</li>
+    <li><code>pn_param</code> the push notification parameter</li>
+    <li><code>pn_prid</code> the push notification unique id</li>
+</ul>
+
+<h4><code>POST /accounts/with-token</code></h4>
+<p>Create an account using a token.</p>
+<p>Return <code>422</code> if the parapeters are invalid or if the token is expired.</p>
+
+<p>JSON parameters:</p>
+<ul>
+    <li><code>username</code> unique username, minimum 6 characters</li>
+    <li><code>password</code> required minimum 6 characters</li>
+    <li><code>algorithm</code> required, values can be <code>SHA-256</code> or <code>MD5</code></li>
+    <li><code>domain</code> optional, the value is set to the default registration domain if not set</li>
+    <li><code>token</code> the unique token</li>
+</ul>
+
 <h4><code>GET /accounts/{sip}/info</code></h4>
 <p>Retrieve public information about the account.</p>
 <p>Return <code>404</code> if the account doesn't exists.</p>
