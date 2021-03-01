@@ -8,7 +8,7 @@
 #%define _datadir           %{_datarootdir}
 #%define _docdir            %{_datadir}/doc
 
-%define build_number 53
+%define build_number 54
 %define var_dir /var/opt/belledonne-communications
 %define opt_dir /opt/belledonne-communications/share/flexisip-account-manager
 %define env_file "$RPM_BUILD_ROOT/etc/flexisip-account-manager/flexiapi.env"
@@ -88,6 +88,7 @@ if [ $1 -eq 1 ] ; then
 
     scl enable rh-php73 "php artisan key:generate"
     scl enable rh-php73 "php artisan migrate"
+    scl enable rh-php73 "php artisan route:cache"
 fi
 
 

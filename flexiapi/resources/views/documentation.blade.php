@@ -69,7 +69,7 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
 
 <h4><code>POST /accounts/with-token</code></h4>
 <p>Create an account using a token.</p>
-<p>Return <code>422</code> if the parapeters are invalid or if the token is expired.</p>
+<p>Return <code>422</code> if the parameters are invalid or if the token is expired.</p>
 
 <p>JSON parameters:</p>
 <ul>
