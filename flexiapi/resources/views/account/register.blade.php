@@ -18,12 +18,14 @@
         </div>
         <p class="mb-1">Register on our service with an email address</p>
     </a>
-    <a href="{{ route('account.register.phone') }}" class="list-group-item list-group-item-action">
-        <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">With your phone number</h5>
-        </div>
-        <p class="mb-1">Use your phone number to register</p>
-    </a>
+    @if (config('app.phone_authentication'))
+        <a href="{{ route('account.register.phone') }}" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">With your phone number</h5>
+            </div>
+            <p class="mb-1">Use your phone number to register</p>
+        </a>
+    @endif
 </div>
 
 @endsection

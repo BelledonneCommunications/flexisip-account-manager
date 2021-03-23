@@ -8,7 +8,7 @@
 #%define _datadir           %{_datarootdir}
 #%define _docdir            %{_datadir}/doc
 
-%define build_number 54
+%define build_number 55
 %define var_dir /var/opt/belledonne-communications
 %define opt_dir /opt/belledonne-communications/share/flexisip-account-manager
 %define env_file "$RPM_BUILD_ROOT/etc/flexisip-account-manager/flexiapi.env"

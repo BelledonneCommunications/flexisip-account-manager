@@ -38,7 +38,7 @@ class RemoveUnconfirmedAccounts extends Command
     {
         $accounts = Account::where('activated', false)->where('creation_time', '<',
             Carbon::now()->subDays($this->argument('days'))->toDateTimeString()
-        )->get();
+        );
 
         if ($this->option('apply')) {
             $this->info($accounts->count() . ' accounts deleted');
