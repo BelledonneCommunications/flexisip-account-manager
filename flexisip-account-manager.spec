@@ -11,10 +11,23 @@
 %define build_number 63
 %define var_dir /var/opt/belledonne-communications
 %define opt_dir /opt/belledonne-communications/share/flexisip-account-manager
-%define env_file "$RPM_BUILD_ROOT/etc/flexisip-account-manager/flexiapi.env"
+
+%if %{with deb}
+    %define env_file "/etc/flexisip-account-manager/flexiapi.env"
+%else
+    %define env_file "$RPM_BUILD_ROOT/etc/flexisip-account-manager/flexiapi.env"
+%endif
+
+%bcond_with deb
 #%if %{build_number}
 #%define build_number_ext -%{build_number}
 #%endif
+
+%if %{with deb}
+    %define web_user www-data
+%else
+    %define web_user apache
+%endif
 
 Name:           bc-flexisip-account-manager
 Version:        1.1.0
@@ -34,7 +47,6 @@ Requires:       rh-php73-php rh-php73-php-xmlrpc rh-php73-php-pdo rh-php73-php-m
 %description
 PHP server for Linphone and Flexisip providing module for account creation.
 
-
 %prep
 %setup -n flexisip-account-manager
 
@@ -49,17 +61,32 @@ cp flexiapi/composer.json "$RPM_BUILD_ROOT%{opt_dir}/flexiapi"
 cp README* "$RPM_BUILD_ROOT%{opt_dir}/"
 mkdir -p "$RPM_BUILD_ROOT/etc/flexisip-account-manager"
 cp -R conf/* "$RPM_BUILD_ROOT/etc/flexisip-account-manager/"
-mkdir -p $RPM_BUILD_ROOT/opt/rh/httpd24/root/etc/httpd/conf.d
-cp httpd/flexisip-account-manager.conf "$RPM_BUILD_ROOT/opt/rh/httpd24/root/etc/httpd/conf.d/"
 
+%if %{with deb}
+    mkdir -p $RPM_BUILD_ROOT/etc/apache2/conf-available
+    cp httpd/flexisip-account-manager.conf "$RPM_BUILD_ROOT/etc/apache2/conf-available/"
+%else
+    mkdir -p $RPM_BUILD_ROOT/opt/rh/httpd24/root/etc/httpd/conf.d
+    cp httpd/flexisip-account-manager.conf "$RPM_BUILD_ROOT/opt/rh/httpd24/root/etc/httpd/conf.d/"
+%endif
+
+# POST INSTALLATION
 
 %post
-if [ $1 -eq 1 ] ; then
+%if %{without deb}
+    if [ $1 -eq 1 ] ; then
+%endif
     mkdir -p %{var_dir}/log
     touch %{var_dir}/log/account-manager.log
-    chown apache:apache %{var_dir}/log/account-manager.log
+    chown %{web_user}:%{web_user} %{var_dir}/log/account-manager.log
+
+%if %{without deb}
     chcon -t httpd_sys_rw_content_t %{var_dir}/log/account-manager.log
+%endif
+
+%if %{without deb}
     setsebool -P httpd_can_network_connect_db on
+%endif
 
     # FlexiAPI base directories setup and rights
     mkdir -p %{var_dir}/flexiapi/storage/app/public
@@ -67,30 +94,56 @@ if [ $1 -eq 1 ] ; then
     mkdir -p %{opt_dir}/flexiapi/bootstrap/cache
     touch %{var_dir}/flexiapi/storage/db.sqlite
     touch %{var_dir}/flexiapi/storage/external.db.sqlite
-    chown -R apache:apache %{var_dir}/flexiapi/storage
+    chown -R %{web_user}:%{web_user} %{var_dir}/flexiapi/storage
 
-    ln -s %{var_dir}/flexiapi/storage %{opt_dir}/flexiapi/.
+    if ! test -f %{env_file}; then
+        ln -s %{var_dir}/flexiapi/storage %{opt_dir}/flexiapi/.
+    fi
 
     # FlexiAPI logs file
     mkdir -p %{var_dir}/log/flexiapi
-    chown -R apache:apache %{var_dir}/log/flexiapi
+    chown -R %{web_user}:%{web_user} %{var_dir}/log/flexiapi
 
-    ln -s %{var_dir}/log/flexiapi %{opt_dir}/flexiapi/storage/logs
+    if ! test -f %{env_file}; then
+        ln -s %{var_dir}/log/flexiapi %{opt_dir}/flexiapi/storage/logs
+    fi
 
     # FlexiAPI env file configuration
-    cd %{opt_dir}/flexiapi/
-    cp .env.example %{env_file}
-    sed -i 's/DB_DATABASE=.*/DB_DATABASE=\/var\/opt\/belledonne-communications\/flexiapi\/storage\/db.sqlite/g' %{env_file}
-    sed -i 's/DB_EXTERNAL_DRIVER=.*/DB_EXTERNAL_DRIVER=sqlite/g' %{env_file}
-    sed -i 's/DB_EXTERNAL_DATABASE=.*/DB_EXTERNAL_DATABASE=\/var\/opt\/belledonne-communications\/flexiapi\/storage\/external.db.sqlite/g' %{env_file}
+    if ! test -f %{env_file}; then
+        cd %{opt_dir}/flexiapi/
+        cp .env.example %{env_file}
+        sed -i 's/DB_DATABASE=.*/DB_DATABASE=\/var\/opt\/belledonne-communications\/flexiapi\/storage\/db.sqlite/g' %{env_file}
+        sed -i 's/DB_EXTERNAL_DRIVER=.*/DB_EXTERNAL_DRIVER=sqlite/g' %{env_file}
+        sed -i 's/DB_EXTERNAL_DATABASE=.*/DB_EXTERNAL_DATABASE=\/var\/opt\/belledonne-communications\/flexiapi\/storage\/external.db.sqlite/g' %{env_file}
 
-    ln -s %{env_file} .env
+        ln -s %{env_file} .env
 
-    scl enable rh-php73 "php artisan key:generate"
-    scl enable rh-php73 "php artisan migrate"
-    scl enable rh-php73 "php artisan route:cache"
+        %if %{with deb}
+            php artisan key:generate
+        %else
+            scl enable rh-php73 "php artisan key:generate"
+        %endif
+    fi
+
+    # Check if there is a migration
+
+    if cd %{opt_dir}/flexiapi/ && php artisan migrate:status | grep -q No; then
+        echo " "
+        echo "You need to migrate the database to finish the setup:"
+        echo "$ cd %{opt_dir}/flexiapi/"
+
+        %if %{with deb}
+            echo $ php artisan migrate
+        %else
+            echo $ scl enable rh-php73 "php artisan migrate"
+        %endif
+    fi
+
+%if %{without deb}
 fi
+%endif
 
+# FILES
 
 %files
 %{opt_dir}/flexiapi/
@@ -106,7 +159,12 @@ fi
 %exclude %{opt_dir}/flexiapi/bootstrap/cache
 
 %config(noreplace) /etc/flexisip-account-manager/*.conf
-%config(noreplace) /opt/rh/httpd24/root/etc/httpd/conf.d/flexisip-account-manager.conf
+
+%if %{with deb}
+    %config(noreplace) /etc/apache2/conf-available/flexisip-account-manager.conf
+%else
+    %config(noreplace) /opt/rh/httpd24/root/etc/httpd/conf.d/flexisip-account-manager.conf
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
