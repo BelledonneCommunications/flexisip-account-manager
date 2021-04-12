@@ -76,7 +76,6 @@ class AccountController extends Controller
                     $query->where('domain', config('app.sip_domain'));
                 }),
                 'filled',
-                new WithoutSpaces
             ],
             'algorithm' => 'required|in:SHA-256,MD5',
             'password' => 'required|filled',
