@@ -68,7 +68,9 @@ class CreateAdminAccountTest extends Command
         $account->activated = true;
         $account->user_agent = 'Test';
         $account->ip_address = '0.0.0.0';
-        $account->creation_time = Carbon::now();
+
+        // Create an "old" account to prevent unwanted deletion on the test server
+        $account->creation_time = Carbon::now()->subYears(3);
         $account->save();
 
         $admin = new Admin;
