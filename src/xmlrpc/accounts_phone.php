@@ -200,9 +200,6 @@ function xmlrpc_activate_phone_account($method, $args)
         if (CUSTOM_HOOKS) {
             hook_on_account_activated($account);
         }
-    } else {
-        Logger::getInstance()->warning("Account id " . $account->id . " was already activated");
-        return ACCOUNT_ALREADY_ACTIVATED;
     }
 
     $password = new Password($db);
