@@ -228,8 +228,9 @@ function xmlrpc_activate_email_account($method, $args)
         return KEY_DOESNT_MATCH;
     }
 
-    $account->activated = "1";
-    $account->update();
+    if (!$account->activate()) {
+        Logger::getInstance()->error("Failed to activate account id " . $account->id);
+    }
 
     $expiration = null;
     // TODO

@@ -63,7 +63,7 @@ function get_trial_expiration_date()
 
 function is_activated($activated)
 {
-    return $activated == "1" || $activated == 1 || $activated;
+    return $activated == "1";
 }
 
 // XMLRPC parameters

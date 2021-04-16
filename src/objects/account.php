@@ -171,6 +171,25 @@ class Account
         return false;
     }
 
+    public function activate()
+    {
+        $query = "UPDATE " . ACCOUNTS_DB_TABLE . " SET activated=1 WHERE id=:id";
+
+        $stmt = $this->conn->prepare($query);
+        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+
+        $stmt->bindParam(":id", $this->id);
+
+        Logger::getInstance()->debug("Activating " . (string)$this);
+        if ($stmt->execute()) {
+            $this->activated = "1";
+            return true;
+        }
+        
+        Logger::getInstance()->error($stmt->errorInfo());
+        return false;
+    }
+
     public function update()
     {
         $query = "UPDATE " . ACCOUNTS_DB_TABLE . " SET username=:username, domain=:domain, activated=:activated";
@@ -298,7 +317,7 @@ class Account
             $this->username = $row['username'];
             $this->domain = $row['domain'];
             $this->email = $row['email'];
-            $this->activated = $row['activated'];
+            $this->activated = strval($row['activated']);
             $this->confirmation_key = $row['confirmation_key'];
             $this->ip_address = $row['ip_address'];
             $this->alias = $row['alias'];

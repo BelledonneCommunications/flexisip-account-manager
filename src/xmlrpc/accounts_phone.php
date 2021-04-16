@@ -181,8 +181,9 @@ function xmlrpc_activate_phone_account($method, $args)
     // If this is a recovery, account is already activated, don't go through the following again
     if (!is_activated($account->activated)) {
         $expiration = null;
-        $account->activated = "1";
-        $account->update();
+        if (!$account->activate()) {
+            Logger::getInstance()->error("Failed to activate account id " . $account->id);
+        }
 
         $alias = new Alias($db);
         $alias->account_id = $account->id;
@@ -199,6 +200,9 @@ function xmlrpc_activate_phone_account($method, $args)
         if (CUSTOM_HOOKS) {
             hook_on_account_activated($account);
         }
+    } else {
+        Logger::getInstance()->warning("Account id " . $account->id . " was already activated");
+        return ACCOUNT_ALREADY_ACTIVATED;
     }
 
     $password = new Password($db);

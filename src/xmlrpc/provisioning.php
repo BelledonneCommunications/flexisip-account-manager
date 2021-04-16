@@ -168,8 +168,7 @@ if (!empty($username)) {
                     $logger->error("Password not found for account id " . $account->id);
                 }
 
-                $account->activated = "1";
-                if (!$account->update()) {
+                if (!$account->activate()) {
                     $logger->error("Failed to activate account id " . $account->id);
                 }
             } else {

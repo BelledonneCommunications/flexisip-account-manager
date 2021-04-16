@@ -62,8 +62,10 @@ function activate_email_account($user, $domain, $key, $algo) {
         return KEY_DOESNT_MATCH;
     }
 
-    $account->activated = "1";
-    $account->update();
+    if (!$account->activate()) {
+        Logger::getInstance()->error("[HTTP] Failed to activate account id " . $account->id);
+        return;
+    }
     Logger::getInstance()->message("[HTTP] Account activated");
 }
 

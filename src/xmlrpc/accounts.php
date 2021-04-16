@@ -130,9 +130,11 @@ function xmlrpc_recover_account_from_confirmation_key($method, $args)
         return KEY_DOESNT_MATCH;
     }
 
+    Logger::getInstance()->message("Account activation status is " . $account->activated);
     if (!is_activated($account)) {
-        $account->activated = "1";
-        $account->update();
+        if (!$account->activate()) {
+            Logger::getInstance()->error("Failed to activate account !");
+        }
     }
 
     $password = new Password($db);
