@@ -43,8 +43,11 @@ rpm-only:
 
 deb-only:
 	rpmbuild -v -bb --with deb --define '_topdir $(OUTPUT_DIR)/rpmbuild' --define "_rpmfilename tmp.rpm" --define "_rpmdir $(OUTPUT_DIR)/rpmbuild" $(OUTPUT_DIR)/rpmbuild/SPECS/flexisip-account-manager.spec
-	fakeroot alien -d --scripts $(OUTPUT_DIR)/rpmbuild/tmp.rpm
-	rm -r $(OUTPUT_DIR)/rpmbuild/tmp.rpm
+	fakeroot alien -g --scripts $(OUTPUT_DIR)/rpmbuild/tmp.rpm
+	rm -r $(OUTPUT_DIR)/rpmbuild
+	rm -rf $(OUTPUT_DIR)/*.orig
+	sed -i 's/Depends:.*/Depends: $${shlibs:Depends}, php7.3, php7.3-xmlrpc, php7.3-pdo, php7.3-mysqlnd, php7.3-mbstring, php7.3-sqlite3/g' $(OUTPUT_DIR)/bc-flexisip-account-manager*/debian/control
+	cd `ls -rt $(OUTPUT_DIR) | tail -1` && dpkg-buildpackage
 	@echo "== DEB Package Created =="
 
 rpm: prepare package-common rpm-only package-end-common

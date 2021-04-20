@@ -13,10 +13,12 @@
 %define opt_dir /opt/belledonne-communications/share/flexisip-account-manager
 
 %if %{with deb}
-    %define env_file "/etc/flexisip-account-manager/flexiapi.env"
+    %define env_config_file "/etc/flexisip-account-manager/flexiapi.env"
 %else
-    %define env_file "$RPM_BUILD_ROOT/etc/flexisip-account-manager/flexiapi.env"
+    %define env_config_file "$RPM_BUILD_ROOT/etc/flexisip-account-manager/flexiapi.env"
 %endif
+
+%define env_symlink_file %{opt_dir}/flexiapi/.env
 
 %bcond_with deb
 #%if %{build_number}
@@ -42,7 +44,11 @@ Source0:        flexisip-account-manager.tar.gz
 #BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 # dependencies
+%if %{with deb}
+Requires:
+%else
 Requires:       rh-php73-php rh-php73-php-xmlrpc rh-php73-php-pdo rh-php73-php-mysqlnd rh-php73-php-mbstring
+%endif
 
 %description
 PHP server for Linphone and Flexisip providing module for account creation.
@@ -88,35 +94,35 @@ cp -R conf/* "$RPM_BUILD_ROOT/etc/flexisip-account-manager/"
     setsebool -P httpd_can_network_connect_db on
 %endif
 
-    # FlexiAPI base directories setup and rights
-    mkdir -p %{var_dir}/flexiapi/storage/app/public
-    mkdir -p %{var_dir}/flexiapi/storage/framework/cache %{var_dir}/flexiapi/storage/framework/sessions %{var_dir}/flexiapi/storage/framework/testing %{var_dir}/flexiapi/storage/framework/views
-    mkdir -p %{opt_dir}/flexiapi/bootstrap/cache
-    touch %{var_dir}/flexiapi/storage/db.sqlite
-    touch %{var_dir}/flexiapi/storage/external.db.sqlite
-    chown -R %{web_user}:%{web_user} %{var_dir}/flexiapi/storage
+    if ! test -f %{env_symlink_file}; then
+        # FlexiAPI logs file
+        mkdir -p %{var_dir}/log/flexiapi
+        chown -R %{web_user}:%{web_user} %{var_dir}/log
 
-    if ! test -f %{env_file}; then
+        # FlexiAPI base directories setup and rights
+        mkdir -p %{var_dir}/flexiapi/storage/app/public
+        mkdir -p %{var_dir}/flexiapi/storage/framework/cache %{var_dir}/flexiapi/storage/framework/sessions %{var_dir}/flexiapi/storage/framework/testing %{var_dir}/flexiapi/storage/framework/views
+        mkdir -p %{opt_dir}/flexiapi/bootstrap/cache
+        touch %{var_dir}/flexiapi/storage/db.sqlite
+        touch %{var_dir}/flexiapi/storage/external.db.sqlite
+
+        ln -s %{var_dir}/log/flexiapi %{var_dir}/flexiapi/storage/logs
         ln -s %{var_dir}/flexiapi/storage %{opt_dir}/flexiapi/.
     fi
 
-    # FlexiAPI logs file
-    mkdir -p %{var_dir}/log/flexiapi
+    chown -R %{web_user}:%{web_user} %{var_dir}/flexiapi/storage
+    chown -R %{web_user}:%{web_user} %{opt_dir}/flexiapi/storage
     chown -R %{web_user}:%{web_user} %{var_dir}/log/flexiapi
 
-    if ! test -f %{env_file}; then
-        ln -s %{var_dir}/log/flexiapi %{opt_dir}/flexiapi/storage/logs
-    fi
-
     # FlexiAPI env file configuration
-    if ! test -f %{env_file}; then
+    if ! test -f %{env_config_file}; then
         cd %{opt_dir}/flexiapi/
-        cp .env.example %{env_file}
-        sed -i 's/DB_DATABASE=.*/DB_DATABASE=\/var\/opt\/belledonne-communications\/flexiapi\/storage\/db.sqlite/g' %{env_file}
-        sed -i 's/DB_EXTERNAL_DRIVER=.*/DB_EXTERNAL_DRIVER=sqlite/g' %{env_file}
-        sed -i 's/DB_EXTERNAL_DATABASE=.*/DB_EXTERNAL_DATABASE=\/var\/opt\/belledonne-communications\/flexiapi\/storage\/external.db.sqlite/g' %{env_file}
+        cp .env.example %{env_config_file}
+        sed -i 's/DB_DATABASE=.*/DB_DATABASE=\/var\/opt\/belledonne-communications\/flexiapi\/storage\/db.sqlite/g' %{env_config_file}
+        sed -i 's/DB_EXTERNAL_DRIVER=.*/DB_EXTERNAL_DRIVER=sqlite/g' %{env_config_file}
+        sed -i 's/DB_EXTERNAL_DATABASE=.*/DB_EXTERNAL_DATABASE=\/var\/opt\/belledonne-communications\/flexiapi\/storage\/external.db.sqlite/g' %{env_config_file}
 
-        ln -s %{env_file} .env
+        ln -s %{env_config_file} %{env_symlink_file}
 
         %if %{with deb}
             php artisan key:generate
@@ -130,18 +136,22 @@ cp -R conf/* "$RPM_BUILD_ROOT/etc/flexisip-account-manager/"
     if cd %{opt_dir}/flexiapi/ && php artisan migrate:status | grep -q No; then
         echo " "
         echo "You need to migrate the database to finish the setup:"
-        echo "$ cd %{opt_dir}/flexiapi/"
+        echo "%{web_user}$ cd %{opt_dir}/flexiapi/"
 
         %if %{with deb}
-            echo $ php artisan migrate
+            echo %{web_user}$ php artisan migrate
         %else
-            echo $ scl enable rh-php73 "php artisan migrate"
+            echo %{web_user}$ scl enable rh-php73 "php artisan migrate"
         %endif
     fi
 
 %if %{without deb}
 fi
 %endif
+
+%postun
+
+rm -rf %{var_dir}
 
 # FILES
 
@@ -155,8 +165,6 @@ fi
 %{opt_dir}/tools/*.php
 %{opt_dir}/xmlrpc/*.php
 %{opt_dir}/README*
-%exclude %{opt_dir}/flexiapi/storage/
-%exclude %{opt_dir}/flexiapi/bootstrap/cache
 
 %config(noreplace) /etc/flexisip-account-manager/*.conf
 
