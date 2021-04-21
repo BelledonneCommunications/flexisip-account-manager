@@ -46,9 +46,13 @@ deb-only:
 	fakeroot alien -g --scripts $(OUTPUT_DIR)/rpmbuild/tmp.rpm
 	rm -r $(OUTPUT_DIR)/rpmbuild
 	rm -rf $(OUTPUT_DIR)/*.orig
-	sed -i 's/Depends:.*/Depends: $${shlibs:Depends}, php7.3, php7.3-xmlrpc, php7.3-pdo, php7.3-mysqlnd, php7.3-mbstring, php7.3-sqlite3/g' $(OUTPUT_DIR)/bc-flexisip-account-manager*/debian/control
-	cd `ls -rt $(OUTPUT_DIR) | tail -1` && dpkg-buildpackage
+	sed -i 's/Depends:.*/Depends: $${shlibs:Depends}, php, php-xmlrpc, php-pdo, php-mysqlnd, php-mbstring, php-sqlite3/g' $(OUTPUT_DIR)/bc-flexisip-account-manager*/debian/control
+	cd `ls -rt $(OUTPUT_DIR) | tail -1` && dpkg-buildpackage --no-sign
 	@echo "== DEB Package Created =="
+
+	# Cleanup
+	ls -d */ | cut -f1 -d'/' | grep bc-flexisip-account-manager | xargs rm -rf
+	ls bc-flexisip-account-manager* | grep -v deb | xargs rm
 
 rpm: prepare package-common rpm-only package-end-common
 rpm-dev: prepare-dev package-common rpm-only package-end-common

@@ -44,11 +44,7 @@ Source0:        flexisip-account-manager.tar.gz
 #BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 # dependencies
-%if %{with deb}
-Requires:
-%else
 Requires:       rh-php73-php rh-php73-php-xmlrpc rh-php73-php-pdo rh-php73-php-mysqlnd rh-php73-php-mbstring
-%endif
 
 %description
 PHP server for Linphone and Flexisip providing module for account creation.
@@ -82,6 +78,23 @@ cp -R conf/* "$RPM_BUILD_ROOT/etc/flexisip-account-manager/"
 %if %{without deb}
     if [ $1 -eq 1 ] ; then
 %endif
+
+    # Create the var directory if it doesn't exists
+    if [ ! -d "%{var_dir}" ]; then
+        # FlexiAPI logs file
+        mkdir -p %{var_dir}/log/flexiapi
+
+        # FlexiAPI base directories setup and rights
+        mkdir -p %{var_dir}/flexiapi/storage/app/public
+        mkdir -p %{var_dir}/flexiapi/storage/framework/cache
+        mkdir -p %{var_dir}/flexiapi/storage/framework/sessions
+        mkdir -p %{var_dir}/flexiapi/storage/framework/testing
+        mkdir -p %{var_dir}/flexiapi/storage/framework/views
+        mkdir -p %{var_dir}/flexiapi/bootstrap/cache
+        touch %{var_dir}/flexiapi/storage/db.sqlite
+        touch %{var_dir}/flexiapi/storage/external.db.sqlite
+    fi
+
     mkdir -p %{var_dir}/log
     touch %{var_dir}/log/account-manager.log
     chown %{web_user}:%{web_user} %{var_dir}/log/account-manager.log
@@ -94,25 +107,14 @@ cp -R conf/* "$RPM_BUILD_ROOT/etc/flexisip-account-manager/"
     setsebool -P httpd_can_network_connect_db on
 %endif
 
-    if ! test -f %{env_symlink_file}; then
-        # FlexiAPI logs file
-        mkdir -p %{var_dir}/log/flexiapi
-        chown -R %{web_user}:%{web_user} %{var_dir}/log
-
-        # FlexiAPI base directories setup and rights
-        mkdir -p %{var_dir}/flexiapi/storage/app/public
-        mkdir -p %{var_dir}/flexiapi/storage/framework/cache %{var_dir}/flexiapi/storage/framework/sessions %{var_dir}/flexiapi/storage/framework/testing %{var_dir}/flexiapi/storage/framework/views
-        mkdir -p %{opt_dir}/flexiapi/bootstrap/cache
-        touch %{var_dir}/flexiapi/storage/db.sqlite
-        touch %{var_dir}/flexiapi/storage/external.db.sqlite
-
-        ln -s %{var_dir}/log/flexiapi %{var_dir}/flexiapi/storage/logs
-        ln -s %{var_dir}/flexiapi/storage %{opt_dir}/flexiapi/.
-    fi
-
+    chown -R %{web_user}:%{web_user} %{var_dir}/log
     chown -R %{web_user}:%{web_user} %{var_dir}/flexiapi/storage
-    chown -R %{web_user}:%{web_user} %{opt_dir}/flexiapi/storage
+    chown -R %{web_user}:%{web_user} %{var_dir}/flexiapi/bootstrap
     chown -R %{web_user}:%{web_user} %{var_dir}/log/flexiapi
+
+    # Forces the creation of the symbolic links event if they already exists
+    ln -sf %{var_dir}/log/flexiapi %{var_dir}/flexiapi/storage/logs
+    ln -sf %{var_dir}/flexiapi/storage %{opt_dir}/flexiapi/.
 
     # FlexiAPI env file configuration
     if ! test -f %{env_config_file}; then
@@ -131,8 +133,10 @@ cp -R conf/* "$RPM_BUILD_ROOT/etc/flexisip-account-manager/"
         %endif
     fi
 
-    # Check if there is a migration
+    # Link it once more
+    ln -sf %{env_config_file} %{env_symlink_file}
 
+    # Check if there is a migration
     if cd %{opt_dir}/flexiapi/ && php artisan migrate:status | grep -q No; then
         echo " "
         echo "You need to migrate the database to finish the setup:"
@@ -149,10 +153,6 @@ cp -R conf/* "$RPM_BUILD_ROOT/etc/flexisip-account-manager/"
 fi
 %endif
 
-%postun
-
-rm -rf %{var_dir}
-
 # FILES
 
 %files
@@ -165,6 +165,8 @@ rm -rf %{var_dir}
 %{opt_dir}/tools/*.php
 %{opt_dir}/xmlrpc/*.php
 %{opt_dir}/README*
+
+%exclude %{opt_dir}/flexiapi/storage/
 
 %config(noreplace) /etc/flexisip-account-manager/*.conf
 
