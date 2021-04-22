@@ -28,8 +28,9 @@ use Carbon\Carbon;
 use App\Account;
 use App\ActivationExpiration;
 use App\Admin;
-use App\Rules\WithoutSpaces;
+use App\Alias;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+use App\Rules\WithoutSpaces;
 
 class AccountController extends Controller
 {
@@ -80,11 +81,17 @@ class AccountController extends Controller
             'algorithm' => 'required|in:SHA-256,MD5',
             'password' => 'required|filled',
             'domain' => 'min:3',
+            'email' => 'email',
             'admin' => 'boolean|nullable',
             'activated' => 'boolean|nullable',
             'confirmation_key_expires' => [
                 'date_format:Y-m-d H:i:s',
                 'nullable',
+            ],
+            'phone' => [
+                'unique:external.aliases,alias',
+                'unique:external.accounts,username',
+                new WithoutSpaces, 'starts_with:+', 'phone:AUTO'
             ]
         ]);
 
@@ -121,6 +128,14 @@ class AccountController extends Controller
             $admin = new Admin;
             $admin->account_id = $account->id;
             $admin->save();
+        }
+
+        if ($request->has('phone')) {
+            $alias = new Alias;
+            $alias->alias = $request->get('phone');
+            $alias->domain = config('app.sip_domain');
+            $alias->account_id = $account->id;
+            $alias->save();
         }
 
         // Full reload
