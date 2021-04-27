@@ -44,12 +44,21 @@ class AuthenticateController extends Controller
     public function authenticate(Request $request)
     {
         $request->validate([
-            'username' => 'required|exists:external.accounts,username',
+            'username' => 'required',
             'password' => 'required'
         ]);
 
         $account = Account::where('username', $request->get('username'))
                           ->first();
+
+        // Try alias
+        if (!$account) {
+            $alias = Alias::where('alias', $request->get('username'))->first();
+
+            if ($alias) {
+                $account = $alias->account;
+            }
+        }
 
         if (!$account) {
             return redirect()->back()->withErrors(['authentication' => 'The account doesn\'t exists']);
@@ -59,7 +68,7 @@ class AuthenticateController extends Controller
         foreach ($account->passwords as $password) {
             if (hash_equals(
                 $password->password,
-                Utils::bchash($request->get('username'), $account->resolvedRealm, $request->get('password'), $password->algorithm)
+                Utils::bchash($account->username, $account->resolvedRealm, $request->get('password'), $password->algorithm)
             )) {
                 Auth::login($account);
                 return redirect()->route('account.panel');
