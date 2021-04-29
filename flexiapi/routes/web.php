@@ -25,10 +25,12 @@ Route::get('login', 'Account\AuthenticateController@login')->name('account.login
 Route::post('authenticate', 'Account\AuthenticateController@authenticate')->name('account.authenticate');
 
 Route::get('login/email', 'Account\AuthenticateController@loginEmail')->name('account.login_email');
+Route::get('authenticate/email', 'Account\AuthenticateController@authenticateEmailToLogin');
 Route::post('authenticate/email', 'Account\AuthenticateController@authenticateEmail')->name('account.authenticate.email');
 Route::get('authenticate/email/{code}', 'Account\AuthenticateController@validateEmail')->name('account.authenticate.email_confirm');
 
 Route::get('login/phone', 'Account\AuthenticateController@loginPhone')->name('account.login_phone');
+Route::get('authenticate/phone', 'Account\AuthenticateController@authenticatePhoneToLogin');
 Route::post('authenticate/phone', 'Account\AuthenticateController@authenticatePhone')->name('account.authenticate.phone');
 Route::post('authenticate/phone/confirm', 'Account\AuthenticateController@validatePhone')->name('account.authenticate.phone_confirm');
 

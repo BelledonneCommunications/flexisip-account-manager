@@ -85,6 +85,11 @@ class AuthenticateController extends Controller
         ]);
     }
 
+    public function authenticateEmailToLogin(Request $request)
+    {
+        return redirect()->route('account.login_email');
+    }
+
     public function authenticateEmail(Request $request)
     {
         $request->validate([
@@ -118,7 +123,12 @@ class AuthenticateController extends Controller
         $request->merge(['code' => $code]);
         $request->validate(['code' => 'required|size:'.self::$emailCodeSize]);
 
-        $account = Account::where('confirmation_key', $code)->firstOrFail();
+        $account = Account::where('confirmation_key', $code)->first();
+
+        if (!$account) {
+            return redirect()->route('account.login_email');
+        }
+
         $account->confirmation_key = null;
 
         // If there is already a password set, we directly activate the account
@@ -145,6 +155,11 @@ class AuthenticateController extends Controller
         return view('account.login.phone');
     }
 
+    public function authenticatePhoneToLogin(Request $request)
+    {
+        return redirect()->route('account.login_phone');
+    }
+
     public function authenticatePhone(Request $request)
     {
         $request->validate([
@@ -165,8 +180,8 @@ class AuthenticateController extends Controller
         }
 
         if (!$account) {
-            return view('account.login_phone')->withErrors([
-                'phone' => 'Phone number not found'
+            return redirect()->back()->withErrors([
+                'phone' => 'Invalid phone number'
             ]);
         }
 
@@ -197,7 +212,7 @@ class AuthenticateController extends Controller
                           ->firstOrFail();
 
         if ($account->confirmation_key != $request->get('code')) {
-            return view('account.login_phone')->withErrors([
+            return redirect()->back()->withErrors([
                 'code' => 'Wrong code'
             ]);
         }
