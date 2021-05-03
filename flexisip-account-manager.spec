@@ -8,7 +8,7 @@
 #%define _datadir           %{_datarootdir}
 #%define _docdir            %{_datadir}/doc
 
-%define build_number 63
+%define build_number 64
 %define var_dir /var/opt/belledonne-communications
 %define opt_dir /opt/belledonne-communications/share/flexisip-account-manager
 
@@ -139,6 +139,8 @@ cp -R conf/* "$RPM_BUILD_ROOT/etc/flexisip-account-manager/"
     # Check if there is a migration
     if cd %{opt_dir}/flexiapi/ && php artisan migrate:status | grep -q No; then
         echo " "
+        echo "All the following commands need to be run with the web user"
+        echo "sudo -su %{web_user}"
         echo "You need to migrate the database to finish the setup:"
         echo "%{web_user}$ cd %{opt_dir}/flexiapi/"
 

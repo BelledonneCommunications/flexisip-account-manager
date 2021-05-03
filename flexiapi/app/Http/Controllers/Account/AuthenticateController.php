@@ -85,11 +85,6 @@ class AuthenticateController extends Controller
         ]);
     }
 
-    public function authenticateEmailToLogin(Request $request)
-    {
-        return redirect()->route('account.login_email');
-    }
-
     public function authenticateEmail(Request $request)
     {
         $request->validate([
@@ -153,11 +148,6 @@ class AuthenticateController extends Controller
     public function loginPhone(Request $request)
     {
         return view('account.login.phone');
-    }
-
-    public function authenticatePhoneToLogin(Request $request)
-    {
-        return redirect()->route('account.login_phone');
     }
 
     public function authenticatePhone(Request $request)
