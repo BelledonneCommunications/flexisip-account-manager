@@ -102,6 +102,7 @@ class AuthenticateController extends Controller
          * Because several accounts can have the same email
          */
         $account = Account::where('email', $request->get('email'))
+                          ->where('username', $request->get('username'))
                           ->first();
         $account->confirmation_key = Str::random(self::$emailCodeSize);
         $account->save();

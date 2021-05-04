@@ -163,6 +163,9 @@ class Account extends Authenticatable
 
         $this->refresh();
 
+        // Set it temporary to try to send the validation email
+        $this->email = $newEmail;
+
         Mail::to($this)->send(new ChangingEmail($this));
     }
 

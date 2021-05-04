@@ -21,13 +21,10 @@ namespace App\Http\Controllers\Account;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 use App\Http\Controllers\Controller;
-use App\Mail\ChangingEmail;
 use App\Mail\ChangedEmail;
-use App\EmailChanged;
 
 class EmailController extends Controller
 {
@@ -40,10 +37,16 @@ class EmailController extends Controller
 
     public function requestUpdate(Request $request)
     {
-        $request->validate([
-            'email_current' => ['required', Rule::in([$request->user()->email])],
-            'email' => 'required|different:email_current|confirmed|email',
-        ]);
+        if ($request->user()->email) {
+            $request->validate([
+                'email_current' => ['required', Rule::in([$request->user()->email])],
+                'email' => 'required|different:email_current|confirmed|email',
+            ]);
+        } else {
+            $request->validate([
+                'email' => 'required|confirmed|email',
+            ]);
+        }
 
         $request->user()->requestEmailUpdate($request->get('email'));
 
