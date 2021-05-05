@@ -91,7 +91,7 @@ class AccountController extends Controller
             'phone' => [
                 'unique:external.aliases,alias',
                 'unique:external.accounts,username',
-                new WithoutSpaces, 'starts_with:+', 'phone:AUTO'
+                new WithoutSpaces, 'starts_with:+'
             ]
         ]);
 

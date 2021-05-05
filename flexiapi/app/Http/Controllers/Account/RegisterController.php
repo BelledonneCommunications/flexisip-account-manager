@@ -118,7 +118,7 @@ class RegisterController extends Controller
             'phone' => [
                 'required', 'unique:external.aliases,alias',
                 'unique:external.accounts,username',
-                new WithoutSpaces, 'starts_with:+', 'phone:AUTO'
+                new WithoutSpaces, 'starts_with:+'
             ],
             'g-recaptcha-response'  => 'required|captcha',
         ]);
