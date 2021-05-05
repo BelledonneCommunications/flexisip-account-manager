@@ -24,6 +24,7 @@ Route::post('authenticate', 'Account\AuthenticateController@authenticate')->name
 
 Route::get('login/email', 'Account\AuthenticateController@loginEmail')->name('account.login_email');
 Route::post('authenticate/email', 'Account\AuthenticateController@authenticateEmail')->name('account.authenticate.email');
+Route::get('authenticate/email/check/{sip}', 'Account\AuthenticateController@checkEmail')->name('account.check.email');
 Route::get('authenticate/email/{code}', 'Account\AuthenticateController@validateEmail')->name('account.authenticate.email_confirm');
 
 Route::get('login/phone', 'Account\AuthenticateController@loginPhone')->name('account.login_phone');

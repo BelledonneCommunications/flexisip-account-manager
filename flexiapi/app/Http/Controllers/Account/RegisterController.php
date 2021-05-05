@@ -98,9 +98,7 @@ class RegisterController extends Controller
 
         Mail::to($account)->send(new RegisterConfirmation($account));
 
-        return view('account.authenticate.email', [
-            'account' => $account
-        ]);
+        return redirect()->route('account.check.email', $account->identifier);
     }
 
     public function storePhone(Request $request)

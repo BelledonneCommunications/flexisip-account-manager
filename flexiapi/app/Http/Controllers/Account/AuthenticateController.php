@@ -85,6 +85,9 @@ class AuthenticateController extends Controller
         ]);
     }
 
+    /**
+     * Display the form
+     */
     public function authenticateEmail(Request $request)
     {
         $request->validate([
@@ -108,6 +111,20 @@ class AuthenticateController extends Controller
         $account->save();
 
         Mail::to($account)->send(new PasswordAuthentication($account));
+
+        return redirect()->route('account.check.email', $account->identifier);
+    }
+
+    /**
+     * A page that check if the email was validated and reload if not
+     */
+    public function checkEmail(Request $request, string $sip)
+    {
+        if (auth()->user()) {
+            return redirect()->route('account.panel');
+        }
+
+        $account = Account::sip($sip)->firstOrFail();
 
         return view('account.authenticate.email', [
             'account' => $account

@@ -91,4 +91,6 @@
 @endif
 </div>
 
+@include('parts.account_variables', ['account' => $account])
+
 @endsection
