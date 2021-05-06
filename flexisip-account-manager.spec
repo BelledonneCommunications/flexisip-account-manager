@@ -8,7 +8,7 @@
 #%define _datadir           %{_datarootdir}
 #%define _docdir            %{_datadir}/doc
 
-%define build_number 68
+%define build_number 69
 %define var_dir /var/opt/belledonne-communications
 %define opt_dir /opt/belledonne-communications/share/flexisip-account-manager
 
@@ -80,20 +80,19 @@ cp -R conf/* "$RPM_BUILD_ROOT/etc/flexisip-account-manager/"
 %endif
 
     # Create the var directory if it doesn't exists
-    if [ ! -d "%{var_dir}/flexiapi" ]; then
-        # FlexiAPI logs file
-        mkdir -p %{var_dir}/log/flexiapi
 
-        # FlexiAPI base directories setup and rights
-        mkdir -p %{var_dir}/flexiapi/storage/app/public
-        mkdir -p %{var_dir}/flexiapi/storage/framework/cache
-        mkdir -p %{var_dir}/flexiapi/storage/framework/sessions
-        mkdir -p %{var_dir}/flexiapi/storage/framework/testing
-        mkdir -p %{var_dir}/flexiapi/storage/framework/views
-        mkdir -p %{var_dir}/flexiapi/bootstrap/cache
-        touch %{var_dir}/flexiapi/storage/db.sqlite
-        touch %{var_dir}/flexiapi/storage/external.db.sqlite
-    fi
+    # FlexiAPI logs file
+    mkdir -p %{var_dir}/log/flexiapi
+
+    # FlexiAPI base directories setup and rights
+    mkdir -p %{var_dir}/flexiapi/storage/app/public
+    mkdir -p %{var_dir}/flexiapi/storage/framework/cache
+    mkdir -p %{var_dir}/flexiapi/storage/framework/sessions
+    mkdir -p %{var_dir}/flexiapi/storage/framework/testing
+    mkdir -p %{var_dir}/flexiapi/storage/framework/views
+    mkdir -p %{var_dir}/flexiapi/bootstrap/cache
+    touch %{var_dir}/flexiapi/storage/db.sqlite
+    touch %{var_dir}/flexiapi/storage/external.db.sqlite
 
     mkdir -p %{var_dir}/log
     touch %{var_dir}/log/account-manager.log
