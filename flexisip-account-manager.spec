@@ -8,7 +8,7 @@
 #%define _datadir           %{_datarootdir}
 #%define _docdir            %{_datadir}/doc
 
-%define build_number 67
+%define build_number 68
 %define var_dir /var/opt/belledonne-communications
 %define opt_dir /opt/belledonne-communications/share/flexisip-account-manager
 
@@ -80,7 +80,7 @@ cp -R conf/* "$RPM_BUILD_ROOT/etc/flexisip-account-manager/"
 %endif
 
     # Create the var directory if it doesn't exists
-    if [ ! -d "%{var_dir}" ]; then
+    if [ ! -d "%{var_dir}/flexiapi" ]; then
         # FlexiAPI logs file
         mkdir -p %{var_dir}/log/flexiapi
 
