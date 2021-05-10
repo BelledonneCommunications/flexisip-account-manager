@@ -53,9 +53,15 @@ return [
     'connections' => [
 
         'local' => [
-            'driver' => env('DB_DRIVER', 'sqlite'),
+            'driver' => env('DB_DRIVER', env('DB_EXTERNAL_DRIVER', 'mysql')),
             'url' => env('DATABASE_URL'),
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'host' => env('DB_EXTERNAL_HOST', '127.0.0.1'),
+            'port' => env('DB_EXTERNAL_PORT', '3306'),
+            'database' => env('DB_DATABASE', env('DB_EXTERNAL_DATABASE', database_path('database.sqlite'))),
+            'username' => env('DB_EXTERNAL_USERNAME', 'forge'),
+            'password' => env('DB_EXTERNAL_PASSWORD', ''),
+            'charset' => env('DB_EXTERNAL_DRIVER', 'mysql') == 'mysql' ? 'utf8mb4' : null,
+            'collation' => env('DB_EXTERNAL_DRIVER', 'mysql') == 'mysql' ? 'utf8mb4_unicode_ci' : null,
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],

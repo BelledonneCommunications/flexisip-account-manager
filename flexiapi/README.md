@@ -17,11 +17,16 @@ Clone the repository, install the dependencies and generate a key.
     composer install --no-dev
     php artisan key:generate
 
-Then configure the two databases connections in the `.env` file (from the `.env.example` one). And migrate the tables.
+Then configure the database connection in the `.env` file (from the `.env.example` one). And migrate the tables.
 
     php artisan migrate
 
-The local one (that is by default using SQLite) is used to store authentications sessions. The remote one should be configured to connect directly to the Flexisip database.
+FlexiAPI can store its local tables in a separate SQLite database. To enable it uncomment and complete the following configuration in the .env file
+
+    # DB_DRIVER=sqlite
+    # DB_DATABASE=/home/edhelas/Repositories/flexisip-account-manager/flexiapi/storage/db.sqlite
+
+By default both local and remote data are stored in the Flexisip account database. You can configure it using the `DB_EXTERNAL_*` parameters in the `.env` file.
 
 You can also run the test suit using `phpunit`.
 
