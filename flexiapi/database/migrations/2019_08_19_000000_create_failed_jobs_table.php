@@ -26,7 +26,7 @@ class CreateFailedJobsTable extends Migration
     public function up()
     {
         Schema::connection('local')->create('failed_jobs', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->text('connection');
             $table->text('queue');
             $table->longText('payload');

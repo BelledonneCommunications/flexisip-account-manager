@@ -26,11 +26,14 @@ class AddEmailChangedTable extends Migration
     public function up()
     {
         Schema::connection('local')->create('email_changed', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->integer('account_id')->unsigned()->unique();
             $table->string('new_email');
             $table->string('hash');
             $table->timestamps();
+
+            //$table->foreign('account_id')->references('id')
+            //      ->on('accounts')->onDelete('cascade');
         });
     }
 

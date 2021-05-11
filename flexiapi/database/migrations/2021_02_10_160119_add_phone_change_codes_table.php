@@ -9,11 +9,14 @@ class AddPhoneChangeCodesTable extends Migration
     public function up()
     {
         Schema::connection('local')->create('phone_change_codes', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->integer('account_id')->unsigned();
             $table->string('code');
             $table->string('phone');
             $table->timestamps();
+
+            //$table->foreign('account_id')->references('id')
+            //      ->on('accounts')->onDelete('cascade');
         });
     }
 

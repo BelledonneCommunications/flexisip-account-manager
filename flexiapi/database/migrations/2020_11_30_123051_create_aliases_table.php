@@ -17,7 +17,7 @@ class CreateAliasesTable extends Migration
                 $table->string('domain', 64);
 
                 $table->foreign('account_id')->references('id')
-                    ->on('accounts')->onDelete('cascade');
+                      ->on('accounts')->onDelete('cascade');
             });
         }
     }

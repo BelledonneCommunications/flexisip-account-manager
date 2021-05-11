@@ -26,9 +26,12 @@ class CreateAdminsTable extends Migration
     public function up()
     {
         Schema::connection('local')->create('admins', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->integer('account_id')->unsigned();
             $table->timestamps();
+
+            //$table->foreign('account_id')->references('id')
+            //      ->on('accounts')->onDelete('cascade');
         });
     }
 

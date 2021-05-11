@@ -26,15 +26,18 @@ class CreateApiKeysTable extends Migration
     public function up()
     {
         Schema::connection('local')->create('api_keys', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->integer('account_id')->unsigned()->unique();
-            $table->string('key')->unique();
+            $table->string('key', 160)->unique(); // MySQL 5.5 limit…
             $table->timestamps();
+
+            //$table->foreign('account_id')->references('id')
+            //      ->on('accounts')->onDelete('cascade');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('api_keys');
+        Schema::connection('local')->dropIfExists('api_keys');
     }
 }

@@ -27,7 +27,7 @@ class CreateAccountsPasswordsTables extends Migration
     {
         if (!Schema::connection('external')->hasTable('accounts')) {
             Schema::connection('external')->create('accounts', function (Blueprint $table) {
-                $table->bigIncrements('id');
+                $table->increments('id');
                 $table->string('username', 64);
                 $table->string('domain', 64);
                 $table->string('email', 64)->nullable();
@@ -43,13 +43,13 @@ class CreateAccountsPasswordsTables extends Migration
 
         if (!Schema::connection('external')->hasTable('passwords')) {
             Schema::connection('external')->create('passwords', function (Blueprint $table) {
-                $table->bigIncrements('id');
+                $table->increments('id');
                 $table->integer('account_id')->unsigned();
                 $table->string('password', 255);
                 $table->string('algorithm', 10)->default('MD5');
 
-                //$table->foreign('account_id')->references('id')
-                //      ->on('accounts')->onDelete('cascade');
+                $table->foreign('account_id')->references('id')
+                      ->on('accounts')->onDelete('cascade');
 
                 $table->timestamps();
             });
