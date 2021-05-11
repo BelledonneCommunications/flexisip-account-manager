@@ -37,7 +37,6 @@ class CreateAccountsPasswordsTables extends Migration
                 $table->string('user_agent', 256);
                 $table->datetime('creation_time');
                 $table->datetime('expire_time')->nullable();
-                $table->timestamps();
             });
         }
 
@@ -50,8 +49,6 @@ class CreateAccountsPasswordsTables extends Migration
 
                 $table->foreign('account_id')->references('id')
                       ->on('accounts')->onDelete('cascade');
-
-                $table->timestamps();
             });
         }
     }
