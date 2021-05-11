@@ -26,7 +26,7 @@ use App\Admin;
 
 class SetAccountAdmin extends Command
 {
-    protected $signature = 'accounts:set-admin {id}';
+    protected $signature = 'accounts:set-admin {sip}';
     protected $description = 'Give the admin role to an account';
 
     public function __construct()
@@ -36,12 +36,19 @@ class SetAccountAdmin extends Command
 
     public function handle()
     {
-        $account = Account::where('id', $this->argument('id'))->first();
+        $account = Account::withoutGlobalScopes()->sip($this->argument('sip'))->first();
 
-        if (!$account) $this->error('Account not found, please use an existing ID');
+        if (!$account) {
+            $this->error('Account not found, please use an existing SIP address');
+            return 1;
+        }
 
         $admin = new Admin;
         $admin->account_id = $account->id;
         $admin->save();
+
+        $this->info('Account '.$this->argument('sip').' is now admin');
+
+        return 0;
     }
 }
