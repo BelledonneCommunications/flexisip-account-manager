@@ -74,6 +74,17 @@ If you set `INSTANCE_CUSTOM_THEME` to true, FlexiAPI will try to load a CSS file
 
 We advise you to copy the `style.css` file and rename it to make your custom CSS configurations for your instance.
 
+#### Flexisip Push notifications pusher
+
+The API endpoint `POST /tokens` uses the `flexisip_pusher` binary delivered by the [Flexisip](https://gitlab.linphone.org/BC/public/flexisip) project (and related package). You must configure the `APP_FLEXISIP_PUSHER_PATH` environement variable to point to the correct binary.
+
+    APP_FLEXISIP_PUSHER_PATH=/opt/belledonne-communications/bin/flexisip_pusher
+
+This binary will be executed under "web user" privileges. Ensure that all the related files required by `flexisip_pusher` can be accessed using this user account.
+
+    /var/opt/belledonne-communications/log/flexisip/flexisip-pusher.log // Write permissions
+    /etc/flexisip/apn/*pem // Read permissions
+
 ### systemd restrictions
 
 To retrieve the devices configuration, FlexiAPI connects to the UNIX socket opened by Flexisip. The socket is located in the `/tmp` directory.

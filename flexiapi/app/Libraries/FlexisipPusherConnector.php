@@ -39,10 +39,11 @@ class FlexisipPusherConnector
         $payload = json_encode(['token' => $token]);
 
         $command = $this->pusherPath
-            . " --pn-provider " . $this->pnProvider
-            . " --pn-param " . $this->pnParam
+            . " --pn-provider '" . $this->pnProvider . "'"
+            . " --pn-param '" . $this->pnParam . "'"
             . " --pn-prid " . $this->pnPrid
-            . " --apple-push-type Background --customPayload " . $payload;
+            . " --apple-push-type Background"
+            . " --customPayload '" . $payload . "'";
 
         $output = null;
         $retval = null;
