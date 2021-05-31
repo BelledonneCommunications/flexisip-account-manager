@@ -194,6 +194,7 @@ function time_elapsed_as_string($secs)
 
     return join(' ', $ret);
 }
+// /!\ ALWAYS enter the const config value under quotes, otherwize it won't be taken into account
 function get_config_value($param_name, $default_value) {
         return defined($param_name) ? constant($param_name) : $default_value;
 }

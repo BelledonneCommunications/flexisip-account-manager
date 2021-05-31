@@ -184,7 +184,7 @@ if (!empty($username)) {
     $xml .= '<entry name="reg_identity"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>&lt;sip:' . $username . '@' . $domain . '&gt;</entry>';
     $xml .= '<entry name="reg_sendregister"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>1</entry>';
     $xml .= '<entry name="refkey"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') .     '>push_notification</entry>';
-    if (get_config_value(CUSTOM_HOOKS, FALSE)) {
+    if (get_config_value("CUSTOM_HOOKS", FALSE)) {
         provisioning_hook_on_proxy_config($xml, $request_params);
     }
     $xml .= '</section>';
@@ -195,14 +195,14 @@ if (!empty($username)) {
         $xml .= '<entry name="ha1"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>' . $ha1 . '</entry>';
         $xml .= '<entry name="realm"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>' . $domain . '</entry>';
         $xml .= '<entry name="algorithm"' . (REMOTE_PROVISIONING_OVERWRITE_ALL ? ' overwrite="true"' : '') . '>' . $algo . '</entry>';
-        if (get_config_value(CUSTOM_HOOKS, FALSE)) {
+        if (get_config_value("CUSTOM_HOOKS", FALSE)) {
             provisioning_hook_on_auth_info($xml, $request_params);
         }
         $xml .= '</section>';
     }
 }
 
-if (get_config_value(CUSTOM_HOOKS, FALSE)) {
+if (get_config_value("CUSTOM_HOOKS", FALSE)) {
     provisioning_hook_on_additional_section($xml, $request_params);
 }
 

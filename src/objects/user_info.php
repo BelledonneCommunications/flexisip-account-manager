@@ -126,7 +126,7 @@ class UserInfo
     {
         $query = "INSERT INTO " . USER_INFO_DB_TABLE . " SET account_id=:account_id, firstname=:firstname, lastname=:lastname, gender=:gender, subscribe=:subscribe";
 
-        if (get_config_value(ENABLE_NEW_ACCOUNTS_GEOLOC, FALSE)) {
+        if (get_config_value("ENABLE_NEW_ACCOUNTS_GEOLOC", FALSE)) {
             $query .= ", country_code=:country_code, country_name=:country_name";
         }
 
@@ -145,7 +145,7 @@ class UserInfo
         $stmt->bindParam(":gender", $this->gender);
         $stmt->bindParam(":subscribe", $this->subscribe);
 
-        if (get_config_value(ENABLE_NEW_ACCOUNTS_GEOLOC, FALSE)) {
+        if (get_config_value("ENABLE_NEW_ACCOUNTS_GEOLOC", FALSE)) {
             $this->country_code = htmlspecialchars(strip_tags($this->country_code));
             $this->country_name = htmlspecialchars(strip_tags($this->country_name));
 
