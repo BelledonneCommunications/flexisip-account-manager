@@ -46,7 +46,7 @@ class Database
               $this->conn = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASSWORD);
             }
 
-            $this->conn->exec("set names utf8");
+            $this->conn->prepare("set names utf8mb4 collate utf8mb4_unicode_ci")->execute();
         } catch (PDOException $exception) {
             Logger::getInstance()->error("Connection error: " . $exception->getMessage());
         }

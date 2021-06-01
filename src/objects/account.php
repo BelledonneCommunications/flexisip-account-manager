@@ -185,7 +185,7 @@ class Account
             $this->activated = "1";
             return true;
         }
-        
+
         Logger::getInstance()->error($stmt->errorInfo());
         return false;
     }
