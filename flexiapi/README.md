@@ -175,3 +175,9 @@ The XML returned by the provisioning endpoint can be completed using hooks.
 
 To do so, copy and rename the `provisioning_hooks.php.example` file into `provisioning_hooks.php` in the configuration directory and complete the functions in the file.
 The functions already contains example codes to show you how the XML can be enhanced or completed.
+
+### Seed liblinphone test accounts
+
+You can also seed the tables with test accounts for the liblinphone test suite with the following command (check LiblinphoneTesterAccoutSeeder for the JSON syntax):
+
+    php artisan accounts:seed /path/to/accounts.json

@@ -19,15 +19,14 @@
 
 namespace App\Console\Commands;
 
-use App\Account;
-use App\AccountTombstone;
-use Carbon\Carbon;
+use Database\Seeders\LiblinphoneTesterAccoutSeeder;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\App;
 
-class ClearOldAccountsTombstones extends Command
+class RunAccountSeeder extends Command
 {
-    protected $signature = 'accounts:clear-accounts-tombstones {days} {--apply}';
-    protected $description = 'Clear deleted accounts tombstones after n days';
+    protected $signature = 'accounts:seed {json-file-path}';
+    protected $description = 'Seed some accounts from a JSON file';
 
     public function __construct()
     {
@@ -36,15 +35,23 @@ class ClearOldAccountsTombstones extends Command
 
     public function handle()
     {
-        $tombstones = AccountTombstone::where('created_at', '<',
-            Carbon::now()->subDays($this->argument('days'))->toDateTimeString()
-        );
+        $file = $this->argument('json-file-path');
 
-        if ($this->option('apply')) {
-            $this->info($tombstones->count() . ' tombstones deleted');
-            $tombstones->delete();
-        } else {
-            $this->info($tombstones->count() . ' tombstones to delete');
+        if (!file_exists($file)) {
+            $this->info('The JSON file doesn\'t exists');
+            return Command::FAILURE;
         }
+
+        $json = json_decode(file_get_contents($file));
+
+        if ($json == null || $json == false) {
+            $this->info('Malformed JSON file');
+            return Command::FAILURE;
+        }
+
+        $seeder = App::make(LiblinphoneTesterAccoutSeeder::class);
+        $seeder->run($json);
+
+        return Command::SUCCESS;
     }
 }
