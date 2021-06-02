@@ -58,43 +58,6 @@ class Device
         return substr($to_string, 0, -2);
     }
 
-    public function dropTable()
-    {
-        $query = "DROP TABLE IF EXISTS " . DEVICES_DB_TABLE;
-
-        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-        $stmt = $this->conn->prepare($query);
-
-        Logger::getInstance()->debug("Dropping table " . DEVICES_DB_TABLE);
-        if ($stmt->execute()) {
-            return true;
-        }
-        Logger::getInstance()->error($stmt->errorInfo());
-        return false;
-    }
-
-    public function createTable()
-    {
-        $query = "CREATE TABLE IF NOT EXISTS " . DEVICES_DB_TABLE . " (
-            id INTEGER(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-            manufacturer VARCHAR(64) NOT NULL,
-            model VARCHAR(34) NOT NULL,
-            status VARCHAR(34) NOT NULL,
-            delay INTEGER(4) NOT NULL DEFAULT 0,
-            hardware_echo_canceller TINYINT(1) NOT NULL DEFAULT 0,
-            PRIMARY KEY (id))";
-
-        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-        $stmt = $this->conn->prepare($query);
-
-        Logger::getInstance()->debug("Creating table " . DEVICES_DB_TABLE);
-        if ($stmt->execute()) {
-            return true;
-        }
-        Logger::getInstance()->error($stmt->errorInfo());
-        return false;
-    }
-
     public function delete()
     {
         $query = "DELETE FROM " . DEVICES_DB_TABLE . " WHERE id = ?";

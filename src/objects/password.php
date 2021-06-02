@@ -50,41 +50,6 @@ class Password
         return substr($to_string, 0, -2);
     }
 
-    public function dropTable()
-    {
-        $query = "DROP TABLE IF EXISTS " . ACCOUNTS_ALGO_DB_TABLE;
-
-        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-        $stmt = $this->conn->prepare($query);
-
-        Logger::getInstance()->debug("Dropping table " . ACCOUNTS_ALGO_DB_TABLE);
-        if ($stmt->execute()) {
-            return true;
-        }
-        Logger::getInstance()->error($stmt->errorInfo());
-        return false;
-    }
-
-    public function createTable()
-    {
-        $query = "CREATE TABLE IF NOT EXISTS " . ACCOUNTS_ALGO_DB_TABLE . " (
-            id INTEGER(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-            account_id INTEGER(11) UNSIGNED NOT NULL,
-            password VARCHAR(255) NOT NULL,
-            algorithm VARCHAR(10) NOT NULL DEFAULT 'MD5',
-            PRIMARY KEY (id), UNIQUE KEY account (account_id, algorithm))";
-
-        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-        $stmt = $this->conn->prepare($query);
-
-        Logger::getInstance()->debug("Creating table " . ACCOUNTS_ALGO_DB_TABLE);
-        if ($stmt->execute()) {
-            return true;
-        }
-        Logger::getInstance()->error($stmt->errorInfo());
-        return false;
-    }
-
     public function delete()
     {
         $query = "DELETE FROM " . ACCOUNTS_ALGO_DB_TABLE;

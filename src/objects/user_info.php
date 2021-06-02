@@ -66,45 +66,6 @@ class UserInfo
         return substr($to_string, 0, -2);
     }
 
-    public function dropTable()
-    {
-        $query = "DROP TABLE IF EXISTS " . USER_INFO_DB_TABLE;
-
-        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-        $stmt = $this->conn->prepare($query);
-
-        Logger::getInstance()->debug("Dropping table " . USER_INFO_DB_TABLE);
-        if ($stmt->execute()) {
-            return true;
-        }
-        Logger::getInstance()->error($stmt->errorInfo());
-        return false;
-    }
-
-    public function createTable()
-    {
-        $query = "CREATE TABLE IF NOT EXISTS " . USER_INFO_DB_TABLE . " (
-                    id INTEGER(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-                    account_id INTEGER(11) UNSIGNED NOT NULL,
-                    firstname VARCHAR(128) NOT NULL,
-                    lastname VARCHAR(128) NOT NULL,
-                    gender enum('male','female') NOT NULL,
-                    country_code VARCHAR(32),
-                    country_name VARCHAR(512),
-                    subscribe enum('0','1') NOT NULL DEFAULT '0',
-                    PRIMARY KEY (id))";
-
-        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-        $stmt = $this->conn->prepare($query);
-
-        Logger::getInstance()->debug("Creating table " . USER_INFO_DB_TABLE);
-        if ($stmt->execute()) {
-            return true;
-        }
-        Logger::getInstance()->error($stmt->errorInfo());
-        return false;
-    }
-
     public function delete()
     {
         $query = "DELETE FROM " . USER_INFO_DB_TABLE . " WHERE id = ?";

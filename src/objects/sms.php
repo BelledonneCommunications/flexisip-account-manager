@@ -50,41 +50,6 @@ class SMS
         return substr($to_string, 0, -2);
     }
 
-    public function dropTable()
-    {
-        $query = "DROP TABLE IF EXISTS " . SMS_DB_TABLE;
-
-        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-        $stmt = $this->conn->prepare($query);
-
-        Logger::getInstance()->debug("Dropping table " . SMS_DB_TABLE);
-        if ($stmt->execute()) {
-            return true;
-        }
-        Logger::getInstance()->error($stmt->errorInfo());
-        return false;
-    }
-
-    public function createTable()
-    {
-        $query = "CREATE TABLE IF NOT EXISTS " . SMS_DB_TABLE . " (
-            id INTEGER(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-            phone VARCHAR(64),
-            last_sms BIGINT(15) UNSIGNED DEFAULT 0,
-            count TINYINT(1) NOT NULL DEFAULT 0,
-            PRIMARY KEY (id), UNIQUE KEY phone (phone))";
-
-        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-        $stmt = $this->conn->prepare($query);
-
-        Logger::getInstance()->debug("Creating table " . SMS_DB_TABLE);
-        if ($stmt->execute()) {
-            return true;
-        }
-        Logger::getInstance()->error($stmt->errorInfo());
-        return false;
-    }
-
     public function delete()
     {
         $query = "DELETE FROM " . SMS_DB_TABLE . " WHERE id = ?";

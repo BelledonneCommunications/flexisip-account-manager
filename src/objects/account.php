@@ -69,47 +69,6 @@ class Account
         return substr($to_string, 0, -2);
     }
 
-    public function dropTable()
-    {
-        $query = "DROP TABLE IF EXISTS " . ACCOUNTS_DB_TABLE;
-
-        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-        $stmt = $this->conn->prepare($query);
-
-        Logger::getInstance()->debug("Dropping table " . ACCOUNTS_DB_TABLE);
-        if ($stmt->execute()) {
-            return true;
-        }
-        Logger::getInstance()->error($stmt->errorInfo());
-        return false;
-    }
-
-    public function createTable()
-    {
-        $query = "CREATE TABLE IF NOT EXISTS " . ACCOUNTS_DB_TABLE . " (
-            id INTEGER(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-            username VARCHAR(64) NOT NULL,
-            domain VARCHAR(64) NOT NULL,
-            email VARCHAR(64) DEFAULT NULL,
-            activated VARCHAR(1) NOT NULL DEFAULT '0',
-            confirmation_key VARCHAR(14) DEFAULT NULL,
-            ip_address VARCHAR(39) NOT NULL,
-            user_agent VARCHAR(256) NOT NULL,
-            creation_time DATETIME NOT NULL,
-            expire_time DATETIME,
-            PRIMARY KEY (id), UNIQUE KEY identity (username, domain))";
-
-        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-        $stmt = $this->conn->prepare($query);
-
-        Logger::getInstance()->debug("Creating table " . ACCOUNTS_DB_TABLE);
-        if ($stmt->execute()) {
-            return true;
-        }
-        Logger::getInstance()->error($stmt->errorInfo());
-        return false;
-    }
-
     public function delete()
     {
         $query = "DELETE FROM " . ACCOUNTS_DB_TABLE . " WHERE id = ?";

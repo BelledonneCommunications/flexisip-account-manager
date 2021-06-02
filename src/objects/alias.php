@@ -50,37 +50,6 @@ class Alias
         return substr($to_string, 0, -2);
     }
 
-    public function dropTable()
-    {
-        $query = "DROP TABLE IF EXISTS " . ALIAS_DB_TABLE;
-        $stmt = $this->conn->prepare($query);
-
-        Logger::getInstance()->debug("Dropping table " . ALIAS_DB_TABLE);
-        if ($stmt->execute()) {
-            return true;
-        }
-        Logger::getInstance()->error($stmt->errorInfo());
-        return false;
-    }
-
-    public function createTable()
-    {
-        $query = "CREATE TABLE IF NOT EXISTS " . ALIAS_DB_TABLE . " (
-            id INTEGER(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-            account_id INTEGER(11) UNSIGNED NOT NULL,
-            alias VARCHAR(64) NOT NULL,
-            domain VARCHAR(64) NOT NULL,
-            PRIMARY KEY (id), UNIQUE KEY identity (alias, domain))";
-        $stmt = $this->conn->prepare($query);
-
-        Logger::getInstance()->debug("Creating table " . ALIAS_DB_TABLE);
-        if ($stmt->execute()) {
-            return true;
-        }
-        Logger::getInstance()->error($stmt->errorInfo());
-        return false;
-    }
-
     public function delete()
     {
         $query = "DELETE FROM " . ALIAS_DB_TABLE;
