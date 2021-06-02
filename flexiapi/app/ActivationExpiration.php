@@ -10,7 +10,6 @@ class ActivationExpiration extends Model
 {
     use HasFactory;
 
-    protected $connection = 'local';
     protected $casts = [
         'expires' => 'datetime:Y-m-d H:i:s',
     ];

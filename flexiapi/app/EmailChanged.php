@@ -23,7 +23,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class EmailChanged extends Model
 {
-    protected $connection = 'local';
     protected $table = 'email_changed';
     protected $hidden = ['id', 'updated_at', 'hash', 'account_id'];
     protected $casts = [

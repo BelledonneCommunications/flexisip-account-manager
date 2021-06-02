@@ -50,7 +50,7 @@ class AccountController extends Controller
         $request->validate([
             'username' => [
                 'required',
-                Rule::unique('external.accounts', 'username')->where(function ($query) use ($request) {
+                Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
                     $query->where('domain', config('app.sip_domain'));
                 }),
                 'filled',

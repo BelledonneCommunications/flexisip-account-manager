@@ -26,7 +26,6 @@ class ApiKey extends Model
 {
     use HasFactory;
 
-    protected $connection = 'local';
     protected $table = 'api_keys';
 
     public function account()

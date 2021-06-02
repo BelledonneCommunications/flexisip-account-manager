@@ -68,7 +68,7 @@ class RegisterController extends Controller
             'privacy' => 'accepted',
             'username' => [
                 'required',
-                Rule::unique('external.accounts', 'username')->where(function ($query) use ($request) {
+                Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
                     $query->where('domain', config('app.sip_domain'));
                 }),
                 'filled',
@@ -107,15 +107,15 @@ class RegisterController extends Controller
             'terms' =>'accepted',
             'privacy' => 'accepted',
             'username' => [
-                Rule::unique('external.accounts', 'username')->where(function ($query) use ($request) {
+                Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
                     $query->where('domain', config('app.sip_domain'));
                 }),
                 'nullable',
                 new WithoutSpaces
             ],
             'phone' => [
-                'required', 'unique:external.aliases,alias',
-                'unique:external.accounts,username',
+                'required', 'unique:aliases,alias',
+                'unique:accounts,username',
                 new WithoutSpaces, 'starts_with:+'
             ],
             'g-recaptcha-response'  => 'required|captcha',

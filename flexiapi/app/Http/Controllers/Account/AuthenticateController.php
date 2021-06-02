@@ -91,10 +91,10 @@ class AuthenticateController extends Controller
     public function authenticateEmail(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|exists:external.accounts,email',
+            'email' => 'required|email|exists:accounts,email',
             'username' => [
                 'required',
-                Rule::exists('external.accounts', 'username')->where(function ($query) use ($request) {
+                Rule::exists('accounts', 'username')->where(function ($query) use ($request) {
                     $query->where('email', $request->get('email'));
                 }),
             ],

@@ -25,37 +25,33 @@ class CreateAccountsPasswordsTables extends Migration
 {
     public function up()
     {
-        if (!Schema::connection('external')->hasTable('accounts')) {
-            Schema::connection('external')->create('accounts', function (Blueprint $table) {
-                $table->increments('id');
-                $table->string('username', 64);
-                $table->string('domain', 64);
-                $table->string('email', 64)->nullable();
-                $table->boolean('activated')->default(false);
-                $table->string('confirmation_key', 14)->nullable();
-                $table->string('ip_address', 39);
-                $table->string('user_agent', 256);
-                $table->datetime('creation_time');
-                $table->datetime('expire_time')->nullable();
-            });
-        }
+        Schema::create('accounts', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('username', 64);
+            $table->string('domain', 64);
+            $table->string('email', 64)->nullable();
+            $table->boolean('activated')->default(false);
+            $table->string('confirmation_key', 14)->nullable();
+            $table->string('ip_address', 39);
+            $table->string('user_agent', 256);
+            $table->datetime('creation_time');
+            $table->datetime('expire_time')->nullable();
+        });
 
-        if (!Schema::connection('external')->hasTable('passwords')) {
-            Schema::connection('external')->create('passwords', function (Blueprint $table) {
-                $table->increments('id');
-                $table->integer('account_id')->unsigned();
-                $table->string('password', 255);
-                $table->string('algorithm', 10)->default('MD5');
+        Schema::create('passwords', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('account_id')->unsigned();
+            $table->string('password', 255);
+            $table->string('algorithm', 10)->default('MD5');
 
-                $table->foreign('account_id')->references('id')
-                      ->on('accounts')->onDelete('cascade');
-            });
-        }
+            $table->foreign('account_id')->references('id')
+                    ->on('accounts')->onDelete('cascade');
+        });
     }
 
     public function down()
     {
-        //Schema::connection('external')->dropIfExists('passwords');
-        //Schema::connection('external')->dropIfExists('accounts');
+        Schema::dropIfExists('passwords');
+        Schema::dropIfExists('accounts');
     }
 }

@@ -26,7 +26,6 @@ class Admin extends Model
 {
     use HasFactory;
 
-    protected $connection = 'local';
     protected $table = 'admins';
     protected $hidden = ['id', 'account_id'];
 

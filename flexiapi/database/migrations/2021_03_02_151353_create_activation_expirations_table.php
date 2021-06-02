@@ -8,19 +8,19 @@ class CreateActivationExpirationsTable extends Migration
 {
     public function up()
     {
-        Schema::connection('local')->create('activation_expirations', function (Blueprint $table) {
+        Schema::create('activation_expirations', function (Blueprint $table) {
             $table->id();
             $table->integer('account_id')->unsigned();
             $table->dateTime('expires');
             $table->timestamps();
 
-            //$table->foreign('account_id')->references('id')
-            //      ->on('accounts')->onDelete('cascade');
+            $table->foreign('account_id')->references('id')
+                  ->on('accounts')->onDelete('cascade');
         });
     }
 
     public function down()
     {
-        Schema::connection('local')->dropIfExists('activation_expirations');
+        Schema::dropIfExists('activation_expirations');
     }
 }

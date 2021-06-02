@@ -73,7 +73,7 @@ class AccountController extends Controller
         $request->validate([
             'username' => [
                 'required',
-                Rule::unique('external.accounts', 'username')->where(function ($query) use ($request) {
+                Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
                     $query->where('domain', config('app.sip_domain'));
                 }),
                 'filled',
@@ -89,8 +89,8 @@ class AccountController extends Controller
                 'nullable',
             ],
             'phone' => [
-                'unique:external.aliases,alias',
-                'unique:external.accounts,username',
+                'unique:aliases,alias',
+                'unique:accounts,username',
                 new WithoutSpaces, 'starts_with:+'
             ]
         ]);

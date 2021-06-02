@@ -8,7 +8,7 @@
 #%define _datadir           %{_datarootdir}
 #%define _docdir            %{_datadir}/doc
 
-%define build_number 76
+%define build_number 77
 %define var_dir /var/opt/belledonne-communications
 %define opt_dir /opt/belledonne-communications/share/flexisip-account-manager
 
@@ -91,8 +91,6 @@ cp -R conf/* "$RPM_BUILD_ROOT/etc/flexisip-account-manager/"
     mkdir -p %{var_dir}/flexiapi/storage/framework/testing
     mkdir -p %{var_dir}/flexiapi/storage/framework/views
     mkdir -p %{var_dir}/flexiapi/bootstrap/cache
-    touch %{var_dir}/flexiapi/storage/db.sqlite
-    touch %{var_dir}/flexiapi/storage/external.db.sqlite
 
     mkdir -p %{var_dir}/log
     touch %{var_dir}/log/account-manager.log
@@ -119,9 +117,6 @@ cp -R conf/* "$RPM_BUILD_ROOT/etc/flexisip-account-manager/"
     if ! test -f %{env_config_file}; then
         cd %{opt_dir}/flexiapi/
         cp .env.example %{env_config_file}
-        sed -i 's/DB_DATABASE=.*/DB_DATABASE=\/var\/opt\/belledonne-communications\/flexiapi\/storage\/db.sqlite/g' %{env_config_file}
-        sed -i 's/DB_EXTERNAL_DRIVER=.*/DB_EXTERNAL_DRIVER=sqlite/g' %{env_config_file}
-        sed -i 's/DB_EXTERNAL_DATABASE=.*/DB_EXTERNAL_DATABASE=\/var\/opt\/belledonne-communications\/flexiapi\/storage\/external.db.sqlite/g' %{env_config_file}
 
         ln -s %{env_config_file} %{env_symlink_file}
 

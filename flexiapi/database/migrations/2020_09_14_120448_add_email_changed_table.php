@@ -25,20 +25,20 @@ class AddEmailChangedTable extends Migration
 {
     public function up()
     {
-        Schema::connection('local')->create('email_changed', function (Blueprint $table) {
+        Schema::create('email_changed', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('account_id')->unsigned()->unique();
             $table->string('new_email');
             $table->string('hash');
             $table->timestamps();
 
-            //$table->foreign('account_id')->references('id')
-            //      ->on('accounts')->onDelete('cascade');
+            $table->foreign('account_id')->references('id')
+                  ->on('accounts')->onDelete('cascade');
         });
     }
 
     public function down()
     {
-        Schema::connection('local')->dropIfExists('email_changed');
+        Schema::dropIfExists('email_changed');
     }
 }

@@ -23,7 +23,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class DigestNonce extends Model
 {
-    protected $connection = 'local';
     protected $table = 'nonces';
 
     public function account()

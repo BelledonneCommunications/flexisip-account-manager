@@ -35,8 +35,8 @@ class AccountPhoneController extends Controller
     {
         $request->validate([
             'phone' => [
-                'required', 'unique:external.aliases,alias',
-                'unique:external.accounts,username',
+                'required', 'unique:aliases,alias',
+                'unique:accounts,username',
                 new WithoutSpaces, 'starts_with:+'
             ]
         ]);

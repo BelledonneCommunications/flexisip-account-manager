@@ -17,16 +17,9 @@ Clone the repository, install the dependencies and generate a key.
     composer install --no-dev
     php artisan key:generate
 
-Then configure the database connection in the `.env` file (from the `.env.example` one). And migrate the tables.
+Then configure the database connection in the `.env` file (from the `.env.example` one). And migrate the tables. The migration *MUST* be run on an empty database.
 
     php artisan migrate
-
-FlexiAPI can store its local tables in a separate SQLite database. To enable it uncomment and complete the following configuration in the .env file
-
-    # DB_DRIVER=sqlite
-    # DB_DATABASE=/home/edhelas/Repositories/flexisip-account-manager/flexiapi/storage/db.sqlite
-
-By default both local and remote data are stored in the Flexisip account database. You can configure it using the `DB_EXTERNAL_*` parameters in the `.env` file.
 
 You can also run the test suit using `phpunit`.
 
@@ -100,11 +93,7 @@ Allow the webserver user to write in the `storage/` directory:
 
     chcon -R -t httpd_sys_rw_content_t storage/
 
-If you have your SQLite DB setup in another directory don't forget to allow write rights as well
-
-    chcon -R -t httpd_sys_rw_content_t db.sqlite
-
-If your external database is locate on a remote machine, you should also allow your webserver user to connect to remote hosts:
+If your database is located on a remote machine, you should also allow your webserver user to connect to remote hosts:
 
     semanage port -a -t http_port_t -p tcp 3306 // Open remote connections on the MySQL port for example
     setsebool httpd_can_network_connect 1 // Allow remote network connected

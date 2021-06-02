@@ -32,7 +32,7 @@ return [
     |
     */
 
-    'default' => 'local',
+    'default' => 'mysql',
 
     /*
     |--------------------------------------------------------------------------
@@ -52,31 +52,17 @@ return [
 
     'connections' => [
 
-        'local' => [
-            'driver' => env('DB_DRIVER', env('DB_EXTERNAL_DRIVER', 'mysql')),
+        'mysql' => [
+            'driver' => env('DB_DRIVER', 'mysql'),
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_EXTERNAL_HOST', '127.0.0.1'),
-            'port' => env('DB_EXTERNAL_PORT', '3306'),
-            'database' => env('DB_DATABASE', env('DB_EXTERNAL_DATABASE', database_path('database.sqlite'))),
-            'username' => env('DB_EXTERNAL_USERNAME', 'forge'),
-            'password' => env('DB_EXTERNAL_PASSWORD', ''),
-            'charset' => env('DB_EXTERNAL_DRIVER', 'mysql') == 'mysql' ? 'utf8mb4' : null,
-            'collation' => env('DB_EXTERNAL_DRIVER', 'mysql') == 'mysql' ? 'utf8mb4_unicode_ci' : null,
-            'prefix' => '',
-            'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
-        ],
-
-        'external' => [
-            'driver' => env('DB_EXTERNAL_DRIVER', 'mysql'),
-            'url' => env('DATABASE_URL'),
-            'host' => env('DB_EXTERNAL_HOST', '127.0.0.1'),
-            'port' => env('DB_EXTERNAL_PORT', '3306'),
-            'database' => env('DB_EXTERNAL_DATABASE', 'forge'),
-            'username' => env('DB_EXTERNAL_USERNAME', 'forge'),
-            'password' => env('DB_EXTERNAL_PASSWORD', ''),
-            'unix_socket' => env('DB_EXTERNAL_SOCKET', ''),
-            'charset' => env('DB_EXTERNAL_DRIVER', 'mysql') == 'mysql' ? 'utf8mb4' : null,
-            'collation' => env('DB_EXTERNAL_DRIVER', 'mysql') == 'mysql' ? 'utf8mb4_unicode_ci' : null,
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'forge'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
             'prefix_indexes' => true,
             'strict' => true,

@@ -9,8 +9,6 @@ class PhoneChangeCode extends Model
 {
     use HasFactory;
 
-    protected $connection = 'local';
-
     public function account()
     {
         return $this->belongsTo('App\Account');

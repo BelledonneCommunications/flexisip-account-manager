@@ -29,14 +29,12 @@ use App\ApiKey;
 use App\Password;
 use App\EmailChanged;
 use App\Helpers\Utils;
-use App\Events\AccountDeleting;
 use App\Mail\ChangingEmail;
 
 class Account extends Authenticatable
 {
     use HasFactory;
 
-    protected $connection = 'external';
     protected $with = ['passwords', 'admin', 'emailChanged', 'alias', 'activationExpiration'];
     protected $hidden = ['alias', 'expire_time', 'confirmation_key'];
     protected $dateTimes = ['creation_time'];
@@ -45,12 +43,6 @@ class Account extends Authenticatable
         'activated' => 'boolean',
     ];
     public $timestamps = false;
-
-    protected $dispatchesEvents = [
-        // Remove all the related data, accross multiple database
-        // and without foreign-keys (sic)
-        'deleting' => AccountDeleting::class,
-    ];
 
     protected static function booted()
     {

@@ -8,20 +8,20 @@ class AddPhoneChangeCodesTable extends Migration
 {
     public function up()
     {
-        Schema::connection('local')->create('phone_change_codes', function (Blueprint $table) {
+        Schema::create('phone_change_codes', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('account_id')->unsigned();
             $table->string('code');
             $table->string('phone');
             $table->timestamps();
 
-            //$table->foreign('account_id')->references('id')
-            //      ->on('accounts')->onDelete('cascade');
+            $table->foreign('account_id')->references('id')
+                  ->on('accounts')->onDelete('cascade');
         });
     }
 
     public function down()
     {
-        Schema::connection('local')->dropIfExists('phone_change_codes');
+        Schema::dropIfExists('phone_change_codes');
     }
 }

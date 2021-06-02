@@ -8,7 +8,7 @@ class CreateTokensTable extends Migration
 {
     public function up()
     {
-        Schema::connection('local')->create('tokens', function (Blueprint $table) {
+        Schema::create('tokens', function (Blueprint $table) {
             $table->id();
             $table->string('token');
             $table->string('pn_provider');
@@ -24,6 +24,6 @@ class CreateTokensTable extends Migration
 
     public function down()
     {
-        Schema::connection('local')->dropIfExists('tokens');
+        Schema::dropIfExists('tokens');
     }
 }

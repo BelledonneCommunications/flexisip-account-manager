@@ -25,18 +25,18 @@ class CreateAdminsTable extends Migration
 {
     public function up()
     {
-        Schema::connection('local')->create('admins', function (Blueprint $table) {
+        Schema::create('admins', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('account_id')->unsigned();
             $table->timestamps();
 
-            //$table->foreign('account_id')->references('id')
-            //      ->on('accounts')->onDelete('cascade');
+            $table->foreign('account_id')->references('id')
+                  ->on('accounts')->onDelete('cascade');
         });
     }
 
     public function down()
     {
-        Schema::connection('local')->dropIfExists('admins');
+        Schema::dropIfExists('admins');
     }
 }
