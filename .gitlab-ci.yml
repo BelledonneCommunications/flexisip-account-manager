@@ -42,7 +42,7 @@ job-centos7-rpm-test:
     when: always
     expire_in: 1 day
 
-job-centos7-rpm-deploy:
+.job-centos7-rpm-deploy:
 
   before_script:
     - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then eval $(ssh-agent -s); fi
@@ -50,7 +50,6 @@ job-centos7-rpm-deploy:
 
   stage: deploy
   tags: [ "docker-centos7" ]
-
   only:
     refs:
       - master
@@ -62,7 +61,17 @@ job-centos7-rpm-deploy:
 
   script:
     - cd rpmbuild/x86_64
-    - for deploydir in $CENTOS7_DEPLOY_DIRECTORY $CENTOS7_LEGACY_DEPLOY_DIRECTORY; do
-        rsync -e "ssh -o StrictHostKeyChecking=no" -pr . $DEPLOY_SERVER:$deploydir;
-        ssh $DEPLOY_SERVER "chmod a+r $deploydir/*.rpm && createrepo_c --update $deploydir/.";
-      done
+    - rsync -e "ssh -o StrictHostKeyChecking=no" -pr . $DEPLOY_SERVER:$CENTOS7_DEPLOY_DIRECTORY_STATE;
+      ssh $DEPLOY_SERVER "chmod a+r $CENTOS7_DEPLOY_DIRECTORY_STATE/*.rpm && createrepo_c --update $CENTOS7_DEPLOY_DIRECTORY_STATE/.";
+
+job-centos7-rpm-deploy-stable:
+
+  extends: .job-centos7-rpm-deploy
+  variables:
+     CENTOS7_DEPLOY_DIRECTORY_STATE: $CENTOS7_DEPLOY_DIRECTORY_STABLE
+
+job-centos7-rpm-deploy-alpha:
+
+  extends: .job-centos7-rpm-deploy
+  variables:
+     CENTOS7_DEPLOY_DIRECTORY_STATE: $CENTOS7_DEPLOY_DIRECTORY_ALPHA
