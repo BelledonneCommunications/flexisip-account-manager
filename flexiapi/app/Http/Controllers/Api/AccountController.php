@@ -22,8 +22,8 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Rules\WithoutSpaces;
 use Carbon\Carbon;
 
 use App\Account;
@@ -86,6 +86,8 @@ class AccountController extends Controller
 
         $account->updatePassword($request->get('password'), $request->get('algorithm'));
 
+        Log::channel('events')->info('API: Account created', ['id' => $account->identifier]);
+
         // Full reload
         return Account::withoutGlobalScopes()->find($account->id);
     }
@@ -106,6 +108,8 @@ class AccountController extends Controller
         $account->confirmation_key = null;
         $account->save();
 
+        Log::channel('events')->info('API: Account activated by email', ['id' => $account->identifier]);
+
         return $account;
     }
 
@@ -124,6 +128,8 @@ class AccountController extends Controller
         $account->activated = true;
         $account->confirmation_key = null;
         $account->save();
+
+        Log::channel('events')->info('API: Account activated by phone', ['id' => $account->identifier]);
 
         return $account;
     }

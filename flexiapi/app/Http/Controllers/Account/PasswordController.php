@@ -22,6 +22,7 @@ namespace App\Http\Controllers\Account;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 use App\Helpers\Utils;
 use App\Mail\ConfirmedRegistration;
@@ -58,6 +59,9 @@ class PasswordController extends Controller
                 )) {
                     $account->updatePassword($request->get('password'), $algorithm);
                     $request->session()->flash('success', 'Password successfully changed');
+
+                    Log::channel('events')->info('Web: Password changed', ['id' => $account->identifier]);
+
                     return redirect()->route('account.panel');
                 }
             }
@@ -66,6 +70,8 @@ class PasswordController extends Controller
         } else {
             // No password yet
             $account->updatePassword($request->get('password'), $algorithm);
+
+            Log::channel('events')->info('Web: Password set for the first time', ['id' => $account->identifier]);
 
             if (!empty($account->email)) {
                 Mail::to($account)->send(new ConfirmedRegistration($account));

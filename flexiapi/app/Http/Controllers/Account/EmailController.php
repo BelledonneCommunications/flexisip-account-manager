@@ -22,6 +22,7 @@ namespace App\Http\Controllers\Account;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 
 use App\Http\Controllers\Controller;
 use App\Mail\ChangedEmail;
@@ -50,6 +51,8 @@ class EmailController extends Controller
 
         $request->user()->requestEmailUpdate($request->get('email'));
 
+        Log::channel('events')->info('Web: Email change requested', ['id' => $request->user()->identifier]);
+
         $request->session()->flash('success', 'An email was sent with a confirmation link. Please click it to update your email address.');
         return redirect()->route('account.panel');
     }
@@ -65,6 +68,8 @@ class EmailController extends Controller
             Mail::to($account)->send(new ChangedEmail());
 
             $account->emailChanged->delete();
+
+            Log::channel('events')->info('Web: Email change updated', ['id' => $account->identifier]);
 
             $request->session()->flash('success', 'Email successfully updated');
             return redirect()->route('account.panel');

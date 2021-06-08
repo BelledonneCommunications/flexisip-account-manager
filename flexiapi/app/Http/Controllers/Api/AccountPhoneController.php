@@ -20,6 +20,7 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
 use App\Rules\WithoutSpaces;
@@ -49,6 +50,8 @@ class AccountPhoneController extends Controller
         $phoneChangeCode->code = Utils::generatePin();
         $phoneChangeCode->save();
 
+        Log::channel('events')->info('API: Account phone change requested by SMS', ['id' => $account->identifier]);
+
         $ovhSMS = new OvhSMS;
         $ovhSMS->send($request->get('phone'), 'Your ' . config('app.name') . ' validation code is ' . $phoneChangeCode->code);
     }
@@ -70,6 +73,8 @@ class AccountPhoneController extends Controller
             $alias->domain = config('app.sip_domain');
             $alias->account_id = $account->id;
             $alias->save();
+
+            Log::channel('events')->info('API: Account phone changed using SMS', ['id' => $account->identifier]);
 
             $phoneChangeCode->delete();
 

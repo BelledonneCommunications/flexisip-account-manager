@@ -23,6 +23,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 use App\Account;
@@ -140,6 +141,8 @@ class AccountController extends Controller
 
         // Full reload
         $account = Account::withoutGlobalScopes()->find($account->id);
+
+        Log::channel('events')->info('API: Admin: Account created', ['id' => $account->identifier]);
 
         return response()->json($account->makeVisible(['confirmation_key']));
     }

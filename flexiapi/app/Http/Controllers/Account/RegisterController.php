@@ -23,6 +23,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 
@@ -96,6 +97,8 @@ class RegisterController extends Controller
             Mail::to(config('app.newsletter_registration_address'))->send(new NewsletterRegistration($account));
         }
 
+        Log::channel('events')->info('Web: Account created using an email confirmation', ['id' => $account->identifier]);
+
         Mail::to($account)->send(new RegisterConfirmation($account));
 
         return redirect()->route('account.check.email', $account->identifier);
@@ -145,6 +148,8 @@ class RegisterController extends Controller
 
         $ovhSMS = new OvhSMS;
         $ovhSMS->send($request->get('phone'), 'Your '.config('app.name').' validation code is '.$account->confirmation_key);
+
+        Log::channel('events')->info('Web: Account created using an SMS confirmation', ['id' => $account->identifier]);
 
         return view('account.authenticate.phone', [
             'account' => $account

@@ -35,6 +35,13 @@ return [
     */
 
     'channels' => [
+        'events' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/events.log'),
+            'level' => 'info',
+            'days' => 30
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],

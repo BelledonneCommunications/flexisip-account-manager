@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 use App\Helpers\Utils;
 use App\Mail\ConfirmedRegistration;
@@ -33,6 +34,9 @@ class PasswordController extends Controller
                     Utils::bchash($account->username, $account->resolvedRealm, $request->get('old_password'), $password->algorithm)
                 )) {
                     $account->updatePassword($request->get('password'), $algorithm);
+
+                    Log::channel('events')->info('API: Account password updated', ['id' => $account->identifier]);
+
                     return response()->json();
                 }
             }

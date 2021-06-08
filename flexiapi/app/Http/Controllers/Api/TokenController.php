@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 use App\Token;
 use App\Libraries\FlexisipPusherConnector;
@@ -44,6 +45,8 @@ class TokenController extends Controller
         // Send the token to the device via Push Notification
         $fp = new FlexisipPusherConnector($token->pn_provider, $token->pn_param, $token->pn_prid);
         if ($fp->sendToken($token->token)) {
+            Log::channel('events')->info('API: Token sent', ['token' => $token->token]);
+
             $token->save();
         } else {
             abort(503, "Token not sent");
