@@ -231,6 +231,6 @@ class AuthenticateDigestOrKey
 
     private function getOpaque(): string
     {
-        return base64_encode(env('APP_KEY'));
+        return base64_encode(config('app.key'));
     }
 }
