@@ -29,6 +29,12 @@ return [
     'transport_protocol_text' => env('ACCOUNT_TRANSPORT_PROTOCOL_TEXT', 'TLS (recommended), TCP or UDP'),
 
     /**
+     * Account provisioning
+     */
+    'provisioning_rc_file' => env('ACCOUNT_PROVISIONING_RC_FILE', ''),
+    'provisioning_overwrite_all' => env('ACCOUNT_PROVISIONING_OVERWRITE_ALL', false),
+
+    /**
      * Set a global realm for all the accounts, if not set, the account domain
      * will be used as a fallback
      */

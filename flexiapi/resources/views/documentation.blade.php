@@ -13,11 +13,11 @@
 > content-type: application/json
 > accept: application/json</code></pre>
 
-<h2>Authentication</h2>
+<h2 id="authentication"><a href="#authentication">Authentication</a></h2>
 
 <p>Restricted endpoints are protected using a DIGEST authentication or an API Key mechanisms.</p>
 
-<h3>Using the API Key</h3>
+<h3 id="authentication_api_key"><a href="#authentication_api_key">Using the API Key</a></h3>
 
 <p>To authenticate using an API Key, you need to <a href="{{ route('account.login') }}">authenticate to your account panel</a> and being an administrator.</p>
 <p>On your panel you will then find a form to generate your personnal key.</p>
@@ -30,7 +30,7 @@
     > x-api-key: {your-api-key}
     > …</code></pre>
 
-<h3>Using DIGEST</h3>
+<h3 id="authentication_digest"><a href="#authentication_digest">Using DIGEST</a></h3>
 
 <p>To discover the available hashing algorythm you MUST send an unauthenticated request to one of the restricted endpoints.<br />
 For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the authentication layer.</p>
@@ -46,9 +46,9 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
 
 <p>You can find more documentation on the related <a href="https://tools.ietf.org/html/rfc7616">IETF RFC-7616</a>.</p>
 
-<h2>Endpoints</h2>
+<h2 id="endpoints"><a href="#endpoints">Endpoints</a></h2>
 
-<h3>Public endpoints</h3>
+<h3 id="public_endpoints"><a href="#public_endpoints">Public endpoints</a></h3>
 
 <h4><code>GET /ping</code></h4>
 <p>Returns <code>pong</code></p>
@@ -100,7 +100,7 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
     <li><code>code</code> the PIN code</li>
 </ul>
 
-<h3>User authenticated endpoints</h3>
+<h3 id="authenticated_endpoints"><a href="#authenticated_endpoints">User authenticated endpoints</a></h3>
 <p>Those endpoints are authenticated and requires an activated account.</p>
 
 <h4><code>GET /accounts/me</code></h4>
@@ -151,7 +151,7 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
 <h4><code>DELETE /accounts/me/devices/{uuid}</code></h4>
 <p>Remove one of the user registered devices.</p>
 
-<h3>Admin endpoints</h3>
+<h3 id="admin_endpoints"><a href="#admin_endpoints">Admin endpoints</a></h3>
 
 <p>Those endpoints are authenticated and requires an admin account.</p>
 
@@ -185,5 +185,18 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
 
 <h4><code>GET /accounts/{id}/deactivate</code></h4>
 <p>Deactivate an account.</p>
+
+<h2 id="provisioning"><a href="#provisioning">Provisioning</a></h2>
+
+<p>When an account is having an available <code>confirmation_key</code> it can be provisioned using the two following URL.</p>
+
+<p>Those two URL are <b>not API endpoints</b>, they are not located under <code>/api</code>.
+
+<h4><code>VISIT /provisioning/{confirmation_key}</code></h4>
+<p>Return the provisioning information available in the liblinphone configuration file (if correctly configured).</p>
+<p>If the <code>confirmation_key</code> is valid the related account information are added to the returned XML. The account is then considered as "provisioned" and those account related information will be removed in the upcoming requests.</p>
+
+<h4><code>VISIT /provisioning/qrcode/{confirmation_key}</code></h4>
+<p>Return a QRCode that points to the provisioning URL.</p>
 
 @endsection

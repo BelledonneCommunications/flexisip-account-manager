@@ -1,0 +1,72 @@
+<?php
+
+use App\Account;
+use App\Password;
+use Illuminate\Http\Request;
+
+/**
+ * This file contains hooks functions used by the provisioning query
+ * Check the commented code to have an overview of what can be done using the parameters
+ */
+
+ /**
+  * @brief Complete the proxy section XML node
+  * @param DOMElement $proxySection
+  * @param Request $request
+  * @param Account $account
+  * @return void
+  */
+function provisioningProxyHook(\DOMElement $proxySection, Request $request, Account $account)
+{
+    /*
+    // Transfort get parameters from the URI into entries
+    foreach ($request->all() as $parameterKey => $parameterValue) {
+        $entry = $proxySection->ownerDocument->createElement('entry', $parameterValue);
+        $entry->setAttribute('name', $parameterKey);
+
+        // Overwrite an existing value
+        $entry->setAttribute('overwrite', 'true');
+
+        $proxySection->appendChild($entry);
+    }
+    */
+}
+
+ /**
+  * @brief Complete a Auth section XML node
+  * @param DOMElement $proxySection
+  * @param Request $request
+  * @param Password $password
+  * @return void
+  */
+function provisioningAuthHook(\DOMElement $authSection, Request $request, Password $password)
+{
+    /*
+    // Inject the related account domain into the request
+    $entry = $authSection->ownerDocument->createElement('entry', $password->account->domain);
+    $entry->setAttribute('name', 'domain');
+    $authSection->appendChild($entry);
+    */
+}
+
+ /**
+  * @brief Complete the proxy section XML node, the Account might be passed as a parameter if resolved
+  * @param DOMElement $proxySection
+  * @param Request $request
+  * @param Account $account
+  * @return void
+  */
+function provisioningAdditionalSectionHook(\DOMElement $config, Request $request, ?Account $account)
+{
+    /*
+    // Add another section
+    $section = $config->ownerDocument->createElement('section');
+    $section->setAttribute('name', 'new_section');
+
+    $entry = $config->ownerDocument->createElement('entry', 'entry_value');
+    $entry->setAttribute('name', 'entry_key');
+    $section->appendChild($entry);
+
+    $config->appendChild($section);
+    */
+}

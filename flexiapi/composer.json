@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.3",
         "anhskohbo/no-captcha": "^3.3",
+        "endroid/qr-code": "^4.1",
         "fideloper/proxy": "^4.4",
         "laravel/framework": "^8.0",
         "laravel/tinker": "^2.4",

@@ -107,6 +107,14 @@ The `/api` page contains all the required documentation to authenticate and requ
 
 FlexiAPI is shipped with several console commands that you can launch using the `artisan` executable available at the root of this project.
 
+### Migrate an old database
+
+FlexiAPI needs an empty database to run its migration. The following console command allow you to import simultanously an exisiting FlexiSIP database and the old FlexiAPI SQLite database file in the new one. To do so, please specify the new database configuration in the `.env` file and run the following command.
+
+    php artisan db:import {old_dbname} {old_sqlite_file_path} --username={old_username} --password={old_password}
+
+You can also specify the `port`, `host` and `database type` as a parameter.
+
 ### Clear Expired Nonces for DIGEST authentication
 
 This will remove the nonces stored that were not updated after `x minutes`.
@@ -128,3 +136,14 @@ This command will set the admin role to any available FlexiSIP account (the exte
     php artisan accounts:set-admin {account_id}
 
 Once one account is declared as administrator, you can directly configure the other ones using the web panel.
+
+## Provisioning
+
+FlexiAPI is providing endpoints to provision Liblinphone powered devices. You can find more documentation about it on the `/api#provisioning` documentation page.
+
+### Provisioning hooks
+
+The XML returned by the provisioning endpoint can be completed using hooks.
+
+To do so, copy and rename the `provisioning_hooks.php.example` file into `provisioning_hooks.php` and complete the functions in the file.
+The functions already contains example codes to show you how the XML can be enhanced or completed.
