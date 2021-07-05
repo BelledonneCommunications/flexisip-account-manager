@@ -17,7 +17,7 @@ use App\PhoneChangeCode;
 
 class ImportDatabase extends Command
 {
-    protected $signature = 'db:import {dbname} {sqlitefilepath} {--u|username=} {--p|password=} {--P|port=3306} {--t|type=mysql} {--host=localhost}';
+    protected $signature = 'db:import {dbname} {sqlite-file-path?} {--u|username=} {--p|password=} {--P|port=3306} {--t|type=mysql} {--host=localhost} {--accounts-table=accounts} {--aliases-table=aliases} {--passwords-table=passwords}';
     protected $description = 'Import an existing Flexisip database into FlexiAPI';
     private $_pagination = 1000;
 
@@ -52,10 +52,14 @@ class ImportDatabase extends Command
             'prefix'    => '',
         ], 'default');
 
-        $capsule->addConnection([
-            'driver'    => 'sqlite',
-            'database'  => $this->argument('sqlitefilepath'),
-        ], 'sqlite');
+        if (!$this->argument('sqlite-file-path')) {
+            $this->confirm('No SQLite database file was specified : Do you wish to continue?');
+        } else {
+            $capsule->addConnection([
+                'driver'    => 'sqlite',
+                'database'  => $this->argument('sqlite-file-path'),
+            ], 'sqlite');
+        }
 
         $capsule->setAsGlobal();
 
@@ -65,7 +69,7 @@ class ImportDatabase extends Command
             return 1;
         }
 
-        $accountsCount = Capsule::table('accounts')->count();
+        $accountsCount = Capsule::table($this->option('accounts-table'))->count();
 
         if ($this->confirm($accountsCount . ' accounts will be migrated : Do you wish to continue?')) {
             // Accounts
@@ -76,7 +80,7 @@ class ImportDatabase extends Command
             $bar = $this->output->createProgressBar($pages);
 
             for ($page = 0; $page <= $pages; $page++) {
-                $originAccounts = Capsule::table('accounts')
+                $originAccounts = Capsule::table($this->option('accounts-table'))
                                          ->take($this->_pagination)
                                          ->skip($page*$this->_pagination)
                                          ->get()
@@ -104,11 +108,11 @@ class ImportDatabase extends Command
             // Passwords
             $this->info('Migrating the passwords');
 
-            $pages = Capsule::table('accounts')->count() / $this->_pagination;
+            $pages = Capsule::table($this->option('passwords-table'))->count() / $this->_pagination;
             $bar = $this->output->createProgressBar($pages);
 
             for ($page = 0; $page <= $pages; $page++) {
-                $originPasswords = Capsule::table('passwords')
+                $originPasswords = Capsule::table($this->option('passwords-table'))
                                           ->take($this->_pagination)
                                           ->skip($page*$this->_pagination)
                                           ->get()
@@ -129,11 +133,11 @@ class ImportDatabase extends Command
             // Aliases
             $this->info('Migrating the aliases');
 
-            $pages = Capsule::table('aliases')->count() / $this->_pagination;
+            $pages = Capsule::table($this->option('aliases-table'))->count() / $this->_pagination;
             $bar = $this->output->createProgressBar($pages);
 
             for ($page = 0; $page <= $pages; $page++) {
-                $originAliases = Capsule::table('aliases')
+                $originAliases = Capsule::table($this->option('aliases-table'))
                                           ->take($this->_pagination)
                                           ->skip($page*$this->_pagination)
                                           ->get()
@@ -149,62 +153,66 @@ class ImportDatabase extends Command
 
             $bar->finish();
 
-            $this->newLine();
+            // SQLite database migration
 
-            $this->info('Migrating the admins');
+            if ($this->argument('sqlite-file-path')) {
+                $this->newLine();
 
-            $originAdmins = Capsule::connection('sqlite')
-                                        ->table('admins')
-                                        ->get()
-                                        ->map(function ($element) {
-                                            return (array)$element;
-                                        })
-                                        ->toArray();
-            Admin::insert($originAdmins);
+                $this->info('Migrating the admins');
 
-            $this->info('Migrating the api keys');
+                $originAdmins = Capsule::connection('sqlite')
+                                            ->table('admins')
+                                            ->get()
+                                            ->map(function ($element) {
+                                                return (array)$element;
+                                            })
+                                            ->toArray();
+                Admin::insert($originAdmins);
 
-            $originApiKeys = Capsule::connection('sqlite')
-                                        ->table('api_keys')
-                                        ->get()
-                                        ->map(function ($element) {
-                                            return (array)$element;
-                                        })
-                                        ->toArray();
-            ApiKey::insert($originApiKeys);
+                $this->info('Migrating the api keys');
 
-            $this->info('Migrating the nonces');
+                $originApiKeys = Capsule::connection('sqlite')
+                                            ->table('api_keys')
+                                            ->get()
+                                            ->map(function ($element) {
+                                                return (array)$element;
+                                            })
+                                            ->toArray();
+                ApiKey::insert($originApiKeys);
 
-            $originNonces = Capsule::connection('sqlite')
-                                        ->table('nonces')
-                                        ->get()
-                                        ->map(function ($element) {
-                                            return (array)$element;
-                                        })
-                                        ->toArray();
-            DigestNonce::insert($originNonces);
+                $this->info('Migrating the nonces');
 
-            $this->info('Migrating the email changed');
+                $originNonces = Capsule::connection('sqlite')
+                                            ->table('nonces')
+                                            ->get()
+                                            ->map(function ($element) {
+                                                return (array)$element;
+                                            })
+                                            ->toArray();
+                DigestNonce::insert($originNonces);
 
-            $originEmailChanged = Capsule::connection('sqlite')
-                                        ->table('email_changed')
-                                        ->get()
-                                        ->map(function ($element) {
-                                            return (array)$element;
-                                        })
-                                        ->toArray();
-            EmailChanged::insert($originEmailChanged);
+                $this->info('Migrating the email changed');
 
-            $this->info('Migrating the phone change code');
+                $originEmailChanged = Capsule::connection('sqlite')
+                                            ->table('email_changed')
+                                            ->get()
+                                            ->map(function ($element) {
+                                                return (array)$element;
+                                            })
+                                            ->toArray();
+                EmailChanged::insert($originEmailChanged);
 
-            $originPhoneChangeCodes = Capsule::connection('sqlite')
-                                        ->table('phone_change_codes')
-                                        ->get()
-                                        ->map(function ($element) {
-                                            return (array)$element;
-                                        })
-                                        ->toArray();
-            PhoneChangeCode::insert($originPhoneChangeCodes);
+                $this->info('Migrating the phone change code');
+
+                $originPhoneChangeCodes = Capsule::connection('sqlite')
+                                            ->table('phone_change_codes')
+                                            ->get()
+                                            ->map(function ($element) {
+                                                return (array)$element;
+                                            })
+                                            ->toArray();
+                PhoneChangeCode::insert($originPhoneChangeCodes);
+            }
 
             $this->enableForeignKeyCheck();
 

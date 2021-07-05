@@ -109,11 +109,11 @@ FlexiAPI is shipped with several console commands that you can launch using the 
 
 ### Migrate an old database
 
-FlexiAPI needs an empty database to run its migration. The following console command allow you to import simultanously an exisiting FlexiSIP database and the old FlexiAPI SQLite database file in the new one. To do so, please specify the new database configuration in the `.env` file and run the following command.
+FlexiAPI needs an empty database to run its migration. The following console command allow you to import simultanously an exisiting FlexiSIP database and the old FlexiAPI SQLite database file (if you have one) in the new one. To do so, please specify the new database configuration in the `.env` file and run the following command.
 
-    php artisan db:import {old_dbname} {old_sqlite_file_path} --username={old_username} --password={old_password}
+    php artisan db:import {old_dbname} {old_sqlite_file_path?} --username={old_username} --password={old_password}
 
-You can also specify the `port`, `host` and `database type` as a parameter.
+You can also specify the `port`, `host` and `database type` as a parameter, as well as the table name for the accounts (default `accounts`), passwords (default `passwords`) and aliases (default `aliases`).
 
 ### Clear Expired Nonces for DIGEST authentication
 
