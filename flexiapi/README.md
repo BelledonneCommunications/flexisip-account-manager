@@ -113,7 +113,9 @@ FlexiAPI needs an empty database to run its migration. The following console com
 
     php artisan db:import {old_dbname} {old_sqlite_file_path?} --username={old_username} --password={old_password}
 
-You can also specify the `port`, `host` and `database type` as a parameter, as well as the table name for the accounts (default `accounts`), passwords (default `passwords`) and aliases (default `aliases`).
+Several other parameters are also available to customize the migration process, you can list them all using the command documentation.
+
+    php artisan -h db:import
 
 ### Clear Expired Nonces for DIGEST authentication
 

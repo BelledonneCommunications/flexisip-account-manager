@@ -73,4 +73,7 @@ Route::group(['middleware' => 'auth.admin'], function () {
     Route::get('admin/accounts/{id}/deactivate', 'Admin\AccountController@deactivate')->name('admin.account.deactivate');
     Route::get('admin/accounts/{id}/admin', 'Admin\AccountController@admin')->name('admin.account.admin');
     Route::get('admin/accounts/{id}/unadmin', 'Admin\AccountController@unadmin')->name('admin.account.unadmin');
+
+    Route::get('admin/accounts/{id}/delete', 'Admin\AccountController@delete')->name('admin.account.delete');
+    Route::delete('admin/accounts', 'Admin\AccountController@destroy')->name('admin.account.destroy');
 });

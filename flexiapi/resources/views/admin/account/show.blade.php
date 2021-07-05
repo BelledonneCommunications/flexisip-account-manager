@@ -33,10 +33,23 @@
 
 <p>
     @if ($account->admin)
-        <span class="badge badge-success">Activated</span> <a href="{{ route('admin.account.unadmin', $account->id) }}">Remove admin role</a>
+        <span class="badge badge-success">Admin</span> <a href="{{ route('admin.account.unadmin', $account->id) }}">Remove admin role</a>
     @else
-        <span class="badge badge-danger">Unactivated</span> <a href="{{ route('admin.account.admin', $account->id) }}">Add admin role</a>
+        <span class="badge badge-danger">Not Admin</span> <a href="{{ route('admin.account.admin', $account->id) }}">Add admin role</a>
     @endif
 </p>
+
+<a class="btn btn-danger" href="{{ route('admin.account.delete', $account->id) }}">Delete the account</a>
+
+@if ($account->confirmation_key)
+    <h3 class="mt-3">Provisioning</h3>
+    <p>Share the following picture with the user or the one-time-use link bellow.</p>
+
+    <img src="{{ route('provisioning.qrcode', $account->confirmation_key) }}"><br />
+
+    <br />
+    <p>The following link can only be visited once</p>
+    <input class="form-control" type="text" readonly value="{{ route('provisioning.show', $account->confirmation_key) }}">
+@endif
 
 @endsection

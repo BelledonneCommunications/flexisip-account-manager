@@ -29,31 +29,31 @@
     <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">Identifier</th>
-            <th scope="col">Email</th>
+            <th scope="col">Identifier (email)</th>
             <th scope="col">Created</th>
-            <th scope="col">Tags</th>
         </tr>
     </thead>
     <tbody>
         @foreach ($accounts as $account)
             <tr>
                 <th scope="row">
-                <a href="{{ route('admin.account.show', $account->id) }}">{{ $account->id }}</a>
-                </th>
-                <td>{{ $account->identifier }}</td>
-                <td>{{ $account->email }}</td>
-                <td>{{ $account->creation_time}}</td>
-                <td>
+                    <a href="{{ route('admin.account.show', $account->id) }}">{{ $account->id }}</a>
+                    <br />
                     @if ($account->activated)
                         <span class="badge badge-success">Activated</span>
                     @else
                         <span class="badge badge-danger">Unactivated</span>
                     @endif
                     @if ($account->admin)
-                        <span class="badge badge-primary">Admin</span>
+                        <br /><span class="badge badge-primary">Admin</span>
+                    @endif
+                </th>
+                <td>{{ $account->identifier }}
+                    @if ($account->email)
+                        (<a href="mailto:{{ $account->email }}">{{ $account->email }}</a>)
                     @endif
                 </td>
+                <td>{{ $account->creation_time}}</td>
             </tr>
         @endforeach
 

@@ -94,6 +94,23 @@ class AccountController extends Controller
         return redirect()->back();
     }
 
+    public function delete(Request $request, $id)
+    {
+        return view('admin.account.delete', [
+            'account' => Account::findOrFail($id)
+        ]);
+    }
+
+    public function destroy(Request $request)
+    {
+        $account = Account::findOrFail($request->get('account_id'));
+        $account->delete();
+
+        $request->session()->flash('success', 'Account successfully destroyed');
+
+        return redirect()->route('admin.account.index');
+    }
+
     public function generateApiKey(Request $request)
     {
         $account = $request->user();
