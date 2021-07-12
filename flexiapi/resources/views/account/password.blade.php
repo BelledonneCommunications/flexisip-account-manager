@@ -9,12 +9,7 @@
 @endif
 
 {!! Form::open(['route' => 'account.password.update']) !!}
-@if ($account->passwords()->count() > 0)
-    <div class="form-group">
-        {!! Form::label('old_password', 'Old password') !!}
-        {!! Form::password('old_password', ['class' => 'form-control', 'required']) !!}
-    </div>
-@endif
+
 <div class="form-group">
     {!! Form::label('password', 'New password') !!}
     {!! Form::password('password', ['class' => 'form-control', 'required']) !!}

@@ -48,38 +48,20 @@ class PasswordController extends Controller
 
         $algorithm = $request->has('password_sha256') ? 'SHA-256' : 'MD5';
 
+        $account->updatePassword($request->get('password'), $algorithm);
+
         if ($account->passwords()->count() > 0) {
-            $request->validate(['old_password' => 'required']);
-
-            foreach ($account->passwords as $password) {
-                // If one of the password stored equals the one entered
-                if (hash_equals(
-                    $password->password,
-                    Utils::bchash($account->username, $account->resolvedRealm, $request->get('old_password'), $password->algorithm)
-                )) {
-                    $account->updatePassword($request->get('password'), $algorithm);
-                    $request->session()->flash('success', 'Password successfully changed');
-
-                    Log::channel('events')->info('Web: Password changed', ['id' => $account->identifier]);
-
-                    return redirect()->route('account.panel');
-                }
-            }
-
-            return redirect()->back()->withErrors(['old_password' => 'Old password not correct']);
+            Log::channel('events')->info('Web: Password changed', ['id' => $account->identifier]);
+            $request->session()->flash('success', 'Password successfully changed');
         } else {
-            // No password yet
-            $account->updatePassword($request->get('password'), $algorithm);
-
             Log::channel('events')->info('Web: Password set for the first time', ['id' => $account->identifier]);
+            $request->session()->flash('success', 'Password successfully set. Your SIP account creation process is now finished.');
 
             if (!empty($account->email)) {
                 Mail::to($account)->send(new ConfirmedRegistration($account));
             }
-
-            $request->session()->flash('success', 'Password successfully set. Your SIP account creation process is now finished.');
-
-            return redirect()->route('account.panel');
         }
+
+        return redirect()->route('account.panel');
     }
 }
