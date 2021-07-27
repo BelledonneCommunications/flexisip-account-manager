@@ -18,6 +18,7 @@
 */
 
 Route::get('/', 'Account\AccountController@home')->name('account.home');
+Route::get('documentation', 'Account\AccountController@documentation')->name('account.documentation');
 
 Route::get('login', 'Account\AuthenticateController@login')->name('account.login');
 Route::post('authenticate', 'Account\AuthenticateController@authenticate')->name('account.authenticate');

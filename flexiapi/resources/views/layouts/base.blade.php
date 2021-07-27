@@ -24,6 +24,7 @@
             @if (config('instance.copyright'))
                 {{ config('instance.copyright') }} |
             @endif
+            <a href="{{ route('account.documentation') }}">Documentation</a> |
             <a href="{{ route('api') }}">API</a>
         </footer>
     </body>

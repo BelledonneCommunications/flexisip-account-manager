@@ -19,11 +19,12 @@
 
 namespace App\Http\Controllers\Account;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\Http\Controllers\Controller;
 use App\Account;
+use App\Helpers\Utils;
 
 class AccountController extends Controller
 {
@@ -35,6 +36,13 @@ class AccountController extends Controller
 
         return view('account.home', [
             'count' => Account::where('activated', true)->count()
+        ]);
+    }
+
+    public function documentation(Request $request)
+    {
+        return view('account.documentation', [
+            'documentation' => Utils::markdownDocumentationView('account.documentation_markdown')
         ]);
     }
 

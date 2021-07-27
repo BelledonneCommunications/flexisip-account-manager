@@ -1,6 +1,6 @@
 # FlexiAPI
 
-This tool connects to the Flexisip CLI interface and exposes several endpoints to request and manage it.
+FlexiAPI brings a web panel and a REST API to manage and handle Flexisip accounts related features.
 
 ## DotEnv configuration
 
@@ -36,19 +36,30 @@ Complete all the other variables in the `.env` file or by overwritting them in y
 
 FlexiAPI can also handle multi domains setup.
 
-To do so, configure several web servers virtualhosts and set a specific `APP_ENV` environement variable in each of them.
+#### Multiple virtualhosts option
+
+In your web server configuration create several virtualhosts that are pointing to the same FlexiAPI instance.
+Using the environnement variables you can then configure FlexiAPI per instance.
 
 With Apache, use the [mod_env](https://httpd.apache.org/docs/2.4/mod/mod_env.html) module.
 
-    SetEnv APP_ENV foobar
+    SetEnv APP_NAME "VirtualHost One"
 
 On nginx use `fastcgi_param` to pass the parameter directly to PHP.
 
     location ~ [^/]\.php(/|$) {
         …
         include /etc/nginx/fastcgi_params;
-        fastcgi_param  APP_ENV     foobar;
+        fastcgi_param  APP_NAME     "VirtualHost Two";
     }
+
+
+> **Warning** Do not create a cache of your configuration (using `artisan config:cache`) if you have a multi-environnement setup.
+> The cache is always having the priority on the variables set in the configuration files.
+
+#### Multiple .env option
+
+To do so, configure several web servers virtualhosts and set a specific `APP_ENV` environnement variable in each of them.
 
 Note that if `APP_ENV` is not set FlexiAPI will directly use the default `.env` file.
 
@@ -101,7 +112,8 @@ If your database is located on a remote machine, you should also allow your webs
 
 ## Usage
 
-The `/api` page contains all the required documentation to authenticate and request the API.
+For the web panel, a generale documentation is available under the `\documentation` page.
+For the REST API, the `/api` page contains all the required documentation to authenticate and request the API.
 
 ## Console commands
 
@@ -109,7 +121,7 @@ FlexiAPI is shipped with several console commands that you can launch using the 
 
 ### Migrate an old database
 
-FlexiAPI needs an empty database to run its migration. The following console command allow you to import simultanously an exisiting FlexiSIP database and the old FlexiAPI SQLite database file (if you have one) in the new one. To do so, please specify the new database configuration in the `.env` file and run the following command.
+FlexiAPI needs an empty database to run its migration. The following console command allow you to import simultanously an exisiting Flexisip database and the old FlexiAPI SQLite database file (if you have one) in the new one. To do so, please specify the new database configuration in the `.env` file and run the following command.
 
     php artisan db:import {old_dbname} {old_sqlite_file_path?} --username={old_username} --password={old_password}
 
@@ -133,7 +145,7 @@ The base request will not delete the related accounts by default. You need to ad
 
 ### Set an account admin
 
-This command will set the admin role to any available FlexiSIP account (the external FlexiSIP database need to be configured beforehand). You need to use the account DB id as a parameter in this command.
+This command will set the admin role to any available Flexisip account (the external Flexisip database need to be configured beforehand). You need to use the account DB id as a parameter in this command.
 
     php artisan accounts:set-admin {account_id}
 
@@ -147,5 +159,5 @@ FlexiAPI is providing endpoints to provision Liblinphone powered devices. You ca
 
 The XML returned by the provisioning endpoint can be completed using hooks.
 
-To do so, copy and rename the `provisioning_hooks.php.example` file into `provisioning_hooks.php` and complete the functions in the file.
+To do so, copy and rename the `provisioning_hooks.php.example` file into `provisioning_hooks.php` in the configuration directory and complete the functions in the file.
 The functions already contains example codes to show you how the XML can be enhanced or completed.

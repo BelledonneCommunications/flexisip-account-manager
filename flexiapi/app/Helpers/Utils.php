@@ -24,6 +24,11 @@ use Illuminate\Support\Str;
 use App\Account;
 use App\DigestNonce;
 
+use League\CommonMark\Environment\Environment;
+use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
+use League\CommonMark\Extension\TableOfContents\TableOfContentsExtension;
+use League\CommonMark\MarkdownConverter;
+
 class Utils
 {
     public static function generateNonce(): string
@@ -51,5 +56,32 @@ class Utils
     public static function generatePin()
     {
         return mt_rand(1000, 9999);
+    }
+
+    public static function markdownDocumentationView($view)
+    {
+        $environment = Environment::createCommonMarkEnvironment();
+        $environment->addExtension(new HeadingPermalinkExtension);
+        $environment->addExtension(new TableOfContentsExtension);
+        $environment->mergeConfig([
+            'heading_permalink' => [
+                'html_class' => 'permalink',
+                'insert' => 'after',
+                'title' => 'Permalink',
+                'id_prefix' => '',
+                'fragment_prefix' => '',
+            ],
+            'table_of_contents' => [
+                'html_class' => 'table-of-contents',
+            ],
+        ]);
+
+        $converter = new MarkdownConverter($environment);
+
+        return (string) $converter->convertToHtml(
+            view($view, [
+                'app_name' => config('app.name')
+            ])->render()
+        );
     }
 }

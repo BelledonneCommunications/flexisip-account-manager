@@ -64,6 +64,31 @@ input.form-control {
     border-color: #9ec6dc;
 }
 
+.permalink {
+    font-size: 0.75em;
+    padding-left: 0.5em;
+    opacity: 0.25;
+}
+
+.permalink:hover {
+    opacity: 1;
+}
+
+@media screen and (min-width: 1025px) {
+    .table-of-contents {
+        float: right;
+        width: 50%;
+    }
+}
+
+.table-of-contents ul {
+    padding-left: 1rem;
+}
+
+.table-of-contents p {
+    margin-bottom: 0;
+}
+
 .btn {
     border: 1px solid #ff733b;
     background-color: transparent;
