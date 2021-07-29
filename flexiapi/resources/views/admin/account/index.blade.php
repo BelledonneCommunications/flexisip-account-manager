@@ -8,6 +8,7 @@
 
 <div class="row mb-2">
     <div class="col-sm">
+        <a class="btn float-right" href="{{ route('admin.account.create') }}">Create</a>
         <h2>Accounts</h2>
     </div>
     <div class="col-sm">
@@ -28,29 +29,31 @@
 <table class="table table-responsive-md">
     <thead>
         <tr>
-            <th scope="col">#</th>
             <th scope="col">Identifier (email)</th>
+            <th scope="col"></th>
             <th scope="col">Created</th>
         </tr>
     </thead>
     <tbody>
         @foreach ($accounts as $account)
             <tr>
-                <th scope="row">
-                    <a href="{{ route('admin.account.show', $account->id) }}">{{ $account->id }}</a>
-                    <br />
+                <td>
+                    <a href="{{ route('admin.account.show', $account->id) }}">
+                        {{ $account->identifier }}
+                    </a>
+                </td>
+                <td>
+                    @if ($account->email)
+                        <span class="badge badge-info">Email</span>
+                    @endif
                     @if ($account->activated)
                         <span class="badge badge-success">Activated</span>
-                    @else
-                        <span class="badge badge-danger">Unactivated</span>
                     @endif
                     @if ($account->admin)
-                        <br /><span class="badge badge-primary">Admin</span>
+                        <span class="badge badge-primary">Admin</span>
                     @endif
-                </th>
-                <td>{{ $account->identifier }}
-                    @if ($account->email)
-                        (<a href="mailto:{{ $account->email }}">{{ $account->email }}</a>)
+                    @if ($account->sha256Password)
+                        <span class="badge badge-info">SHA256</span>
                     @endif
                 </td>
                 <td>{{ $account->creation_time}}</td>

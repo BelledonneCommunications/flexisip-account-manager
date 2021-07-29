@@ -136,6 +136,11 @@ class Account extends Authenticatable
         return null;
     }
 
+    public function getSha256PasswordAttribute()
+    {
+        return $this->passwords()->where('algorithm', 'SHA-256')->exists();
+    }
+
     public function activationExpired(): bool
     {
         return ($this->activationExpiration && $this->activationExpiration->isExpired());

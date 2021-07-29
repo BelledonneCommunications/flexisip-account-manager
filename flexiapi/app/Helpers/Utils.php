@@ -24,7 +24,7 @@ use Illuminate\Support\Str;
 use App\Account;
 use App\DigestNonce;
 
-use League\CommonMark\Environment\Environment;
+use League\CommonMark\Environment;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 use League\CommonMark\Extension\TableOfContents\TableOfContentsExtension;
 use League\CommonMark\MarkdownConverter;

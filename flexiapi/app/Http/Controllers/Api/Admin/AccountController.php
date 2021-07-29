@@ -74,14 +74,13 @@ class AccountController extends Controller
         $request->validate([
             'username' => [
                 'required',
-                Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
+                Rule::unique('accounts', 'username')->where(function ($query) {
                     $query->where('domain', config('app.sip_domain'));
                 }),
                 'filled',
             ],
             'algorithm' => 'required|in:SHA-256,MD5',
             'password' => 'required|filled',
-            'domain' => 'min:3',
             'email' => 'email',
             'admin' => 'boolean|nullable',
             'activated' => 'boolean|nullable',
@@ -102,9 +101,7 @@ class AccountController extends Controller
         $account->activated = $request->has('activated')
             ? (bool)$request->get('activated')
             : false;
-        $account->domain = $request->has('domain')
-            ? $request->get('domain')
-            : config('app.sip_domain');
+        $account->domain = config('app.sip_domain');
         $account->ip_address = $request->ip();
         $account->creation_time = Carbon::now();
         $account->user_agent = config('app.name');

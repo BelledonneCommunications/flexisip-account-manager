@@ -85,6 +85,9 @@ class AccountApiTest extends TestCase
 
     public function testDomain()
     {
+        $configDomain = 'sip.domain.com';
+        config()->set('app.sip_domain', $configDomain);
+
         $admin = Admin::factory()->create();
         $password = $admin->account->passwords()->first();
         $username = 'foobar';
@@ -104,7 +107,7 @@ class AccountApiTest extends TestCase
             ->assertJson([
                 'id' => 2,
                 'username' => $username,
-                'domain' => $domain,
+                'domain' => $configDomain,
                 'activated' => false
             ]);
 

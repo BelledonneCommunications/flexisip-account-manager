@@ -68,7 +68,7 @@ As an administrator, you will be able to generate an API Key allowing you to use
 
 ## Accounts administration
 
-From the accounts administration panel an administrator will be able to list, show and delete accounts from the attached Flexisip server.
+From the accounts administration panel an administrator will be able to list, create, show, edit and and delete accounts from the attached Flexisip server.
 
 ### Display a user account
 
@@ -77,6 +77,8 @@ Each user, identified by a unique number can be managed from the panel. The acco
 You can also set an account as an administrator. The account will then have the same access as you from.
 
 Finally the account page allows you to provision the account, using a QR Code or a unique link that can be shared with the contact.
+
+The provisioning link can be generated and refreshed from this page as well.
 
 ### Delete an account
 

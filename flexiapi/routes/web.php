@@ -64,17 +64,27 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::group(['middleware' => 'auth.admin'], function () {
-    Route::get('admin/accounts/{search?}', 'Admin\AccountController@index')->name('admin.account.index');
-    Route::post('admin/search', 'Admin\AccountController@search')->name('admin.account.search');
-
     Route::post('admin/api_key', 'Admin\AccountController@generateApiKey')->name('admin.api_key.generate');
 
-    Route::get('admin/accounts/show/{id}', 'Admin\AccountController@show')->name('admin.account.show');
-    Route::get('admin/accounts/{id}/activate', 'Admin\AccountController@activate')->name('admin.account.activate');
-    Route::get('admin/accounts/{id}/deactivate', 'Admin\AccountController@deactivate')->name('admin.account.deactivate');
-    Route::get('admin/accounts/{id}/admin', 'Admin\AccountController@admin')->name('admin.account.admin');
+    Route::get('admin/accounts/{account}/show', 'Admin\AccountController@show')->name('admin.account.show');
+
+    Route::get('admin/accounts/{account}/activate', 'Admin\AccountController@activate')->name('admin.account.activate');
+    Route::get('admin/accounts/{account}/deactivate', 'Admin\AccountController@deactivate')->name('admin.account.deactivate');
+
+    Route::get('admin/accounts/{account}/admin', 'Admin\AccountController@admin')->name('admin.account.admin');
     Route::get('admin/accounts/{id}/unadmin', 'Admin\AccountController@unadmin')->name('admin.account.unadmin');
 
-    Route::get('admin/accounts/{id}/delete', 'Admin\AccountController@delete')->name('admin.account.delete');
+    Route::get('admin/accounts/{account}/provision', 'Admin\AccountController@provision')->name('admin.account.provision');
+
+    Route::get('admin/accounts/create', 'Admin\AccountController@create')->name('admin.account.create');
+    Route::post('admin/accounts', 'Admin\AccountController@store')->name('admin.account.store');
+
+    Route::get('admin/accounts/{account}/edit', 'Admin\AccountController@edit')->name('admin.account.edit');
+    Route::put('admin/accounts/{id}', 'Admin\AccountController@update')->name('admin.account.update');
+
+    Route::get('admin/accounts/{account}/delete', 'Admin\AccountController@delete')->name('admin.account.delete');
     Route::delete('admin/accounts', 'Admin\AccountController@destroy')->name('admin.account.destroy');
+
+    Route::get('admin/accounts/{search?}', 'Admin\AccountController@index')->name('admin.account.index');
+    Route::post('admin/accounts/search', 'Admin\AccountController@search')->name('admin.account.search');
 });
