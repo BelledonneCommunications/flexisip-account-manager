@@ -76,7 +76,6 @@ input.form-control {
 
 @media screen and (min-width: 1025px) {
     .table-of-contents {
-        float: right;
         width: 50%;
     }
 }

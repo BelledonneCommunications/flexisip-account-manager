@@ -8,7 +8,7 @@
 
 <div class="row mb-2">
     <div class="col-sm">
-        <a class="btn float-right" href="{{ route('admin.account.create') }}">Create</a>
+        <a class="btn btn-success float-right" href="{{ route('admin.account.create') }}">Create</a>
         <h2>Accounts</h2>
     </div>
     <div class="col-sm">

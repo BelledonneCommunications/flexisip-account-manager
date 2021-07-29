@@ -53,12 +53,12 @@
     <p>The following link can only be visited once</p>
     <input class="form-control" type="text" readonly value="{{ route('provisioning.show', $account->confirmation_key) }}">
     <p class="mt-3">
-        <a class="btn btn-danger mr-2" href="{{ route('admin.account.provision', $account->id) }}">Renew the provision link</a>
+        <a class="btn btn-light mr-2" href="{{ route('admin.account.provision', $account->id) }}">Renew the provision link</a>
         The current one will be unavailable
     </p>
 @else
     <p class="mt-3">
-        <a class="btn btn-danger" href="{{ route('admin.account.provision', $account->id) }}">Generate a provision link</a>
+        <a class="btn btn-light" href="{{ route('admin.account.provision', $account->id) }}">Generate a provision link</a>
     </p>
 @endif
 

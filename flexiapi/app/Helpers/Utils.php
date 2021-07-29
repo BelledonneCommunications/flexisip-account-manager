@@ -72,7 +72,7 @@ class Utils
                 'fragment_prefix' => '',
             ],
             'table_of_contents' => [
-                'html_class' => 'table-of-contents',
+                'html_class' => 'table-of-contents float-right',
             ],
         ]);
 

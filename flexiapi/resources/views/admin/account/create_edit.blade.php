@@ -74,7 +74,7 @@
         </div>
     </div>
 
-{!! Form::submit(($account->id) ? 'Update' : 'Create', ['class' => 'btn btn-danger btn-centered']) !!}
+{!! Form::submit(($account->id) ? 'Update' : 'Create', ['class' => 'btn btn-success btn-centered']) !!}
 {!! Form::close() !!}
 
 @endsection
