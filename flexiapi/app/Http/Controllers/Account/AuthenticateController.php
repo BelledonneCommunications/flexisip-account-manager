@@ -38,6 +38,10 @@ class AuthenticateController extends Controller
 
     public function login(Request $request)
     {
+        if (auth()->user()) {
+            return redirect()->route('account.panel');
+        }
+
         return view('account.login');
     }
 
