@@ -28,11 +28,13 @@
         @include('parts.password_recovery')
     @endif
 
-    <hr />
+    @if (config('app.public_registration'))
+        <hr />
 
-    <p class="text-center">
-        No account yet?
-        <a class="btn btn-secondary ml-2" href="{{ route('account.register') }}">Register</a>
-    </p>
+        <p class="text-center">
+            No account yet?
+            <a class="btn btn-secondary ml-2" href="{{ route('account.register') }}">Register</a>
+        </p>
+    @endif
 
 @endsection

@@ -15,9 +15,11 @@
             </ul>
 
             <ul class="navbar-nav">
-                <li class="nav-item @if (request()->routeIs('account.register')) active @endif">
-                    <a class="nav-link" href="{{ route('account.register') }}">Register</a>
-                </li>
+                @if (config('app.public_registration'))
+                    <li class="nav-item @if (request()->routeIs('account.register')) active @endif">
+                        <a class="nav-link" href="{{ route('account.register') }}">Register</a>
+                    </li>
+                @endif
                 <li class="nav-item @if (request()->routeIs('account.login')) active @endif">
                     <a class="nav-link" href="{{ route('account.login') }}">Login</a>
                 </li>

@@ -10,7 +10,11 @@ Registration can be achieve using two methods if they are correctly configured a
 
 ## Email Registration
 
-You can [create an account using an email address]({{ route('account.register.email') }}). The form requires you to provide an username and your email address.
+@if (!config('app.public_registration'))
+*The feature is not enabled on this instance.*
+@endif
+
+You can @if (config('app.public_registration')) [create an account using an email address]({{ route('account.register.email') }}) @else create an account using an email address @endif. The form requires you to provide an username and your email address.
 
 Once completed a confirmation email containing a unique link will be sent to the address. This link is used to activate your account, allowing you to finish the setup.
 

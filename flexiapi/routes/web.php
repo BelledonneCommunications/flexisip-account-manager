@@ -32,18 +32,19 @@ Route::get('login/phone', 'Account\AuthenticateController@loginPhone')->name('ac
 Route::post('authenticate/phone', 'Account\AuthenticateController@authenticatePhone')->name('account.authenticate.phone');
 Route::post('authenticate/phone/confirm', 'Account\AuthenticateController@validatePhone')->name('account.authenticate.phone_confirm');
 
-Route::get('register', 'Account\RegisterController@register')->name('account.register');
-
 Route::get('provisioning/qrcode/{confirmation}', 'Account\ProvisioningController@qrcode')->name('provisioning.qrcode');
 Route::get('provisioning/{confirmation?}', 'Account\ProvisioningController@show')->name('provisioning.show');
 
-if (config('app.phone_authentication')) {
-    Route::get('register/phone', 'Account\RegisterController@registerPhone')->name('account.register.phone');
-    Route::post('register/phone', 'Account\RegisterController@storePhone')->name('account.store.phone');
-}
+if (config('app.public_registration')) {
+    if (config('app.phone_authentication')) {
+        Route::get('register/phone', 'Account\RegisterController@registerPhone')->name('account.register.phone');
+        Route::post('register/phone', 'Account\RegisterController@storePhone')->name('account.store.phone');
+    }
 
-Route::get('register/email', 'Account\RegisterController@registerEmail')->name('account.register.email');
-Route::post('register/email', 'Account\RegisterController@storeEmail')->name('account.store.email');
+    Route::get('register', 'Account\RegisterController@register')->name('account.register');
+    Route::get('register/email', 'Account\RegisterController@registerEmail')->name('account.register.email');
+    Route::post('register/email', 'Account\RegisterController@storeEmail')->name('account.store.email');
+}
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('panel', 'Account\AccountController@panel')->name('account.panel');
