@@ -51,7 +51,15 @@ class ProvisioningController extends Controller
         return response($result->getString())->header('Content-Type', $result->getMimeType());
     }
 
-    public function show(Request $request, $confirmationKey = null)
+    /**
+     * Authenticated provisioning
+     */
+    public function me(Request $request)
+    {
+        return $this->show($request, null, $request->user());
+    }
+
+    public function show(Request $request, $confirmationKey = null, Account $requestAccount = null)
     {
         // Load the hooks if they exists
         $provisioningHooks = config_path('provisioning_hooks.php');
@@ -99,67 +107,71 @@ class ProvisioningController extends Controller
         $account = null;
 
         // Account handling
-        if ($confirmationKey) {
+        if ($requestAccount) {
+            $account = $requestAccount;
+        } else if ($confirmationKey) {
             $account = Account::withoutGlobalScopes()
                 ->where('confirmation_key', $confirmationKey)
                 ->first();
+        }
 
-            if ($account && !$account->activationExpired()) {
+        if ($account && !$account->activationExpired()) {
+            $section = $dom->createElement('section');
+            $section->setAttribute('name', 'proxy_' . $proxyConfigIndex);
+
+            $entry = $dom->createElement('entry', $account->identifier);
+            $entry->setAttribute('name', 'reg_identity');
+            $section->appendChild($entry);
+
+            $entry = $dom->createElement('entry', 1);
+            $entry->setAttribute('name', 'reg_sendregister');
+            $section->appendChild($entry);
+
+            $entry = $dom->createElement('entry', 'push_notification');
+            $entry->setAttribute('name', 'refkey');
+            $section->appendChild($entry);
+
+            // Complete the section with the Proxy hook
+            if (function_exists('provisioningProxyHook')) {
+                provisioningProxyHook($section, $request, $account);
+            }
+
+            $config->appendChild($section);
+
+            $passwords = $account->passwords()->get();
+
+            foreach ($passwords as $password) { // => foreach ($passwords)
                 $section = $dom->createElement('section');
-                $section->setAttribute('name', 'proxy_' . $proxyConfigIndex);
+                $section->setAttribute('name', 'auth_info_' . $authInfoIndex);
 
                 $entry = $dom->createElement('entry', $account->identifier);
-                $entry->setAttribute('name', 'reg_identity');
+                $entry->setAttribute('name', 'username');
                 $section->appendChild($entry);
 
-                $entry = $dom->createElement('entry', 1);
-                $entry->setAttribute('name', 'reg_sendregister');
+                $entry = $dom->createElement('entry', $password->password);
+                $entry->setAttribute('name', 'ha1');
                 $section->appendChild($entry);
 
-                $entry = $dom->createElement('entry', 'push_notification');
-                $entry->setAttribute('name', 'refkey');
+                $entry = $dom->createElement('entry', $account->resolvedRealm);
+                $entry->setAttribute('name', 'realm');
                 $section->appendChild($entry);
 
-                // Complete the section with the Proxy hook
-                if (function_exists('provisioningProxyHook')) {
-                    provisioningProxyHook($section, $request, $account);
+                $entry = $dom->createElement('entry', $password->algorithm);
+                $entry->setAttribute('name', 'algorithm');
+                $section->appendChild($entry);
+
+                // Complete the section with the Auth hook
+                if (function_exists('provisioningAuthHook')) {
+                    provisioningAuthHook($section, $request, $password);
                 }
 
                 $config->appendChild($section);
 
-                $passwords = $account->passwords()->get();
+                $authInfoIndex++;
 
-                foreach ($passwords as $password) { // => foreach ($passwords)
-                    $section = $dom->createElement('section');
-                    $section->setAttribute('name', 'auth_info_' . $authInfoIndex);
+            }
 
-                    $entry = $dom->createElement('entry', $account->identifier);
-                    $entry->setAttribute('name', 'username');
-                    $section->appendChild($entry);
-
-                    $entry = $dom->createElement('entry', $password->password);
-                    $entry->setAttribute('name', 'ha1');
-                    $section->appendChild($entry);
-
-                    $entry = $dom->createElement('entry', $account->resolvedRealm);
-                    $entry->setAttribute('name', 'realm');
-                    $section->appendChild($entry);
-
-                    $entry = $dom->createElement('entry', $password->algorithm);
-                    $entry->setAttribute('name', 'algorithm');
-                    $section->appendChild($entry);
-
-                    // Complete the section with the Auth hook
-                    if (function_exists('provisioningAuthHook')) {
-                        provisioningAuthHook($section, $request, $password);
-                    }
-
-                    $config->appendChild($section);
-
-                    $authInfoIndex++;
-
-                }
-
+            if ($confirmationKey) {
                 $account->confirmation_key = null;
                 $account->save();
             }

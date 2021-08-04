@@ -20,6 +20,8 @@
 namespace Database\Factories;
 
 use App\Account;
+use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class AccountFactory extends Factory
@@ -33,6 +35,7 @@ class AccountFactory extends Factory
             'domain' => config('app.sip_domain'),
             'email' => $this->faker->email,
             'user_agent' => $this->faker->userAgent,
+            'confirmation_key' => Str::random(WebAuthenticateController::$emailCodeSize),
             'ip_address' => $this->faker->ipv4,
             'creation_time' => $this->faker->dateTime,
             'activated' => true

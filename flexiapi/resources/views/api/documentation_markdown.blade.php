@@ -192,9 +192,17 @@ When an account is having an available `confirmation_key` it can be provisioned 
 
 Those two URL are <b>not API endpoints</b>, they are not located under `/api`.
 
-### `VISIT /provisioning/{confirmation_key}`
+### `VISIT /provisioning/`
 Return the provisioning information available in the liblinphone configuration file (if correctly configured).
-If the `confirmation_key` is valid the related account information are added to the returned XML. The account is then considered as "provisioned" and those account related information will be removed in the upcoming requests.
+
+### `VISIT /provisioning/{confirmation_key}`
+Return the provisioning information available in the liblinphone configuration file.
+If the `confirmation_key` is valid the related account information are added to the returned XML. The account is then considered as "provisioned" and those account related information will be removed in the upcoming requests (the content will be the same as the previous url).
 
 ### `VISIT /provisioning/qrcode/{confirmation_key}`
 Return a QRCode that points to the provisioning URL.
+
+## Authenticated provisioning
+
+### `VISIT /provisioning/me`
+Return the same base content as the previous URL and the account related information, similar to the `confirmation_key` endpoint. However this endpoint will always return those information.

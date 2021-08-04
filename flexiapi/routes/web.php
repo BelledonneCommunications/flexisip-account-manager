@@ -32,6 +32,10 @@ Route::get('login/phone', 'Account\AuthenticateController@loginPhone')->name('ac
 Route::post('authenticate/phone', 'Account\AuthenticateController@authenticatePhone')->name('account.authenticate.phone');
 Route::post('authenticate/phone/confirm', 'Account\AuthenticateController@validatePhone')->name('account.authenticate.phone_confirm');
 
+Route::group(['middleware' => 'auth.digest_or_key'], function () {
+    Route::get('provisioning/me', 'Account\ProvisioningController@me')->name('provisioning.me');
+});
+
 Route::get('provisioning/qrcode/{confirmation}', 'Account\ProvisioningController@qrcode')->name('provisioning.qrcode');
 Route::get('provisioning/{confirmation?}', 'Account\ProvisioningController@show')->name('provisioning.show');
 
