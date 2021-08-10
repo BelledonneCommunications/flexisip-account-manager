@@ -26,7 +26,7 @@ use App\Account;
 
 class RemoveUnconfirmedAccounts extends Command
 {
-    protected $signature = 'accounts:clear-unconfirmed {days} {--apply}';
+    protected $signature = 'accounts:clear-unconfirmed {days} {--apply} {--and-confirmed}';
     protected $description = 'Clear unconfirmed accounts after n days';
 
     public function __construct()
@@ -36,9 +36,13 @@ class RemoveUnconfirmedAccounts extends Command
 
     public function handle()
     {
-        $accounts = Account::where('activated', false)->where('creation_time', '<',
+        $accounts = Account::where('creation_time', '<',
             Carbon::now()->subDays($this->argument('days'))->toDateTimeString()
         );
+
+        if (!$this->option('and-confirmed')) {
+            $accounts = $accounts->where('activated', false);
+        }
 
         if ($this->option('apply')) {
             $this->info($accounts->count() . ' accounts deleted');

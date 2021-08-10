@@ -139,7 +139,7 @@ This will remove the nonces stored that were not updated after `x minutes`.
 
 This request will remove the accounts that were not confirmed after `x days`. In the database an unconfirmed account is having the `activated` attribute set to `false`.
 
-    php artisan accounts:clear-unconfirmed {days} {--apply}
+    php artisan accounts:clear-unconfirmed {days} {--apply} {--and-confirmed}
 
 The base request will not delete the related accounts by default. You need to add `--apply` to remove them.
 
