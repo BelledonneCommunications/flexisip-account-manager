@@ -101,9 +101,11 @@ class AccountController extends Controller
         $account->activated = $request->has('activated')
             ? (bool)$request->get('activated')
             : false;
-        $account->domain = config('app.sip_domain');
         $account->ip_address = $request->ip();
         $account->creation_time = Carbon::now();
+        $account->domain = $request->has('domain') && config('app.everyone_is_admin')
+            ? $request->get('domain')
+            : config('app.sip_domain');
         $account->user_agent = config('app.name');
 
         if (!$request->has('activated') || !(bool)$request->get('activated')) {

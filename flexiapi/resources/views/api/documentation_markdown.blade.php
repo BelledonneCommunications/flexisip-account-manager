@@ -165,7 +165,7 @@ JSON parameters:
 * `username` unique username, minimum 6 characters
 * `password` required minimum 6 characters
 * `algorithm` required, values can be `SHA-256` or `MD5`
-* `domain` **not configurable** the value is enforced to the default registration domain set in the global configuration
+* `domain` **not configurable except during test deployments** the value is enforced to the default registration domain set in the global configuration
 * `activated` optional, a boolean, set to `false` by default
 * `admin` optional, a boolean, set to `false` by default, create an admin account
 * `phone` optional, a phone number, set a phone number to the account
@@ -190,7 +190,7 @@ Deactivate an account.
 
 When an account is having an available `confirmation_key` it can be provisioned using the two following URL.
 
-Those two URL are <b>not API endpoints</b>, they are not located under `/api`.
+Those two URL are **not API endpoints**, they are not located under `/api`.
 
 ### `VISIT /provisioning/`
 Return the provisioning information available in the liblinphone configuration file (if correctly configured).

@@ -114,6 +114,37 @@ class AccountApiTest extends TestCase
         $this->assertFalse(empty($response1['confirmation_key']));
     }
 
+    public function testDomainInTestDeployment()
+    {
+        $configDomain = 'testdomain.com';
+        config()->set('app.everyone_is_admin', true);
+        config()->set('app.sip_domain', 'anotherdomain.com');
+
+        $admin = Admin::factory()->create();
+        $password = $admin->account->passwords()->first();
+        $username = 'foobar';
+
+        $response0 = $this->generateFirstResponse($password);
+        $response1 = $this->generateSecondResponse($password, $response0)
+            ->json($this->method, $this->route, [
+                'username' => $username,
+                'domain' => $configDomain,
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+            ]);
+
+        $response1
+            ->assertStatus(200)
+            ->assertJson([
+                'id' => 2,
+                'username' => $username,
+                'domain' => $configDomain,
+                'activated' => false
+            ]);
+
+        $this->assertFalse(empty($response1['confirmation_key']));
+    }
+
     public function testUsernameNoDomain()
     {
         $admin = Admin::factory()->create();
