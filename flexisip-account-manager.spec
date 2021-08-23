@@ -8,7 +8,7 @@
 #%define _datadir           %{_datarootdir}
 #%define _docdir            %{_datadir}/doc
 
-%define build_number 97
+%define build_number 98
 %define var_dir /var/opt/belledonne-communications
 %define opt_dir /opt/belledonne-communications/share/flexisip-account-manager
 
@@ -44,7 +44,7 @@ Source0:        flexisip-account-manager.tar.gz
 #BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 # dependencies
-Requires:       rh-php73-php rh-php73-php-xmlrpc rh-php73-php-pdo rh-php73-php-mysqlnd rh-php73-php-mbstring
+Requires:       rh-php73-php rh-php73-php-gd rh-php73-php-xmlrpc rh-php73-php-pdo rh-php73-php-mysqlnd rh-php73-php-mbstring
 
 %description
 PHP server for Linphone and Flexisip providing module for account creation.
