@@ -65,7 +65,7 @@ class ProvisioningController extends Controller
         $provisioningHooks = config_path('provisioning_hooks.php');
 
         if (file_exists($provisioningHooks)) {
-            require($provisioningHooks);
+            require_once($provisioningHooks);
         }
 
         $dom = new \DOMDocument('1.0', 'UTF-8');
@@ -119,7 +119,7 @@ class ProvisioningController extends Controller
             $section = $dom->createElement('section');
             $section->setAttribute('name', 'proxy_' . $proxyConfigIndex);
 
-            $entry = $dom->createElement('entry', $account->identifier);
+            $entry = $dom->createElement('entry', '<sip:'.$account->identifier.'>');
             $entry->setAttribute('name', 'reg_identity');
             $section->appendChild($entry);
 
@@ -144,8 +144,12 @@ class ProvisioningController extends Controller
                 $section = $dom->createElement('section');
                 $section->setAttribute('name', 'auth_info_' . $authInfoIndex);
 
-                $entry = $dom->createElement('entry', $account->identifier);
+                $entry = $dom->createElement('entry', $account->username);
                 $entry->setAttribute('name', 'username');
+                $section->appendChild($entry);
+
+                $entry = $dom->createElement('entry', $account->domain);
+                $entry->setAttribute('name', 'domain');
                 $section->appendChild($entry);
 
                 $entry = $dom->createElement('entry', $password->password);
