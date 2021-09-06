@@ -27,6 +27,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 
 use App\Account;
+use App\AccountTombstone;
 use App\Token;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 
@@ -51,7 +52,14 @@ class AccountController extends Controller
             'username' => [
                 'required',
                 Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
-                    $query->where('domain', config('app.sip_domain'));
+                    $query->where('domain', $request->has('domain') && config('app.everyone_is_admin')
+                                                ? $request->get('domain')
+                                                : config('app.sip_domain'));
+                }),
+                Rule::unique('accounts_tombstones', 'username')->where(function ($query) use ($request) {
+                    $query->where('domain', $request->has('domain') && config('app.everyone_is_admin')
+                                                ? $request->get('domain')
+                                                : config('app.sip_domain'));
                 }),
                 'filled',
             ],
@@ -75,7 +83,7 @@ class AccountController extends Controller
         $account->username = $request->get('username');
         $account->email = $request->get('email');
         $account->activated = false;
-        $account->domain = $request->has('domain')
+        $account->domain = $request->has('domain') && config('app.everyone_is_admin')
             ? $request->get('domain')
             : config('app.sip_domain');
         $account->ip_address = $request->ip();
@@ -143,6 +151,13 @@ class AccountController extends Controller
 
     public function delete(Request $request)
     {
+        if (!$request->user()->hasTombstone()) {
+            $tombstone = new AccountTombstone;
+            $tombstone->username = $request->user()->username;
+            $tombstone->domain = $request->user()->domain;
+            $tombstone->save();
+        }
+
         return Account::where('id', $request->user()->id)
                       ->delete();
     }

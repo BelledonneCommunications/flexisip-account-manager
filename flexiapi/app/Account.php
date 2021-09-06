@@ -88,6 +88,13 @@ class Account extends Authenticatable
         return $this->hasOne('App\Admin');
     }
 
+    public function hasTombstone()
+    {
+        return AccountTombstone::where('username', $this->attributes['username'])
+                               ->where('domain', $this->attributes['domain'])
+                               ->exists();
+    }
+
     public function activationExpiration()
     {
         return $this->hasOne('App\ActivationExpiration');

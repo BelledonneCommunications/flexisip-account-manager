@@ -28,6 +28,7 @@ use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 
 use App\Account;
+use App\AccountTombstone;
 use App\Alias;
 use App\Rules\WithoutSpaces;
 use App\Helpers\Utils;
@@ -72,6 +73,9 @@ class RegisterController extends Controller
                 Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
                     $query->where('domain', config('app.sip_domain'));
                 }),
+                Rule::unique('accounts_tombstones', 'username')->where(function ($query) use ($request) {
+                    $query->where('domain', config('app.sip_domain'));
+                }),
                 'filled',
                 new WithoutSpaces
             ],
@@ -111,6 +115,9 @@ class RegisterController extends Controller
             'privacy' => 'accepted',
             'username' => [
                 Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
+                    $query->where('domain', config('app.sip_domain'));
+                }),
+                Rule::unique('accounts_tombstones', 'username')->where(function ($query) use ($request) {
                     $query->where('domain', config('app.sip_domain'));
                 }),
                 'nullable',

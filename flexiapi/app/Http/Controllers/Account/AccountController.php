@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Account;
+use App\AccountTombstone;
 use App\Helpers\Utils;
 
 class AccountController extends Controller
@@ -63,6 +64,13 @@ class AccountController extends Controller
     public function destroy(Request $request)
     {
         $request->validate(['identifier' => 'required|same:identifier_confirm']);
+
+        if (!$request->user()->hasTombstone()) {
+            $tombstone = new AccountTombstone;
+            $tombstone->username = $request->user()->username;
+            $tombstone->domain = $request->user()->domain;
+            $tombstone->save();
+        }
 
         $request->user()->delete();
         Auth::logout();

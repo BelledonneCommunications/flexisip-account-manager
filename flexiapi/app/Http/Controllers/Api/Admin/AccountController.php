@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 use App\Account;
+use App\AccountTombstone;
 use App\ActivationExpiration;
 use App\Admin;
 use App\Alias;
@@ -48,6 +49,14 @@ class AccountController extends Controller
     public function destroy(Request $request, $id)
     {
         $account = Account::findOrFail($id);
+
+        if (!$account->hasTombstone()) {
+            $tombstone = new AccountTombstone;
+            $tombstone->username = $account->username;
+            $tombstone->domain = $account->domain;
+            $tombstone->save();
+        }
+
         $account->delete();
     }
 
@@ -74,8 +83,11 @@ class AccountController extends Controller
         $request->validate([
             'username' => [
                 'required',
-                Rule::unique('accounts', 'username')->where(function ($query) {
-                    $query->where('domain', config('app.sip_domain'));
+                Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
+                    $query->where('domain', $request->has('domain') && config('app.everyone_is_admin')
+                                                ? $request->get('domain')
+                                                : config('app.sip_domain')
+                    );
                 }),
                 'filled',
             ],

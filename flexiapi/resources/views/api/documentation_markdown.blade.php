@@ -80,7 +80,7 @@ JSON parameters:
 * `username` unique username, minimum 6 characters
 * `password` required minimum 6 characters
 * `algorithm` required, values can be `SHA-256` or `MD5`
-* `domain` optional, the value is set to the default registration domain if not set
+* `domain` **not configurable except during test deployments** the value is enforced to the default registration domain set in the global configuration
 * `token` the unique token
 
 #### `GET /accounts/{sip}/info`

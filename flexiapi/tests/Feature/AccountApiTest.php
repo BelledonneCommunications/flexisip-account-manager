@@ -21,6 +21,7 @@ namespace Tests\Feature;
 
 use App\Password;
 use App\Account;
+use App\AccountTombstone;
 use App\ActivationExpiration;
 use App\Admin;
 use Carbon\Carbon;
@@ -663,6 +664,8 @@ class AccountApiTest extends TestCase
         $this->keyAuthenticated($admin->account)
             ->delete($this->route.'/'.$password->account->id)
             ->assertStatus(200);
+
+        $this->assertEquals(1, AccountTombstone::count());
 
         $this->keyAuthenticated($admin->account)
             ->get($this->route.'/'.$password->account->id)
