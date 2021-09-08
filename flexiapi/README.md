@@ -107,8 +107,12 @@ Allow the webserver user to write in the `storage/` directory:
 If your database is located on a remote machine, you should also allow your webserver user to connect to remote hosts:
 
     semanage port -a -t http_port_t -p tcp 3306 // Open remote connections on the MySQL port for example
-    setsebool httpd_can_network_connect 1 // Allow remote network connected
-    setsebool httpd_can_network_connect_db 1 // Allow remote database connection
+    setsebool -P httpd_can_network_connect 1 // Allow remote network connected
+    setsebool -P httpd_can_network_connect_db 1 // Allow remote database connection
+
+If you are planning to send emails using your account manager:
+
+    setsebool -P httpd_can_sendmail 1 // Allow email to be sent
 
 ## Usage
 
@@ -142,6 +146,14 @@ This request will remove the accounts that were not confirmed after `x days`. In
     php artisan accounts:clear-unconfirmed {days} {--apply} {--and-confirmed}
 
 The base request will not delete the related accounts by default. You need to add `--apply` to remove them.
+
+### Remove deleted accounts tombstones
+
+This request will remove the deleted accounts tombstones created after `x days`.
+
+    php artisan accounts:clear-accounts-tombstones {days} {--apply}
+
+The base request will not delete the related tombstones by default. You need to add `--apply` to remove them.
 
 ### Set an account admin
 

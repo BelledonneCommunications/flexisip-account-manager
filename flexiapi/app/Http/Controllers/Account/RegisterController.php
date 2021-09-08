@@ -28,7 +28,6 @@ use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 
 use App\Account;
-use App\AccountTombstone;
 use App\Alias;
 use App\Rules\WithoutSpaces;
 use App\Helpers\Utils;

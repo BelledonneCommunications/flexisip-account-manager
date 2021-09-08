@@ -57,6 +57,8 @@ class AccountController extends Controller
             $tombstone->save();
         }
 
+        Log::channel('events')->info('API Admin: Account destroyed', ['id' => $account->identifier]);
+
         $account->delete();
     }
 
@@ -66,6 +68,8 @@ class AccountController extends Controller
         $account->activated = true;
         $account->save();
 
+        Log::channel('events')->info('API Admin: Account activated', ['id' => $account->identifier]);
+
         return $account;
     }
 
@@ -74,6 +78,8 @@ class AccountController extends Controller
         $account = Account::findOrFail($id);
         $account->activated = false;
         $account->save();
+
+        Log::channel('events')->info('API Admin: Account deactivated', ['id' => $account->identifier]);
 
         return $account;
     }

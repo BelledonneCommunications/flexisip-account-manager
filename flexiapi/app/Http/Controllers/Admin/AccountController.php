@@ -22,6 +22,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 use App\Account;
@@ -75,6 +76,8 @@ class AccountController extends Controller
         $this->fillPassword($request, $account);
         $this->fillPhone($request, $account);
 
+        Log::channel('events')->info('Web Admin: Account created', ['id' => $account->identifier]);
+
         return redirect()->route('admin.account.show', $account->id);
     }
 
@@ -95,6 +98,8 @@ class AccountController extends Controller
         $this->fillPassword($request, $account);
         $this->fillPhone($request, $account);
 
+        Log::channel('events')->info('Web Admin: Account updated', ['id' => $account->identifier]);
+
         return redirect()->route('admin.account.show', $id);
     }
 
@@ -108,6 +113,8 @@ class AccountController extends Controller
         $account->activated = true;
         $account->save();
 
+        Log::channel('events')->info('Web Admin: Account activated', ['id' => $account->identifier]);
+
         return redirect()->back();
     }
 
@@ -115,6 +122,8 @@ class AccountController extends Controller
     {
         $account->activated = false;
         $account->save();
+
+        Log::channel('events')->info('Web Admin: Account deactivated', ['id' => $account->identifier]);
 
         return redirect()->back();
     }
@@ -124,6 +133,8 @@ class AccountController extends Controller
         $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
         $account->save();
 
+        Log::channel('events')->info('Web Admin: Account provisioned', ['id' => $account->identifier]);
+
         return redirect()->back();
     }
 
@@ -132,6 +143,8 @@ class AccountController extends Controller
         $admin = new Admin;
         $admin->account_id = $account->id;
         $admin->save();
+
+        Log::channel('events')->info('Web Admin: Account set as admin', ['id' => $account->identifier]);
 
         return redirect()->back();
     }
@@ -144,6 +157,8 @@ class AccountController extends Controller
         if ($account->id == $request->user()->id) abort(403);
 
         if ($account->admin) $account->admin->delete();
+
+        Log::channel('events')->info('Web Admin: Account unset as admin', ['id' => $account->identifier]);
 
         return redirect()->back();
     }
@@ -161,6 +176,8 @@ class AccountController extends Controller
         $account->delete();
 
         $request->session()->flash('success', 'Account successfully destroyed');
+
+        Log::channel('events')->info('Web Admin: Account deleted', ['id' => $account->identifier]);
 
         return redirect()->route('admin.account.index');
     }
