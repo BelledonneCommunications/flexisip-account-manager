@@ -10,8 +10,8 @@ class AddAccountsTombstonesTable extends Migration
     {
         Schema::create('accounts_tombstones', function (Blueprint $table) {
             $table->id();
-            $table->string('username');
-            $table->string('domain');
+            $table->string('username', 64);
+            $table->string('domain', 64);
             $table->timestamps();
 
             $table->unique(['username', 'domain']);

@@ -8,7 +8,7 @@
 #%define _datadir           %{_datarootdir}
 #%define _docdir            %{_datadir}/doc
 
-%define build_number 101
+%define build_number 102
 %define var_dir /var/opt/belledonne-communications
 %define opt_dir /opt/belledonne-communications/share/flexisip-account-manager
 
@@ -86,7 +86,7 @@ cp -R conf/* "$RPM_BUILD_ROOT/etc/flexisip-account-manager/"
 
     # FlexiAPI base directories setup and rights
     mkdir -p %{var_dir}/flexiapi/storage/app/public
-    mkdir -p %{var_dir}/flexiapi/storage/framework/cache
+    mkdir -p %{var_dir}/flexiapi/storage/framework/cache/data
     mkdir -p %{var_dir}/flexiapi/storage/framework/sessions
     mkdir -p %{var_dir}/flexiapi/storage/framework/testing
     mkdir -p %{var_dir}/flexiapi/storage/framework/views

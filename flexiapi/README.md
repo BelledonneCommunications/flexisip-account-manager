@@ -127,6 +127,8 @@ FlexiAPI is shipped with several console commands that you can launch using the 
 
 FlexiAPI needs an empty database to run its migration. The following console command allow you to import simultanously an exisiting Flexisip database and the old FlexiAPI SQLite database file (if you have one) in the new one. To do so, please specify the new database configuration in the `.env` file and run the following command.
 
+The migration script requires at least 300mb of memory to run. You should edit the `memory_limit` in the `php.ini` file to increase it.
+
     php artisan db:import {old_dbname} {old_sqlite_file_path?} --username={old_username} --password={old_password}
 
 Several other parameters are also available to customize the migration process, you can list them all using the command documentation.
