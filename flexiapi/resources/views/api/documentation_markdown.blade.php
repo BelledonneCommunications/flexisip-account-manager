@@ -186,6 +186,17 @@ Activate an account.
 #### `GET /accounts/{id}/deactivate`
 Deactivate an account.
 
+### Statistics
+
+#### `GET /statistics/day`
+Retrieve registrations statistics for 24 hours.
+
+#### `GET /statistics/week`
+Retrieve registrations statistics for a week.
+
+#### `GET /statistics/month`
+Retrieve registrations statistics for a month.
+
 # Provisioning
 
 When an account is having an available `confirmation_key` it can be provisioned using the two following URL.

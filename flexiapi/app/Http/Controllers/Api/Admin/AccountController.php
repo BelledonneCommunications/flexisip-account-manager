@@ -124,7 +124,7 @@ class AccountController extends Controller
         $account->domain = $request->has('domain') && config('app.everyone_is_admin')
             ? $request->get('domain')
             : config('app.sip_domain');
-        $account->user_agent = config('app.name');
+        $account->user_agent = $request->header('User-Agent') ?? config('app.name');
 
         if (!$request->has('activated') || !(bool)$request->get('activated')) {
             $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);

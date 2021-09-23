@@ -33,6 +33,10 @@ Route::post('accounts/{sip}/activate/email', 'Api\AccountController@activateEmai
 Route::post('accounts/{sip}/activate/phone', 'Api\AccountController@activatePhone');
 
 Route::group(['middleware' => ['auth.digest_or_key']], function () {
+    Route::get('statistic/month', 'Api\StatisticController@month');
+    Route::get('statistic/week', 'Api\StatisticController@week');
+    Route::get('statistic/day', 'Api\StatisticController@day');
+
     Route::get('accounts/me', 'Api\AccountController@show');
     Route::delete('accounts/me', 'Api\AccountController@delete');
 

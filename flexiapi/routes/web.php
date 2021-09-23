@@ -71,6 +71,10 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => 'auth.admin'], function () {
     Route::post('admin/api_key', 'Admin\AccountController@generateApiKey')->name('admin.api_key.generate');
 
+    Route::get('admin/statistics/day', 'Admin\StatisticsController@showDay')->name('admin.statistics.show.day');
+    Route::get('admin/statistics/week', 'Admin\StatisticsController@showWeek')->name('admin.statistics.show.week');
+    Route::get('admin/statistics/month', 'Admin\StatisticsController@showMonth')->name('admin.statistics.show.month');
+
     Route::get('admin/accounts/{account}/show', 'Admin\AccountController@show')->name('admin.account.show');
 
     Route::get('admin/accounts/{account}/activate', 'Admin\AccountController@activate')->name('admin.account.activate');

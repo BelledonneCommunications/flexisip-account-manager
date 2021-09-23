@@ -1,0 +1,6 @@
+#!/bin/sh
+
+cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi/
+scl enable rh-php73 "php artisan digest:expired-nonces-clear 60"
+scl enable rh-php73 "php artisan accounts:clear-accounts-tombstones 7 --apply"
+scl enable rh-php73 "php artisan accounts:clear-unconfirmed 30 --apply"

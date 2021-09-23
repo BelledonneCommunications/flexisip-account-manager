@@ -84,6 +84,14 @@ Finally the account page allows you to provision the account, using a QR Code or
 
 The provisioning link can be generated and refreshed from this page as well.
 
+### Create and edit an account
+
+Administrators can create and edit accounts directly from the admin panel.
+
 ### Delete an account
 
 The deletion of an account is definitive, all the database related data (password, aliases…) will be destroyed after the deletion.
+
+## Statistics
+
+The statistics panel show registrations statistics based on their type (mobile and email based registration) and their activations states.

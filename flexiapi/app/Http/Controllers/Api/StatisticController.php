@@ -1,7 +1,7 @@
 <?php
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
-    Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
+    Copyright (C) 2021 Belledonne Communications SARL, All rights reserved.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -17,26 +17,27 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+namespace App\Http\Controllers\Api;
 
-class AddAccountsTombstonesTable extends Migration
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+use App\Libraries\StatisticsCruncher;
+
+class StatisticController extends Controller
 {
-    public function up()
+    public function month(Request $request)
     {
-        Schema::create('accounts_tombstones', function (Blueprint $table) {
-            $table->id();
-            $table->string('username', 64);
-            $table->string('domain', 64);
-            $table->timestamps();
-
-            $table->unique(['username', 'domain']);
-        });
+        return StatisticsCruncher::month();
     }
 
-    public function down()
+    public function week(Request $request)
     {
-        Schema::dropIfExists('accounts_tombstones');
+        return StatisticsCruncher::week();
+    }
+
+    public function day(Request $request)
+    {
+        return StatisticsCruncher::day();
     }
 }

@@ -8,7 +8,7 @@
 #%define _datadir           %{_datarootdir}
 #%define _docdir            %{_datadir}/doc
 
-%define build_number 105
+%define build_number 106
 %define var_dir /var/opt/belledonne-communications
 %define opt_dir /opt/belledonne-communications/share/flexisip-account-manager
 
@@ -64,12 +64,16 @@ cp README* "$RPM_BUILD_ROOT%{opt_dir}/"
 mkdir -p "$RPM_BUILD_ROOT/etc/flexisip-account-manager"
 cp -R conf/* "$RPM_BUILD_ROOT/etc/flexisip-account-manager/"
 
+mkdir -p $RPM_BUILD_ROOT/etc/cron.daily
+
 %if %{with deb}
     mkdir -p $RPM_BUILD_ROOT/etc/apache2/conf-available
     cp httpd/flexisip-account-manager.conf "$RPM_BUILD_ROOT/etc/apache2/conf-available/"
+    cp cron/flexiapi.debian "$RPM_BUILD_ROOT/etc/cron.daily/"
 %else
     mkdir -p $RPM_BUILD_ROOT/opt/rh/httpd24/root/etc/httpd/conf.d
     cp httpd/flexisip-account-manager.conf "$RPM_BUILD_ROOT/opt/rh/httpd24/root/etc/httpd/conf.d/"
+    cp cron/flexiapi.redhat "$RPM_BUILD_ROOT/etc/cron.daily/"
 %endif
 
 # POST INSTALLATION
@@ -168,15 +172,19 @@ fi
 
 %if %{with deb}
     %config(noreplace) /etc/apache2/conf-available/flexisip-account-manager.conf
+    %config(noreplace) /etc/cron.daily/flexiapi.debian
 %else
     %config(noreplace) /opt/rh/httpd24/root/etc/httpd/conf.d/flexisip-account-manager.conf
+    %config(noreplace) /etc/cron.daily/flexiapi.redhat
 %endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Tue Jan 5 2020 Timothée Jaussoin <timothee.jaussoin@belledonne-communications.com>
+* Tue Sep 28 2021 Timothée Jaussoin <timothee.jaussoin@belledonne-communications.com>
+- Install cron scripts
+* Sun Jan 5 2020 Timothée Jaussoin <timothee.jaussoin@belledonne-communications.com>
 - Import and configure the new API package
 * Thu Jul 4 2019 Sylvain Berfini <sylvain.berfini@belledonne-communications.com>
 - New files layout

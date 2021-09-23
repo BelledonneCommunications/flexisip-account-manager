@@ -58,6 +58,12 @@ class Utils
         return mt_rand(1000, 9999);
     }
 
+    public static function percent($value, $max)
+    {
+        if ($max == 0) $max = 1;
+        return round(($value*100)/$max, 2);
+    }
+
     public static function markdownDocumentationView($view)
     {
         $environment = Environment::createCommonMarkEnvironment();

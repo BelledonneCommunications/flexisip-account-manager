@@ -28,6 +28,7 @@ package-common:
 	# General
 	cp README.md $(OUTPUT_DIR)/flexisip-account-manager/
 	cp -R httpd/ $(OUTPUT_DIR)/flexisip-account-manager/
+	cp -R cron/ $(OUTPUT_DIR)/flexisip-account-manager/
 	cp flexisip-account-manager.spec $(OUTPUT_DIR)/rpmbuild/SPECS/
 
 	tar cvf flexisip-account-manager.tar.gz -C $(OUTPUT_DIR) flexisip-account-manager

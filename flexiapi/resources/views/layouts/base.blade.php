@@ -13,6 +13,7 @@
             @else
                 <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}" >
             @endif
+            <link rel="stylesheet" type="text/css" href="{{ asset('css/charts.css') }}" >
         @endif
     </head>
     <body>

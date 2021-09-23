@@ -91,7 +91,7 @@ class RegisterController extends Controller
         $account->domain = config('app.sip_domain');
         $account->ip_address = $request->ip();
         $account->creation_time = Carbon::now();
-        $account->user_agent = config('app.name');
+        $account->user_agent = $request->header('User-Agent') ?? config('app.name');
         $account->save();
 
         $account->confirmation_key = Str::random($this->emailCodeSize);
@@ -143,7 +143,7 @@ class RegisterController extends Controller
         $account->domain = config('app.sip_domain');
         $account->ip_address = $request->ip();
         $account->creation_time = Carbon::now();
-        $account->user_agent = config('app.name');
+        $account->user_agent = $request->header('User-Agent') ?? config('app.name');
         $account->save();
 
         $alias = new Alias;
