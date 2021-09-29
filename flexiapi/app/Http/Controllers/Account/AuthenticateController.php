@@ -175,7 +175,7 @@ class AuthenticateController extends Controller
     public function authenticatePhone(Request $request)
     {
         $request->validate([
-            'phone' => 'required|starts_with:+|phone:AUTO',
+            'phone' => 'required|starts_with:+',
             'g-recaptcha-response'  => 'required|captcha',
         ]);
 
