@@ -10,12 +10,13 @@
 
 <div class="form-group">
     {!! Form::label('username', 'SIP Username') !!}
-    <div class=" input-group mb-3">
+    <div class=" input-group">
         {!! Form::text('username', old('username'), ['class' => 'form-control', 'placeholder' => 'username', 'required']) !!}
         <div class="input-group-append">
             <span class="input-group-text" id="basic-addon2">{{ $domain }}</span>
         </div>
     </div>
+    <small class="form-text text-muted mb-3">Capital letters are not allowed</small>
 </div>
 
 <hr />

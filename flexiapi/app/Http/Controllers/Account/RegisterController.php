@@ -34,6 +34,7 @@ use App\Helpers\Utils;
 use App\Libraries\OvhSMS;
 use App\Mail\RegisterConfirmation;
 use App\Mail\NewsletterRegistration;
+use App\Rules\NoUppercase;
 
 class RegisterController extends Controller
 {
@@ -69,6 +70,7 @@ class RegisterController extends Controller
             'privacy' => 'accepted',
             'username' => [
                 'required',
+                new NoUppercase,
                 Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
                     $query->where('domain', config('app.sip_domain'));
                 }),
@@ -113,6 +115,7 @@ class RegisterController extends Controller
             'terms' =>'accepted',
             'privacy' => 'accepted',
             'username' => [
+                new NoUppercase,
                 Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
                     $query->where('domain', config('app.sip_domain'));
                 }),

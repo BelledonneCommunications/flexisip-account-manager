@@ -30,6 +30,7 @@ use App\Account;
 use App\AccountTombstone;
 use App\Token;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+use App\Rules\NoUppercase;
 
 class AccountController extends Controller
 {
@@ -51,6 +52,7 @@ class AccountController extends Controller
         $request->validate([
             'username' => [
                 'required',
+                new NoUppercase,
                 Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
                     $query->where('domain', $request->has('domain') && config('app.everyone_is_admin')
                                                 ? $request->get('domain')
