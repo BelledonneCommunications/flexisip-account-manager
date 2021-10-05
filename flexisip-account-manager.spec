@@ -8,7 +8,7 @@
 #%define _datadir           %{_datarootdir}
 #%define _docdir            %{_datadir}/doc
 
-%define build_number 106
+%define build_number 107
 %define var_dir /var/opt/belledonne-communications
 %define opt_dir /opt/belledonne-communications/share/flexisip-account-manager
 
@@ -70,10 +70,12 @@ mkdir -p $RPM_BUILD_ROOT/etc/cron.daily
     mkdir -p $RPM_BUILD_ROOT/etc/apache2/conf-available
     cp httpd/flexisip-account-manager.conf "$RPM_BUILD_ROOT/etc/apache2/conf-available/"
     cp cron/flexiapi.debian "$RPM_BUILD_ROOT/etc/cron.daily/"
+    chmod +x "$RPM_BUILD_ROOT/etc/cron.daily/flexiapi.debian"
 %else
     mkdir -p $RPM_BUILD_ROOT/opt/rh/httpd24/root/etc/httpd/conf.d
     cp httpd/flexisip-account-manager.conf "$RPM_BUILD_ROOT/opt/rh/httpd24/root/etc/httpd/conf.d/"
     cp cron/flexiapi.redhat "$RPM_BUILD_ROOT/etc/cron.daily/"
+    chmod +x "$RPM_BUILD_ROOT/etc/cron.daily/flexiapi.redhat"
 %endif
 
 # POST INSTALLATION
