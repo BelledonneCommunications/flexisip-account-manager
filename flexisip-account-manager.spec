@@ -8,7 +8,7 @@
 #%define _datadir           %{_datarootdir}
 #%define _docdir            %{_datadir}/doc
 
-%define build_number 140
+%define build_number 141
 %define var_dir /var/opt/belledonne-communications
 %define opt_dir /opt/belledonne-communications/share/flexisip-account-manager
 
@@ -27,6 +27,7 @@
 
 %if %{with deb}
     %define web_user www-data
+    %define apache_conf_path /etc/apache2/conf-available
 %else
     %define web_user apache
 %endif
@@ -44,7 +45,18 @@ Source0:        flexisip-account-manager.tar.gz
 #BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 # dependencies
+
+#These are not indented because rpm cannot recognize "Requires" with spaces/tabs (???)
+
+%if "%{?dist}" == ".el7"
 Requires:       rh-php73-php rh-php73-php-gd rh-php73-php-xmlrpc rh-php73-php-pdo rh-php73-php-mysqlnd rh-php73-php-mbstring
+%define apache_conf_path /opt/rh/httpd24/root/etc/httpd/conf.d
+%endif
+
+%if "%{?dist}" == ".el8"
+Requires:       php php-gd php-xmlrpc php-pdo php-mysqlnd php-mbstring
+%define apache_conf_path /etc/httpd/conf.d
+%endif
 
 %description
 PHP server for Linphone and Flexisip providing module for account creation.
@@ -66,14 +78,13 @@ cp -R conf/* "$RPM_BUILD_ROOT/etc/flexisip-account-manager/"
 
 mkdir -p $RPM_BUILD_ROOT/etc/cron.daily
 
+mkdir -p $RPM_BUILD_ROOT%{apache_conf_path}
+cp httpd/flexisip-account-manager.conf "$RPM_BUILD_ROOT%{apache_conf_path}/"
+
 %if %{with deb}
-    mkdir -p $RPM_BUILD_ROOT/etc/apache2/conf-available
-    cp httpd/flexisip-account-manager.conf "$RPM_BUILD_ROOT/etc/apache2/conf-available/"
     cp cron/flexiapi.debian "$RPM_BUILD_ROOT/etc/cron.daily/"
     chmod +x "$RPM_BUILD_ROOT/etc/cron.daily/flexiapi.debian"
 %else
-    mkdir -p $RPM_BUILD_ROOT/opt/rh/httpd24/root/etc/httpd/conf.d
-    cp httpd/flexisip-account-manager.conf "$RPM_BUILD_ROOT/opt/rh/httpd24/root/etc/httpd/conf.d/"
     cp cron/flexiapi.redhat "$RPM_BUILD_ROOT/etc/cron.daily/"
     chmod +x "$RPM_BUILD_ROOT/etc/cron.daily/flexiapi.redhat"
 %endif
@@ -172,11 +183,10 @@ fi
 
 %config(noreplace) /etc/flexisip-account-manager/*.conf
 
+%config(noreplace) %{apache_conf_path}/flexisip-account-manager.conf
 %if %{with deb}
-    %config(noreplace) /etc/apache2/conf-available/flexisip-account-manager.conf
     %config(noreplace) /etc/cron.daily/flexiapi.debian
 %else
-    %config(noreplace) /opt/rh/httpd24/root/etc/httpd/conf.d/flexisip-account-manager.conf
     %config(noreplace) /etc/cron.daily/flexiapi.redhat
 %endif
 
@@ -184,6 +194,8 @@ fi
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Tue Oct 12 2021 Peio Rigaux <peio.rigaux@belledonne-communications.com>
+- Adapted specfile to support Rocky Linux 8
 * Tue Sep 28 2021 Timothée Jaussoin <timothee.jaussoin@belledonne-communications.com>
 - Install cron scripts
 * Sun Jan 5 2020 Timothée Jaussoin <timothee.jaussoin@belledonne-communications.com>

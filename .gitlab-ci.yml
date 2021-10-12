@@ -6,10 +6,8 @@ stages:
   - deploy
   - test
 
-centos7-rpm:
-
-  tags: [ "docker-centos7" ]
-  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-centos7-php
+.rpm:
+  tags: [ "docker" ]
 
   stage: package
   script:
@@ -24,10 +22,20 @@ centos7-rpm:
     paths:
       - flexiapi/vendor/
 
-centos7-rpm-test:
+centos7-rpm:
+  extends: .rpm
+  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-centos7-php
 
+
+rocky8-rpm:
+  extends: .rpm
+  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-rocky8-php
+
+centos7-rpm-test:
   tags: [ "docker-centos7" ]
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-centos7-php
+  dependencies:
+    - centos7-rpm
 
   stage: test
   script:
@@ -43,34 +51,35 @@ centos7-rpm-test:
     expire_in: 1 day
 
 .package-deploy:
-
   before_script:
     - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then eval $(ssh-agent -s); fi
     - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then echo "$SCP_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null; fi
+  stage: deploy
 
+.rpm-deploy:
+
+  script:
+    - cd rpmbuild/x86_64
+    - rsync -e "ssh -o StrictHostKeyChecking=no" -pr . $DEPLOY_SERVER:$DEPLOY_DIRECTORY_STATE;
+      ssh $DEPLOY_SERVER "chmod a+r $DEPLOY_DIRECTORY_STATE/*.rpm && createrepo_c --update $DEPLOY_DIRECTORY_STATE/.";
   only:
     refs:
       - master
     changes:
       - flexisip-account-manager.spec
 
-  stage: deploy
-
+  extends:
+    - .package-deploy
 
 
 .centos7-rpm-deploy:
-
-  extends: .package-deploy
+  extends: .rpm-deploy
   tags: [ "docker-centos7" ]
-
 
   dependencies:
     - centos7-rpm
 
-  script:
-    - cd rpmbuild/x86_64
-    - rsync -e "ssh -o StrictHostKeyChecking=no" -pr . $DEPLOY_SERVER:$CENTOS7_DEPLOY_DIRECTORY_STATE;
-      ssh $DEPLOY_SERVER "chmod a+r $CENTOS7_DEPLOY_DIRECTORY_STATE/*.rpm && createrepo_c --update $CENTOS7_DEPLOY_DIRECTORY_STATE/.";
+
 
 centos7-rpm-deploy-stable:
 
@@ -85,8 +94,23 @@ centos7-rpm-deploy-alpha:
      CENTOS7_DEPLOY_DIRECTORY_STATE: $CENTOS7_DEPLOY_DIRECTORY_ALPHA
 
 
-debian11-packaging:
+.rocky8-rpm-deploy:
+  extends: .rpm-deploy
+  tags: [ "docker" ]
+  dependencies:
+    - rocky8-rpm
 
+# rocky8-rpm-deploy-stable:
+#   extends: .rocky8-rpm-deploy
+#   variables:
+#      DEPLOY_DIRECTORY_STATE: $CENTOS8_DEPLOY_DIRECTORY_STABLE
+
+rocky8-rpm-deploy-alpha:
+  extends: .rocky8-rpm-deploy
+  variables:
+     DEPLOY_DIRECTORY_STATE: $CENTOS8_DEPLOY_DIRECTORY_ALPHA
+
+debian11-packaging:
   tags: [ "docker" ]
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-debian11-php:20220413_flexiapi_packaging
 
