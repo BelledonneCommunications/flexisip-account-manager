@@ -44,11 +44,14 @@ class RemoveUnconfirmedAccounts extends Command
             $accounts = $accounts->where('activated', false);
         }
 
+        $count = $accounts->count();
+
         if ($this->option('apply')) {
-            $this->info($accounts->count() . ' accounts deleted');
+            $this->info($count . ' accounts in deletion…');
             $accounts->delete();
+            $this->info($count . ' accounts deleted');
         } else {
-            $this->info($accounts->count() . ' accounts to delete');
+            $this->info($count . ' accounts to delete');
         }
     }
 }

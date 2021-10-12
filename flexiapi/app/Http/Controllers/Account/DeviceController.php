@@ -46,7 +46,7 @@ class DeviceController extends Controller
             ]);
     }
 
-    public function destroy(string $uuid)
+    public function destroy(Request $request, string $uuid)
     {
         $connector = new FlexisipConnector;
         $connector->deleteDevice($request->user()->identifier, $uuid);

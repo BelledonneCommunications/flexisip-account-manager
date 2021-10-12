@@ -116,7 +116,7 @@ If you are planning to send emails using your account manager:
 
 ## Usage
 
-For the web panel, a generale documentation is available under the `\documentation` page.
+For the web panel, a generale documentation is available under the `/documentation` page.
 For the REST API, the `/api` page contains all the required documentation to authenticate and request the API.
 
 ## Console commands

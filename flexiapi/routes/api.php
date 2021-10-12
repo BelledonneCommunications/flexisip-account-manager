@@ -49,12 +49,39 @@ Route::group(['middleware' => ['auth.digest_or_key']], function () {
     Route::post('accounts/me/email/request', 'Api\EmailController@requestUpdate');
     Route::post('accounts/me/password', 'Api\PasswordController@update');
 
+    Route::get('accounts/me/contacts', 'Api\AccountContactController@index');
+    Route::get('accounts/me/contacts/{sip}', 'Api\AccountContactController@show');
+
     Route::group(['middleware' => ['auth.admin']], function () {
+        // Accounts
         Route::get('accounts/{id}/activate', 'Api\Admin\AccountController@activate');
         Route::get('accounts/{id}/deactivate', 'Api\Admin\AccountController@deactivate');
         Route::post('accounts', 'Api\Admin\AccountController@store');
         Route::get('accounts', 'Api\Admin\AccountController@index');
         Route::get('accounts/{id}', 'Api\Admin\AccountController@show');
         Route::delete('accounts/{id}', 'Api\Admin\AccountController@destroy');
+
+        // Account actions
+        Route::get('accounts/{id}/actions', 'Api\Admin\AccountActionController@index');
+        Route::get('accounts/{id}/actions/{action_id}', 'Api\Admin\AccountActionController@show');
+        Route::post('accounts/{id}/actions', 'Api\Admin\AccountActionController@store');
+        Route::delete('accounts/{id}/actions/{action_id}', 'Api\Admin\AccountActionController@destroy');
+        Route::put('accounts/{id}/actions/{action_id}', 'Api\Admin\AccountActionController@update');
+
+        // Account contacts
+        Route::get('accounts/{id}/contacts', 'Api\Admin\AccountContactController@index');
+        Route::get('accounts/{id}/contacts/{contact_id}', 'Api\Admin\AccountContactController@show');
+        Route::post('accounts/{id}/contacts/{contact_id}', 'Api\Admin\AccountContactController@add');
+        Route::delete('accounts/{id}/contacts/{contact_id}', 'Api\Admin\AccountContactController@remove');
+
+        // Account types
+        Route::get('account_types', 'Api\Admin\AccountTypeController@index');
+        Route::get('account_types/{id}', 'Api\Admin\AccountTypeController@show');
+        Route::post('account_types', 'Api\Admin\AccountTypeController@store');
+        Route::delete('account_types/{id}', 'Api\Admin\AccountTypeController@destroy');
+        Route::put('account_types/{id}', 'Api\Admin\AccountTypeController@update');
+
+        Route::post('accounts/{id}/types/{type_id}', 'Api\Admin\AccountController@typeAdd');
+        Route::delete('accounts/{id}/types/{type_id}', 'Api\Admin\AccountController@typeRemove');
     });
 });

@@ -34,6 +34,10 @@ Route::post('authenticate/phone/confirm', 'Account\AuthenticateController@valida
 
 Route::group(['middleware' => 'auth.digest_or_key'], function () {
     Route::get('provisioning/me', 'Account\ProvisioningController@me')->name('provisioning.me');
+
+    // Vcard 4.0
+    Route::get('contacts/vcard/{sip}', 'Account\ContactVcardController@show');
+    Route::get('contacts/vcard', 'Account\ContactVcardController@index');
 });
 
 Route::get('provisioning/qrcode/{confirmation}', 'Account\ProvisioningController@qrcode')->name('provisioning.qrcode');

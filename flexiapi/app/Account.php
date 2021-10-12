@@ -35,8 +35,8 @@ class Account extends Authenticatable
 {
     use HasFactory;
 
-    protected $with = ['passwords', 'admin', 'emailChanged', 'alias', 'activationExpiration'];
-    protected $hidden = ['alias', 'expire_time', 'confirmation_key'];
+    protected $with = ['passwords', 'admin', 'emailChanged', 'alias', 'activationExpiration', 'types', 'actions'];
+    protected $hidden = ['alias', 'expire_time', 'confirmation_key', 'pivot'];
     protected $dateTimes = ['creation_time'];
     protected $appends = ['realm', 'phone', 'confirmation_key_expires'];
     protected $casts = [
@@ -44,6 +44,9 @@ class Account extends Authenticatable
     ];
     public $timestamps = false;
 
+    /**
+     * Scopes
+     */
     protected static function booted()
     {
         static::addGlobalScope('domain', function (Builder $builder) {
@@ -63,36 +66,12 @@ class Account extends Authenticatable
         return $query->where('id', '<', 0);
     }
 
-    public function phoneChangeCode()
+    /**
+     * Relations
+     */
+    public function actions()
     {
-        return $this->hasOne('App\PhoneChangeCode');
-    }
-
-    public function passwords()
-    {
-        return $this->hasMany('App\Password');
-    }
-
-    public function alias()
-    {
-        return $this->hasOne('App\Alias');
-    }
-
-    public function nonces()
-    {
-        return $this->hasMany('App\DigestNonce');
-    }
-
-    public function admin()
-    {
-        return $this->hasOne('App\Admin');
-    }
-
-    public function hasTombstone()
-    {
-        return AccountTombstone::where('username', $this->attributes['username'])
-                               ->where('domain', $this->attributes['domain'])
-                               ->exists();
+        return $this->hasMany('App\AccountAction');
     }
 
     public function activationExpiration()
@@ -100,9 +79,24 @@ class Account extends Authenticatable
         return $this->hasOne('App\ActivationExpiration');
     }
 
+    public function admin()
+    {
+        return $this->hasOne('App\Admin');
+    }
+
+    public function alias()
+    {
+        return $this->hasOne('App\Alias');
+    }
+
     public function apiKey()
     {
         return $this->hasOne('App\ApiKey');
+    }
+
+    public function contacts()
+    {
+        return $this->belongsToMany('App\Account', 'contacts', 'account_id', 'contact_id');
     }
 
     public function emailChanged()
@@ -110,6 +104,29 @@ class Account extends Authenticatable
         return $this->hasOne('App\EmailChanged');
     }
 
+    public function nonces()
+    {
+        return $this->hasMany('App\DigestNonce');
+    }
+
+    public function passwords()
+    {
+        return $this->hasMany('App\Password');
+    }
+
+    public function phoneChangeCode()
+    {
+        return $this->hasOne('App\PhoneChangeCode');
+    }
+
+    public function types()
+    {
+        return $this->belongsToMany('App\AccountType');
+    }
+
+    /**
+     * Attributes
+     */
     public function getIdentifierAttribute()
     {
         return $this->attributes['username'].'@'.$this->attributes['domain'];
@@ -148,6 +165,9 @@ class Account extends Authenticatable
         return $this->passwords()->where('algorithm', 'SHA-256')->exists();
     }
 
+    /**
+     * Utils
+     */
     public function activationExpired(): bool
     {
         return ($this->activationExpiration && $this->activationExpiration->isExpired());
@@ -188,6 +208,13 @@ class Account extends Authenticatable
         return ($this->admin);
     }
 
+    public function hasTombstone()
+    {
+        return AccountTombstone::where('username', $this->attributes['username'])
+                               ->where('domain', $this->attributes['domain'])
+                               ->exists();
+    }
+
     public function updatePassword($newPassword, $algorithm)
     {
         $this->passwords()->delete();
@@ -197,5 +224,33 @@ class Account extends Authenticatable
         $password->password = Utils::bchash($this->username, $this->resolvedRealm, $newPassword, $algorithm);
         $password->algorithm = $algorithm;
         $password->save();
+    }
+
+    public function toVcard4()
+    {
+        $vcard = '
+BEGIN:VCARD
+VERSION:4.0
+KIND:individual
+MEMBER:'.$this->getIdentifierAttribute();
+
+        if (!empty($this->attributes['display_name'])) {
+            $vcard . '
+NAME:'.$this->attributes['display_name'];
+        }
+
+        if ($this->types) {
+            $vcard .= '
+X-LINPHONE-ACCOUNT-TYPE:'.$this->types->implode('key', ',');
+        }
+
+        foreach ($this->actions as $action) {
+            $vcard .= '
+X-LINPHONE-ACCOUNT-ACTION:'.$action->key.';'.$action->code.';'.$action->protocol;
+        }
+
+        return $vcard . '
+END:VCARD
+        ';
     }
 }

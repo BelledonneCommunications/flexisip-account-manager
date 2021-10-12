@@ -4,7 +4,7 @@ An API to deal with the Flexisip server
 
 The API is available under `/api`
 
-A `from` (consisting of the user SIP address, prefixed with `sip:`), `content-type` and `accept` HTTP headers are required to use the API properly
+A `from` (consisting of the user SIP address, prefixed with `sip:`), `content-type` and `accept` HTTP headers are REQUIRED to use the API properly
 
 ```
 > GET /api/{endpoint}
@@ -167,6 +167,7 @@ JSON parameters:
 * `algorithm` required, values can be `SHA-256` or `MD5`
 * `domain` **not configurable except during test deployments** the value is enforced to the default registration domain set in the global configuration
 * `activated` optional, a boolean, set to `false` by default
+* `display_name` optional, string
 * `admin` optional, a boolean, set to `false` by default, create an admin account
 * `phone` optional, a phone number, set a phone number to the account
 * `confirmation_key_expires` optional, a datetime of this format: Y-m-d H:i:s. Only used when `activated` is not used or `false`. Enforces an expiration date on the returned `confirmation_key`. After that datetime public email or phone activation endpoints will return `403`.
@@ -186,6 +187,77 @@ Activate an account.
 #### `GET /accounts/{id}/deactivate`
 Deactivate an account.
 
+### Contacts
+
+#### `GET /accounts/{id}/contacts/`
+Get all the account contacts.
+
+#### `POST /accounts/{id}/contacts/{contact_id}`
+Add a contact to the list.
+
+#### `DELETE /accounts/{id}/contacts/{contact_id}`
+Remove a contact from the list.
+
+### Account Actions
+
+#### `GET /accounts/{id}/actions/`
+Show an account related actions.
+
+#### `GET /accounts/{id}/actions/{action_id}`
+Show an account related action.
+
+#### `POST /accounts/{id}/actions/`
+Create an account action.
+
+JSON parameters:
+
+* `key` required, alpha numeric with dashes, lowercase
+* `code` required, alpha numeric, lowercase
+* `protocol` required, values must be `sipinfo` or `rfc2833`
+
+#### `PUT /accounts/{id}/actions/{action_id}`
+Create an account action.
+
+JSON parameters:
+
+* `key` required, alpha numeric with dashes, lowercase
+* `code` required, alpha numeric, lowercase
+* `protocol` required, values must be `sipinfo` or `rfc2833`
+
+#### `DELETE /accounts/{id}/actions/{action_id}`
+Delete an account related action.
+
+### Account Types
+
+#### `GET /account_types/`
+Show all the account types.
+
+#### `GET /account_types/{id}`
+Show an account type.
+
+#### `POST /account_types/`
+Create an account type.
+
+JSON parameters:
+
+* `key` required, alpha numeric with dashes, lowercase
+
+#### `PUT /account_types/{id}`
+Update an account type.
+
+JSON parameters:
+
+* `key` required, alpha numeric with dashes, lowercase
+
+#### `DELETE /account_types/{id}`
+Delete an account type.
+
+#### `POST /accounts/{id}/types/{type_id}`
+Add a type to the account.
+
+#### `DELETE /accounts/{id}/contacts/{type_id}`
+Remove a a type from the account.
+
 ### Statistics
 
 #### `GET /statistics/day`
@@ -197,11 +269,13 @@ Retrieve registrations statistics for a week.
 #### `GET /statistics/month`
 Retrieve registrations statistics for a month.
 
-# Provisioning
+# Non-API Endpoints
+
+The following URLs are **not API endpoints**, they are not located under `/api` but directly under the root path.
+
+## Provisioning
 
 When an account is having an available `confirmation_key` it can be provisioned using the two following URL.
-
-Those two URL are **not API endpoints**, they are not located under `/api`.
 
 ### `VISIT /provisioning/`
 Return the provisioning information available in the liblinphone configuration file (if correctly configured).
@@ -217,3 +291,11 @@ Return a QRCode that points to the provisioning URL.
 
 ### `VISIT /provisioning/me`
 Return the same base content as the previous URL and the account related information, similar to the `confirmation_key` endpoint. However this endpoint will always return those information.
+
+## Authenticated contact list
+
+### `VISIT /contacts/vcard`
+Return the authenticated user contacts list, in [vCard 4.0 format](https://datatracker.ietf.org/doc/html/rfc6350).
+
+### `VISIT /contacts/vcard/{sip}`
+Return a specific user authenticated contact, in [vCard 4.0 format](https://datatracker.ietf.org/doc/html/rfc6350).

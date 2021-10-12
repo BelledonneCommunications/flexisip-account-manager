@@ -28,6 +28,7 @@ use Carbon\Carbon;
 
 use App\Account;
 use App\AccountTombstone;
+use App\AccountType;
 use App\ActivationExpiration;
 use App\Admin;
 use App\Alias;
@@ -116,6 +117,7 @@ class AccountController extends Controller
         $account = new Account;
         $account->username = $request->get('username');
         $account->email = $request->get('email');
+        $account->display_name = $request->get('display_name');
         $account->activated = $request->has('activated')
             ? (bool)$request->get('activated')
             : false;
@@ -162,5 +164,25 @@ class AccountController extends Controller
         Log::channel('events')->info('API: Admin: Account created', ['id' => $account->identifier]);
 
         return response()->json($account->makeVisible(['confirmation_key']));
+    }
+
+    public function typeAdd(int $id, int $typeId)
+    {
+        if (Account::findOrFail($id)->types()->pluck('id')->contains($typeId)) {
+            abort(403);
+        }
+
+        if (AccountType::findOrFail($typeId)) {
+            return Account::findOrFail($id)->types()->attach($typeId);
+        }
+    }
+
+    public function typeRemove(int $id, int $typeId)
+    {
+        if (!Account::findOrFail($id)->types()->pluck('id')->contains($typeId)) {
+            abort(403);
+        }
+
+        return Account::findOrFail($id)->types()->detach($typeId);
     }
 }
