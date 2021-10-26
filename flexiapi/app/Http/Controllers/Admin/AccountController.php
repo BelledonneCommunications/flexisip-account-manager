@@ -67,6 +67,7 @@ class AccountController extends Controller
         $account = new Account;
         $account->username = $request->get('username');
         $account->email = $request->get('email');
+        $account->display_name = $request->get('display_name');
         $account->domain = config('app.sip_domain');
         $account->ip_address = $request->ip();
         $account->creation_time = Carbon::now();
@@ -93,6 +94,7 @@ class AccountController extends Controller
         $account = Account::findOrFail($id);
         $account->username = $request->get('username');
         $account->email = $request->get('email');
+        $account->display_name = $request->get('display_name');
         $account->save();
 
         $this->fillPassword($request, $account);

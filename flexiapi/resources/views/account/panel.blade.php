@@ -54,6 +54,12 @@
             </div>
             <p class="mb-1">Manage the Flexisip accounts</p>
         </a>
+        <a href="{{ route('admin.account.type.index') }}" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Account types</h5>
+            </div>
+            <p class="mb-1">Manage the account types</p>
+        </a>
         <a href="{{ route('admin.statistics.show.day') }}" class="list-group-item list-group-item-action">
             <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1">Statistics</h5>

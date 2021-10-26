@@ -46,7 +46,7 @@ class AccountActionController extends Controller
         $request->validate([
             'key' => ['required', 'alpha_dash', new NoUppercase],
             'code' => ['required', 'alpha_num', new NoUppercase],
-            'protocol' => 'required|in:sipinfo,rfc2833'
+            'protocol' => 'required|in:' . AccountAction::protocolsRule()
         ]);
 
         $accountAction = new AccountAction;
@@ -64,7 +64,7 @@ class AccountActionController extends Controller
         $request->validate([
             'key' => ['alpha_dash', new NoUppercase],
             'code' => ['alpha_num', new NoUppercase],
-            'protocol' => 'in:sipinfo,rfc2833'
+            'protocol' => 'in:' . AccountAction::protocolsRule()
         ]);
 
         $accountAction = Account::findOrFail($id)

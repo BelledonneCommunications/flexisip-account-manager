@@ -69,6 +69,11 @@
         </div>
 
         <div class="form-group col-md-6">
+            {!! Form::label('display_name', 'Display Name') !!}
+            {!! Form::text('display_name', $account->display_name, ['class' => 'form-control', 'placeholder' => 'John Doe']); !!}
+        </div>
+
+        <div class="form-group col-md-6">
             {!! Form::label('phone', 'Phone') !!}
             {!! Form::text('phone', $account->phone, ['class' => 'form-control', 'placeholder' => '+12123123']); !!}
         </div>

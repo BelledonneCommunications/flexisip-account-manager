@@ -79,6 +79,26 @@ Route::group(['middleware' => 'auth.admin'], function () {
     Route::get('admin/statistics/week', 'Admin\StatisticsController@showWeek')->name('admin.statistics.show.week');
     Route::get('admin/statistics/month', 'Admin\StatisticsController@showMonth')->name('admin.statistics.show.month');
 
+    // Account types
+    Route::get('admin/accounts/types', 'Admin\AccountTypeController@index')->name('admin.account.type.index');
+    Route::get('admin/accounts/types/create', 'Admin\AccountTypeController@create')->name('admin.account.type.create');
+    Route::post('admin/accounts/types', 'Admin\AccountTypeController@store')->name('admin.account.type.store');
+    Route::get('admin/accounts/types/{type_id}/edit', 'Admin\AccountTypeController@edit')->name('admin.account.type.edit');
+    Route::put('admin/accounts/types/{type_id}', 'Admin\AccountTypeController@update')->name('admin.account.type.update');
+    Route::get('admin/accounts/types/{type_id}/delete', 'Admin\AccountTypeController@delete')->name('admin.account.type.delete');
+    Route::delete('admin/accounts/types/{type_id}', 'Admin\AccountTypeController@destroy')->name('admin.account.type.destroy');
+
+    Route::get('admin/accounts/{account}/types/create', 'Admin\AccountAccountTypeController@create')->name('admin.account.account_type.create');
+    Route::post('admin/accounts/{account}/types', 'Admin\AccountAccountTypeController@store')->name('admin.account.account_type.store');
+    Route::delete('admin/accounts/{account}/types/{type_id}', 'Admin\AccountAccountTypeController@destroy')->name('admin.account.account_type.destroy');
+
+    // Contacts
+    Route::get('admin/accounts/{account}/contacts/create', 'Admin\AccountContactController@create')->name('admin.account.contact.create');
+    Route::post('admin/accounts/{account}/contacts', 'Admin\AccountContactController@store')->name('admin.account.contact.store');
+    Route::get('admin/accounts/{account}/contacts/{contact_id}/delete', 'Admin\AccountContactController@delete')->name('admin.account.contact.delete');
+    Route::delete('admin/accounts/{account}/contacts', 'Admin\AccountContactController@destroy')->name('admin.account.contact.destroy');
+
+    // Accounts
     Route::get('admin/accounts/{account}/show', 'Admin\AccountController@show')->name('admin.account.show');
 
     Route::get('admin/accounts/{account}/activate', 'Admin\AccountController@activate')->name('admin.account.activate');
@@ -100,4 +120,12 @@ Route::group(['middleware' => 'auth.admin'], function () {
 
     Route::get('admin/accounts/{search?}', 'Admin\AccountController@index')->name('admin.account.index');
     Route::post('admin/accounts/search', 'Admin\AccountController@search')->name('admin.account.search');
+
+    // Account actions
+    Route::get('admin/accounts/{account}/actions/create', 'Admin\AccountActionController@create')->name('admin.account.action.create');
+    Route::post('admin/accounts/{account}/actions', 'Admin\AccountActionController@store')->name('admin.account.action.store');
+    Route::get('admin/accounts/{account}/actions/{action_id}/edit', 'Admin\AccountActionController@edit')->name('admin.account.action.edit');
+    Route::put('admin/accounts/{account}/actions/{action_id}', 'Admin\AccountActionController@update')->name('admin.account.action.update');
+    Route::get('admin/accounts/{account}/actions/{action_id}/delete', 'Admin\AccountActionController@delete')->name('admin.account.action.delete');
+    Route::delete('admin/accounts/{account}/actions/{action_id}', 'Admin\AccountActionController@destroy')->name('admin.account.action.destroy');
 });

@@ -25,7 +25,6 @@
     </div>
 </div>
 
-
 <table class="table table-responsive-md">
     <thead>
         <tr>
@@ -59,7 +58,6 @@
                 <td>{{ $account->creation_time}}</td>
             </tr>
         @endforeach
-
     </tbody>
 </table>
 

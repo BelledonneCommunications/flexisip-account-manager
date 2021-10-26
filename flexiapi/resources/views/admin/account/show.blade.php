@@ -20,7 +20,8 @@
     <b>Id:</b> {{ $account->id }}<br />
     <b>Identifier:</b> {{ $account->identifier }}<br />
     <b>Email:</b> <a href="mailto:{{ $account->email }}">{{ $account->email }}</a><br />
-    <b>Phone number:</b>@if ($account->alias) {{ $account->phone }} @else No number @endif
+    @if ($account->alias)<b>Phone number:</b> {{ $account->phone }}<br />@endif
+    @if ($account->display_name)<b>Display name:</b> {{ $account->display_name }}<br />@endif
 </p>
 
 @if ($account->sha256Password)
@@ -43,8 +44,65 @@
     <span class="badge badge-danger">Not Admin</span> <a href="{{ route('admin.account.admin', $account->id) }}">Add admin role</a>
 @endif
 
+<h3 class="mt-3">Contacts</h3>
+
+<table class="table">
+    <tbody>
+        @foreach ($account->contacts as $contact)
+            <tr>
+                <th scope="row">{{ $contact->identifier }}</th>
+                <td>
+                    <a class="btn btn-sm mr-2" href="{{ route('admin.account.contact.delete', [$account, $contact->id]) }}">Delete</a>
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+
+<a class="btn btn-sm" href="{{ route('admin.account.contact.create', $account) }}">Add</a>
+
+<h3 class="mt-3">Actions</h3>
+
+<table class="table">
+    <tbody>
+        @foreach ($account->actions as $action)
+            <tr>
+                <th scope="row">{{ $action->key }}</th>
+                <td>{{ $action->code }}</td>
+                <td>{{ $action->resolvedProtocol }}</td>
+                <td>
+                    <a class="btn btn-sm mr-2" href="{{ route('admin.account.action.edit', [$account, $action->id]) }}">Edit</a>
+                    <a class="btn btn-sm mr-2" href="{{ route('admin.account.action.delete', [$account, $action->id]) }}">Delete</a>
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+
+<a class="btn btn-sm" href="{{ route('admin.account.action.create', $account) }}">Add</a>
+
+<h3 class="mt-3">Types</h3>
+
+<table class="table">
+    <tbody>
+        @foreach ($account->types as $type)
+            <tr>
+                <th scope="row">{{ $type->key }}</th>
+                <td>
+                    {!! Form::open(['route' => ['admin.account.account_type.destroy', $account, $type->id], 'method' => 'delete']) !!}
+                    {!! Form::submit('Delete', ['class' => 'btn btn-sm mr-2']) !!}
+                    {!! Form::close() !!}
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+
+<a class="btn btn-sm" href="{{ route('admin.account.account_type.create', $account) }}">Add</a>
+
+<h3 class="mt-3">Provisioning</h3>
+
 @if ($account->confirmation_key)
-    <h3 class="mt-3">Provisioning</h3>
     <p>Share the following picture with the user or the one-time-use link bellow.</p>
 
     <img src="{{ route('provisioning.qrcode', $account->confirmation_key) }}"><br />

@@ -99,6 +99,11 @@ input.form-control {
     padding: 0 1.5rem;
 }
 
+.btn.btn-sm {
+    padding: 0 0.75rem;
+    line-height: 1.75rem;
+}
+
 .btn.btn-centered {
     display: block;
     margin: 1rem auto;
