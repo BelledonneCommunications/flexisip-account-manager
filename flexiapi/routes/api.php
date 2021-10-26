@@ -49,8 +49,8 @@ Route::group(['middleware' => ['auth.digest_or_key']], function () {
     Route::post('accounts/me/email/request', 'Api\EmailController@requestUpdate');
     Route::post('accounts/me/password', 'Api\PasswordController@update');
 
-    Route::get('accounts/me/contacts', 'Api\AccountContactController@index');
     Route::get('accounts/me/contacts/{sip}', 'Api\AccountContactController@show');
+    Route::get('accounts/me/contacts', 'Api\AccountContactController@index');
 
     Route::group(['middleware' => ['auth.admin']], function () {
         // Accounts

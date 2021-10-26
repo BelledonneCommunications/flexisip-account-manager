@@ -228,8 +228,7 @@ class Account extends Authenticatable
 
     public function toVcard4()
     {
-        $vcard = '
-BEGIN:VCARD
+        $vcard = 'BEGIN:VCARD
 VERSION:4.0
 KIND:individual
 MEMBER:'.$this->getIdentifierAttribute();
@@ -250,7 +249,6 @@ X-LINPHONE-ACCOUNT-ACTION:'.$action->key.';'.$action->code.';'.$action->protocol
         }
 
         return $vcard . '
-END:VCARD
-        ';
+END:VCARD';
     }
 }

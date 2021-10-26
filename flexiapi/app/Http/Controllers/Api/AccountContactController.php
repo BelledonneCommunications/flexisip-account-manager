@@ -27,26 +27,14 @@ class AccountContactController extends Controller
 {
     public function index(Request $request)
     {
-        $contacts = $request->user()->contacts;
-
-        return $request->has('vcard')
-            ? response($contacts->map(function ($contact) {
-                return $contact->toVcard4();
-            })->implode('
-                ')
-            )
-            : $contacts;
+        return $request->user()->contacts;
     }
 
     public function show(Request $request, string $sip)
     {
-        $contact = $request->user()
+        return $request->user()
                        ->contacts()
                        ->sip($sip)
                        ->firstOrFail();
-
-        return $request->has('vcard')
-            ? $contact->toVcard4()
-            : $contact;
     }
 }

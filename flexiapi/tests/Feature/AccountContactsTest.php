@@ -39,6 +39,7 @@ class AccountContactTest extends TestCase
     {
         $password1 = Password::factory()->create();
         $password2 = Password::factory()->create();
+        $password3 = Password::factory()->create();
 
         $typeKey = 'phone';
         $actionKey = '123';
@@ -53,6 +54,12 @@ class AccountContactTest extends TestCase
             ->assertStatus(200);
 
         $this->assertEquals(1, DB::table('contacts')->count());
+
+        $this->keyAuthenticated($admin->account)
+            ->json($this->method, $this->route.'/'.$password1->account->id.'/contacts/'.$password3->account->id)
+            ->assertStatus(200);
+
+        $this->assertEquals(2, DB::table('contacts')->count());
 
         // Type
         $this->keyAuthenticated($admin->account)
@@ -79,7 +86,7 @@ class AccountContactTest extends TestCase
         $this->keyAuthenticated($admin->account)
              ->json($this->method, $this->route.'/'.$password1->account->id.'/contacts/'.$password2->account->id)
              ->assertStatus(403);
-        $this->assertEquals(1, DB::table('contacts')->count());
+        $this->assertEquals(2, DB::table('contacts')->count());
 
         $this->keyAuthenticated($admin->account)
              ->get($this->route.'/'.$password1->account->id.'/contacts')
@@ -100,6 +107,14 @@ class AccountContactTest extends TestCase
                 'username' => $password2->account->username,
                 'activated' => true
              ]]);
+
+        $this->keyAuthenticated($password1->account)
+             ->get($this->route.'/me/contacts/'.$password2->account->identifier)
+             ->assertStatus(200)
+             ->assertJson([
+                'username' => $password2->account->username,
+                'activated' => true
+             ]);
 
         // Vcard 4.0
         $this->keyAuthenticated($password1->account)
@@ -127,12 +142,12 @@ class AccountContactTest extends TestCase
              ->delete($this->route.'/'.$password1->account->id.'/contacts/'.$password2->account->id)
              ->assertStatus(200);
 
-        $this->assertEquals(0, DB::table('contacts')->count());
+        $this->assertEquals(1, DB::table('contacts')->count());
 
         // Retry
         $this->keyAuthenticated($admin->account)
              ->delete($this->route.'/'.$password1->account->id.'/contacts/'.$password2->account->id)
              ->assertStatus(403);
-        $this->assertEquals(0, DB::table('contacts')->count());
+        $this->assertEquals(1, DB::table('contacts')->count());
     }
 }

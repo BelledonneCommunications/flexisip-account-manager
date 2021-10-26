@@ -150,6 +150,14 @@ Return the user registered devices.
 #### `DELETE /accounts/me/devices/{uuid}`
 Remove one of the user registered devices.
 
+### Accounts devices
+
+#### `GET /accounts/me/contacts`
+Return the user contacts.
+
+#### `GET /accounts/me/contacts/{sip}`
+Return a user contact.
+
 ## Admin endpoints
 
 Those endpoints are authenticated and requires an admin account.

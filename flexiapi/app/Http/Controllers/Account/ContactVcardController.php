@@ -30,8 +30,7 @@ class ContactVcardController extends Controller
         return response(
             $request->user()->contacts->map(function ($contact) {
                 return $contact->toVcard4();
-            })->implode('
-            ')
+            })->implode("\n")
         );
     }
 
