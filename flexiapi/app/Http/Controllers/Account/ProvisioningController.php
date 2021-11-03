@@ -115,6 +115,15 @@ class ProvisioningController extends Controller
                 ->first();
         }
 
+        $section = $dom->createElement('section');
+        $section->setAttribute('name', 'misc');
+
+        $entry = $dom->createElement('entry', route('account.contacts.vcard.index'));
+        $entry->setAttribute('name', 'contacts-vcard-list');
+        $section->appendChild($entry);
+
+        $config->appendChild($section);
+
         if ($account && !$account->activationExpired()) {
             $section = $dom->createElement('section');
             $section->setAttribute('name', 'proxy_' . $proxyConfigIndex);

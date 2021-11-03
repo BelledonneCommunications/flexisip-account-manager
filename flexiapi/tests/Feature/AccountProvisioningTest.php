@@ -57,7 +57,8 @@ class AccountProvisioningTest extends TestCase
             ->get($this->accountRoute)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
-            ->assertSee('ha1');
+            ->assertSee('ha1')
+            ->assertSee('contacts-vcard-list');
 
         // And then twice
         $response = $this->keyAuthenticated($password->account)

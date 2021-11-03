@@ -231,11 +231,11 @@ class Account extends Authenticatable
         $vcard = 'BEGIN:VCARD
 VERSION:4.0
 KIND:individual
-MEMBER:'.$this->getIdentifierAttribute();
+IMPP:sip:'.$this->getIdentifierAttribute();
 
         if (!empty($this->attributes['display_name'])) {
             $vcard . '
-NAME:'.$this->attributes['display_name'];
+FN:'.$this->attributes['display_name'];
         }
 
         if ($this->types) {
