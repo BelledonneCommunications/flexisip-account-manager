@@ -9,6 +9,7 @@ class MakeAccountTypesKeyUnique extends Migration
     public function up()
     {
         Schema::table('account_types', function (Blueprint $table) {
+            $table->string('key', 64)->change();
             $table->unique('key');
         });
 
@@ -18,6 +19,7 @@ class MakeAccountTypesKeyUnique extends Migration
     {
         Schema::table('account_types', function (Blueprint $table) {
             $table->dropUnique('account_types_key_unique');
+            $table->string('key', 256)->change();
         });
 
     }

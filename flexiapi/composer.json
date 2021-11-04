@@ -10,6 +10,7 @@
     "require": {
         "php": ">=7.3.0",
         "anhskohbo/no-captcha": "^3.3",
+        "doctrine/dbal": "^3.1",
         "endroid/qr-code": "^4.1",
         "fideloper/proxy": "^4.4",
         "laravel/framework": "^8.0",
