@@ -234,11 +234,14 @@ KIND:individual
 IMPP:sip:'.$this->getIdentifierAttribute();
 
         if (!empty($this->attributes['display_name'])) {
-            $vcard . '
+            $vcard .= '
 FN:'.$this->attributes['display_name'];
+        } else {
+            $vcard .= '
+FN:'.$this->getIdentifierAttribute();
         }
 
-        if ($this->types) {
+        if ($this->types->count() > 0) {
             $vcard .= '
 X-LINPHONE-ACCOUNT-TYPE:'.$this->types->implode('key', ',');
         }
