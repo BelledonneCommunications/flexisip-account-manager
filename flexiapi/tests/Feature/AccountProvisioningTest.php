@@ -19,10 +19,12 @@
 
 namespace Tests\Feature;
 
+use Account;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 use App\Password;
+use App\Account as DBAccount;
 
 class AccountProvisioningTest extends TestCase
 {
@@ -77,12 +79,17 @@ class AccountProvisioningTest extends TestCase
 
         $password = Password::factory()->create();
         $password->account->generateApiKey();
+        $password->account->activated = false;
+        $password->account->save();
 
         // Ensure that we get the authentication password once
         $response = $this->get($this->route.'/'.$password->account->confirmation_key)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('ha1');
+
+        // Check if the account has been activated
+        $this->assertEquals(true, DBAccount::where('id', $password->account->id)->first()->activated);
 
         // And then twice
         $response = $this->get($this->route.'/'.$password->account->confirmation_key)

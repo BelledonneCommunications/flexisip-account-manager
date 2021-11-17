@@ -149,7 +149,7 @@ class ProvisioningController extends Controller
 
             $passwords = $account->passwords()->get();
 
-            foreach ($passwords as $password) { // => foreach ($passwords)
+            foreach ($passwords as $password) {
                 $section = $dom->createElement('section');
                 $section->setAttribute('name', 'auth_info_' . $authInfoIndex);
 
@@ -185,6 +185,12 @@ class ProvisioningController extends Controller
             }
 
             if ($confirmationKey) {
+                // Activate the account
+                if ($account->activated == false
+                && $confirmationKey == $account->confirmation_key) {
+                    $account->activated = true;
+                }
+
                 $account->confirmation_key = null;
                 $account->save();
             }

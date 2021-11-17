@@ -292,6 +292,8 @@ Return the provisioning information available in the liblinphone configuration f
 Return the provisioning information available in the liblinphone configuration file.
 If the `confirmation_key` is valid the related account information are added to the returned XML. The account is then considered as "provisioned" and those account related information will be removed in the upcoming requests (the content will be the same as the previous url).
 
+If the account is not activated and the `confirmation_key` is valid. The account will be activated.
+
 ### `VISIT /provisioning/qrcode/{confirmation_key}`
 Return a QRCode that points to the provisioning URL.
 
