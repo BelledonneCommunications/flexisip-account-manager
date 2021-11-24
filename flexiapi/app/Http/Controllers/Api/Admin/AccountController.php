@@ -47,6 +47,11 @@ class AccountController extends Controller
         return Account::without(['passwords', 'admin'])->findOrFail($id)->makeVisible(['confirmation_key']);
     }
 
+    public function search(Request $request, string $sip)
+    {
+        return Account::sip($sip)->firstOrFail();
+    }
+
     public function destroy(Request $request, $id)
     {
         $account = Account::findOrFail($id);

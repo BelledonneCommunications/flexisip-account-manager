@@ -186,6 +186,9 @@ Retrieve all the accounts, paginated.
 #### `GET /accounts/{id}`
 Retrieve a specific account.
 
+#### `GET /accounts/{sip}/search`
+Search for a specific account by sip address.
+
 #### `DELETE /accounts/{id}`
 Delete a specific account and its related information.
 

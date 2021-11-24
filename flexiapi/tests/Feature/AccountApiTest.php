@@ -582,6 +582,15 @@ class AccountApiTest extends TestCase
             ->assertJson([
                 'activated' => true
             ]);
+
+        // Search feature
+        $this->keyAuthenticated($admin->account)
+            ->get($this->route.'/'.$password->account->identifier.'/search')
+            ->assertStatus(200)
+            ->assertJson([
+                'id' => $password->account->id,
+                'activated' => true
+            ]);
     }
 
     public function testGetAll()
