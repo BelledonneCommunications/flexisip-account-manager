@@ -24,7 +24,7 @@ Once completed a confirmation email containing a unique link will be sent to the
 *The feature is not enabled on this instance.*
 @endif
 
-If enabled you can also @if (config('app.phone_authentication')) [create an account using a phone number]({{ route('account.register.phone') }}) @else create an account using a phone number @endif. You can also add an option nickname to personnalize your SIP address. If not, your phone number will be used as a username.
+If enabled you can also @if (config('app.phone_authentication')) [create an account using a phone number]({{ route('account.register.phone') }}) @else create an account using a phone number @endif. You can also add an optional nickname to personnalize your SIP address. If not, your phone number will be used as a username.
 
 Once submitted, you will be asked to provide a unique pin code received by SMS to the phone number used during the registration.
 
@@ -78,19 +78,23 @@ From the accounts administration panel an administrator will be able to list, cr
 
 Each user, identified by a unique number can be managed from the panel. The account can be activated or deactivated (see the Registration section for more information about activation).
 
-You can also set an account as an administrator. The account will then have the same access as you from.
+You can also set an account as an administrator. The account will then have the same accesses and authorizations as you.
 
 Finally the account page allows you to provision the account, using a QR Code or a unique link that can be shared with the contact.
 
-The provisioning link can be generated and refreshed from this page as well.
+The provisioning link can be generated and refreshed from this page as well. If the provisiong link is renewed, the old one will be unavailable.
 
 ### Create and edit an account
 
-Administrators can create and edit accounts directly from the admin panel.
+Administrators can create and edit accounts directly from the admin panel. During the edition they can assign contacts (other accounts available in the local database), actions and types the same way it can be done in the [API]({{ route('api') }}).
 
 ### Delete an account
 
 The deletion of an account is definitive, all the database related data (password, aliases…) will be destroyed after the deletion.
+
+### Create, edit and delete account types
+
+An adminisator can create, edit and delete account types. Those can be used to categorize accounts in clients, they are often used for Internet of Things related devices.
 
 ## Statistics
 
