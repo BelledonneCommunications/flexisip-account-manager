@@ -97,10 +97,7 @@ class AuthenticateController extends Controller
         $request->validate([
             'email' => 'required|email|exists:accounts,email',
             'username' => [
-                'required',
-                Rule::exists('accounts', 'username')->where(function ($query) use ($request) {
-                    $query->where('email', $request->get('email'));
-                }),
+                'required'
             ],
             'g-recaptcha-response'  => 'required|captcha',
         ]);
@@ -111,6 +108,22 @@ class AuthenticateController extends Controller
         $account = Account::where('email', $request->get('email'))
                           ->where('username', $request->get('username'))
                           ->first();
+
+        // Try alias
+        if (!$account) {
+            $alias = Alias::where('alias', $request->get('username'))->first();
+
+            if ($alias && $alias->account->email == $request->get('email')) {
+                $account = $alias->account;
+            }
+        }
+
+        if (!$account) {
+            return redirect()->back()->withErrors(['authentication' => 'The account doesn\'t exists']);
+        }
+
+        dd($account);
+
         $account->confirmation_key = Str::random(self::$emailCodeSize);
         $account->save();
 
