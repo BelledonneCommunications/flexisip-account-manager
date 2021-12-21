@@ -104,6 +104,14 @@ Allow the webserver user to write in the `storage/` directory:
 
     chcon -R -t httpd_sys_rw_content_t storage/
 
+Don't forget to make this change persistent if the directory may be relabeled :
+
+    semanage fcontext -a -t httpd_sys_rw_content_t storage/
+
+You can use the restorecon command to verify that this is working :
+
+    restorecon storage/
+
 If your database is located on a remote machine, you should also allow your webserver user to connect to remote hosts:
 
     semanage port -a -t http_port_t -p tcp 3306 // Open remote connections on the MySQL port for example
