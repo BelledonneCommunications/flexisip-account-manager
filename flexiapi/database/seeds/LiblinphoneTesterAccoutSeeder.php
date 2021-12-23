@@ -15,8 +15,10 @@ use Illuminate\Support\Facades\DB;
  *       "passwords": [{ "hash": "<hash>", "algorithm": "<algorithm>"}],
  *       "alias": { "alias": "<alias>", "domain": "<domain>"}
  *   },
- *   {"type": "range", "id": "%range%", "username": "user_%range%", "domain": "<domain>",
- *       "range": {"from": 5, "to": 10},
+ *   {"type": "range", "id": "%id%", "username": "user_%usernamePostfix%", "domain": "<domain>",
+ *       "iteration": 2000,
+ *       "idStart": 49,
+ *       "usernameStart": 1,
  *       "passwords": [{ "hash": "<hash>", "algorithm": "<algorithm>"}]
  *   }
  * ]
@@ -67,20 +69,20 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
             }
 
             if ($element->type == 'range') {
-                for ($i = $element->range->from; $i <= $element->range->to; $i++) {
+                for ($i = 0; $i < $element->iteration; $i++) {
                     array_push(
                         $accounts,
                         $this->generateAccountArray(
-                            str_replace('%range%', $i, $element->id),
-                            str_replace('%range%', $i, $element->username),
-                            str_replace('%range%', $i, $element->domain),
+                            str_replace('%id%', $element->idStart + $i, $element->id),
+                            str_replace('%usernamePostfix%', $element->usernameStart + $i, $element->username),
+                            $element->domain,
                             $element->activated ?? true
                         )
                     );
 
                     array_push(
                         $passwords,
-                        $this->generatePasswordArray($i, 'secret', 'CLRTXT')
+                        $this->generatePasswordArray($element->idStart + $i, 'secret', 'CLRTXT')
                     );
                 }
             }
