@@ -22,6 +22,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Str;
 
@@ -49,9 +50,13 @@ class Account extends Authenticatable
      */
     protected static function booted()
     {
-        static::addGlobalScope('domain', function (Builder $builder) {
-            $builder->where('domain', config('app.sip_domain'));
-        });
+        $user = Auth::user();
+
+        if (!$user || !$user->admin || !config('app.admins_manage_multi_domains')) {
+            static::addGlobalScope('domain', function (Builder $builder) {
+                $builder->where('domain', config('app.sip_domain'));
+            });
+        }
     }
 
     public function scopeSip($query, string $sip)

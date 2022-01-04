@@ -54,12 +54,12 @@ class AccountController extends Controller
                 'required',
                 new NoUppercase,
                 Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
-                    $query->where('domain', $request->has('domain') && config('app.everyone_is_admin')
+                    $query->where('domain', $request->has('domain') && config('app.admins_manage_multi_domains')
                                                 ? $request->get('domain')
                                                 : config('app.sip_domain'));
                 }),
                 Rule::unique('accounts_tombstones', 'username')->where(function ($query) use ($request) {
-                    $query->where('domain', $request->has('domain') && config('app.everyone_is_admin')
+                    $query->where('domain', $request->has('domain') && config('app.admins_manage_multi_domains')
                                                 ? $request->get('domain')
                                                 : config('app.sip_domain'));
                 }),
@@ -85,7 +85,7 @@ class AccountController extends Controller
         $account->username = $request->get('username');
         $account->email = $request->get('email');
         $account->activated = false;
-        $account->domain = $request->has('domain') && config('app.everyone_is_admin')
+        $account->domain = $request->has('domain') && config('app.admins_manage_multi_domains')
             ? $request->get('domain')
             : config('app.sip_domain');
         $account->ip_address = $request->ip();

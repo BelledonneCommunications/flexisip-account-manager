@@ -49,6 +49,12 @@ return [
      */
     'everyone_is_admin' => env('APP_EVERYONE_IS_ADMIN', false),
 
+    /**
+     * Allow admins to handle all the accounts in the database
+     * ENABLE IT AT YOUR OWN RISKS IN PRODUCTION
+     */
+    'admins_manage_multi_domains' => env('APP_ADMINS_MANAGE_MULTI_DOMAINS', false),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

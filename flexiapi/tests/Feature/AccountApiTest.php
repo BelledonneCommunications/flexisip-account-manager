@@ -118,7 +118,7 @@ class AccountApiTest extends TestCase
     public function testDomainInTestDeployment()
     {
         $configDomain = 'testdomain.com';
-        config()->set('app.everyone_is_admin', true);
+        config()->set('app.admins_manage_multi_domains', true);
         config()->set('app.sip_domain', 'anotherdomain.com');
 
         $admin = Admin::factory()->create();

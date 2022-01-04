@@ -24,6 +24,7 @@ class UpdateAccountRequest extends FormRequest
                 })->ignore($this->route('id'), 'id'),
                 'filled',
             ],
+            'domain' => config('app.admins_manage_multi_domains') ? 'required' : '',
             'email' => 'nullable|email',
             'password_sha256' => 'nullable|min:3',
             'phone' => [

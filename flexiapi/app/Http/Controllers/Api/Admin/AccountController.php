@@ -96,7 +96,7 @@ class AccountController extends Controller
             'username' => [
                 'required',
                 Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
-                    $query->where('domain', $request->has('domain') && config('app.everyone_is_admin')
+                    $query->where('domain', $request->has('domain') && config('app.admins_manage_multi_domains')
                                                 ? $request->get('domain')
                                                 : config('app.sip_domain')
                     );
@@ -128,7 +128,7 @@ class AccountController extends Controller
             : false;
         $account->ip_address = $request->ip();
         $account->creation_time = Carbon::now();
-        $account->domain = $request->has('domain') && config('app.everyone_is_admin')
+        $account->domain = $request->has('domain') && config('app.admins_manage_multi_domains')
             ? $request->get('domain')
             : config('app.sip_domain');
         $account->user_agent = $request->header('User-Agent') ?? config('app.name');

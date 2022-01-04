@@ -38,10 +38,17 @@
         <div class="form-group col-md-12">
             {!! Form::label('username', 'Username') !!}
             <div class="input-group">
-                {!! Form::text('username', $account->username, ['class' => 'form-control', 'placeholder' => 'Username']); !!}
-                <div class="input-group-append">
-                    <span class="input-group-text" id="basic-addon1">@ {{ config('app.sip_domain') }}</span>
-                </div>
+                {!! Form::text('username', $account->username, ['class' => 'form-control', 'placeholder' => 'Username', 'required' => 'required']); !!}
+                @if (config('app.admins_manage_multi_domains'))
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon1">@</span>
+                    </div>
+                    {!! Form::text('username', $account->domain ?? config('app.sip_domain'), ['class' => 'form-control', 'placeholder' => 'domain.com', 'required' => 'required']); !!}
+                @else
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon1">@ {{ config('app.sip_domain') }}</span>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

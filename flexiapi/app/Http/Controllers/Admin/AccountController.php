@@ -68,7 +68,9 @@ class AccountController extends Controller
         $account->username = $request->get('username');
         $account->email = $request->get('email');
         $account->display_name = $request->get('display_name');
-        $account->domain = config('app.sip_domain');
+        $account->domain = $request->has('domain') && config('app.admins_manage_multi_domains')
+            ? $request->get('domain')
+            : config('app.sip_domain');
         $account->ip_address = $request->ip();
         $account->creation_time = Carbon::now();
         $account->user_agent = config('app.name');

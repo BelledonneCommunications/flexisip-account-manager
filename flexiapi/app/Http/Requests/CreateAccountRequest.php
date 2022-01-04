@@ -24,6 +24,7 @@ class CreateAccountRequest extends FormRequest
                 }),
                 'filled',
             ],
+            'domain' => config('app.admins_manage_multi_domains') ? 'required' : '',
             'password' => 'required|min:3',
             'email' => 'nullable|email',
             'phone' => [
