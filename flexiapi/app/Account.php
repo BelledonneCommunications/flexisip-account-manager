@@ -50,13 +50,12 @@ class Account extends Authenticatable
      */
     protected static function booted()
     {
-        $user = Auth::user();
-
-        if (!$user || !$user->admin || !config('app.admins_manage_multi_domains')) {
-            static::addGlobalScope('domain', function (Builder $builder) {
+        static::addGlobalScope('domain', function (Builder $builder) {
+            $user = Auth::user();
+            if (!$user || !$user->admin || !config('app.admins_manage_multi_domains')) {
                 $builder->where('domain', config('app.sip_domain'));
-            });
-        }
+            }
+        });
     }
 
     public function scopeSip($query, string $sip)

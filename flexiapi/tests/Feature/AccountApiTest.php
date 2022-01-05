@@ -24,8 +24,11 @@ use App\Account;
 use App\AccountTombstone;
 use App\ActivationExpiration;
 use App\Admin;
+
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\Fluent\AssertableJson;
+
 use Tests\TestCase;
 
 class AccountApiTest extends TestCase
@@ -94,6 +97,8 @@ class AccountApiTest extends TestCase
         $username = 'foobar';
         $domain = 'example.com';
 
+        config()->set('app.admins_manage_multi_domains', false);
+
         $response0 = $this->generateFirstResponse($password);
         $response1 = $this->generateSecondResponse($password, $response0)
             ->json($this->method, $this->route, [
@@ -113,6 +118,70 @@ class AccountApiTest extends TestCase
             ]);
 
         $this->assertFalse(empty($response1['confirmation_key']));
+    }
+
+    public function testAdminMultiDomains()
+    {
+        $configDomain = 'sip.domain.com';
+        config()->set('app.sip_domain', $configDomain);
+        config()->set('app.admins_manage_multi_domains', true);
+
+        $admin = Admin::factory()->create();
+        $password = $admin->account->passwords()->first();
+        $password->account->generateApiKey();
+        $password->account->save();
+
+        $username = 'foobar';
+        $domain1 = 'example.com';
+        $domain2 = 'foobar.com';
+
+        $response0 = $this->keyAuthenticated($password->account)
+            ->json($this->method, $this->route, [
+                'username' => $username,
+                'domain' => $domain1,
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+            ]);
+
+        $response0
+            ->assertStatus(200)
+            ->assertJson([
+                'username' => $username,
+                'domain' => $domain1
+            ]);
+
+        $response1 = $this->keyAuthenticated($password->account)
+            ->json($this->method, $this->route, [
+                'username' => $username,
+                'domain' => $domain2,
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+            ]);
+
+        $response1
+            ->assertStatus(200)
+            ->assertJson([
+                'username' => $username,
+                'domain' => $domain2
+            ]);
+
+        $this->keyAuthenticated($password->account)
+            ->get($this->route)
+            ->assertStatus(200)
+            ->assertJson(['data' => [
+                [
+                    'username' => $admin->account->username,
+                    'domain' => $admin->account->domain
+                ],
+                [
+                    'username' => $username,
+                    'domain' => $domain1
+                ],
+                [
+                    'username' => $username,
+                    'domain' => $domain2
+                ]
+            ]]);
     }
 
     public function testDomainInTestDeployment()

@@ -42,17 +42,17 @@ class AccountController extends Controller
         return Account::without(['passwords', 'admin'])->paginate(20);
     }
 
-    public function show(Request $request, $id)
+    public function show($id)
     {
         return Account::without(['passwords', 'admin'])->findOrFail($id)->makeVisible(['confirmation_key']);
     }
 
-    public function search(Request $request, string $sip)
+    public function search(string $sip)
     {
         return Account::sip($sip)->firstOrFail();
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
         $account = Account::findOrFail($id);
 
@@ -68,7 +68,7 @@ class AccountController extends Controller
         $account->delete();
     }
 
-    public function activate(Request $request, $id)
+    public function activate($id)
     {
         $account = Account::findOrFail($id);
         $account->activated = true;
@@ -79,7 +79,7 @@ class AccountController extends Controller
         return $account;
     }
 
-    public function deactivate(Request $request, $id)
+    public function deactivate($id)
     {
         $account = Account::findOrFail($id);
         $account->activated = false;

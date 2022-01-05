@@ -173,7 +173,8 @@ JSON parameters:
 * `username` unique username, minimum 6 characters
 * `password` required minimum 6 characters
 * `algorithm` required, values can be `SHA-256` or `MD5`
-* `domain` **not configurable by default, except if `admins_manage_multi_domains` is set to `true` in the configuration** the value is enforced to the default registration domain set in the global configuration
+* `domain` **not configurable by default. The value is enforced to the default domain set in the global configuration (`app.sip_domain`)**
+The `domain` field is taken into account ONLY when `app.admins_manage_multi_domains` is set to `true` in the global configuration
 * `activated` optional, a boolean, set to `false` by default
 * `display_name` optional, string
 * `admin` optional, a boolean, set to `false` by default, create an admin account
