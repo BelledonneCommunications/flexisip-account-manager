@@ -51,8 +51,12 @@ class Account extends Authenticatable
     protected static function booted()
     {
         static::addGlobalScope('domain', function (Builder $builder) {
-            $user = Auth::user();
-            if (!$user || !$user->admin || !config('app.admins_manage_multi_domains')) {
+            if (Auth::hasUser()) {
+                $user = Auth::user();
+                if (!$user->admin || !config('app.admins_manage_multi_domains')) {
+                    $builder->where('domain', config('app.sip_domain'));
+                }
+            } else {
                 $builder->where('domain', config('app.sip_domain'));
             }
         });
