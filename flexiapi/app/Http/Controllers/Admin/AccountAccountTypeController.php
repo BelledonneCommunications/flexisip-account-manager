@@ -28,8 +28,10 @@ use App\AccountType;
 
 class AccountAccountTypeController extends Controller
 {
-    public function create(Account $account)
+    public function create(int $id)
     {
+        $account = Account::findOrFail($id);
+
         return view('admin.account.account_type.create', [
             'account' => $account,
             'account_types' => AccountType::whereNotIn('id', function($query) use ($account) {
@@ -40,8 +42,10 @@ class AccountAccountTypeController extends Controller
         ]);
     }
 
-    public function store(Request $request, Account $account)
+    public function store(Request $request, int $id)
     {
+        $account = Account::findOrFail($id);
+
         $request->validate([
             'account_type_id' => ['required', 'exists:account_types,id'],
         ]);
@@ -55,8 +59,10 @@ class AccountAccountTypeController extends Controller
         return redirect()->route('admin.account.show', $account);
     }
 
-    public function destroy(Request $request, Account $account, int $typeId)
+    public function destroy(Request $request, int $id, int $typeId)
     {
+        $account = Account::findOrFail($id);
+
         $account->types()->detach($typeId);
 
         $request->session()->flash('success', 'Type successfully removed');

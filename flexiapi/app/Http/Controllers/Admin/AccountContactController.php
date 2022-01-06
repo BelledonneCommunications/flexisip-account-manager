@@ -27,15 +27,18 @@ use App\Account;
 
 class AccountContactController extends Controller
 {
-    public function create(Account $account)
+    public function create(int $id)
     {
+        $account = Account::findOrFail($id);
+
         return view('admin.account.contact.create', [
             'account' => $account
         ]);
     }
 
-    public function store(Request $request, Account $account)
+    public function store(Request $request, int $id)
     {
+        $account = Account::findOrFail($id);
         $contact = Account::sip($request->get('sip'))->first();
 
         if (!$contact) {
@@ -54,8 +57,9 @@ class AccountContactController extends Controller
         return redirect()->route('admin.account.show', $account);
     }
 
-    public function delete(Account $account, int $contactId)
+    public function delete(int $id, int $contactId)
     {
+        $account = Account::findOrFail($id);
         $contact = $account->contacts()->where('id', $contactId)->firstOrFail();
 
         return view('admin.account.contact.delete', [
@@ -64,8 +68,9 @@ class AccountContactController extends Controller
         ]);
     }
 
-    public function destroy(Request $request, Account $account)
+    public function destroy(Request $request, int $id)
     {
+        $account = Account::findOrFail($id);
         $contact = $account->contacts()->where('id', $request->get('contact_id'))->firstOrFail();
 
         $account->contacts()->detach($contact->id);

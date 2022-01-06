@@ -48,10 +48,10 @@ class AccountController extends Controller
         ]);
     }
 
-    public function show(Account $account)
+    public function show(int $id)
     {
         return view('admin.account.show', [
-            'account' => $account
+            'account' => Account::findOrFail($id)
         ]);
     }
 
@@ -84,10 +84,10 @@ class AccountController extends Controller
         return redirect()->route('admin.account.show', $account->id);
     }
 
-    public function edit(Account $account)
+    public function edit(int $id)
     {
         return view('admin.account.create_edit', [
-            'account' => $account
+            'account' => Account::findOrFail($id)
         ]);
     }
 
@@ -112,8 +112,9 @@ class AccountController extends Controller
         return redirect()->route('admin.account.index', $request->get('search'));
     }
 
-    public function activate(Account $account)
+    public function activate(int $id)
     {
+        $account = Account::findOrFail($id);
         $account->activated = true;
         $account->save();
 
@@ -122,8 +123,9 @@ class AccountController extends Controller
         return redirect()->back();
     }
 
-    public function deactivate(Account $account)
+    public function deactivate(int $id)
     {
+        $account = Account::findOrFail($id);
         $account->activated = false;
         $account->save();
 
@@ -132,8 +134,9 @@ class AccountController extends Controller
         return redirect()->back();
     }
 
-    public function provision(Account $account)
+    public function provision(int $id)
     {
+        $account = Account::findOrFail($id);
         $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
         $account->save();
 
@@ -142,8 +145,10 @@ class AccountController extends Controller
         return redirect()->back();
     }
 
-    public function admin(Account $account)
+    public function admin(int $id)
     {
+        $account = Account::findOrFail($id);
+
         $admin = new Admin;
         $admin->account_id = $account->id;
         $admin->save();
@@ -167,8 +172,10 @@ class AccountController extends Controller
         return redirect()->back();
     }
 
-    public function delete(Account $account)
+    public function delete(int $id)
     {
+        $account = Account::findOrFail($id);
+
         return view('admin.account.delete', [
             'account' => $account
         ]);
@@ -194,16 +201,20 @@ class AccountController extends Controller
         return redirect()->back();
     }
 
-    private function fillPassword(Request $request, Account $account)
+    private function fillPassword(Request $request, int $id)
     {
+        $account = Account::findOrFail($id);
+
         if ($request->filled('password')) {
             $algorithm = $request->has('password_sha256') ? 'SHA-256' : 'MD5';
             $account->updatePassword($request->get('password'), $algorithm);
         }
     }
 
-    private function fillPhone(Request $request, Account $account)
+    private function fillPhone(Request $request, int $id)
     {
+        $account = Account::findOrFail($id);
+
         if ($request->filled('phone')) {
             $account->alias()->delete();
 
