@@ -15,8 +15,6 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
     'sip_domain' => env('APP_SIP_DOMAIN', 'sip.domain.com'),
-    'flexisip_proxy_pid' => env('APP_FLEXISIP_PROXY_PID', '/var/run/flexisip-proxy.pid'),
-    'flexisip_pusher_path' => env('APP_FLEXISIP_PUSHER_PATH', ''),
 
     'terms_of_use_url' => env('TERMS_OF_USE_URL', ''),
     'privacy_policy_url' => env('PRIVACY_POLICY_URL', ''),
@@ -30,6 +28,17 @@ return [
     'proxy_registrar_address' => env('ACCOUNT_PROXY_REGISTRAR_ADDRESS', 'sip.domain.com'),
     'transport_protocol_text' => env('ACCOUNT_TRANSPORT_PROTOCOL_TEXT', 'TLS (recommended), TCP or UDP'),
 
+    /**
+     * Time limit before the API Key and related cookie are expired
+     */
+    'api_key_expiration_minutes' => env('APP_API_KEY_EXPIRATION_MINUTES', 60),
+
+    /**
+     * External interfaces
+     */
+    'flexisip_proxy_pid' => env('APP_FLEXISIP_PROXY_PID', '/var/run/flexisip-proxy.pid'),
+    'flexisip_pusher_path' => env('APP_FLEXISIP_PUSHER_PATH', ''),
+    'linphone_daemon_unix_pipe' => env('APP_LINPHONE_DAEMON_UNIX_PATH', null),
 
     /**
      * Account provisioning

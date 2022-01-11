@@ -11,6 +11,8 @@
     </testsuite>
     <testsuite name="Feature">
       <directory suffix="Test.php">./tests/Feature</directory>
+      <!-- Exclude the Message test suite as it relies on the linphone-daemon that can't be mocked for the moment -->
+      <exclude>./tests/Feature/AccountMessageTest.php</exclude>
     </testsuite>
   </testsuites>
   <php>

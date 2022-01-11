@@ -67,25 +67,6 @@
             <p class="mb-1">Show some registration statistics</p>
         </a>
     </div>
-
-    <h5>API Key</h5>
-
-    <p>As an administrator you can generate an API key and use it to request the different API endpoints, <a href="{{ route('api') }}">check the related API documentation</a> to know how to use that key.</p>
-
-    {!! Form::open(['route' => 'admin.api_key.generate']) !!}
-    <div class="form-row">
-        <div class="col-8">
-        <input readonly class="form-control" placeholder="No key yet, press Generate"
-            @if ($account->apiKey)
-                value="{{ $account->apiKey->key }}"
-            @endif
-        >
-        </div>
-        <div class="col-4">
-            <button type="submit" class="btn btn-primary">Generate</button>
-        </div>
-    </div>
-{!! Form::close() !!}
 @endif
 
 <h3 class="mt-3">Account information</h3>
@@ -102,6 +83,25 @@
     <b>Transport: </b> {{ config('app.transport_protocol_text') }} <br />
 @endif
 </div>
+
+<h3 class="mt-3">API Key</h3>
+
+<p>You can generate an API key and use it to request the different API endpoints, <a href="{{ route('api') }}">check the related API documentation</a> to know how to use that key.</p>
+
+{!! Form::open(['route' => 'account.api_key.generate']) !!}
+<div class="form-row">
+    <div class="col-8">
+    <input readonly class="form-control" placeholder="No key yet, press Generate"
+        @if ($account->apiKey)
+            value="{{ $account->apiKey->key }}"
+        @endif
+    >
+    </div>
+    <div class="col-4">
+        <button type="submit" class="btn btn-primary">Generate</button>
+    </div>
+</div>
+{!! Form::close() !!}
 
 @include('parts.account_variables', ['account' => $account])
 

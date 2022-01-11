@@ -20,7 +20,6 @@
 namespace Tests\Feature;
 
 use App\Password;
-use App\AccountAction;
 use App\AccountType;
 use App\Admin;
 

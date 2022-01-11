@@ -55,7 +55,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            'throttle:600,1', // move to 600 instead of	60
+            'throttle:600,1', // move to 600 instead of 60
             'bindings',
         ],
     ];
@@ -75,6 +75,8 @@ class Kernel extends HttpKernel
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
+        'cookie' => \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+        'cookie.encrypt' => \App\Http\Middleware\EncryptCookies::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,

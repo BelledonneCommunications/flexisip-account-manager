@@ -61,6 +61,8 @@ if (config('app.web_panel')) {
         Route::get('panel', 'Account\AccountController@panel')->name('account.panel');
         Route::get('logout', 'Account\AuthenticateController@logout')->name('account.logout');
 
+        Route::post('api_key', 'Account\AccountController@generateApiKey')->name('account.api_key.generate');
+
         Route::get('delete', 'Account\AccountController@delete')->name('account.delete');
         Route::delete('delete', 'Account\AccountController@destroy')->name('account.destroy');
 
@@ -76,8 +78,7 @@ if (config('app.web_panel')) {
     });
 
     Route::group(['middleware' => 'auth.admin'], function () {
-        Route::post('admin/api_key', 'Admin\AccountController@generateApiKey')->name('admin.api_key.generate');
-
+        // Statistics
         Route::get('admin/statistics/day', 'Admin\StatisticsController@showDay')->name('admin.statistics.show.day');
         Route::get('admin/statistics/week', 'Admin\StatisticsController@showWeek')->name('admin.statistics.show.week');
         Route::get('admin/statistics/month', 'Admin\StatisticsController@showMonth')->name('admin.statistics.show.month');

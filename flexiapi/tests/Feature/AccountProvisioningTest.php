@@ -19,7 +19,6 @@
 
 namespace Tests\Feature;
 
-use Account;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

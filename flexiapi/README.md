@@ -143,11 +143,17 @@ Several other parameters are also available to customize the migration process, 
 
     php artisan -h db:import
 
+### Clear the expired API Keys
+
+This will remove the API Keys that were not used after `x minutes`.
+
+    php artisan digest:clear-api-keys {minutes}
+
 ### Clear Expired Nonces for DIGEST authentication
 
 This will remove the nonces stored that were not updated after `x minutes`.
 
-    php artisan digest:expired-nonces-clear {minutes}
+    php artisan digest:clear-nonces {minutes}
 
 ### Remove the unconfirmed accounts
 

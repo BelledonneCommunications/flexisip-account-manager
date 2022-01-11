@@ -31,6 +31,7 @@ use App\Password;
 use App\EmailChanged;
 use App\Helpers\Utils;
 use App\Mail\ChangingEmail;
+use Carbon\Carbon;
 
 class Account extends Authenticatable
 {
@@ -223,6 +224,7 @@ class Account extends Authenticatable
 
         $apiKey = new ApiKey;
         $apiKey->account_id = $this->id;
+        $apiKey->last_used_at = Carbon::now();
         $apiKey->key = Str::random(40);
         $apiKey->save();
     }

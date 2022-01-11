@@ -17,7 +17,8 @@
         "laravel/tinker": "^2.4",
         "laravelcollective/html": "^6.2",
         "ovh/ovh": "^2.0",
-        "parsedown/laravel": "^1.2"
+        "parsedown/laravel": "^1.2",
+        "react/socket": "^1.10"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",
@@ -33,7 +34,10 @@
         },
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
     },
     "extra": {
         "laravel": {

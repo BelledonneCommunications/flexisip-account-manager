@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cookie;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 
@@ -164,5 +165,16 @@ class AccountController extends Controller
 
         return Account::where('id', $request->user()->id)
                       ->delete();
+    }
+
+    public function generateApiKey(Request $request)
+    {
+        $account = $request->user();
+        $account->generateApiKey();
+
+        $account->refresh();
+        Cookie::queue('x-api-key', $account->apiKey->key, config('app.api_key_expiration_minutes'));
+
+        return $account->apiKey->key;
     }
 }

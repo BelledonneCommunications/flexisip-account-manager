@@ -37,6 +37,8 @@ Route::group(['middleware' => ['auth.digest_or_key']], function () {
     Route::get('statistic/week', 'Api\StatisticController@week');
     Route::get('statistic/day', 'Api\StatisticController@day');
 
+    Route::get('accounts/me/api_key', 'Api\AccountController@generateApiKey')->middleware('cookie', 'cookie.encrypt');
+
     Route::get('accounts/me', 'Api\AccountController@show');
     Route::delete('accounts/me', 'Api\AccountController@delete');
 
@@ -53,6 +55,10 @@ Route::group(['middleware' => ['auth.digest_or_key']], function () {
     Route::get('accounts/me/contacts', 'Api\AccountContactController@index');
 
     Route::group(['middleware' => ['auth.admin']], function () {
+        if (!empty(config('app.linphone_daemon_unix_pipe'))) {
+            Route::post('messages', 'Api\MessageController@send');
+        }
+
         // Accounts
         Route::get('accounts/{id}/activate', 'Api\Admin\AccountController@activate');
         Route::get('accounts/{id}/deactivate', 'Api\Admin\AccountController@deactivate');

@@ -197,14 +197,6 @@ class AccountController extends Controller
         return redirect()->route('admin.account.index');
     }
 
-    public function generateApiKey(Request $request)
-    {
-        $account = $request->user();
-        $account->generateApiKey();
-
-        return redirect()->back();
-    }
-
     private function fillPassword(Request $request, Account $account)
     {
         if ($request->filled('password')) {

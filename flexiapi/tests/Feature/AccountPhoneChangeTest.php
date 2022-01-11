@@ -20,8 +20,6 @@
 namespace Tests\Feature;
 
 use App\Password;
-use App\Account;
-use App\Admin;
 use App\PhoneChangeCode;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -48,7 +46,7 @@ class AccountPhoneChangeTest extends TestCase
         // Send a SMS
         /*$this->keyAuthenticated($password->account)
             ->json($this->method, $this->route.'/request', [
-                'phone' => '+33667545663'
+                'phone' => '+3312345678'
             ])
             ->assertStatus(200);*/
     }

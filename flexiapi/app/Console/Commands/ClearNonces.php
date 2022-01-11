@@ -24,10 +24,10 @@ use Illuminate\Console\Command;
 use Carbon\Carbon;
 use App\DigestNonce;
 
-class ClearExpiredNonces extends Command
+class ClearNonces extends Command
 {
-    protected $signature = 'digest:expired-nonces-clear {minutes}';
-    protected $description = 'Clear the expired DIGEST nonces';
+    protected $signature = 'digest:clear-nonces {minutes}';
+    protected $description = 'Clear the expired DIGEST nonces after n minutes';
 
     public function __construct()
     {

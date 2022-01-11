@@ -54,6 +54,14 @@ class AccountController extends Controller
         ]);
     }
 
+    public function generateApiKey(Request $request)
+    {
+        $account = $request->user();
+        $account->generateApiKey();
+
+        return redirect()->back();
+    }
+
     public function delete(Request $request)
     {
         return view('account.delete', [

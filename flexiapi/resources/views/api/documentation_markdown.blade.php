@@ -19,8 +19,7 @@ Restricted endpoints are protected using a DIGEST authentication or an API Key m
 
 ## Using the API Key
 
-To authenticate using an API Key, you need to @if (config('app.web_panel')) [authenticate to your account panel]({{ route('account.login') }}) @else authenticate to your account panel @endif and be an administrator.
-On your panel you will then find a form to generate your personnal key.
+You can retrieve an API Key from @if (config('app.web_panel')) [your account panel]({{ route('account.login') }}) @else your account panel @endif or using <a href="#get-accountsmeapikey">the dedicated API endpoint</a>.
 
 You can then use your freshly generated key by adding a new `x-api-key` header to your API requests:
 
@@ -28,6 +27,15 @@ You can then use your freshly generated key by adding a new `x-api-key` header t
 > GET /api/{endpoint}
 > from: sip:foobar@sip.example.org
 > x-api-key: {your-api-key}
+> …
+```
+
+Or using a cookie:
+
+```
+> GET /api/{endpoint}
+> from: sip:foobar@sip.example.org
+> Cookie: x-api-key={your-api-key}
 > …
 ```
 
@@ -106,6 +114,10 @@ JSON parameters:
 Those endpoints are authenticated and requires an activated account.
 
 ### Accounts
+
+#### `GET /accounts/me/api_key`
+Generate and retrieve a fresh API Key.
+This endpoint is also setting the API Key as a Cookie.
 
 #### `GET /accounts/me`
 Retrieve the account information.
@@ -271,6 +283,16 @@ Add a type to the account.
 
 #### `DELETE /accounts/{id}/contacts/{type_id}`
 Remove a a type from the account.
+
+### Messages
+
+#### `POST /messages`
+Send a message over SIP.
+
+JSON parameters:
+
+* `to` required, SIP address of the receiver
+* `body` required, content of the message
 
 ### Statistics
 

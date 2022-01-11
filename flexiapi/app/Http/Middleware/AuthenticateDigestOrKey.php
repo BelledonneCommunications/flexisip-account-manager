@@ -21,7 +21,7 @@ namespace App\Http\Middleware;
 
 use App\Account;
 use App\Helpers\Utils;
-
+use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
@@ -64,9 +64,16 @@ class AuthenticateDigestOrKey
         }
 
         // Key authentication
-        if ($request->header('x-api-key')) {
+
+        if ($request->header('x-api-key') || $request->cookie('x-api-key')) {
             if ($account->apiKey
-            && $account->apiKey->key == $request->header('x-api-key')) {
+            && ($account->apiKey->key == $request->header('x-api-key')
+            ||  $account->apiKey->key == $request->cookie('x-api-key')
+            )) {
+                // Refresh the API Key
+                $account->apiKey->last_used_at = Carbon::now();
+                $account->apiKey->save();
+
                 Auth::login($account);
                 $response = $next($request);
 
