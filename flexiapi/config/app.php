@@ -25,6 +25,7 @@ return [
     'phone_authentication' => env('PHONE_AUTHENTICATION', true),
     'public_registration' => env('PUBLIC_REGISTRATION', true),
     'devices_management' => env('DEVICES_MANAGEMENT', false),
+    'web_panel' => env('WEB_PANEL', true),
 
     'proxy_registrar_address' => env('ACCOUNT_PROXY_REGISTRAR_ADDRESS', 'sip.domain.com'),
     'transport_protocol_text' => env('ACCOUNT_TRANSPORT_PROTOCOL_TEXT', 'TLS (recommended), TCP or UDP'),

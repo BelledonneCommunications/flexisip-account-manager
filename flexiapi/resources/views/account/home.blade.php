@@ -10,24 +10,26 @@
     @parsedown(config('instance.intro_registration'))
 @endif
 
-<hr />
+@if (config('app.web_panel'))
+    <hr />
 
-<div class="list-group mb-3">
-    @if (config('app.public_registration'))
-        <a href="{{ route('account.register') }}" class="list-group-item list-group-item-action">
+    <div class="list-group mb-3">
+        @if (config('app.public_registration'))
+            <a href="{{ route('account.register') }}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Create an account</h5>
+                </div>
+                <p class="mb-1">Register on our service</p>
+            </a>
+        @endif
+        <a href="{{ route('account.login') }}" class="list-group-item list-group-item-action">
             <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">Create an account</h5>
+                <h5 class="mb-1">Manage your account</h5>
             </div>
-            <p class="mb-1">Register on our service</p>
+            <p class="mb-1">Get access to your account panel to configure it</p>
         </a>
-    @endif
-    <a href="{{ route('account.login') }}" class="list-group-item list-group-item-action">
-        <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">Manage your account</h5>
-        </div>
-        <p class="mb-1">Get access to your account panel to configure it</p>
-    </a>
-</div>
+    </div>
+@endif
 
 @include('parts.password_recovery')
 

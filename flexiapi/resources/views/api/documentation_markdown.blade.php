@@ -19,7 +19,7 @@ Restricted endpoints are protected using a DIGEST authentication or an API Key m
 
 ## Using the API Key
 
-To authenticate using an API Key, you need to [authenticate to your account panel]({{ route('account.login') }}) and being an administrator.
+To authenticate using an API Key, you need to @if (config('app.web_panel')) [authenticate to your account panel]({{ route('account.login') }}) @else authenticate to your account panel @endif and be an administrator.
 On your panel you will then find a form to generate your personnal key.
 
 You can then use your freshly generated key by adding a new `x-api-key` header to your API requests:

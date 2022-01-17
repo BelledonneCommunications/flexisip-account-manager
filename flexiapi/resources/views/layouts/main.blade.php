@@ -1,6 +1,8 @@
 @extends('layouts.base')
 
 @section('header')
+
+@if (config('app.web_panel'))
     <nav class="navbar navbar-expand-lg">
         <div class="collapse navbar-collapse" >
             <ul class="navbar-nav mr-auto">
@@ -26,6 +28,8 @@
             </ul>
         </div>
     </nav>
+@endif
+
 @endsection
 
 @section('body')
