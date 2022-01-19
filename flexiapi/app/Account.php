@@ -31,6 +31,7 @@ use App\Password;
 use App\EmailChanged;
 use App\Helpers\Utils;
 use App\Mail\ChangingEmail;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Account extends Authenticatable
 {
@@ -44,6 +45,8 @@ class Account extends Authenticatable
         'activated' => 'boolean',
     ];
     public $timestamps = false;
+
+    public static $dtmfProtocols = ['sipinfo' => 'SIPInfo', 'rfc2833' => 'RFC2833'];
 
     /**
      * Scopes
@@ -79,7 +82,11 @@ class Account extends Authenticatable
      */
     public function actions()
     {
-        return $this->hasMany('App\AccountAction');
+        return $this->hasMany('App\AccountAction')->whereIn('account_id', function ($query) {
+            $query->select('id')
+                  ->from('accounts')
+                  ->whereNotNull('dtmf_protocol');
+        });
     }
 
     public function activationExpiration()
@@ -173,6 +180,16 @@ class Account extends Authenticatable
         return $this->passwords()->where('algorithm', 'SHA-256')->exists();
     }
 
+    public static function dtmfProtocolsRule()
+    {
+        return implode(',', array_keys(self::$dtmfProtocols));
+    }
+
+    public function getResolvedDtmfProtocolAttribute()
+    {
+        return self::$dtmfProtocols[$this->attributes['dtmf_protocol']];
+    }
+
     /**
      * Utils
      */
@@ -249,6 +266,11 @@ FN:'.$this->attributes['display_name'];
 FN:'.$this->getIdentifierAttribute();
         }
 
+        if ($this->dtmf_protocol) {
+            $vcard .= '
+X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:'.$this->dtmf_protocol;
+        }
+
         if ($this->types->count() > 0) {
             $vcard .= '
 X-LINPHONE-ACCOUNT-TYPE:'.$this->types->implode('key', ',');
@@ -256,7 +278,7 @@ X-LINPHONE-ACCOUNT-TYPE:'.$this->types->implode('key', ',');
 
         foreach ($this->actions as $action) {
             $vcard .= '
-X-LINPHONE-ACCOUNT-ACTION:'.$action->key.';'.$action->code.';'.$action->protocol;
+X-LINPHONE-ACCOUNT-ACTION:'.$action->key.';'.$action->code;
         }
 
         return $vcard . '

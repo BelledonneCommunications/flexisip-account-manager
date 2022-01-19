@@ -20,6 +20,7 @@
     <b>Id:</b> {{ $account->id }}<br />
     <b>Identifier:</b> {{ $account->identifier }}<br />
     <b>Email:</b> <a href="mailto:{{ $account->email }}">{{ $account->email }}</a><br />
+    <b>DTMF Protocol:</b> @if ($account->dtmf_protocol) {{ $account->resolvedDtmfProtocol }}@endif<br />
     @if ($account->alias)<b>Phone number:</b> {{ $account->phone }}<br />@endif
     @if ($account->display_name)<b>Display name:</b> {{ $account->display_name }}<br />@endif
 </p>
@@ -63,13 +64,14 @@
 
 <h3 class="mt-3">Actions</h3>
 
+@if (!$account->dtmf_protocol)
+
 <table class="table">
     <tbody>
         @foreach ($account->actions as $action)
             <tr>
                 <th scope="row">{{ $action->key }}</th>
                 <td>{{ $action->code }}</td>
-                <td>{{ $action->resolvedProtocol }}</td>
                 <td>
                     <a class="btn btn-sm mr-2" href="{{ route('admin.account.action.edit', [$account, $action->id]) }}">Edit</a>
                     <a class="btn btn-sm mr-2" href="{{ route('admin.account.action.delete', [$account, $action->id]) }}">Delete</a>
@@ -80,6 +82,10 @@
 </table>
 
 <a class="btn btn-sm" href="{{ route('admin.account.action.create', $account) }}">Add</a>
+
+@else
+    <p>To manage actions, you must configure the DTMF protocol in the account settings.</p>
+@endif
 
 <h3 class="mt-3">Types</h3>
 

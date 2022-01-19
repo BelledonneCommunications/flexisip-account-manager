@@ -121,13 +121,15 @@ class AccountContactTest extends TestCase
              ->get('/contacts/vcard')
              ->assertStatus(200)
              ->assertSeeText($typeKey)
-             ->assertSeeText($actionKey.';'.$actionCode.';'.$actionProtocol);
+             ->assertSeeText($password2->dtmf_protocol)
+             ->assertSeeText($actionKey.';'.$actionCode);
 
         $this->keyAuthenticated($password1->account)
              ->get('/contacts/vcard/'.$password2->account->identifier)
              ->assertStatus(200)
              ->assertSeeText($typeKey)
-             ->assertSeeText($actionKey.';'.$actionCode.';'.$actionProtocol);
+             ->assertSeeText($password2->dtmf_protocol)
+             ->assertSeeText($actionKey.';'.$actionCode);
 
         $this->keyAuthenticated($password1->account)
              ->get($this->route.'/me/contacts/'.$password2->account->identifier)

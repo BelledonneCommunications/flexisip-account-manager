@@ -58,7 +58,8 @@ class AccountController extends Controller
     public function create(Request $request)
     {
         return view('admin.account.create_edit', [
-            'account' => new Account
+            'account' => new Account,
+            'protocols' => [null => 'None'] + Account::$dtmfProtocols
         ]);
     }
 
@@ -74,6 +75,7 @@ class AccountController extends Controller
         $account->ip_address = $request->ip();
         $account->creation_time = Carbon::now();
         $account->user_agent = config('app.name');
+        $account->dtmf_protocol = $request->get('dtmf_protocol');
         $account->save();
 
         $this->fillPassword($request, $account);
@@ -87,7 +89,8 @@ class AccountController extends Controller
     public function edit(int $id)
     {
         return view('admin.account.create_edit', [
-            'account' => Account::findOrFail($id)
+            'account' => Account::findOrFail($id),
+            'protocols' => [null => 'None'] + Account::$dtmfProtocols
         ]);
     }
 
@@ -97,6 +100,7 @@ class AccountController extends Controller
         $account->username = $request->get('username');
         $account->email = $request->get('email');
         $account->display_name = $request->get('display_name');
+        $account->dtmf_protocol = $request->get('dtmf_protocol');
         $account->save();
 
         $this->fillPassword($request, $account);
@@ -201,20 +205,16 @@ class AccountController extends Controller
         return redirect()->back();
     }
 
-    private function fillPassword(Request $request, int $id)
+    private function fillPassword(Request $request, Account $account)
     {
-        $account = Account::findOrFail($id);
-
         if ($request->filled('password')) {
             $algorithm = $request->has('password_sha256') ? 'SHA-256' : 'MD5';
             $account->updatePassword($request->get('password'), $algorithm);
         }
     }
 
-    private function fillPhone(Request $request, int $id)
+    private function fillPhone(Request $request, Account $account)
     {
-        $account = Account::findOrFail($id);
-
         if ($request->filled('phone')) {
             $account->alias()->delete();
 

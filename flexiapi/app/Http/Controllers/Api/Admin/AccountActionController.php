@@ -30,12 +30,12 @@ class AccountActionController extends Controller
 {
     public function index(int $id)
     {
-        return Account::findOrFail($id)->actions;
+        return $this->resolveAccount($id)->actions;
     }
 
     public function get(int $id, int $actionId)
     {
-        return Account::findOrFail($id)
+        return $this->resolveAccount($id)
                       ->actions()
                       ->where('id', $actionId)
                       ->firstOrFail();
@@ -43,17 +43,17 @@ class AccountActionController extends Controller
 
     public function store(Request $request, int $id)
     {
+        $account = $this->resolveAccount($id);
+
         $request->validate([
             'key' => ['required', 'alpha_dash', new NoUppercase],
-            'code' => ['required', 'alpha_num', new NoUppercase],
-            'protocol' => 'required|in:' . AccountAction::protocolsRule()
+            'code' => ['required', 'alpha_num', new NoUppercase]
         ]);
 
         $accountAction = new AccountAction;
-        $accountAction->account_id = Account::findOrFail($id)->id;
+        $accountAction->account_id = $account->id;
         $accountAction->key = $request->get('key');
         $accountAction->code = $request->get('code');
-        $accountAction->protocol = $request->get('protocol');
         $accountAction->save();
 
         return $accountAction;
@@ -61,19 +61,19 @@ class AccountActionController extends Controller
 
     public function update(Request $request, int $id, int $actionId)
     {
+        $account = $this->resolveAccount($id);
+
         $request->validate([
             'key' => ['alpha_dash', new NoUppercase],
-            'code' => ['alpha_num', new NoUppercase],
-            'protocol' => 'in:' . AccountAction::protocolsRule()
+            'code' => ['alpha_num', new NoUppercase]
         ]);
 
-        $accountAction = Account::findOrFail($id)
+        $accountAction = $account
                                 ->actions()
                                 ->where('id', $actionId)
                                 ->firstOrFail();
         $accountAction->key = $request->get('key');
         $accountAction->code = $request->get('code');
-        $accountAction->protocol = $request->get('protocol');
         $accountAction->save();
 
         return $accountAction;
@@ -81,9 +81,17 @@ class AccountActionController extends Controller
 
     public function destroy(int $id, int $actionId)
     {
-        return Account::findOrFail($id)
+        return $this->resolveAccount($id)
                                  ->actions()
                                  ->where('id', $actionId)
                                  ->delete();
+    }
+
+    private function resolveAccount(int $id)
+    {
+        $account = Account::findOrFail($id);
+        if ($account->dtmf_protocol == null) abort(403, 'DTMF Protocol must be configured');
+
+        return $account;
     }
 }

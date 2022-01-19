@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
 use Illuminate\Validation\Rule;
+
+use App\Account;
 use App\Rules\WithoutSpaces;
 
 class UpdateAccountRequest extends FormRequest
@@ -27,6 +28,7 @@ class UpdateAccountRequest extends FormRequest
             'domain' => config('app.admins_manage_multi_domains') ? 'required' : '',
             'email' => 'nullable|email',
             'password_sha256' => 'nullable|min:3',
+            'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
             'phone' => [
                 'nullable',
                 Rule::unique('accounts', 'username')->where(function ($query) {

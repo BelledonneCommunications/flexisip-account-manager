@@ -67,6 +67,7 @@ class AccountController extends Controller
             ],
             'algorithm' => 'required|in:SHA-256,MD5',
             'password' => 'required|filled',
+            'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
             'domain' => 'min:3',
             'token' => [
                 'required',
@@ -91,6 +92,7 @@ class AccountController extends Controller
         $account->ip_address = $request->ip();
         $account->creation_time = Carbon::now();
         $account->user_agent = config('app.name');
+        $account->dtmf_protocol = $request->get('dtmf_protocol');
         $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
         $account->save();
 

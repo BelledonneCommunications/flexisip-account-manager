@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
 use Illuminate\Validation\Rule;
+
+use App\Account;
 use App\Rules\WithoutSpaces;
 
 class CreateAccountRequest extends FormRequest
@@ -27,6 +28,7 @@ class CreateAccountRequest extends FormRequest
             'domain' => config('app.admins_manage_multi_domains') ? 'required' : '',
             'password' => 'required|min:3',
             'email' => 'nullable|email',
+            'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
             'phone' => [
                 'nullable',
                 'unique:aliases,alias',

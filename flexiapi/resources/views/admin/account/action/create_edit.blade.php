@@ -37,10 +37,6 @@
             {!! Form::label('code', 'Code') !!}
             {!! Form::text('code', $action->code, ['class' => 'form-control', 'placeholder' => '12ab45']); !!}
         </div>
-        <div class="form-group col-md-12">
-            {!! Form::label('protocol', 'Protocol') !!}
-            {!! Form::select('protocol', $protocols, $action->protocol, ['class' => 'form-control']); !!}
-        </div>
     </div>
 
 {!! Form::submit(($action->id) ? 'Update' : 'Create', ['class' => 'btn btn-success btn-centered']) !!}

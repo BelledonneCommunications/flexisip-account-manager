@@ -43,8 +43,7 @@ class AccountActionTest extends TestCase
         $this->keyAuthenticated($admin->account)
             ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
                 'key' => '123',
-                'code' => '123',
-                'protocol' => 'sipinfo'
+                'code' => '123'
             ])
             ->assertStatus(201);
 
@@ -53,17 +52,7 @@ class AccountActionTest extends TestCase
         // Missing key
         $this->keyAuthenticated($admin->account)
         ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
-            'code' => '123',
-            'protocol' => 'sipinfo'
-        ])
-        ->assertStatus(422);
-
-        // Invalid protocol
-        $this->keyAuthenticated($admin->account)
-        ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
-            'key' => 'abc1234',
-            'code' => '123',
-            'protocol' => 'wrong'
+            'code' => '123'
         ])
         ->assertStatus(422);
 
@@ -71,8 +60,7 @@ class AccountActionTest extends TestCase
         $this->keyAuthenticated($admin->account)
         ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
             'key' => 'Abc1234',
-            'code' => '123',
-            'protocol' => 'wrong'
+            'code' => '123'
         ])
         ->assertStatus(422);
 
@@ -81,10 +69,29 @@ class AccountActionTest extends TestCase
             ->assertJson([
                 [
                     'key' => '123',
-                    'code' => '123',
-                    'protocol' => 'sipinfo'
+                    'code' => '123'
                 ]
             ]);
+
+        // No protocol
+        $password->account->dtmf_protocol = null;
+        $password->account->save();
+
+        $this->keyAuthenticated($admin->account)
+        ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
+            'key' => 'abc1234',
+            'code' => '123'
+        ])
+        ->assertStatus(403);
+
+        $this->keyAuthenticated($admin->account)
+            ->get($this->route.'/'.$password->account->id.'/actions')
+            ->assertStatus(403);
+
+        $this->keyAuthenticated($admin->account)
+            ->get($this->route.'/'.$password->account->id)
+            ->assertStatus(200)
+            ->assertJsonPath('actions', []);
     }
 
     public function testDelete()

@@ -108,6 +108,7 @@ class AccountController extends Controller
             'email' => 'email',
             'admin' => 'boolean|nullable',
             'activated' => 'boolean|nullable',
+            'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
             'confirmation_key_expires' => [
                 'date_format:Y-m-d H:i:s',
                 'nullable',
@@ -127,6 +128,7 @@ class AccountController extends Controller
             ? (bool)$request->get('activated')
             : false;
         $account->ip_address = $request->ip();
+        $account->dtmf_protocol = $request->get('dtmf_protocol');
         $account->creation_time = Carbon::now();
         $account->domain = $request->has('domain') && config('app.admins_manage_multi_domains')
             ? $request->get('domain')

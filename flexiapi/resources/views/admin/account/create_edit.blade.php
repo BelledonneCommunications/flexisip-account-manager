@@ -43,7 +43,7 @@
                     <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon1">@</span>
                     </div>
-                    {!! Form::text('username', $account->domain ?? config('app.sip_domain'), ['class' => 'form-control', 'placeholder' => 'domain.com', 'required' => 'required']); !!}
+                    {!! Form::text('domain', $account->domain ?? config('app.sip_domain'), ['class' => 'form-control', 'placeholder' => 'domain.com', 'required' => 'required']); !!}
                 @else
                     <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon1">@ {{ config('app.sip_domain') }}</span>
@@ -70,6 +70,7 @@
         <div class="form-group col-md-12 mb-0">
             <h4>Optional</h4>
         </div>
+
         <div class="form-group col-md-6">
             {!! Form::label('email', 'Email') !!}
             {!! Form::email('email', $account->email, ['class' => 'form-control', 'placeholder' => 'Email']); !!}
@@ -83,6 +84,11 @@
         <div class="form-group col-md-6">
             {!! Form::label('phone', 'Phone') !!}
             {!! Form::text('phone', $account->phone, ['class' => 'form-control', 'placeholder' => '+12123123']); !!}
+        </div>
+
+        <div class="form-group col-md-6">
+            {!! Form::label('dtmf_protocol', 'DTMF Protocol') !!}
+            {!! Form::select('dtmf_protocol', $protocols, $account->dtmf_protocol, ['class' => 'form-control']); !!}
         </div>
     </div>
 

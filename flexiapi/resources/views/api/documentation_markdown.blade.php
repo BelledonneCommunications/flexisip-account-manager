@@ -82,6 +82,7 @@ JSON parameters:
 * `algorithm` required, values can be `SHA-256` or `MD5`
 * `domain` **not configurable except during test deployments** the value is enforced to the default registration domain set in the global configuration
 * `token` the unique token
+* `dtmf_protocol` optional, values must be `sipinfo` or `rfc2833`
 
 #### `GET /accounts/{sip}/info`
 Retrieve public information about the account.
@@ -179,6 +180,7 @@ The `domain` field is taken into account ONLY when `app.admins_manage_multi_doma
 * `display_name` optional, string
 * `admin` optional, a boolean, set to `false` by default, create an admin account
 * `phone` optional, a phone number, set a phone number to the account
+* `dtmf_protocol` optional, values must be `sipinfo` or `rfc2833`
 * `confirmation_key_expires` optional, a datetime of this format: Y-m-d H:i:s. Only used when `activated` is not used or `false`. Enforces an expiration date on the returned `confirmation_key`. After that datetime public email or phone activation endpoints will return `403`.
 
 #### `GET /accounts`
@@ -212,6 +214,8 @@ Remove a contact from the list.
 
 ### Account Actions
 
+The following endpoints will return `403 Forbidden` if the requested account doesn't have a DTMF protocol configured.
+
 #### `GET /accounts/{id}/actions/`
 Show an account related actions.
 
@@ -225,7 +229,6 @@ JSON parameters:
 
 * `key` required, alpha numeric with dashes, lowercase
 * `code` required, alpha numeric, lowercase
-* `protocol` required, values must be `sipinfo` or `rfc2833`
 
 #### `PUT /accounts/{id}/actions/{action_id}`
 Create an account action.
@@ -234,7 +237,6 @@ JSON parameters:
 
 * `key` required, alpha numeric with dashes, lowercase
 * `code` required, alpha numeric, lowercase
-* `protocol` required, values must be `sipinfo` or `rfc2833`
 
 #### `DELETE /accounts/{id}/actions/{action_id}`
 Delete an account related action.
@@ -310,6 +312,27 @@ Return the same base content as the previous URL and the account related informa
 
 ### `GET /contacts/vcard`
 Return the authenticated user contacts list, in [vCard 4.0 format](https://datatracker.ietf.org/doc/html/rfc6350).
+
+Here is the format of the vCard list returned by the endpoint:
+
+```
+    BEGIN:VCARD
+    VERSION:4.0
+    KIND:individual
+    IMPP:sip:schoen.tatyana@sip.linphone.org
+    FN:schoen.tatyana@sip.linphone.org
+    X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:SIPInfo
+    X-LINPHONE-ACCOUNT-TYPE:phone
+    X-LINPHONE-ACCOUNT-ACTION:action_key;123
+    END:VCARD
+    BEGIN:VCARD
+    VERSION:4.0
+    KIND:individual
+    IMPP:sip:dhand@sip.linphone.org
+    FN:dhand@sip.linphone.org
+    X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:SIPInfo
+    END:VCARD
+```
 
 ### `GET /contacts/vcard/{sip}`
 Return a specific user authenticated contact, in [vCard 4.0 format](https://datatracker.ietf.org/doc/html/rfc6350).

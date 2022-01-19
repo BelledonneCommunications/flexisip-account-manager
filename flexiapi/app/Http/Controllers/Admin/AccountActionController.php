@@ -35,8 +35,7 @@ class AccountActionController extends Controller
 
         return view('admin.account.action.create_edit', [
             'action' => new AccountAction,
-            'account' => $account,
-            'protocols' => AccountAction::$protocols
+            'account' => $account
         ]);
     }
 
@@ -46,15 +45,13 @@ class AccountActionController extends Controller
 
         $request->validate([
             'key' => ['required', 'alpha_dash', new NoUppercase],
-            'code' => ['required', 'alpha_num', new NoUppercase],
-            'protocol' => 'required|in:' . AccountAction::protocolsRule()
+            'code' => ['required', 'alpha_num', new NoUppercase]
         ]);
 
         $accountAction = new AccountAction;
         $accountAction->account_id = $account->id;
         $accountAction->key = $request->get('key');
         $accountAction->code = $request->get('code');
-        $accountAction->protocol = $request->get('protocol');
         $accountAction->save();
 
         $request->session()->flash('success', 'Action successfully created');
@@ -73,8 +70,7 @@ class AccountActionController extends Controller
 
         return view('admin.account.action.create_edit', [
             'action' => $accountAction,
-            'account' => $account,
-            'protocols' => AccountAction::$protocols
+            'account' => $account
         ]);
     }
 
@@ -84,8 +80,7 @@ class AccountActionController extends Controller
 
         $request->validate([
             'key' => ['alpha_dash', new NoUppercase],
-            'code' => ['alpha_num', new NoUppercase],
-            'protocol' => 'in:' . AccountAction::protocolsRule()
+            'code' => ['alpha_num', new NoUppercase]
         ]);
 
         $accountAction = $account->actions()
@@ -93,7 +88,6 @@ class AccountActionController extends Controller
             ->firstOrFail();
         $accountAction->key = $request->get('key');
         $accountAction->code = $request->get('code');
-        $accountAction->protocol = $request->get('protocol');
         $accountAction->save();
 
         $request->session()->flash('success', 'Action successfully updated');

@@ -1,10 +1,10 @@
 $(eval GIT_DESCRIBE = $(shell sh -c "git describe"))
 OUTPUT_DIR = ${CURDIR}
 prepare:
-	cd flexiapi && composer install --no-dev
+	cd flexiapi && php composer.phar install --no-dev
 
 prepare-dev:
-	cd flexiapi && composer install
+	cd flexiapi && php composer.phar install
 
 package-common:
 	rm -rf $(OUTPUT_DIR)/flexisip-account-manager

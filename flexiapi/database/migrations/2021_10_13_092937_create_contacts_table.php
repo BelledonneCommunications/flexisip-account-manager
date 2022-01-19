@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class CreateContactsTable extends Migration
 {
@@ -47,7 +48,15 @@ class CreateContactsTable extends Migration
                   ->on('accounts')->onDelete('cascade');
             $table->string('key');
             $table->string('code');
-            $table->string('protocol');
+
+            /**
+             * See 2022_01_19_160606_move_protocol_from_account_actions_to_account.php
+             * SQLite can't handle the migration in the testing pipeline, so we must
+             * prevent the column to be created in the first place
+             **/
+            if (DB::getDriverName() !== 'sqlite') {
+                $table->string('protocol');
+            }
             $table->timestamps();
         });
     }
