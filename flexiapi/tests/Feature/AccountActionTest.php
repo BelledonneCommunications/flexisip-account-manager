@@ -104,8 +104,7 @@ class AccountActionTest extends TestCase
         $this->keyAuthenticated($admin->account)
             ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
                 'key' => '123',
-                'code' => '123',
-                'protocol' => 'sipinfo'
+                'code' => '123'
             ])
             ->assertStatus(201);
 
@@ -129,8 +128,7 @@ class AccountActionTest extends TestCase
         $this->keyAuthenticated($admin->account)
             ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
                 'key' => '123',
-                'code' => '123',
-                'protocol' => 'sipinfo'
+                'code' => '123'
             ])
             ->assertStatus(201);
 
@@ -140,8 +138,7 @@ class AccountActionTest extends TestCase
         $this->keyAuthenticated($admin->account)
             ->json('PUT', $this->route.'/'.$password->account->id.'/actions/'.$accountAction->id, [
                 'key' => '123',
-                'code' => 'abc',
-                'protocol' => 'sipinfo'
+                'code' => 'abc'
             ])
             ->assertStatus(200);
 

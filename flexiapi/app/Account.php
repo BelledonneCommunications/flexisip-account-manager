@@ -31,7 +31,6 @@ use App\Password;
 use App\EmailChanged;
 use App\Helpers\Utils;
 use App\Mail\ChangingEmail;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Account extends Authenticatable
 {
@@ -271,9 +270,9 @@ FN:'.$this->getIdentifierAttribute();
 X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:'.$this->dtmf_protocol;
         }
 
-        if ($this->types->count() > 0) {
+        foreach ($this->types as $type) {
             $vcard .= '
-X-LINPHONE-ACCOUNT-TYPE:'.$this->types->implode('key', ',');
+X-LINPHONE-ACCOUNT-TYPE:'.$type;
         }
 
         foreach ($this->actions as $action) {

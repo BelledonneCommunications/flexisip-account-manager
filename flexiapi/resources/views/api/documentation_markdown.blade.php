@@ -321,7 +321,7 @@ Here is the format of the vCard list returned by the endpoint:
     KIND:individual
     IMPP:sip:schoen.tatyana@sip.linphone.org
     FN:schoen.tatyana@sip.linphone.org
-    X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:SIPInfo
+    X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:sipinfo
     X-LINPHONE-ACCOUNT-TYPE:phone
     X-LINPHONE-ACCOUNT-ACTION:action_key;123
     END:VCARD
@@ -330,7 +330,7 @@ Here is the format of the vCard list returned by the endpoint:
     KIND:individual
     IMPP:sip:dhand@sip.linphone.org
     FN:dhand@sip.linphone.org
-    X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:SIPInfo
+    X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:sipinfo
     END:VCARD
 ```
 

@@ -76,6 +76,7 @@ class AccountApiTest extends TestCase
                 'username' => $username,
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
+                'dtmf_protocol' => 'sipinfo'
             ]);
 
         $response1
@@ -84,6 +85,7 @@ class AccountApiTest extends TestCase
                 'id' => 2,
                 'username' => $username,
                 'activated' => false,
+                'dtmf_protocol' => 'sipinfo'
             ]);
     }
 
