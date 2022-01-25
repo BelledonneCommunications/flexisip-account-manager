@@ -39,7 +39,8 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
                         $element->id,
                         $element->username,
                         $element->domain,
-                        $element->activated ?? true
+                        $element->activated ?? true,
+                        $element->confirmation_key
                     )
                 );
 
@@ -76,7 +77,8 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
                             str_replace('%id%', $element->idStart + $i, $element->id),
                             str_replace('%usernamePostfix%', $element->usernameStart + $i, $element->username),
                             $element->domain,
-                            $element->activated ?? true
+                            $element->activated ?? true,
+                            $element->confirmation_key
                         )
                     );
 
