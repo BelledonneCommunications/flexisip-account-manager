@@ -38,7 +38,7 @@ class AccountFactory extends Factory
             'confirmation_key' => Str::random(WebAuthenticateController::$emailCodeSize),
             'ip_address' => $this->faker->ipv4,
             'creation_time' => $this->faker->dateTime,
-            'dtmf_protocol' => Account::$dtmfProtocols[array_rand(Account::$dtmfProtocols)],
+            'dtmf_protocol' => array_rand(Account::$dtmfProtocols),
             'activated' => true
         ];
     }

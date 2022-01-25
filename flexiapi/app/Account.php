@@ -272,7 +272,7 @@ X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:'.$this->dtmf_protocol;
 
         foreach ($this->types as $type) {
             $vcard .= '
-X-LINPHONE-ACCOUNT-TYPE:'.$type;
+X-LINPHONE-ACCOUNT-TYPE:'.$type->key;
         }
 
         foreach ($this->actions as $action) {

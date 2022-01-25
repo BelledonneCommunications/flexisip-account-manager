@@ -44,7 +44,6 @@ class AccountContactTest extends TestCase
         $typeKey = 'phone';
         $actionKey = '123';
         $actionCode = '123';
-        $actionProtocol = 'sipinfo';
 
         $admin = Admin::factory()->create();
         $admin->account->generateApiKey();
@@ -78,8 +77,7 @@ class AccountContactTest extends TestCase
         $this->keyAuthenticated($admin->account)
             ->json($this->method, $this->route.'/'.$password2->account->id.'/actions', [
                 'key' => $actionKey,
-                'code' => $actionCode,
-                'protocol' => $actionProtocol
+                'code' => $actionCode
             ]);
 
         // Retry
@@ -120,16 +118,16 @@ class AccountContactTest extends TestCase
         $this->keyAuthenticated($password1->account)
              ->get('/contacts/vcard')
              ->assertStatus(200)
-             ->assertSeeText($typeKey)
-             ->assertSeeText($password2->dtmf_protocol)
-             ->assertSeeText($actionKey.';'.$actionCode);
+             ->assertSeeText("X-LINPHONE-ACCOUNT-TYPE:".$typeKey)
+             ->assertSeeText("X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:".$password2->dtmf_protocol)
+             ->assertSeeText("X-LINPHONE-ACCOUNT-ACTION:".$actionKey.';'.$actionCode);
 
         $this->keyAuthenticated($password1->account)
              ->get('/contacts/vcard/'.$password2->account->identifier)
              ->assertStatus(200)
-             ->assertSeeText($typeKey)
-             ->assertSeeText($password2->dtmf_protocol)
-             ->assertSeeText($actionKey.';'.$actionCode);
+             ->assertSeeText("X-LINPHONE-ACCOUNT-TYPE:".$typeKey)
+             ->assertSeeText("X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:".$password2->dtmf_protocol)
+             ->assertSeeText("X-LINPHONE-ACCOUNT-ACTION:".$actionKey.';'.$actionCode);
 
         $this->keyAuthenticated($password1->account)
              ->get($this->route.'/me/contacts/'.$password2->account->identifier)
