@@ -45,7 +45,7 @@ class Account extends Authenticatable
     ];
     public $timestamps = false;
 
-    public static $dtmfProtocols = ['sipinfo' => 'SIPInfo', 'rfc2833' => 'RFC2833'];
+    public static $dtmfProtocols = ['sipinfo' => 'SIPInfo', 'rfc2833' => 'RFC2833', 'sipmessage' => 'SIP Message'];
 
     /**
      * Scopes

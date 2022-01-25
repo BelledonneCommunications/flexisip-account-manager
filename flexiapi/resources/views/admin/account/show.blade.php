@@ -64,7 +64,7 @@
 
 <h3 class="mt-3">Actions</h3>
 
-@if (!$account->dtmf_protocol)
+@if ($account->dtmf_protocol)
 
 <table class="table">
     <tbody>
