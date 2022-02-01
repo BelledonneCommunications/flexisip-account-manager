@@ -25,15 +25,18 @@ use App\Http\Controllers\Controller;
 
 class AccountContactController extends Controller
 {
+    private $selected = ['id', 'username', 'domain', 'activated', 'dtmf_protocol'];
+
     public function index(Request $request)
     {
-        return $request->user()->contacts;
+        return $request->user()->contacts()->select($this->selected)->get();
     }
 
     public function show(Request $request, string $sip)
     {
         return $request->user()
                        ->contacts()
+                       ->select($this->selected)
                        ->sip($sip)
                        ->firstOrFail();
     }

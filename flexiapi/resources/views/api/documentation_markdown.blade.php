@@ -151,7 +151,7 @@ Return the user registered devices.
 #### `DELETE /accounts/me/devices/{uuid}`
 Remove one of the user registered devices.
 
-### Accounts devices
+### Accounts contacts
 
 #### `GET /accounts/me/contacts`
 Return the user contacts.
