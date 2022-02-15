@@ -75,6 +75,7 @@ class CreateAdminAccountTest extends Command
 
         $apiKey = new ApiKey;
         $apiKey->account_id = $account->id;
+        $apiKey->last_used_at = Carbon::now();
         $apiKey->key = $secret;
         $apiKey->save();
 
