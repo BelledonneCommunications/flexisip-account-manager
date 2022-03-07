@@ -88,6 +88,27 @@ class AccountApiTest extends TestCase
             ]);
     }
 
+    public function testUsernameNotPhone()
+    {
+        $admin = Admin::factory()->create();
+        $password = $admin->account->passwords()->first();
+        $password->account->generateApiKey();
+        $password->account->save();
+
+        $username = '+33612121212';
+        $domain = 'example.com';
+
+        $response = $this->keyAuthenticated($password->account)
+        ->json($this->method, $this->route, [
+            'username' => $username,
+            'domain' => $domain,
+            'algorithm' => 'SHA-256',
+            'password' => '123456',
+        ]);
+
+        $response->assertStatus(422);
+    }
+
     public function testDomain()
     {
         $configDomain = 'sip.domain.com';

@@ -53,6 +53,10 @@ function xmlrpc_create_phone_account($method, $args)
         return ALGO_NOT_SUPPORTED;
     }
 
+    if (startswith($user, "+") && $user != $phone) {
+        return ALIAS_DOESNT_MATCH;
+    }
+
     if (!check_parameter($user)) {
         $user = $phone;
     }

@@ -31,6 +31,7 @@ use App\Account;
 use App\AccountTombstone;
 use App\Token;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+use App\Rules\IsNotPhoneNumber;
 use App\Rules\NoUppercase;
 
 class AccountController extends Controller
@@ -54,6 +55,7 @@ class AccountController extends Controller
             'username' => [
                 'required',
                 new NoUppercase,
+                new IsNotPhoneNumber,
                 Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
                     $query->where('domain', $request->has('domain') && config('app.everyone_is_admin') && config('app.admins_manage_multi_domains')
                                                 ? $request->get('domain')

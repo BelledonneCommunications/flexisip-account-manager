@@ -16,7 +16,7 @@
             <span class="input-group-text" id="basic-addon2">{{ $domain }}</span>
         </div>
     </div>
-    <small class="form-text text-muted mb-3">Capital letters are not allowed</small>
+    <small class="form-text text-muted mb-3">Shoudn't be a phone number. Capital letters are not allowed.</small>
 </div>
 
 <hr />

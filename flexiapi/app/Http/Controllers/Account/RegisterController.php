@@ -30,11 +30,12 @@ use Carbon\Carbon;
 use App\Account;
 use App\Alias;
 use App\Rules\WithoutSpaces;
+use App\Rules\IsNotPhoneNumber;
+use App\Rules\NoUppercase;
 use App\Helpers\Utils;
 use App\Libraries\OvhSMS;
 use App\Mail\RegisterConfirmation;
 use App\Mail\NewsletterRegistration;
-use App\Rules\NoUppercase;
 
 class RegisterController extends Controller
 {
@@ -78,7 +79,8 @@ class RegisterController extends Controller
                     $query->where('domain', config('app.sip_domain'));
                 }),
                 'filled',
-                new WithoutSpaces
+                new WithoutSpaces,
+                new IsNotPhoneNumber,
             ],
             'g-recaptcha-response'  => 'required|captcha',
             'email' => 'required|email|confirmed'
@@ -123,7 +125,8 @@ class RegisterController extends Controller
                     $query->where('domain', config('app.sip_domain'));
                 }),
                 'nullable',
-                new WithoutSpaces
+                new WithoutSpaces,
+                new IsNotPhoneNumber,
             ],
             'phone' => [
                 'required', 'unique:aliases,alias',

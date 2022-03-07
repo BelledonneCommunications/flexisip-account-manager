@@ -33,6 +33,8 @@ use App\ActivationExpiration;
 use App\Admin;
 use App\Alias;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+use App\Rules\IsNotPhoneNumber;
+use App\Rules\NoUppercase;
 use App\Rules\WithoutSpaces;
 
 class AccountController extends Controller
@@ -95,6 +97,8 @@ class AccountController extends Controller
         $request->validate([
             'username' => [
                 'required',
+                new NoUppercase,
+                new IsNotPhoneNumber,
                 Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
                     $query->where('domain', $request->has('domain') && config('app.admins_manage_multi_domains')
                                                 ? $request->get('domain')
