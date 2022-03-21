@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
 
 class MessageController extends Controller
 {
@@ -23,24 +24,25 @@ class MessageController extends Controller
 
         $connector->connect('unix://'.config('app.linphone_daemon_unix_pipe'))
             ->then(function (\React\Socket\Connection $connection) use ($request, &$returnedLines) {
-
-            $connection->on('data', function ($message) use ($connection, &$returnedLines) {
-                foreach (preg_split("/\r\n|\n|\r/", $message) as $line) {
-                    if(!empty($line) && false !== ($matches = explode(':', $line, 2))) {
-                        $returnedLines["{$matches[0]}"] = trim($matches[1]);
+                $connection->on('data', function ($message) use ($connection, &$returnedLines) {
+                    foreach (preg_split("/\r\n|\n|\r/", $message) as $line) {
+                        if(!empty($line) && false !== ($matches = explode(':', $line, 2))) {
+                            $returnedLines["{$matches[0]}"] = trim($matches[1]);
+                        }
                     }
-                }
 
-                $connection->close();
+                    $connection->close();
+                });
+
+                $connection->write("message sip:".$request->get('to')." ".$request->get('body')."\n");
+            }, function (\Exception $e) {
+                Log::error($e->getMessage());
             });
-
-            $connection->write("message sip:".$request->get('to')." ".$request->get('body')."\n");
-        });
 
         $loop->run();
 
         if (!array_key_exists('Status', $returnedLines)) {
-            throw ValidationException::withMessages(["The linphone-daemon UNIX socket cannot be requested properly"]);
+            throw ValidationException::withMessages(["The internal socket cannot be requested properly"]);
         }
 
         if ($returnedLines['Status'] == 'Error') {
