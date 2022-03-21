@@ -39,6 +39,10 @@ class MessageController extends Controller
 
         $loop->run();
 
+        if (!array_key_exists('Status', $returnedLines)) {
+            throw ValidationException::withMessages(["The linphone-daemon UNIX socket cannot be requested properly"]);
+        }
+
         if ($returnedLines['Status'] == 'Error') {
             throw ValidationException::withMessages([$returnedLines['Reason']]);
         }

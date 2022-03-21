@@ -195,3 +195,15 @@ The functions already contains example codes to show you how the XML can be enha
 You can also seed the tables with test accounts for the liblinphone test suite with the following command (check LiblinphoneTesterAccoutSeeder for the JSON syntax):
 
     php artisan accounts:seed /path/to/accounts.json
+
+## Sending SIP messages from the API
+
+The `POST /api/messages` endpoint allows you to send messages on the SIP network. It call internally `linphone-daemon` to do so. To be able to use it you should follow the following steps:
+
+1. Launch the `linphone-daemon` with a UNIX socket path, this will create a socket file in `/tmp` (the file will be `/tmp/lp` for the following line).
+
+    $ linphone-daemon --pipe ld
+
+2. Configure the `.env` file to point to that UNIX socket
+
+    APP_LINPHONE_DAEMON_UNIX_PATH=/tmp/ld
