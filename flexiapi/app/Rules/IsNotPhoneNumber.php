@@ -9,7 +9,7 @@ class IsNotPhoneNumber implements Rule
 {
     public function passes($attribute, $value): bool
     {
-        return (Validator::not(Validator::phone())->not(Validator::startsWith('+'))->noWhitespace()->validate($value));
+        return (Validator::not(Validator::phone())->not(Validator::startsWith('+'))->validate($value));
     }
 
     public function message()
