@@ -6,7 +6,7 @@ stages:
   - deploy
   - test
 
-job-centos7-rpm:
+centos7-rpm:
 
   tags: [ "docker-centos7" ]
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-centos7-php
@@ -24,7 +24,7 @@ job-centos7-rpm:
     paths:
       - flexiapi/vendor/
 
-job-centos7-rpm-test:
+centos7-rpm-test:
 
   tags: [ "docker-centos7" ]
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-centos7-php
@@ -42,36 +42,93 @@ job-centos7-rpm-test:
     when: always
     expire_in: 1 day
 
-.job-centos7-rpm-deploy:
+.package-deploy:
 
   before_script:
     - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then eval $(ssh-agent -s); fi
     - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then echo "$SCP_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null; fi
 
-  stage: deploy
-  tags: [ "docker-centos7" ]
   only:
     refs:
       - master
     changes:
       - flexisip-account-manager.spec
 
+  stage: deploy
+
+
+
+.centos7-rpm-deploy:
+
+  extends: .package-deploy
+  tags: [ "docker-centos7" ]
+
+
   dependencies:
-    - job-centos7-rpm
+    - centos7-rpm
 
   script:
     - cd rpmbuild/x86_64
     - rsync -e "ssh -o StrictHostKeyChecking=no" -pr . $DEPLOY_SERVER:$CENTOS7_DEPLOY_DIRECTORY_STATE;
       ssh $DEPLOY_SERVER "chmod a+r $CENTOS7_DEPLOY_DIRECTORY_STATE/*.rpm && createrepo_c --update $CENTOS7_DEPLOY_DIRECTORY_STATE/.";
 
-job-centos7-rpm-deploy-stable:
+centos7-rpm-deploy-stable:
 
-  extends: .job-centos7-rpm-deploy
+  extends: .centos7-rpm-deploy
   variables:
      CENTOS7_DEPLOY_DIRECTORY_STATE: $CENTOS7_DEPLOY_DIRECTORY_STABLE
 
-job-centos7-rpm-deploy-alpha:
+centos7-rpm-deploy-alpha:
 
-  extends: .job-centos7-rpm-deploy
+  extends: .centos7-rpm-deploy
   variables:
      CENTOS7_DEPLOY_DIRECTORY_STATE: $CENTOS7_DEPLOY_DIRECTORY_ALPHA
+
+
+debian11-packaging:
+
+  tags: [ "docker" ]
+  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-debian11-php:20220413_flexiapi_packaging
+
+  stage: package
+  script:
+    - make deb-dev
+  artifacts:
+    paths:
+      - ./*.deb
+    when: always
+    expire_in: 1 year
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - flexiapi/vendor/
+
+debian11-deploy:
+  extends: .package-deploy
+  tags: [ "docker" ]
+  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-debian11-php:20220413_flexiapi_packaging
+  dependencies:
+    - debian11-packaging
+  variables:
+    RELEASE: bullseye
+    FREIGHT_PATH: $DEBIAN_FREIGHT_CONF_PATH
+  only:
+    - branches
+    - merge_requests
+    - schedules
+
+  before_script:
+    - eval $(ssh-agent -s)
+    - echo "$DEPLOY_USER_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - echo "$DEPLOY_SERVER_HOST_KEY" >> ~/.ssh/known_hosts
+  script:
+    - id=$(cat /dev/urandom | tr -dc '[:alnum:]' | fold -w 10 | head -n 1) || true
+    - tmpdir="$MAKE_REPO_TMP/tmp-$id" || true
+    - rsync_dest="$DEPLOY_SERVER:$tmpdir/"
+    - echo ">>> Pushing packages into '$rsync_dest'"
+    - rsync -rv *.deb $rsync_dest
+    - ssh $DEPLOY_SERVER "echo \">>>> Making repository make_repo deb $tmpdir $FREIGHT_PATH $RELEASE\"; make_repo deb $tmpdir $FREIGHT_PATH $RELEASE || exit 1; echo \">>>> Removing '$tmpdir'\"; rm -r $tmpdir"
+
+  after_script:
+    - rm -rf ~/.ssh || true
