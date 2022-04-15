@@ -103,7 +103,7 @@ debian11-packaging:
     paths:
       - flexiapi/vendor/
 
-debian11-deploy:
+.debian11-deploy:
   extends: .package-deploy
   tags: [ "docker" ]
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-debian11-php:20220413_flexiapi_packaging
@@ -113,9 +113,10 @@ debian11-deploy:
     RELEASE: bullseye
     FREIGHT_PATH: $DEBIAN_FREIGHT_CONF_PATH
   only:
-    - branches
-    - merge_requests
-    - schedules
+    refs:
+      - master
+    changes:
+      - flexisip-account-manager.spec
 
   before_script:
     - eval $(ssh-agent -s)
@@ -128,7 +129,17 @@ debian11-deploy:
     - rsync_dest="$DEPLOY_SERVER:$tmpdir/"
     - echo ">>> Pushing packages into '$rsync_dest'"
     - rsync -rv *.deb $rsync_dest
-    - ssh $DEPLOY_SERVER "echo \">>>> Making repository make_repo deb $tmpdir $FREIGHT_PATH $RELEASE\"; make_repo deb $tmpdir $FREIGHT_PATH $RELEASE || exit 1; echo \">>>> Removing '$tmpdir'\"; rm -r $tmpdir"
+    - ssh $DEPLOY_SERVER "echo \">>>> Making repository with Freight\";  (freight add --conf=$FREIGHT_PATH $tmpdir/*.deb apt/$RELEASE/$BRANCH && freight cache --conf=$FREIGHT_PATH apt/$RELEASE) || exit 1; echo \">>>> Removing '$tmpdir'\"; rm -r $tmpdir"
 
   after_script:
     - rm -rf ~/.ssh || true
+
+debian11-stable-deploy:
+  extends: .debian11-deploy
+  variables:
+    BRANCH: stable
+
+debian11-alpha-deploy:
+  extends: .debian11-deploy
+  variables:
+    BRANCH: alpha
