@@ -213,6 +213,9 @@ Activate an account.
 #### `GET /accounts/{id}/deactivate`
 Deactivate an account.
 
+#### `GET /accounts/{id}/provision`
+Re-provision an account by generating a fresh `confirmation_key`.
+
 ### Contacts
 
 #### `GET /accounts/{id}/contacts/`
@@ -307,7 +310,7 @@ Retrieve registrations statistics for a month.
 
 # Non-API Endpoints
 
-The following URLs are **not REST API endpoints**, they are not located under `/api` but directly under the root path.
+The following URLs are **not API endpoints** they are not returning `JSON` content and they are not located under `/api` but directly under the root path.
 
 ## Provisioning
 

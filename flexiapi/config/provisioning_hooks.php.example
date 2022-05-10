@@ -19,7 +19,7 @@ use Illuminate\Http\Request;
 function provisioningProxyHook(\DOMElement $proxySection, Request $request, Account $account)
 {
     /*
-    // Transfort get parameters from the URI into entries
+    // Transform get parameters from the URI into entries
     foreach ($request->all() as $parameterKey => $parameterValue) {
         $entry = $proxySection->ownerDocument->createElement('entry', $parameterValue);
         $entry->setAttribute('name', $parameterKey);

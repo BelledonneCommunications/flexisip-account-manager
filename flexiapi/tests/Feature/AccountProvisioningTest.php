@@ -23,6 +23,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 use App\Password;
+use App\Admin;
 use App\Account as DBAccount;
 
 class AccountProvisioningTest extends TestCase
@@ -95,5 +96,29 @@ class AccountProvisioningTest extends TestCase
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
             ->assertDontSee('ha1');
+
+        $password->account->refresh();
+
+        $confirmationKey = $password->account->confirmation_key;
+
+        // Refresh the confirmation_key
+        $admin = Admin::factory()->create();
+        $admin->account->generateApiKey();
+
+        $this->keyAuthenticated($admin->account)
+            ->json($this->method, '/api/accounts/'.$password->account->id.'/provision')
+            ->assertStatus(200)
+            ->assertSee('confirmation_key')
+            ->assertDontSee($confirmationKey);
+
+        $password->account->refresh();
+
+        $this->assertNotEquals($confirmationKey, $password->account->confirmation_key);
+
+        // And then provision one last time
+        $this->get($this->route.'/'.$password->account->confirmation_key)
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/xml')
+            ->assertSee('ha1');
     }
 }

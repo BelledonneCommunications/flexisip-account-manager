@@ -70,7 +70,7 @@ class AccountController extends Controller
         $account->delete();
     }
 
-    public function activate($id)
+    public function activate(int $id)
     {
         $account = Account::findOrFail($id);
         $account->activated = true;
@@ -81,7 +81,7 @@ class AccountController extends Controller
         return $account;
     }
 
-    public function deactivate($id)
+    public function deactivate(int $id)
     {
         $account = Account::findOrFail($id);
         $account->activated = false;
@@ -90,6 +90,17 @@ class AccountController extends Controller
         Log::channel('events')->info('API Admin: Account deactivated', ['id' => $account->identifier]);
 
         return $account;
+    }
+
+    public function provision(int $id)
+    {
+        $account = Account::findOrFail($id);
+        $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
+        $account->save();
+
+        Log::channel('events')->info('API Admin: Account provisioned', ['id' => $account->identifier]);
+
+        return $account->makeVisible(['confirmation_key']);
     }
 
     public function store(Request $request)
