@@ -56,4 +56,60 @@ class AccountApiKeyTest extends TestCase
                   ->assertSee($password->account->apiKey->key)
                   ->assertPlainCookie('x-api-key', $password->account->apiKey->key);
     }
+
+    public function testAuthToken()
+    {
+        // Generate a public auth_token
+        $response = $this->json('POST', '/api/accounts/auth_token')
+            ->assertStatus(201)
+            ->assertJson([
+                'token' => true
+            ])->content();
+
+        $authToken = json_decode($response)->token;
+
+        // Attach the auth_token to the account
+        $password = Password::factory()->create();
+        $password->account->generateApiKey();
+
+        $this->keyAuthenticated($password->account)
+            ->json($this->method, '/api/accounts/auth_token/' . $authToken . '/attach')
+            ->assertStatus(200);
+
+        // Re-attach
+        $this->keyAuthenticated($password->account)
+            ->json($this->method, '/api/accounts/auth_token/' . $authToken . '/attach')
+            ->assertStatus(404);
+
+        // Attach using a wrong auth_token
+        $this->keyAuthenticated($password->account)
+            ->json($this->method, '/api/accounts/auth_token/wrong_token/attach')
+            ->assertStatus(404);
+
+        // Retrieve an API key from the attached auth_token
+        $response = $this->json($this->method, $this->route . '/' . $authToken)
+            ->assertStatus(200)
+            ->assertJson([
+                'api_key' => true
+            ])->content();
+
+        $apiKey = json_decode($response)->api_key;
+
+        // Re-retrieve
+        $this->json($this->method, $this->route . '/' . $authToken)
+            ->assertStatus(404);
+
+        // Check the if the API key can be used for the account
+
+        $response = $this->withHeaders([
+                'From' => 'sip:'.$password->account->identifier,
+                'x-api-key' => $apiKey,
+            ])
+            ->json($this->method, '/api/accounts/me')
+            ->assertStatus(200)
+            ->content();
+
+        // Check if the account was correctly attached
+        $this->assertEquals(json_decode($response)->email, $password->account->email);
+    }
 }

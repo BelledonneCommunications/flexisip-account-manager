@@ -21,13 +21,13 @@ namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 
 use App\Account;
 use App\Alias;
+use App\AuthToken;
 use App\Helpers\Utils;
 use App\Libraries\OvhSMS;
 use App\Mail\PasswordAuthentication;
@@ -245,6 +245,38 @@ class AuthenticateController extends Controller
 
         Auth::login($account);
         return redirect()->route('account.panel');
+    }
+
+    public function loginAuthToken(Request $request, ?string $token = null)
+    {
+        $authToken = null;
+
+        if (!empty($token)) {
+            $authToken = AuthToken::where('token', $token)->valid()->first();
+        }
+
+        if ($authToken == null) {
+            $authToken = new AuthToken;
+            $authToken->token = Str::random(32);
+            $authToken->save();
+
+            return redirect()->route('account.authenticate.auth_token', ['token' => $authToken->token]);
+        }
+
+        // If the $authToken was flashed by an authenticated user
+        if ($authToken->account_id) {
+            Auth::login($authToken->account);
+
+            $authToken->delete();
+
+            $request->session()->flash('success', 'Successfully authenticated');
+
+            return redirect()->route('account.panel');
+        }
+
+        return view('account.authenticate.auth_token', [
+            'authToken' => $authToken
+        ]);
     }
 
     public function logout(Request $request)

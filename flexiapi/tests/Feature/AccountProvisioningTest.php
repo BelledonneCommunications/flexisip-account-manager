@@ -25,6 +25,7 @@ use Tests\TestCase;
 use App\Password;
 use App\Admin;
 use App\Account as DBAccount;
+use App\AuthToken;
 
 class AccountProvisioningTest extends TestCase
 {
@@ -120,5 +121,38 @@ class AccountProvisioningTest extends TestCase
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('ha1');
+    }
+
+    public function testAuthTokenProvisioning()
+    {
+        // Generate a public auth_token and attach it
+        $response = $this->json('POST', '/api/accounts/auth_token')
+            ->assertStatus(201)
+            ->assertJson([
+                'token' => true
+            ])->content();
+
+        $authToken = json_decode($response)->token;
+
+        $password = Password::factory()->create();
+        $password->account->generateApiKey();
+
+        $this->keyAuthenticated($password->account)
+            ->json($this->method, '/api/accounts/auth_token/' . $authToken . '/attach')
+            ->assertStatus(200);
+
+        // Use the auth_token to provision the account
+        $this->assertEquals(AuthToken::count(), 1);
+
+        $this->get($this->route.'/auth_token/'.$authToken)
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/xml')
+            ->assertSee('ha1');
+
+        $this->assertEquals(AuthToken::count(), 0);
+
+        // Try to re-use the auth_token
+        $this->get($this->route.'/auth_token/'.$authToken)
+            ->assertStatus(404);
     }
 }

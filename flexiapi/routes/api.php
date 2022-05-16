@@ -36,12 +36,18 @@ Route::post('accounts/with-token', 'Api\AccountController@store');
 Route::post('accounts/{sip}/activate/email', 'Api\AccountController@activateEmail');
 Route::post('accounts/{sip}/activate/phone', 'Api\AccountController@activatePhone');
 
+Route::post('accounts/auth_token', 'Api\AuthTokenController@store');
+
+Route::get('accounts/me/api_key/{auth_token}', 'Api\ApiKeyController@generateFromToken')->middleware('cookie', 'cookie.encrypt');
+
 Route::group(['middleware' => ['auth.digest_or_key']], function () {
     Route::get('statistic/month', 'Api\StatisticController@month');
     Route::get('statistic/week', 'Api\StatisticController@week');
     Route::get('statistic/day', 'Api\StatisticController@day');
 
-    Route::get('accounts/me/api_key', 'Api\AccountController@generateApiKey')->middleware('cookie', 'cookie.encrypt');
+    Route::get('accounts/auth_token/{auth_token}/attach', 'Api\AuthTokenController@attach');
+
+    Route::get('accounts/me/api_key', 'Api\ApiKeyController@generate')->middleware('cookie', 'cookie.encrypt');
 
     Route::get('accounts/me', 'Api\AccountController@show');
     Route::delete('accounts/me', 'Api\AccountController@delete');

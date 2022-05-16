@@ -32,6 +32,8 @@ if (config('app.web_panel')) {
     Route::get('login/phone', 'Account\AuthenticateController@loginPhone')->name('account.login_phone');
     Route::post('authenticate/phone', 'Account\AuthenticateController@authenticatePhone')->name('account.authenticate.phone');
     Route::post('authenticate/phone/confirm', 'Account\AuthenticateController@validatePhone')->name('account.authenticate.phone_confirm');
+
+    Route::get('authenticate/qrcode/{token?}', 'Account\AuthenticateController@loginAuthToken')->name('account.authenticate.auth_token');
 }
 
 Route::group(['middleware' => 'auth.digest_or_key'], function () {
@@ -42,6 +44,7 @@ Route::group(['middleware' => 'auth.digest_or_key'], function () {
     Route::get('contacts/vcard', 'Account\ContactVcardController@index')->name('account.contacts.vcard.index');
 });
 
+Route::get('provisioning/auth_token/{auth_token}', 'Account\ProvisioningController@authToken')->name('provisioning.auth_token');
 Route::get('provisioning/qrcode/{provisioning_token}', 'Account\ProvisioningController@qrcode')->name('provisioning.qrcode');
 Route::get('provisioning/{provisioning_token?}', 'Account\ProvisioningController@show')->name('provisioning.show');
 
@@ -75,7 +78,14 @@ if (config('app.web_panel')) {
         Route::get('devices', 'Account\DeviceController@index')->name('account.device.index');
         Route::get('devices/delete/{id}', 'Account\DeviceController@delete')->name('account.device.delete');
         Route::delete('devices/{id}', 'Account\DeviceController@destroy')->name('account.device.destroy');
+
+        Route::post('auth_tokens', 'Account\AuthTokenController@create')->name('account.auth_tokens.create');
+
+        Route::get('auth_tokens/auth/external/{token}', 'Account\AuthTokenController@authExternal')->name('auth_tokens.auth.external');
     });
+
+    Route::get('auth_tokens/qrcode/{token}', 'Account\AuthTokenController@qrcode')->name('auth_tokens.qrcode');
+    Route::get('auth_tokens/auth/{token}', 'Account\AuthTokenController@auth')->name('auth_tokens.auth');
 
     Route::group(['middleware' => 'auth.admin'], function () {
         // Statistics

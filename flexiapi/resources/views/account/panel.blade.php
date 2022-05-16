@@ -84,6 +84,19 @@
 @endif
 </div>
 
+<h3 class="mt-3">Automatic authentication</h3>
+
+<p>You can automatically authenticate another device on this panel by flashing the following QR Code.
+Once generated the QR Code stays valid for a few minutes.</p>
+
+@foreach ($account->authTokens()->valid()->get() as $authToken)
+    <img src="{{ route('auth_tokens.qrcode', ['token' => $authToken->token]) }}">
+@endforeach
+
+{!! Form::open(['route' => 'account.auth_tokens.create']) !!}
+    <button type="submit" class="btn btn-primary">Generate</button>
+{!! Form::close() !!}
+
 <h3 class="mt-3">API Key</h3>
 
 <p>You can generate an API key and use it to request the different API endpoints, <a href="{{ route('api') }}">check the related API documentation</a> to know how to use that key.</p>

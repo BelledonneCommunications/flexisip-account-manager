@@ -5,4 +5,7 @@
             or your <a href="{{ route('account.login_phone') }}">Phone number</a>
         @endif
     </p>
+    <p class="text-center">
+        …or login using an already authenticated device <a href="{{ route('account.authenticate.auth_token') }}">by flashing a QRcode</a>.
+    </p>
 @endif

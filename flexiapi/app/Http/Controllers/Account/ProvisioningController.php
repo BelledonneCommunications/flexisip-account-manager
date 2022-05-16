@@ -20,6 +20,7 @@
 namespace App\Http\Controllers\Account;
 
 use App\Account;
+use App\AuthToken;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -49,6 +50,23 @@ class ProvisioningController extends Controller
             ->build();
 
         return response($result->getString())->header('Content-Type', $result->getMimeType());
+    }
+
+    /**
+     * auth_token based provisioning
+     */
+    public function authToken(Request $request, string $token)
+    {
+        $authToken = AuthToken::where('token', $token)->valid()->firstOrFail();
+
+        if ($authToken->account) {
+            $account = $authToken->account;
+            $authToken->delete();
+
+            return $this->show($request, null, $account);
+        }
+
+        abort(404);
     }
 
     /**

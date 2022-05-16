@@ -71,7 +71,7 @@ class Account extends Authenticatable
             list($usernane, $domain) = explode('@', $sip);
 
             return $query->where('username', $usernane)
-                         ->where('domain', $domain);
+                ->where('domain', $domain);
         };
 
         return $query->where('id', '<', 0);
@@ -84,8 +84,8 @@ class Account extends Authenticatable
     {
         return $this->hasMany('App\AccountAction')->whereIn('account_id', function ($query) {
             $query->select('id')
-                  ->from('accounts')
-                  ->whereNotNull('dtmf_protocol');
+                ->from('accounts')
+                ->whereNotNull('dtmf_protocol');
         });
     }
 
@@ -124,6 +124,11 @@ class Account extends Authenticatable
         return $this->hasMany('App\DigestNonce');
     }
 
+    public function authTokens()
+    {
+        return $this->hasMany('App\AuthToken');
+    }
+
     public function passwords()
     {
         return $this->hasMany('App\Password');
@@ -144,7 +149,7 @@ class Account extends Authenticatable
      */
     public function getIdentifierAttribute()
     {
-        return $this->attributes['username'].'@'.$this->attributes['domain'];
+        return $this->attributes['username'] . '@' . $this->attributes['domain'];
     }
 
     public function getRealmAttribute()
@@ -218,7 +223,7 @@ class Account extends Authenticatable
         Mail::to($this)->send(new ChangingEmail($this));
     }
 
-    public function generateApiKey()
+    public function generateApiKey(): ApiKey
     {
         $this->apiKey()->delete();
 
@@ -227,6 +232,26 @@ class Account extends Authenticatable
         $apiKey->last_used_at = Carbon::now();
         $apiKey->key = Str::random(40);
         $apiKey->save();
+
+        return $apiKey;
+    }
+
+    public function generateAuthToken(): AuthToken
+    {
+        // Clean the expired and previous ones
+        AuthToken::where(
+            'created_at',
+            '<',
+            Carbon::now()->subMinutes(AuthToken::$expirationMinutes)
+        )->orWhere('account_id', $this->id)
+         ->delete();
+
+        $authToken = new AuthToken;
+        $authToken->account_id = $this->id;
+        $authToken->token = Str::random(32);
+        $authToken->save();
+
+        return $authToken;
     }
 
     public function isAdmin()
@@ -237,8 +262,8 @@ class Account extends Authenticatable
     public function hasTombstone()
     {
         return AccountTombstone::where('username', $this->attributes['username'])
-                               ->where('domain', $this->attributes['domain'])
-                               ->exists();
+            ->where('domain', $this->attributes['domain'])
+            ->exists();
     }
 
     public function updatePassword($newPassword, $algorithm)
@@ -257,29 +282,29 @@ class Account extends Authenticatable
         $vcard = 'BEGIN:VCARD
 VERSION:4.0
 KIND:individual
-IMPP:sip:'.$this->getIdentifierAttribute();
+IMPP:sip:' . $this->getIdentifierAttribute();
 
         if (!empty($this->attributes['display_name'])) {
             $vcard .= '
-FN:'.$this->attributes['display_name'];
+FN:' . $this->attributes['display_name'];
         } else {
             $vcard .= '
-FN:'.$this->getIdentifierAttribute();
+FN:' . $this->getIdentifierAttribute();
         }
 
         if ($this->dtmf_protocol) {
             $vcard .= '
-X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:'.$this->dtmf_protocol;
+X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:' . $this->dtmf_protocol;
         }
 
         foreach ($this->types as $type) {
             $vcard .= '
-X-LINPHONE-ACCOUNT-TYPE:'.$type->key;
+X-LINPHONE-ACCOUNT-TYPE:' . $type->key;
         }
 
         foreach ($this->actions as $action) {
             $vcard .= '
-X-LINPHONE-ACCOUNT-ACTION:'.$action->key.';'.$action->code;
+X-LINPHONE-ACCOUNT-ACTION:' . $action->key . ';' . $action->code;
         }
 
         return $vcard . '

@@ -98,6 +98,18 @@ JSON parameters:
 
 Create and return an `account_creation_token`.
 
+## Auth Tokens
+
+### `POST /accounts/auth_token`
+<span class="badge badge-success">Public</span>
+Generate an `auth_token`. To attach the generated token to an account see [`auth_token` attachement endpoint](#get-accountsauthtokenauthtokenattach).
+
+#### `GET /accounts/auth_token/{auth_token}/attach`
+<span class="badge badge-info">User</span>
+Attach a publicly generated authentication token to the currently authenticated account.
+
+Return `404` if the token is non existing or invalid.
+
 ## Accounts
 
 ### `POST /accounts/with-account-creation-token`
@@ -134,6 +146,14 @@ Return `404` if the account doesn't exists or if the code is incorrect, the vali
 JSON parameters:
 
 * `code` the PIN code
+
+### `GET /accounts/me/api_key/{auth_token}`
+<span class="badge badge-info">Public</span>
+Generate and retrieve a fresh API Key from an `auth_token`. The `auth_token` must be attached to an existing account, see [`auth_token` attachement endpoint](#get-accountsauthtokenauthtokenattach) to do so.
+
+Return `404` if the token is invalid or not attached.
+
+This endpoint is also setting the API Key as a Cookie.
 
 ### `GET /accounts/me/api_key`
 <span class="badge badge-info">User</span>
@@ -251,7 +271,7 @@ Return a user contact.
 
 ## Contacts
 
-### `GET /accounts/{id}/contacts/`
+### `GET /accounts/{id}/contacts`
 <span class="badge badge-warning">Admin</span>
 Get all the account contacts.
 
@@ -267,7 +287,7 @@ Remove a contact from the list.
 
 The following endpoints will return `403 Forbidden` if the requested account doesn't have a DTMF protocol configured.
 
-### `GET /accounts/{id}/actions/`
+### `GET /accounts/{id}/actions`
 <span class="badge badge-warning">Admin</span>
 Show an account related actions.
 
@@ -299,7 +319,7 @@ Delete an account related action.
 
 ## Account Types
 
-### `GET /account_types/`
+### `GET /account_types`
 <span class="badge badge-warning">Admin</span>
 Show all the account types.
 
@@ -307,7 +327,7 @@ Show all the account types.
 <span class="badge badge-warning">Admin</span>
 Show an account type.
 
-### `POST /account_types/`
+### `POST /account_types`
 <span class="badge badge-warning">Admin</span>
 Create an account type.
 
@@ -368,7 +388,7 @@ The following URLs are **not API endpoints** they are not returning `JSON` conte
 
 When an account is having an available `provisioning_token` it can be provisioned using the two following URL.
 
-### `GET /provisioning/`
+### `GET /provisioning`
 <span class="badge badge-success">Public</span>
 Return the provisioning information available in the liblinphone configuration file (if correctly configured).
 
