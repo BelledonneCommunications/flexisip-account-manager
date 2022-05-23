@@ -122,8 +122,6 @@ class AuthenticateController extends Controller
             return redirect()->back()->withErrors(['authentication' => 'The account doesn\'t exists']);
         }
 
-        dd($account);
-
         $account->confirmation_key = Str::random(self::$emailCodeSize);
         $account->save();
 
