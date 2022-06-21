@@ -29,7 +29,7 @@ use Carbon\Carbon;
 
 use App\Account;
 use App\AccountTombstone;
-use App\Token;
+use App\AccountCreationToken;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use App\Rules\IsNotPhoneNumber;
 use App\Rules\NoUppercase;
@@ -72,16 +72,16 @@ class AccountController extends Controller
             'password' => 'required|filled',
             'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
             'domain' => 'min:3',
-            'token' => [
+            'account_creation_token' => [
                 'required',
-                Rule::exists('tokens', 'token')->where(function ($query) {
+                Rule::exists('account_creation_tokens', 'token')->where(function ($query) {
                     $query->where('used', false);
                 }),
                 'size:'.WebAuthenticateController::$emailCodeSize
             ]
         ]);
 
-        $token = Token::where('token', $request->get('token'))->first();
+        $token = AccountCreationToken::where('token', $request->get('account_creation_token'))->first();
         $token->used = true;
         $token->save();
 
@@ -96,7 +96,7 @@ class AccountController extends Controller
         $account->creation_time = Carbon::now();
         $account->user_agent = config('app.name');
         $account->dtmf_protocol = $request->get('dtmf_protocol');
-        $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
+        $account->provisioning_token = Str::random(WebAuthenticateController::$emailCodeSize);
         $account->save();
 
         $account->updatePassword($request->get('password'), $request->get('algorithm'));

@@ -140,6 +140,7 @@ class AccountApiTest extends TestCase
             ]);
 
         $this->assertFalse(empty($response1['confirmation_key']));
+        $this->assertFalse(empty($response1['provisioning_token']));
     }
 
     public function testAdminMultiDomains()
@@ -235,6 +236,7 @@ class AccountApiTest extends TestCase
             ]);
 
         $this->assertFalse(empty($response1['confirmation_key']));
+        $this->assertFalse(empty($response1['provisioning_token']));
     }
 
     public function testUsernameNoDomain()
@@ -305,6 +307,7 @@ class AccountApiTest extends TestCase
             ]);
 
         $this->assertTrue(!empty($response1['confirmation_key']));
+        $this->assertFalse(empty($response1['provisioning_token']));
     }
 
     public function testActivated()
@@ -334,6 +337,7 @@ class AccountApiTest extends TestCase
             ]);
 
         $this->assertTrue(empty($response1['confirmation_key']));
+        $this->assertTrue(empty($response1['provisioning_token']));
     }
 
     public function testNotActivated()
@@ -362,6 +366,7 @@ class AccountApiTest extends TestCase
             ]);
 
         $this->assertFalse(empty($response1['confirmation_key']));
+        $this->assertFalse(empty($response1['provisioning_token']));
     }
 
     public function testSimpleAccount()

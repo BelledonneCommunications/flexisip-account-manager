@@ -24,13 +24,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 
-use App\Token;
+use App\AccountCreationToken;
 use App\Libraries\FlexisipPusherConnector;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 
-class TokenController extends Controller
+class AccountCreationTokenController extends Controller
 {
-    public function create(Request $request)
+    public function sendByPush(Request $request)
     {
         $request->validate([
             'pn_provider' => 'required',
@@ -38,7 +38,7 @@ class TokenController extends Controller
             'pn_prid' => 'required',
         ]);
 
-        if (Token::where('pn_provider', $request->get('pn_provider'))
+        if (AccountCreationToken::where('pn_provider', $request->get('pn_provider'))
                  ->where('pn_param', $request->get('pn_param'))
                  ->where('pn_prid', $request->get('pn_prid'))
                  ->where('used', false)
@@ -46,14 +46,14 @@ class TokenController extends Controller
             abort(403, 'A similar token was already used');
         }
 
-        if (Token::where('pn_provider', $request->get('pn_provider'))
+        if (AccountCreationToken::where('pn_provider', $request->get('pn_provider'))
                  ->where('pn_param', $request->get('pn_param'))
                  ->where('pn_prid', $request->get('pn_prid'))
                  ->count() > 3) {
             abort(403, 'The limit of tokens generated for this device has been reached');
         }
 
-        $token = new Token;
+        $token = new AccountCreationToken;
         $token->token = Str::random(WebAuthenticateController::$emailCodeSize);
         $token->pn_provider = $request->get('pn_provider');
         $token->pn_param = $request->get('pn_param');

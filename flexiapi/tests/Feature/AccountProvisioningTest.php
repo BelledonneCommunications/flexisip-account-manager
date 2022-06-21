@@ -83,7 +83,7 @@ class AccountProvisioningTest extends TestCase
         $password->account->save();
 
         // Ensure that we get the authentication password once
-        $response = $this->get($this->route.'/'.$password->account->confirmation_key)
+        $response = $this->get($this->route.'/'.$password->account->provisioning_token)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('ha1');
@@ -92,31 +92,31 @@ class AccountProvisioningTest extends TestCase
         $this->assertEquals(true, DBAccount::where('id', $password->account->id)->first()->activated);
 
         // And then twice
-        $response = $this->get($this->route.'/'.$password->account->confirmation_key)
+        $response = $this->get($this->route.'/'.$password->account->provisioning_token)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
             ->assertDontSee('ha1');
 
         $password->account->refresh();
 
-        $confirmationKey = $password->account->confirmation_key;
+        $provisioningToken = $password->account->provisioning_token;
 
-        // Refresh the confirmation_key
+        // Refresh the provisioning_token
         $admin = Admin::factory()->create();
         $admin->account->generateApiKey();
 
         $this->keyAuthenticated($admin->account)
             ->json($this->method, '/api/accounts/'.$password->account->id.'/provision')
             ->assertStatus(200)
-            ->assertSee('confirmation_key')
-            ->assertDontSee($confirmationKey);
+            ->assertSee('provisioning_token')
+            ->assertDontSee($provisioningToken);
 
         $password->account->refresh();
 
-        $this->assertNotEquals($confirmationKey, $password->account->confirmation_key);
+        $this->assertNotEquals($provisioningToken, $password->account->provisioning_token);
 
         // And then provision one last time
-        $this->get($this->route.'/'.$password->account->confirmation_key)
+        $this->get($this->route.'/'.$password->account->provisioning_token)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('ha1');

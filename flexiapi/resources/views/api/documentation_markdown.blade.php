@@ -17,6 +17,14 @@ A `from` (consisting of the user SIP address, prefixed with `sip:`), `content-ty
 
 Restricted endpoints are protected using a DIGEST authentication or an API Key mechanisms.
 
+## Access model
+
+The endpoints are accessible using three different models:
+
+- <span class="badge badge-success">Public</span> publicly accessible
+- <span class="badge badge-info">User</span> the endpoint can only be accessed by an authenticated user
+- <span class="badge badge-warning">Admin</span> the endpoint can be only be accessed by an authenticated admin user
+
 ## Using the API Key
 
 You can retrieve an API Key from @if (config('app.web_panel')) [your account panel]({{ route('account.login') }}) @else your account panel @endif or using <a href="#get-accountsmeapikey">the dedicated API endpoint</a>.
@@ -59,17 +67,19 @@ You can find more documentation on the related [IETF RFC-7616](https://tools.iet
 
 # Endpoints
 
-## Public endpoints
+## Ping
 
-### General
-
-#### `GET /ping`
+### `GET /ping`
+<span class="badge badge-success">Public</span>
 Returns `pong`
 
-### Accounts
+## Account Creation Tokens
 
-#### `POST /tokens`
-Send a token using a push notification to the device.
+An account creation token is a unique token that allow the creation of a unique account.
+
+### `POST /account_creation_tokens/send-by-push`
+<span class="badge badge-success">Public</span>
+Create and send an `account_creation_token` using a push notification to the device.
 Return `403` if a token was already sent, or if the tokens limit is reached for this device.
 Return `503` if the token was not successfully sent.
 
@@ -79,8 +89,16 @@ JSON parameters:
 * `pn_param` the push notification parameter
 * `pn_prid` the push notification unique id
 
-#### `POST /accounts/with-token`
-Create an account using a token.
+### `POST /account_creation_tokens`
+<span class="badge badge-warning">Admin</span>
+
+Create and return an `account_creation_token`.
+
+## Accounts
+
+### `POST /accounts/with-account-creation-token`
+<span class="badge badge-success">Public</span>
+Create an account using an `account_creation_token`.
 Return `422` if the parameters are invalid or if the token is expired.
 
 JSON parameters:
@@ -89,49 +107,52 @@ JSON parameters:
 * `password` required minimum 6 characters
 * `algorithm` required, values can be `SHA-256` or `MD5`
 * `domain` **not configurable except during test deployments** the value is enforced to the default registration domain set in the global configuration
-* `token` the unique token
+* `account_creation_token` the unique `account_creation_token`
 * `dtmf_protocol` optional, values must be `sipinfo` or `rfc2833`
 
-#### `GET /accounts/{sip}/info`
+### `GET /accounts/{sip}/info`
+<span class="badge badge-success">Public</span>
 Retrieve public information about the account.
 Return `404` if the account doesn't exists.
 
-#### `POST /accounts/{sip}/activate/email`
+### `POST /accounts/{sip}/activate/email`
+<span class="badge badge-success">Public</span>
 Activate an account using a secret code received by email.
 Return `404` if the account doesn't exists or if the code is incorrect, the validated account otherwise.
 JSON parameters:
 
 * `code` the code
 
-#### `POST /accounts/{sip}/activate/phone`
+### `POST /accounts/{sip}/activate/phone`
+<span class="badge badge-success">Public</span>
 Activate an account using a pin code received by phone.
 Return `404` if the account doesn't exists or if the code is incorrect, the validated account otherwise.
 JSON parameters:
 
 * `code` the PIN code
 
-## User authenticated endpoints
-Those endpoints are authenticated and requires an activated account.
-
-### Accounts
-
-#### `GET /accounts/me/api_key`
+### `GET /accounts/me/api_key`
+<span class="badge badge-info">User</span>
 Generate and retrieve a fresh API Key.
 This endpoint is also setting the API Key as a Cookie.
 
-#### `GET /accounts/me`
+### `GET /accounts/me`
+<span class="badge badge-info">User</span>
 Retrieve the account information.
 
-#### `DELETE /accounts/me`
+### `DELETE /accounts/me`
+<span class="badge badge-info">User</span>
 Delete the account.
 
-#### `POST /accounts/me/email/request`
+### `POST /accounts/me/email/request`
+<span class="badge badge-info">User</span>
 Change the account email. An email will be sent to the new email address to confirm the operation.
 JSON parameters:
 
 * `email` the new email address
 
-#### `POST /accounts/me/password`
+### `POST /accounts/me/password`
+<span class="badge badge-info">User</span>
 Change the account password.
 JSON parameters:
 
@@ -139,47 +160,10 @@ JSON parameters:
 * `old_password` required if the password is already set, the old password
 * `password` required, the new password
 
-### Accounts phone number
-
-#### `POST /accounts/me/phone/request`
-Request a specific code by SMS
-JSON parameters:
-
-* `phone` the phone number to send the SMS
-
-#### `POST /accounts/me/phone`
-Confirm the code received and change the phone number
-JSON parameters:
-
-* `code` the received SMS code
-
-Return the updated account
-
-### Accounts devices
-
-#### `GET /accounts/me/devices`
-Return the user registered devices.
-
-#### `DELETE /accounts/me/devices/{uuid}`
-Remove one of the user registered devices.
-
-### Accounts contacts
-
-#### `GET /accounts/me/contacts`
-Return the user contacts.
-
-#### `GET /accounts/me/contacts/{sip}`
-Return a user contact.
-
-## Admin endpoints
-
-Those endpoints are authenticated and requires an admin account.
-
-### Accounts
-
-#### `POST /accounts`
+### `POST /accounts`
+<span class="badge badge-warning">Admin</span>
 To create an account directly from the API.
-If `activated` is set to `false` a random generated `confirmation_key` will be returned to allow further activation using the public endpoints. Check `confirmation_key_expires` to also set an expiration date on that `confirmation_key`.
+If `activated` is set to `false` a random generated `confirmation_key` and `provisioning_token` will be returned to allow further activation using the public endpoints and provision the account. Check `confirmation_key_expires` to also set an expiration date on that `confirmation_key`.
 
 JSON parameters:
 
@@ -195,49 +179,100 @@ The `domain` field is taken into account ONLY when `app.admins_manage_multi_doma
 * `dtmf_protocol` optional, values must be `sipinfo` or `rfc2833`
 * `confirmation_key_expires` optional, a datetime of this format: Y-m-d H:i:s. Only used when `activated` is not used or `false`. Enforces an expiration date on the returned `confirmation_key`. After that datetime public email or phone activation endpoints will return `403`.
 
-#### `GET /accounts`
+### `GET /accounts`
+<span class="badge badge-warning">Admin</span>
 Retrieve all the accounts, paginated.
 
-#### `GET /accounts/{id}`
+### `GET /accounts/{id}`
+<span class="badge badge-warning">Admin</span>
 Retrieve a specific account.
 
-#### `GET /accounts/{sip}/search`
+### `GET /accounts/{sip}/search`
+<span class="badge badge-warning">Admin</span>
 Search for a specific account by sip address.
 
-#### `DELETE /accounts/{id}`
+### `DELETE /accounts/{id}`
+<span class="badge badge-warning">Admin</span>
 Delete a specific account and its related information.
 
-#### `GET /accounts/{id}/activate`
+### `GET /accounts/{id}/activate`
+<span class="badge badge-warning">Admin</span>
 Activate an account.
 
-#### `GET /accounts/{id}/deactivate`
+### `GET /accounts/{id}/deactivate`
+<span class="badge badge-warning">Admin</span>
 Deactivate an account.
 
-#### `GET /accounts/{id}/provision`
-Re-provision an account by generating a fresh `confirmation_key`.
+### `GET /accounts/{id}/provision`
+<span class="badge badge-warning">Admin</span>
+Re-provision an account by generating a fresh `provisioning_token`.
 
-### Contacts
+## Accounts phone number
 
-#### `GET /accounts/{id}/contacts/`
+### `POST /accounts/me/phone/request`
+<span class="badge badge-info">User</span>
+Request a specific code by SMS
+JSON parameters:
+
+* `phone` the phone number to send the SMS
+
+### `POST /accounts/me/phone`
+<span class="badge badge-info">User</span>
+Confirm the code received and change the phone number
+JSON parameters:
+
+* `code` the received SMS code
+
+Return the updated account
+
+## Accounts devices
+
+### `GET /accounts/me/devices`
+<span class="badge badge-info">User</span>
+Return the user registered devices.
+
+### `DELETE /accounts/me/devices/{uuid}`
+<span class="badge badge-info">User</span>
+Remove one of the user registered devices.
+
+## Accounts contacts
+
+### `GET /accounts/me/contacts`
+<span class="badge badge-info">User</span>
+Return the user contacts.
+
+### `GET /accounts/me/contacts/{sip}`
+<span class="badge badge-info">User</span>
+Return a user contact.
+
+## Contacts
+
+### `GET /accounts/{id}/contacts/`
+<span class="badge badge-warning">Admin</span>
 Get all the account contacts.
 
-#### `POST /accounts/{id}/contacts/{contact_id}`
+### `POST /accounts/{id}/contacts/{contact_id}`
+<span class="badge badge-warning">Admin</span>
 Add a contact to the list.
 
-#### `DELETE /accounts/{id}/contacts/{contact_id}`
+### `DELETE /accounts/{id}/contacts/{contact_id}`
+<span class="badge badge-warning">Admin</span>
 Remove a contact from the list.
 
-### Account Actions
+## Account Actions
 
 The following endpoints will return `403 Forbidden` if the requested account doesn't have a DTMF protocol configured.
 
-#### `GET /accounts/{id}/actions/`
+### `GET /accounts/{id}/actions/`
+<span class="badge badge-warning">Admin</span>
 Show an account related actions.
 
-#### `GET /accounts/{id}/actions/{action_id}`
+### `GET /accounts/{id}/actions/{action_id}`
+<span class="badge badge-warning">Admin</span>
 Show an account related action.
 
-#### `POST /accounts/{id}/actions/`
+### `POST /accounts/{id}/actions/`
+<span class="badge badge-warning">Admin</span>
 Create an account action.
 
 JSON parameters:
@@ -245,7 +280,8 @@ JSON parameters:
 * `key` required, alpha numeric with dashes, lowercase
 * `code` required, alpha numeric, lowercase
 
-#### `PUT /accounts/{id}/actions/{action_id}`
+### `PUT /accounts/{id}/actions/{action_id}`
+<span class="badge badge-warning">Admin</span>
 Create an account action.
 
 JSON parameters:
@@ -253,43 +289,52 @@ JSON parameters:
 * `key` required, alpha numeric with dashes, lowercase
 * `code` required, alpha numeric, lowercase
 
-#### `DELETE /accounts/{id}/actions/{action_id}`
+### `DELETE /accounts/{id}/actions/{action_id}`
+<span class="badge badge-warning">Admin</span>
 Delete an account related action.
 
-### Account Types
+## Account Types
 
-#### `GET /account_types/`
+### `GET /account_types/`
+<span class="badge badge-warning">Admin</span>
 Show all the account types.
 
-#### `GET /account_types/{id}`
+### `GET /account_types/{id}`
+<span class="badge badge-warning">Admin</span>
 Show an account type.
 
-#### `POST /account_types/`
+### `POST /account_types/`
+<span class="badge badge-warning">Admin</span>
 Create an account type.
 
 JSON parameters:
 
 * `key` required, alpha numeric with dashes, lowercase
 
-#### `PUT /account_types/{id}`
+### `PUT /account_types/{id}`
+<span class="badge badge-warning">Admin</span>
 Update an account type.
 
 JSON parameters:
 
 * `key` required, alpha numeric with dashes, lowercase
 
-#### `DELETE /account_types/{id}`
+### `DELETE /account_types/{id}`
+<span class="badge badge-warning">Admin</span>
 Delete an account type.
 
-#### `POST /accounts/{id}/types/{type_id}`
+### `POST /accounts/{id}/types/{type_id}`
+<span class="badge badge-warning">Admin</span>
 Add a type to the account.
 
-#### `DELETE /accounts/{id}/contacts/{type_id}`
+### `DELETE /accounts/{id}/contacts/{type_id}`
+<span class="badge badge-warning">Admin</span>
 Remove a a type from the account.
 
-### Messages
+## Messages
 
-#### `POST /messages`
+### `POST /messages`
+<span class="badge badge-warning">Admin</span>
 Send a message over SIP.
 
 JSON parameters:
@@ -297,15 +342,18 @@ JSON parameters:
 * `to` required, SIP address of the receiver
 * `body` required, content of the message
 
-### Statistics
+## Statistics
 
-#### `GET /statistics/day`
+### `GET /statistics/day`
+<span class="badge badge-warning">Admin</span>
 Retrieve registrations statistics for 24 hours.
 
-#### `GET /statistics/week`
+### `GET /statistics/week`
+<span class="badge badge-warning">Admin</span>
 Retrieve registrations statistics for a week.
 
-#### `GET /statistics/month`
+### `GET /statistics/month`
+<span class="badge badge-warning">Admin</span>
 Retrieve registrations statistics for a month.
 
 # Non-API Endpoints
@@ -314,28 +362,31 @@ The following URLs are **not API endpoints** they are not returning `JSON` conte
 
 ## Provisioning
 
-When an account is having an available `confirmation_key` it can be provisioned using the two following URL.
+When an account is having an available `provisioning_token` it can be provisioned using the two following URL.
 
 ### `GET /provisioning/`
+<span class="badge badge-success">Public</span>
 Return the provisioning information available in the liblinphone configuration file (if correctly configured).
 
-### `GET /provisioning/{confirmation_key}`
+### `GET /provisioning/{provisioning_token}`
+<span class="badge badge-success">Public</span>
 Return the provisioning information available in the liblinphone configuration file.
-If the `confirmation_key` is valid the related account information are added to the returned XML. The account is then considered as "provisioned" and those account related information will be removed in the upcoming requests (the content will be the same as the previous url).
+If the `provisioning_token` is valid the related account information are added to the returned XML. The account is then considered as "provisioned" and those account related information will be removed in the upcoming requests (the content will be the same as the previous url).
 
-If the account is not activated and the `confirmation_key` is valid. The account will be activated.
+If the account is not activated and the `provisioning_token` is valid. The account will be activated.
 
-### `GET /provisioning/qrcode/{confirmation_key}`
+### `GET /provisioning/qrcode/{provisioning_token}`
+<span class="badge badge-success">Public</span>
 Return a QRCode that points to the provisioning URL.
 
-## Authenticated provisioning
-
 ### `GET /provisioning/me`
-Return the same base content as the previous URL and the account related information, similar to the `confirmation_key` endpoint. However this endpoint will always return those information.
+<span class="badge badge-info">User</span>
+Return the same base content as the previous URL and the account related information, similar to the `provisioning_token` endpoint. However this endpoint will always return those information.
 
-## Authenticated contact list
+## Contacts list
 
 ### `GET /contacts/vcard`
+<span class="badge badge-info">User</span>
 Return the authenticated user contacts list, in [vCard 4.0 format](https://datatracker.ietf.org/doc/html/rfc6350).
 
 Here is the format of the vCard list returned by the endpoint:
@@ -360,4 +411,5 @@ Here is the format of the vCard list returned by the endpoint:
 ```
 
 ### `GET /contacts/vcard/{sip}`
+<span class="badge badge-info">User</span>
 Return a specific user authenticated contact, in [vCard 4.0 format](https://datatracker.ietf.org/doc/html/rfc6350).

@@ -38,7 +38,7 @@ class Account extends Authenticatable
     use HasFactory;
 
     protected $with = ['passwords', 'admin', 'emailChanged', 'alias', 'activationExpiration', 'types', 'actions'];
-    protected $hidden = ['alias', 'expire_time', 'confirmation_key', 'pivot'];
+    protected $hidden = ['alias', 'expire_time', 'confirmation_key', 'provisioning_token', 'pivot'];
     protected $dateTimes = ['creation_time'];
     protected $appends = ['realm', 'phone', 'confirmation_key_expires'];
     protected $casts = [

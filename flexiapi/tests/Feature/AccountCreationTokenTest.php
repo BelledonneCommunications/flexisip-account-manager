@@ -22,14 +22,14 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-use App\Token;
+use App\AccountCreationToken;
 
-class AccountTokenTest extends TestCase
+class AccountCreationTokenTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $tokenRoute = '/api/tokens';
-    protected $accountRoute = '/api/accounts/with-token';
+    protected $tokenRoute = '/api/account_creation_tokens/send-by-push';
+    protected $accountRoute = '/api/accounts/with-account-creation-token';
     protected $method = 'POST';
 
     protected $pnProvider = 'provider';
@@ -54,7 +54,7 @@ class AccountTokenTest extends TestCase
 
     public function testLimit()
     {
-        $token = Token::factory()->create();
+        $token = AccountCreationToken::factory()->create();
 
         $response = $this->json($this->method, $this->tokenRoute, [
             'pn_provider' => $token->pn_provider,
@@ -66,14 +66,14 @@ class AccountTokenTest extends TestCase
 
     public function testInvalidToken()
     {
-        $token = Token::factory()->create();
+        $token = AccountCreationToken::factory()->create();
 
         // Invalid token
         $response = $this->json($this->method, $this->accountRoute, [
             'username' => 'username',
             'algorithm' => 'SHA-256',
             'password' => '2',
-            'token' => '0123456789abc'
+            'account_creation_token' => '0123456789abc'
         ]);
         $response->assertStatus(422);
 
@@ -82,7 +82,7 @@ class AccountTokenTest extends TestCase
             'username' => 'username',
             'algorithm' => 'SHA-256',
             'password' => '2',
-            'token' => $token->token
+            'account_creation_token' => $token->token
         ]);
         $response->assertStatus(200);
 
@@ -91,7 +91,7 @@ class AccountTokenTest extends TestCase
             'username' => 'username2',
             'algorithm' => 'SHA-256',
             'password' => '2',
-            'token' => $token->token
+            'account_creation_token' => $token->token
         ]);
         $response->assertStatus(422);
     }

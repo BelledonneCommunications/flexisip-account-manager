@@ -1,7 +1,7 @@
 <?php
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
-    Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
+    Copyright (C) 2021 Belledonne Communications SARL, All rights reserved.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -19,28 +19,24 @@
 
 namespace Database\Factories;
 
-use App\Account;
-use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
-class AccountFactory extends Factory
+use App\AccountCreationToken;
+use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+
+class AccountCreationTokenFactory extends Factory
 {
-    protected $model = Account::class;
+    protected $model = AccountCreationToken::class;
 
     public function definition()
     {
         return [
-            'username' => $this->faker->username,
-            'domain' => config('app.sip_domain'),
-            'email' => $this->faker->email,
-            'user_agent' => $this->faker->userAgent,
-            'confirmation_key' => Str::random(WebAuthenticateController::$emailCodeSize),
-            'provisioning_token' => Str::random(WebAuthenticateController::$emailCodeSize),
-            'ip_address' => $this->faker->ipv4,
-            'creation_time' => $this->faker->dateTime,
-            'dtmf_protocol' => array_rand(Account::$dtmfProtocols),
-            'activated' => true
+            'pn_provider' => $this->faker->uuid,
+            'pn_param' => $this->faker->uuid,
+            'pn_prid' => $this->faker->uuid,
+            'token' => Str::random(WebAuthenticateController::$emailCodeSize),
+            'used' => false
         ];
     }
 }

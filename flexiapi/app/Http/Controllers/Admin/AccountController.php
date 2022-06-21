@@ -141,7 +141,7 @@ class AccountController extends Controller
     public function provision(int $id)
     {
         $account = Account::findOrFail($id);
-        $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
+        $account->provisioning_token = Str::random(WebAuthenticateController::$emailCodeSize);
         $account->save();
 
         Log::channel('events')->info('Web Admin: Account provisioned', ['id' => $account->identifier]);

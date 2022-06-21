@@ -46,7 +46,7 @@ class AccountController extends Controller
 
     public function show($id)
     {
-        return Account::without(['passwords', 'admin'])->findOrFail($id)->makeVisible(['confirmation_key']);
+        return Account::without(['passwords', 'admin'])->findOrFail($id)->makeVisible(['confirmation_key', 'provisioning_token']);
     }
 
     public function search(string $sip)
@@ -95,12 +95,12 @@ class AccountController extends Controller
     public function provision(int $id)
     {
         $account = Account::findOrFail($id);
-        $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
+        $account->provisioning_token = Str::random(WebAuthenticateController::$emailCodeSize);
         $account->save();
 
         Log::channel('events')->info('API Admin: Account provisioned', ['id' => $account->identifier]);
 
-        return $account->makeVisible(['confirmation_key']);
+        return $account->makeVisible(['provisioning_token']);
     }
 
     public function store(Request $request)
@@ -152,6 +152,7 @@ class AccountController extends Controller
 
         if (!$request->has('activated') || !(bool)$request->get('activated')) {
             $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
+            $account->provisioning_token = Str::random(WebAuthenticateController::$emailCodeSize);
         }
 
         $account->save();
@@ -185,7 +186,7 @@ class AccountController extends Controller
 
         Log::channel('events')->info('API: Admin: Account created', ['id' => $account->identifier]);
 
-        return response()->json($account->makeVisible(['confirmation_key']));
+        return response()->json($account->makeVisible(['confirmation_key', 'provisioning_token']));
     }
 
     public function typeAdd(int $id, int $typeId)

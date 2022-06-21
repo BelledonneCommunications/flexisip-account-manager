@@ -108,14 +108,14 @@
 
 <h3 class="mt-3">Provisioning</h3>
 
-@if ($account->confirmation_key)
+@if ($account->provisioning_token)
     <p>Share the following picture with the user or the one-time-use link bellow.</p>
 
-    <img src="{{ route('provisioning.qrcode', $account->confirmation_key) }}"><br />
+    <img src="{{ route('provisioning.qrcode', $account->provisioning_token) }}"><br />
 
     <br />
     <p>The following link can only be visited once</p>
-    <input class="form-control" type="text" readonly value="{{ route('provisioning.show', $account->confirmation_key) }}">
+    <input class="form-control" type="text" readonly value="{{ route('provisioning.show', $account->provisioning_token) }}">
     <p class="mt-3">
         <a class="btn btn-light mr-2" href="{{ route('admin.account.provision', $account->id) }}">Renew the provision link</a>
         The current one will be unavailable

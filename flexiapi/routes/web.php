@@ -42,8 +42,8 @@ Route::group(['middleware' => 'auth.digest_or_key'], function () {
     Route::get('contacts/vcard', 'Account\ContactVcardController@index')->name('account.contacts.vcard.index');
 });
 
-Route::get('provisioning/qrcode/{confirmation}', 'Account\ProvisioningController@qrcode')->name('provisioning.qrcode');
-Route::get('provisioning/{confirmation?}', 'Account\ProvisioningController@show')->name('provisioning.show');
+Route::get('provisioning/qrcode/{provisioning_token}', 'Account\ProvisioningController@qrcode')->name('provisioning.qrcode');
+Route::get('provisioning/{provisioning_token?}', 'Account\ProvisioningController@show')->name('provisioning.show');
 
 if (config('app.public_registration')) {
     if (config('app.phone_authentication')) {

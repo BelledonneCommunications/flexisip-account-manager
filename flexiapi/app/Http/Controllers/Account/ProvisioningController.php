@@ -31,17 +31,17 @@ use Endroid\QrCode\Writer\PngWriter;
 
 class ProvisioningController extends Controller
 {
-    public function qrcode(Request $request, $confirmationKey)
+    public function qrcode(Request $request, $provisioningToken)
     {
         $account = Account::withoutGlobalScopes()
-            ->where('confirmation_key', $confirmationKey)
+            ->where('provisioning_token', $provisioningToken)
             ->firstOrFail();
 
         if ($account->activationExpired()) abort(404);
 
         $result = Builder::create()
             ->writer(new PngWriter())
-            ->data(route('provisioning.show', ['confirmation' => $confirmationKey]))
+            ->data(route('provisioning.show', ['provisioning_token' => $provisioningToken]))
             ->encoding(new Encoding('UTF-8'))
             ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
             ->size(300)
@@ -59,7 +59,7 @@ class ProvisioningController extends Controller
         return $this->show($request, null, $request->user());
     }
 
-    public function show(Request $request, $confirmationKey = null, Account $requestAccount = null)
+    public function show(Request $request, $provisioningToken = null, Account $requestAccount = null)
     {
         // Load the hooks if they exists
         $provisioningHooks = config_path('provisioning_hooks.php');
@@ -109,9 +109,9 @@ class ProvisioningController extends Controller
         // Account handling
         if ($requestAccount) {
             $account = $requestAccount;
-        } else if ($confirmationKey) {
+        } else if ($provisioningToken) {
             $account = Account::withoutGlobalScopes()
-                ->where('confirmation_key', $confirmationKey)
+                ->where('provisioning_token', $provisioningToken)
                 ->first();
         }
 
@@ -184,14 +184,14 @@ class ProvisioningController extends Controller
 
             }
 
-            if ($confirmationKey) {
+            if ($provisioningToken) {
                 // Activate the account
                 if ($account->activated == false
-                && $confirmationKey == $account->confirmation_key) {
+                && $provisioningToken == $account->provisioning_token) {
                     $account->activated = true;
                 }
 
-                $account->confirmation_key = null;
+                $account->provisioning_token = null;
                 $account->save();
             }
         }

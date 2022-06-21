@@ -26,9 +26,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('ping', 'Api\PingController@ping');
-Route::post('tokens', 'Api\TokenController@create');
+Route::post('account_creation_tokens/send-by-push', 'Api\AccountCreationTokenController@sendByPush');
 Route::get('accounts/{sip}/info', 'Api\AccountController@info');
-Route::post('accounts/with-token', 'Api\AccountController@store');
+Route::post('accounts/with-account-creation-token', 'Api\AccountController@store');
 Route::post('accounts/{sip}/activate/email', 'Api\AccountController@activateEmail');
 Route::post('accounts/{sip}/activate/phone', 'Api\AccountController@activatePhone');
 

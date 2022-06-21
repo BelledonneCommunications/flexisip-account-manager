@@ -1,7 +1,7 @@
 <?php
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
-    Copyright (C) 2021 Belledonne Communications SARL, All rights reserved.
+    Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -17,26 +17,23 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace Database\Factories;
+namespace App\Http\Controllers\Api;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-use App\Token;
+use App\AccountCreationToken;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 
-class TokenFactory extends Factory
+class AccountCreationTokenController extends Controller
 {
-    protected $model = Token::class;
-
-    public function definition()
+    public function create(Request $request)
     {
-        return [
-            'pn_provider' => $this->faker->uuid,
-            'pn_param' => $this->faker->uuid,
-            'pn_prid' => $this->faker->uuid,
-            'token' => Str::random(WebAuthenticateController::$emailCodeSize),
-            'used' => false
-        ];
+        $token = new AccountCreationToken;
+        $token->token = Str::random(WebAuthenticateController::$emailCodeSize);
+        $token->save();
+
+        return $token;
     }
 }
