@@ -1,6 +1,6 @@
-# About
+# About & Auth.
 
-An API to deal with the Flexisip server
+An API to deal with the Flexisip server.
 
 The API is available under `/api`
 
@@ -13,11 +13,12 @@ A `from` (consisting of the user SIP address, prefixed with `sip:`), `content-ty
 > accept: application/json
 ```
 
-# Authentication
+<div class="card bg-light mb-3">
+  <div class="card-body">
 
 Restricted endpoints are protected using a DIGEST authentication or an API Key mechanisms.
 
-## Access model
+#### Access model
 
 The endpoints are accessible using three different models:
 
@@ -25,7 +26,7 @@ The endpoints are accessible using three different models:
 - <span class="badge badge-info">User</span> the endpoint can only be accessed by an authenticated user
 - <span class="badge badge-warning">Admin</span> the endpoint can be only be accessed by an authenticated admin user
 
-## Using the API Key
+#### Using the API Key
 
 You can retrieve an API Key from @if (config('app.web_panel')) [your account panel]({{ route('account.login') }}) @else your account panel @endif or using <a href="#get-accountsmeapikey">the dedicated API endpoint</a>.
 
@@ -47,7 +48,7 @@ Or using a cookie:
 > …
 ```
 
-## Using DIGEST
+#### Using DIGEST
 
 To discover the available hashing algorythm you MUST send an unauthenticated request to one of the restricted endpoints.<br />
 For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the authentication layer.
@@ -65,6 +66,9 @@ For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the auth
 
 You can find more documentation on the related [IETF RFC-7616](https://tools.ietf.org/html/rfc7616).
 
+  </div>
+</div>
+
 # Endpoints
 
 ## Ping
@@ -75,7 +79,7 @@ Returns `pong`
 
 ## Account Creation Tokens
 
-An account creation token is a unique token that allow the creation of a unique account.
+An account creation token is a unique token that allow the creation of a **unique** account.
 
 ### `POST /account_creation_tokens/send-by-push`
 <span class="badge badge-success">Public</span>

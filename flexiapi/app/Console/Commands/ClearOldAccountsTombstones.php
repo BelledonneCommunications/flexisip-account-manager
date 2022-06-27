@@ -19,7 +19,6 @@
 
 namespace App\Console\Commands;
 
-use App\Account;
 use App\AccountTombstone;
 use Carbon\Carbon;
 use Illuminate\Console\Command;

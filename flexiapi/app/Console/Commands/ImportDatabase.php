@@ -90,7 +90,6 @@ class ImportDatabase extends Command
 
         if ($this->confirm($accountsCount . ' accounts will be migrated : Do you wish to continue?')) {
             // Accounts
-
             $this->info('Migrating the accounts');
 
             $pages = $accountsCount / $this->_pagination;
