@@ -64,7 +64,48 @@ class AccountCreationTokenTest extends TestCase
         $response->assertStatus(403);
     }
 
+    /**
+     * For retro-compatibility only
+     */
+    public function testRetrocopatibilityToken()
+    {
+        $token = AccountCreationToken::factory()->create();
+
+        $response = $this->json($this->method, '/api/tokens', [
+            'pn_provider' => $token->pn_provider,
+            'pn_param' => $token->pn_param,
+            'pn_prid' => $token->pn_prid
+        ]);
+        $response->assertStatus(403);
+    }
+
     public function testInvalidToken()
+    {
+        $token = AccountCreationToken::factory()->create();
+
+        // Valid token
+        $response = $this->json($this->method, '/api/accounts/with-token', [
+            'username' => 'username',
+            'algorithm' => 'SHA-256',
+            'password' => '2',
+            'token' => $token->token
+        ]);
+        $response->assertStatus(200);
+
+        // Expired token
+        $response = $this->json($this->method, '/api/accounts/with-token', [
+            'username' => 'username2',
+            'algorithm' => 'SHA-256',
+            'password' => '2',
+            'token' => $token->token
+        ]);
+        $response->assertStatus(422);
+    }
+
+    /**
+     * For retrocompatibility only
+     */
+    public function testRetrocompatibilityInvalidToken()
     {
         $token = AccountCreationToken::factory()->create();
 

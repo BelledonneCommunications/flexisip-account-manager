@@ -73,15 +73,23 @@ class AccountController extends Controller
             'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
             'domain' => 'min:3',
             'account_creation_token' => [
-                'required',
+                'required_without:token',
                 Rule::exists('account_creation_tokens', 'token')->where(function ($query) {
                     $query->where('used', false);
                 }),
                 'size:'.WebAuthenticateController::$emailCodeSize
-            ]
+            ],
+            // For retro-compatibility
+            'token' => [
+                'required_without:account_creation_token',
+                Rule::exists('account_creation_tokens', 'token')->where(function ($query) {
+                    $query->where('used', false);
+                }),
+                'size:'.WebAuthenticateController::$emailCodeSize
+            ],
         ]);
 
-        $token = AccountCreationToken::where('token', $request->get('account_creation_token'))->first();
+        $token = AccountCreationToken::where('token', $request->get('token') ?? $request->get('account_creation_token'))->first();
         $token->used = true;
         $token->save();
 
