@@ -17,77 +17,97 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Helpers;
-
 use Illuminate\Support\Str;
 
 use App\Account;
 use App\DigestNonce;
-
+use App\ExternalAccount;
+use Illuminate\Support\Facades\Schema;
 use League\CommonMark\Environment;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 use League\CommonMark\Extension\TableOfContents\TableOfContentsExtension;
 use League\CommonMark\MarkdownConverter;
 
-class Utils
+function generateNonce(): string
 {
-    public static function generateNonce(): string
-    {
-        return Str::random(32);
+    return Str::random(32);
+}
+
+function generateValidNonce(Account $account): string
+{
+    $nonce = new DigestNonce;
+    $nonce->account_id = $account->id;
+    $nonce->nonce = generateNonce();
+    $nonce->save();
+
+    return $nonce->nonce;
+}
+
+function bchash(string $username, string $domain, string $password, string $algorithm = 'MD5')
+{
+    $algos = ['MD5' => 'md5', 'SHA-256' => 'sha256'];
+
+    return hash($algos[$algorithm], $username.':'.$domain.':'.$password);
+}
+
+function generatePin()
+{
+    return mt_rand(1000, 9999);
+}
+
+function percent($value, $max)
+{
+    if ($max == 0) $max = 1;
+    return round(($value*100)/$max, 2);
+}
+
+function markdownDocumentationView($view): string
+{
+    $environment = Environment::createCommonMarkEnvironment();
+    $environment->addExtension(new HeadingPermalinkExtension);
+    $environment->addExtension(new TableOfContentsExtension);
+    $environment->mergeConfig([
+        'heading_permalink' => [
+            'html_class' => 'permalink',
+            'insert' => 'after',
+            'title' => 'Permalink',
+            'id_prefix' => '',
+            'fragment_prefix' => '',
+        ],
+        'table_of_contents' => [
+            'html_class' => 'table-of-contents float-right',
+        ],
+    ]);
+
+    $converter = new MarkdownConverter($environment);
+
+    return (string) $converter->convertToHtml(
+        view($view, [
+            'app_name' => config('app.name')
+        ])->render()
+    );
+}
+
+function getAvailableExternalAccount(): ?ExternalAccount
+{
+    if (Schema::hasTable('external_accounts')) {
+        return ExternalAccount::where('used', false)
+        ->where('account_id', null)
+        ->first();
     }
 
-    public static function generateValidNonce(Account $account): string
-    {
-        $nonce = new DigestNonce;
-        $nonce->account_id = $account->id;
-        $nonce->nonce = Utils::generateNonce();
-        $nonce->save();
+    return null;
+}
 
-        return $nonce->nonce;
+function publicRegistrationEnabled(): bool
+{
+    if (config('app.public_registration')) {
+        if (config('app.consume_external_account_on_create')) {
+            return (bool)getAvailableExternalAccount();
+        }
+
+        return true;
     }
 
-    public static function bchash(string $username, string $domain, string $password, string $algorithm = 'MD5')
-    {
-        $algos = ['MD5' => 'md5', 'SHA-256' => 'sha256'];
-
-        return hash($algos[$algorithm], $username.':'.$domain.':'.$password);
-    }
-
-    public static function generatePin()
-    {
-        return mt_rand(1000, 9999);
-    }
-
-    public static function percent($value, $max)
-    {
-        if ($max == 0) $max = 1;
-        return round(($value*100)/$max, 2);
-    }
-
-    public static function markdownDocumentationView($view)
-    {
-        $environment = Environment::createCommonMarkEnvironment();
-        $environment->addExtension(new HeadingPermalinkExtension);
-        $environment->addExtension(new TableOfContentsExtension);
-        $environment->mergeConfig([
-            'heading_permalink' => [
-                'html_class' => 'permalink',
-                'insert' => 'after',
-                'title' => 'Permalink',
-                'id_prefix' => '',
-                'fragment_prefix' => '',
-            ],
-            'table_of_contents' => [
-                'html_class' => 'table-of-contents float-right',
-            ],
-        ]);
-
-        $converter = new MarkdownConverter($environment);
-
-        return (string) $converter->convertToHtml(
-            view($view, [
-                'app_name' => config('app.name')
-            ])->render()
-        );
-    }
+    return false;
 }

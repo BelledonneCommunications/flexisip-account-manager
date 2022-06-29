@@ -29,7 +29,6 @@ use Illuminate\Support\Str;
 use App\ApiKey;
 use App\Password;
 use App\EmailChanged;
-use App\Helpers\Utils;
 use App\Mail\ChangingEmail;
 use Carbon\Carbon;
 
@@ -61,6 +60,21 @@ class Account extends Authenticatable
                 }
             } else {
                 $builder->where('domain', config('app.sip_domain'));
+            }
+        });
+
+        /**
+         * External account handling
+         */
+        static::creating(function ($account) {
+            if (config('app.consume_external_account_on_create') && !getAvailableExternalAccount()) {
+                abort(403, 'Accounts cannot be created on the server');
+            }
+        });
+
+        static::created(function ($account) {
+            if (config('app.consume_external_account_on_create')) {
+                $account->attachExternalAccount();
             }
         });
     }
@@ -107,6 +121,11 @@ class Account extends Authenticatable
     public function apiKey()
     {
         return $this->hasOne('App\ApiKey');
+    }
+
+    public function externalAccount()
+    {
+        return $this->hasOne('App\ExternalAccount');
     }
 
     public function contacts()
@@ -203,6 +222,17 @@ class Account extends Authenticatable
         return ($this->activationExpiration && $this->activationExpiration->isExpired());
     }
 
+    public function attachExternalAccount(): bool
+    {
+        $externalAccount = getAvailableExternalAccount();
+
+        if (!$externalAccount) abort(403, 'No External Account left');
+
+        $externalAccount->account_id = $this->id;
+        $externalAccount->used = true;
+        return $externalAccount->save();
+    }
+
     public function requestEmailUpdate(string $newEmail)
     {
         // Remove all the old requests
@@ -272,7 +302,7 @@ class Account extends Authenticatable
 
         $password = new Password;
         $password->account_id = $this->id;
-        $password->password = Utils::bchash($this->username, $this->resolvedRealm, $newPassword, $algorithm);
+        $password->password = bchash($this->username, $this->resolvedRealm, $newPassword, $algorithm);
         $password->algorithm = $algorithm;
         $password->save();
     }

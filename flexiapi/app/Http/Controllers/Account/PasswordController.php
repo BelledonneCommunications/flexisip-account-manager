@@ -24,7 +24,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
-use App\Helpers\Utils;
 use App\Mail\ConfirmedRegistration;
 
 class PasswordController extends Controller

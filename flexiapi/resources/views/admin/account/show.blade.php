@@ -22,6 +22,7 @@
     <b>Email:</b> <a href="mailto:{{ $account->email }}">{{ $account->email }}</a><br />
     <b>DTMF Protocol:</b> @if ($account->dtmf_protocol) {{ $account->resolvedDtmfProtocol }}@endif<br />
     @if ($account->alias)<b>Phone number:</b> {{ $account->phone }}<br />@endif
+    @if ($account->group)<b>Group:</b> {{ $account->group }}<br />@endif
     @if ($account->display_name)<b>Display name:</b> {{ $account->display_name }}<br />@endif
 </p>
 
@@ -43,6 +44,16 @@
     <span class="badge badge-success">Admin</span> <a href="{{ route('admin.account.unadmin', $account->id) }}">Remove admin role</a>
 @else
     <span class="badge badge-danger">Not Admin</span> <a href="{{ route('admin.account.admin', $account->id) }}">Add admin role</a>
+@endif
+
+<h3 class="mt-3">External Account</h3>
+
+@if ($account->externalAccount)
+    <p>
+        <b>Identifier:</b> {{ $account->externalAccount->identifier }}<br />
+    </p>
+@else
+    <a class="btn btn-sm @if ($external_accounts_count == 0)disabled @endif" href="{{ route('admin.account.external_account.attach', $account->id) }}">Attach an External Account ({{ $external_accounts_count}} left)</a>
 @endif
 
 <h3 class="mt-3">Contacts</h3>

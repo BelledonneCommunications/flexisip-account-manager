@@ -28,6 +28,8 @@ return [
     'proxy_registrar_address' => env('ACCOUNT_PROXY_REGISTRAR_ADDRESS', 'sip.domain.com'),
     'transport_protocol_text' => env('ACCOUNT_TRANSPORT_PROTOCOL_TEXT', 'TLS (recommended), TCP or UDP'),
 
+    'consume_external_account_on_create' => env('ACCOUNT_CONSUME_EXTERNAL_ACCOUNT_ON_CREATE', false),
+
     /**
      * Time limit before the API Key and related cookie are expired
      */
@@ -224,6 +226,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\HelperServiceProvider::class,
 
     ],
 
@@ -273,7 +276,7 @@ return [
         'Storage' => Illuminate\Support\Facades\Storage::class,
         'Str' => Illuminate\Support\Str::class,
         'URL' => Illuminate\Support\Facades\URL::class,
-        'Utils' => App\Helpers\Utils::class,
+        //'Utils' => App\Helpers\class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
     ],

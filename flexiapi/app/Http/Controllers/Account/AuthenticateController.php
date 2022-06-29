@@ -28,7 +28,6 @@ use Illuminate\Support\Facades\Mail;
 use App\Account;
 use App\Alias;
 use App\AuthToken;
-use App\Helpers\Utils;
 use App\Libraries\OvhSMS;
 use App\Mail\PasswordAuthentication;
 
@@ -72,7 +71,7 @@ class AuthenticateController extends Controller
         foreach ($account->passwords as $password) {
             if (hash_equals(
                 $password->password,
-                Utils::bchash($account->username, $account->resolvedRealm, $request->get('password'), $password->algorithm)
+                bchash($account->username, $account->resolvedRealm, $request->get('password'), $password->algorithm)
             )) {
                 Auth::login($account);
                 return redirect()->route('account.panel');
@@ -208,7 +207,7 @@ class AuthenticateController extends Controller
             ]);
         }
 
-        $account->confirmation_key = Utils::generatePin();
+        $account->confirmation_key = generatePin();
         $account->save();
 
         $ovhSMS = new OvhSMS;

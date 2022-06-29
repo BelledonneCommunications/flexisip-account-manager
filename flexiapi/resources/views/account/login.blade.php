@@ -28,7 +28,7 @@
         @include('parts.password_recovery')
     @endif
 
-    @if (config('app.public_registration'))
+    @if (publicRegistrationEnabled())
         <hr />
 
         <p class="text-center">

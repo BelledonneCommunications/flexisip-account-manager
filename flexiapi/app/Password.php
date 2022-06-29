@@ -27,6 +27,7 @@ class Password extends Model
     use HasFactory;
 
     public $timestamps = false;
+    protected $fillable = ['account_id', 'password', 'algorithm'];
     protected $hidden = ['id', 'password', 'account_id', 'created_at', 'updated_at'];
 
     public function account()

@@ -48,7 +48,7 @@ Route::get('provisioning/auth_token/{auth_token}', 'Account\ProvisioningControll
 Route::get('provisioning/qrcode/{provisioning_token}', 'Account\ProvisioningController@qrcode')->name('provisioning.qrcode');
 Route::get('provisioning/{provisioning_token?}', 'Account\ProvisioningController@show')->name('provisioning.show');
 
-if (config('app.public_registration')) {
+if (publicRegistrationEnabled()) {
     if (config('app.phone_authentication')) {
         Route::get('register/phone', 'Account\RegisterController@registerPhone')->name('account.register.phone');
         Route::post('register/phone', 'Account\RegisterController@storePhone')->name('account.store.phone');
@@ -117,6 +117,8 @@ if (config('app.web_panel')) {
 
         Route::get('admin/accounts/{account}/activate', 'Admin\AccountController@activate')->name('admin.account.activate');
         Route::get('admin/accounts/{account}/deactivate', 'Admin\AccountController@deactivate')->name('admin.account.deactivate');
+
+        Route::get('admin/accounts/{account}/external_account/attach', 'Admin\AccountController@attachExternalAccount')->name('admin.account.external_account.attach');
 
         Route::get('admin/accounts/{account}/admin', 'Admin\AccountController@admin')->name('admin.account.admin');
         Route::get('admin/accounts/{id}/unadmin', 'Admin\AccountController@unadmin')->name('admin.account.unadmin');

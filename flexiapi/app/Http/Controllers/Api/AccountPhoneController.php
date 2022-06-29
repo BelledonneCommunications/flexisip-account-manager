@@ -24,7 +24,6 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
 use App\Rules\WithoutSpaces;
-use App\Helpers\Utils;
 use App\Libraries\OvhSMS;
 
 use App\PhoneChangeCode;
@@ -47,7 +46,7 @@ class AccountPhoneController extends Controller
         $phoneChangeCode = $account->phoneChangeCode ?? new PhoneChangeCode;
         $phoneChangeCode->account_id = $account->id;
         $phoneChangeCode->phone = $request->get('phone');
-        $phoneChangeCode->code = Utils::generatePin();
+        $phoneChangeCode->code = generatePin();
         $phoneChangeCode->save();
 
         Log::channel('events')->info('API: Account phone change requested by SMS', ['id' => $account->identifier]);

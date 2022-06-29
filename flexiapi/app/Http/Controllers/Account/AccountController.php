@@ -25,7 +25,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Account;
 use App\AccountTombstone;
-use App\Helpers\Utils;
 
 class AccountController extends Controller
 {
@@ -43,7 +42,7 @@ class AccountController extends Controller
     public function documentation(Request $request)
     {
         return view('account.documentation', [
-            'documentation' => Utils::markdownDocumentationView('account.documentation_markdown')
+            'documentation' => markdownDocumentationView('account.documentation_markdown')
         ]);
     }
 

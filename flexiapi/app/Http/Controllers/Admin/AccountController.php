@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use App\Account;
 use App\Admin;
 use App\Alias;
+use App\ExternalAccount;
 use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
@@ -36,7 +37,7 @@ class AccountController extends Controller
 {
     public function index(Request $request, $search = '')
     {
-        $accounts = Account::orderBy('creation_time', 'desc');
+        $accounts = Account::orderBy('creation_time', 'desc')->with('externalAccount');
 
         if (!empty($search)) {
             $accounts = $accounts->where('username', 'like', '%'.$search.'%');
@@ -51,6 +52,7 @@ class AccountController extends Controller
     public function show(int $id)
     {
         return view('admin.account.show', [
+            'external_accounts_count' => ExternalAccount::where('used', false)->count(),
             'account' => Account::findOrFail($id)
         ]);
     }
@@ -114,6 +116,16 @@ class AccountController extends Controller
     public function search(Request $request)
     {
         return redirect()->route('admin.account.index', $request->get('search'));
+    }
+
+    public function attachExternalAccount(int $id)
+    {
+        $account = Account::findOrFail($id);
+        $account->attachExternalAccount();
+
+        Log::channel('events')->info('Web Admin: ExternalAccount attached', ['id' => $account->identifier]);
+
+        return redirect()->back();
     }
 
     public function activate(int $id)

@@ -24,7 +24,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
-use App\Helpers\Utils;
 use App\Mail\ConfirmedRegistration;
 
 class PasswordController extends Controller
@@ -48,7 +47,7 @@ class PasswordController extends Controller
             foreach ($account->passwords as $password) {
                 if (hash_equals(
                     $password->password,
-                    Utils::bchash($account->username, $account->resolvedRealm, $request->get('old_password'), $password->algorithm)
+                    bchash($account->username, $account->resolvedRealm, $request->get('old_password'), $password->algorithm)
                 )) {
                     $account->updatePassword($request->get('password'), $algorithm);
 

@@ -19,7 +19,6 @@
 
 namespace Database\Factories;
 
-use App\Helpers\Utils;
 use App\Password;
 use App\PhoneChangeCode;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -35,7 +34,7 @@ class PhoneChangeCodeFactory extends Factory
 
         return [
             'account_id' => $password->account->id,
-            'code'   => Utils::generatePin(),
+            'code'   => generatePin(),
             'phone'  => '+3312341234',
         ];
     }

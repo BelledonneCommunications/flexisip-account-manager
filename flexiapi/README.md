@@ -179,6 +179,26 @@ This command will set the admin role to any available Flexisip account (the exte
 
 Once one account is declared as administrator, you can directly configure the other ones using the web panel.
 
+### Generate External Accounts
+
+Generate `amount` accounts defined by the `group` label.
+The generated accounts will have a random username suffixed by the group name.
+
+    accounts:generate-external {amount} {group}
+
+### Export External Accounts
+
+Export all the accounts defined by the `group` label.
+The command generates a JSON file containing the accounts ready to by imported as External Accounts in the current directory. A specific path can be defined using the `--o|output` optional parameter.
+
+    accounts:export-to-externals {group} {--o|output=}
+
+### Import External Accounts
+
+Import accounts previously exported as a JSON file. Accounts previously imported will be skipped in the process.
+
+    accounts:import-externals {file_path}
+
 ## Provisioning
 
 FlexiAPI is providing endpoints to provision Liblinphone powered devices. You can find more documentation about it on the `/api#provisioning` documentation page.

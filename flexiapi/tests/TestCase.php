@@ -21,7 +21,6 @@ namespace Tests;
 
 use App\Password;
 use App\Account;
-use App\Helpers\Utils;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
@@ -59,7 +58,7 @@ abstract class TestCase extends BaseTestCase
         $challenge = \substr($response->headers->get('www-authenticate'), 7);
         $extractedChallenge = $this->extractAuthenticateHeader($challenge);
 
-        $cnonce = Utils::generateNonce();
+        $cnonce = generateNonce();
 
         $A1 = $password->password;
         $A2 = hash($hash, $this->method . ':' . $this->route);

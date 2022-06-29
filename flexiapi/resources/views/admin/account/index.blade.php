@@ -42,14 +42,17 @@
                     </a>
                 </td>
                 <td>
+                    @if ($account->externalAccount)
+                        <span class="badge badge-secondary" title="External Account attached">EA</span>
+                    @endif
                     @if ($account->email)
                         <span class="badge badge-info">Email</span>
                     @endif
                     @if ($account->activated)
-                        <span class="badge badge-success">Activated</span>
+                        <span class="badge badge-success" title="Activated">Act.</span>
                     @endif
                     @if ($account->admin)
-                        <span class="badge badge-primary">Admin</span>
+                        <span class="badge badge-primary" title="Admin">Adm.</span>
                     @endif
                     @if ($account->sha256Password)
                         <span class="badge badge-info">SHA256</span>

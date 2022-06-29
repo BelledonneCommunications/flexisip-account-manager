@@ -32,7 +32,6 @@ use App\Alias;
 use App\Rules\WithoutSpaces;
 use App\Rules\IsNotPhoneNumber;
 use App\Rules\NoUppercase;
-use App\Helpers\Utils;
 use App\Libraries\OvhSMS;
 use App\Mail\RegisterConfirmation;
 use App\Mail\NewsletterRegistration;
@@ -155,7 +154,7 @@ class RegisterController extends Controller
         $alias->account_id = $account->id;
         $alias->save();
 
-        $account->confirmation_key = Utils::generatePin();
+        $account->confirmation_key = generatePin();
         $account->save();
 
         $ovhSMS = new OvhSMS;

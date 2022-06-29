@@ -143,10 +143,12 @@ class ProvisioningController extends Controller
         $config->appendChild($section);
 
         if ($account && !$account->activationExpired()) {
+            $externalAccount = $account->externalAccount;
+
             $section = $dom->createElement('section');
             $section->setAttribute('name', 'proxy_' . $proxyConfigIndex);
 
-            $entry = $dom->createElement('entry', '<sip:'.$account->identifier.'>');
+            $entry = $dom->createElement('entry', '<sip:' . $account->identifier . '>');
             $entry->setAttribute('name', 'reg_identity');
             $section->appendChild($entry);
 
@@ -161,6 +163,12 @@ class ProvisioningController extends Controller
             // Complete the section with the Proxy hook
             if (function_exists('provisioningProxyHook')) {
                 provisioningProxyHook($section, $request, $account);
+            }
+
+            if ($externalAccount) {
+                $entry = $dom->createElement('entry', 'external_account');
+                $entry->setAttribute('name', 'depends_on');
+                $section->appendChild($entry);
             }
 
             $config->appendChild($section);
@@ -199,18 +207,70 @@ class ProvisioningController extends Controller
                 $config->appendChild($section);
 
                 $authInfoIndex++;
-
             }
 
             if ($provisioningToken) {
                 // Activate the account
-                if ($account->activated == false
-                && $provisioningToken == $account->provisioning_token) {
+                if (
+                    $account->activated == false
+                    && $provisioningToken == $account->provisioning_token
+                ) {
                     $account->activated = true;
                 }
 
                 $account->provisioning_token = null;
                 $account->save();
+            }
+
+            $proxyConfigIndex++;
+
+            // External Account handling
+            if ($externalAccount) {
+                $section = $dom->createElement('section');
+                $section->setAttribute('name', 'proxy_' . $proxyConfigIndex);
+
+                $entry = $dom->createElement('entry', '<sip:' . $externalAccount->identifier . '>');
+                $entry->setAttribute('name', 'reg_identity');
+                $section->appendChild($entry);
+
+                $entry = $dom->createElement('entry', 1);
+                $entry->setAttribute('name', 'reg_sendregister');
+                $section->appendChild($entry);
+
+                $entry = $dom->createElement('entry', 'push_notification');
+                $entry->setAttribute('name', 'refkey');
+                $section->appendChild($entry);
+
+                $entry = $dom->createElement('entry', 'external_account');
+                $entry->setAttribute('name', 'idkey');
+                $section->appendChild($entry);
+
+                $config->appendChild($section);
+
+                $section = $dom->createElement('section');
+                $section->setAttribute('name', 'auth_info_' . $authInfoIndex);
+
+                $entry = $dom->createElement('entry', $externalAccount->username);
+                $entry->setAttribute('name', 'username');
+                $section->appendChild($entry);
+
+                $entry = $dom->createElement('entry', $externalAccount->domain);
+                $entry->setAttribute('name', 'domain');
+                $section->appendChild($entry);
+
+                $entry = $dom->createElement('entry', $externalAccount->password);
+                $entry->setAttribute('name', 'ha1');
+                $section->appendChild($entry);
+
+                $entry = $dom->createElement('entry', $account->resolvedRealm);
+                $entry->setAttribute('name', 'realm');
+                $section->appendChild($entry);
+
+                $entry = $dom->createElement('entry', $externalAccount->algorithm);
+                $entry->setAttribute('name', 'algorithm');
+                $section->appendChild($entry);
+
+                $config->appendChild($section);
             }
         }
 

@@ -20,7 +20,6 @@
 namespace App\Http\Middleware;
 
 use App\Account;
-use App\Helpers\Utils;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
@@ -170,7 +169,7 @@ class AuthenticateDigestOrKey
     {
         $response = new Response;
 
-        $nonce = Utils::generateValidNonce($account);
+        $nonce = generateValidNonce($account);
         $headers = $this->generateAuthHeaders($account, $nonce);
 
         if (!empty($headers)) {

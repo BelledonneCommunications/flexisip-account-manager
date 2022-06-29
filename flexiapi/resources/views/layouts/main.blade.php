@@ -17,7 +17,7 @@
             </ul>
 
             <ul class="navbar-nav">
-                @if (config('app.public_registration'))
+                @if (publicRegistrationEnabled())
                     <li class="nav-item @if (request()->routeIs('account.register')) active @endif">
                         <a class="nav-link" href="{{ route('account.register') }}">Register</a>
                     </li>
