@@ -3,8 +3,8 @@
 #################################################
 stages:
   - package
-  - deploy
   - test
+  - deploy
 
 .rpm:
   tags: [ "docker" ]
@@ -62,11 +62,11 @@ centos7-rpm-test:
     - cd rpmbuild/x86_64
     - rsync -e "ssh -o StrictHostKeyChecking=no" -pr . $DEPLOY_SERVER:$DEPLOY_DIRECTORY_STATE;
       ssh $DEPLOY_SERVER "chmod a+r $DEPLOY_DIRECTORY_STATE/*.rpm && createrepo_c --update $DEPLOY_DIRECTORY_STATE/.";
-  # only:
-  #   refs:
-  #     - master
-  #   changes:
-  #     - flexisip-account-manager.spec
+  only:
+    refs:
+      - master
+    changes:
+      - flexisip-account-manager.spec
 
   extends:
     - .package-deploy
@@ -136,11 +136,11 @@ debian11-packaging:
   variables:
     RELEASE: bullseye
     FREIGHT_PATH: $DEBIAN_FREIGHT_CONF_PATH
-  # only:
-  #   refs:
-  #     - master
-  #   changes:
-  #     - flexisip-account-manager.spec
+  only:
+    refs:
+      - master
+    changes:
+      - flexisip-account-manager.spec
 
   before_script:
     - eval $(ssh-agent -s)
