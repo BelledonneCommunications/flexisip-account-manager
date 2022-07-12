@@ -104,7 +104,7 @@ Create and return an `account_creation_token`.
 <span class="badge badge-success">Public</span>
 Generate an `auth_token`. To attach the generated token to an account see [`auth_token` attachement endpoint](#get-accountsauthtokenauthtokenattach).
 
-#### `GET /accounts/auth_token/{auth_token}/attach`
+### `GET /accounts/auth_token/{auth_token}/attach`
 <span class="badge badge-info">User</span>
 Attach a publicly generated authentication token to the currently authenticated account.
 
