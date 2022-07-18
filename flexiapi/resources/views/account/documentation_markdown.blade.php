@@ -6,7 +6,7 @@ The application is connected to the Flexisip server and directly interact with i
 
 # Registration
 
-Registration can be achieve using two methods if they are correctly configured and enabled by your administrator.
+Registration can be achieve using several methods if they are correctly configured and enabled by your administrator.
 
 ## Email Registration
 
@@ -17,6 +17,10 @@ Registration can be achieve using two methods if they are correctly configured a
 You can @if (config('app.web_panel') && config('app.public_registration')) [create an account using an email address]({{ route('account.register.email') }}) @else create an account using an email address @endif. The form requires you to provide an username and your email address.
 
 Once completed a confirmation email containing a unique link will be sent to the address. This link is used to activate your account, allowing you to finish the setup.
+
+## Account Creation Token Registration
+
+Allow the creation of an account using a previously generated Account Creation Token.
 
 ## Phone Registration
 
@@ -37,6 +41,10 @@ Once activated {{ $app_name }} will ask your to provide a password to finish you
 To authenticate please fill in the username or phone number and password you provided during the registration phase.
 
 If you forgot your password or didn't configured it, you can always recover your account using the recover password forms, using your @if (config('app.web_panel')) [email address]({{ route('account.login_email') }}) @else email address @endif or @if (config('app.web_panel') && config('app.phone_authentication')) [phone number]({{ route('account.login_phone') }}) @else phone number (not enabled) @endif. Once authenticated you will then be able to change your password.
+
+## Code based authentication
+
+[{{ $app_name }}]({{ route('account.home') }}) allows you to authenticate a new device using an already authenticated one. This can be done by generating a QRCode from the authenticated device and flash it on the un-authenticated one (or the other way around).
 
 # Account panel
 
@@ -91,6 +99,14 @@ Administrators can create and edit accounts directly from the admin panel. Durin
 ### Delete an account
 
 The deletion of an account is definitive, all the database related data (password, aliases…) will be destroyed after the deletion.
+
+### Attach the account to an External Account
+
+@if (config('app.consume_external_account_on_create') == false)
+*The feature is not enabled on this instance.*
+@endif
+
+It is possible to import external accounts in the application. If this feature is enabled those External Accounts can be attached during the account creation process or afterward using the Account page dedicated button.
 
 ### Create, edit and delete account types
 

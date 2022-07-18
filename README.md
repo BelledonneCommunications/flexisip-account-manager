@@ -79,25 +79,11 @@ php /opt/belledonne-communications/share/flexisip-account-manager/tools/create_t
 
 ### 5. Install OVH SMS gateway dependency (optionnal)
 
-To install OVH SMS PHP API create a `composer.json` file in `/opt/belledonne-communications/`:
+Download and install [composer](https://getcomposer.org/download/) or use the one already provided by your OS.
+Then install the `php-ovh-sms` library in the `flexisip-account-manager` directory.
 
-```bash
-cat > /opt/belledonne-communications/share/flexisip-account-manager/composer.json << EOF
-{
-	"name": "XMLRPC SMS API",
-	"description": "XMLRPC SMS API",
-	"require": { "ovh/php-ovh-sms": "dev-master" }
-}
-EOF
-```
-
-Then download and install [composer](https://getcomposer.org/download/).
-
-Finally start composer:
-
-```bash
-cd /opt/belledonne-communications/share/flexisip-account-manager/ && composer install
-```
+    cd /opt/belledonne-communications/share/flexisip-account-manager/
+    php composer.phar require ovh/php-ovh-sms
 
 ### 4. Configure the API
 ------------------------------
