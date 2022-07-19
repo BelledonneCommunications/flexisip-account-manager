@@ -13,14 +13,14 @@ package-common:
 	mkdir -p $(OUTPUT_DIR)/rpmbuild/SOURCES
 
 	# XMLRPC
-	cp -R --parents src/**/*.php $(OUTPUT_DIR)/flexisip-account-manager/
-	cp -R --parents src/api/**/*.php $(OUTPUT_DIR)/flexisip-account-manager/
+	cp -R --parents xmlrpc/src/**/*.php $(OUTPUT_DIR)/flexisip-account-manager/
+	cp -R --parents xmlrpc/src/api/**/*.php $(OUTPUT_DIR)/flexisip-account-manager/
 	cp -R --parents conf/*.conf $(OUTPUT_DIR)/flexisip-account-manager/
 
 	# FlexiAPI
 	cp -R --parents flexiapi/**/* $(OUTPUT_DIR)/flexisip-account-manager/
 	cp flexiapi/composer* $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
-	cp flexiapi/README.md $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
+	cp README.md $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
 	cp flexiapi/.env.example $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/.env.example
 	cp flexiapi/artisan $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
 	cp flexiapi/phpunit.xml $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
@@ -28,7 +28,7 @@ package-common:
 	cp flexiapi/phpmd.xml $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
 
 	# General
-	cp README.md $(OUTPUT_DIR)/flexisip-account-manager/
+	cp xmlrpc/README.md $(OUTPUT_DIR)/flexisip-account-manager/
 	cp -R httpd/ $(OUTPUT_DIR)/flexisip-account-manager/
 	cp -R cron/ $(OUTPUT_DIR)/flexisip-account-manager/
 	cp flexisip-account-manager.spec $(OUTPUT_DIR)/rpmbuild/SPECS/

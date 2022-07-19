@@ -8,7 +8,7 @@
 #%define _datadir           %{_datarootdir}
 #%define _docdir            %{_datadir}/doc
 
-%define build_number 162
+%define build_number 163
 %define var_dir /var/opt/belledonne-communications
 %define opt_dir /opt/belledonne-communications/share/flexisip-account-manager
 
@@ -33,9 +33,9 @@
 %endif
 
 Name:           bc-flexisip-account-manager
-Version:        1.1.0
+Version:        1.2.0
 Release:        %{build_number}%{?dist}
-Summary:        SIP account management xml-rpc server, for use with flexisip server suite. Only tested for Apache2.
+Summary:        Web panel and a REST API to manage and handle Flexisip accounts related features. Only tested for Apache2.
 
 Group:          Applications/Communications
 License:        GPL
@@ -67,7 +67,7 @@ PHP server for Linphone and Flexisip providing module for account creation.
 %install
 rm -rf "$RPM_BUILD_ROOT"
 mkdir -p "$RPM_BUILD_ROOT%{opt_dir}"
-cp -R src/* "$RPM_BUILD_ROOT%{opt_dir}/"
+cp -R xmlrpc/src/* "$RPM_BUILD_ROOT%{opt_dir}/"
 
 cp -R flexiapi "$RPM_BUILD_ROOT%{opt_dir}"
 cp flexiapi/composer.json "$RPM_BUILD_ROOT%{opt_dir}/flexiapi"
@@ -194,6 +194,8 @@ fi
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Mon Oct 24 2022 Timothée Jaussoin <timothee.jaussoin@belledonne-communications.com>
+- Release the 1.2 version, see CHANGELOG
 * Tue Oct 12 2021 Peio Rigaux <peio.rigaux@belledonne-communications.com>
 - Adapted specfile to support Rocky Linux 8
 * Tue Sep 28 2021 Timothée Jaussoin <timothee.jaussoin@belledonne-communications.com>

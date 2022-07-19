@@ -3,6 +3,7 @@ rpmbuild/
 
 .env.*
 
+xmlrpc/src/vendor
 flexiapi/node_modules
 flexiapi/public/hot
 flexiapi/public/storage

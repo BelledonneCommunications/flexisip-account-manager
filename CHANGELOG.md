@@ -1,22 +1,14 @@
-# Change Log
+# Flexisip Account Manager Changelog
 
-All notable changes to this project will be documented in this file.
+v1.2
+----
 
-Group changes to describe their impact on the project, as follows:
-
-| **Group name** | **Description**                                       |
-| ----------     | ----------------------------------------------------- |
-| Added          | New features                                          |
-| Changed        | Changes in existing functionality                     |
-| Deprecated     | Once-stable features removed in upcoming releases     |
-| Removed        | Deprecated features removed in this release           |
-| Fixed          | Any bug fixes                                         |
-| Security       | To invite users to upgrade in case of vulnerabilities |
-
-
-As of now, since Flexisip-account-amanger doesn't have a release yet, changes will be listed by build number.
-
-## Build 32 - 2020-10-16
-
-### [Fixed]
- - 401 Unauthorized when trying to use provisioning with SHA-256 digest auth ('SHA256' typo)
+- Introduce FlexiAPI built on Laravel to replace XMLRPC
+- Deprecates XMLRPC (will be removed in the 2.0 release)
+- Create a REST API to manage the accounts, related features and provisioning
+- Create a user web panel for their account management, currently in testing phase (unstable)
+- Create an admin web panel to manage accounts and related features
+- Allow accounts to be exported as ExternalAccounts and imported in another Flexisip Account Manager instance
+- Add various artisan console commands to maintain the data (cleaning up, importing, exporting, seeding)
+- Add unit tests for the FlexiAIP REST API
+- Rebuild the existing database using the Laravel migration scripts
