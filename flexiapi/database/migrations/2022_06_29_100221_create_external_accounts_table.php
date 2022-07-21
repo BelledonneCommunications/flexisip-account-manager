@@ -25,7 +25,7 @@ class CreateExternalAccountsTable extends Migration
         });
 
         Schema::table('accounts', function (Blueprint $table) {
-            $table->string('group')->nullable();
+            $table->string('group', 16)->nullable();
             $table->index('group');
         });
     }
