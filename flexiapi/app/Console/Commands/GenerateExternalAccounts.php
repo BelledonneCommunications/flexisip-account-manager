@@ -4,8 +4,11 @@ namespace App\Console\Commands;
 
 use App\Account;
 use App\Password;
+use App\Rules\NoUppercase;
+
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class GenerateExternalAccounts extends Command
@@ -21,6 +24,40 @@ class GenerateExternalAccounts extends Command
 
     public function handle()
     {
+        $validator = Validator::make([
+            'amount' => $this->argument('amount'),
+            'group' => $this->argument('group'),
+        ], [
+            'amount' => ['required', 'integer'],
+            'group' => ['required', 'alpha-dash', new NoUppercase]
+        ]);
+
+        if ($validator->fails()) {
+            $this->info('External accounts no created:');
+
+            foreach ($validator->errors()->all() as $error) {
+                $this->error($error);
+            }
+
+            return 1;
+        }
+
+        $groups = Account::distinct('group')
+                         ->whereNotNull('group')
+                         ->get('group')
+                         ->pluck('group')
+                         ->toArray();
+
+        if (!in_array($this->argument('group'), $groups)) {
+            $this->info('Existing groups: '.implode(',', $groups));
+
+            if (!$this->confirm('You are creating a new group of External Account, are you sure?', false))
+            {
+                $this->info('Creation aborted');
+                return 0;
+            }
+        }
+
         $accounts = collect();
         $passwords = collect();
         $algorithm = 'SHA-256';
@@ -29,7 +66,7 @@ class GenerateExternalAccounts extends Command
 
         while ($i < $this->argument('amount')) {
             $account = new Account;
-            $account->username = $this->argument('group') . '_' . Str::random(6);
+            $account->username = Str::random(12);
             $account->domain = config('app.sip_domain');
             $account->activated = 1;
             $account->ip_address = '127.0.0.1';
