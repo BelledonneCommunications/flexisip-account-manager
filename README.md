@@ -1,18 +1,19 @@
-### Introduction
+## Introduction
 
 Flexisip Account Manager is a software product running on a server, dedicated to the creation and management of SIP accounts from Linphone-based apps.
 It supports user identity validation via email or SMS, secure user authentication with SHA-256 digest or TLS client certificates.
 
 Flexisip Account Manager also includes a remote provisioning server for static auto-configuration, compatible with Linphone URL / QR Code provisioning feature.
 
-### License
+## License
 
 Flexisip Account Manager is dual licensed, and can be licensed and distributed:
 * under an Affero GPLv3 license for free (see LICENSE.txt file for details)
 * under a proprietary license, for closed source projects. Contact [Belledonne Communications](https://www.linphone.org/contact) for any question about costs and services.
 
-### 1. Install RPM package with dependencies
---------------------------------------------
+## Documentation
+
+### Install RPM package with dependencies
 
 Enable Belledonne Communications repository:
 
@@ -45,8 +46,7 @@ If you don't have any other php installed on your server, use the following to b
 ln -s /opt/rh/rh-php73/root/usr/bin/php /usr/bin/php
 ```
 
-### 2. Configure Apache server
-------------------------------
+### Apache server configuration
 
 The RPM will create a `flexisip-account-manager.conf` file inside `/opt/rh/httpd24/root/etc/httpd/conf.d/`
 
@@ -54,13 +54,11 @@ It simply contains an Alias directive, up to you to configure your virtual host 
 
 Once you're done, reload the configuration inside httpd: `service httpd24-httpd reload`
 
-### 3. Install and setup MySQL database
----------------------------------------
+### MySQL database configuration
 
 For the account manager to work, you need a mysql database with a user that has read/write access.
 
-### 4. Configure XMLRPC server
-------------------------------
+### XMLRPC server configuration
 
 The RPM package has installed the configuration files in `/etc/flexisip-account-manager/`
 
@@ -77,7 +75,15 @@ Now you can create the necessary tables in the database using our script:
 php /opt/belledonne-communications/share/flexisip-account-manager/tools/create_tables.php
 ```
 
-### 5. Install OVH SMS gateway dependency (optionnal)
+### Email configuration
+
+Flexisip Account Manager is sending email to allow the accounts activations. To allow emails to be sent a few configuration steps are required:
+
+1. Install `sendmail` and `postfix`
+2. Set `EMAIL_ENABLED` and `SEND_ACTIVATION_EMAIL` to `true` in the configuration
+3. Ensure that postfix is correctly configured (regarding the `relayhost` setting in `main.cf` for example)
+
+### Install OVH SMS gateway dependency (optionnal)
 
 Download and install [composer](https://getcomposer.org/download/) or use the one already provided by your OS.
 Then install the `php-ovh-sms` library in the `flexisip-account-manager` directory.
@@ -85,8 +91,7 @@ Then install the `php-ovh-sms` library in the `flexisip-account-manager` directo
     cd /opt/belledonne-communications/share/flexisip-account-manager/
     php composer.phar require ovh/php-ovh-sms
 
-### 4. Configure the API
-------------------------------
+### API configuration
 
 The FlexiAPI configuration is located in the same directory as for the XMLRPC server. You can find its whole configuration in `/etc/flexisip-account-manager/flexiapi.env`.
 
@@ -99,8 +104,8 @@ php artisan migrate
 
 This API is having it's own README file in the `flexiapi` directory.
 
-### 5. Packaging
---------------------
+### Packaging
+
 To build a rpm package on centos7:
 
 ```bash
@@ -117,8 +122,7 @@ GitLab is running the command above using `make rpm-dev`, this also install all 
 
 The flexisip-account-manager rpm package can be found in `rpmbuild/RPMS/x86_64/bc-flexisip-account-manager*.rpm`
 
-### 6. Miscellaneous
---------------------
+### Miscellaneous
 
 - For remote provisioning create a `default.rc` file in `/opt/belledonne-communications/` and set the values you want
 client side, set the provisioning uri to the same host but to `provisioning.php` instead of `xmlrpc.php`.
