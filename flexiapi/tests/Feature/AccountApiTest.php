@@ -52,15 +52,6 @@ class AccountApiTest extends TestCase
                           ->json($this->method, $this->route);
 
         $response1->assertStatus(403);
-
-        config()->set('app.everyone_is_admin', true);
-
-        $password = Password::factory()->create();
-        $response0 = $this->generateFirstResponse($password);
-        $response1 = $this->generateSecondResponse($password, $response0)
-                          ->json($this->method, $this->route);
-
-        $response1->assertStatus(422);
     }
 
     public function testAdminOk()

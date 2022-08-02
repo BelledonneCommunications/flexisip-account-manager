@@ -55,13 +55,6 @@ return [
     'realm' => env('ACCOUNT_REALM', null),
 
     /**
-     * Allow any accounts to request the API as an administrator
-     * This parameter is only the for debug purpose or running the tests
-     * DO NOT ENABLE IT IN PRODUCTION
-     */
-    'everyone_is_admin' => env('APP_EVERYONE_IS_ADMIN', false),
-
-    /**
      * Allow admins to handle all the accounts in the database
      * ENABLE IT AT YOUR OWN RISKS IN PRODUCTION
      */
