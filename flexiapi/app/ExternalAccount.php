@@ -21,6 +21,6 @@ class ExternalAccount extends Model
 
     public function getResolvedRealmAttribute()
     {
-        return config('app.realm') ?? $this->attributes['domain'];
+        return $this->attributes['domain'];
     }
 }

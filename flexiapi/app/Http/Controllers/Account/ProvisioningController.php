@@ -262,7 +262,7 @@ class ProvisioningController extends Controller
                 $entry->setAttribute('name', 'ha1');
                 $section->appendChild($entry);
 
-                $entry = $dom->createElement('entry', $account->resolvedRealm);
+                $entry = $dom->createElement('entry', $externalAccount->resolvedRealm);
                 $entry->setAttribute('name', 'realm');
                 $section->appendChild($entry);
 
