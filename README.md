@@ -69,11 +69,7 @@ At least you MUST edit the following file and fill the values you used in previo
 nano /etc/flexisip-account-manager/db.conf
 ```
 
-Now you can create the necessary tables in the database using our script:
-
-```bash
-php /opt/belledonne-communications/share/flexisip-account-manager/tools/create_tables.php
-```
+To create the database schema, use the `artisan migrate` script provided by FlexiAPI.
 
 ### Email configuration
 
@@ -90,19 +86,6 @@ Then install the `php-ovh-sms` library in the `flexisip-account-manager` directo
 
     cd /opt/belledonne-communications/share/flexisip-account-manager/
     php composer.phar require ovh/php-ovh-sms
-
-### API configuration
-
-The FlexiAPI configuration is located in the same directory as for the XMLRPC server. You can find its whole configuration in `/etc/flexisip-account-manager/flexiapi.env`.
-
-You should normally only change the `DB_EXTERNAL` parameters then rollback and re-run the migrations (by default the API is assuming that it runs on two SQLite databases). To do so, find the root directory of `flexiapi` (normally under `/opt/belledonne-communications/share/flexisip-account-manager`), authenticate as your web user (`www-data` or `apache`) and run rollback and migrate (all the content will be destroyed, we recommend to do always do backup of your databases before running any migrations):
-
-```bash
-php artisan migrate:rollback
-php artisan migrate
-```
-
-This API is having it's own README file in the `flexiapi` directory.
 
 ### Packaging
 
