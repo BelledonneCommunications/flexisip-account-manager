@@ -111,10 +111,7 @@ class AccountController extends Controller
                 new NoUppercase,
                 new IsNotPhoneNumber,
                 Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
-                    $query->where('domain', $request->has('domain') && config('app.admins_manage_multi_domains')
-                                                ? $request->get('domain')
-                                                : config('app.sip_domain')
-                    );
+                    $query->where('domain', $this->resolveDomain($request));
                 }),
                 'filled',
             ],
@@ -139,15 +136,11 @@ class AccountController extends Controller
         $account->username = $request->get('username');
         $account->email = $request->get('email');
         $account->display_name = $request->get('display_name');
-        $account->activated = $request->has('activated')
-            ? (bool)$request->get('activated')
-            : false;
+        $account->activated = $request->has('activated') ? (bool)$request->get('activated') : false;
         $account->ip_address = $request->ip();
         $account->dtmf_protocol = $request->get('dtmf_protocol');
         $account->creation_time = Carbon::now();
-        $account->domain = $request->has('domain') && config('app.admins_manage_multi_domains')
-            ? $request->get('domain')
-            : config('app.sip_domain');
+        $account->domain = $this->resolveDomain($request);
         $account->user_agent = $request->header('User-Agent') ?? config('app.name');
 
         if (!$request->has('activated') || !(bool)$request->get('activated')) {

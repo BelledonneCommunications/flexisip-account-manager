@@ -20,6 +20,7 @@
 namespace App\Libraries;
 
 use Ovh\Api;
+use Illuminate\Support\Facades\Log;
 
 class OvhSMS
 {
@@ -28,6 +29,10 @@ class OvhSMS
 
     public function __construct()
     {
+        if (empty(config('ovh.app_key'))) {
+            Log::error('OVH SMS API not configured');
+        }
+
         $this->_api = new Api(
             config('ovh.app_key'),
             config('ovh.app_secret'),
@@ -35,12 +40,24 @@ class OvhSMS
             config('ovh.app_consumer_key')
         );
 
-        $smsServices = $this->_api->get('/sms/');
-        if (!empty($smsServices)) $this->_smsService = $smsServices[0];
+        try {
+            $smsServices = $this->_api->get('/sms/');
+
+            if (!empty($smsServices)) {
+                $this->_smsService = $smsServices[0];
+            }
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            Log::error('OVH SMS API not reachable: ' . $e->getMessage());
+        }
     }
 
     public function send(string $to, string $message)
     {
+        if (!$this->_smsService) {
+            Log::error('OVH SMS API not configured');
+            return;
+        }
+
         $content = (object) [
             'charset'           => 'UTF-8',
             'class'             => 'phoneDisplay',
@@ -54,9 +71,13 @@ class OvhSMS
             'validityPeriod'    => 2880
         ];
 
-        $this->_api->post('/sms/'. $this->_smsService . '/jobs', $content);
-        // One credit removed
+        try {
+            $this->_api->post('/sms/'. $this->_smsService . '/jobs', $content);
+            // One credit removed
 
-        $this->_api->get('/sms/'. $this->_smsService . '/jobs');
+            $this->_api->get('/sms/'. $this->_smsService . '/jobs');
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            Log::error('OVH SMS not sent: ' . $e->getMessage());
+        }
     }
 }

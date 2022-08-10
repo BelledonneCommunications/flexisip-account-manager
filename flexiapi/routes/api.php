@@ -29,12 +29,21 @@ Route::get('ping', 'Api\PingController@ping');
 Route::post('account_creation_tokens/send-by-push', 'Api\AccountCreationTokenController@sendByPush');
 // Old URL, for retro-compatibility
 Route::post('tokens', 'Api\AccountCreationTokenController@sendByPush');
+
 Route::get('accounts/{sip}/info', 'Api\AccountController@info');
+
 Route::post('accounts/with-account-creation-token', 'Api\AccountController@store');
 // Old URL, for retro-compatibility
 Route::post('accounts/with-token', 'Api\AccountController@store');
+
 Route::post('accounts/{sip}/activate/email', 'Api\AccountController@activateEmail');
 Route::post('accounts/{sip}/activate/phone', 'Api\AccountController@activatePhone');
+
+// /!\ Dangerous endpoints
+Route::post('accounts/public', 'Api\AccountController@storePublic');
+Route::get('accounts/{sip}/recover/{recovery_key}', 'Api\AccountController@recoverUsingKey');
+Route::post('accounts/recover-by-phone', 'Api\AccountController@recoverByPhone');
+Route::get('accounts/{phone}/info-by-phone', 'Api\AccountController@phoneInfo');
 
 Route::post('accounts/auth_token', 'Api\AuthTokenController@store');
 

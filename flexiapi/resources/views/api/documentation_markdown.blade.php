@@ -112,6 +112,26 @@ Return `404` if the token is non existing or invalid.
 
 ## Accounts
 
+### `POST /accounts/public`
+
+@if(config('app.dangerous_endpoints'))**Enabled on this instance**@else**Not enabled on this instance**@endif
+
+
+<span class="badge badge-success">Public</span>
+<span class="badge badge-warning">Unsecure endpoint</span>
+Create an account.
+Return `422` if the parameters are invalid.
+Send an email with the activation key if `email` is set, send an SMS otherwise.
+
+JSON parameters:
+
+* `username` required if `phone` not set, unique username, minimum 6 characters
+* `password` required minimum 6 characters
+* `algorithm` required, values can be `SHA-256` or `MD5`
+* `domain` if not set the value is enforced to the default registration domain set in the global configuration
+* `email` optional if `phone` set, an email, set an email to the account
+* `phone` required if `username` not set, optional if `email` set, a phone number, set a phone number to the account
+
 ### `POST /accounts/with-account-creation-token`
 <span class="badge badge-success">Public</span>
 Create an account using an `account_creation_token`.
@@ -122,13 +142,45 @@ JSON parameters:
 * `username` unique username, minimum 6 characters
 * `password` required minimum 6 characters
 * `algorithm` required, values can be `SHA-256` or `MD5`
-* `domain` **not configurable except during test deployments** the value is enforced to the default registration domain set in the global configuration
 * `account_creation_token` the unique `account_creation_token`
 * `dtmf_protocol` optional, values must be `sipinfo` or `rfc2833`
 
 ### `GET /accounts/{sip}/info`
 <span class="badge badge-success">Public</span>
 Retrieve public information about the account.
+Return `404` if the account doesn't exists.
+
+### `GET /accounts/{phone}/info-by-phone`
+@if(config('app.dangerous_endpoints'))**Enabled on this instance**@else**Not enabled on this instance**@endif
+
+
+<span class="badge badge-success">Public</span>
+<span class="badge badge-warning">Unsecure endpoint</span>
+Retrieve public information about the account.
+Return `404` if the account doesn't exists.
+
+### `POST /accounts/recover-by-phone`
+@if(config('app.dangerous_endpoints'))**Enabled on this instance**@else**Not enabled on this instance**@endif
+
+
+<span class="badge badge-success">Public</span>
+<span class="badge badge-warning">Unsecure endpoint</span>
+Send a SMS with a recovery PIN code to the `phone` number provided.
+Return `404` if the account doesn't exists.
+
+JSON parameters:
+
+* `phone` required the phone number to send the SMS to
+
+### `GET /accounts/{sip}/recover/{recover_key}`
+@if(config('app.dangerous_endpoints'))**Enabled on this instance**@else**Not enabled on this instance**@endif
+
+
+<span class="badge badge-success">Public</span>
+<span class="badge badge-warning">Unsecure endpoint</span>
+Activate the account if the correct `recover_key` is provided.
+Return the account information (including the hashed password) if valid.
+
 Return `404` if the account doesn't exists.
 
 ### `POST /accounts/{sip}/activate/email`
@@ -194,8 +246,7 @@ JSON parameters:
 * `username` unique username, minimum 6 characters
 * `password` required minimum 6 characters
 * `algorithm` required, values can be `SHA-256` or `MD5`
-* `domain` **not configurable by default. The value is enforced to the default domain set in the global configuration (`app.sip_domain`)**
-The `domain` field is taken into account ONLY when `app.admins_manage_multi_domains` is set to `true` in the global configuration
+* `domain` **not configurable by default**. Only configurable if `APP_ADMINS_MANAGE_MULTI_DOMAINS` is set to `true` in the global configuration. Otherwise `APP_SIP_DOMAIN` is used.
 * `activated` optional, a boolean, set to `false` by default
 * `display_name` optional, string
 * `admin` optional, a boolean, set to `false` by default, create an admin account

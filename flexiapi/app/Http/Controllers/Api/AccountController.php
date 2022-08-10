@@ -23,15 +23,20 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 
 use App\Account;
 use App\AccountTombstone;
 use App\AccountCreationToken;
+use App\Alias;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+use App\Libraries\OvhSMS;
+use App\Mail\RegisterConfirmation;
 use App\Rules\IsNotPhoneNumber;
 use App\Rules\NoUppercase;
+use App\Rules\WithoutSpaces;
 
 class AccountController extends Controller
 {
@@ -48,6 +53,164 @@ class AccountController extends Controller
         ]);
     }
 
+    /**
+     * /!\ Dangerous endpoint, disabled by default
+     */
+    public function phoneInfo(Request $request, string $phone)
+    {
+        if (!config('app.dangerous_endpoints')) return abort(404);
+
+        $request->merge(['phone' => $phone]);
+        $request->validate([
+            'phone' => [ 'required', new WithoutSpaces, 'starts_with:+']
+        ]);
+
+        $alias = Alias::where('alias', $phone)->first();
+        $account = $alias
+            ? $alias->account
+            : Account::sip($phone)->firstOrFail();
+
+        return \response()->json([
+            'activated' => $account->activated,
+            'realm' => $account->realm
+        ]);
+    }
+
+    /**
+     * /!\ Dangerous endpoint, disabled by default
+     * Store directly the account and alias in the DB and send a SMS or email for the validation
+     */
+    public function storePublic(Request $request)
+    {
+        if (!config('app.dangerous_endpoints')) return abort(404);
+
+        $request->validate([
+            'username' => [
+                'prohibits:phone',
+                new NoUppercase,
+                new IsNotPhoneNumber,
+                Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
+                    $query->where('domain', $request->has('domain') ? $request->get('domain') : config('app.sip_domain'));
+                }),
+                Rule::unique('accounts_tombstones', 'username')->where(function ($query) use ($request) {
+                    $query->where('domain', $request->has('domain') ? $request->get('domain') : config('app.sip_domain'));
+                }),
+                'filled',
+            ],
+            'algorithm' => 'required|in:SHA-256,MD5',
+            'password' => 'required|filled',
+            'domain' => 'min:3',
+            'email' => 'required_without:phone|email',
+            'phone' => [
+                'required_without:email',
+                'prohibits:username',
+                'unique:aliases,alias',
+                'unique:accounts,username',
+                new WithoutSpaces, 'starts_with:+'
+            ]
+        ]);
+
+        $account = new Account;
+        $account->username = !empty($request->get('username'))
+            ? $request->get('username')
+            : $request->get('phone');
+        $account->email = $request->get('email');
+        $account->activated = false;
+        $account->domain = $request->has('domain')
+            ? $request->get('domain')
+            : config('app.sip_domain');
+        $account->ip_address = $request->ip();
+        $account->creation_time = Carbon::now();
+        $account->user_agent = config('app.name');
+        $account->provisioning_token = Str::random(WebAuthenticateController::$emailCodeSize);
+        $account->save();
+
+        $account->updatePassword($request->get('password'), $request->get('algorithm'));
+
+        Log::channel('events')->info('API: Account created using the public endpoint', ['id' => $account->identifier]);
+
+        // Send validation by phone
+        if ($request->has('phone')) {
+            $alias = new Alias;
+            $alias->alias = $request->get('phone');
+            $alias->domain = config('app.sip_domain');
+            $alias->account_id = $account->id;
+            $alias->save();
+
+            $account->confirmation_key = generatePin();
+            $account->save();
+
+            Log::channel('events')->info('API: Account created using the public endpoint by phone', ['id' => $account->identifier]);
+
+            $ovhSMS = new OvhSMS;
+            $ovhSMS->send($request->get('phone'), 'Your ' . config('app.name') . ' recovery code is ' . $account->confirmation_key);
+        }
+
+        // Send validation by email
+        elseif ($request->has('email')) {
+            $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
+            $account->save();
+
+            Log::channel('events')->info('API: Account created using the public endpoint by email', ['id' => $account->identifier]);
+
+            Mail::to($account)->send(new RegisterConfirmation($account));
+        }
+
+        // Full reload
+        return Account::withoutGlobalScopes()->find($account->id);
+    }
+
+    /**
+     * /!\ Dangerous endpoint, disabled by default
+     */
+    public function recoverByPhone(Request $request)
+    {
+        if (!config('app.dangerous_endpoints')) return abort(404);
+
+        $request->validate([
+            'phone' => [
+                'required', new WithoutSpaces, 'starts_with:+'
+            ]
+        ]);
+
+        $alias = Alias::where('alias', $request->get('phone'))->first();
+        $account = $alias
+            ? $alias->account
+            : Account::sip($request->get('phone'))->firstOrFail();
+
+        $account->confirmation_key = generatePin();
+        $account->save();
+
+        Log::channel('events')->info('API: Account recovery by phone', ['id' => $account->identifier]);
+
+        $ovhSMS = new OvhSMS;
+        $ovhSMS->send($request->get('phone'), 'Your ' . config('app.name') . ' recovery code is ' . $account->confirmation_key);
+    }
+
+    /**
+     * /!\ Dangerous endpoint, disabled by default
+     */
+    public function recoverUsingKey(string $sip, string $recoveryKey)
+    {
+        if (!config('app.dangerous_endpoints')) return abort(404);
+
+        $account = Account::sip($sip)
+                          ->where('confirmation_key', $recoveryKey)
+                          ->firstOrFail();
+
+        if ($account->activationExpired()) abort(403, 'Activation expired');
+
+        $account->activated = true;
+        $account->confirmation_key = null;
+        $account->save();
+
+        $account->passwords->each(function ($i, $k) {
+            $i->makeVisible(['password']);
+        });
+
+        return $account;
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -56,21 +219,16 @@ class AccountController extends Controller
                 new NoUppercase,
                 new IsNotPhoneNumber,
                 Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
-                    $query->where('domain', $request->has('domain') && config('app.everyone_is_admin') && config('app.admins_manage_multi_domains')
-                                                ? $request->get('domain')
-                                                : config('app.sip_domain'));
+                    $query->where('domain', config('app.sip_domain'));
                 }),
                 Rule::unique('accounts_tombstones', 'username')->where(function ($query) use ($request) {
-                    $query->where('domain', $request->has('domain') && config('app.everyone_is_admin') && config('app.admins_manage_multi_domains')
-                                                ? $request->get('domain')
-                                                : config('app.sip_domain'));
+                    $query->where('domain', config('app.sip_domain'));
                 }),
                 'filled',
             ],
             'algorithm' => 'required|in:SHA-256,MD5',
             'password' => 'required|filled',
             'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
-            'domain' => 'min:3',
             'account_creation_token' => [
                 'required_without:token',
                 Rule::exists('account_creation_tokens', 'token')->where(function ($query) {
@@ -96,9 +254,7 @@ class AccountController extends Controller
         $account->username = $request->get('username');
         $account->email = $request->get('email');
         $account->activated = false;
-        $account->domain = ($request->has('domain') && config('app.everyone_is_admin') && config('app.admins_manage_multi_domains'))
-            ? $request->get('domain')
-            : config('app.sip_domain');
+        $account->domain = config('app.sip_domain');
         $account->ip_address = $request->ip();
         $account->creation_time = Carbon::now();
         $account->user_agent = config('app.name');

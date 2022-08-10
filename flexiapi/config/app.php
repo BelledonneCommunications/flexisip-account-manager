@@ -67,6 +67,11 @@ return [
      */
     'admins_manage_multi_domains' => env('APP_ADMINS_MANAGE_MULTI_DOMAINS', false),
 
+    /**
+     * /!\ Enable dangerous endpoints required for fallback
+     */
+    'dangerous_endpoints' => env('APP_DANGEROUS_ENDPOINTS', false),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

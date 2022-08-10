@@ -24,7 +24,7 @@ use App\Account;
 use App\AccountTombstone;
 use App\ActivationExpiration;
 use App\Admin;
-
+use App\Alias as AppAlias;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -480,6 +480,194 @@ class AccountApiTest extends TestCase
             ]);
     }
 
+    /**
+     * /!\ Dangerous endpoints
+     */
+    public function testRecover()
+    {
+        $confirmationKey = '0123';
+        $password = Password::factory()->create();
+        $password->account->generateApiKey();
+        $password->account->confirmation_key = $confirmationKey;
+        $password->account->activated = false;
+        $password->account->save();
+
+        config()->set('app.dangerous_endpoints', true);
+
+        $this->assertDatabaseHas('accounts', [
+            'username' => $password->account->username,
+            'domain' => $password->account->domain,
+            'activated' => false
+        ]);
+
+        $this->get($this->route.'/'.$password->account->identifier.'/recover/'.$confirmationKey)
+            ->assertJson(['passwords' => [[
+                'password' => $password->password,
+                'algorithm' => $password->algorithm
+            ]]])
+            ->assertStatus(200);
+
+        $this->json('GET', $this->route.'/'.$password->account->identifier.'/recover/'.$confirmationKey)
+            ->assertStatus(404);
+
+        $this->assertDatabaseHas('accounts', [
+            'username' => $password->account->username,
+            'domain' => $password->account->domain,
+            'activated' => true
+        ]);
+    }
+
+    /**
+     * /!\ Dangerous endpoints
+     */
+    public function testRecoverPhone()
+    {
+        $phone = '+3361234';
+
+        $password = Password::factory()->create();
+        $password->account->generateApiKey();
+        $password->account->activated = false;
+        $password->account->save();
+
+        config()->set('app.dangerous_endpoints', true);
+
+        $alias = new AppAlias;
+        $alias->alias = $phone;
+        $alias->domain = $password->account->domain;
+        $alias->account_id = $password->account->id;
+        $alias->save();
+
+        $this->json($this->method, $this->route.'/recover-by-phone', [
+                'phone' => $phone
+            ])
+            ->assertStatus(200);
+
+        $password->account->refresh();
+
+        $this->get($this->route.'/'.$password->account->identifier.'/recover/'.$password->account->confirmation_key)
+            ->assertStatus(200)
+            ->assertJson([
+                'activated' => true
+            ]);
+
+        $this->get($this->route.'/'.$phone.'/info-by-phone')
+            ->assertStatus(200)
+            ->assertJson([
+                'activated' => true
+            ]);
+
+        $this->get($this->route.'/+1234/info-by-phone')
+            ->assertStatus(404);
+
+        $this->json('GET', $this->route.'/'.$password->account->identifier.'/info-by-phone')
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['phone']);
+    }
+
+    /**
+     * /!\ Dangerous endpoints
+     */
+    public function testCreatePublic()
+    {
+        $username = 'publicuser';
+
+        config()->set('app.dangerous_endpoints', true);
+
+        // Missing email
+        $this->json($this->method, $this->route.'/public', [
+            'username' => $username,
+            'algorithm' => 'SHA-256',
+            'password' => '2',
+        ])
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['email']);
+
+        $this->json($this->method, $this->route.'/public', [
+            'username' => $username,
+            'algorithm' => 'SHA-256',
+            'password' => '2',
+            'email' => 'john@doe.tld',
+        ])
+        ->assertStatus(200)
+        ->assertJson([
+            'activated' => false
+        ]);
+
+        // Already created
+        $this->json($this->method, $this->route.'/public', [
+            'username' => $username,
+            'algorithm' => 'SHA-256',
+            'password' => '2',
+            'email' => 'john@doe.tld',
+        ])
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['username']);
+
+        $this->assertDatabaseHas('accounts', [
+            'username' => $username,
+            'domain' => config('app.sip_domain')
+        ]);
+    }
+
+    public function testCreatePublicPhone()
+    {
+        $phone = '+12345';
+
+        config()->set('app.dangerous_endpoints', true);
+
+        // Username and phone
+        $this->json($this->method, $this->route.'/public', [
+            'username' => 'myusername',
+            'phone' => $phone,
+            'algorithm' => 'SHA-256',
+            'password' => '2',
+            'email' => 'john@doe.tld',
+        ])
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['phone', 'username']);
+
+        // Bad phone format
+        $this->json($this->method, $this->route.'/public', [
+            'phone' => 'username',
+            'algorithm' => 'SHA-256',
+            'password' => '2',
+            'email' => 'john@doe.tld',
+        ])
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['phone']);
+
+        $this->json($this->method, $this->route.'/public', [
+            'phone' => $phone,
+            'algorithm' => 'SHA-256',
+            'password' => '2',
+            'email' => 'john@doe.tld',
+        ])
+        ->assertStatus(200)
+        ->assertJson([
+            'activated' => false
+        ]);
+
+        // Already exists
+        $this->json($this->method, $this->route.'/public', [
+            'phone' => $phone,
+            'algorithm' => 'SHA-256',
+            'password' => '2',
+            'email' => 'john@doe.tld',
+        ])
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['phone']);
+
+        $this->assertDatabaseHas('accounts', [
+            'username' => $phone,
+            'domain' => config('app.sip_domain')
+        ]);
+
+        $this->assertDatabaseHas('aliases', [
+            'alias' => $phone,
+            'domain' => config('app.sip_domain')
+        ]);
+    }
+
     public function testActivatePhone()
     {
         $confirmationKey = '0123';
@@ -515,11 +703,11 @@ class AccountApiTest extends TestCase
             ])
             ->assertStatus(200);
 
-        $this->get($this->route.'/'.$password->account->identifier.'/info')
-            ->assertStatus(200)
-            ->assertJson([
-                'activated' => true
-            ]);
+        $this->assertDatabaseHas('accounts', [
+            'username' => $password->account->username,
+            'domain' => $password->account->domain,
+            'activated' => true
+        ]);
     }
 
     public function testChangeEmail()
@@ -576,9 +764,7 @@ class AccountApiTest extends TestCase
                 'password' => $password
             ])
             ->assertStatus(422)
-            ->assertJson([
-                'errors' => ['algorithm' => true]
-            ]);
+            ->assertJsonValidationErrors(['algorithm']);
 
         // Fresh password without an old one
         $this->keyAuthenticated($account)
@@ -606,9 +792,7 @@ class AccountApiTest extends TestCase
                 'password' => $newPassword
             ])
             ->assertStatus(422)
-            ->assertJson([
-                'errors' => ['old_password' => true]
-            ]);
+            ->assertJsonValidationErrors(['old_password']);
 
         // Set the new password with incorrect old password
         $this->keyAuthenticated($account)
@@ -617,9 +801,7 @@ class AccountApiTest extends TestCase
                 'old_password' => 'blabla',
                 'password' => $newPassword
             ])
-            ->assertJson([
-                'errors' => ['old_password' => true]
-            ])
+            ->assertJsonValidationErrors(['old_password'])
             ->assertStatus(422);
 
         // Set the new password
