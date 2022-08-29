@@ -153,7 +153,11 @@ class AccountController extends Controller
 
             Log::channel('events')->info('API: Account created using the public endpoint by email', ['id' => $account->identifier]);
 
-            Mail::to($account)->send(new RegisterConfirmation($account));
+            try {
+                Mail::to($account)->send(new RegisterConfirmation($account));
+            } catch (\Exception $e) {
+                Log::error('Public Register Confirmation email not sent: ' . $e->getMessage());
+            }
         }
 
         // Full reload

@@ -57,11 +57,6 @@ class AuthenticateDigestOrKey
 
         $resolvedRealm = config('app.realm') ?? $domain;
 
-        // Check if activated
-        if (!$account->activated) {
-            return $this->generateUnauthorizedResponse($account);
-        }
-
         // Key authentication
 
         if ($request->header('x-api-key') || $request->cookie('x-api-key')) {
