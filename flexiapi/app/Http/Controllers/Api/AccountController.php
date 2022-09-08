@@ -323,6 +323,17 @@ class AccountController extends Controller
                       ->first();
     }
 
+    public function provision(Request $request)
+    {
+        $account = $request->user();
+        $account->provisioning_token = Str::random(WebAuthenticateController::$emailCodeSize);
+        $account->save();
+
+        Log::channel('events')->info('API: Account provisioned', ['id' => $account->identifier]);
+
+        return $account->makeVisible(['provisioning_token']);
+    }
+
     public function delete(Request $request)
     {
         if (!$request->user()->hasTombstone()) {

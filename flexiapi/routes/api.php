@@ -60,6 +60,7 @@ Route::group(['middleware' => ['auth.digest_or_key']], function () {
 
     Route::get('accounts/me', 'Api\AccountController@show');
     Route::delete('accounts/me', 'Api\AccountController@delete');
+    Route::get('accounts/me/provision', 'Api\AccountController@provision');
 
     Route::post('accounts/me/phone/request', 'Api\AccountPhoneController@requestUpdate');
     Route::post('accounts/me/phone', 'Api\AccountPhoneController@update');

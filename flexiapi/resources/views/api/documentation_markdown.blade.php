@@ -104,6 +104,8 @@ Create and return an `account_creation_token`.
 <span class="badge badge-success">Public</span>
 Generate an `auth_token`. To attach the generated token to an account see [`auth_token` attachement endpoint](#get-accountsauthtokenauthtokenattach).
 
+Return the `auth_token` object.
+
 ### `GET /accounts/auth_token/{auth_token}/attach`
 <span class="badge badge-info">User</span>
 Attach a publicly generated authentication token to the currently authenticated account.
@@ -200,7 +202,7 @@ JSON parameters:
 * `code` the PIN code
 
 ### `GET /accounts/me/api_key/{auth_token}`
-<span class="badge badge-info">Public</span>
+<span class="badge badge-success">Public</span>
 Generate and retrieve a fresh API Key from an `auth_token`. The `auth_token` must be attached to an existing account, see [`auth_token` attachement endpoint](#get-accountsauthtokenauthtokenattach) to do so.
 
 Return `404` if the token is invalid or not attached.
@@ -215,6 +217,12 @@ This endpoint is also setting the API Key as a Cookie.
 ### `GET /accounts/me`
 <span class="badge badge-info">User</span>
 Retrieve the account information.
+
+### `GET /accounts/me/provision`
+<span class="badge badge-info">User</span>
+Provision the account by generating a fresh `provisioning_token`.
+
+Return the account object.
 
 ### `DELETE /accounts/me`
 <span class="badge badge-info">User</span>
@@ -280,7 +288,7 @@ Deactivate an account.
 
 ### `GET /accounts/{id}/provision`
 <span class="badge badge-warning">Admin</span>
-Re-provision an account by generating a fresh `provisioning_token`.
+Provision an account by generating a fresh `provisioning_token`.
 
 ## Accounts phone number
 

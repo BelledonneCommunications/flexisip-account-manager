@@ -71,6 +71,30 @@ class AccountProvisioningTest extends TestCase
             ->assertSee('ha1');
     }
 
+    public function testAuthenticatedReProvisioning()
+    {
+        $password = Password::factory()->create();
+        $password->account->generateApiKey();
+
+        $provisioningToken = $password->account->provisioning_token;
+
+        // Regenerate a new provisioning token from the authenticated account
+        $this->keyAuthenticated($password->account)
+            ->json($this->method, '/api/accounts/me/provision')
+            ->assertStatus(200)
+            ->assertSee('provisioning_token')
+            ->assertDontSee($provisioningToken);
+
+        $password->account->refresh();
+
+        // And use the fresh provisioning token
+        $this->get($this->route.'/'.$password->account->provisioning_token)
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/xml')
+            ->assertSee($password->account->username)
+            ->assertSee('ha1');
+    }
+
     public function testConfirmationKeyProvisioning()
     {
         $response = $this->get($this->route.'/1234');
