@@ -20,6 +20,7 @@
 namespace App\Http\Middleware;
 
 use App\Account;
+use App\ApiKey;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
@@ -43,6 +44,25 @@ class AuthenticateDigestOrKey
      */
     public function handle($request, Closure $next)
     {
+        // Key authentication
+
+        if ($request->header('x-api-key') || $request->cookie('x-api-key')) {
+            $apiKey = ApiKey::where('key', $request->header('x-api-key') ?? $request->cookie('x-api-key'))
+                            ->first();
+
+            if ($apiKey) {
+                $apiKey->last_used_at = Carbon::now();
+                $apiKey->save();
+
+                Auth::login($apiKey->account);
+                $response = $next($request);
+
+                return $response;
+            }
+
+            return $this->generateUnauthorizedResponse($apiKey->account);
+        }
+
         Validator::make(['from' => $request->header('From')], [
             'from'    => 'required',
         ])->validate();
@@ -56,26 +76,6 @@ class AuthenticateDigestOrKey
                           ->firstOrFail();
 
         $resolvedRealm = config('app.realm') ?? $domain;
-
-        // Key authentication
-
-        if ($request->header('x-api-key') || $request->cookie('x-api-key')) {
-            if ($account->apiKey
-            && ($account->apiKey->key == $request->header('x-api-key')
-            ||  $account->apiKey->key == $request->cookie('x-api-key')
-            )) {
-                // Refresh the API Key
-                $account->apiKey->last_used_at = Carbon::now();
-                $account->apiKey->save();
-
-                Auth::login($account);
-                $response = $next($request);
-
-                return $response;
-            }
-
-            return $this->generateUnauthorizedResponse($account);
-        }
 
         // DIGEST authentication
 

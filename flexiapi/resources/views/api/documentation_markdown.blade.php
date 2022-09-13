@@ -4,7 +4,7 @@ An API to deal with the Flexisip server.
 
 The API is available under `/api`
 
-A `from` (consisting of the user SIP address, prefixed with `sip:`), `content-type` and `accept` HTTP headers are REQUIRED to use the API properly
+A `content-type` and `accept` HTTP headers are REQUIRED to use the API properly
 
 ```
 > GET /api/{endpoint}
@@ -34,7 +34,6 @@ You can then use your freshly generated key by adding a new `x-api-key` header t
 
 ```
 > GET /api/{endpoint}
-> from: sip:foobar@sip.example.org
 > x-api-key: {your-api-key}
 > …
 ```
@@ -43,7 +42,6 @@ Or using a cookie:
 
 ```
 > GET /api/{endpoint}
-> from: sip:foobar@sip.example.org
 > Cookie: x-api-key={your-api-key}
 > …
 ```
@@ -51,10 +49,13 @@ Or using a cookie:
 #### Using DIGEST
 
 To discover the available hashing algorythm you MUST send an unauthenticated request to one of the restricted endpoints.<br />
-For the moment only DIGEST-MD5 and DIGEST-SHA-256 are supported through the authentication layer.
+Only DIGEST-MD5 and DIGEST-SHA-256 are supported through the authentication layer.
+
+A `from` (consisting of the user SIP address, prefixed with `sip:`) header is required to initiate the DIGEST flow.
 
 ```
 > GET /api/{restricted-endpoint}
+> from: sip:foobar@sip.example.org
 > …
 
 

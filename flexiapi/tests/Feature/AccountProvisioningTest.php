@@ -80,7 +80,7 @@ class AccountProvisioningTest extends TestCase
 
         // Regenerate a new provisioning token from the authenticated account
         $this->keyAuthenticated($password->account)
-            ->json($this->method, '/api/accounts/me/provision')
+            ->get('/api/accounts/me/provision')
             ->assertStatus(200)
             ->assertSee('provisioning_token')
             ->assertDontSee($provisioningToken);

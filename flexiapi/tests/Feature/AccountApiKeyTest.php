@@ -68,6 +68,10 @@ class AccountApiKeyTest extends TestCase
 
         $authToken = json_decode($response)->token;
 
+        // Try to retrieve an API key from the un-attached auth_token
+        $response = $this->json($this->method, $this->route . '/' . $authToken)
+            ->assertStatus(404);
+
         // Attach the auth_token to the account
         $password = Password::factory()->create();
         $password->account->generateApiKey();
@@ -100,10 +104,15 @@ class AccountApiKeyTest extends TestCase
             ->assertStatus(404);
 
         // Check the if the API key can be used for the account
+        $response = $this->withHeaders(['x-api-key' => $apiKey])
+            ->json($this->method, '/api/accounts/me')
+            ->assertStatus(200)
+            ->content();
 
+        // Try with a wrong From
         $response = $this->withHeaders([
-                'From' => 'sip:'.$password->account->identifier,
                 'x-api-key' => $apiKey,
+                'From' => 'sip:baduser@server.tld'
             ])
             ->json($this->method, '/api/accounts/me')
             ->assertStatus(200)

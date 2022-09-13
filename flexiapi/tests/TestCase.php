@@ -33,7 +33,6 @@ abstract class TestCase extends BaseTestCase
     protected function keyAuthenticated(Account $account)
     {
         return $this->withHeaders([
-            'From' => 'sip:'.$account->identifier,
             'x-api-key' => $account->apiKey->key,
         ]);
     }
