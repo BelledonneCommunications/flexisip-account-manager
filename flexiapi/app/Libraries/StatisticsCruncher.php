@@ -27,7 +27,6 @@ use Carbon\CarbonInterval;
 
 use App\Account;
 
-
 class StatisticsCruncher
 {
     public static function month()
@@ -39,7 +38,7 @@ class StatisticsCruncher
             ))->each->setAppends([])->pluck('count', 'moment');
 
         $dataAliases = self::getAccountFrom(Carbon::now()->subMonth())
-            ->whereIn('id', function($query) {
+            ->whereIn('id', function ($query) {
                 $query->select('account_id')
                       ->from('aliases');
             })
@@ -57,7 +56,7 @@ class StatisticsCruncher
 
         $dataAliasesActivated = self::getAccountFrom(Carbon::now()->subMonth())
             ->where('activated', true)
-            ->whereIn('id', function($query) {
+            ->whereIn('id', function ($query) {
                 $query->select('account_id')
                       ->from('aliases');
             })
@@ -84,7 +83,7 @@ class StatisticsCruncher
             ))->each->setAppends([])->pluck('count', 'moment');
 
         $dataAliases = self::getAccountFrom(Carbon::now()->subWeek())
-            ->whereIn('id', function($query) {
+            ->whereIn('id', function ($query) {
                 $query->select('account_id')
                       ->from('aliases');
             })
@@ -102,7 +101,7 @@ class StatisticsCruncher
 
         $dataAliasesActivated = self::getAccountFrom(Carbon::now()->subWeek())
             ->where('activated', true)
-            ->whereIn('id', function($query) {
+            ->whereIn('id', function ($query) {
                 $query->select('account_id')
                       ->from('aliases');
             })
@@ -129,7 +128,7 @@ class StatisticsCruncher
             ))->each->setAppends([])->pluck('count', 'moment');
 
         $dataAliases = self::getAccountFrom(Carbon::now()->subDay())
-            ->whereIn('id', function($query) {
+            ->whereIn('id', function ($query) {
                 $query->select('account_id')
                       ->from('aliases');
             })
@@ -147,7 +146,7 @@ class StatisticsCruncher
 
         $dataAliasesActivated = self::getAccountFrom(Carbon::now()->subDay())
             ->where('activated', true)
-            ->whereIn('id', function($query) {
+            ->whereIn('id', function ($query) {
                 $query->select('account_id')
                       ->from('aliases');
             })

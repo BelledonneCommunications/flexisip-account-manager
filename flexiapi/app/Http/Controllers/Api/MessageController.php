@@ -26,7 +26,7 @@ class MessageController extends Controller
             ->then(function (\React\Socket\Connection $connection) use ($request, &$returnedLines) {
                 $connection->on('data', function ($message) use ($connection, &$returnedLines) {
                     foreach (preg_split("/\r\n|\n|\r/", $message) as $line) {
-                        if(!empty($line) && false !== ($matches = explode(':', $line, 2))) {
+                        if (!empty($line) && false !== ($matches = explode(':', $line, 2))) {
                             $returnedLines["{$matches[0]}"] = trim($matches[1]);
                         }
                     }

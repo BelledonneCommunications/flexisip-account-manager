@@ -35,7 +35,9 @@ class ClearOldAccountsTombstones extends Command
 
     public function handle()
     {
-        $tombstones = AccountTombstone::where('created_at', '<',
+        $tombstones = AccountTombstone::where(
+            'created_at',
+            '<',
             Carbon::now()->subDays($this->argument('days'))->toDateTimeString()
         );
 

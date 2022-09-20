@@ -36,7 +36,7 @@ class ImportDatabase extends Command
 {
     protected $signature = 'db:import {dbname} {sqlite-file-path?} {--u|username=} {--p|password=} {--P|port=3306} {--t|type=mysql} {--host=localhost} {--accounts-table=accounts} {--aliases-table=aliases} {--passwords-table=passwords}';
     protected $description = 'Import an existing Flexisip database into FlexiAPI';
-    private $_pagination = 1000;
+    private $pagination = 1000;
 
     public function __construct()
     {
@@ -92,13 +92,13 @@ class ImportDatabase extends Command
             // Accounts
             $this->info('Migrating the accounts');
 
-            $pages = $accountsCount / $this->_pagination;
+            $pages = $accountsCount / $this->pagination;
             $bar = $this->output->createProgressBar($pages);
 
             for ($page = 0; $page <= $pages; $page++) {
                 $originAccounts = Capsule::table($this->option('accounts-table'))
-                                         ->take($this->_pagination)
-                                         ->skip($page*$this->_pagination)
+                                         ->take($this->pagination)
+                                         ->skip($page*$this->pagination)
                                          ->get()
                                          ->map(function ($element) {
                                             // Fix bad creation_time
@@ -124,13 +124,13 @@ class ImportDatabase extends Command
             // Passwords
             $this->info('Migrating the passwords');
 
-            $pages = Capsule::table($this->option('passwords-table'))->count() / $this->_pagination;
+            $pages = Capsule::table($this->option('passwords-table'))->count() / $this->pagination;
             $bar = $this->output->createProgressBar($pages);
 
             for ($page = 0; $page <= $pages; $page++) {
                 $originPasswords = Capsule::table($this->option('passwords-table'))
-                                          ->take($this->_pagination)
-                                          ->skip($page*$this->_pagination)
+                                          ->take($this->pagination)
+                                          ->skip($page*$this->pagination)
                                           ->get()
                                           ->map(function ($element) {
                                             return (array)$element;
@@ -149,13 +149,13 @@ class ImportDatabase extends Command
             // Aliases
             $this->info('Migrating the aliases');
 
-            $pages = Capsule::table($this->option('aliases-table'))->count() / $this->_pagination;
+            $pages = Capsule::table($this->option('aliases-table'))->count() / $this->pagination;
             $bar = $this->output->createProgressBar($pages);
 
             for ($page = 0; $page <= $pages; $page++) {
                 $originAliases = Capsule::table($this->option('aliases-table'))
-                                          ->take($this->_pagination)
-                                          ->skip($page*$this->_pagination)
+                                          ->take($this->pagination)
+                                          ->skip($page*$this->pagination)
                                           ->get()
                                           ->map(function ($element) {
                                             return (array)$element;

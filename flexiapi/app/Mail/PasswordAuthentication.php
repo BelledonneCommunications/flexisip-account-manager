@@ -29,11 +29,11 @@ class PasswordAuthentication extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private $_account;
+    private $account;
 
     public function __construct(Account $account)
     {
-        $this->_account = $account;
+        $this->account = $account;
     }
 
     public function build()
@@ -41,7 +41,7 @@ class PasswordAuthentication extends Mailable
         return $this->view('mails.authentication')
                     ->text('mails.authentication_text')
                     ->with([
-                        'link' => route('account.authenticate.email_confirm', [$this->_account->confirmation_key])
+                        'link' => route('account.authenticate.email_confirm', [$this->account->confirmation_key])
                     ]);
     }
 }

@@ -34,7 +34,7 @@ class AccountAccountTypeController extends Controller
 
         return view('admin.account.account_type.create', [
             'account' => $account,
-            'account_types' => AccountType::whereNotIn('id', function($query) use ($account) {
+            'account_types' => AccountType::whereNotIn('id', function ($query) use ($account) {
                 $query->select('account_type_id')
                       ->from('account_account_type')
                       ->where('account_id', $account->id);

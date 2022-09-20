@@ -7,7 +7,7 @@ stages:
   - deploy
 
 .rpm:
-  tags: [ "docker" ]
+  tags: ["docker"]
 
   stage: package
   script:
@@ -26,13 +26,12 @@ centos7-rpm:
   extends: .rpm
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-centos7-php
 
-
 rocky8-rpm:
   extends: .rpm
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-rocky8-php
 
 centos7-rpm-test:
-  tags: [ "docker-centos7" ]
+  tags: ["docker-centos7"]
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-centos7-php
   dependencies:
     - centos7-rpm
@@ -41,6 +40,7 @@ centos7-rpm-test:
   script:
     - yum -y localinstall rpmbuild/x86_64/*.rpm
     - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
+    - scl enable rh-php73 "vendor/bin/phpcs"
     - scl enable rh-php73 "php artisan key:generate"
     - scl enable rh-php73 "vendor/bin/phpunit --log-junit $CI_PROJECT_DIR/flexiapi_phpunit.log"
   artifacts:
@@ -57,7 +57,6 @@ centos7-rpm-test:
   stage: deploy
 
 .rpm-deploy:
-
   script:
     - cd rpmbuild/x86_64
     - rsync -e "ssh -o StrictHostKeyChecking=no" -pr . $DEPLOY_SERVER:$DEPLOY_DIRECTORY_STATE;
@@ -71,32 +70,26 @@ centos7-rpm-test:
   extends:
     - .package-deploy
 
-
 .centos7-rpm-deploy:
   extends: .rpm-deploy
-  tags: [ "docker-centos7" ]
+  tags: ["docker-centos7"]
 
   dependencies:
     - centos7-rpm
 
-
-
 centos7-rpm-deploy-stable:
-
   extends: .centos7-rpm-deploy
   variables:
-     DEPLOY_DIRECTORY_STATE: $CENTOS7_DEPLOY_DIRECTORY_STABLE
+    DEPLOY_DIRECTORY_STATE: $CENTOS7_DEPLOY_DIRECTORY_STABLE
 
 centos7-rpm-deploy-alpha:
-
   extends: .centos7-rpm-deploy
   variables:
-     DEPLOY_DIRECTORY_STATE: $CENTOS7_DEPLOY_DIRECTORY_ALPHA
-
+    DEPLOY_DIRECTORY_STATE: $CENTOS7_DEPLOY_DIRECTORY_ALPHA
 
 .rocky8-rpm-deploy:
   extends: .rpm-deploy
-  tags: [ "docker" ]
+  tags: ["docker"]
   dependencies:
     - rocky8-rpm
 
@@ -108,10 +101,10 @@ centos7-rpm-deploy-alpha:
 rocky8-rpm-deploy-alpha:
   extends: .rocky8-rpm-deploy
   variables:
-     DEPLOY_DIRECTORY_STATE: $CENTOS8_DEPLOY_DIRECTORY_ALPHA
+    DEPLOY_DIRECTORY_STATE: $CENTOS8_DEPLOY_DIRECTORY_ALPHA
 
 debian11-packaging:
-  tags: [ "docker" ]
+  tags: ["docker"]
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-debian11-php:20220413_flexiapi_packaging
 
   stage: package
@@ -129,7 +122,7 @@ debian11-packaging:
 
 .debian11-deploy:
   extends: .package-deploy
-  tags: [ "docker" ]
+  tags: ["docker"]
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-debian11-php:20220413_flexiapi_packaging
   dependencies:
     - debian11-packaging

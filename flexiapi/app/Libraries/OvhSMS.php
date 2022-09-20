@@ -24,8 +24,8 @@ use Illuminate\Support\Facades\Log;
 
 class OvhSMS
 {
-    private $_api;
-    private $_smsService;
+    private $api;
+    private $smsService;
 
     public function __construct()
     {
@@ -33,7 +33,7 @@ class OvhSMS
             Log::error('OVH SMS API not configured');
         }
 
-        $this->_api = new Api(
+        $this->api = new Api(
             config('ovh.app_key'),
             config('ovh.app_secret'),
             config('ovh.app_endpoint'),
@@ -41,10 +41,10 @@ class OvhSMS
         );
 
         try {
-            $smsServices = $this->_api->get('/sms/');
+            $smsServices = $this->api->get('/sms/');
 
             if (!empty($smsServices)) {
-                $this->_smsService = $smsServices[0];
+                $this->smsService = $smsServices[0];
             }
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             Log::error('OVH SMS API not reachable: ' . $e->getMessage());
@@ -53,7 +53,7 @@ class OvhSMS
 
     public function send(string $to, string $message)
     {
-        if (!$this->_smsService) {
+        if (!$this->smsService) {
             Log::error('OVH SMS API not configured');
             return;
         }
@@ -72,10 +72,10 @@ class OvhSMS
         ];
 
         try {
-            $this->_api->post('/sms/'. $this->_smsService . '/jobs', $content);
+            $this->api->post('/sms/'. $this->smsService . '/jobs', $content);
             // One credit removed
 
-            $this->_api->get('/sms/'. $this->_smsService . '/jobs');
+            $this->api->get('/sms/'. $this->smsService . '/jobs');
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             Log::error('OVH SMS not sent: ' . $e->getMessage());
         }

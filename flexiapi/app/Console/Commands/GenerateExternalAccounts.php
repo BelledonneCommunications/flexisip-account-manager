@@ -51,8 +51,7 @@ class GenerateExternalAccounts extends Command
         if (!in_array($this->argument('group'), $groups)) {
             $this->info('Existing groups: '.implode(',', $groups));
 
-            if (!$this->confirm('You are creating a new group of External Account, are you sure?', false))
-            {
+            if (!$this->confirm('You are creating a new group of External Account, are you sure?', false)) {
                 $this->info('Creation aborted');
                 return 0;
             }

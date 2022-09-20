@@ -62,7 +62,7 @@ class AccountController extends Controller
 
         $request->merge(['phone' => $phone]);
         $request->validate([
-            'phone' => [ 'required', new WithoutSpaces, 'starts_with:+']
+            'phone' => ['required', new WithoutSpaces, 'starts_with:+']
         ]);
 
         $alias = Alias::where('alias', $phone)->first();
@@ -144,10 +144,8 @@ class AccountController extends Controller
 
             $ovhSMS = new OvhSMS;
             $ovhSMS->send($request->get('phone'), 'Your ' . config('app.name') . ' recovery code is ' . $account->confirmation_key);
-        }
-
-        // Send validation by email
-        elseif ($request->has('email')) {
+        } elseif ($request->has('email')) {
+            // Send validation by email
             $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
             $account->save();
 
@@ -199,8 +197,8 @@ class AccountController extends Controller
         if (!config('app.dangerous_endpoints')) return abort(404);
 
         $account = Account::sip($sip)
-                          ->where('confirmation_key', $recoveryKey)
-                          ->firstOrFail();
+            ->where('confirmation_key', $recoveryKey)
+            ->firstOrFail();
 
         if ($account->activationExpired()) abort(403, 'Activation expired');
 
@@ -238,7 +236,7 @@ class AccountController extends Controller
                 Rule::exists('account_creation_tokens', 'token')->where(function ($query) {
                     $query->where('used', false);
                 }),
-                'size:'.WebAuthenticateController::$emailCodeSize
+                'size:' . WebAuthenticateController::$emailCodeSize
             ],
             // For retro-compatibility
             'token' => [
@@ -246,7 +244,7 @@ class AccountController extends Controller
                 Rule::exists('account_creation_tokens', 'token')->where(function ($query) {
                     $query->where('used', false);
                 }),
-                'size:'.WebAuthenticateController::$emailCodeSize
+                'size:' . WebAuthenticateController::$emailCodeSize
             ],
         ]);
 
@@ -277,12 +275,12 @@ class AccountController extends Controller
     public function activateEmail(Request $request, string $sip)
     {
         $request->validate([
-            'code' => 'required|size:'.WebAuthenticateController::$emailCodeSize
+            'code' => 'required|size:' . WebAuthenticateController::$emailCodeSize
         ]);
 
         $account = Account::sip($sip)
-                          ->where('confirmation_key', $request->get('code'))
-                          ->firstOrFail();
+            ->where('confirmation_key', $request->get('code'))
+            ->firstOrFail();
 
         if ($account->activationExpired()) abort(403, 'Activation expired');
 
@@ -302,8 +300,8 @@ class AccountController extends Controller
         ]);
 
         $account = Account::sip($sip)
-                          ->where('confirmation_key', $request->get('code'))
-                          ->firstOrFail();
+            ->where('confirmation_key', $request->get('code'))
+            ->firstOrFail();
 
         if ($account->activationExpired()) abort(403, 'Activation expired');
 
@@ -319,8 +317,8 @@ class AccountController extends Controller
     public function show(Request $request)
     {
         return Account::where('id', $request->user()->id)
-                      ->without(['api_key', 'email_changed.new_email'])
-                      ->first();
+            ->without(['api_key', 'email_changed.new_email'])
+            ->first();
     }
 
     public function provision(Request $request)
@@ -344,6 +342,6 @@ class AccountController extends Controller
         }
 
         return Account::where('id', $request->user()->id)
-                      ->delete();
+            ->delete();
     }
 }

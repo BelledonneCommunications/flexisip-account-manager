@@ -61,7 +61,8 @@ abstract class TestCase extends BaseTestCase
 
         $A1 = $password->password;
         $A2 = hash($hash, $this->method . ':' . $this->route);
-        $response = hash($hash,
+        $response = hash(
+            $hash,
             sprintf(
                 '%s:%s:%s:%s:%s:%s',
                 $A1,

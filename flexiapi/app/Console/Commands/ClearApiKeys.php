@@ -40,7 +40,9 @@ class ClearApiKeys extends Command
 
         $this->info('Deleting api keys unused after ' . $minutes . ' minutes');
 
-        $count = ApiKey::where('last_used_at', '<',
+        $count = ApiKey::where(
+            'last_used_at',
+            '<',
             Carbon::now()->subMinutes($minutes)->toDateTimeString()
         )->delete();
 

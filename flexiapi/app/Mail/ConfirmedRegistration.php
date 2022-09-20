@@ -29,17 +29,17 @@ class ConfirmedRegistration extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private $_account;
+    private $account;
 
     public function __construct(Account $account)
     {
-        $this->_account = $account;
+        $this->account = $account;
     }
 
     public function build()
     {
         return $this->view('mails.confirmed_registration')
                     ->text('mails.confirmed_registration_text')
-                    ->with(['account' => $this->_account]);
+                    ->with(['account' => $this->account]);
     }
 }

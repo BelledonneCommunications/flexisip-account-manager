@@ -23,17 +23,17 @@ use App\Device;
 
 class FlexisipConnector
 {
-    private $_socket;
+    private $socket;
 
     public function __construct()
     {
         $pid = file_get_contents(config('app.flexisip_proxy_pid'));
-        $this->_socket = stream_socket_client('unix:///tmp/flexisip-proxy-'.$pid, $errno, $errstr);
+        $this->socket = streamsocket_client('unix:///tmp/flexisip-proxy-'.$pid, $errno, $errstr);
     }
 
     public function __destruct()
     {
-        fclose($this->_socket);
+        fclose($this->socket);
     }
 
     public function getDevices(string $from)
@@ -64,7 +64,7 @@ class FlexisipConnector
 
     private function request(string $command, array $parameters)
     {
-        fwrite($this->_socket, $command.' '.\implode(' ', $parameters));
-        return json_decode(fread($this->_socket, 8192));
+        fwrite($this->socket, $command.' '.\implode(' ', $parameters));
+        return json_decode(fread($this->socket, 8192));
     }
 }

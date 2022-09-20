@@ -29,17 +29,17 @@ class NewsletterRegistration extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private $_account;
+    private $account;
 
     public function __construct(Account $account)
     {
-        $this->_account = $account;
+        $this->account = $account;
     }
 
     public function build()
     {
         return $this->view('mails.newsletter_registration')
                     ->text('mails.newsletter_registration_text')
-                    ->with(['account' => $this->_account]);
+                    ->with(['account' => $this->account]);
     }
 }

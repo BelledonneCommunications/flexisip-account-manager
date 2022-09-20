@@ -36,7 +36,9 @@ class ClearNonces extends Command
 
     public function handle()
     {
-        $count = DigestNonce::where('created_at', '<',
+        $count = DigestNonce::where(
+            'created_at',
+            '<',
             Carbon::now()->subMinutes($this->argument('minutes'))->toDateTimeString()
         )->delete();
 

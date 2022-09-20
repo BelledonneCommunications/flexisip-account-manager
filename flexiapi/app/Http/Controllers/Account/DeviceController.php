@@ -29,21 +29,25 @@ class DeviceController extends Controller
     {
         $connector = new FlexisipConnector;
 
-        return view('account.devices.index',
+        return view(
+            'account.devices.index',
             ['devices' => $connector->getDevices($request->user()->identifier)
                                     ->keyBy('uuid')
-            ]);
+            ]
+        );
     }
 
     public function delete(Request $request, string $uuid)
     {
         $connector = new FlexisipConnector;
 
-        return view('account.devices.delete',
+        return view(
+            'account.devices.delete',
             ['device' => $connector->getDevices($request->user()->identifier)
                                    ->keyBy('uuid')
                                    ->where('uuid', $uuid)
-            ]);
+            ]
+        );
     }
 
     public function destroy(Request $request, string $uuid)

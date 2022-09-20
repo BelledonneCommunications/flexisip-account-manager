@@ -127,7 +127,7 @@ class ProvisioningController extends Controller
         // Account handling
         if ($requestAccount) {
             $account = $requestAccount;
-        } else if ($provisioningToken) {
+        } elseif ($provisioningToken) {
             $account = Account::withoutGlobalScopes()
                 ->where('provisioning_token', $provisioningToken)
                 ->first();
@@ -211,8 +211,7 @@ class ProvisioningController extends Controller
 
             if ($provisioningToken) {
                 // Activate the account
-                if (
-                    $account->activated == false
+                if ($account->activated == false
                     && $provisioningToken == $account->provisioning_token
                 ) {
                     $account->activated = true;
