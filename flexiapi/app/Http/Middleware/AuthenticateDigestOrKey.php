@@ -128,18 +128,18 @@ class AuthenticateDigestOrKey
             $hash = self::ALGORITHMS[$auth['algorithm']];
 
             // Hashing and checking
-            $A1 = $password->algorithm == 'CLRTXT'
+            $a1 = $password->algorithm == 'CLRTXT'
                 ? hash($hash, $account->username.':'.$resolvedRealm.':'.$password->password)
                 : $password->password; // username:realm/domain:password
-            $A2 = hash($hash, $request->method().':'.$auth['uri']);
+            $a2 = hash($hash, $request->method().':'.$auth['uri']);
 
             $validResponse = hash($hash,
-                $A1.
+                $a1.
                 ':'.$auth['nonce'].
                 ':'.$auth['nc'].
                 ':'.$auth['cnonce'].
                 ':'.$auth['qop'].
-                ':'.$A2
+                ':'.$a2
             );
 
             // Auth response don't match

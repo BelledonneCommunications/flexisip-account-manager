@@ -41,6 +41,7 @@ centos7-rpm-test:
     - yum -y localinstall rpmbuild/x86_64/*.rpm
     - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
     - scl enable rh-php73 "vendor/bin/phpcs"
+    - scl enable rh-php73 "vendor/bin/phpmd . ansi phpmd.xml"
     - scl enable rh-php73 "php artisan key:generate"
     - scl enable rh-php73 "vendor/bin/phpunit --log-junit $CI_PROJECT_DIR/flexiapi_phpunit.log"
   artifacts:

@@ -38,16 +38,16 @@ class EmailController extends Controller
 
     public function requestUpdate(Request $request)
     {
-        if ($request->user()->email) {
-            $request->validate([
-                'email_current' => ['required', Rule::in([$request->user()->email])],
-                'email' => 'required|different:email_current|confirmed|email',
-            ]);
-        } else {
-            $request->validate([
-                'email' => 'required|confirmed|email',
-            ]);
-        }
+        $request->validate(
+            $request->user()->email
+                ? [
+                    'email_current' => ['required', Rule::in([$request->user()->email])],
+                    'email' => 'required|different:email_current|confirmed|email',
+                ]
+                : [
+                    'email' => 'required|confirmed|email',
+                ]
+        );
 
         $request->user()->requestEmailUpdate($request->get('email'));
 

@@ -25,6 +25,7 @@ package-common:
 	cp flexiapi/artisan $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
 	cp flexiapi/phpunit.xml $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
 	cp flexiapi/phpcs.xml $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
+	cp flexiapi/phpmd.xml $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
 
 	# General
 	cp README.md $(OUTPUT_DIR)/flexisip-account-manager/

@@ -69,9 +69,7 @@ class ImportDatabase extends Command
             'prefix'    => '',
         ], 'default');
 
-        if (!$this->argument('sqlite-file-path')) {
-            $this->confirm('No SQLite database file was specified : Do you wish to continue?');
-        } else {
+        if ($this->argument('sqlite-file-path')) {
             $capsule->addConnection([
                 'driver'    => 'sqlite',
                 'database'  => $this->argument('sqlite-file-path'),
@@ -79,6 +77,10 @@ class ImportDatabase extends Command
         }
 
         $capsule->setAsGlobal();
+
+        if (!$this->argument('sqlite-file-path')) {
+            $this->confirm('No SQLite database file was specified : Do you wish to continue?');
+        }
 
         // Ensure that the target database is empty
         if (Account::count() > 0) {

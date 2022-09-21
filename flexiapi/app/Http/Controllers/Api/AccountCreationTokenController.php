@@ -65,8 +65,9 @@ class AccountCreationTokenController extends Controller
             Log::channel('events')->info('API: Token sent', ['token' => $token->token]);
 
             $token->save();
-        } else {
-            abort(503, "Token not sent");
+            return;
         }
+
+        abort(503, "Token not sent");
     }
 }

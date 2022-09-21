@@ -16,9 +16,10 @@ class AddLastUsedAtColumnToApiKeysTable extends Migration
         Schema::table('api_keys', function (Blueprint $table) {
             if (DB::getDriverName() == 'sqlite') {
                 $table->dateTime('last_used_at')->default('');
-            } else {
-                $table->dateTime('last_used_at');
+                return;
             }
+
+            $table->dateTime('last_used_at');
         });
     }
 

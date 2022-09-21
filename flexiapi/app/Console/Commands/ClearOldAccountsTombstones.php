@@ -44,8 +44,11 @@ class ClearOldAccountsTombstones extends Command
         if ($this->option('apply')) {
             $this->info($tombstones->count() . ' tombstones deleted');
             $tombstones->delete();
-        } else {
-            $this->info($tombstones->count() . ' tombstones to delete');
+
+            return 0;
         }
+
+        $this->info($tombstones->count() . ' tombstones to delete');
+        return 0;
     }
 }

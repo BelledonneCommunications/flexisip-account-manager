@@ -41,17 +41,18 @@ class ImportExternalAccounts extends Command
         foreach ($json as $account) {
             if ($existingUsernames->contains($account->username)) {
                 $existingCounter++;
-            } else {
-                $externalAccount = new ExternalAccount;
-                $externalAccount->username = $account->username;
-                $externalAccount->domain = $account->domain;
-                $externalAccount->group = $account->group;
-                $externalAccount->password = $account->password;
-                $externalAccount->algorithm = $account->algorithm;
-
-                $externalAccounts->push($externalAccount->toArray());
-                $importedCounter++;
+                continue;
             }
+
+            $externalAccount = new ExternalAccount;
+            $externalAccount->username = $account->username;
+            $externalAccount->domain = $account->domain;
+            $externalAccount->group = $account->group;
+            $externalAccount->password = $account->password;
+            $externalAccount->algorithm = $account->algorithm;
+
+            $externalAccounts->push($externalAccount->toArray());
+            $importedCounter++;
         }
 
         ExternalAccount::insert($externalAccounts->toArray());

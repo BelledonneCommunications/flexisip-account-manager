@@ -58,12 +58,12 @@ class PasswordController extends Controller
             }
 
             return response()->json(['errors' => ['old_password' => 'Incorrect old password']], 422);
-        } else {
-            $account->updatePassword($request->get('password'), $algorithm);
+        }
 
-            if (!empty($account->email)) {
-                Mail::to($account)->send(new ConfirmedRegistration($account));
-            }
+        $account->updatePassword($request->get('password'), $algorithm);
+
+        if (!empty($account->email)) {
+            Mail::to($account)->send(new ConfirmedRegistration($account));
         }
     }
 }

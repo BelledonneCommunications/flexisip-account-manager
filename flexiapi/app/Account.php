@@ -58,9 +58,11 @@ class Account extends Authenticatable
                 if (!$user->admin || !config('app.admins_manage_multi_domains')) {
                     $builder->where('domain', config('app.sip_domain'));
                 }
-            } else {
-                $builder->where('domain', config('app.sip_domain'));
+
+                return;
             }
+
+            $builder->where('domain', config('app.sip_domain'));
         });
 
         /**
@@ -274,7 +276,7 @@ class Account extends Authenticatable
             '<',
             Carbon::now()->subMinutes(AuthToken::$expirationMinutes)
         )->orWhere('account_id', $this->id)
-         ->delete();
+            ->delete();
 
         $authToken = new AuthToken;
         $authToken->account_id = $this->id;
@@ -314,13 +316,10 @@ VERSION:4.0
 KIND:individual
 IMPP:sip:' . $this->getIdentifierAttribute();
 
-        if (!empty($this->attributes['display_name'])) {
-            $vcard .= '
-FN:' . $this->attributes['display_name'];
-        } else {
-            $vcard .= '
-FN:' . $this->getIdentifierAttribute();
-        }
+        $vcard .= '
+FN:' . !empty($this->attributes['display_name'])
+            ? $this->attributes['display_name']
+            : $this->getIdentifierAttribute();
 
         if ($this->dtmf_protocol) {
             $vcard .= '

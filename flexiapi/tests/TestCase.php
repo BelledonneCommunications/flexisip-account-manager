@@ -59,18 +59,18 @@ abstract class TestCase extends BaseTestCase
 
         $cnonce = generateNonce();
 
-        $A1 = $password->password;
-        $A2 = hash($hash, $this->method . ':' . $this->route);
+        $a1 = $password->password;
+        $a2 = hash($hash, $this->method . ':' . $this->route);
         $response = hash(
             $hash,
             sprintf(
                 '%s:%s:%s:%s:%s:%s',
-                $A1,
+                $a1,
                 $extractedChallenge['nonce'],
                 $nc,
                 $cnonce,
                 $extractedChallenge['qop'],
-                $A2
+                $a2
             )
         );
 
