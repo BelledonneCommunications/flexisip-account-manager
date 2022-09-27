@@ -6,6 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 use App\Account;
+use App\Rules\IsNotPhoneNumber;
+use App\Rules\NoUppercase;
 use App\Rules\WithoutSpaces;
 
 class UpdateAccountRequest extends FormRequest
@@ -20,6 +22,8 @@ class UpdateAccountRequest extends FormRequest
         return [
             'username' => [
                 'required',
+                new NoUppercase,
+                new IsNotPhoneNumber,
                 Rule::unique('accounts', 'username')->where(function ($query) {
                     $query->where('domain', config('app.sip_domain'));
                 })->ignore($this->route('id'), 'id'),
