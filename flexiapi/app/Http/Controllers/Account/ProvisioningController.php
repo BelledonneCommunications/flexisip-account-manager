@@ -148,7 +148,7 @@ class ProvisioningController extends Controller
             $section = $dom->createElement('section');
             $section->setAttribute('name', 'proxy_' . $proxyConfigIndex);
 
-            $entry = $dom->createElement('entry', '<sip:' . $account->identifier . '>');
+            $entry = $dom->createElement('entry', $account->fullIdentifier);
             $entry->setAttribute('name', 'reg_identity');
             $section->appendChild($entry);
 
@@ -228,7 +228,7 @@ class ProvisioningController extends Controller
                 $section = $dom->createElement('section');
                 $section->setAttribute('name', 'proxy_' . $proxyConfigIndex);
 
-                $entry = $dom->createElement('entry', '<sip:' . $externalAccount->identifier . '>');
+                $entry = $dom->createElement('entry', $externalAccount->fullIdentifier);
                 $entry->setAttribute('name', 'reg_identity');
                 $section->appendChild($entry);
 

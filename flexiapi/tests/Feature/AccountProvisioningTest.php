@@ -92,6 +92,7 @@ class AccountProvisioningTest extends TestCase
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee($password->account->username)
+            ->assertSee($password->account->display_name)
             ->assertSee('ha1');
     }
 

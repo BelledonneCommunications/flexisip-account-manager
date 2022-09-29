@@ -173,6 +173,15 @@ class Account extends Authenticatable
         return $this->attributes['username'] . '@' . $this->attributes['domain'];
     }
 
+    public function getFullIdentifierAttribute()
+    {
+        $displayName = $this->attributes['display_name']
+                    ? '"' . $this->attributes['display_name'] . '" '
+                    : '';
+
+        return $displayName . '<sip:' . $this->getIdentifierAttribute() . '>';
+    }
+
     public function getRealmAttribute()
     {
         return config('app.realm');
