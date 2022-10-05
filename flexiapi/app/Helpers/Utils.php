@@ -47,7 +47,7 @@ function bchash(string $username, string $domain, string $password, string $algo
 {
     $algos = ['MD5' => 'md5', 'SHA-256' => 'sha256'];
 
-    return hash($algos[$algorithm], $username.':'.$domain.':'.$password);
+    return hash($algos[$algorithm], $username . ':' . $domain . ':' . $password);
 }
 
 function generatePin()
@@ -58,7 +58,7 @@ function generatePin()
 function percent($value, $max)
 {
     if ($max == 0) $max = 1;
-    return round(($value*100)/$max, 2);
+    return round(($value * 100) / $max, 2);
 }
 
 function markdownDocumentationView($view): string
@@ -92,8 +92,8 @@ function getAvailableExternalAccount(): ?ExternalAccount
 {
     if (Schema::hasTable('external_accounts')) {
         return ExternalAccount::where('used', false)
-        ->where('account_id', null)
-        ->first();
+            ->where('account_id', null)
+            ->first();
     }
 
     return null;
@@ -114,7 +114,9 @@ function publicRegistrationEnabled(): bool
 
 function isRegularExpression($string): bool
 {
-    set_error_handler(function() {}, E_WARNING);
+    set_error_handler(function () {
+    }, E_WARNING);
+
     $isRegularExpression = preg_match($string, '') !== false;
     restore_error_handler();
 
