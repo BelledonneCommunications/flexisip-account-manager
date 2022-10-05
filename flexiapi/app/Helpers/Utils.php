@@ -111,3 +111,12 @@ function publicRegistrationEnabled(): bool
 
     return false;
 }
+
+function isRegularExpression($string): bool
+{
+    set_error_handler(function() {}, E_WARNING);
+    $isRegularExpression = preg_match($string, '') !== false;
+    restore_error_handler();
+
+    return $isRegularExpression;
+}

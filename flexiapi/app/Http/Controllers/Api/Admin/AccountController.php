@@ -33,6 +33,7 @@ use App\ActivationExpiration;
 use App\Admin;
 use App\Alias;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+use App\Rules\BlacklistedUsername;
 use App\Rules\IsNotPhoneNumber;
 use App\Rules\NoUppercase;
 use App\Rules\WithoutSpaces;
@@ -110,6 +111,7 @@ class AccountController extends Controller
                 'required',
                 new NoUppercase,
                 new IsNotPhoneNumber,
+                new BlacklistedUsername,
                 Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
                     $query->where('domain', $this->resolveDomain($request));
                 }),

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 use App\Account;
+use App\Rules\BlacklistedUsername;
 use App\Rules\IsNotPhoneNumber;
 use App\Rules\NoUppercase;
 use App\Rules\WithoutSpaces;
@@ -24,6 +25,7 @@ class CreateAccountRequest extends FormRequest
                 'required',
                 new NoUppercase,
                 new IsNotPhoneNumber,
+                new BlacklistedUsername,
                 Rule::unique('accounts', 'username')->where(function ($query) {
                     $query->where('domain', config('app.sip_domain'));
                 }),

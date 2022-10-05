@@ -35,6 +35,7 @@ use App\Rules\NoUppercase;
 use App\Libraries\OvhSMS;
 use App\Mail\RegisterConfirmation;
 use App\Mail\NewsletterRegistration;
+use App\Rules\BlacklistedUsername;
 
 class RegisterController extends Controller
 {
@@ -80,6 +81,7 @@ class RegisterController extends Controller
                 'filled',
                 new WithoutSpaces,
                 new IsNotPhoneNumber,
+                new BlacklistedUsername
             ],
             'g-recaptcha-response'  => 'required|captcha',
             'email' => 'required|email|confirmed'
@@ -126,6 +128,7 @@ class RegisterController extends Controller
                 'nullable',
                 new WithoutSpaces,
                 new IsNotPhoneNumber,
+                new BlacklistedUsername
             ],
             'phone' => [
                 'required', 'unique:aliases,alias',

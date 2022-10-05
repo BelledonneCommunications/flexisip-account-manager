@@ -136,4 +136,45 @@ class AccountCreationTokenTest extends TestCase
         ]);
         $response->assertStatus(422);
     }
+
+    /**
+     * Test username blacklist
+     */
+    public function testBlacklistedUsername()
+    {
+        $token = AccountCreationToken::factory()->create();
+
+        config()->set('app.blacklisted_usernames', 'foobar,blacklisted,username-.*');
+
+        // Blacklisted username
+        $response = $this->json($this->method, $this->accountRoute, [
+            'username' => 'blacklisted',
+            'algorithm' => 'SHA-256',
+            'password' => '2',
+            'account_creation_token' => $token->token
+        ]);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['username']);
+
+        // Blacklisted regex username
+        $response = $this->json($this->method, $this->accountRoute, [
+            'username' => 'username-gnap',
+            'algorithm' => 'SHA-256',
+            'password' => '2',
+            'account_creation_token' => $token->token
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['username']);
+
+        // Valid username
+        $response = $this->json($this->method, $this->accountRoute, [
+            'username' => 'valid-username',
+            'algorithm' => 'SHA-256',
+            'password' => '2',
+            'account_creation_token' => $token->token
+        ]);
+
+        $response->assertStatus(200);
+    }
 }

@@ -29,6 +29,7 @@ return [
     'transport_protocol_text' => env('ACCOUNT_TRANSPORT_PROTOCOL_TEXT', 'TLS (recommended), TCP or UDP'),
 
     'consume_external_account_on_create' => env('ACCOUNT_CONSUME_EXTERNAL_ACCOUNT_ON_CREATE', false),
+    'blacklisted_usernames' => env('ACCOUNT_BLACKLISTED_USERNAMES', ''),
 
     /**
      * Time limit before the API Key and related cookie are expired
