@@ -25,6 +25,11 @@ You can also run the test suit using `phpunit`.
 
 To know more about the web server configuration part, you can directly [visit the official Laravel installation documentation](https://laravel.com/docs/8.x).
 
+### Apache2 server configuration
+
+The package will deploy a `flexisip-account-manager.conf` file in the apache2 configuration directory.
+This file can be loaded and configured in your specific VirtualHost configuration.
+
 ### Configure the .env file
 
 Complete all the other variables in the `.env` file or by overwritting them in your Docker or web-server configuration:

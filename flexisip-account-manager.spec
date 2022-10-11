@@ -8,7 +8,7 @@
 #%define _datadir           %{_datarootdir}
 #%define _docdir            %{_datadir}/doc
 
-%define build_number 156
+%define build_number 157
 %define var_dir /var/opt/belledonne-communications
 %define opt_dir /opt/belledonne-communications/share/flexisip-account-manager
 
@@ -35,7 +35,7 @@
 Name:           bc-flexisip-account-manager
 Version:        1.1.0
 Release:        %{build_number}%{?dist}
-Summary:        SIP account management xml-rpc server, for use with flexisip server suite.
+Summary:        SIP account management xml-rpc server, for use with flexisip server suite. Only tested for Apache2.
 
 Group:          Applications/Communications
 License:        GPL
