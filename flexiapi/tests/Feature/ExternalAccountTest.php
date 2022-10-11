@@ -76,6 +76,7 @@ class ExternalAccountTest extends TestCase
             ->get($this->provisioningRoute)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
+            ->assertSee($externalAccount->identifier)
             ->assertSee('ha1')
             ->assertSee('idkey')
             ->assertSee('depends_on');
