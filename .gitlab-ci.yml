@@ -28,12 +28,12 @@ centos7-rpm:
 
 rocky8-rpm:
   extends: .rpm
-  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-rocky8-php
+  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-rocky8-php:2022_10_18_fix_centos_eol_repository
 
 centos7-rpm-test:
-  tags: ["docker-centos7"]
+  tags: ["docker"]
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-centos7-php
-  dependencies:
+  needs:
     - centos7-rpm
 
   stage: test
@@ -44,6 +44,49 @@ centos7-rpm-test:
     - scl enable rh-php73 "vendor/bin/phpmd . ansi phpmd.xml"
     - scl enable rh-php73 "php artisan key:generate"
     - scl enable rh-php73 "vendor/bin/phpunit --log-junit $CI_PROJECT_DIR/flexiapi_phpunit.log"
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/flexiapi_phpunit.log
+      - flexiapi/storage/logs/
+    when: always
+    expire_in: 1 day
+
+rocky8-rpm-test:
+  tags: ["docker"]
+  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-rocky8-php:2022_10_18_fix_centos_eol_repository
+  needs:
+    - rocky8-rpm
+
+  stage: test
+  script:
+    - yum -y localinstall rpmbuild/x86_64/*.rpm
+    - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
+    - vendor/bin/phpcs
+    - vendor/bin/phpmd . ansi phpmd.xml
+    - php artisan key:generate
+    - vendor/bin/phpunit --log-junit $CI_PROJECT_DIR/flexiapi_phpunit.log
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/flexiapi_phpunit.log
+      - flexiapi/storage/logs/
+    when: always
+    expire_in: 1 day
+
+debian11-deb-test:
+  tags: ["docker"]
+  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-debian11-php:20221029_belledone_apt_repository
+  needs:
+    - debian11-deb
+
+  stage: test
+  script:
+    - sudo -s apt update
+    - sudo -s apt -y install bc-flexisip-account-manager
+    - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
+    - vendor/bin/phpcs
+    - vendor/bin/phpmd . ansi phpmd.xml
+    - php artisan key:generate
+    - vendor/bin/phpunit --log-junit $CI_PROJECT_DIR/flexiapi_phpunit.log
   artifacts:
     paths:
       - $CI_PROJECT_DIR/flexiapi_phpunit.log
@@ -75,7 +118,7 @@ centos7-rpm-test:
   extends: .rpm-deploy
   tags: ["docker-centos7"]
 
-  dependencies:
+  needs:
     - centos7-rpm
 
 centos7-rpm-deploy-stable:
@@ -91,7 +134,7 @@ centos7-rpm-deploy-alpha:
 .rocky8-rpm-deploy:
   extends: .rpm-deploy
   tags: ["docker"]
-  dependencies:
+  needs:
     - rocky8-rpm
 
 # rocky8-rpm-deploy-stable:
@@ -104,7 +147,7 @@ rocky8-rpm-deploy-alpha:
   variables:
     DEPLOY_DIRECTORY_STATE: $CENTOS8_DEPLOY_DIRECTORY_ALPHA
 
-debian11-packaging:
+debian11-deb:
   tags: ["docker"]
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-debian11-php:20220413_flexiapi_packaging
 
@@ -125,8 +168,8 @@ debian11-packaging:
   extends: .package-deploy
   tags: ["docker"]
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-debian11-php:20220413_flexiapi_packaging
-  dependencies:
-    - debian11-packaging
+  needs:
+    - debian11-deb
   variables:
     RELEASE: bullseye
     FREIGHT_PATH: $DEBIAN_FREIGHT_CONF_PATH
