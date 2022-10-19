@@ -326,7 +326,8 @@ KIND:individual
 IMPP:sip:' . $this->getIdentifierAttribute();
 
         $vcard .= '
-FN:' . !empty($this->attributes['display_name'])
+FN:';
+        $vcard .= !empty($this->attributes['display_name'])
             ? $this->attributes['display_name']
             : $this->getIdentifierAttribute();
 

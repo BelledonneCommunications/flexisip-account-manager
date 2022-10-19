@@ -117,6 +117,7 @@ class AccountContactTest extends TestCase
         $this->keyAuthenticated($password1->account)
              ->get('/contacts/vcard')
              ->assertStatus(200)
+             ->assertSeeText("FN:".$password2->display_name)
              ->assertSeeText("X-LINPHONE-ACCOUNT-TYPE:".$typeKey)
              ->assertSeeText("X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:".$password2->dtmf_protocol)
              ->assertSeeText("X-LINPHONE-ACCOUNT-ACTION:".$actionKey.';'.$actionCode);
