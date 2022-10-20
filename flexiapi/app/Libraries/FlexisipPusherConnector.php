@@ -19,6 +19,8 @@
 
 namespace App\Libraries;
 
+use Illuminate\Support\Facades\Log;
+
 class FlexisipPusherConnector
 {
     private $pusherPath;
@@ -38,16 +40,20 @@ class FlexisipPusherConnector
     {
         $payload = json_encode(['token' => $token]);
 
-        $command = $this->pusherPath
+        if (!empty($this->pusherPath)) {
+            $command = $this->pusherPath
             . " --pn-provider '" . $this->pnProvider . "'"
             . " --pn-param '" . $this->pnParam . "'"
             . " --pn-prid " . $this->pnPrid
             . " --apple-push-type Background"
             . " --customPayload '" . $payload . "'";
 
-        $output = null;
-        $retval = null;
+            $output = null;
+            $retval = null;
 
-        return exec($command, $output, $retval);
+            return exec($command, $output, $retval);
+        }
+
+        Log::error('Pusher path not configured');
     }
 }
