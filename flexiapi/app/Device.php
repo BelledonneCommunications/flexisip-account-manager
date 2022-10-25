@@ -26,9 +26,9 @@ class Device extends Model
 {
     public function fromContact(\stdClass $contact)
     {
-        $this->uuid = \substr($contact->line_value_copy, 2, -2);
-        $this->expires_at = Carbon::createFromTimestamp($contact->expires_at);
-        $this->update_time = Carbon::createFromTimestamp($contact->update_time);
-        $this->user_agent = $contact->user_agent;
+        $this->uuid = \substr($contact->{'unique-id'}, 2, -2);
+        $this->expires_at = Carbon::createFromTimestamp($contact->{'expires-at'});
+        $this->update_time = Carbon::createFromTimestamp($contact->{'update-time'});
+        $this->user_agent = $contact->{'user-agent'};
     }
 }

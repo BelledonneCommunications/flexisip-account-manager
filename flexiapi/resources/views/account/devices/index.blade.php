@@ -18,7 +18,7 @@
         @foreach ($devices as $device)
             <tr>
                 <td>{{ $device->user_agent }}</td>
-                <td>{{ $account->expires_at }}</td>
+                <td>{{ $device->expires_at }}</td>
                 <td>
                     <a type="button"
                        class="btn btn-danger"

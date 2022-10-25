@@ -27,8 +27,8 @@ class FlexisipConnector
 
     public function __construct()
     {
-        $pid = file_get_contents(config('app.flexisip_proxy_pid'));
-        $this->socket = streamsocket_client('unix:///tmp/flexisip-proxy-'.$pid, $errno, $errstr);
+        $pid = \file_get_contents(config('app.flexisip_proxy_pid'));
+        $this->socket = \stream_socket_client('unix:///tmp/flexisip-proxy-'.$pid, $errno, $errstr);
     }
 
     public function __destruct()
@@ -43,7 +43,7 @@ class FlexisipConnector
         ]);
         $devices = collect();
 
-        if (isset($content->contacts)) {
+        if ($content && isset($content->contacts)) {
             foreach ($content->contacts as $contact) {
                 $device = new Device;
                 $device->fromContact($contact);
@@ -62,9 +62,10 @@ class FlexisipConnector
         ]);
     }
 
-    private function request(string $command, array $parameters)
+    private function request(string $command, array $parameters): ?\stdClass
     {
         fwrite($this->socket, $command.' '.\implode(' ', $parameters));
+
         return json_decode(fread($this->socket, 8192));
     }
 }
