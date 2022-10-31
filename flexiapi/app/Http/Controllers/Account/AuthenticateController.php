@@ -172,8 +172,6 @@ class AuthenticateController extends Controller
             return redirect()->route('account.password');
         }
 
-        $request->session()->flash('success', 'Your account creation process is now finished.');
-
         return redirect()->route('account.panel');
     }
 
