@@ -22,7 +22,8 @@ return [
     'newsletter_registration_address' => env('NEWSLETTER_REGISTRATION_ADDRESS', ''),
     'phone_authentication' => env('PHONE_AUTHENTICATION', true),
     'public_registration' => env('PUBLIC_REGISTRATION', true),
-    'devices_management' => env('DEVICES_MANAGEMENT', false),
+    // See https://gitlab.linphone.org/BC/public/flexisip-account-manager/-/issues/54
+    'devices_management' => false, //env('DEVICES_MANAGEMENT', false),
     'web_panel' => env('WEB_PANEL', true),
 
     'proxy_registrar_address' => env('ACCOUNT_PROXY_REGISTRAR_ADDRESS', 'sip.domain.com'),
@@ -41,7 +42,8 @@ return [
      */
     'flexisip_proxy_pid' => env('APP_FLEXISIP_PROXY_PID', '/var/run/flexisip-proxy.pid'),
     'flexisip_pusher_path' => env('APP_FLEXISIP_PUSHER_PATH', null),
-    'linphone_daemon_unix_pipe' => env('APP_LINPHONE_DAEMON_UNIX_PATH', null),
+    // See https://gitlab.linphone.org/BC/public/flexisip-account-manager/-/issues/54
+    'linphone_daemon_unix_pipe' => null, // env('APP_LINPHONE_DAEMON_UNIX_PATH', null),
 
     /**
      * Account provisioning

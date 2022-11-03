@@ -244,6 +244,8 @@ You can also seed the tables with test accounts for the liblinphone test suite w
 
 ## Sending SIP messages from the API
 
+**The messaging related features are considered instable and are not available**
+
 The `POST /api/messages` endpoint allows you to send messages on the SIP network. It call internally `linphone-daemon` to do so. To be able to use it you should follow the following steps:
 
 1. Launch the `linphone-daemon` with a UNIX socket path, this will create a socket file in `/tmp` (the file will be `/tmp/lp` for the following line).

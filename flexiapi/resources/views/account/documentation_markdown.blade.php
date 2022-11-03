@@ -64,6 +64,8 @@ Your account can be deleted from the panel using the @if (config('app.web_panel'
 
 ## Devices management
 
+**The devices related features are considered instable and are not available**
+
 @if (config('app.devices_management') == false)
 *The feature is not enabled on this instance.*
 @endif

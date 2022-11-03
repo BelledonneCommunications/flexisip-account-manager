@@ -65,8 +65,9 @@ Route::group(['middleware' => ['auth.digest_or_key']], function () {
     Route::post('accounts/me/phone/request', 'Api\AccountPhoneController@requestUpdate');
     Route::post('accounts/me/phone', 'Api\AccountPhoneController@update');
 
-    Route::get('accounts/me/devices', 'Api\DeviceController@index');
-    Route::delete('accounts/me/devices/{uuid}', 'Api\DeviceController@destroy');
+    // See https://gitlab.linphone.org/BC/public/flexisip-account-manager/-/issues/54
+    //Route::get('accounts/me/devices', 'Api\DeviceController@index');
+    //Route::delete('accounts/me/devices/{uuid}', 'Api\DeviceController@destroy');
 
     Route::post('accounts/me/email/request', 'Api\EmailController@requestUpdate');
     Route::post('accounts/me/password', 'Api\PasswordController@update');
@@ -75,9 +76,10 @@ Route::group(['middleware' => ['auth.digest_or_key']], function () {
     Route::get('accounts/me/contacts', 'Api\AccountContactController@index');
 
     Route::group(['middleware' => ['auth.admin']], function () {
-        if (!empty(config('app.linphone_daemon_unix_pipe'))) {
-            Route::post('messages', 'Api\MessageController@send');
-        }
+        // See https://gitlab.linphone.org/BC/public/flexisip-account-manager/-/issues/54
+        //if (!empty(config('app.linphone_daemon_unix_pipe'))) {
+        //    Route::post('messages', 'Api\MessageController@send');
+        //}
 
         // Accounts
         Route::get('accounts/{id}/activate', 'Api\Admin\AccountController@activate');

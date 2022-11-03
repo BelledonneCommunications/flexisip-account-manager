@@ -311,6 +311,8 @@ Return the updated account
 
 ## Accounts devices
 
+**The devices related features are considered instable and are not available**
+
 ### `GET /accounts/me/devices`
 <span class="badge badge-info">User</span>
 Return the user registered devices.
@@ -416,6 +418,8 @@ Add a type to the account.
 Remove a a type from the account.
 
 ## Messages
+
+**The messaging related features are considered instable and are not available**
 
 ### `POST /messages`
 <span class="badge badge-warning">Admin</span>
