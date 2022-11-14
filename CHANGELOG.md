@@ -1,5 +1,12 @@
 # Flexisip Account Manager Changelog
 
+v1.3
+----
+- Fix #58 Fix the packaging process to use git describe as a reference
+- Fix #58 Move the generated packages in the build directory, and fix the release and version format in the .spec
+- Fix #58 Refactor and cleanup the .gitlab-ci file
+- Move the minimum PHP version to 8.0
+
 v1.2
 ----
 

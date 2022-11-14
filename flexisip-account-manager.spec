@@ -1,14 +1,6 @@
 # -*- rpm-spec -*-
-#%define _prefix    @CMAKE_INSTALL_PREFIX@
-#%define pkg_prefix @BC_PACKAGE_NAME_PREFIX@
 
-# re-define some directories for older RPMBuild versions which don't. This messes up the doc/ dir
-# taken from https://fedoraproject.org/wiki/Packaging:RPMMacros?rd=Packaging/RPMMacros
-#%define _datarootdir       %{_prefix}/share
-#%define _datadir           %{_datarootdir}
-#%define _docdir            %{_datadir}/doc
-
-%define build_number 163
+%define build_number MAKE_FILE_BUILD_NUMBER_SEARCH
 %define var_dir /var/opt/belledonne-communications
 %define opt_dir /opt/belledonne-communications/share/flexisip-account-manager
 
@@ -21,9 +13,6 @@
 %define env_symlink_file %{opt_dir}/flexiapi/.env
 
 %bcond_with deb
-#%if %{build_number}
-#%define build_number_ext -%{build_number}
-#%endif
 
 %if %{with deb}
     %define web_user www-data
@@ -33,27 +22,21 @@
 %endif
 
 Name:           bc-flexisip-account-manager
-Version:        1.2.0
+Version:        MAKE_FILE_VERSION_SEARCH
 Release:        %{build_number}%{?dist}
 Summary:        Web panel and a REST API to manage and handle Flexisip accounts related features. Only tested for Apache2.
 
 Group:          Applications/Communications
 License:        GPL
 URL:            http://www.linphone.org
-#Source0:        %{name}-%{version}%{?build_number_ext}.tar.gz
 Source0:        flexisip-account-manager.tar.gz
-#BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-
-# dependencies
 
 #These are not indented because rpm cannot recognize "Requires" with spaces/tabs (???)
 
 %if "%{?dist}" == ".el7"
 Requires:       rh-php73-php rh-php73-php-gd rh-php73-php-xmlrpc rh-php73-php-pdo rh-php73-php-mysqlnd rh-php73-php-mbstring
 %define apache_conf_path /opt/rh/httpd24/root/etc/httpd/conf.d
-%endif
-
-%if "%{?dist}" == ".el8"
+%else
 Requires:       php php-gd php-xmlrpc php-pdo php-mysqlnd php-mbstring
 %define apache_conf_path /etc/httpd/conf.d
 %endif
@@ -192,19 +175,3 @@ fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
-
-%changelog
-* Mon Oct 24 2022 Timothée Jaussoin <timothee.jaussoin@belledonne-communications.com>
-- Release the 1.2 version, see CHANGELOG
-* Tue Oct 12 2021 Peio Rigaux <peio.rigaux@belledonne-communications.com>
-- Adapted specfile to support Rocky Linux 8
-* Tue Sep 28 2021 Timothée Jaussoin <timothee.jaussoin@belledonne-communications.com>
-- Install cron scripts
-* Sun Jan 5 2020 Timothée Jaussoin <timothee.jaussoin@belledonne-communications.com>
-- Import and configure the new API package
-* Thu Jul 4 2019 Sylvain Berfini <sylvain.berfini@belledonne-communications.com>
-- New files layout
-* Fri Jun 28 2019 Johan Pascal <johan.pascal@belledonne-communications.com>
--
-* Fri May 18 2018 Matthieu TANON <matthieu.tanon@belledonne-communications.com>
-- Initial RPM release.

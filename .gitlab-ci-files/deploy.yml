@@ -1,0 +1,43 @@
+centos7-deploy:
+  extends: .deploy
+  script:
+    - ./deploy_packages.sh centos
+  needs:
+    - centos7-package
+    - centos7-test
+
+rocky8-deploy:
+  extends: .deploy
+  script:
+    - ./deploy_packages.sh rockylinux
+  needs:
+    - rocky8-package
+    - rocky8-test
+
+debian11-deploy:
+  extends: .deploy
+  script:
+    - ./deploy_packages.sh debian bullseye
+  needs:
+    - debian11-package
+    - debian11-test
+
+.deploy:
+  stage: deploy
+  tags: ["docker"]
+  only:
+    refs:
+      - master
+
+  before_script:
+    - eval $(ssh-agent -s)
+    - echo "$DEPLOY_USER_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - echo "$DEPLOY_SERVER_HOST_KEY" >> ~/.ssh/known_hosts
+    - |
+      curl -o deploy_packages.sh --header "PRIVATE-TOKEN: ${TOOLS_REPOSITORY_TOKEN}" https://gitlab.linphone.org/api/v4/projects/368/repository/files/deploy_packages.sh/raw
+    - chmod +x deploy_packages.sh
+
+  after_script:
+    - rm -rf ~/.ssh || true
+    - rm -rf deploy_packages.sh || true

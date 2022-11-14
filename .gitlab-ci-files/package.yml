@@ -1,0 +1,31 @@
+centos7-package:
+  extends: .package
+  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-centos7-php:$CENTOS_7_IMAGE_VERSION
+  script:
+    - make rpm-el7
+
+rocky8-package:
+  extends: .package
+  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-rocky8-php:$ROCKY_8_IMAGE_VERSION
+  script:
+    - make rpm
+
+debian11-package:
+  extends: .package
+  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-debian11-php:$DEBIAN_11_IMAGE_VERSION
+  script:
+    - make deb
+
+.package:
+  tags: ["docker"]
+
+  stage: package
+  artifacts:
+    paths:
+      - build/*
+    when: always
+    expire_in: 1 day
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - flexiapi/vendor/

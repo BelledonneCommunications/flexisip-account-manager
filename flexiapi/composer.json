@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": ">=7.3.0",
+        "php": ">=8.0",
         "anhskohbo/no-captcha": "^3.3",
         "doctrine/dbal": "^3.1",
         "endroid/qr-code": "^4.1",
@@ -33,7 +33,7 @@
     },
     "config": {
         "platform": {
-            "php": "7.3"
+            "php": "8.0"
         },
         "optimize-autoloader": true,
         "preferred-install": "dist",
