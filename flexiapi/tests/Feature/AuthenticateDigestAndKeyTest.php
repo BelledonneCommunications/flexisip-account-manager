@@ -165,6 +165,18 @@ class AuthenticateDigestAndKeyTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function testAuthenticationWrongAlgorithm()
+    {
+        $password = Password::factory()->sha256()->create();
+        $response = $this->generateFirstResponse($password);
+        $response = $this->withHeaders([
+            'From' => 'sip:'.$password->account->identifier,
+            'Authorization' => $this->generateDigest($password, $response, 'md5'),
+        ])->json($this->method, $this->route);
+
+        $response->assertStatus(401);
+    }
+
     public function testAuthenticationSHA265FromCLRTXT()
     {
         $password = Password::factory()->clrtxt()->create();

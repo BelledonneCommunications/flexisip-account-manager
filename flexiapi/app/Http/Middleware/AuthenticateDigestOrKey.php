@@ -122,7 +122,11 @@ class AuthenticateDigestOrKey
             if (!$password) {
                 $password = $account->passwords()
                                     ->where('algorithm', 'CLRTXT')
-                                    ->firstOrFail();
+                                    ->first();
+            }
+
+            if (!$password) {
+                return $this->generateUnauthorizedResponse($account, 'Wrong algorithm');
             }
 
             $hash = self::ALGORITHMS[$auth['algorithm']];
