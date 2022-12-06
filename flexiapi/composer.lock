@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "239806fda05a06e6027f9ac26670e52b",
+    "content-hash": "1d639b63887c0a6cb7e1ead3a20cf069",
     "packages": [
         {
             "name": "anhskohbo/no-captcha",
@@ -939,26 +939,29 @@
         },
         {
             "name": "endroid/qr-code",
-            "version": "4.6.1",
+            "version": "4.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/endroid/qr-code.git",
-                "reference": "a75c913b0e4d6ad275e49a2c1de1cacffc6c2184"
+                "reference": "027522766a7bb40e15686fd380b77e0aaa76b7d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/endroid/qr-code/zipball/a75c913b0e4d6ad275e49a2c1de1cacffc6c2184",
-                "reference": "a75c913b0e4d6ad275e49a2c1de1cacffc6c2184",
+                "url": "https://api.github.com/repos/endroid/qr-code/zipball/027522766a7bb40e15686fd380b77e0aaa76b7d4",
+                "reference": "027522766a7bb40e15686fd380b77e0aaa76b7d4",
                 "shasum": ""
             },
             "require": {
                 "bacon/bacon-qr-code": "^2.0.5",
-                "php": "^7.4||^8.0"
+                "php": "^8.0"
+            },
+            "conflict": {
+                "khanamiryan/qrcode-detector-decoder": "^1.0.6"
             },
             "require-dev": {
                 "endroid/quality": "dev-master",
                 "ext-gd": "*",
-                "khanamiryan/qrcode-detector-decoder": "^1.0.4",
+                "khanamiryan/qrcode-detector-decoder": "^1.0.4||^2.0.2",
                 "setasign/fpdf": "^1.8.2"
             },
             "suggest": {
@@ -999,7 +1002,7 @@
             ],
             "support": {
                 "issues": "https://github.com/endroid/qr-code/issues",
-                "source": "https://github.com/endroid/qr-code/tree/4.6.1"
+                "source": "https://github.com/endroid/qr-code/tree/4.7.0"
             },
             "funding": [
                 {
@@ -1007,7 +1010,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-10-26T08:48:17+00:00"
+            "time": "2022-12-12T16:10:52+00:00"
         },
         {
             "name": "erusev/parsedown",
@@ -2347,6 +2350,67 @@
                 }
             ],
             "time": "2022-07-24T11:55:47+00:00"
+        },
+        {
+            "name": "namoshek/laravel-redis-sentinel",
+            "version": "v0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Namoshek/laravel-redis-sentinel.git",
+                "reference": "9ab2f0a69e5b0240cf929c459e0a4d3c82b7073b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Namoshek/laravel-redis-sentinel/zipball/9ab2f0a69e5b0240cf929c459e0a4d3c82b7073b",
+                "reference": "9ab2f0a69e5b0240cf929c459e0a4d3c82b7073b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-redis": "*",
+                "illuminate/contracts": "^8.0|^9.0",
+                "illuminate/redis": "^8.0|^9.0",
+                "illuminate/support": "^8.0|^9.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "orchestra/testbench": "^6.0|^7.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Namoshek\\Redis\\Sentinel\\RedisSentinelServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Namoshek\\Redis\\Sentinel\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marvin Mall",
+                    "email": "marvin-mall@msn.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "An extension of Laravels Redis driver which supports connecting to a Redis master through Redis Sentinel.",
+            "homepage": "https://github.com/Namoshek/laravel-redis-sentinel",
+            "keywords": [
+                "laravel",
+                "redis"
+            ],
+            "support": {
+                "issues": "https://github.com/Namoshek/laravel-redis-sentinel/issues",
+                "source": "https://github.com/Namoshek/laravel-redis-sentinel/tree/v0.1.2"
+            },
+            "time": "2022-05-16T18:00:45+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -7918,16 +7982,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "9.2.19",
+            "version": "9.2.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "c77b56b63e3d2031bd8997fcec43c1925ae46559"
+                "reference": "3f893e19712bb0c8bc86665d1562e9fd509c4ef0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/c77b56b63e3d2031bd8997fcec43c1925ae46559",
-                "reference": "c77b56b63e3d2031bd8997fcec43c1925ae46559",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/3f893e19712bb0c8bc86665d1562e9fd509c4ef0",
+                "reference": "3f893e19712bb0c8bc86665d1562e9fd509c4ef0",
                 "shasum": ""
             },
             "require": {
@@ -7983,7 +8047,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.19"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.21"
             },
             "funding": [
                 {
@@ -7991,7 +8055,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-11-18T07:47:47+00:00"
+            "time": "2022-12-14T13:26:54+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",

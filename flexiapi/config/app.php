@@ -39,7 +39,6 @@ return [
     /**
      * External interfaces
      */
-    'flexisip_proxy_pid' => env('APP_FLEXISIP_PROXY_PID', '/var/run/flexisip-proxy.pid'),
     'flexisip_pusher_path' => env('APP_FLEXISIP_PUSHER_PATH', null),
     'linphone_daemon_unix_pipe' => env('APP_LINPHONE_DAEMON_UNIX_PATH', null),
 

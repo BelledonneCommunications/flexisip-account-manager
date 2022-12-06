@@ -77,7 +77,7 @@ if (config('app.web_panel')) {
 
         Route::get('devices', 'Account\DeviceController@index')->name('account.device.index');
         Route::get('devices/delete/{id}', 'Account\DeviceController@delete')->name('account.device.delete');
-        Route::delete('devices/{id}', 'Account\DeviceController@destroy')->name('account.device.destroy');
+        Route::delete('devices', 'Account\DeviceController@destroy')->name('account.device.destroy');
 
         Route::post('auth_tokens', 'Account\AuthTokenController@create')->name('account.auth_tokens.create');
 

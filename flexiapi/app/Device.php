@@ -31,4 +31,29 @@ class Device extends Model
         $this->update_time = Carbon::createFromTimestamp($contact->{'update-time'});
         $this->user_agent = $contact->{'user-agent'};
     }
+
+    public function fromRedisContact(string $contact)
+    {
+        // Ugly :'(
+        $result = [];
+        $exploded = explode(';', urldecode($contact));
+
+        foreach ($exploded as $line) {
+            $line = explode('=', $line);
+
+            if (count($line) == 2) {
+                $result[trim($line[0])] = $line[1];
+            }
+
+            // User agent
+            if (count($line) == 4) {
+                $result['userAgent'] = substr($line[3], 0, -1);
+            }
+        }
+
+        $this->uuid = \substr($result['sip.instance'], 2, -2);
+        $this->expires_at = Carbon::createFromTimestamp($result['message-expires']);
+        $this->update_time = Carbon::createFromTimestamp($result['updatedAt']);
+        $this->user_agent = $result['userAgent'];
+    }
 }

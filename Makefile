@@ -23,10 +23,10 @@ cleanup-package-semvers:
 	rm flexisip-account-manager.spec.run
 
 prepare:
-	cd flexiapi && php composer.phar install --no-dev
+	cd flexiapi && php composer.phar install --ignore-platform-req=ext-redis --no-dev
 
 prepare-dev:
-	cd flexiapi && php composer.phar install
+	cd flexiapi && php composer.phar install --ignore-platform-req=ext-redis
 
 package-common:
 	rm -rf $(OUTPUT_DIR)/flexisip-account-manager
@@ -82,7 +82,7 @@ deb-only:
 	fakeroot alien -g -k --scripts $(OUTPUT_DIR)/rpmbuild/tmp.rpm
 	rm -r $(OUTPUT_DIR)/rpmbuild
 	rm -rf $(OUTPUT_DIR)/*.orig
-	sed -i 's/Depends:.*/Depends: $${shlibs:Depends}, php, php-xml, php-pdo, php-gd, php-mysql, php-mbstring, php-sqlite3/g' $(OUTPUT_DIR)/bc-flexisip-account-manager*/debian/control
+	sed -i 's/Depends:.*/Depends: $${shlibs:Depends}, php, php-xml, php-pdo, php-gd, php-redis, php-mysql, php-mbstring, php-sqlite3/g' $(OUTPUT_DIR)/bc-flexisip-account-manager*/debian/control
 
 	cd `ls -rt $(OUTPUT_DIR) | tail -1` && dpkg-buildpackage --no-sign
 	@echo "📦✅ DEB Package Created"

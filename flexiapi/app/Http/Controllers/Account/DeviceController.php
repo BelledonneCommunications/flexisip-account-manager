@@ -31,8 +31,8 @@ class DeviceController extends Controller
 
         return view(
             'account.devices.index',
-            ['devices' => $connector->getDevices($request->user()->identifier)
-                                    ->keyBy('uuid')
+            [
+                'devices' => $connector->getDevices($request->user()->identifier)
             ]
         );
     }
@@ -43,17 +43,17 @@ class DeviceController extends Controller
 
         return view(
             'account.devices.delete',
-            ['device' => $connector->getDevices($request->user()->identifier)
-                                   ->keyBy('uuid')
-                                   ->where('uuid', $uuid)
+            [
+                'device' => $connector->getDevices($request->user()->identifier)
+                    ->where('uuid', $uuid)->first()
             ]
         );
     }
 
-    public function destroy(Request $request, string $uuid)
+    public function destroy(Request $request)
     {
         $connector = new FlexisipConnector;
-        $connector->deleteDevice($request->user()->identifier, $uuid);
+        $connector->deleteDevice($request->user()->identifier, $request->get('uuid'));
 
         return redirect()->route('account.device.index');
     }

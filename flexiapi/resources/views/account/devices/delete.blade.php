@@ -13,8 +13,7 @@
 
 <p>Are you sure you want to delete the following device?</p>
 <p>
-    <b>User Agent:</b> {{ $device->user_agent }}<br />
-    <b>Expires At:</b> {{ $device->expires_at }}</p>
+    <b>User Agent:</b> {{ $device->user_agent }}
 </p>
 
 

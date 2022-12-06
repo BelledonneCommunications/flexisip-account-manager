@@ -29,11 +29,10 @@ class DeviceController extends Controller
     {
         $connector = new FlexisipConnector;
 
-        return $connector->getDevices($request->user()->identifier)
-                         ->keyBy('uuid');
+        return $connector->getDevices($request->user()->identifier);
     }
 
-    public function destroy(string $uuid)
+    public function destroy(Request $request, string $uuid)
     {
         $connector = new FlexisipConnector;
 

@@ -16,6 +16,7 @@
         "laravel/framework": "^8.0",
         "laravel/tinker": "^2.4",
         "laravelcollective/html": "^6.2",
+        "namoshek/laravel-redis-sentinel": "^0.1.2",
         "ovh/ovh": "^2.0",
         "parsedown/laravel": "^1.2",
         "react/socket": "^1.10",

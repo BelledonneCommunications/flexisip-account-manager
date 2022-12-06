@@ -20,52 +20,36 @@
 namespace App\Libraries;
 
 use App\Device;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Log;
 
 class FlexisipConnector
 {
-    private $socket;
-
-    public function __construct()
-    {
-        $pid = \file_get_contents(config('app.flexisip_proxy_pid'));
-        $this->socket = \stream_socket_client('unix:///tmp/flexisip-proxy-'.$pid, $errno, $errstr);
-    }
-
-    public function __destruct()
-    {
-        fclose($this->socket);
-    }
-
     public function getDevices(string $from)
     {
-        $content = $this->request('REGISTRAR_GET', [
-            'sip:'.$from
-        ]);
         $devices = collect();
 
-        if ($content && isset($content->contacts)) {
-            foreach ($content->contacts as $contact) {
+        try {
+            $content = Redis::hgetall('fs:' . $from);
+
+            foreach ($content as $key => $contact) {
                 $device = new Device;
-                $device->fromContact($contact);
+                $device->fromRedisContact($contact);
                 $devices->push($device);
             }
+        } catch (\Throwable $th) {
+            Log::error('Redis server issue: ' . $th->getMessage());
         }
 
-        return $devices;
+        return $devices->keyBy('uuid');
     }
 
     public function deleteDevice(string $from, string $uuid)
     {
-        $this->request('REGISTRAR_DELETE', [
-            'sip:'.$from,
-            '"<'.$uuid.'>"',
-        ]);
-    }
-
-    private function request(string $command, array $parameters): ?\stdClass
-    {
-        fwrite($this->socket, $command.' '.\implode(' ', $parameters));
-
-        return json_decode(fread($this->socket, 8192));
+        try {
+            Redis::hdel('fs:' . $from, '"<' . $uuid . '>"');
+        } catch (\Throwable $th) {
+            Log::error('Redis server issue: ' . $th->getMessage());
+        }
     }
 }

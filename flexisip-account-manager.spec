@@ -31,13 +31,11 @@ License:        GPL
 URL:            http://www.linphone.org
 Source0:        flexisip-account-manager.tar.gz
 
-#These are not indented because rpm cannot recognize "Requires" with spaces/tabs (???)
+Requires:       php php-gd php-xmlrpc php-pdo php-redis php-mysqlnd php-mbstring
 
 %if "%{?dist}" == ".el7"
-Requires:       rh-php73-php rh-php73-php-gd rh-php73-php-xmlrpc rh-php73-php-pdo rh-php73-php-mysqlnd rh-php73-php-mbstring
 %define apache_conf_path /opt/rh/httpd24/root/etc/httpd/conf.d
 %else
-Requires:       php php-gd php-xmlrpc php-pdo php-mysqlnd php-mbstring
 %define apache_conf_path /etc/httpd/conf.d
 %endif
 

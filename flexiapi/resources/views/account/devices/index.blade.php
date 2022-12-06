@@ -10,7 +10,6 @@
     <thead>
         <tr>
             <th scope="col">User Agent</th>
-            <th scope="col">Expires At</th>
             <th scope="col"></th>
         </tr>
     </thead>
@@ -18,7 +17,6 @@
         @foreach ($devices as $device)
             <tr>
                 <td>{{ $device->user_agent }}</td>
-                <td>{{ $device->expires_at }}</td>
                 <td>
                     <a type="button"
                        class="btn btn-danger"
