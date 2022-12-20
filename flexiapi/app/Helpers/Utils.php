@@ -23,10 +23,9 @@ use App\Account;
 use App\DigestNonce;
 use App\ExternalAccount;
 use Illuminate\Support\Facades\Schema;
-use League\CommonMark\Environment;
+use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 use League\CommonMark\Extension\TableOfContents\TableOfContentsExtension;
-use League\CommonMark\MarkdownConverter;
 
 function generateNonce(): string
 {
@@ -63,10 +62,7 @@ function percent($value, $max)
 
 function markdownDocumentationView($view): string
 {
-    $environment = Environment::createCommonMarkEnvironment();
-    $environment->addExtension(new HeadingPermalinkExtension);
-    $environment->addExtension(new TableOfContentsExtension);
-    $environment->mergeConfig([
+    $converter = new CommonMarkConverter([
         'heading_permalink' => [
             'html_class' => 'permalink',
             'insert' => 'after',
@@ -79,10 +75,11 @@ function markdownDocumentationView($view): string
         ],
     ]);
 
-    $converter = new MarkdownConverter($environment);
+    $converter->getEnvironment()->addExtension(new HeadingPermalinkExtension);
+    $converter->getEnvironment()->addExtension(new TableOfContentsExtension);
 
-    return (string) $converter->convertToHtml(
-        view($view, [
+    return (string) $converter->convert(
+        (string)view($view, [
             'app_name' => config('app.name')
         ])->render()
     );
