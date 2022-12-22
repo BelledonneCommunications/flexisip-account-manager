@@ -84,7 +84,7 @@
 @endif
 </div>
 
-<h3 class="mt-3">Automatic authentication</h3>
+<!--<h3 class="mt-3">Automatic authentication</h3>
 
 <p>You can automatically authenticate another device on this panel by flashing the following QR Code.
 Once generated the QR Code stays valid for a few minutes.</p>
@@ -95,7 +95,7 @@ Once generated the QR Code stays valid for a few minutes.</p>
 
 {!! Form::open(['route' => 'account.auth_tokens.create']) !!}
     <button type="submit" class="btn btn-primary">Generate</button>
-{!! Form::close() !!}
+{!! Form::close() !!}-->
 
 <h3 class="mt-3">API Key</h3>
 
