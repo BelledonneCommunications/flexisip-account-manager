@@ -118,11 +118,7 @@ cp httpd/flexisip-account-manager.conf "$RPM_BUILD_ROOT%{apache_conf_path}/"
 
         ln -s %{env_config_file} %{env_symlink_file}
 
-        %if %{with deb}
-            php artisan key:generate
-        %else
-            scl enable rh-php73 "php artisan key:generate"
-        %endif
+        php artisan key:generate
     fi
 
     # Link it once more
@@ -135,12 +131,7 @@ cp httpd/flexisip-account-manager.conf "$RPM_BUILD_ROOT%{apache_conf_path}/"
         echo "sudo -su %{web_user}"
         echo "You need to migrate the database to finish the setup:"
         echo "%{web_user}$ cd %{opt_dir}/flexiapi/"
-
-        %if %{with deb}
-            echo %{web_user}$ php artisan migrate
-        %else
-            echo %{web_user}$ scl enable rh-php73 "php artisan migrate"
-        %endif
+        echo %{web_user}$ php artisan migrate
     fi
 
 %if %{without deb}
