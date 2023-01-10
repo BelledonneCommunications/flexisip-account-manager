@@ -21,6 +21,8 @@
     %define web_user apache
 %endif
 
+%define apache_conf_path /etc/httpd/conf.d
+
 Name:           bc-flexisip-account-manager
 Version:        MAKE_FILE_VERSION_SEARCH
 Release:        %{build_number}%{?dist}
@@ -32,12 +34,6 @@ URL:            http://www.linphone.org
 Source0:        flexisip-account-manager.tar.gz
 
 Requires:       php php-gd php-xmlrpc php-pdo php-redis php-mysqlnd php-mbstring
-
-%if "%{?dist}" == ".el7"
-%define apache_conf_path /opt/rh/httpd24/root/etc/httpd/conf.d
-%else
-%define apache_conf_path /etc/httpd/conf.d
-%endif
 
 %description
 PHP server for Linphone and Flexisip providing module for account creation.
