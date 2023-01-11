@@ -19,9 +19,9 @@
     %define apache_conf_path /etc/apache2/conf-available
 %else
     %define web_user apache
+    %define apache_conf_path /etc/httpd/conf.d
 %endif
 
-%define apache_conf_path /etc/httpd/conf.d
 
 Name:           bc-flexisip-account-manager
 Version:        MAKE_FILE_VERSION_SEARCH
