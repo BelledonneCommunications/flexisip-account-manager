@@ -36,6 +36,7 @@ debian11-test:
     - debian11-package
   script:
     - pwd
+    - apt update
     - apt install -y ./build/*.deb
     - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
     - composer install --dev

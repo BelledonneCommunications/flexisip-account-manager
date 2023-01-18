@@ -82,14 +82,14 @@ deb-only:
 	fakeroot alien -g -k --scripts $(OUTPUT_DIR)/rpmbuild/tmp.rpm
 	rm -r $(OUTPUT_DIR)/rpmbuild
 	rm -rf $(OUTPUT_DIR)/*.orig
-	sed -i 's/Depends:.*/Depends: $${shlibs:Depends}, php, php-xml, php-pdo, php-gd, php-redis, php-mysql, php-mbstring, php-sqlite3/g' $(OUTPUT_DIR)/bc-flexisip-account-manager*/debian/control
+	sed -i 's/Depends:.*/Depends: $${shlibs:Depends}, php (>= 8.0), php-xml, php-pdo, php-gd, php-redis, php-mysql, php-mbstring, php-sqlite3/g' $(OUTPUT_DIR)/bc-flexisip-account-manager*/debian/control
 
 	cd `ls -rt $(OUTPUT_DIR) | tail -1` && dpkg-buildpackage --no-sign
 	@echo "📦✅ DEB Package Created"
 
 	@echo "🧹 Cleanup"
 	ls -d */ | cut -f1 -d'/' | grep bc-flexisip-account-manager | xargs rm -rf
-	ls bc-flexisip-account-manager* | grep -v deb | xargs rm
+	ls bc-flexisip-account-manager* | grep -v "\.deb" | xargs rm
 
 	mv *.deb build/.
 
