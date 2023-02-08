@@ -47,8 +47,9 @@ class AuthenticateDigestOrKey
         // Key authentication
 
         if ($request->header('x-api-key') || $request->cookie('x-api-key')) {
-            $apiKey = ApiKey::where('key', $request->header('x-api-key') ?? $request->cookie('x-api-key'))
-                            ->first();
+            $apiKey = ApiKey::with(['account' => function ($query) {
+                $query->withoutGlobalScopes();
+            }])->where('key', $request->header('x-api-key') ?? $request->cookie('x-api-key'))->first();
 
             if ($apiKey) {
                 $apiKey->last_used_at = Carbon::now();
@@ -60,7 +61,7 @@ class AuthenticateDigestOrKey
                 return $response;
             }
 
-            return $this->generateUnauthorizedResponse($apiKey->account);
+            return $this->generateUnauthorizedResponse();
         }
 
         Validator::make(['from' => $request->header('From')], [
@@ -164,15 +165,17 @@ class AuthenticateDigestOrKey
         return $this->generateUnauthorizedResponse($account);
     }
 
-    private function generateUnauthorizedResponse(Account $account, $message = 'Unauthenticated request')
+    private function generateUnauthorizedResponse(?Account $account = null, $message = 'Unauthenticated request')
     {
         $response = new Response;
 
-        $nonce = generateValidNonce($account);
-        $headers = $this->generateAuthHeaders($account, $nonce);
+        if ($account) {
+            $nonce = generateValidNonce($account);
+            $headers = $this->generateAuthHeaders($account, $nonce);
 
-        if (!empty($headers)) {
-            $response->header('WWW-Authenticate', $headers);
+            if (!empty($headers)) {
+                $response->header('WWW-Authenticate', $headers);
+            }
         }
 
         $response->setStatusCode(401);
