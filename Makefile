@@ -24,9 +24,11 @@ cleanup-package-semvers:
 
 prepare:
 	cd flexiapi && php composer.phar install --ignore-platform-req=ext-redis --no-dev
+	cd xmlrpc/src && cp ../../flexiapi/composer.phar . && php composer.phar install --ignore-platform-req=ext-redis --no-dev
 
 prepare-dev:
 	cd flexiapi && php composer.phar install --ignore-platform-req=ext-redis
+	cd xmlrpc/src && cp ../../flexiapi/composer.phar . && php composer.phar install --ignore-platform-req=ext-redis
 
 package-common:
 	rm -rf $(OUTPUT_DIR)/flexisip-account-manager
@@ -36,6 +38,7 @@ package-common:
 
 	# XMLRPC
 	cp -R --parents xmlrpc/src/**/*.php $(OUTPUT_DIR)/flexisip-account-manager/
+	cp -R --parents xmlrpc/src/vendor/**/* $(OUTPUT_DIR)/flexisip-account-manager/
 	cp -R --parents xmlrpc/src/api/**/*.php $(OUTPUT_DIR)/flexisip-account-manager/
 	cp -R --parents conf/*.conf $(OUTPUT_DIR)/flexisip-account-manager/
 

@@ -138,6 +138,7 @@ fi
 
 %files
 %{opt_dir}/flexiapi/
+%{opt_dir}/vendor/
 %{opt_dir}/api/account/*.php
 %{opt_dir}/config/*.php
 %{opt_dir}/database/*.php
