@@ -91,3 +91,43 @@ class Logger
         $this->mylog("Debug", $message);
     }
 }
+
+function systemErrorHandler($errno, string $errstr, string $errfile = '', int $errline = 0, $trace = '')
+{
+    if (\is_array($trace)) $trace = '';
+
+    $error = $errstr . " in " . $errfile . ' (line ' . $errline . ")\n";
+    $fullError = $error . 'Trace' . "\n" . $trace;
+
+    Logger::getInstance()->debug($fullError);
+
+    return false;
+}
+
+function exceptionHandler($exception)
+{
+    systemErrorHandler(
+        E_ERROR,
+        get_class($exception) . ': '. $exception->getMessage(),
+        $exception->getFile(),
+        $exception->getLine(),
+        $exception->getTraceAsString()
+    );
+}
+
+function fatalErrorShutdownHandler()
+{
+    $lastError = error_get_last();
+    if ($lastError && $lastError['type'] === E_ERROR) {
+        systemErrorHandler(
+            E_ERROR,
+            $lastError['message'],
+            $lastError['file'],
+            $lastError['line']
+        );
+    }
+}
+
+set_error_handler('systemErrorHandler', E_ALL);
+set_exception_handler('exceptionHandler');
+register_shutdown_function('fatalErrorShutdownHandler');
