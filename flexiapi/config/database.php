@@ -144,7 +144,7 @@ return [
 
             // If a Redis Sentinel is used
             'sentinel_host' => env('REDIS_SENTINEL_HOST', '127.0.0.1'),
-            'sentinel_port' => env('REDIS_SENTINEL_PORT', 26379),
+            'sentinel_port' => (int)env('REDIS_SENTINEL_PORT', 26379),
             'sentinel_service' => env('REDIS_SENTINEL_SERVICE', 'mymaster'),
             'sentinel_timeout' => env('REDIS_SENTINEL_TIMEOUT', 0),
             'sentinel_persistent' => env('REDIS_SENTINEL_PERSISTENT'),
