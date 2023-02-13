@@ -44,7 +44,6 @@ class Device extends Model
         }
 
         $this->uuid = \substr($result['sip.instance'], 2, -2);
-        $this->expires_at = Carbon::createFromTimestamp($result['message-expires']);
         $this->update_time = Carbon::createFromTimestamp($result['updatedAt']);
         $this->user_agent = $result['userAgent'];
     }
