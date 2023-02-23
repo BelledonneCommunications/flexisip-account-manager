@@ -258,6 +258,7 @@ JSON parameters:
 * `domain` **not configurable by default**. Only configurable if `APP_ADMINS_MANAGE_MULTI_DOMAINS` is set to `true` in the global configuration. Otherwise `APP_SIP_DOMAIN` is used.
 * `activated` optional, a boolean, set to `false` by default
 * `display_name` optional, string
+* `email` optional, string, must be an email
 * `admin` optional, a boolean, set to `false` by default, create an admin account
 * `phone` optional, a phone number, set a phone number to the account
 * `dtmf_protocol` optional, values must be `sipinfo` or `rfc2833`
