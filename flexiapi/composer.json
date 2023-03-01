@@ -14,6 +14,7 @@
         "endroid/qr-code": "^4.1",
         "fakerphp/faker": "^1.21",
         "laravel/framework": "^9.5",
+        "monicahq/laravel-sabre": "^1.7",
         "namoshek/laravel-redis-sentinel": "^0.1.2",
         "ovh/ovh": "^3.0",
         "parsedown/laravel": "^1.2",
