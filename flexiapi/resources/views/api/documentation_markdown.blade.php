@@ -132,7 +132,7 @@ JSON parameters:
 * `password` required minimum 6 characters
 * `algorithm` required, values can be `SHA-256` or `MD5`
 * `domain` if not set the value is enforced to the default registration domain set in the global configuration
-* `email` optional if `phone` set, an email, set an email to the account
+* `email` optional if `phone` set, an email, set an email to the account, must be unique if `ACCOUNT_EMAIL_UNIQUE` is set to `true`
 * `phone` required if `username` not set, optional if `email` set, a phone number, set a phone number to the account
 
 ### `POST /accounts/with-account-creation-token`
@@ -234,7 +234,7 @@ Delete the account.
 Change the account email. An email will be sent to the new email address to confirm the operation.
 JSON parameters:
 
-* `email` the new email address
+* `email` the new email address, must be unique if `ACCOUNT_EMAIL_UNIQUE` is set to `true`
 
 ### `POST /accounts/me/password`
 <span class="badge badge-info">User</span>
@@ -258,7 +258,7 @@ JSON parameters:
 * `domain` **not configurable by default**. Only configurable if `APP_ADMINS_MANAGE_MULTI_DOMAINS` is set to `true` in the global configuration. Otherwise `APP_SIP_DOMAIN` is used.
 * `activated` optional, a boolean, set to `false` by default
 * `display_name` optional, string
-* `email` optional, string, must be an email
+* `email` optional, must be an email, must be unique if `ACCOUNT_EMAIL_UNIQUE` is set to `true`
 * `admin` optional, a boolean, set to `false` by default, create an admin account
 * `phone` optional, a phone number, set a phone number to the account
 * `dtmf_protocol` optional, values must be `sipinfo` or `rfc2833`

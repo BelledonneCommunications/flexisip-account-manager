@@ -102,7 +102,9 @@ class AccountController extends Controller
             'algorithm' => 'required|in:SHA-256,MD5',
             'password' => 'required|filled',
             'domain' => 'min:3',
-            'email' => 'required_without:phone|email',
+            'email' => config('app.account_email_unique')
+                ? 'required_without:phone|email|unique:accounts,email'
+                : 'required_without:phone|email',
             'phone' => [
                 'required_without:email',
                 'prohibits:username',
@@ -241,6 +243,9 @@ class AccountController extends Controller
                 }),
                 'size:' . WebAuthenticateController::$emailCodeSize
             ],
+            'email' => config('app.account_email_unique')
+                ? 'nullable|email|unique:accounts,email'
+                : 'nullable|email',
             // For retro-compatibility
             'token' => [
                 'required_without:account_creation_token',

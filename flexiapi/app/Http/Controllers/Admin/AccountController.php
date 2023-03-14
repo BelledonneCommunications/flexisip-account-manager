@@ -32,6 +32,11 @@ use App\ExternalAccount;
 use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+use App\Rules\BlacklistedUsername;
+use App\Rules\IsNotPhoneNumber;
+use App\Rules\NoUppercase;
+use App\Rules\WithoutSpaces;
+use Illuminate\Validation\Rule;
 
 class AccountController extends Controller
 {
@@ -67,6 +72,31 @@ class AccountController extends Controller
 
     public function store(CreateAccountRequest $request)
     {
+        $request->validate([
+            'username' => [
+                'required',
+                new NoUppercase,
+                new IsNotPhoneNumber,
+                new BlacklistedUsername,
+                Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
+                    $query->where('domain', $this->resolveDomain($request));
+                }),
+                'filled',
+            ],
+            'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
+            'email' => [
+                'nullable',
+                'email',
+                config('app.account_email_unique') ? Rule::unique('accounts', 'email') : null
+            ],
+            'phone' => [
+                'nullable',
+                'unique:aliases,alias',
+                'unique:accounts,username',
+                new WithoutSpaces, 'starts_with:+'
+            ]
+        ]);
+
         $account = new Account;
         $account->username = $request->get('username');
         $account->email = $request->get('email');
@@ -96,6 +126,31 @@ class AccountController extends Controller
 
     public function update(UpdateAccountRequest $request, $id)
     {
+        $request->validate([
+            'username' => [
+                'required',
+                new NoUppercase,
+                new IsNotPhoneNumber,
+                new BlacklistedUsername,
+                Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
+                    $query->where('domain', $this->resolveDomain($request));
+                })->ignore($id),
+                'filled',
+            ],
+            'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
+            'email' => [
+                'nullable',
+                'email',
+                config('app.account_email_unique') ? Rule::unique('accounts', 'email')->ignore($id) : null
+            ],
+            'phone' => [
+                'nullable',
+                'unique:aliases,alias',
+                'unique:accounts,username',
+                new WithoutSpaces, 'starts_with:+'
+            ]
+        ]);
+
         $account = Account::findOrFail($id);
         $account->username = $request->get('username');
         $account->email = $request->get('email');

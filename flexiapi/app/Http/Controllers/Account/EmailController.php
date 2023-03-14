@@ -42,10 +42,14 @@ class EmailController extends Controller
             $request->user()->email
                 ? [
                     'email_current' => ['required', Rule::in([$request->user()->email])],
-                    'email' => 'required|different:email_current|confirmed|email',
+                    'email' => config('app.account_email_unique')
+                        ? 'required|different:email_current|confirmed|email|unique:accounts,email'
+                        : 'required|different:email_current|confirmed|email',
                 ]
                 : [
-                    'email' => 'required|confirmed|email',
+                    'email' => config('app.account_email_unique')
+                        ? 'required|email|confirmed|unique:accounts,email'
+                        : 'required|confirmed|email',
                 ]
         );
 

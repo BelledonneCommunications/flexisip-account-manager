@@ -84,7 +84,9 @@ class RegisterController extends Controller
                 new BlacklistedUsername
             ],
             'g-recaptcha-response'  => 'required|captcha',
-            'email' => 'required|email|confirmed'
+            'email' => config('app.account_email_unique')
+                ? 'required|email|confirmed|unique:accounts,email'
+                : 'required|email|confirmed',
         ]);
 
         $account = new Account;
@@ -100,8 +102,7 @@ class RegisterController extends Controller
         $account->confirmation_key = Str::random($this->emailCodeSize);
         $account->save();
 
-        if (!empty(config('app.newsletter_registration_address'))
-         && $request->has('newsletter')) {
+        if (!empty(config('app.newsletter_registration_address')) && $request->has('newsletter')) {
             Mail::to(config('app.newsletter_registration_address'))->send(new NewsletterRegistration($account));
         }
 
@@ -115,7 +116,7 @@ class RegisterController extends Controller
     public function storePhone(Request $request)
     {
         $request->validate([
-            'terms' =>'accepted',
+            'terms' => 'accepted',
             'privacy' => 'accepted',
             'username' => [
                 new NoUppercase,
@@ -135,6 +136,9 @@ class RegisterController extends Controller
                 'unique:accounts,username',
                 new WithoutSpaces, 'starts_with:+'
             ],
+            'email' => config('app.account_email_unique')
+                ? 'nullable|email|unique:accounts,email'
+                : 'nullable|email',
             'g-recaptcha-response'  => 'required|captcha',
         ]);
 
@@ -161,7 +165,7 @@ class RegisterController extends Controller
         $account->save();
 
         $ovhSMS = new OvhSMS;
-        $ovhSMS->send($request->get('phone'), 'Your '.config('app.name').' validation code is '.$account->confirmation_key);
+        $ovhSMS->send($request->get('phone'), 'Your ' . config('app.name') . ' validation code is ' . $account->confirmation_key);
 
         Log::channel('events')->info('Web: Account created using an SMS confirmation', ['id' => $account->identifier]);
 

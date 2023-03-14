@@ -119,7 +119,6 @@ class AccountController extends Controller
             ],
             'algorithm' => 'required|in:SHA-256,MD5',
             'password' => 'required|filled',
-            'email' => 'email',
             'admin' => 'boolean|nullable',
             'activated' => 'boolean|nullable',
             'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
@@ -127,6 +126,9 @@ class AccountController extends Controller
                 'date_format:Y-m-d H:i:s',
                 'nullable',
             ],
+            'email' => config('app.account_email_unique')
+                ? 'nullable|email|unique:accounts,email'
+                : 'nullable|email',
             'phone' => [
                 'unique:aliases,alias',
                 'unique:accounts,username',

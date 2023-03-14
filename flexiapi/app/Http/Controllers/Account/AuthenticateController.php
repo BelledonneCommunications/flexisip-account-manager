@@ -52,7 +52,7 @@ class AuthenticateController extends Controller
         ]);
 
         $account = Account::where('username', $request->get('username'))
-                          ->first();
+            ->first();
 
         // Try alias
         if (!$account) {
@@ -104,9 +104,13 @@ class AuthenticateController extends Controller
         /**
          * Because several accounts can have the same email
          */
-        $account = Account::where('email', $request->get('email'))
-                          ->where('username', $request->get('username'))
-                          ->first();
+        $account = Account::where('username', $request->get('username'));
+
+        if (config('app.account_email_unique') == false) {
+            $account = $account->where('email', $request->get('email'));
+        }
+
+        $account = $account->first();
 
         // Try alias
         if (!$account) {
@@ -148,7 +152,7 @@ class AuthenticateController extends Controller
     public function validateEmail(Request $request, string $code)
     {
         $request->merge(['code' => $code]);
-        $request->validate(['code' => 'required|size:'.self::$emailCodeSize]);
+        $request->validate(['code' => 'required|size:' . self::$emailCodeSize]);
 
         $account = Account::where('confirmation_key', $code)->first();
 
@@ -188,7 +192,7 @@ class AuthenticateController extends Controller
         ]);
 
         $account = Account::where('username', $request->get('phone'))
-                          ->first();
+            ->first();
 
         // Try alias
         if (!$account) {
@@ -209,7 +213,7 @@ class AuthenticateController extends Controller
         $account->save();
 
         $ovhSMS = new OvhSMS;
-        $ovhSMS->send($request->get('phone'), 'Your '.config('app.name').' validation code is '.$account->confirmation_key);
+        $ovhSMS->send($request->get('phone'), 'Your ' . config('app.name') . ' validation code is ' . $account->confirmation_key);
 
         // Ask the user to set a password
         if (!$account->activated) {
@@ -229,7 +233,7 @@ class AuthenticateController extends Controller
         ]);
 
         $account = Account::where('id', $request->get('account_id'))
-                          ->firstOrFail();
+            ->firstOrFail();
 
         if ($account->confirmation_key != $request->get('code')) {
             return redirect()->back()->withErrors([

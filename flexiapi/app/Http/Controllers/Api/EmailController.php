@@ -27,8 +27,14 @@ class EmailController extends Controller
 {
     public function requestUpdate(Request $request)
     {
+        $rules = ['required', 'email', Rule::notIn([$request->user()->email])];
+
+        if (config('app.account_email_unique')) {
+            array_push($rules, Rule::unique('accounts', 'email'));
+        }
+
         $request->validate([
-            'email' => ['required', 'email', Rule::notIn([$request->user()->email])],
+            'email' => $rules,
         ]);
         $request->user()->requestEmailUpdate($request->get('email'));
     }

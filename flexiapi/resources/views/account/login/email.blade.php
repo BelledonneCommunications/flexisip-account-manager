@@ -7,10 +7,12 @@
         <div class="card mt-3">
             <div class="card-body">
                 {!! Form::open(['route' => 'account.authenticate.email']) !!}
-                    <div class="form-group">
-                        {!! Form::label('email', 'Email') !!}
-                        {!! Form::email('email', old('email'), ['class' => 'form-control', 'placeholder' => 'bob@example.com', 'required']) !!}
-                    </div>
+                    @if (config('app.account_email_unique') == false)
+                        <div class="form-group">
+                            {!! Form::label('email', 'Email') !!}
+                            {!! Form::email('email', old('email'), ['class' => 'form-control', 'placeholder' => 'bob@example.com', 'required']) !!}
+                        </div>
+                    @endif
                     <div class="form-group">
                         {!! Form::label('username', 'SIP Username') !!}
                         <div class=" input-group mb-3">

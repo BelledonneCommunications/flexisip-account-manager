@@ -471,6 +471,33 @@ class AccountApiTest extends TestCase
             ]);
     }
 
+    public function testUniqueEmailAdmin()
+    {
+        $email = 'collision@email.com';
+
+        $existing = Password::factory()->create();
+        $existing->account->activated = false;
+        $existing->account->email = $email;
+        $existing->account->save();
+
+        config()->set('app.account_email_unique', true);
+
+        $admin = Admin::factory()->create();
+        $admin->account->generateApiKey();
+        $admin->account->save();
+
+        $this->keyAuthenticated($admin->account)
+            ->json($this->method, $this->route, [
+                'username' => 'hop',
+                'email' => $email,
+                'domain' => 'server.com',
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+            ])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['email']);
+    }
+
     /**
      * /!\ Dangerous endpoints
      */
@@ -594,6 +621,18 @@ class AccountApiTest extends TestCase
         ->assertStatus(422)
         ->assertJsonValidationErrors(['username']);
 
+        // Email is now unique
+        config()->set('app.account_email_unique', true);
+
+        $this->json($this->method, $this->route.'/public', [
+            'username' => 'johndoe',
+            'algorithm' => 'SHA-256',
+            'password' => '2',
+            'email' => 'john@doe.tld',
+        ])
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['email']);
+
         $this->assertDatabaseHas('accounts', [
             'username' => $username,
             'domain' => config('app.sip_domain')
@@ -704,6 +743,7 @@ class AccountApiTest extends TestCase
     public function testChangeEmail()
     {
         $password = Password::factory()->create();
+        $otherAccount = Password::factory()->create();
         $password->account->generateApiKey();
         $newEmail = 'new_email@test.com';
 
@@ -737,6 +777,16 @@ class AccountApiTest extends TestCase
                     'new_email' => $newEmail
                 ]
             ]);
+
+        // Email already exists
+        config()->set('app.account_email_unique', true);
+
+        $this->keyAuthenticated($password->account)
+            ->json($this->method, $this->route.'/me/email/request', [
+                'email' => $otherAccount->account->email
+            ])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['email']);
     }
 
     public function testChangePassword()

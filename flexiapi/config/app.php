@@ -28,6 +28,7 @@ return [
     'proxy_registrar_address' => env('ACCOUNT_PROXY_REGISTRAR_ADDRESS', 'sip.domain.com'),
     'transport_protocol_text' => env('ACCOUNT_TRANSPORT_PROTOCOL_TEXT', 'TLS (recommended), TCP or UDP'),
 
+    'account_email_unique' => env('ACCOUNT_EMAIL_UNIQUE', false),
     'consume_external_account_on_create' => env('ACCOUNT_CONSUME_EXTERNAL_ACCOUNT_ON_CREATE', false),
     'blacklisted_usernames' => env('ACCOUNT_BLACKLISTED_USERNAMES', ''),
 
