@@ -88,7 +88,7 @@ class AccountProvisioningTest extends TestCase
         $password->account->refresh();
 
         // And use the fresh provisioning token
-        $this->get($this->route.'/'.$password->account->provisioning_token)
+        $this->get($this->route . '/' . $password->account->provisioning_token)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee($password->account->username)
@@ -96,9 +96,42 @@ class AccountProvisioningTest extends TestCase
             ->assertSee('ha1');
     }
 
+    public function testPasswordResetProvisioning()
+    {
+        $password = Password::factory()->create();
+        $password->account->generateApiKey();
+
+        $currentPassword = $password->password;
+
+        $provioningUrl = route(
+            'provisioning.show',
+            [
+                'provisioning_token' => $password->account->provisioning_token,
+                'reset_password' => true
+            ]
+        );
+
+        // Check the QRCode
+        $this->get($this->route . '/qrcode/' . $password->account->provisioning_token . '?reset_password')
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'image/png')
+            ->assertHeader('X-Qrcode-URL', $provioningUrl);
+
+        // And use the fresh provisioning token
+        $this->get($provioningUrl)
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/xml')
+            ->assertSee($password->account->username)
+            ->assertSee($password->account->display_name)
+            ->assertSee('ha1')
+            ->assertSee($password->account->passwords()->first()->password);
+
+        $this->assertNotEquals($password->account->passwords()->first()->password, $currentPassword);
+    }
+
     public function testConfirmationKeyProvisioning()
     {
-        $response = $this->get($this->route.'/1234');
+        $response = $this->get($this->route . '/1234');
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/xml');
         $response->assertDontSee('ha1');
@@ -109,7 +142,7 @@ class AccountProvisioningTest extends TestCase
         $password->account->save();
 
         // Ensure that we get the authentication password once
-        $response = $this->get($this->route.'/'.$password->account->provisioning_token)
+        $response = $this->get($this->route . '/' . $password->account->provisioning_token)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('ha1');
@@ -118,7 +151,7 @@ class AccountProvisioningTest extends TestCase
         $this->assertEquals(true, DBAccount::where('id', $password->account->id)->first()->activated);
 
         // And then twice
-        $response = $this->get($this->route.'/'.$password->account->provisioning_token)
+        $response = $this->get($this->route . '/' . $password->account->provisioning_token)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
             ->assertDontSee('ha1');
@@ -132,7 +165,7 @@ class AccountProvisioningTest extends TestCase
         $admin->account->generateApiKey();
 
         $this->keyAuthenticated($admin->account)
-            ->json($this->method, '/api/accounts/'.$password->account->id.'/provision')
+            ->json($this->method, '/api/accounts/' . $password->account->id . '/provision')
             ->assertStatus(200)
             ->assertSee('provisioning_token')
             ->assertDontSee($provisioningToken);
@@ -142,7 +175,7 @@ class AccountProvisioningTest extends TestCase
         $this->assertNotEquals($provisioningToken, $password->account->provisioning_token);
 
         // And then provision one last time
-        $this->get($this->route.'/'.$password->account->provisioning_token)
+        $this->get($this->route . '/' . $password->account->provisioning_token)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('ha1');
@@ -169,7 +202,7 @@ class AccountProvisioningTest extends TestCase
         // Use the auth_token to provision the account
         $this->assertEquals(AuthToken::count(), 1);
 
-        $this->get($this->route.'/auth_token/'.$authToken)
+        $this->get($this->route . '/auth_token/' . $authToken)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('ha1');
@@ -177,7 +210,7 @@ class AccountProvisioningTest extends TestCase
         $this->assertEquals(AuthToken::count(), 0);
 
         // Try to re-use the auth_token
-        $this->get($this->route.'/auth_token/'.$authToken)
+        $this->get($this->route . '/auth_token/' . $authToken)
             ->assertStatus(404);
     }
 }

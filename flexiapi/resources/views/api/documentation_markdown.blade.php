@@ -453,16 +453,24 @@ When an account is having an available `provisioning_token` it can be provisione
 <span class="badge badge-success">Public</span>
 Return the provisioning information available in the liblinphone configuration file (if correctly configured).
 
-### `GET /provisioning/{provisioning_token}`
+### `GET /provisioning/{provisioning_token}?reset_password`
 <span class="badge badge-success">Public</span>
 Return the provisioning information available in the liblinphone configuration file.
 If the `provisioning_token` is valid the related account information are added to the returned XML. The account is then considered as "provisioned" and those account related information will be removed in the upcoming requests (the content will be the same as the previous url).
 
 If the account is not activated and the `provisioning_token` is valid. The account will be activated.
 
-### `GET /provisioning/qrcode/{provisioning_token}`
+URL parameters:
+
+* `reset_password` optional, reset the password while doing the provisioning
+
+### `GET /provisioning/qrcode/{provisioning_token}?reset_password`
 <span class="badge badge-success">Public</span>
 Return a QRCode that points to the provisioning URL.
+
+URL parameters:
+
+* `reset_password` optional, reset the password while doing the provisioning
 
 ### `GET /provisioning/me`
 <span class="badge badge-info">User</span>

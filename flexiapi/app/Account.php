@@ -307,7 +307,7 @@ class Account extends Authenticatable
             ->exists();
     }
 
-    public function updatePassword($newPassword, $algorithm)
+    public function updatePassword($newPassword, ?string $algorithm = 'SHA-256')
     {
         $this->passwords()->delete();
 

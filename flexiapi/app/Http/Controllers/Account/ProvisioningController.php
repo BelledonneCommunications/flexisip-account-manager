@@ -32,7 +32,7 @@ use Endroid\QrCode\Writer\PngWriter;
 
 class ProvisioningController extends Controller
 {
-    public function qrcode(Request $request, $provisioningToken)
+    public function qrcode(Request $request, string $provisioningToken)
     {
         $account = Account::withoutGlobalScopes()
             ->where('provisioning_token', $provisioningToken)
@@ -40,16 +40,26 @@ class ProvisioningController extends Controller
 
         if ($account->activationExpired()) abort(404);
 
+        $params = ['provisioning_token' => $provisioningToken];
+
+        if ($request->has('reset_password')) {
+            $params['reset_password'] = true;
+        }
+
+        $url = route('provisioning.show', $params);
+
         $result = Builder::create()
             ->writer(new PngWriter())
-            ->data(route('provisioning.show', ['provisioning_token' => $provisioningToken]))
+            ->data($url)
             ->encoding(new Encoding('UTF-8'))
             ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
             ->size(300)
             ->margin(10)
             ->build();
 
-        return response($result->getString())->header('Content-Type', $result->getMimeType());
+        return response($result->getString())
+            ->header('Content-Type', $result->getMimeType())
+            ->header('X-Qrcode-URL', $url);
     }
 
     /**
@@ -131,6 +141,11 @@ class ProvisioningController extends Controller
             $account = Account::withoutGlobalScopes()
                 ->where('provisioning_token', $provisioningToken)
                 ->first();
+        }
+
+        // Password reset
+        if ($request->has('reset_password')) {
+            $account->updatePassword(Str::random(10));
         }
 
         $section = $dom->createElement('section');
