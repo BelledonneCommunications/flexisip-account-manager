@@ -115,13 +115,6 @@ This binary will be executed under "web user" privileges. Ensure that all the re
     /var/opt/belledonne-communications/log/flexisip/flexisip-pusher.log // Write permissions
     /etc/flexisip/apn/*pem // Read permissions
 
-### systemd restrictions
-
-To retrieve the devices configuration or send SIP messages, FlexiAPI connects to UNIX sockets opened by Flexisip and the `linphone-daemon`. The sockets are located in the `/tmp` directory.
-If you have issues connecting to those sockets, please ensure that your PHP process have access to it (user, rights).
-
-The systemd service [PrivateTmp](https://access.redhat.com/blogs/766093/posts/1976243) setting might also restrict that access.
-
 ### SELinux restrictions
 
 If you are running on a CentOS/RedHat machine, please ensure that SELinux is correctly configured.
@@ -261,3 +254,7 @@ The `POST /api/messages` endpoint allows you to send messages on the SIP network
     APP_LINPHONE_DAEMON_UNIX_PATH=/tmp/ld
 
 If you have issues connecting to that socket check the [`systemd restrictions`](#systemd-restrictions) part of this document.
+
+The socket is located in the `/tmp` directory.
+
+The systemd service [PrivateTmp](https://access.redhat.com/blogs/766093/posts/1976243) setting might also restrict that access.
