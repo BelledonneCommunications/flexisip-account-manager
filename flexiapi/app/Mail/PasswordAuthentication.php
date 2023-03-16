@@ -38,10 +38,22 @@ class PasswordAuthentication extends Mailable
 
     public function build()
     {
-        return $this->view('mails.authentication')
-                    ->text('mails.authentication_text')
-                    ->with([
-                        'link' => route('account.authenticate.email_confirm', [$this->account->confirmation_key])
-                    ]);
+        return $this->view(view()->exists('mails.authentication_custom')
+                ? 'mails.authentication_custom'
+                : 'mails.authentication')
+            ->text(view()->exists('mails.authentication_text_custom')
+                ? 'mails.authentication_text_custom'
+                : 'mails.authentication_text')
+            ->with([
+                'link' => route('account.authenticate.email_confirm', [$this->account->confirmation_key]),
+                'provisioning_link' => route('provisioning.show', [
+                    'provisioning_token' => $this->account->provisioning_token,
+                    'reset_password' => true
+                ]),
+                'provisioning_qrcode' => route('provisioning.qrcode', [
+                    'provisioning_token' => $this->account->provisioning_token,
+                    'reset_password' => true
+                ])
+            ]);
     }
 }

@@ -126,7 +126,7 @@ class AccountController extends Controller
         $account->ip_address = $request->ip();
         $account->creation_time = Carbon::now();
         $account->user_agent = config('app.name');
-        $account->provisioning_token = Str::random(WebAuthenticateController::$emailCodeSize);
+        $account->provision();
         $account->save();
 
         $account->updatePassword($request->get('password'), $request->get('algorithm'));
@@ -269,7 +269,7 @@ class AccountController extends Controller
         $account->creation_time = Carbon::now();
         $account->user_agent = config('app.name');
         $account->dtmf_protocol = $request->get('dtmf_protocol');
-        $account->provisioning_token = Str::random(WebAuthenticateController::$emailCodeSize);
+        $account->provision();
         $account->save();
 
         $account->updatePassword($request->get('password'), $request->get('algorithm'));
@@ -332,7 +332,7 @@ class AccountController extends Controller
     public function provision(Request $request)
     {
         $account = $request->user();
-        $account->provisioning_token = Str::random(WebAuthenticateController::$emailCodeSize);
+        $account->provision();
         $account->save();
 
         Log::channel('events')->info('API: Account provisioned', ['id' => $account->identifier]);

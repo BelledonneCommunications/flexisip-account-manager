@@ -96,7 +96,7 @@ class AccountController extends Controller
     public function provision(int $id)
     {
         $account = Account::findOrFail($id);
-        $account->provisioning_token = Str::random(WebAuthenticateController::$emailCodeSize);
+        $account->provision();
         $account->save();
 
         Log::channel('events')->info('API Admin: Account provisioned', ['id' => $account->identifier]);
@@ -149,7 +149,7 @@ class AccountController extends Controller
 
         if (!$request->has('activated') || !(bool)$request->get('activated')) {
             $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
-            $account->provisioning_token = Str::random(WebAuthenticateController::$emailCodeSize);
+            $account->provision();
         }
 
         $account->save();

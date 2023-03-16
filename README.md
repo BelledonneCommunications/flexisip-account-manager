@@ -225,6 +225,12 @@ Import accounts previously exported as a JSON file. Accounts previously imported
 
     accounts:import-externals {file_path}
 
+## Custom email templaces
+
+Some email templates can be customized.
+
+To do so, copy and rename the existing `*_custom.blade.php.example` files into `*custom.blade.php` and adapt the content of the email (HTML and text versions), those files will then replace the default ones.
+
 ## Provisioning
 
 FlexiAPI is providing endpoints to provision Liblinphone powered devices. You can find more documentation about it on the `/api#provisioning` documentation page.

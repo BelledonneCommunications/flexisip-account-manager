@@ -93,21 +93,24 @@ class AuthenticateController extends Controller
      */
     public function authenticateEmail(Request $request)
     {
-        $request->validate([
+        $rules = [
             'email' => 'required|email|exists:accounts,email',
-            'username' => [
-                'required'
-            ],
             'g-recaptcha-response'  => 'required|captcha',
-        ]);
+        ];
+
+        if (config('app.account_email_unique') == false) {
+            $rules['username'] = 'required';
+        }
+
+        $request->validate($rules);
+
+        $account = Account::where('email', $request->get('email'));
 
         /**
          * Because several accounts can have the same email
          */
-        $account = Account::where('username', $request->get('username'));
-
         if (config('app.account_email_unique') == false) {
-            $account = $account->where('email', $request->get('email'));
+            $account = $account->where('username', $request->get('username'));
         }
 
         $account = $account->first();
@@ -126,6 +129,7 @@ class AuthenticateController extends Controller
         }
 
         $account->confirmation_key = Str::random(self::$emailCodeSize);
+        $account->provision();
         $account->save();
 
         Mail::to($account)->send(new PasswordAuthentication($account));

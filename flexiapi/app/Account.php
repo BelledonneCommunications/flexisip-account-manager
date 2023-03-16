@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use Illuminate\Support\Str;
 
 use App\ApiKey;
@@ -293,6 +294,12 @@ class Account extends Authenticatable
         $authToken->save();
 
         return $authToken;
+    }
+
+    public function provision(): string
+    {
+        $this->provisioning_token = Str::random(WebAuthenticateController::$emailCodeSize);
+        return $this->provisioning_token;
     }
 
     public function isAdmin()
