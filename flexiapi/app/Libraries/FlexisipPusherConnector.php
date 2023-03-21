@@ -34,6 +34,10 @@ class FlexisipPusherConnector
         $this->pnProvider = $pnProvider;
         $this->pnParam = $pnParam;
         $this->pnPrid = $pnPrid;
+
+        if ($this->pnProvider == 'fcm' && config('app.flexisip_pusher_firebase_key') == null) {
+            Log::error('Firebase pusher key not configured');
+        }
     }
 
     public function sendToken(string $token)
@@ -42,11 +46,14 @@ class FlexisipPusherConnector
 
         if (!empty($this->pusherPath)) {
             $command = $this->pusherPath
-            . " --pn-provider '" . $this->pnProvider . "'"
-            . " --pn-param '" . $this->pnParam . "'"
-            . " --pn-prid " . $this->pnPrid
-            . " --apple-push-type Background"
-            . " --customPayload '" . $payload . "'";
+                . " --pn-provider '" . $this->pnProvider . "'"
+                . " --pn-param '" . $this->pnParam . "'"
+                . " --pn-prid " . $this->pnPrid
+                . " --customPayload '" . $payload . "'";
+
+            $command .= in_array($this->pnProvider, ['apns', 'apns.dev'])
+                ? " --apple-push-type Background"
+                : " --key " . config('app.flexisip_pusher_firebase_key');
 
             $output = null;
             $retval = null;

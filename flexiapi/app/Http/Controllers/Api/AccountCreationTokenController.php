@@ -38,21 +38,6 @@ class AccountCreationTokenController extends Controller
             'pn_prid' => 'required',
         ]);
 
-        if (AccountCreationToken::where('pn_provider', $request->get('pn_provider'))
-                 ->where('pn_param', $request->get('pn_param'))
-                 ->where('pn_prid', $request->get('pn_prid'))
-                 ->where('used', false)
-                 ->count() > 0) {
-            abort(403, 'A similar token was already used');
-        }
-
-        if (AccountCreationToken::where('pn_provider', $request->get('pn_provider'))
-                 ->where('pn_param', $request->get('pn_param'))
-                 ->where('pn_prid', $request->get('pn_prid'))
-                 ->count() > 3) {
-            abort(403, 'The limit of tokens generated for this device has been reached');
-        }
-
         $token = new AccountCreationToken;
         $token->token = Str::random(WebAuthenticateController::$emailCodeSize);
         $token->pn_provider = $request->get('pn_provider');

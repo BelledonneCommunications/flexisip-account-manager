@@ -52,18 +52,6 @@ class ApiAccountCreationTokenTest extends TestCase
         $response->assertStatus(503);
     }
 
-    public function testLimit()
-    {
-        $token = AccountCreationToken::factory()->create();
-
-        $response = $this->json($this->method, $this->tokenRoute, [
-            'pn_provider' => $token->pn_provider,
-            'pn_param' => $token->pn_param,
-            'pn_prid' => $token->pn_prid,
-        ]);
-        $response->assertStatus(403);
-    }
-
     /**
      * For retro-compatibility only
      */
@@ -76,7 +64,7 @@ class ApiAccountCreationTokenTest extends TestCase
             'pn_param' => $token->pn_param,
             'pn_prid' => $token->pn_prid
         ]);
-        $response->assertStatus(403);
+        $response->assertStatus(503);
     }
 
     public function testInvalidToken()

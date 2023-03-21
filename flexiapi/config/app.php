@@ -41,6 +41,7 @@ return [
      * External interfaces
      */
     'flexisip_pusher_path' => env('APP_FLEXISIP_PUSHER_PATH', null),
+    'flexisip_pusher_firebase_key' => env('APP_FLEXISIP_PUSHER_FIREBASE_KEY', null),
     'linphone_daemon_unix_pipe' => env('APP_LINPHONE_DAEMON_UNIX_PATH', null),
 
     /**
