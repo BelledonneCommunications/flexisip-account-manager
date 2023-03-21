@@ -30,7 +30,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use Tests\TestCase;
 
-class AccountApiTest extends TestCase
+class ApiAccountTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -97,7 +97,41 @@ class AccountApiTest extends TestCase
             'password' => '123456',
         ]);
 
-        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['username']);
+    }
+
+    public function testUsernameNotSIP()
+    {
+        $admin = Admin::factory()->create();
+        $password = $admin->account->passwords()->first();
+        $password->account->generateApiKey();
+        $password->account->save();
+
+        $username = 'blabla🔥';
+        $domain = 'example.com';
+
+        $response = $this->keyAuthenticated($password->account)
+        ->json($this->method, $this->route, [
+            'username' => $username,
+            'domain' => $domain,
+            'algorithm' => 'SHA-256',
+            'password' => '123456',
+        ]);
+
+        $response->assertJsonValidationErrors(['username']);
+
+        $username = 'blabla hop';
+        $domain = 'example.com';
+
+        $response = $this->keyAuthenticated($password->account)
+        ->json($this->method, $this->route, [
+            'username' => $username,
+            'domain' => $domain,
+            'algorithm' => 'SHA-256',
+            'password' => '123456',
+        ]);
+
+        $response->assertJsonValidationErrors(['username']);
     }
 
     public function testDomain()

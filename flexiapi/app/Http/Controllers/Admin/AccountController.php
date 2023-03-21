@@ -35,6 +35,7 @@ use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateContro
 use App\Rules\BlacklistedUsername;
 use App\Rules\IsNotPhoneNumber;
 use App\Rules\NoUppercase;
+use App\Rules\SIPUsername;
 use App\Rules\WithoutSpaces;
 use Illuminate\Validation\Rule;
 
@@ -78,6 +79,7 @@ class AccountController extends Controller
                 new NoUppercase,
                 new IsNotPhoneNumber,
                 new BlacklistedUsername,
+                new SIPUsername,
                 Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
                     $query->where('domain', $this->resolveDomain($request));
                 }),
@@ -132,6 +134,7 @@ class AccountController extends Controller
                 new NoUppercase,
                 new IsNotPhoneNumber,
                 new BlacklistedUsername,
+                new SIPUsername,
                 Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
                     $query->where('domain', $this->resolveDomain($request));
                 })->ignore($id),

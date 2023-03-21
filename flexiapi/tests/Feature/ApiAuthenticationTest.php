@@ -24,7 +24,7 @@ use App\Password;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AuthenticateDigestAndKeyTest extends TestCase
+class ApiAuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 

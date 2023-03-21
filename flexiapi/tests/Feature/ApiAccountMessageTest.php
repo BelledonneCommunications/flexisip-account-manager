@@ -25,7 +25,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
-class AccountMessageTest extends TestCase
+class ApiAccountMessageTest extends TestCase
 {
     use RefreshDatabase;
 

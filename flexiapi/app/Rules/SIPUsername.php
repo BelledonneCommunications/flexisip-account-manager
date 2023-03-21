@@ -1,7 +1,7 @@
 <?php
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
-    Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
+    Copyright (C) 2023 Belledonne Communications SARL, All rights reserved.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -20,23 +20,17 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Str;
+use Respect\Validation\Validator;
 
-class SIP implements Rule
+class SIPUsername implements Rule
 {
-    public function __construct()
-    {
-        //
-    }
-
     public function passes($attribute, $value)
     {
-        // TODO complete me
-        return Str::contains($value, '@');
+        return Validator::regex('/^[a-z0-9+_.-]*$/')->validate($value);
     }
 
     public function message()
     {
-        return 'The :attribute must be a SIP address.';
+        return 'The :attribute should be a valid SIP username';
     }
 }

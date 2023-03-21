@@ -9,6 +9,7 @@ use App\Account;
 use App\Rules\BlacklistedUsername;
 use App\Rules\IsNotPhoneNumber;
 use App\Rules\NoUppercase;
+use App\Rules\SIPUsername;
 use App\Rules\WithoutSpaces;
 
 class UpdateAccountRequest extends FormRequest
@@ -26,6 +27,7 @@ class UpdateAccountRequest extends FormRequest
                 new NoUppercase,
                 new IsNotPhoneNumber,
                 new BlacklistedUsername,
+                new SIPUsername,
                 Rule::unique('accounts', 'username')->where(function ($query) {
                     $query->where('domain', config('app.sip_domain'));
                 })->ignore($this->route('id'), 'id'),

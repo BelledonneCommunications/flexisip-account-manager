@@ -36,6 +36,7 @@ use App\Libraries\OvhSMS;
 use App\Mail\RegisterConfirmation;
 use App\Mail\NewsletterRegistration;
 use App\Rules\BlacklistedUsername;
+use App\Rules\SIPUsername;
 
 class RegisterController extends Controller
 {
@@ -81,7 +82,8 @@ class RegisterController extends Controller
                 'filled',
                 new WithoutSpaces,
                 new IsNotPhoneNumber,
-                new BlacklistedUsername
+                new BlacklistedUsername,
+                new SIPUsername
             ],
             'g-recaptcha-response'  => 'required|captcha',
             'email' => config('app.account_email_unique')
@@ -129,7 +131,8 @@ class RegisterController extends Controller
                 'nullable',
                 new WithoutSpaces,
                 new IsNotPhoneNumber,
-                new BlacklistedUsername
+                new BlacklistedUsername,
+                new SIPUsername
             ],
             'phone' => [
                 'required', 'unique:aliases,alias',

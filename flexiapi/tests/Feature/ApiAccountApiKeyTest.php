@@ -24,7 +24,7 @@ use Tests\TestCase;
 
 use App\Password;
 
-class AccountApiKeyTest extends TestCase
+class ApiAccountApiKeyTest extends TestCase
 {
     use RefreshDatabase;
 

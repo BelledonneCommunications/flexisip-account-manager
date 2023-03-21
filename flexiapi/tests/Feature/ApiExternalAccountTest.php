@@ -25,7 +25,7 @@ use App\ExternalAccount;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class ExternalAccountTest extends TestCase
+class ApiExternalAccountTest extends TestCase
 {
     use RefreshDatabase;
 

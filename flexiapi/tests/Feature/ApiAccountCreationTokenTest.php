@@ -24,7 +24,7 @@ use Tests\TestCase;
 
 use App\AccountCreationToken;
 
-class AccountCreationTokenTest extends TestCase
+class ApiAccountCreationTokenTest extends TestCase
 {
     use RefreshDatabase;
 

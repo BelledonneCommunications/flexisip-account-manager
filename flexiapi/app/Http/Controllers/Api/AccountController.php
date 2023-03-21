@@ -37,6 +37,7 @@ use App\Mail\RegisterConfirmation;
 use App\Rules\BlacklistedUsername;
 use App\Rules\IsNotPhoneNumber;
 use App\Rules\NoUppercase;
+use App\Rules\SIPUsername;
 use App\Rules\WithoutSpaces;
 
 class AccountController extends Controller
@@ -91,6 +92,7 @@ class AccountController extends Controller
                 new NoUppercase,
                 new IsNotPhoneNumber,
                 new BlacklistedUsername,
+                new SIPUsername,
                 Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
                     $query->where('domain', $request->has('domain') ? $request->get('domain') : config('app.sip_domain'));
                 }),
@@ -225,6 +227,7 @@ class AccountController extends Controller
                 new NoUppercase,
                 new IsNotPhoneNumber,
                 new BlacklistedUsername,
+                new SIPUsername,
                 Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
                     $query->where('domain', config('app.sip_domain'));
                 }),

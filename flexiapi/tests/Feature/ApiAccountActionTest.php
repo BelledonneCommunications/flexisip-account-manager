@@ -26,7 +26,7 @@ use App\Admin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AccountActionTest extends TestCase
+class ApiAccountActionTest extends TestCase
 {
     use RefreshDatabase;
 

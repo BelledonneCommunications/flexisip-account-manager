@@ -27,7 +27,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class AccountTypeTest extends TestCase
+class ApiAccountTypeTest extends TestCase
 {
     use RefreshDatabase;
 

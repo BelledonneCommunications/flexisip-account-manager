@@ -25,7 +25,7 @@ use App\PhoneChangeCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AccountPhoneChangeTest extends TestCase
+class ApiAccountPhoneChangeTest extends TestCase
 {
     use RefreshDatabase;
 
