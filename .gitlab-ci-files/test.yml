@@ -1,20 +1,3 @@
-centos7-test:
-  extends: .test
-  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-centos7-php:$CENTOS_7_IMAGE_VERSION
-  needs:
-    - centos7-package
-  script:
-    - yum -y localinstall build/*.rpm
-    - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
-    - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-    - php composer-setup.php
-    - php -r "unlink('composer-setup.php');"
-    - php composer.phar install
-    - vendor/bin/phpcs
-    - vendor/bin/phpmd . ansi phpmd.xml
-    - php artisan key:generate
-    - vendor/bin/phpunit --log-junit $CI_PROJECT_DIR/flexiapi_phpunit.log
-
 rocky8-test:
   extends: .test
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-rocky8-php:$ROCKY_8_IMAGE_VERSION

@@ -1,11 +1,3 @@
-centos7-deploy:
-  extends: .deploy
-  script:
-    - ./deploy_packages.sh centos
-  needs:
-    - centos7-package
-    - centos7-test
-
 rocky8-deploy:
   extends: .deploy
   script:

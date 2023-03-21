@@ -1,9 +1,3 @@
-centos7-package:
-  extends: .package
-  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-centos7-php:$CENTOS_7_IMAGE_VERSION
-  script:
-    - make rpm-el7
-
 rocky8-package:
   extends: .package
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-rocky8-php:$ROCKY_8_IMAGE_VERSION
