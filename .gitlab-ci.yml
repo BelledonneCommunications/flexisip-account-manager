@@ -1,6 +1,6 @@
 variables:
-  ROCKY_8_IMAGE_VERSION: 20221212_php80
-  DEBIAN_11_IMAGE_VERSION: 20221212_php82
+  ROCKY_8_IMAGE_VERSION: 20230323_113930_add_git
+  DEBIAN_11_IMAGE_VERSION: 20230322_172926_missing_tools
 
 include:
   - '.gitlab-ci-files/package.yml'

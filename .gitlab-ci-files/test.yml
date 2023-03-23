@@ -1,6 +1,6 @@
 rocky8-test:
   extends: .test
-  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-rocky8-php:$ROCKY_8_IMAGE_VERSION
+  image: gitlab.linphone.org:4567/bc/public/docker/rocky8-php:$ROCKY_8_IMAGE_VERSION
   needs:
     - rocky8-package
   script:
@@ -14,7 +14,7 @@ rocky8-test:
 
 debian11-test:
   extends: .test
-  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-debian11-php:$DEBIAN_11_IMAGE_VERSION
+  image: gitlab.linphone.org:4567/bc/public/docker/debian11-php:$DEBIAN_11_IMAGE_VERSION
   needs:
     - debian11-package
   script:
