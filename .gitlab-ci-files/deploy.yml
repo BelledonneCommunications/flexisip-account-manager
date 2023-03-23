@@ -14,6 +14,13 @@ debian11-deploy:
     - debian11-package
     - debian11-test
 
+phpredis-remi-package:
+  extends: .deploy
+  script:
+    - ./deploy_packages.sh rockylinux
+  needs:
+    - phpredis-remi-package
+
 .deploy:
   stage: deploy
   tags: ["docker"]
