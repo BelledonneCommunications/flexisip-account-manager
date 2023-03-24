@@ -18,8 +18,9 @@ phpredis-remi-package:
     - yum -y install wget php-devel gcc liblzf php-pear  php-pecl-igbinary-devel php-pecl-msgpack-devel lz4-devel liblzf-devel libzstd-devel
     - wget https://rpms.remirepo.net/SRPMS/$PHP_REDIS_REMI_VERSION.remi.src.rpm
     - rpmbuild --rebuild $PHP_REDIS_REMI_VERSION.remi.src.rpm
-    - mv /root/rpmbuild/RPMS/*/*.rpm $CI_PROJECT_DIR/build
-    - rm -r /root/rpmbuild
+    - rm /root/rpmbuild/RPMS/*/*debug*.rpm # Remove the debug packages
+    - mv /root/rpmbuild/RPMS/*/*.rpm $CI_PROJECT_DIR/build/$PHP_REDIS_REMI_VERSION.el8.x86_64.rpm # Rename to fit our naming format
+    - rm -r /root/rpmbuild # Cleanup
 
 .package:
   tags: ["docker"]
