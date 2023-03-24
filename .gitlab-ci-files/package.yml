@@ -10,16 +10,32 @@ debian11-package:
   script:
     - make deb
 
-phpredis-remi-package:
+remi-phpredis-package:
+  extends: .remi-package
+  variables:
+    PACKAGE: $PHP_REDIS_REMI_VERSION
+
+remi-igbinary-package:
+  extends: .remi-package
+  variables:
+    PACKAGE: $PHP_IGBINARY_REMI_VERSION
+
+remi-msgpack-package:
+  extends: .remi-package
+  variables:
+    PACKAGE: $PHP_MSGPACK_REMI_VERSION
+
+.remi-package:
   extends: .package
   image: gitlab.linphone.org:4567/bc/public/docker/rocky8-php:$ROCKY_8_IMAGE_VERSION
   script:
     - mkdir -p $CI_PROJECT_DIR/build
-    - yum -y install wget php-devel gcc liblzf php-pear  php-pecl-igbinary-devel php-pecl-msgpack-devel lz4-devel liblzf-devel libzstd-devel
-    - wget https://rpms.remirepo.net/SRPMS/$PHP_REDIS_REMI_VERSION.remi.src.rpm
-    - rpmbuild --rebuild $PHP_REDIS_REMI_VERSION.remi.src.rpm
-    - rm /root/rpmbuild/RPMS/*/*debug*.rpm # Remove the debug packages
-    - mv /root/rpmbuild/RPMS/*/*.rpm $CI_PROJECT_DIR/build/$PHP_REDIS_REMI_VERSION.el8.x86_64.rpm # Rename to fit our naming format
+    - yum -y install wget php-devel gcc liblzf php-pear php-pecl-igbinary-devel php-pecl-msgpack-devel lz4-devel liblzf-devel libzstd-devel php-pecl-apcu-devel
+    - wget https://rpms.remirepo.net/SRPMS/$PACKAGE.remi.src.rpm
+    - rpmbuild --rebuild $PACKAGE.remi.src.rpm
+    - rm -f /root/rpmbuild/RPMS/*/*debug*.rpm
+    - rm -f /root/rpmbuild/RPMS/*/*devel*.rpm
+    - mv /root/rpmbuild/RPMS/*/*.rpm $CI_PROJECT_DIR/build/$PACKAGE.el8.x86_64.rpm # Rename to fit our naming format
     - rm -r /root/rpmbuild # Cleanup
 
 .package:

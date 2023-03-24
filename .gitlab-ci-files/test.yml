@@ -28,11 +28,11 @@ debian11-test:
     - php artisan key:generate
     - vendor/bin/phpunit --log-junit $CI_PROJECT_DIR/flexiapi_phpunit.log
 
-phpredis-remi-test:
+remi-phpredis-test:
   extends: .test
   image: gitlab.linphone.org:4567/bc/public/docker/rocky8-php:$ROCKY_8_IMAGE_VERSION
   needs:
-    - phpredis-remi-package
+    - remi-phpredis-package
   script:
     - yum -y localinstall build/*.rpm
 
