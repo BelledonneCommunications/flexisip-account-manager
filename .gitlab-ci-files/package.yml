@@ -17,7 +17,7 @@ phpredis-remi-package:
     - mkdir -p $CI_PROJECT_DIR/build
     - yum -y install wget php-devel gcc liblzf php-pear  php-pecl-igbinary-devel php-pecl-msgpack-devel lz4-devel liblzf-devel libzstd-devel
     - wget https://rpms.remirepo.net/SRPMS/$PHP_REDIS_REMI_VERSION.remi.src.rpm
-    - rpmbuild --rebuild php-pecl-redis5-5.3.7~RC2-1.remi.src.rpm
+    - rpmbuild --rebuild $PHP_REDIS_REMI_VERSION.remi.src.rpm
     - mv /root/rpmbuild/RPMS/*/*.rpm $CI_PROJECT_DIR/build
     - rm -r /root/rpmbuild
 

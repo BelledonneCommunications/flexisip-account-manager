@@ -14,12 +14,13 @@ debian11-deploy:
     - debian11-package
     - debian11-test
 
-phpredis-remi-package:
+phpredis-remi-deploy:
   extends: .deploy
   script:
     - ./deploy_packages.sh rockylinux
   needs:
     - phpredis-remi-package
+    - phpredis-remi-test
 
 .deploy:
   stage: deploy
