@@ -1,7 +1,7 @@
 variables:
   ROCKY_8_IMAGE_VERSION: 20230323_113930_add_git
   DEBIAN_11_IMAGE_VERSION: 20230322_172926_missing_tools
-  PHP_REDIS_REMI_VERSION: php-pecl-redis5-5.3.7~RC2-1
+  PHP_REDIS_REMI_VERSION: php-pecl-redis5-5.3.6-1
 
 include:
   - '.gitlab-ci-files/package.yml'
