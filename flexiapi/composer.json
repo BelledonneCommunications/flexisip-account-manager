@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
+    "name": "bc/flexiapi",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "FlexiAPI",
     "keywords": [
         "framework",
         "laravel"
