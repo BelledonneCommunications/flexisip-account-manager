@@ -12,6 +12,12 @@ debian11-package:
 
 remi-phpredis-package:
   extends: .remi-package
+  before_script:
+    - yum -y localinstall build/*.rpm
+  needs:
+    - remi-igbinary-package
+    - remi-msgpack-package
+    - remi-xmlrpc-package
   variables:
     PACKAGE: $PHP_REDIS_REMI_VERSION
 
@@ -25,16 +31,22 @@ remi-msgpack-package:
   variables:
     PACKAGE: $PHP_MSGPACK_REMI_VERSION
 
+remi-xmlrpc-package:
+  extends: .remi-package
+  variables:
+    PACKAGE: $PHP_XMLRPC_REMI_VERSION
+
 .remi-package:
   extends: .package
   image: gitlab.linphone.org:4567/bc/public/docker/rocky8-php:$ROCKY_8_IMAGE_VERSION
   script:
     - mkdir -p $CI_PROJECT_DIR/build
-    - yum -y install wget php-devel gcc liblzf php-pear php-pecl-igbinary-devel php-pecl-msgpack-devel lz4-devel liblzf-devel libzstd-devel php-pecl-apcu-devel
+    - dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.rpm
+    - yum -y install wget php-devel gcc liblzf php-pear lz4-devel liblzf-devel libzstd-devel php-pecl-apcu-devel
     - wget https://rpms.remirepo.net/SRPMS/$PACKAGE.remi.src.rpm
     - rpmbuild --rebuild $PACKAGE.remi.src.rpm
     - rm -f /root/rpmbuild/RPMS/*/*debug*.rpm
-    - rm -f /root/rpmbuild/RPMS/*/*devel*.rpm
+    - mv /root/rpmbuild/RPMS/*/*devel*.rpm $CI_PROJECT_DIR/build/$PACKAGE-devel.el8.x86_64.rpm || true # Rename to fit our naming format
     - mv /root/rpmbuild/RPMS/*/*.rpm $CI_PROJECT_DIR/build/$PACKAGE.el8.x86_64.rpm # Rename to fit our naming format
     - rm -r /root/rpmbuild # Cleanup
 
