@@ -14,6 +14,8 @@ remi-phpredis-package:
   extends: .remi-package
   before_script:
     - yum -y localinstall build/*.rpm
+  after_script:
+    - rm -f /root/rpmbuild/RPMS/*/*devel*.rpm
   needs:
     - remi-igbinary-package
     - remi-msgpack-package
