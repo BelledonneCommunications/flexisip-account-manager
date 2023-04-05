@@ -32,6 +32,7 @@ remi-deploy:
       - master
 
   before_script:
+    - rm -f $CI_PROJECT_DIR/build/*devel*.rpm
     - eval $(ssh-agent -s)
     - echo "$DEPLOY_USER_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
