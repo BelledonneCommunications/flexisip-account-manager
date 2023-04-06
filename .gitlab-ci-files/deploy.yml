@@ -28,8 +28,8 @@ remi-deploy:
   stage: deploy
   tags: ["docker"]
   only:
-    refs:
-      - master
+    - master
+    - /^release/.*$/
 
   before_script:
     - rm -f $CI_PROJECT_DIR/build/*devel*.rpm # Remove devel packages
