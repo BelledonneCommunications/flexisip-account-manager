@@ -10,12 +10,11 @@
     "require": {
         "php": ">=8.0",
         "anhskohbo/no-captcha": "^3.3",
-        "doctrine/dbal": "^3.1",
+        "doctrine/dbal": "^3.6",
         "endroid/qr-code": "^4.1",
-        "fideloper/proxy": "^4.4",
-        "laravel/framework": "^8.0",
-        "laravel/tinker": "^2.4",
-        "laravelcollective/html": "^6.2",
+        "fakerphp/faker": "^1.21",
+        "laravel/framework": "^9.0",
+        "laravelcollective/html": "^6.4",
         "namoshek/laravel-redis-sentinel": "^0.1.2",
         "ovh/ovh": "^2.0",
         "parsedown/laravel": "^1.2",
@@ -24,17 +23,15 @@
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",
-        "facade/ignition": "^2.3",
-        "fzaninotto/faker": "^1.9",
-        "mockery/mockery": "^1.4",
-        "nunomaduro/collision": "^5.0",
+        "mockery/mockery": "^1.5",
+        "nunomaduro/collision": "^6.1",
+        "phpmd/phpmd": "^2.13",
         "phpunit/phpunit": "^9.0",
-        "squizlabs/php_codesniffer": "^3.7",
-        "phpmd/phpmd": "^2.13"
+        "squizlabs/php_codesniffer": "^3.7"
     },
     "config": {
         "platform": {
-            "php": "8.0"
+            "php": "8.0.2"
         },
         "optimize-autoloader": true,
         "preferred-install": "dist",
