@@ -49,7 +49,7 @@ class ApiAccountTest extends TestCase
         $password = Password::factory()->create();
         $response0 = $this->generateFirstResponse($password);
         $response1 = $this->generateSecondResponse($password, $response0)
-                          ->json($this->method, $this->route);
+            ->json($this->method, $this->route);
 
         $response1->assertStatus(403);
     }
@@ -90,12 +90,12 @@ class ApiAccountTest extends TestCase
         $domain = 'example.com';
 
         $response = $this->keyAuthenticated($password->account)
-        ->json($this->method, $this->route, [
-            'username' => $username,
-            'domain' => $domain,
-            'algorithm' => 'SHA-256',
-            'password' => '123456',
-        ]);
+            ->json($this->method, $this->route, [
+                'username' => $username,
+                'domain' => $domain,
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+            ]);
 
         $response->assertJsonValidationErrors(['username']);
     }
@@ -111,12 +111,12 @@ class ApiAccountTest extends TestCase
         $domain = 'example.com';
 
         $response = $this->keyAuthenticated($password->account)
-        ->json($this->method, $this->route, [
-            'username' => $username,
-            'domain' => $domain,
-            'algorithm' => 'SHA-256',
-            'password' => '123456',
-        ]);
+            ->json($this->method, $this->route, [
+                'username' => $username,
+                'domain' => $domain,
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+            ]);
 
         $response->assertJsonValidationErrors(['username']);
 
@@ -124,12 +124,12 @@ class ApiAccountTest extends TestCase
         $domain = 'example.com';
 
         $response = $this->keyAuthenticated($password->account)
-        ->json($this->method, $this->route, [
-            'username' => $username,
-            'domain' => $domain,
-            'algorithm' => 'SHA-256',
-            'password' => '123456',
-        ]);
+            ->json($this->method, $this->route, [
+                'username' => $username,
+                'domain' => $domain,
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+            ]);
 
         $response->assertJsonValidationErrors(['username']);
     }
@@ -407,7 +407,7 @@ class ApiAccountTest extends TestCase
         /**
          * Public information
          */
-        $this->get($this->route.'/'.$password->account->identifier.'/info')
+        $this->get($this->route . '/' . $password->account->identifier . '/info')
             ->assertStatus(200)
             ->assertJson([
                 'activated' => false,
@@ -421,7 +421,7 @@ class ApiAccountTest extends TestCase
          * Retrieve the authenticated account
          */
         $this->keyAuthenticated($password->account)
-            ->get($this->route.'/me')
+            ->get($this->route . '/me')
             ->assertStatus(200)
             ->assertJson([
                 'username' => $password->account->username,
@@ -433,14 +433,14 @@ class ApiAccountTest extends TestCase
          * Retrieve the authenticated account
          */
         $this->keyAuthenticated($password->account)
-            ->delete($this->route.'/me')
+            ->delete($this->route . '/me')
             ->assertStatus(200);
 
         /**
          * Check again
          */
-        $this->get($this->route.'/'.$password->account->identifier.'/info')
-             ->assertStatus(404);
+        $this->get($this->route . '/' . $password->account->identifier . '/info')
+            ->assertStatus(404);
     }
 
     public function testActivateEmail()
@@ -457,36 +457,36 @@ class ApiAccountTest extends TestCase
         $expiration->expires = Carbon::now()->subYear();
         $expiration->save();
 
-        $this->get($this->route.'/'.$password->account->identifier.'/info')
+        $this->get($this->route . '/' . $password->account->identifier . '/info')
             ->assertStatus(200)
             ->assertJson([
                 'activated' => false
             ]);
 
         $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route.'/blabla/activate/email', [
-                'code' => $confirmationKey
+            ->json($this->method, $this->route . '/blabla/activate/email', [
+                'confirmation_key' => $confirmationKey
             ])
             ->assertStatus(404);
 
-        $activateEmailRoute = $this->route.'/'.$password->account->identifier.'/activate/email';
+        $activateEmailRoute = $this->route . '/' . $password->account->identifier . '/activate/email';
 
         $this->keyAuthenticated($password->account)
             ->json($this->method, $activateEmailRoute, [
-                'code' => $confirmationKey.'longer'
+                'confirmation_key' => $confirmationKey . 'longer'
             ])
             ->assertStatus(422);
 
         $this->keyAuthenticated($password->account)
             ->json($this->method, $activateEmailRoute, [
-                'code' => 'X123456789abc'
+                'confirmation_key' => 'X123456789abc'
             ])
             ->assertStatus(404);
 
         // Expired
         $this->keyAuthenticated($password->account)
             ->json($this->method, $activateEmailRoute, [
-                'code' => $confirmationKey
+                'confirmation_key' => $confirmationKey
             ])
             ->assertStatus(403);
 
@@ -494,11 +494,11 @@ class ApiAccountTest extends TestCase
 
         $this->keyAuthenticated($password->account)
             ->json($this->method, $activateEmailRoute, [
-                'code' => $confirmationKey
+                'confirmation_key' => $confirmationKey
             ])
             ->assertStatus(200);
 
-        $this->get($this->route.'/'.$password->account->identifier.'/info')
+        $this->get($this->route . '/' . $password->account->identifier . '/info')
             ->assertStatus(200)
             ->assertJson([
                 'activated' => true
@@ -552,14 +552,14 @@ class ApiAccountTest extends TestCase
             'activated' => false
         ]);
 
-        $this->get($this->route.'/'.$password->account->identifier.'/recover/'.$confirmationKey)
+        $this->get($this->route . '/' . $password->account->identifier . '/recover/' . $confirmationKey)
             ->assertJson(['passwords' => [[
                 'password' => $password->password,
                 'algorithm' => $password->algorithm
             ]]])
             ->assertStatus(200);
 
-        $this->json('GET', $this->route.'/'.$password->account->identifier.'/recover/'.$confirmationKey)
+        $this->json('GET', $this->route . '/' . $password->account->identifier . '/recover/' . $confirmationKey)
             ->assertStatus(404);
 
         $this->assertDatabaseHas('accounts', [
@@ -589,29 +589,29 @@ class ApiAccountTest extends TestCase
         $alias->account_id = $password->account->id;
         $alias->save();
 
-        $this->json($this->method, $this->route.'/recover-by-phone', [
-                'phone' => $phone
-            ])
+        $this->json($this->method, $this->route . '/recover-by-phone', [
+            'phone' => $phone
+        ])
             ->assertStatus(200);
 
         $password->account->refresh();
 
-        $this->get($this->route.'/'.$password->account->identifier.'/recover/'.$password->account->confirmation_key)
+        $this->get($this->route . '/' . $password->account->identifier . '/recover/' . $password->account->confirmation_key)
             ->assertStatus(200)
             ->assertJson([
                 'activated' => true
             ]);
 
-        $this->get($this->route.'/'.$phone.'/info-by-phone')
+        $this->get($this->route . '/' . $phone . '/info-by-phone')
             ->assertStatus(200)
             ->assertJson([
                 'activated' => true
             ]);
 
-        $this->get($this->route.'/+1234/info-by-phone')
+        $this->get($this->route . '/+1234/info-by-phone')
             ->assertStatus(404);
 
-        $this->json('GET', $this->route.'/'.$password->account->identifier.'/info-by-phone')
+        $this->json('GET', $this->route . '/' . $password->account->identifier . '/info-by-phone')
             ->assertStatus(422)
             ->assertJsonValidationErrors(['phone']);
     }
@@ -626,46 +626,46 @@ class ApiAccountTest extends TestCase
         config()->set('app.dangerous_endpoints', true);
 
         // Missing email
-        $this->json($this->method, $this->route.'/public', [
+        $this->json($this->method, $this->route . '/public', [
             'username' => $username,
             'algorithm' => 'SHA-256',
             'password' => '2',
         ])
-        ->assertStatus(422)
-        ->assertJsonValidationErrors(['email']);
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['email']);
 
-        $this->json($this->method, $this->route.'/public', [
+        $this->json($this->method, $this->route . '/public', [
             'username' => $username,
             'algorithm' => 'SHA-256',
             'password' => '2',
             'email' => 'john@doe.tld',
         ])
-        ->assertStatus(200)
-        ->assertJson([
-            'activated' => false
-        ]);
+            ->assertStatus(200)
+            ->assertJson([
+                'activated' => false
+            ]);
 
         // Already created
-        $this->json($this->method, $this->route.'/public', [
+        $this->json($this->method, $this->route . '/public', [
             'username' => $username,
             'algorithm' => 'SHA-256',
             'password' => '2',
             'email' => 'john@doe.tld',
         ])
-        ->assertStatus(422)
-        ->assertJsonValidationErrors(['username']);
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['username']);
 
         // Email is now unique
         config()->set('app.account_email_unique', true);
 
-        $this->json($this->method, $this->route.'/public', [
+        $this->json($this->method, $this->route . '/public', [
             'username' => 'johndoe',
             'algorithm' => 'SHA-256',
             'password' => '2',
             'email' => 'john@doe.tld',
         ])
-        ->assertStatus(422)
-        ->assertJsonValidationErrors(['email']);
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['email']);
 
         $this->assertDatabaseHas('accounts', [
             'username' => $username,
@@ -680,46 +680,46 @@ class ApiAccountTest extends TestCase
         config()->set('app.dangerous_endpoints', true);
 
         // Username and phone
-        $this->json($this->method, $this->route.'/public', [
+        $this->json($this->method, $this->route . '/public', [
             'username' => 'myusername',
             'phone' => $phone,
             'algorithm' => 'SHA-256',
             'password' => '2',
             'email' => 'john@doe.tld',
         ])
-        ->assertStatus(422)
-        ->assertJsonValidationErrors(['phone', 'username']);
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['phone', 'username']);
 
         // Bad phone format
-        $this->json($this->method, $this->route.'/public', [
+        $this->json($this->method, $this->route . '/public', [
             'phone' => 'username',
             'algorithm' => 'SHA-256',
             'password' => '2',
             'email' => 'john@doe.tld',
         ])
-        ->assertStatus(422)
-        ->assertJsonValidationErrors(['phone']);
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['phone']);
 
-        $this->json($this->method, $this->route.'/public', [
+        $this->json($this->method, $this->route . '/public', [
             'phone' => $phone,
             'algorithm' => 'SHA-256',
             'password' => '2',
             'email' => 'john@doe.tld',
         ])
-        ->assertStatus(200)
-        ->assertJson([
-            'activated' => false
-        ]);
+            ->assertStatus(200)
+            ->assertJson([
+                'activated' => false
+            ]);
 
         // Already exists
-        $this->json($this->method, $this->route.'/public', [
+        $this->json($this->method, $this->route . '/public', [
             'phone' => $phone,
             'algorithm' => 'SHA-256',
             'password' => '2',
             'email' => 'john@doe.tld',
         ])
-        ->assertStatus(422)
-        ->assertJsonValidationErrors(['phone']);
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['phone']);
 
         $this->assertDatabaseHas('accounts', [
             'username' => $phone,
@@ -746,7 +746,7 @@ class ApiAccountTest extends TestCase
         $expiration->expires = Carbon::now()->subYear();
         $expiration->save();
 
-        $this->get($this->route.'/'.$password->account->identifier.'/info')
+        $this->get($this->route . '/' . $password->account->identifier . '/info')
             ->assertStatus(200)
             ->assertJson([
                 'activated' => false
@@ -754,16 +754,16 @@ class ApiAccountTest extends TestCase
 
         // Expired
         $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route.'/'.$password->account->identifier.'/activate/phone', [
-                'code' => $confirmationKey
+            ->json($this->method, $this->route . '/' . $password->account->identifier . '/activate/phone', [
+                'confirmation_key' => $confirmationKey
             ])
             ->assertStatus(403);
 
         $expiration->delete();
 
         $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route.'/'.$password->account->identifier.'/activate/phone', [
-                'code' => $confirmationKey
+            ->json($this->method, $this->route . '/' . $password->account->identifier . '/activate/phone', [
+                'confirmation_key' => $confirmationKey
             ])
             ->assertStatus(200);
 
@@ -783,27 +783,27 @@ class ApiAccountTest extends TestCase
 
         // Bad email
         $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route.'/me/email/request', [
+            ->json($this->method, $this->route . '/me/email/request', [
                 'email' => 'gnap'
             ])
             ->assertStatus(422);
 
         // Same email
         $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route.'/me/email/request', [
+            ->json($this->method, $this->route . '/me/email/request', [
                 'email' => $password->account->email
             ])
             ->assertStatus(422);
 
         // Correct email
         $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route.'/me/email/request', [
+            ->json($this->method, $this->route . '/me/email/request', [
                 'email' => $newEmail
             ])
             ->assertStatus(200);
 
         $this->keyAuthenticated($password->account)
-            ->get($this->route.'/me')
+            ->get($this->route . '/me')
             ->assertStatus(200)
             ->assertJson([
                 'username' => $password->account->username,
@@ -816,7 +816,7 @@ class ApiAccountTest extends TestCase
         config()->set('app.account_email_unique', true);
 
         $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route.'/me/email/request', [
+            ->json($this->method, $this->route . '/me/email/request', [
                 'email' => $otherAccount->account->email
             ])
             ->assertStatus(422)
@@ -834,7 +834,7 @@ class ApiAccountTest extends TestCase
 
         // Wrong algorithm
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/me/password', [
+            ->json($this->method, $this->route . '/me/password', [
                 'algorithm' => '123',
                 'password' => $password
             ])
@@ -843,7 +843,7 @@ class ApiAccountTest extends TestCase
 
         // Fresh password without an old one
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/me/password', [
+            ->json($this->method, $this->route . '/me/password', [
                 'algorithm' => $algorithm,
                 'password' => $password
             ])
@@ -851,7 +851,7 @@ class ApiAccountTest extends TestCase
 
         // First check
         $this->keyAuthenticated($account)
-            ->get($this->route.'/me')
+            ->get($this->route . '/me')
             ->assertStatus(200)
             ->assertJson([
                 'username' => $account->username,
@@ -862,7 +862,7 @@ class ApiAccountTest extends TestCase
 
         // Set new password without old one
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/me/password', [
+            ->json($this->method, $this->route . '/me/password', [
                 'algorithm' => $newAlgorithm,
                 'password' => $newPassword
             ])
@@ -871,7 +871,7 @@ class ApiAccountTest extends TestCase
 
         // Set the new password with incorrect old password
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/me/password', [
+            ->json($this->method, $this->route . '/me/password', [
                 'algorithm' => $newAlgorithm,
                 'old_password' => 'blabla',
                 'password' => $newPassword
@@ -881,7 +881,7 @@ class ApiAccountTest extends TestCase
 
         // Set the new password
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/me/password', [
+            ->json($this->method, $this->route . '/me/password', [
                 'algorithm' => $newAlgorithm,
                 'old_password' => $password,
                 'password' => $newPassword
@@ -890,7 +890,7 @@ class ApiAccountTest extends TestCase
 
         // Second check
         $this->keyAuthenticated($account)
-            ->get($this->route.'/me')
+            ->get($this->route . '/me')
             ->assertStatus(200)
             ->assertJson([
                 'username' => $account->username,
@@ -909,28 +909,28 @@ class ApiAccountTest extends TestCase
 
         // deactivate
         $this->keyAuthenticated($admin->account)
-            ->get($this->route.'/'.$password->account->id.'/deactivate')
+            ->get($this->route . '/' . $password->account->id . '/deactivate')
             ->assertStatus(200)
             ->assertJson([
                 'activated' => false
             ]);
 
         $this->keyAuthenticated($admin->account)
-            ->get($this->route.'/'.$password->account->id)
+            ->get($this->route . '/' . $password->account->id)
             ->assertStatus(200)
             ->assertJson([
                 'activated' => false
             ]);
 
         $this->keyAuthenticated($admin->account)
-            ->get($this->route.'/'.$password->account->id.'/activate')
+            ->get($this->route . '/' . $password->account->id . '/activate')
             ->assertStatus(200)
             ->assertJson([
                 'activated' => true
             ]);
 
         $this->keyAuthenticated($admin->account)
-            ->get($this->route.'/'.$password->account->id)
+            ->get($this->route . '/' . $password->account->id)
             ->assertStatus(200)
             ->assertJson([
                 'activated' => true
@@ -938,7 +938,7 @@ class ApiAccountTest extends TestCase
 
         // Search feature
         $this->keyAuthenticated($admin->account)
-            ->get($this->route.'/'.$password->account->identifier.'/search')
+            ->get($this->route . '/' . $password->account->identifier . '/search')
             ->assertStatus(200)
             ->assertJson([
                 'id' => $password->account->id,
@@ -963,7 +963,7 @@ class ApiAccountTest extends TestCase
 
         // /accounts/id
         $this->keyAuthenticated($admin->account)
-            ->get($this->route.'/'.$admin->id)
+            ->get($this->route . '/' . $admin->id)
             ->assertStatus(200)
             ->assertJson([
                 'id' => 1,
@@ -1024,13 +1024,13 @@ class ApiAccountTest extends TestCase
         $admin->account->generateApiKey();
 
         $this->keyAuthenticated($admin->account)
-            ->delete($this->route.'/'.$password->account->id)
+            ->delete($this->route . '/' . $password->account->id)
             ->assertStatus(200);
 
         $this->assertEquals(1, AccountTombstone::count());
 
         $this->keyAuthenticated($admin->account)
-            ->get($this->route.'/'.$password->account->id)
+            ->get($this->route . '/' . $password->account->id)
             ->assertStatus(404);
     }
 }
