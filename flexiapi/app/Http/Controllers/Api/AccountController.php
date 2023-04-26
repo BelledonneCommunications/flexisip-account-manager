@@ -285,12 +285,17 @@ class AccountController extends Controller
 
     public function activateEmail(Request $request, string $sip)
     {
+        // For retro-compatibility
+        if ($request->has('code')) {
+            $request->merge(['confirmation_key' => $request->get('code')]);
+        }
+
         $request->validate([
-            'code' => 'required|size:' . WebAuthenticateController::$emailCodeSize
+            'confirmation_key' => 'required|size:' . WebAuthenticateController::$emailCodeSize
         ]);
 
         $account = Account::sip($sip)
-            ->where('confirmation_key', $request->get('code'))
+            ->where('confirmation_key', $request->get('confirmation_key'))
             ->firstOrFail();
 
         if ($account->activationExpired()) abort(403, 'Activation expired');
@@ -306,12 +311,17 @@ class AccountController extends Controller
 
     public function activatePhone(Request $request, string $sip)
     {
+        // For retro-compatibility
+        if ($request->has('code')) {
+            $request->merge(['confirmation_key' => $request->get('code')]);
+        }
+
         $request->validate([
-            'code' => 'required|digits:4'
+            'confirmation_key' => 'required|digits:4'
         ]);
 
         $account = Account::sip($sip)
-            ->where('confirmation_key', $request->get('code'))
+            ->where('confirmation_key', $request->get('confirmation_key'))
             ->firstOrFail();
 
         if ($account->activationExpired()) abort(403, 'Activation expired');

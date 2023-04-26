@@ -192,7 +192,7 @@ Activate an account using a secret code received by email.
 Return `404` if the account doesn't exists or if the code is incorrect, the validated account otherwise.
 JSON parameters:
 
-* `code` the code
+* `confirmation_key` the confirmation key
 
 ### `POST /accounts/{sip}/activate/phone`
 <span class="badge badge-success">Public</span>
@@ -200,7 +200,7 @@ Activate an account using a pin code received by phone.
 Return `404` if the account doesn't exists or if the code is incorrect, the validated account otherwise.
 JSON parameters:
 
-* `code` the PIN code
+* `confirmation_key` the PIN code
 
 ### `GET /accounts/me/api_key/{auth_token}`
 <span class="badge badge-success">Public</span>
