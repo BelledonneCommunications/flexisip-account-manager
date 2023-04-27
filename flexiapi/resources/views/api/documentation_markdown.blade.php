@@ -146,7 +146,7 @@ JSON parameters:
 * `password` required minimum 6 characters
 * `algorithm` required, values can be `SHA-256` or `MD5`
 * `account_creation_token` the unique `account_creation_token`
-* `dtmf_protocol` optional, values must be `sipinfo` or `rfc2833`
+* `dtmf_protocol` optional, values must be `sipinfo`, `sipmessage` or `rfc2833`
 
 ### `GET /accounts/{sip}/info`
 <span class="badge badge-success">Public</span>
@@ -260,7 +260,7 @@ JSON parameters:
 * `display_name` optional, string
 * `admin` optional, a boolean, set to `false` by default, create an admin account
 * `phone` optional, a phone number, set a phone number to the account
-* `dtmf_protocol` optional, values must be `sipinfo` or `rfc2833`
+* `dtmf_protocol` optional, values must be `sipinfo`, `sipmessage` or `rfc2833`
 * `confirmation_key_expires` optional, a datetime of this format: Y-m-d H:i:s. Only used when `activated` is not used or `false`. Enforces an expiration date on the returned `confirmation_key`. After that datetime public email or phone activation endpoints will return `403`.
 
 ### `GET /accounts`
