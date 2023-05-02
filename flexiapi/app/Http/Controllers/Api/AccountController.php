@@ -34,6 +34,7 @@ use App\Alias;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use App\Libraries\OvhSMS;
 use App\Mail\RegisterConfirmation;
+use App\Rules\AccountCreationToken as RulesAccountCreationToken;
 use App\Rules\BlacklistedUsername;
 use App\Rules\IsNotPhoneNumber;
 use App\Rules\NoUppercase;
@@ -70,11 +71,13 @@ class AccountController extends Controller
         $alias = Alias::where('alias', $phone)->first();
         $account = $alias
             ? $alias->account
-            : Account::sip($phone)->firstOrFail();
+            // Injecting the default sip domain to try to resolve the account
+            : Account::sip($phone . '@' . config('app.sip_domain'))->firstOrFail();
 
         return \response()->json([
             'activated' => $account->activated,
-            'realm' => $account->realm
+            'realm' => $account->realm,
+            'phone' => (bool)$alias
         ]);
     }
 
@@ -113,6 +116,10 @@ class AccountController extends Controller
                 'unique:aliases,alias',
                 'unique:accounts,username',
                 new WithoutSpaces, 'starts_with:+'
+            ],
+            'account_creation_token' => [
+                'required',
+                new RulesAccountCreationToken
             ]
         ]);
 
@@ -178,13 +185,17 @@ class AccountController extends Controller
         $request->validate([
             'phone' => [
                 'required', new WithoutSpaces, 'starts_with:+'
+            ],
+            'account_creation_token' => [
+                'required',
+                new RulesAccountCreationToken
             ]
         ]);
 
         $alias = Alias::where('alias', $request->get('phone'))->first();
         $account = $alias
             ? $alias->account
-            : Account::sip($request->get('phone'))->firstOrFail();
+            : Account::sip($request->get('phone') . '@' . config('app.sip_domain'))->firstOrFail();
 
         $account->confirmation_key = generatePin();
         $account->save();
@@ -202,9 +213,12 @@ class AccountController extends Controller
     {
         if (!config('app.dangerous_endpoints')) return abort(404);
 
-        $account = Account::sip($sip)
-            ->where('confirmation_key', $recoveryKey)
-            ->firstOrFail();
+        $alias = Alias::sip($sip)->first();
+        $account = $alias
+            ? $alias->account
+            : Account::sip($sip)->firstOrFail();
+
+        if ($account->confirmation_key != $recoveryKey) abort(404);
 
         if ($account->activationExpired()) abort(403, 'Activation expired');
 
@@ -241,10 +255,7 @@ class AccountController extends Controller
             'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
             'account_creation_token' => [
                 'required_without:token',
-                Rule::exists('account_creation_tokens', 'token')->where(function ($query) {
-                    $query->where('used', false);
-                }),
-                'size:' . WebAuthenticateController::$emailCodeSize
+                new RulesAccountCreationToken
             ],
             'email' => config('app.account_email_unique')
                 ? 'nullable|email|unique:accounts,email'
@@ -252,10 +263,7 @@ class AccountController extends Controller
             // For retro-compatibility
             'token' => [
                 'required_without:account_creation_token',
-                Rule::exists('account_creation_tokens', 'token')->where(function ($query) {
-                    $query->where('used', false);
-                }),
-                'size:' . WebAuthenticateController::$emailCodeSize
+                new RulesAccountCreationToken
             ],
         ]);
 

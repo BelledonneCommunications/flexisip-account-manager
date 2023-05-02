@@ -30,4 +30,16 @@ class Alias extends Model
     {
         return $this->belongsTo('App\Account');
     }
+
+    public function scopeSip($query, string $sip)
+    {
+        if (\str_contains($sip, '@')) {
+            list($usernane, $domain) = explode('@', $sip);
+
+            return $query->where('alias', $usernane)
+                ->where('domain', $domain);
+        };
+
+        return $query->where('id', '<', 0);
+    }
 }
