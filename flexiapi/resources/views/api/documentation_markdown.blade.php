@@ -134,6 +134,7 @@ JSON parameters:
 * `domain` if not set the value is enforced to the default registration domain set in the global configuration
 * `email` optional if `phone` set, an email, set an email to the account, must be unique if `ACCOUNT_EMAIL_UNIQUE` is set to `true`
 * `phone` required if `username` not set, optional if `email` set, a phone number, set a phone number to the account
+* `account_creation_token` the unique `account_creation_token`
 
 ### `POST /accounts/with-account-creation-token`
 <span class="badge badge-success">Public</span>
@@ -162,6 +163,8 @@ Return `404` if the account doesn't exists.
 Retrieve public information about the account.
 Return `404` if the account doesn't exists.
 
+Return `phone: true` if the returned account has a phone number.
+
 ### `POST /accounts/recover-by-phone`
 @if(config('app.dangerous_endpoints'))**Enabled on this instance**@else**Not enabled on this instance**@endif
 
@@ -174,6 +177,7 @@ Return `404` if the account doesn't exists.
 JSON parameters:
 
 * `phone` required the phone number to send the SMS to
+* `account_creation_token` the unique `account_creation_token`
 
 ### `GET /accounts/{sip}/recover/{recover_key}`
 @if(config('app.dangerous_endpoints'))**Enabled on this instance**@else**Not enabled on this instance**@endif
@@ -182,6 +186,9 @@ JSON parameters:
 <span class="badge badge-success">Public</span>
 <span class="badge badge-warning">Unsecure endpoint</span>
 Activate the account if the correct `recover_key` is provided.
+
+The `sip` parameter can be the default SIP account or the phone based one.
+
 Return the account information (including the hashed password) if valid.
 
 Return `404` if the account doesn't exists.

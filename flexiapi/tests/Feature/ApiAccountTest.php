@@ -21,6 +21,7 @@ namespace Tests\Feature;
 
 use App\Password;
 use App\Account;
+use App\AccountCreationToken;
 use App\AccountTombstone;
 use App\ActivationExpiration;
 use App\Admin;
@@ -565,8 +566,31 @@ class ApiAccountTest extends TestCase
         $this->assertDatabaseHas('accounts', [
             'username' => $password->account->username,
             'domain' => $password->account->domain,
+            'confirmation_key' => null,
             'activated' => true
         ]);
+
+        // Recover by alias
+
+        $newConfirmationKey = '1345';
+
+        $password->account->confirmation_key = $newConfirmationKey;
+        $password->account->save();
+
+        $phone = '+1234';
+
+        $alias = new AppAlias;
+        $alias->alias = $phone;
+        $alias->domain = $password->account->domain;
+        $alias->account_id = $password->account->id;
+        $alias->save();
+
+        $this->get($this->route . '/' . $phone . '@' . $alias->domain . '/recover/' . $newConfirmationKey)
+            ->assertJson(['passwords' => [[
+                'password' => $password->password,
+                'algorithm' => $password->algorithm
+            ]]])
+            ->assertStatus(200);
     }
 
     /**
@@ -592,6 +616,22 @@ class ApiAccountTest extends TestCase
         $this->json($this->method, $this->route . '/recover-by-phone', [
             'phone' => $phone
         ])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['account_creation_token']);
+
+
+        $this->json($this->method, $this->route . '/recover-by-phone', [
+            'phone' => $phone,
+            'account_creation_token' => 'wrong'
+        ])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['account_creation_token']);
+        $token = AccountCreationToken::factory()->create();
+
+        $this->json($this->method, $this->route . '/recover-by-phone', [
+            'phone' => $phone,
+            'account_creation_token' => $token->token
+        ])
             ->assertStatus(200);
 
         $password->account->refresh();
@@ -605,7 +645,8 @@ class ApiAccountTest extends TestCase
         $this->get($this->route . '/' . $phone . '/info-by-phone')
             ->assertStatus(200)
             ->assertJson([
-                'activated' => true
+                'activated' => true,
+                'phone' => true
             ]);
 
         $this->get($this->route . '/+1234/info-by-phone')
@@ -614,11 +655,25 @@ class ApiAccountTest extends TestCase
         $this->json('GET', $this->route . '/' . $password->account->identifier . '/info-by-phone')
             ->assertStatus(422)
             ->assertJsonValidationErrors(['phone']);
+
+        // Check the mixed username/phone resolution...
+        $password->account->username = $phone;
+        $password->account->save();
+
+        $alias->delete();
+
+        $this->get($this->route . '/' . $phone . '/info-by-phone')
+            ->assertStatus(200)
+            ->assertJson([
+                'activated' => true,
+                'phone' => false
+            ]);
     }
 
     /**
      * /!\ Dangerous endpoints
      */
+
     public function testCreatePublic()
     {
         $username = 'publicuser';
@@ -639,6 +694,18 @@ class ApiAccountTest extends TestCase
             'algorithm' => 'SHA-256',
             'password' => '2',
             'email' => 'john@doe.tld',
+        ])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['account_creation_token']);
+
+        $token = AccountCreationToken::factory()->create();
+
+        $this->json($this->method, $this->route . '/public', [
+            'username' => $username,
+            'algorithm' => 'SHA-256',
+            'password' => '2',
+            'email' => 'john@doe.tld',
+            'account_creation_token' => $token->token
         ])
             ->assertStatus(200)
             ->assertJson([
@@ -700,11 +767,14 @@ class ApiAccountTest extends TestCase
             ->assertStatus(422)
             ->assertJsonValidationErrors(['phone']);
 
+        $token = AccountCreationToken::factory()->create();
+
         $this->json($this->method, $this->route . '/public', [
             'phone' => $phone,
             'algorithm' => 'SHA-256',
             'password' => '2',
             'email' => 'john@doe.tld',
+            'account_creation_token' => $token->token
         ])
             ->assertStatus(200)
             ->assertJson([
