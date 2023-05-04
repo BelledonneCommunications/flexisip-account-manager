@@ -91,9 +91,8 @@ class AccountController extends Controller
 
         $request->validate([
             'username' => [
-                'prohibits:phone',
+                'required_without:phone',
                 new NoUppercase,
-                new IsNotPhoneNumber,
                 new BlacklistedUsername,
                 new SIPUsername,
                 Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
@@ -112,7 +111,7 @@ class AccountController extends Controller
                 : 'required_without:phone|email',
             'phone' => [
                 'required_without:email',
-                'prohibits:username',
+                'required_without:username',
                 'unique:aliases,alias',
                 'unique:accounts,username',
                 new WithoutSpaces, 'starts_with:+'
@@ -134,7 +133,7 @@ class AccountController extends Controller
             : config('app.sip_domain');
         $account->ip_address = $request->ip();
         $account->creation_time = Carbon::now();
-        $account->user_agent = config('app.name');
+        $account->user_agent = $request->header('User-Agent') ?? config('app.name');
         $account->provision();
         $account->save();
 
@@ -154,6 +153,7 @@ class AccountController extends Controller
             $account->save();
 
             Log::channel('events')->info('API: Account created using the public endpoint by phone', ['id' => $account->identifier]);
+            Log::channel('events')->info('OVH SMS sending: Sending an SMS with the recovery code', ['id' => $account->identifier, 'confirmation_key', $account->conformation_key]);
 
             $ovhSMS = new OvhSMS;
             $ovhSMS->send($request->get('phone'), 'Your ' . config('app.name') . ' recovery code is ' . $account->confirmation_key);

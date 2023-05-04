@@ -699,8 +699,11 @@ class ApiAccountTest extends TestCase
             ->assertJsonValidationErrors(['account_creation_token']);
 
         $token = AccountCreationToken::factory()->create();
+        $userAgent = 'User Agent Test';
 
-        $this->json($this->method, $this->route . '/public', [
+        $this->withHeaders([
+            'User-Agent' => $userAgent,
+        ])->json($this->method, $this->route . '/public', [
             'username' => $username,
             'algorithm' => 'SHA-256',
             'password' => '2',
@@ -736,7 +739,8 @@ class ApiAccountTest extends TestCase
 
         $this->assertDatabaseHas('accounts', [
             'username' => $username,
-            'domain' => config('app.sip_domain')
+            'domain' => config('app.sip_domain'),
+            'user_agent' => $userAgent
         ]);
     }
 
@@ -745,17 +749,6 @@ class ApiAccountTest extends TestCase
         $phone = '+12345';
 
         config()->set('app.dangerous_endpoints', true);
-
-        // Username and phone
-        $this->json($this->method, $this->route . '/public', [
-            'username' => 'myusername',
-            'phone' => $phone,
-            'algorithm' => 'SHA-256',
-            'password' => '2',
-            'email' => 'john@doe.tld',
-        ])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['phone', 'username']);
 
         // Bad phone format
         $this->json($this->method, $this->route . '/public', [
