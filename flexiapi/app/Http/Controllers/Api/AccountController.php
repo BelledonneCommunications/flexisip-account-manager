@@ -153,7 +153,6 @@ class AccountController extends Controller
             $account->save();
 
             Log::channel('events')->info('API: Account created using the public endpoint by phone', ['id' => $account->identifier]);
-            Log::channel('events')->info('OVH SMS sending: Sending an SMS with the recovery code', ['id' => $account->identifier, 'confirmation_key', $account->conformation_key]);
 
             $ovhSMS = new OvhSMS;
             $ovhSMS->send($request->get('phone'), 'Your ' . config('app.name') . ' recovery code is ' . $account->confirmation_key);
