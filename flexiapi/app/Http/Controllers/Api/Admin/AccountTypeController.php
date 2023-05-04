@@ -41,7 +41,7 @@ class AccountTypeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'key' => ['required', 'alpha_dash', new NoUppercase],
+            'key' => ['required', 'alpha_dash', new NoUppercase, 'unique:account_types,key'],
         ]);
 
         $accountType = new AccountType;

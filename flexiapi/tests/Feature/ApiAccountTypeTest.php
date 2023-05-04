@@ -47,17 +47,26 @@ class ApiAccountTypeTest extends TestCase
 
         $this->assertEquals(1, AccountType::count());
 
+        // Same key
+        $this->keyAuthenticated($admin->account)
+            ->json($this->method, $this->route, [
+                'key' => 'phone',
+            ])
+            ->assertJsonValidationErrorFor('key')
+            ->assertStatus(422);
+
+
         // Missing key
         $this->keyAuthenticated($admin->account)
-        ->json($this->method, $this->route, [])
-        ->assertStatus(422);
+            ->json($this->method, $this->route, [])
+            ->assertStatus(422);
 
         // Invalid key
         $this->keyAuthenticated($admin->account)
-        ->json($this->method, $this->route, [
-            'key' => 'Abc1234',
-        ])
-        ->assertStatus(422);
+            ->json($this->method, $this->route, [
+                'key' => 'Abc1234',
+            ])
+            ->assertStatus(422);
 
         $this->keyAuthenticated($admin->account)
             ->get($this->route)
@@ -83,7 +92,7 @@ class ApiAccountTypeTest extends TestCase
         $accountType = AccountType::first();
 
         $this->keyAuthenticated($admin->account)
-            ->delete($this->route.'/'.$accountType->id)
+            ->delete($this->route . '/' . $accountType->id)
             ->assertStatus(200);
 
         $this->assertEquals(0, AccountType::count());
@@ -104,7 +113,7 @@ class ApiAccountTypeTest extends TestCase
         $accountType = AccountType::first();
 
         $this->keyAuthenticated($admin->account)
-            ->json('PUT', $this->route.'/'.$accountType->id, [
+            ->json('PUT', $this->route . '/' . $accountType->id, [
                 'key' => 'door',
             ])
             ->assertStatus(200);
@@ -137,34 +146,34 @@ class ApiAccountTypeTest extends TestCase
         $password = Password::factory()->create();
 
         $this->keyAuthenticated($admin->account)
-            ->json($this->method, '/api/accounts/'.$password->account->id.'/types/'.$accountType->id)
+            ->json($this->method, '/api/accounts/' . $password->account->id . '/types/' . $accountType->id)
             ->assertStatus(200);
 
         $this->keyAuthenticated($admin->account)
-            ->json($this->method, '/api/accounts/'.$password->account->id.'/types/'.$accountType->id)
+            ->json($this->method, '/api/accounts/' . $password->account->id . '/types/' . $accountType->id)
             ->assertStatus(403);
 
         $this->keyAuthenticated($admin->account)
-        ->get('/api/accounts/'.$password->account->id)
-        ->assertJson([
-            'types' => [
-                [
-                    'id' => $accountType->id,
-                    'key' => $accountType->key
+            ->get('/api/accounts/' . $password->account->id)
+            ->assertJson([
+                'types' => [
+                    [
+                        'id' => $accountType->id,
+                        'key' => $accountType->key
+                    ]
                 ]
-            ]
-        ]);
+            ]);
 
         // Remove
         $this->keyAuthenticated($admin->account)
-            ->delete('/api/accounts/'.$password->account->id.'/types/'.$accountType->id)
+            ->delete('/api/accounts/' . $password->account->id . '/types/' . $accountType->id)
             ->assertStatus(200);
 
         $this->assertEquals(0, DB::table('account_account_type')->count());
 
         // Retry
         $this->keyAuthenticated($admin->account)
-            ->delete('/api/accounts/'.$password->account->id.'/types/'.$accountType->id)
+            ->delete('/api/accounts/' . $password->account->id . '/types/' . $accountType->id)
             ->assertStatus(403);
         $this->assertEquals(0, DB::table('account_account_type')->count());
     }
