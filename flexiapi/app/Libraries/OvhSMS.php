@@ -71,6 +71,8 @@ class OvhSMS
             'validityPeriod'    => 2880
         ];
 
+        Log::channel('events')->info('OVH SMS sending', ['to' => $to, 'message' => $message]);
+
         try {
             $this->api->post('/sms/'. $this->smsService . '/jobs', $content);
             // One credit removed
