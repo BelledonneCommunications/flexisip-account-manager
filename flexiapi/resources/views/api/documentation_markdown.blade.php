@@ -279,9 +279,17 @@ Retrieve all the accounts, paginated.
 <span class="badge badge-warning">Admin</span>
 Retrieve a specific account.
 
+### `POST /accounts/{id}/recover-by-email`
+<span class="badge badge-warning">Admin</span>
+Send the account recovery email containing a fresh `provisioning_token` and `confirmation_key`
+
 ### `GET /accounts/{sip}/search`
 <span class="badge badge-warning">Admin</span>
 Search for a specific account by sip address.
+
+### `GET /accounts/{email}/search-by-email`
+<span class="badge badge-warning">Admin</span>
+Search for a specific account by email.
 
 ### `DELETE /accounts/{id}`
 <span class="badge badge-warning">Admin</span>
