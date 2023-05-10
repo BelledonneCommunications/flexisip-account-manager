@@ -188,9 +188,9 @@ class AccountProvisioningTest extends TestCase
             ->assertStatus(201)
             ->assertJson([
                 'token' => true
-            ])->content();
+            ]);
 
-        $authToken = json_decode($response)->token;
+        $authToken = $response->json('token');
 
         $password = Password::factory()->create();
         $password->account->generateApiKey();

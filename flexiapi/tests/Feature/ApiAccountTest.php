@@ -1007,6 +1007,38 @@ class ApiAccountTest extends TestCase
                 'id' => $password->account->id,
                 'activated' => true
             ]);
+
+        $this->keyAuthenticated($admin->account)
+            ->get($this->route . '/' . $password->account->email . '/search-by-email')
+            ->assertStatus(200)
+            ->assertJson([
+                'id' => $password->account->id,
+                'activated' => true
+            ]);
+
+        $this->keyAuthenticated($admin->account)
+            ->get($this->route . '/wrong@email.com/search-by-email')
+            ->assertStatus(404);
+    }
+
+    public function testRecoverByEmail()
+    {
+        $email = 'collision@email.com';
+
+        $account = Password::factory()->create();
+        $account->account->email = $email;
+        $account->account->save();
+
+        $admin = Admin::factory()->create();
+        $admin->account->generateApiKey();
+        $admin->account->save();
+
+        $response = $this->keyAuthenticated($admin->account)
+            ->post($this->route . '/' . $account->id . '/recover-by-email')
+            ->assertStatus(200);
+
+        $this->assertNotEquals($response->json('confirmation_key'), $account->confirmation_key);
+        $this->assertNotEquals($response->json('provisioning_token'), $account->provisioning_token);
     }
 
     public function testGetAll()

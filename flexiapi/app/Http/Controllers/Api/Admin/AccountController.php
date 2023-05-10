@@ -33,11 +33,13 @@ use App\ActivationExpiration;
 use App\Admin;
 use App\Alias;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+use App\Mail\PasswordAuthentication;
 use App\Rules\BlacklistedUsername;
 use App\Rules\IsNotPhoneNumber;
 use App\Rules\NoUppercase;
 use App\Rules\SIPUsername;
 use App\Rules\WithoutSpaces;
+use Illuminate\Support\Facades\Mail;
 
 class AccountController extends Controller
 {
@@ -54,6 +56,11 @@ class AccountController extends Controller
     public function search(string $sip)
     {
         return Account::sip($sip)->firstOrFail();
+    }
+
+    public function searchByEmail(Request $request, string $email)
+    {
+        return Account::where('email', $email)->firstOrFail();
     }
 
     public function destroy($id)
@@ -183,7 +190,7 @@ class AccountController extends Controller
         // Full reload
         $account = Account::withoutGlobalScopes()->find($account->id);
 
-        Log::channel('events')->info('API: Admin: Account created', ['id' => $account->identifier]);
+        Log::channel('events')->info('API Admin: Account created', ['id' => $account->identifier]);
 
         return response()->json($account->makeVisible(['confirmation_key', 'provisioning_token']));
     }
@@ -206,5 +213,19 @@ class AccountController extends Controller
         }
 
         return Account::findOrFail($id)->types()->detach($typeId);
+    }
+
+    public function recoverByEmail(int $id)
+    {
+        $account = Account::findOrFail($id);
+        $account->provision();
+        $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
+        $account->save();
+
+        Log::channel('events')->info('API Admin: Sending recovery email', ['id' => $account->identifier]);
+
+        Mail::to($account)->send(new PasswordAuthentication($account));
+
+        return response()->json($account->makeVisible(['confirmation_key', 'provisioning_token']));
     }
 }

@@ -64,9 +64,9 @@ class ApiAccountApiKeyTest extends TestCase
             ->assertStatus(201)
             ->assertJson([
                 'token' => true
-            ])->content();
+            ]);
 
-        $authToken = json_decode($response)->token;
+        $authToken = $response->json('token');
 
         // Try to retrieve an API key from the un-attached auth_token
         $response = $this->json($this->method, $this->route . '/' . $authToken)
@@ -95,9 +95,9 @@ class ApiAccountApiKeyTest extends TestCase
             ->assertStatus(200)
             ->assertJson([
                 'api_key' => true
-            ])->content();
+            ]);
 
-        $apiKey = json_decode($response)->api_key;
+        $apiKey = $response->json('api_key');
 
         // Re-retrieve
         $this->json($this->method, $this->route . '/' . $authToken)
@@ -106,8 +106,7 @@ class ApiAccountApiKeyTest extends TestCase
         // Check the if the API key can be used for the account
         $response = $this->withHeaders(['x-api-key' => $apiKey])
             ->json($this->method, '/api/accounts/me')
-            ->assertStatus(200)
-            ->content();
+            ->assertStatus(200);
 
         // Try with a wrong From
         $response = $this->withHeaders([
@@ -115,10 +114,9 @@ class ApiAccountApiKeyTest extends TestCase
                 'From' => 'sip:baduser@server.tld'
             ])
             ->json($this->method, '/api/accounts/me')
-            ->assertStatus(200)
-            ->content();
+            ->assertStatus(200);
 
         // Check if the account was correctly attached
-        $this->assertEquals(json_decode($response)->email, $password->account->email);
+        $this->assertEquals($response->json('email'), $password->account->email);
     }
 }
