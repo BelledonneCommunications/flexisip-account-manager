@@ -26,58 +26,59 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('ping', 'Api\PingController@ping');
-Route::post('account_creation_tokens/send-by-push', 'Api\AccountCreationTokenController@sendByPush');
-// Old URL, for retro-compatibility
-Route::post('tokens', 'Api\AccountCreationTokenController@sendByPush');
 
-Route::get('accounts/{sip}/info', 'Api\AccountController@info');
+Route::post('account_creation_request_tokens', 'Api\Account\CreationRequestToken@create');
+Route::post('account_creation_tokens/send-by-push', 'Api\Account\CreationTokenController@sendByPush');
+Route::post('account_creation_tokens/using-account-creation-request-token', 'Api\Account\CreationTokenController@usingAccountRequestToken');
+Route::post('accounts/with-account-creation-token', 'Api\Account\AccountController@store');
 
-Route::post('accounts/with-account-creation-token', 'Api\AccountController@store');
-// Old URL, for retro-compatibility
-Route::post('accounts/with-token', 'Api\AccountController@store');
+Route::get('accounts/{sip}/info', 'Api\Account\AccountController@info');
 
-Route::post('accounts/{sip}/activate/email', 'Api\AccountController@activateEmail');
-Route::post('accounts/{sip}/activate/phone', 'Api\AccountController@activatePhone');
+Route::post('accounts/{sip}/activate/email', 'Api\Account\AccountController@activateEmail');
+Route::post('accounts/{sip}/activate/phone', 'Api\Account\AccountController@activatePhone');
 
 // /!\ Dangerous endpoints
-Route::post('accounts/public', 'Api\AccountController@storePublic');
-Route::get('accounts/{sip}/recover/{recovery_key}', 'Api\AccountController@recoverUsingKey');
-Route::post('accounts/recover-by-phone', 'Api\AccountController@recoverByPhone');
-Route::get('accounts/{phone}/info-by-phone', 'Api\AccountController@phoneInfo');
+Route::post('accounts/public', 'Api\Account\AccountController@storePublic');
+Route::get('accounts/{sip}/recover/{recovery_key}', 'Api\Account\AccountController@recoverUsingKey');
+Route::post('accounts/recover-by-phone', 'Api\Account\AccountController@recoverByPhone');
+Route::get('accounts/{phone}/info-by-phone', 'Api\Account\AccountController@phoneInfo');
 
-Route::post('accounts/auth_token', 'Api\AuthTokenController@store');
+Route::post('accounts/auth_token', 'Api\Account\AuthTokenController@store');
 
-Route::get('accounts/me/api_key/{auth_token}', 'Api\ApiKeyController@generateFromToken')->middleware('cookie', 'cookie.encrypt');
+Route::get('accounts/me/api_key/{auth_token}', 'Api\Account\ApiKeyController@generateFromToken')->middleware('cookie', 'cookie.encrypt');
 
 Route::group(['middleware' => ['auth.digest_or_key']], function () {
     Route::get('statistic/month', 'Api\StatisticController@month');
     Route::get('statistic/week', 'Api\StatisticController@week');
     Route::get('statistic/day', 'Api\StatisticController@day');
 
-    Route::get('accounts/auth_token/{auth_token}/attach', 'Api\AuthTokenController@attach');
+    Route::get('accounts/auth_token/{auth_token}/attach', 'Api\Account\AuthTokenController@attach');
 
-    Route::get('accounts/me/api_key', 'Api\ApiKeyController@generate')->middleware('cookie', 'cookie.encrypt');
+    Route::get('accounts/me/api_key', 'Api\Account\ApiKeyController@generate')->middleware('cookie', 'cookie.encrypt');
 
-    Route::get('accounts/me', 'Api\AccountController@show');
-    Route::delete('accounts/me', 'Api\AccountController@delete');
-    Route::get('accounts/me/provision', 'Api\AccountController@provision');
+    Route::get('accounts/me', 'Api\Account\AccountController@show');
+    Route::delete('accounts/me', 'Api\Account\AccountController@delete');
+    Route::get('accounts/me/provision', 'Api\Account\AccountController@provision');
 
-    Route::post('accounts/me/phone/request', 'Api\AccountPhoneController@requestUpdate');
-    Route::post('accounts/me/phone', 'Api\AccountPhoneController@update');
+    Route::post('accounts/me/phone/request', 'Api\Account\PhoneController@requestUpdate');
+    Route::post('accounts/me/phone', 'Api\Account\PhoneController@update');
 
-    Route::get('accounts/me/devices', 'Api\DeviceController@index');
-    Route::delete('accounts/me/devices/{uuid}', 'Api\DeviceController@destroy');
+    Route::get('accounts/me/devices', 'Api\Account\DeviceController@index');
+    Route::delete('accounts/me/devices/{uuid}', 'Api\Account\DeviceController@destroy');
 
-    Route::post('accounts/me/email/request', 'Api\EmailController@requestUpdate');
-    Route::post('accounts/me/password', 'Api\PasswordController@update');
+    Route::post('accounts/me/email/request', 'Api\Account\EmailController@requestUpdate');
+    Route::post('accounts/me/password', 'Api\Account\PasswordController@update');
 
-    Route::get('accounts/me/contacts/{sip}', 'Api\AccountContactController@show');
-    Route::get('accounts/me/contacts', 'Api\AccountContactController@index');
+    Route::get('accounts/me/contacts/{sip}', 'Api\Account\ContactController@show');
+    Route::get('accounts/me/contacts', 'Api\Account\ContactController@index');
 
     Route::group(['middleware' => ['auth.admin']], function () {
         if (!empty(config('app.linphone_daemon_unix_pipe'))) {
-            Route::post('messages', 'Api\MessageController@send');
+            Route::post('messages', 'Api\Admin\MessageController@send');
         }
+
+        // Account creation token
+        Route::post('account_creation_tokens', 'Api\Admin\AccountCreationTokenController@create');
 
         // Accounts
         Route::get('accounts/{id}/activate', 'Api\Admin\AccountController@activate');

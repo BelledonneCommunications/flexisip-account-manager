@@ -1,7 +1,7 @@
 <?php
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
-    Copyright (C) 2022 Belledonne Communications SARL, All rights reserved.
+    Copyright (C) 2023 Belledonne Communications SARL, All rights reserved.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -22,14 +22,14 @@ namespace App;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AccountType extends Model
+class AccountCreationRequestToken extends Model
 {
     use HasFactory;
 
-    protected $hidden = ['pivot', 'created_at', 'updated_at'];
+    protected $hidden = ['id', 'updated_at', 'created_at'];
 
-    public function accounts()
+    public function accountCreationToken()
     {
-        return $this->belongsToMany(Account::class);
+        return $this->belongsTo(AccountCreationToken::class, 'acc_creation_token_id');
     }
 }

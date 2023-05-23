@@ -78,9 +78,19 @@ You can find more documentation on the related [IETF RFC-7616](https://tools.iet
 <span class="badge badge-success">Public</span>
 Returns `pong`
 
+## Account Creation Request Tokens
+
+An `account_creation_request_token` is a unique token that can be validated and then used to generate a valid `account_creation_token`.
+
+### `POST /account_creation_request_tokens`
+<span class="badge badge-success">Public</span>
+
+Create and return an `account_creation_request_token` that should then be validated to be used.
+
+
 ## Account Creation Tokens
 
-An account creation token is a unique token that allow the creation of a **unique** account.
+An `account_creation_token` is a unique token that allow the creation of a **unique** account.
 
 ### `POST /account_creation_tokens/send-by-push`
 <span class="badge badge-success">Public</span>
@@ -93,6 +103,16 @@ JSON parameters:
 * `pn_provider` the push notification provider
 * `pn_param` the push notification parameter
 * `pn_prid` the push notification unique id
+
+### `POST /account_creation_tokens/using-account-creation-request-token`
+<span class="badge badge-success">Public</span>
+Create an `account_creation_token` using an `account_creation_request_token`.
+Return an `account_creation_token`.
+Return `403` if the `account_creation_request_token` provided is not valid or expired otherwise.
+
+JSON parameters:
+
+* `account_creation_request_token` required
 
 ### `POST /account_creation_tokens`
 <span class="badge badge-warning">Admin</span>

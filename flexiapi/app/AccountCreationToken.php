@@ -25,4 +25,11 @@ use Illuminate\Database\Eloquent\Model;
 class AccountCreationToken extends Model
 {
     use HasFactory;
+
+    protected $hidden = ['id', 'updated_at', 'created_at'];
+
+    public function accountCreationRequestToken()
+    {
+        return $this->hasOne(AccountCreationRequestToken::class, 'acc_creation_token_id');
+    }
 }

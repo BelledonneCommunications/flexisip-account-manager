@@ -1,7 +1,7 @@
 <?php
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
-    Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
+    Copyright (C) 2023 Belledonne Communications SARL, All rights reserved.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -17,25 +17,22 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Http\Controllers\Api;
+namespace App\Rules;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use App\AccountCreationRequestToken as AppAccountCreationRequestToken;
+use App\Http\Controllers\Account\AuthenticateController;
+use Illuminate\Contracts\Validation\Rule;
 
-class EmailController extends Controller
+class AccountCreationRequestToken implements Rule
 {
-    public function requestUpdate(Request $request)
+    public function passes($attribute, $value)
     {
-        $rules = ['required', 'email', Rule::notIn([$request->user()->email])];
+        return AppAccountCreationRequestToken::where('token', $value)->where('used', false)->exists()
+            && strlen($value) == AuthenticateController::$emailCodeSize;
+    }
 
-        if (config('app.account_email_unique')) {
-            array_push($rules, Rule::unique('accounts', 'email'));
-        }
-
-        $request->validate([
-            'email' => $rules,
-        ]);
-        $request->user()->requestEmailUpdate($request->get('email'));
+    public function message()
+    {
+        return 'Please provide a valid account_creation_request_token';
     }
 }

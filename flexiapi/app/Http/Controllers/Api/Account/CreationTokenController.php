@@ -17,8 +17,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Account;
 
+use App\AccountCreationRequestToken;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -27,8 +28,9 @@ use Illuminate\Support\Facades\Log;
 use App\AccountCreationToken;
 use App\Libraries\FlexisipPusherConnector;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+use App\Rules\AccountCreationRequestToken as RulesAccountCreationRequestToken;
 
-class AccountCreationTokenController extends Controller
+class CreationTokenController extends Controller
 {
     public function sendByPush(Request $request)
     {
@@ -54,5 +56,33 @@ class AccountCreationTokenController extends Controller
         }
 
         abort(503, "Token not sent");
+    }
+
+    public function usingAccountRequestToken(Request $request)
+    {
+        $request->validate([
+            'account_creation_request_token' => [
+                'required',
+                new RulesAccountCreationRequestToken
+            ]
+        ]);
+
+        $creationRequestToken = AccountCreationRequestToken::where('token', $request->get('account_creation_request_token'))
+            ->where('used', false)
+            ->first();
+
+        if ($creationRequestToken && $creationRequestToken->validated_at != null) {
+            $accountCreationToken = new AccountCreationToken;
+            $accountCreationToken->token = Str::random(WebAuthenticateController::$emailCodeSize);
+            $accountCreationToken->save();
+
+            $creationRequestToken->used = true;
+            $creationRequestToken->acc_creation_token_id = $accountCreationToken->id;
+            $creationRequestToken->save();
+
+            return $accountCreationToken;
+        }
+
+        return abort(403);
     }
 }

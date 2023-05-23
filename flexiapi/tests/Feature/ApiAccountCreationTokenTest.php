@@ -19,17 +19,23 @@
 
 namespace Tests\Feature;
 
+use App\AccountCreationRequestToken;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 use App\AccountCreationToken;
+use App\Admin;
+use Carbon\Carbon;
 
 class ApiAccountCreationTokenTest extends TestCase
 {
     use RefreshDatabase;
 
     protected $tokenRoute = '/api/account_creation_tokens/send-by-push';
+    protected $tokenRequestRoute = '/api/account_creation_request_tokens';
+    protected $tokenUsingCreationTokenRoute = '/api/account_creation_tokens/using-account-creation-request-token';
     protected $accountRoute = '/api/accounts/with-account-creation-token';
+    protected $adminRoute = '/api/account_creation_tokens';
     protected $method = 'POST';
 
     protected $pnProvider = 'provider';
@@ -52,48 +58,21 @@ class ApiAccountCreationTokenTest extends TestCase
         $response->assertStatus(503);
     }
 
-    /**
-     * For retro-compatibility only
-     */
-    public function testRetrocopatibilityToken()
+    public function testAdminEndpoint()
     {
-        $token = AccountCreationToken::factory()->create();
+        $admin = Admin::factory()->create();
+        $admin->account->generateApiKey();
 
-        $response = $this->json($this->method, '/api/tokens', [
-            'pn_provider' => $token->pn_provider,
-            'pn_param' => $token->pn_param,
-            'pn_prid' => $token->pn_prid
+        $response = $this->keyAuthenticated($admin->account)
+            ->json($this->method, $this->adminRoute)
+            ->assertStatus(201);
+
+        $this->assertDatabaseHas('account_creation_tokens', [
+            'token' => $response->json()['token']
         ]);
-        $response->assertStatus(503);
     }
 
     public function testInvalidToken()
-    {
-        $token = AccountCreationToken::factory()->create();
-
-        // Valid token
-        $response = $this->json($this->method, '/api/accounts/with-token', [
-            'username' => 'username',
-            'algorithm' => 'SHA-256',
-            'password' => '2',
-            'token' => $token->token
-        ]);
-        $response->assertStatus(200);
-
-        // Expired token
-        $response = $this->json($this->method, '/api/accounts/with-token', [
-            'username' => 'username2',
-            'algorithm' => 'SHA-256',
-            'password' => '2',
-            'token' => $token->token
-        ]);
-        $response->assertStatus(422);
-    }
-
-    /**
-     * For retrocompatibility only
-     */
-    public function testRetrocompatibilityInvalidToken()
     {
         $token = AccountCreationToken::factory()->create();
 
@@ -125,9 +104,6 @@ class ApiAccountCreationTokenTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /**
-     * Test username blacklist
-     */
     public function testBlacklistedUsername()
     {
         $token = AccountCreationToken::factory()->create();
@@ -164,5 +140,35 @@ class ApiAccountCreationTokenTest extends TestCase
         ]);
 
         $response->assertStatus(200);
+    }
+
+    public function testAccountCreationRequestToken()
+    {
+        $response = $this->json($this->method, $this->tokenRequestRoute);
+        $response->assertStatus(201);
+        $creationRequestToken = $response->json()['token'];
+
+        // Validate the creation request token
+        AccountCreationRequestToken::where('token', $creationRequestToken)->update(['validated_at' => Carbon::now()]);
+
+        $response = $this->json($this->method, $this->tokenUsingCreationTokenRoute, [
+            'account_creation_request_token' => $creationRequestToken
+        ])->assertStatus(201);
+
+        $creationToken = $response->json()['token'];
+
+        $this->assertDatabaseHas('account_creation_request_tokens', [
+            'token' => $creationRequestToken,
+            'used' => true
+        ]);
+
+        $this->assertDatabaseHas('account_creation_tokens', [
+            'token' => $creationToken
+        ]);
+
+        $this->assertSame(
+            AccountCreationRequestToken::where('token', $creationRequestToken)->first()->accountCreationToken->id,
+            AccountCreationToken::where('token', $creationToken)->first()->id
+        );
     }
 }

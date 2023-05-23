@@ -33,7 +33,7 @@
 @endsection
 
 @section('body')
-    <div class="container pt-4">
+    <div class="container @if (isset($large) && $large) large @endif pt-4">
         @include('parts.errors')
         @yield('content')
     </div>

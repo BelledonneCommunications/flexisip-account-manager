@@ -36,6 +36,9 @@ if (config('app.web_panel')) {
     Route::get('authenticate/qrcode/{token?}', 'Account\AuthenticateController@loginAuthToken')->name('account.authenticate.auth_token');
 }
 
+Route::get('creation_token/check/{token}', 'Account\CreationRequestTokenController@check')->name('account.creation_request_token.check');
+Route::post('creation_token/validate', 'Account\CreationRequestTokenController@validateToken')->name('account.creation_request_token.validate');
+
 Route::group(['middleware' => 'auth.digest_or_key'], function () {
     Route::get('provisioning/me', 'Account\ProvisioningController@me')->name('provisioning.me');
 

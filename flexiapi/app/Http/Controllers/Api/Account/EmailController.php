@@ -1,7 +1,7 @@
 <?php
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
-    Copyright (C) 2022 Belledonne Communications SARL, All rights reserved.
+    Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -17,19 +17,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App;
+namespace App\Http\Controllers\Api\Account;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
-class AccountType extends Model
+class EmailController extends Controller
 {
-    use HasFactory;
-
-    protected $hidden = ['pivot', 'created_at', 'updated_at'];
-
-    public function accounts()
+    public function requestUpdate(Request $request)
     {
-        return $this->belongsToMany(Account::class);
+        $rules = ['required', 'email', Rule::notIn([$request->user()->email])];
+
+        if (config('app.account_email_unique')) {
+            array_push($rules, Rule::unique('accounts', 'email'));
+        }
+
+        $request->validate([
+            'email' => $rules,
+        ]);
+        $request->user()->requestEmailUpdate($request->get('email'));
     }
 }
