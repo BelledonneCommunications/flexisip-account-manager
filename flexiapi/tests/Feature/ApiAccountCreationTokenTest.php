@@ -148,6 +148,8 @@ class ApiAccountCreationTokenTest extends TestCase
         $response->assertStatus(201);
         $creationRequestToken = $response->json()['token'];
 
+        $this->assertSame($response->json()['validation_url'], route('account.creation_request_token.check', $creationRequestToken));
+
         // Validate the creation request token
         AccountCreationRequestToken::where('token', $creationRequestToken)->update(['validated_at' => Carbon::now()]);
 
