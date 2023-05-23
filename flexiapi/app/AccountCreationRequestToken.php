@@ -27,9 +27,17 @@ class AccountCreationRequestToken extends Model
     use HasFactory;
 
     protected $hidden = ['id', 'updated_at', 'created_at'];
+    protected $appends = ['validation_url'];
 
     public function accountCreationToken()
     {
         return $this->belongsTo(AccountCreationToken::class, 'acc_creation_token_id');
+    }
+
+    public function getValidationUrlAttribute(): ?string
+    {
+        return $this->validated_at == null
+            ? route('account.creation_request_token.check', $this->token)
+            : null;
     }
 }
