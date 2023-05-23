@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Account;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -253,20 +253,15 @@ class AccountController extends Controller
             'password' => 'required|filled',
             'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
             'account_creation_token' => [
-                'required_without:token',
+                'required',
                 new RulesAccountCreationToken
             ],
             'email' => config('app.account_email_unique')
                 ? 'nullable|email|unique:accounts,email'
                 : 'nullable|email',
-            // For retro-compatibility
-            'token' => [
-                'required_without:account_creation_token',
-                new RulesAccountCreationToken
-            ],
         ]);
 
-        $token = AccountCreationToken::where('token', $request->get('token') ?? $request->get('account_creation_token'))->first();
+        $token = AccountCreationToken::where('token', $request->get('account_creation_token'))->first();
         $token->used = true;
         $token->save();
 

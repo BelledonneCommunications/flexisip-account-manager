@@ -108,62 +108,62 @@ class Account extends Authenticatable
 
     public function activationExpiration()
     {
-        return $this->hasOne('App\ActivationExpiration');
+        return $this->hasOne(ActivationExpiration::class);
     }
 
     public function admin()
     {
-        return $this->hasOne('App\Admin');
+        return $this->hasOne(Admin::class);
     }
 
     public function alias()
     {
-        return $this->hasOne('App\Alias');
+        return $this->hasOne(Alias::class);
     }
 
     public function apiKey()
     {
-        return $this->hasOne('App\ApiKey');
+        return $this->hasOne(ApiKey::class);
     }
 
     public function externalAccount()
     {
-        return $this->hasOne('App\ExternalAccount');
+        return $this->hasOne(ExternalAccount::class);
     }
 
     public function contacts()
     {
-        return $this->belongsToMany('App\Account', 'contacts', 'account_id', 'contact_id');
+        return $this->belongsToMany(Account::class, 'contacts', 'account_id', 'contact_id');
     }
 
     public function emailChanged()
     {
-        return $this->hasOne('App\EmailChanged');
+        return $this->hasOne(EmailChanged::class);
     }
 
     public function nonces()
     {
-        return $this->hasMany('App\DigestNonce');
+        return $this->hasMany(DigestNonce::class);
     }
 
     public function authTokens()
     {
-        return $this->hasMany('App\AuthToken');
+        return $this->hasMany(AuthToken::class);
     }
 
     public function passwords()
     {
-        return $this->hasMany('App\Password');
+        return $this->hasMany(Password::class);
     }
 
     public function phoneChangeCode()
     {
-        return $this->hasOne('App\PhoneChangeCode');
+        return $this->hasOne(PhoneChangeCode::class);
     }
 
     public function types()
     {
-        return $this->belongsToMany('App\AccountType');
+        return $this->belongsToMany(AccountType::class);
     }
 
     /**

@@ -29,6 +29,10 @@ body > div {
     max-width: 800px;
 }
 
+.container.large {
+    max-width: 1024px;
+}
+
 body > footer::before {
     background-color: white;
     background-position: bottom center;

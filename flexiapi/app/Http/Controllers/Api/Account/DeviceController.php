@@ -1,7 +1,7 @@
 <?php
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
-    Copyright (C) 2021 Belledonne Communications SARL, All rights reserved.
+    Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -17,27 +17,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Http\Controllers\Api;
-
-use Illuminate\Http\Request;
+namespace App\Http\Controllers\Api\Account;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Libraries\FlexisipConnector;
 
-class AccountContactController extends Controller
+class DeviceController extends Controller
 {
-    private $selected = ['id', 'username', 'domain', 'activated', 'dtmf_protocol'];
-
     public function index(Request $request)
     {
-        return $request->user()->contacts()->select($this->selected)->get();
+        $connector = new FlexisipConnector;
+
+        return $connector->getDevices($request->user()->identifier);
     }
 
-    public function show(Request $request, string $sip)
+    public function destroy(Request $request, string $uuid)
     {
-        return $request->user()
-                       ->contacts()
-                       ->select($this->selected)
-                       ->sip($sip)
-                       ->firstOrFail();
+        $connector = new FlexisipConnector;
+
+        return $connector->deleteDevice($request->user()->identifier, $uuid);
     }
 }

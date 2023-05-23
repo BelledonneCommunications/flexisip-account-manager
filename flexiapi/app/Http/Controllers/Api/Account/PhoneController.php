@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Account;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -29,7 +29,7 @@ use App\Libraries\OvhSMS;
 use App\PhoneChangeCode;
 use App\Alias;
 
-class AccountPhoneController extends Controller
+class PhoneController extends Controller
 {
     public function requestUpdate(Request $request)
     {
