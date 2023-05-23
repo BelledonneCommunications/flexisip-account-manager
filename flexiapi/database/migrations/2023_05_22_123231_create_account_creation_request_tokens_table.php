@@ -10,7 +10,7 @@ class CreateAccountCreationRequestTokensTable extends Migration
     {
         Schema::create('account_creation_request_tokens', function (Blueprint $table) {
             $table->id();
-            $table->string('token')->index();
+            $table->string('token', 16)->index();
             $table->boolean('used')->default(false);
             $table->dateTime('validated_at')->nullable();
 
