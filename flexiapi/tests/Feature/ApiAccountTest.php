@@ -319,7 +319,7 @@ class ApiAccountTest extends TestCase
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'algorithm' => 'SHA-256',
-                'password' => '2',
+                'password' => 'blabla',
                 'admin' => true,
             ]);
 
@@ -349,7 +349,7 @@ class ApiAccountTest extends TestCase
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'algorithm' => 'SHA-256',
-                'password' => '2',
+                'password' => 'blabla',
                 'activated' => true,
             ]);
 
@@ -379,7 +379,7 @@ class ApiAccountTest extends TestCase
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'algorithm' => 'SHA-256',
-                'password' => '2',
+                'password' => 'blabla',
                 'activated' => false,
             ]);
 
@@ -531,6 +531,49 @@ class ApiAccountTest extends TestCase
             ])
             ->assertStatus(422)
             ->assertJsonValidationErrors(['email']);
+    }
+
+    public function testEditAdmin()
+    {
+        $password = Password::factory()->create();
+        $account = $password->account;
+
+        $admin = Admin::factory()->create();
+        $admin->account->generateApiKey();
+        $admin->account->save();
+
+        $username = 'changed';
+        $algorithm = 'MD5';
+        $password = 'other';
+
+        $this->keyAuthenticated($admin->account)
+            ->json('PUT', $this->route. '/1234')
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['username']);
+
+        $this->keyAuthenticated($admin->account)
+            ->json('PUT', $this->route. '/1234', [
+                'username' => 'good'
+            ])
+            ->assertStatus(422);
+
+        $this->keyAuthenticated($admin->account)
+            ->json('PUT', $this->route. '/'. $account->id, [
+                'username' => $username,
+                'algorithm' => $algorithm,
+                'password' => $password,
+            ])
+            ->assertStatus(200);
+
+        $this->assertDatabaseHas('accounts', [
+            'id' => $account->id,
+            'username' => $username
+        ]);
+
+        $this->assertDatabaseHas('passwords', [
+            'account_id' => $account->id,
+            'algorithm' => $algorithm
+        ]);
     }
 
     /**

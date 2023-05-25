@@ -33,8 +33,11 @@ class UpdateAccountRequest extends FormRequest
                 })->ignore($this->route('id'), 'id'),
                 'filled',
             ],
-            'domain' => config('app.admins_manage_multi_domains') ? 'required' : '',
-            'email' => 'nullable|email',
+            'email' => [
+                'nullable',
+                'email',
+                config('app.account_email_unique') ? Rule::unique('accounts', 'email')->ignore($this->route('id')) : null
+            ],
             'password_sha256' => 'nullable|min:3',
             'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
             'phone' => [

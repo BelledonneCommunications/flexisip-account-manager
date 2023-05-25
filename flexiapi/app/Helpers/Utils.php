@@ -22,6 +22,7 @@ use Illuminate\Support\Str;
 use App\Account;
 use App\DigestNonce;
 use App\ExternalAccount;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
@@ -118,4 +119,14 @@ function isRegularExpression($string): bool
     restore_error_handler();
 
     return $isRegularExpression;
+}
+
+function resolveDomain(Request $request): string
+{
+    return $request->has('domain')
+        && $request->user()
+        && $request->user()->admin
+        && config('app.admins_manage_multi_domains')
+            ? $request->get('domain')
+            : config('app.sip_domain');
 }

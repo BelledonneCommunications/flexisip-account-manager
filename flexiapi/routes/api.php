@@ -88,11 +88,12 @@ Route::group(['middleware' => ['auth.digest_or_key']], function () {
         Route::post('accounts/{id}/recover-by-email', 'Api\Admin\AccountController@recoverByEmail');
 
         Route::post('accounts', 'Api\Admin\AccountController@store');
+        Route::put('accounts/{id}', 'Api\Admin\AccountController@update');
         Route::get('accounts', 'Api\Admin\AccountController@index');
-        Route::get('accounts/{sip}/search', 'Api\Admin\AccountController@search');
-        Route::get('accounts/{email}/search-by-email', 'Api\Admin\AccountController@searchByEmail');
         Route::get('accounts/{id}', 'Api\Admin\AccountController@show');
         Route::delete('accounts/{id}', 'Api\Admin\AccountController@destroy');
+        Route::get('accounts/{sip}/search', 'Api\Admin\AccountController@search');
+        Route::get('accounts/{email}/search-by-email', 'Api\Admin\AccountController@searchByEmail');
 
         // Account actions
         Route::get('accounts/{id}/actions', 'Api\Admin\AccountActionController@index');

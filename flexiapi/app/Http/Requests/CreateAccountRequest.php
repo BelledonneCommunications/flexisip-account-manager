@@ -29,13 +29,14 @@ class CreateAccountRequest extends FormRequest
                 new BlacklistedUsername,
                 new SIPUsername,
                 Rule::unique('accounts', 'username')->where(function ($query) {
-                    $query->where('domain', config('app.sip_domain'));
+                    $query->where('domain', resolveDomain($this));
                 }),
                 'filled',
             ],
-            'domain' => config('app.admins_manage_multi_domains') ? 'required' : '',
             'password' => 'required|min:3',
-            'email' => 'nullable|email',
+            'email' => config('app.account_email_unique')
+                ? 'nullable|email|unique:accounts,email'
+                : 'nullable|email',
             'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
             'phone' => [
                 'nullable',
