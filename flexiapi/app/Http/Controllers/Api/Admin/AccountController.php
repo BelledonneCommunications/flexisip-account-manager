@@ -22,7 +22,6 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
@@ -33,12 +32,9 @@ use App\ActivationExpiration;
 use App\Admin;
 use App\Alias;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+use App\Http\Requests\CreateAccountRequest;
+use App\Http\Requests\UpdateAccountRequest;
 use App\Mail\PasswordAuthentication;
-use App\Rules\BlacklistedUsername;
-use App\Rules\IsNotPhoneNumber;
-use App\Rules\NoUppercase;
-use App\Rules\SIPUsername;
-use App\Rules\WithoutSpaces;
 use Illuminate\Support\Facades\Mail;
 
 class AccountController extends Controller
@@ -112,36 +108,15 @@ class AccountController extends Controller
         return $account->makeVisible(['provisioning_token']);
     }
 
-    public function store(Request $request)
+    public function store(CreateAccountRequest $request)
     {
         $request->validate([
-            'username' => [
-                'required',
-                new NoUppercase,
-                new IsNotPhoneNumber,
-                new BlacklistedUsername,
-                new SIPUsername,
-                Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
-                    $query->where('domain', $this->resolveDomain($request));
-                }),
-                'filled',
-            ],
             'algorithm' => 'required|in:SHA-256,MD5',
-            'password' => 'required|filled',
             'admin' => 'boolean|nullable',
             'activated' => 'boolean|nullable',
-            'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
             'confirmation_key_expires' => [
                 'date_format:Y-m-d H:i:s',
                 'nullable',
-            ],
-            'email' => config('app.account_email_unique')
-                ? 'nullable|email|unique:accounts,email'
-                : 'nullable|email',
-            'phone' => [
-                'unique:aliases,alias',
-                'unique:accounts,username',
-                new WithoutSpaces, 'starts_with:+'
             ]
         ]);
 
@@ -153,7 +128,7 @@ class AccountController extends Controller
         $account->ip_address = $request->ip();
         $account->dtmf_protocol = $request->get('dtmf_protocol');
         $account->creation_time = Carbon::now();
-        $account->domain = $this->resolveDomain($request);
+        $account->domain = resolveDomain($request);
         $account->user_agent = $request->header('User-Agent') ?? config('app.name');
 
         if (!$request->has('activated') || !(bool)$request->get('activated')) {
@@ -172,27 +147,45 @@ class AccountController extends Controller
         }
 
         $account->updatePassword($request->get('password'), $request->get('algorithm'));
-
-        if ($request->has('admin') && (bool)$request->get('admin')) {
-            $admin = new Admin;
-            $admin->account_id = $account->id;
-            $admin->save();
-        }
-
-        if ($request->has('phone')) {
-            $alias = new Alias;
-            $alias->alias = $request->get('phone');
-            $alias->domain = config('app.sip_domain');
-            $alias->account_id = $account->id;
-            $alias->save();
-        }
+        $account->admin = $request->has('admin') && (bool)$request->get('admin');
+        $account->phone = $request->get('phone');
 
         // Full reload
         $account = Account::withoutGlobalScopes()->find($account->id);
 
         Log::channel('events')->info('API Admin: Account created', ['id' => $account->identifier]);
 
-        return response()->json($account->makeVisible(['confirmation_key', 'provisioning_token']));
+        return $account->makeVisible(['confirmation_key', 'provisioning_token']);
+    }
+
+    public function update(UpdateAccountRequest $request, int $accountId)
+    {
+        $request->validate([
+            'algorithm' => 'required|in:SHA-256,MD5',
+            'admin' => 'boolean|nullable',
+            'activated' => 'boolean|nullable'
+        ]);
+
+        $account = Account::findOrFail($accountId);
+        $account->username = $request->get('username');
+        $account->email = $request->get('email');
+        $account->display_name = $request->get('display_name');
+        $account->dtmf_protocol = $request->get('dtmf_protocol');
+        $account->domain = resolveDomain($request);
+        $account->user_agent = $request->header('User-Agent') ?? config('app.name');
+
+        $account->save();
+
+        $account->updatePassword($request->get('password'), $request->get('algorithm'));
+        $account->admin = $request->has('admin') && (bool)$request->get('admin');
+        $account->phone = $request->get('phone');
+
+        // Full reload
+        $account = Account::withoutGlobalScopes()->find($account->id);
+
+        Log::channel('events')->info('API Admin: Account updated', ['id' => $account->identifier]);
+
+        return $account->makeVisible(['confirmation_key', 'provisioning_token']);
     }
 
     public function typeAdd(int $id, int $typeId)
@@ -226,6 +219,6 @@ class AccountController extends Controller
 
         Mail::to($account)->send(new PasswordAuthentication($account));
 
-        return response()->json($account->makeVisible(['confirmation_key', 'provisioning_token']));
+        return $account->makeVisible(['confirmation_key', 'provisioning_token']);
     }
 }

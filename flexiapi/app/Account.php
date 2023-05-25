@@ -32,6 +32,7 @@ use App\Password;
 use App\EmailChanged;
 use App\Mail\ChangingEmail;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class Account extends Authenticatable
 {
@@ -202,6 +203,19 @@ class Account extends Authenticatable
         return null;
     }
 
+    public function setPhoneAttribute(?string $phone)
+    {
+        $this->alias()->delete();
+
+        if (!empty($phone)) {
+            $alias = new Alias;
+            $alias->alias = $phone;
+            $alias->domain = config('app.sip_domain');
+            $alias->account_id = $this->id;
+            $alias->save();
+        }
+    }
+
     public function getConfirmationKeyExpiresAttribute()
     {
         if ($this->activationExpiration) {
@@ -302,9 +316,20 @@ class Account extends Authenticatable
         return $this->provisioning_token;
     }
 
-    public function isAdmin()
+    public function getAdminAttribute(): bool
     {
-        return ($this->admin);
+        return ($this->admin()->exists());
+    }
+
+    public function setAdminAttribute(bool $isAdmin)
+    {
+        $this->admin()->delete();
+
+        if ($isAdmin) {
+            $admin = new Admin;
+            $admin->account_id = $this->id;
+            $admin->save();
+        }
     }
 
     public function hasTombstone()
@@ -323,6 +348,14 @@ class Account extends Authenticatable
         $password->password = bchash($this->username, $this->resolvedRealm, $newPassword, $algorithm);
         $password->algorithm = $algorithm;
         $password->save();
+    }
+
+    public function fillPassword(Request $request)
+    {
+        if ($request->filled('password')) {
+            $this->algorithm = $request->has('password_sha256') ? 'SHA-256' : 'MD5';
+            $this->updatePassword($request->get('password'), $this->algorithm);
+        }
     }
 
     public function toVcard4()

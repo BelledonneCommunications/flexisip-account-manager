@@ -19,7 +19,7 @@ class AuthenticateAdmin
             return redirect()->route('account.login');
         }
 
-        if (!$request->user()->isAdmin()) {
+        if (!$request->user()->admin) {
             return abort(403, 'Unauthorized area');
         }
 

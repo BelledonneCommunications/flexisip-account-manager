@@ -291,6 +291,21 @@ JSON parameters:
 * `dtmf_protocol` optional, values must be `sipinfo`, `sipmessage` or `rfc2833`
 * `confirmation_key_expires` optional, a datetime of this format: Y-m-d H:i:s. Only used when `activated` is not used or `false`. Enforces an expiration date on the returned `confirmation_key`. After that datetime public email or phone activation endpoints will return `403`.
 
+### `PUT /accounts/{id}`
+<span class="badge badge-warning">Admin</span>
+Update an existing account.
+
+JSON parameters:
+
+* `username` unique username, minimum 6 characters
+* `password` required minimum 6 characters
+* `algorithm` required, values can be `SHA-256` or `MD5`
+* `display_name` optional, string
+* `email` optional, must be an email, must be unique if `ACCOUNT_EMAIL_UNIQUE` is set to `true`
+* `admin` optional, a boolean, set to `false` by default, create an admin account
+* `phone` optional, a phone number, set a phone number to the account
+* `dtmf_protocol` optional, values must be `sipinfo`, `sipmessage` or `rfc2833`
+
 ### `GET /accounts`
 <span class="badge badge-warning">Admin</span>
 Retrieve all the accounts, paginated.

@@ -30,12 +30,6 @@ use App\Alias;
 use App\ExternalAccount;
 use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
-use App\Rules\BlacklistedUsername;
-use App\Rules\IsNotPhoneNumber;
-use App\Rules\NoUppercase;
-use App\Rules\SIPUsername;
-use App\Rules\WithoutSpaces;
-use Illuminate\Validation\Rule;
 
 class AccountController extends Controller
 {
@@ -71,45 +65,19 @@ class AccountController extends Controller
 
     public function store(CreateAccountRequest $request)
     {
-        $request->validate([
-            'username' => [
-                'required',
-                new NoUppercase,
-                new IsNotPhoneNumber,
-                new BlacklistedUsername,
-                new SIPUsername,
-                Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
-                    $query->where('domain', $this->resolveDomain($request));
-                }),
-                'filled',
-            ],
-            'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
-            'email' => [
-                'nullable',
-                'email',
-                config('app.account_email_unique') ? Rule::unique('accounts', 'email') : null
-            ],
-            'phone' => [
-                'nullable',
-                'unique:aliases,alias',
-                'unique:accounts,username',
-                new WithoutSpaces, 'starts_with:+'
-            ]
-        ]);
-
         $account = new Account;
         $account->username = $request->get('username');
         $account->email = $request->get('email');
         $account->display_name = $request->get('display_name');
-        $account->domain = $this->resolveDomain($request);
+        $account->domain = resolveDomain($request);
         $account->ip_address = $request->ip();
         $account->creation_time = Carbon::now();
         $account->user_agent = config('app.name');
         $account->dtmf_protocol = $request->get('dtmf_protocol');
         $account->save();
 
-        $this->fillPassword($request, $account);
-        $this->fillPhone($request, $account);
+        $account->phone = $request->get('phone');
+        $account->fillPassword($request);
 
         Log::channel('events')->info('Web Admin: Account created', ['id' => $account->identifier]);
 
@@ -126,32 +94,6 @@ class AccountController extends Controller
 
     public function update(UpdateAccountRequest $request, $id)
     {
-        $request->validate([
-            'username' => [
-                'required',
-                new NoUppercase,
-                new IsNotPhoneNumber,
-                new BlacklistedUsername,
-                new SIPUsername,
-                Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
-                    $query->where('domain', $this->resolveDomain($request));
-                })->ignore($id),
-                'filled',
-            ],
-            'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
-            'email' => [
-                'nullable',
-                'email',
-                config('app.account_email_unique') ? Rule::unique('accounts', 'email')->ignore($id) : null
-            ],
-            'phone' => [
-                'nullable',
-                'unique:aliases,alias',
-                'unique:accounts,username',
-                new WithoutSpaces, 'starts_with:+'
-            ]
-        ]);
-
         $account = Account::findOrFail($id);
         $account->username = $request->get('username');
         $account->email = $request->get('email');
@@ -159,8 +101,8 @@ class AccountController extends Controller
         $account->dtmf_protocol = $request->get('dtmf_protocol');
         $account->save();
 
-        $this->fillPassword($request, $account);
-        $this->fillPhone($request, $account);
+        $account->phone = $request->get('phone');
+        $account->fillPassword($request);
 
         Log::channel('events')->info('Web Admin: Account updated', ['id' => $account->identifier]);
 
@@ -261,26 +203,5 @@ class AccountController extends Controller
         Log::channel('events')->info('Web Admin: Account deleted', ['id' => $account->identifier]);
 
         return redirect()->route('admin.account.index');
-    }
-
-    private function fillPassword(Request $request, Account $account)
-    {
-        if ($request->filled('password')) {
-            $algorithm = $request->has('password_sha256') ? 'SHA-256' : 'MD5';
-            $account->updatePassword($request->get('password'), $algorithm);
-        }
-    }
-
-    private function fillPhone(Request $request, Account $account)
-    {
-        if ($request->filled('phone')) {
-            $account->alias()->delete();
-
-            $alias = new Alias;
-            $alias->alias = $request->get('phone');
-            $alias->domain = config('app.sip_domain');
-            $alias->account_id = $account->id;
-            $alias->save();
-        }
     }
 }

@@ -45,7 +45,7 @@
     </a>
 </div>
 
-@if($account->isAdmin())
+@if($account->admin)
     <h3>Admin area</h3>
     <div class="list-group mb-3">
         <a href="{{ route('admin.account.index') }}" class="list-group-item list-group-item-action">
