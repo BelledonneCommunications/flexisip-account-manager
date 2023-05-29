@@ -108,7 +108,7 @@ JSON parameters:
 <span class="badge badge-success">Public</span>
 Create an `account_creation_token` using an `account_creation_request_token`.
 Return an `account_creation_token`.
-Return `403` if the `account_creation_request_token` provided is not valid or expired otherwise.
+Return `404` if the `account_creation_request_token` provided is not valid or expired otherwise.
 
 JSON parameters:
 

@@ -83,6 +83,6 @@ class CreationTokenController extends Controller
             return $accountCreationToken;
         }
 
-        return abort(403);
+        return abort(404);
     }
 }
