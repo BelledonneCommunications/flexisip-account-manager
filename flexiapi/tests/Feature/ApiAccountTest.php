@@ -111,28 +111,35 @@ class ApiAccountTest extends TestCase
         $username = 'blabla🔥';
         $domain = 'example.com';
 
-        $response = $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($password->account)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'domain' => $domain,
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
-            ]);
+            ])->assertJsonValidationErrors(['username']);
 
-        $response->assertJsonValidationErrors(['username']);
+        // Change the regex
+        config()->set('app.account_username_regex', '^[a-z0-9🔥+_.-]*$');
+
+        $this->keyAuthenticated($password->account)
+            ->json($this->method, $this->route, [
+                'username' => $username,
+                'domain' => $domain,
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+            ])->assertStatus(200);
 
         $username = 'blabla hop';
         $domain = 'example.com';
 
-        $response = $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($password->account)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'domain' => $domain,
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
-            ]);
-
-        $response->assertJsonValidationErrors(['username']);
+            ])->assertJsonValidationErrors(['username']);
     }
 
     public function testDomain()

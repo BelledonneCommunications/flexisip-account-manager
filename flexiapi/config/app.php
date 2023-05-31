@@ -31,6 +31,7 @@ return [
     'account_email_unique' => env('ACCOUNT_EMAIL_UNIQUE', false),
     'consume_external_account_on_create' => env('ACCOUNT_CONSUME_EXTERNAL_ACCOUNT_ON_CREATE', false),
     'blacklisted_usernames' => env('ACCOUNT_BLACKLISTED_USERNAMES', ''),
+    'account_username_regex' => env('ACCOUNT_USERNAME_REGEX', '^[a-z0-9+_.-]*$'),
 
     /**
      * Time limit before the API Key and related cookie are expired
