@@ -26,7 +26,7 @@ class SIPUsername implements Rule
 {
     public function passes($attribute, $value)
     {
-        return Validator::regex('/^[a-z0-9+_.-]*$/')->validate($value);
+        return Validator::regex('/' . config('app.account_username_regex') . '/')->validate($value);
     }
 
     public function message()
