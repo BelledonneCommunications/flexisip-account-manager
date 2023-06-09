@@ -920,8 +920,8 @@ class ApiAccountTest extends TestCase
             ->assertStatus(200)
             ->assertJson([
                 'username' => $password->account->username,
-                'email_changed' => [
-                    'new_email' => $newEmail
+                'email_change_code' => [
+                    'email' => $newEmail
                 ]
             ]);
 

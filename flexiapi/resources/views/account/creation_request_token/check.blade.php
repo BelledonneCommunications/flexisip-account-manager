@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.main', ['welcome' => true])
 
 @section('content')
     <div class="card mt-3">

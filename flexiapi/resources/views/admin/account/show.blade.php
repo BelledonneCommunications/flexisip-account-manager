@@ -1,4 +1,4 @@
-@extends('layouts.account')
+@extends('layouts.main')
 
 @section('breadcrumb')
 <li class="breadcrumb-item" aria-current="page">
@@ -11,10 +11,10 @@
 
 @section('content')
 
-<a class="btn btn-danger float-right" href="{{ route('admin.account.delete', $account->id) }}">Delete</a>
-<a class="btn float-right mr-2" href="{{ route('admin.account.edit', $account->id) }}">Edit</a>
+<a class="btn oppose" href="{{ route('admin.account.delete', $account->id) }}">Delete</a>
+<a class="btn oppose" href="{{ route('admin.account.edit', $account->id) }}">Edit</a>
 
-<h2>Account</h2>
+<h1>Account</h1>
 
 <p>
     <b>Id:</b> {{ $account->id }}<br />

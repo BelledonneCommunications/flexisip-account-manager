@@ -48,11 +48,11 @@ If you forgot your password or didn't configured it, you can always recover your
 
 # Account panel
 
-Once authenticated you will get access to @if (config('app.web_panel')) [your account panel]({{ route('account.panel') }}) @else your account panel @endif.
+Once authenticated you will get access to @if (config('app.web_panel')) [your account panel]({{ route('account.dashboard') }}) @else your account panel @endif.
 
 ## Change your email address
 
-You can @if (config('app.web_panel')) [change your email address]({{ route('account.email') }}) @else change your email address @endif from the panel. A confirmation email containing a unique link will be sent to validate the new one.
+You can @if (config('app.web_panel')) [change your email address]({{ route('account.email.change') }}) @else change your email address @endif from the panel. A confirmation email containing a unique link will be sent to validate the new one.
 
 ## Change your password
 

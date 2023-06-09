@@ -1,4 +1,4 @@
-@extends('layouts.account')
+@extends('layouts.main')
 
 @section('breadcrumb')
 <li class="breadcrumb-item" aria-current="page">
@@ -21,9 +21,9 @@
 @section('content')
 
 @if ($account->id)
-    <h2>Edit an account</h2>
+    <h1>Edit an account</h1>
 @else
-    <h2>Create an account</h2>
+    <h1>Create an account</h1>
 @endif
 
 {!! Form::model($account, [
@@ -34,65 +34,53 @@
         ? 'put'
         : 'post'
 ]) !!}
-    <div class="form-row">
-        <div class="form-group col-md-12">
-            {!! Form::label('username', 'Username') !!}
-            <div class="input-group">
-                {!! Form::text('username', $account->username, ['class' => 'form-control', 'placeholder' => 'Username', 'required' => 'required']); !!}
-                @if (config('app.admins_manage_multi_domains'))
-                    <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon1">@</span>
-                    </div>
-                    {!! Form::text('domain', $account->domain ?? config('app.sip_domain'), ['class' => 'form-control', 'placeholder' => 'domain.com', 'required' => 'required']); !!}
-                @else
-                    <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon1">@ {{ config('app.sip_domain') }}</span>
-                    </div>
-                @endif
-            </div>
-        </div>
+    <div>
+        {!! Form::text('username', $account->username, ['placeholder' => 'Username', 'required' => 'required']); !!}
+        {!! Form::label('username', 'Username') !!}
+    </div>
+    <div>
+        @if (config('app.admins_manage_multi_domains'))
+            {!! Form::text('domain', $account->domain ?? config('app.sip_domain'), ['placeholder' => 'domain.com', 'required' => 'required']); !!}
+        @else
+            {!! Form::text('domain', $account->domain ?? config('app.sip_domain'), ['placeholder' => 'domain.com', 'disabled']); !!}
+        @endif
+        {!! Form::label('domain', 'Domain') !!}
     </div>
 
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            {!! Form::label('password', ($account->id) ? 'Password (fill to change)' : 'Password') !!}
-            {!! Form::password('password', ['class' => 'form-control', 'placeholder' => 'Password']); !!}
-            <div class="form-check mt-3">
-                {!! Form::checkbox('password_sha256', 'checked', $account->sha256Password, ['class' => 'form-check-input']) !!}
-                {!! Form::label('password_sha256', 'Use a SHA-256 encrypted password', ['class' => 'form-check-label']) !!}
-            </div>
-        </div>
+    <div>
+        {!! Form::password('password', ['placeholder' => 'Password', 'required']); !!}
+        {!! Form::label('password', ($account->id) ? 'Password (fill to change)' : 'Password') !!}
+    </div>
+    <div>
+        {!! Form::checkbox('password_sha256', 'checked', $account->sha256Password) !!}
+        {!! Form::label('password_sha256', 'Use a SHA-256 encrypted password') !!}
+    </div>
+
+    <div>
+        {!! Form::email('email', $account->email, ['placeholder' => 'Email']); !!}
+        {!! Form::label('email', 'Email') !!}
+    </div>
+
+    <div>
+        {!! Form::text('display_name', $account->display_name, ['placeholder' => 'John Doe']); !!}
+        {!! Form::label('display_name', 'Display Name') !!}
+    </div>
+
+    <div>
+        {!! Form::text('phone', $account->phone, ['placeholder' => '+12123123']); !!}
+        {!! Form::label('phone', 'Phone') !!}
+    </div>
+
+    <div class="select">
+        {!! Form::select('dtmf_protocol', $protocols, $account->dtmf_protocol); !!}
+        {!! Form::label('dtmf_protocol', 'DTMF Protocol') !!}
     </div>
 
     <hr />
-
-    <div class="form-row">
-        <div class="form-group col-md-12 mb-0">
-            <h4>Optional</h4>
-        </div>
-
-        <div class="form-group col-md-6">
-            {!! Form::label('email', 'Email') !!}
-            {!! Form::email('email', $account->email, ['class' => 'form-control', 'placeholder' => 'Email']); !!}
-        </div>
-
-        <div class="form-group col-md-6">
-            {!! Form::label('display_name', 'Display Name') !!}
-            {!! Form::text('display_name', $account->display_name, ['class' => 'form-control', 'placeholder' => 'John Doe']); !!}
-        </div>
-
-        <div class="form-group col-md-6">
-            {!! Form::label('phone', 'Phone') !!}
-            {!! Form::text('phone', $account->phone, ['class' => 'form-control', 'placeholder' => '+12123123']); !!}
-        </div>
-
-        <div class="form-group col-md-6">
-            {!! Form::label('dtmf_protocol', 'DTMF Protocol') !!}
-            {!! Form::select('dtmf_protocol', $protocols, $account->dtmf_protocol, ['class' => 'form-control']); !!}
-        </div>
+    <div>
+        {!! Form::submit(($account->id) ? 'Update' : 'Create', ['class' => 'btn oppose']) !!}
     </div>
 
-{!! Form::submit(($account->id) ? 'Update' : 'Create', ['class' => 'btn btn-success btn-centered']) !!}
 {!! Form::close() !!}
 
 @endsection

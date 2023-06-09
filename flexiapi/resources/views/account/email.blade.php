@@ -1,4 +1,4 @@
-@extends('layouts.account')
+@extends('layouts.main')
 
 @section('content')
 
@@ -12,12 +12,12 @@
 
 {!! Form::open(['route' => 'account.email.request_update']) !!}
 <div class="form-group">
-    {!! Form::label('email', 'New email') !!}
     {!! Form::email('email', old('email'), ['class' => 'form-control', 'placeholder' => 'bob@example.net', 'required']) !!}
+    {!! Form::label('email', 'New email') !!}
 </div>
 <div class="form-group">
-    {!! Form::label('email_confirmation', 'Email confirmation') !!}
     {!! Form::email('email_confirmation', old('email_confirm'), ['class' => 'form-control', 'placeholder' => 'bob@example.net', 'required']) !!}
+    {!! Form::label('email_confirmation', 'Email confirmation') !!}
 </div>
 
 {!! Form::hidden('email_current', $account->email) !!}

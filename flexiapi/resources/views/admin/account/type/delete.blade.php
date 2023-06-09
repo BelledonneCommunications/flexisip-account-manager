@@ -1,4 +1,4 @@
-@extends('layouts.account')
+@extends('layouts.main')
 
 @section('breadcrumb')
 <li class="breadcrumb-item" aria-current="page">

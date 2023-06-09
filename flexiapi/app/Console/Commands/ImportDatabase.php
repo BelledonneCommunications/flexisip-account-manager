@@ -209,17 +209,6 @@ class ImportDatabase extends Command
                                             ->toArray();
                 DigestNonce::insert($originNonces);
 
-                $this->info('Migrating the email changed');
-
-                $originEmailChanged = Capsule::connection('sqlite')
-                                            ->table('email_changed')
-                                            ->get()
-                                            ->map(function ($element) {
-                                                return (array)$element;
-                                            })
-                                            ->toArray();
-                EmailChanged::insert($originEmailChanged);
-
                 $this->info('Migrating the phone change code');
 
                 $originPhoneChangeCodes = Capsule::connection('sqlite')

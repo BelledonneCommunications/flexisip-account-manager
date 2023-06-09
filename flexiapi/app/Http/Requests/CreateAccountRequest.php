@@ -31,6 +31,9 @@ class CreateAccountRequest extends FormRequest
                 Rule::unique('accounts', 'username')->where(function ($query) {
                     $query->where('domain', resolveDomain($this));
                 }),
+                /*Rule::unique('accounts_tombstones', 'username')->where(function ($query) use ($request) {
+                    $query->where('domain', config('app.sip_domain'));
+                }),*/
                 'filled',
             ],
             'password' => 'required|min:3',

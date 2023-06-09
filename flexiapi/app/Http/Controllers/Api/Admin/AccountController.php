@@ -29,13 +29,10 @@ use App\Account;
 use App\AccountTombstone;
 use App\AccountType;
 use App\ActivationExpiration;
-use App\Admin;
-use App\Alias;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
-use App\Mail\PasswordAuthentication;
-use Illuminate\Support\Facades\Mail;
+use App\Services\AccountService;
 
 class AccountController extends Controller
 {
@@ -54,7 +51,7 @@ class AccountController extends Controller
         return Account::sip($sip)->firstOrFail();
     }
 
-    public function searchByEmail(Request $request, string $email)
+    public function searchByEmail(string $email)
     {
         return Account::where('email', $email)->firstOrFail();
     }
@@ -211,13 +208,7 @@ class AccountController extends Controller
     public function recoverByEmail(int $id)
     {
         $account = Account::findOrFail($id);
-        $account->provision();
-        $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
-        $account->save();
-
-        Log::channel('events')->info('API Admin: Sending recovery email', ['id' => $account->identifier]);
-
-        Mail::to($account)->send(new PasswordAuthentication($account));
+        $account = (new AccountService)->recoverByEmail($account);
 
         return $account->makeVisible(['confirmation_key', 'provisioning_token']);
     }

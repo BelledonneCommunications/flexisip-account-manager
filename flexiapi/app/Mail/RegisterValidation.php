@@ -25,7 +25,7 @@ use Illuminate\Queue\SerializesModels;
 
 use App\Account;
 
-class ChangingEmail extends Mailable
+class RegisterValidation extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -38,8 +38,10 @@ class ChangingEmail extends Mailable
 
     public function build()
     {
-        return $this->view('mails.changing_email')
-                    ->text('mails.changing_email_text')
-                    ->with(['account' => $this->account]);
+        return $this->view('mails.register_validate')
+                    ->text('mails.register_validate_text')
+                    ->with([
+                        'code' => $this->account->emailChangeCode()->first()->code
+                    ]);
     }
 }

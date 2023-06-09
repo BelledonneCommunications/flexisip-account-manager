@@ -1,40 +1,55 @@
-@extends('layouts.main')
+@extends('layouts.main', ['welcome' => true])
 
 @section('content')
-    @if (Auth::check())
-        @include('parts.already_auth')
-    @else
-        {!! Form::open(['route' => 'account.authenticate']) !!}
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    @if (config('app.phone_authentication'))
-                        {!! Form::label('username', 'Username or phone number') !!}
-                        {!! Form::text('username', old('username'), ['class' => 'form-control', 'placeholder' => 'username or phone number', 'required']) !!}
-                    @else
-                        {!! Form::label('username', 'Username') !!}
-                        {!! Form::text('username', old('username'), ['class' => 'form-control', 'placeholder' => 'username', 'required']) !!}
-                    @endif
-                </div>
-                <div class="form-group col-md-6">
-                    {!! Form::label('password', 'Password') !!}
-                    {!! Form::password('password', ['class' => 'form-control', 'placeholder' => 'myPassword', 'required']) !!}
-                </div>
+    <section>
+        <h1><i class="material-icons">waving_hand</i> Oh hi!</h1>
+
+        @if (config('instance.intro_registration'))
+            @parsedown(config('instance.intro_registration'))
+        @endif
+
+        @if (Auth::check())
+            @include('parts.already_auth')
+        @else
+            {!! Form::open(['route' => 'account.authenticate']) !!}
+            <div class="large">
+                @if (config('app.phone_authentication'))
+                    {!! Form::text('username', old('username'), ['placeholder' => 'username or phone number', 'required']) !!}
+                    {!! Form::label('username', 'Username or phone number') !!}
+                @else
+                    {!! Form::text('username', old('username'), ['placeholder' => 'username', 'required']) !!}
+                    {!! Form::label('username', 'Username') !!}
+                @endif
+            </div>
+            <div class="large">
+                {!! Form::password('password', ['placeholder' => 'myPassword', 'required']) !!}
+                {!! Form::label('password', 'Password') !!}
+            </div>
+            <div class="large">
+                {!! Form::submit('Login', ['class' => 'btn oppose']) !!}
             </div>
 
-            {!! Form::submit('Login', ['class' => 'btn btn-primary btn-centered mt-1']) !!}
+            {!! Form::close() !!}
 
-        {!! Form::close() !!}
+            <br />
 
-        @include('parts.password_recovery')
-    @endif
+            @include('parts.recovery')
+        @endif
 
-    @if (publicRegistrationEnabled())
-        <hr />
+        @if (publicRegistrationEnabled())
+            <br />
+            <br />
 
-        <p class="text-center">
-            No account yet?
-            <a class="btn btn-secondary ml-2" href="{{ route('account.register') }}">Register</a>
-        </p>
-    @endif
+            <p>
+                No account yet?
+                <a class="btn btn-secondary" href="{{ route('account.register') }}">Register</a>
+            </p>
+        @endif
+    </section>
+    <section class="on_desktop" style="text-align: center;">
+        <span style="color: var(--main-5); font-size: 5rem; font-weight: 300;">{{ $count }}</span><br />
+        <p style="margin-bottom: 3rem;">users</p>
+        <img src="/img/login.svg">
+    </section>
 
 @endsection

@@ -1,32 +1,56 @@
-@extends('layouts.main')
+@extends('layouts.main', ['welcome' => true])
 
 @section('content')
 
-<h2>Register using a phone number</h2>
+<section>
 
-{!! Form::open(['route' => 'account.store.phone']) !!}
+<p class="oppose">
+    You already have an account?
+    <a class="btn btn-secondary" href="{{ route('account.login') }}">Login</a>
+</p>
 
-<p>Please enter your phone number and optionally a username. When the username is set, it will identify you on the service: other users won't need to know your phone number to call you.<br />The next step of the registration procedure will ask you to setup a password.</p>
+<h1><i class="material-icons">account_circle</i> Register</h1>
+@include('parts.tabs.register')
 
-<div class="form-group">
+{!! Form::open(['route' => 'account.store']) !!}
+
+<div>
+    {!! Form::text('username', old('username'), ['placeholder' => 'username', 'required']) !!}
+    {!! Form::label('username', 'Username') !!}
+    @include('parts.errors', ['name' => 'username'])
+</div>
+<div>
+    {!! Form::text('username', $domain, ['disabled']) !!}
+</div>
+
+<div>
+    {!! Form::password('password', ['required']) !!}
+    {!! Form::label('password', 'Password') !!}
+    @include('parts.errors', ['name' => 'password'])
+</div>
+<div>
+    {!! Form::password('password_confirmation', ['required']) !!}
+    {!! Form::label('password_confirmation', 'Confirm password') !!}
+</div>
+
+<div clas="large">
+    {!! Form::text('phone', old('phone'), ['placeholder' => '+123456789', 'required']) !!}
     {!! Form::label('phone', 'Phone number') !!}
-    {!! Form::text('phone', old('phone'), ['class' => 'form-control', 'placeholder' => '+123456789']) !!}
+    @include('parts.errors', ['name' => 'phone'])
 </div>
 
-<div class="form-group">
-    {!! Form::label('username', 'SIP Username (optional)') !!}
-    <div class=" input-group">
-        {!! Form::text('username', old('username'), ['class' => 'form-control', 'placeholder' => 'username']) !!}
-        <div class="input-group-append">
-            <span class="input-group-text" id="basic-addon2">{{ $domain }}</span>
-        </div>
-    </div>
-    <small class="form-text text-muted mb-3">Shoudn't be a phone number. Capital letters are not allowed.</small>
-</div>
 
 @include('parts.terms')
 
-{!! Form::submit('Register', ['class' => 'btn btn-primary btn-centered']) !!}
+<div class="large">
+    {!! Form::submit('Register', ['class' => 'btn oppose']) !!}
+</div>
+
 {!! Form::close() !!}
+
+</section>
+<section class="on_desktop">
+    <img src="/img/login.svg">
+</section>
 
 @endsection

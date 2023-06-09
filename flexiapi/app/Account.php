@@ -21,7 +21,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
@@ -29,8 +28,6 @@ use Illuminate\Support\Str;
 
 use App\ApiKey;
 use App\Password;
-use App\EmailChanged;
-use App\Mail\ChangingEmail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -38,7 +35,7 @@ class Account extends Authenticatable
 {
     use HasFactory;
 
-    protected $with = ['passwords', 'admin', 'emailChanged', 'alias', 'activationExpiration', 'types', 'actions'];
+    protected $with = ['passwords', 'admin', 'alias', 'activationExpiration', 'emailChangeCode', 'types', 'actions'];
     protected $hidden = ['alias', 'expire_time', 'confirmation_key', 'provisioning_token', 'pivot'];
     protected $dateTimes = ['creation_time'];
     protected $appends = ['realm', 'phone', 'confirmation_key_expires'];
@@ -137,11 +134,6 @@ class Account extends Authenticatable
         return $this->belongsToMany(Account::class, 'contacts', 'account_id', 'contact_id');
     }
 
-    public function emailChanged()
-    {
-        return $this->hasOne(EmailChanged::class);
-    }
-
     public function nonces()
     {
         return $this->hasMany(DigestNonce::class);
@@ -160,6 +152,11 @@ class Account extends Authenticatable
     public function phoneChangeCode()
     {
         return $this->hasOne(PhoneChangeCode::class);
+    }
+
+    public function emailChangeCode()
+    {
+        return $this->hasOne(EmailChangeCode::class);
     }
 
     public function types()
@@ -259,26 +256,6 @@ class Account extends Authenticatable
         return $externalAccount->save();
     }
 
-    public function requestEmailUpdate(string $newEmail)
-    {
-        // Remove all the old requests
-        $this->emailChanged()->delete();
-
-        // Create a new one
-        $emailChanged = new EmailChanged;
-        $emailChanged->new_email = $newEmail;
-        $emailChanged->hash = Str::random(16);
-        $emailChanged->account_id = $this->id;
-        $emailChanged->save();
-
-        $this->refresh();
-
-        // Set it temporary to try to send the validation email
-        $this->email = $newEmail;
-
-        Mail::to($this)->send(new ChangingEmail($this));
-    }
-
     public function generateApiKey(): ApiKey
     {
         $this->apiKey()->delete();
@@ -339,7 +316,7 @@ class Account extends Authenticatable
             ->exists();
     }
 
-    public function updatePassword($newPassword, ?string $algorithm = 'SHA-256')
+    public function updatePassword($newPassword, string $algorithm = 'SHA-256')
     {
         $this->passwords()->delete();
 

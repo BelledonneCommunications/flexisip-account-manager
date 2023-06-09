@@ -53,7 +53,7 @@ class PasswordController extends Controller
             Log::channel('events')->info('Web: Password changed', ['id' => $account->identifier]);
             $request->session()->flash('success', 'Password successfully changed');
 
-            return redirect()->route('account.panel');
+            return redirect()->route('account.dashboard');
         }
 
         Log::channel('events')->info('Web: Password set for the first time', ['id' => $account->identifier]);
@@ -63,6 +63,6 @@ class PasswordController extends Controller
             Mail::to($account)->send(new ConfirmedRegistration($account));
         }
 
-        return redirect()->route('account.panel');
+        return redirect()->route('account.dashboard');
     }
 }

@@ -17,19 +17,32 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Mail;
+namespace App;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class ChangedEmail extends Mailable
+class EmailChangeCode extends Model
 {
-    use Queueable, SerializesModels;
+    use HasFactory;
 
-    public function build()
+    protected $hidden = ['id', 'account_id', 'code'];
+
+    public function account()
     {
-        return $this->view('mails.changed_email')
-                    ->text('mails.changed_email_text');
+        return $this->belongsTo('App\Account');
+    }
+
+    public function validate(int $code): bool
+    {
+        return ($this->code == $code);
+    }
+
+    public function getObfuscatedEmailAttribute()
+    {
+        $stars = 4; // Min Stars to use
+        $at = strpos($this->attributes['email'], '@');
+        if ($at - 2 > $stars) $stars = $at - 2;
+        return substr($this->attributes['email'], 0, 1) . str_repeat('*', $stars) . substr($this->attributes['email'], $at - 1);
     }
 }

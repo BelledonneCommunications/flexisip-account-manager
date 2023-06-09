@@ -57,7 +57,7 @@ class AuthTokenController extends Controller
 
         $request->session()->flash('success', 'Successfully authenticated');
 
-        return redirect()->route('account.panel');
+        return redirect()->route('account.dashboard');
     }
 
     /**
@@ -74,6 +74,6 @@ class AuthTokenController extends Controller
             $request->session()->flash('success', 'External device successfully authenticated');
         }
 
-        return redirect()->route('account.panel');
+        return redirect()->route('account.dashboard');
     }
 }

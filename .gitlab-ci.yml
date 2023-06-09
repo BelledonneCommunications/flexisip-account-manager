@@ -3,7 +3,7 @@ variables:
   DEBIAN_11_IMAGE_VERSION: 20230322_172926_missing_tools
   PHP_REDIS_REMI_VERSION: php-pecl-redis5-5.3.6-1
   PHP_IGBINARY_REMI_VERSION: php-pecl-igbinary-3.2.14-1
-  PHP_MSGPACK_REMI_VERSION: php-pecl-msgpack-2.1.2-1
+  PHP_MSGPACK_REMI_VERSION: php-pecl-msgpack-2.2.0-1
   PHP_XMLRPC_REMI_VERSION: php-pecl-xmlrpc-1.0.0~rc3-2
 
 include:

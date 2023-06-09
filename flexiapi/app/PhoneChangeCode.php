@@ -26,6 +26,8 @@ class PhoneChangeCode extends Model
 {
     use HasFactory;
 
+    protected $hidden = ['id', 'account_id', 'code'];
+
     public function account()
     {
         return $this->belongsTo('App\Account');

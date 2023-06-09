@@ -1,11 +1,11 @@
-@extends('layouts.account')
+@extends('layouts.main')
 
 @section('content')
 
-<h2>Manage your account</h2>
+<h1><i class="material-icons">dashboard</i> Dashboard</h1>
 
 <div class="list-group mb-3 pt-2">
-    <a href="{{ route('account.email') }}" class="list-group-item list-group-item-action">
+    <a href="{{ route('account.email.change') }}" class="list-group-item list-group-item-action">
         <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">Change my current account email</h5>
         </div>

@@ -8,15 +8,15 @@
     ],
     "license": "MIT",
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.0.2",
         "anhskohbo/no-captcha": "^3.3",
         "doctrine/dbal": "^3.6",
         "endroid/qr-code": "^4.1",
         "fakerphp/faker": "^1.21",
-        "laravel/framework": "^9.0",
+        "laravel/framework": "^9.5",
         "laravelcollective/html": "^6.4",
         "namoshek/laravel-redis-sentinel": "^0.1.2",
-        "ovh/ovh": "^2.0",
+        "ovh/ovh": "^3.0",
         "parsedown/laravel": "^1.2",
         "react/socket": "^1.10",
         "respect/validation": "^2.2"

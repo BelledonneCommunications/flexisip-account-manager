@@ -32,6 +32,7 @@ use App\AccountTombstone;
 use App\AccountCreationToken;
 use App\Alias;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+use App\Http\Requests\CreateAccountRequest;
 use App\Libraries\OvhSMS;
 use App\Mail\RegisterConfirmation;
 use App\Rules\AccountCreationToken as RulesAccountCreationToken;
@@ -40,6 +41,7 @@ use App\Rules\IsNotPhoneNumber;
 use App\Rules\NoUppercase;
 use App\Rules\SIPUsername;
 use App\Rules\WithoutSpaces;
+use App\Services\AccountService;
 
 class AccountController extends Controller
 {
@@ -232,57 +234,9 @@ class AccountController extends Controller
         return $account;
     }
 
-    public function store(Request $request)
+    public function store(CreateAccountRequest $request)
     {
-        $request->validate([
-            'username' => [
-                'required',
-                new NoUppercase,
-                new IsNotPhoneNumber,
-                new BlacklistedUsername,
-                new SIPUsername,
-                Rule::unique('accounts', 'username')->where(function ($query) use ($request) {
-                    $query->where('domain', config('app.sip_domain'));
-                }),
-                Rule::unique('accounts_tombstones', 'username')->where(function ($query) use ($request) {
-                    $query->where('domain', config('app.sip_domain'));
-                }),
-                'filled',
-            ],
-            'algorithm' => 'required|in:SHA-256,MD5',
-            'password' => 'required|filled',
-            'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
-            'account_creation_token' => [
-                'required',
-                new RulesAccountCreationToken
-            ],
-            'email' => config('app.account_email_unique')
-                ? 'nullable|email|unique:accounts,email'
-                : 'nullable|email',
-        ]);
-
-        $token = AccountCreationToken::where('token', $request->get('account_creation_token'))->first();
-        $token->used = true;
-        $token->save();
-
-        $account = new Account;
-        $account->username = $request->get('username');
-        $account->email = $request->get('email');
-        $account->activated = false;
-        $account->domain = config('app.sip_domain');
-        $account->ip_address = $request->ip();
-        $account->creation_time = Carbon::now();
-        $account->user_agent = config('app.name');
-        $account->dtmf_protocol = $request->get('dtmf_protocol');
-        $account->provision();
-        $account->save();
-
-        $account->updatePassword($request->get('password'), $request->get('algorithm'));
-
-        Log::channel('events')->info('API: Account created', ['id' => $account->identifier]);
-
-        // Full reload
-        return Account::withoutGlobalScopes()->find($account->id);
+        return (new AccountService)->store($request);
     }
 
     public function activateEmail(Request $request, string $sip)

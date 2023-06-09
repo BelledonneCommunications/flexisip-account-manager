@@ -20,22 +20,13 @@
 namespace App\Http\Controllers\Api\Account;
 
 use App\Http\Controllers\Controller;
+use App\Services\AccountService;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class EmailController extends Controller
 {
     public function requestUpdate(Request $request)
     {
-        $rules = ['required', 'email', Rule::notIn([$request->user()->email])];
-
-        if (config('app.account_email_unique')) {
-            array_push($rules, Rule::unique('accounts', 'email'));
-        }
-
-        $request->validate([
-            'email' => $rules,
-        ]);
-        $request->user()->requestEmailUpdate($request->get('email'));
+        (new AccountService)->requestEmailChange($request);
     }
 }

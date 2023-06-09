@@ -20,65 +20,40 @@
 namespace App\Http\Controllers\Account;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Log;
-
 use App\Http\Controllers\Controller;
-use App\Mail\ChangedEmail;
+use App\Services\AccountService;
 
 class EmailController extends Controller
 {
-    public function show(Request $request)
+    public function change(Request $request)
     {
-        return view('account.email', [
+        return view('account.email.change', [
             'account' => $request->user()
         ]);
     }
 
-    public function requestUpdate(Request $request)
+    public function requestChange(Request $request)
     {
-        $request->validate(
-            $request->user()->email
-                ? [
-                    'email_current' => ['required', Rule::in([$request->user()->email])],
-                    'email' => config('app.account_email_unique')
-                        ? 'required|different:email_current|confirmed|email|unique:accounts,email'
-                        : 'required|different:email_current|confirmed|email',
-                ]
-                : [
-                    'email' => config('app.account_email_unique')
-                        ? 'required|email|confirmed|unique:accounts,email'
-                        : 'required|confirmed|email',
-                ]
-        );
+        //$request->validate(['g-recaptcha-response' => 'required|captcha']);
 
-        $request->user()->requestEmailUpdate($request->get('email'));
+        (new AccountService(api: false))->requestEmailChange($request);
 
-        Log::channel('events')->info('Web: Email change requested', ['id' => $request->user()->identifier]);
-
-        $request->session()->flash('success', 'An email was sent with a confirmation link. Please click it to update your email address.');
-        return redirect()->route('account.panel');
+        return redirect()->route('account.email.validate');
     }
 
-    public function update(Request $request, string $hash)
+    public function validateChange(Request $request)
     {
-        $account = $request->user();
+        return view('account.email.validate', [
+            'emailChangeCode' => $request->user()->emailChangeCode()->firstOrFail()
+        ]);
+    }
 
-        if ($account->emailChanged && $account->emailChanged->hash == $hash) {
-            $account->email = $account->emailChanged->new_email;
-            $account->save();
-
-            Mail::to($account)->send(new ChangedEmail());
-
-            $account->emailChanged->delete();
-
-            Log::channel('events')->info('Web: Email change updated', ['id' => $account->identifier]);
-
-            $request->session()->flash('success', 'Email successfully updated');
-            return redirect()->route('account.panel');
+    public function store(Request $request)
+    {
+        if ((new AccountService(api: false))->updateEmail($request)) {
+            return redirect()->route('account.dashboard');
         }
 
-        abort(404);
+        return redirect()->route('account.email.change');
     }
 }

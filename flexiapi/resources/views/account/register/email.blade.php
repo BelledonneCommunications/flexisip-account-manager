@@ -1,38 +1,52 @@
-@extends('layouts.main')
+@extends('layouts.main', ['welcome' => true])
 
 @section('content')
 
-<h2>Register using an email address</h2>
+<section>
 
-{!! Form::open(['route' => 'account.store.email']) !!}
+<p class="oppose">
+    You already have an account?
+    <a class="btn btn-secondary" href="{{ route('account.login') }}">Login</a>
+</p>
 
-<p>Fill a username and an email address, you will then be able to set a password to finish the registration process.</p>
+<h1><i class="material-icons">account_circle</i> Register</h1>
 
-<div class="form-group">
-    {!! Form::label('username', 'SIP Username') !!}
-    <div class=" input-group">
-        {!! Form::text('username', old('username'), ['class' => 'form-control', 'placeholder' => 'username', 'required']) !!}
-        <div class="input-group-append">
-            <span class="input-group-text" id="basic-addon2">{{ $domain }}</span>
-        </div>
-    </div>
-    <small class="form-text text-muted mb-3">Shoudn't be a phone number. Capital letters are not allowed.</small>
+@include('parts.tabs.register')
+
+{!! Form::open(['route' => 'account.store']) !!}
+
+<div>
+    {!! Form::text('username', old('username'), ['placeholder' => 'username', 'required']) !!}
+    {!! Form::label('username', 'Username') !!}
+    @include('parts.errors', ['name' => 'username'])
 </div>
 
-<hr />
-<div class="form-row">
-    <div class="form-group col-md-6">
-        {!! Form::label('email', 'Email') !!}
-        {!! Form::email('email', old('email'), ['class' => 'form-control', 'placeholder' => 'bob@example.net']) !!}
-    </div>
-    <div class="form-group col-md-6">
-        {!! Form::label('email_confirmation', 'Email confirmation') !!}
-        {!! Form::email('email_confirmation', old('email_confirm'), ['class' => 'form-control', 'placeholder' => 'bob@example.net']) !!}
-    </div>
+<div>
+    <input type="text" name="username" value="{{ $domain }}" disabled>
+</div>
+
+<div>
+    {!! Form::email('email', old('email'), ['placeholder' => 'bob@example.net', 'required']) !!}
+    {!! Form::label('email', 'Email') !!}
+    @include('parts.errors', ['name' => 'email'])
+</div>
+<div>
+    {!! Form::email('email_confirmation', old('email_confirm'), ['placeholder' => 'bob@example.net', 'required']) !!}
+    {!! Form::label('email_confirmation', 'Confirm email') !!}
+</div>
+
+<div>
+    {!! Form::password('password', ['required']) !!}
+    {!! Form::label('password', 'Password') !!}
+    @include('parts.errors', ['name' => 'password'])
+</div>
+<div>
+    {!! Form::password('password_confirmation', ['required']) !!}
+    {!! Form::label('password_confirmation', 'Confirm password') !!}
 </div>
 
 @if (!empty(config('app.newsletter_registration_address')))
-    <div class="form-check mb-3">
+    <div class="large checkbox">
         {!! Form::checkbox('newsletter', 'true', false, ['class' => 'form-check-input', 'id' => 'newsletter']) !!}
         <label class="form-check-label" for="newsletter">I would like to subscribe to the newsletter</a></label>
     </div>
@@ -40,7 +54,19 @@
 
 @include('parts.terms')
 
-{!! Form::submit('Register', ['class' => 'btn btn-primary btn-centered']) !!}
+<div class="large">
+    {!! Form::submit('Register', ['class' => 'btn oppose']) !!}
+</div>
+
 {!! Form::close() !!}
 
+</section>
+<section class="on_desktop">
+    <img src="/img/login.svg">
+</section>
+
+@endsection
+
+@section('footer')
+Hop
 @endsection

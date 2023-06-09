@@ -25,7 +25,7 @@ use Illuminate\Queue\SerializesModels;
 
 use App\Account;
 
-class PasswordAuthentication extends Mailable
+class RecoverByCode extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -45,7 +45,7 @@ class PasswordAuthentication extends Mailable
                 ? 'mails.authentication_text_custom'
                 : 'mails.authentication_text')
             ->with([
-                'link' => route('account.authenticate.email_confirm', [$this->account->confirmation_key]),
+                'recovery_code' => $this->account->recovery_code,
                 'provisioning_link' => route('provisioning.show', [
                     'provisioning_token' => $this->account->provisioning_token,
                     'reset_password' => true

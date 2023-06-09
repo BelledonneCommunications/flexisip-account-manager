@@ -23,22 +23,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Account;
 use App\AccountTombstone;
+use App\Http\Requests\CreateAccountRequest;
+use App\Services\AccountService;
 
 class AccountController extends Controller
 {
-    public function home(Request $request)
-    {
-        if ($request->user()) {
-            return redirect()->route('account.panel');
-        }
-
-        return view('account.home', [
-            'count' => Account::where('activated', true)->count()
-        ]);
-    }
-
     public function documentation(Request $request)
     {
         return view('account.documentation', [
@@ -48,7 +38,7 @@ class AccountController extends Controller
 
     public function panel(Request $request)
     {
-        return view('account.panel', [
+        return view('account.dashboard', [
             'account' => $request->user()
         ]);
     }
@@ -59,6 +49,23 @@ class AccountController extends Controller
         $account->generateApiKey();
 
         return redirect()->back();
+    }
+
+    public function store(CreateAccountRequest $request)
+    {
+        $account = (new AccountService(api: false))->store($request);
+
+        Auth::login($account);
+
+        if ($request->has('phone')) {
+            (new AccountService(api: false))->requestPhoneChange($request);
+            return redirect()->route('account.phone.validate');
+        } elseif ($request->has('email')) {
+            (new AccountService(api: false))->requestEmailChange($request);
+            return redirect()->route('account.email.validate');
+        }
+
+        return abort(404);
     }
 
     public function delete(Request $request)

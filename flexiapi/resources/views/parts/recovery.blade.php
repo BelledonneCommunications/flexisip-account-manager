@@ -5,9 +5,9 @@
         @else
             Set or recover your password
         @endif
-            using your <a href="{{ route('account.login_email') }}">Email address</a>
+            using your <a href="{{ route('account.recovery.show.email') }}">Email address</a>
         @if (config('app.phone_authentication'))
-            or your <a href="{{ route('account.login_phone') }}">Phone number</a>
+            or your <a href="{{ route('account.recovery.show.phone') }}">Phone number</a>
         @endif
     </p>
     <p class="text-center">

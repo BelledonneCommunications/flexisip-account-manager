@@ -80,7 +80,7 @@ class ApiAccountCreationTokenTest extends TestCase
         $response = $this->json($this->method, $this->accountRoute, [
             'username' => 'username',
             'algorithm' => 'SHA-256',
-            'password' => '2',
+            'password' => '123',
             'account_creation_token' => '0123456789abc'
         ]);
         $response->assertStatus(422);
@@ -89,7 +89,7 @@ class ApiAccountCreationTokenTest extends TestCase
         $response = $this->json($this->method, $this->accountRoute, [
             'username' => 'username',
             'algorithm' => 'SHA-256',
-            'password' => '2',
+            'password' => '123',
             'account_creation_token' => $token->token
         ]);
         $response->assertStatus(200);
@@ -98,7 +98,7 @@ class ApiAccountCreationTokenTest extends TestCase
         $response = $this->json($this->method, $this->accountRoute, [
             'username' => 'username2',
             'algorithm' => 'SHA-256',
-            'password' => '2',
+            'password' => '123',
             'account_creation_token' => $token->token
         ]);
         $response->assertStatus(422);
@@ -114,7 +114,7 @@ class ApiAccountCreationTokenTest extends TestCase
         $response = $this->json($this->method, $this->accountRoute, [
             'username' => 'blacklisted',
             'algorithm' => 'SHA-256',
-            'password' => '2',
+            'password' => '123',
             'account_creation_token' => $token->token
         ]);
         $response->assertStatus(422);
@@ -124,7 +124,7 @@ class ApiAccountCreationTokenTest extends TestCase
         $response = $this->json($this->method, $this->accountRoute, [
             'username' => 'username-gnap',
             'algorithm' => 'SHA-256',
-            'password' => '2',
+            'password' => '123',
             'account_creation_token' => $token->token
         ]);
 
@@ -135,7 +135,7 @@ class ApiAccountCreationTokenTest extends TestCase
         $response = $this->json($this->method, $this->accountRoute, [
             'username' => 'valid-username',
             'algorithm' => 'SHA-256',
-            'password' => '2',
+            'password' => '123',
             'account_creation_token' => $token->token
         ]);
 
