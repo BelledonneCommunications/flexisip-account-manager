@@ -1,5 +1,10 @@
 # Flexisip Account Manager Changelog
 
+v1.4
+----
+- Redesign and refactoring of the main UI and panel flows
+- Removal of XMLRPC
+
 v1.3
 ----
 - Fix #90 Deploy packages from release branches as well
