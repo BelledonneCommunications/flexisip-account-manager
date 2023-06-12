@@ -33,7 +33,7 @@ remi-deploy:
 
   before_script:
     - rm -f $CI_PROJECT_DIR/build/*devel*.rpm # Remove devel packages
-    - cd $CI_PROJECT_DIR/build/ && for file in *; do mv "$file" $(echo "$file" | sed -e 's/[^A-Za-z0-9._-]//g'); done || true && cd .. # Rename non standard packages
+    - cd $CI_PROJECT_DIR/build/ && for file in *; do mv "$file" $(echo "$file" | sed -e 's/[^A-Za-z0-9._+-]//g'); done || true && cd .. # Rename non standard packages
     - eval $(ssh-agent -s)
     - echo "$DEPLOY_USER_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
