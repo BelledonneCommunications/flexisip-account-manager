@@ -72,12 +72,12 @@ if (config('app.web_panel')) {
         Route::get('phone', 'showPhone')->name('account.recovery.show.phone');
         Route::get('email', 'showEmail')->name('account.recovery.show.email');
         Route::post('/', 'send')->name('account.recovery.send');
-        Route::post('/confirm', 'confirm')->name('account.recovery.confirm');
+        Route::post('confirm', 'confirm')->name('account.recovery.confirm');
     });
 
     Route::middleware(['auth'])->group(function () {
         // Email change and validation
-        Route::prefix('recover')->controller(EmailController::class)->group(function () {
+        Route::prefix('email')->controller(EmailController::class)->group(function () {
             Route::get('change', 'change')->name('account.email.change');
             Route::post('change', 'requestChange')->name('account.email.request_change');
             Route::get('validate', 'validateChange')->name('account.email.validate');
@@ -122,64 +122,64 @@ if (config('app.web_panel')) {
     Route::get('auth_tokens/qrcode/{token}', 'Account\AuthTokenController@qrcode')->name('auth_tokens.qrcode');
     Route::get('auth_tokens/auth/{token}', 'Account\AuthTokenController@auth')->name('auth_tokens.auth');
 
-    Route::prefix('admin')->middleware(['auth.admin'])->group(function () {
+    Route::name('admin.')->prefix('admin')->middleware(['auth.admin'])->group(function () {
         // Statistics
-        Route::get('statistics/day', 'Admin\StatisticsController@showDay')->name('admin.statistics.show.day');
-        Route::get('statistics/week', 'Admin\StatisticsController@showWeek')->name('admin.statistics.show.week');
-        Route::get('statistics/month', 'Admin\StatisticsController@showMonth')->name('admin.statistics.show.month');
+        Route::get('statistics/day', 'Admin\StatisticsController@showDay')->name('statistics.show.day');
+        Route::get('statistics/week', 'Admin\StatisticsController@showWeek')->name('statistics.show.week');
+        Route::get('statistics/month', 'Admin\StatisticsController@showMonth')->name('statistics.show.month');
 
         Route::prefix('accounts')->group(function () {
             // Account types
-            Route::get('types', 'Admin\AccountTypeController@index')->name('admin.account.type.index');
-            Route::get('types/create', 'Admin\AccountTypeController@create')->name('admin.account.type.create');
-            Route::post('types', 'Admin\AccountTypeController@store')->name('admin.account.type.store');
-            Route::get('types/{type_id}/edit', 'Admin\AccountTypeController@edit')->name('admin.account.type.edit');
-            Route::put('types/{type_id}', 'Admin\AccountTypeController@update')->name('admin.account.type.update');
-            Route::get('types/{type_id}/delete', 'Admin\AccountTypeController@delete')->name('admin.account.type.delete');
-            Route::delete('types/{type_id}', 'Admin\AccountTypeController@destroy')->name('admin.account.type.destroy');
+            Route::get('types', 'Admin\AccountTypeController@index')->name('account.type.index');
+            Route::get('types/create', 'Admin\AccountTypeController@create')->name('account.type.create');
+            Route::post('types', 'Admin\AccountTypeController@store')->name('account.type.store');
+            Route::get('types/{type_id}/edit', 'Admin\AccountTypeController@edit')->name('account.type.edit');
+            Route::put('types/{type_id}', 'Admin\AccountTypeController@update')->name('account.type.update');
+            Route::get('types/{type_id}/delete', 'Admin\AccountTypeController@delete')->name('account.type.delete');
+            Route::delete('types/{type_id}', 'Admin\AccountTypeController@destroy')->name('account.type.destroy');
 
-            Route::get('{account}/types/create', 'Admin\AccountAccountTypeController@create')->name('admin.account.account_type.create');
-            Route::post('{account}/types', 'Admin\AccountAccountTypeController@store')->name('admin.account.account_type.store');
-            Route::delete('{account}/types/{type_id}', 'Admin\AccountAccountTypeController@destroy')->name('admin.account.account_type.destroy');
+            Route::get('{account}/types/create', 'Admin\AccountAccountTypeController@create')->name('account.account_type.create');
+            Route::post('{account}/types', 'Admin\AccountAccountTypeController@store')->name('account.account_type.store');
+            Route::delete('{account}/types/{type_id}', 'Admin\AccountAccountTypeController@destroy')->name('account.account_type.destroy');
 
             // Contacts
-            Route::get('{account}/contacts/create', 'Admin\AccountContactController@create')->name('admin.account.contact.create');
-            Route::post('{account}/contacts', 'Admin\AccountContactController@store')->name('admin.account.contact.store');
-            Route::get('{account}/contacts/{contact_id}/delete', 'Admin\AccountContactController@delete')->name('admin.account.contact.delete');
-            Route::delete('{account}/contacts', 'Admin\AccountContactController@destroy')->name('admin.account.contact.destroy');
+            Route::get('{account}/contacts/create', 'Admin\AccountContactController@create')->name('account.contact.create');
+            Route::post('{account}/contacts', 'Admin\AccountContactController@store')->name('account.contact.store');
+            Route::get('{account}/contacts/{contact_id}/delete', 'Admin\AccountContactController@delete')->name('account.contact.delete');
+            Route::delete('{account}/contacts', 'Admin\AccountContactController@destroy')->name('account.contact.destroy');
 
             // Accounts
-            Route::get('{account}/show', 'Admin\AccountController@show')->name('admin.account.show');
+            Route::get('{account}/show', 'Admin\AccountController@show')->name('account.show');
 
-            Route::get('{account}/activate', 'Admin\AccountController@activate')->name('admin.account.activate');
-            Route::get('{account}/deactivate', 'Admin\AccountController@deactivate')->name('admin.account.deactivate');
+            Route::get('{account}/activate', 'Admin\AccountController@activate')->name('account.activate');
+            Route::get('{account}/deactivate', 'Admin\AccountController@deactivate')->name('account.deactivate');
 
-            Route::get('{account}/external_account/attach', 'Admin\AccountController@attachExternalAccount')->name('admin.account.external_account.attach');
+            Route::get('{account}/external_account/attach', 'Admin\AccountController@attachExternalAccount')->name('account.external_account.attach');
 
-            Route::get('{account}/admin', 'Admin\AccountController@admin')->name('admin.account.admin');
-            Route::get('{id}/unadmin', 'Admin\AccountController@unadmin')->name('admin.account.unadmin');
+            Route::get('{account}/admin', 'Admin\AccountController@admin')->name('account.admin');
+            Route::get('{id}/unadmin', 'Admin\AccountController@unadmin')->name('account.unadmin');
 
-            Route::get('{account}/provision', 'Admin\AccountController@provision')->name('admin.account.provision');
+            Route::get('{account}/provision', 'Admin\AccountController@provision')->name('account.provision');
 
-            Route::get('create', 'Admin\AccountController@create')->name('admin.account.create');
-            Route::post('accounts', 'Admin\AccountController@store')->name('admin.account.store');
+            Route::get('create', 'Admin\AccountController@create')->name('account.create');
+            Route::post('accounts', 'Admin\AccountController@store')->name('account.store');
 
-            Route::get('{account}/edit', 'Admin\AccountController@edit')->name('admin.account.edit');
-            Route::put('{id}', 'Admin\AccountController@update')->name('admin.account.update');
+            Route::get('{account}/edit', 'Admin\AccountController@edit')->name('account.edit');
+            Route::put('{id}', 'Admin\AccountController@update')->name('account.update');
 
-            Route::get('{account}/delete', 'Admin\AccountController@delete')->name('admin.account.delete');
-            Route::delete('accounts', 'Admin\AccountController@destroy')->name('admin.account.destroy');
+            Route::get('{account}/delete', 'Admin\AccountController@delete')->name('account.delete');
+            Route::delete('accounts', 'Admin\AccountController@destroy')->name('account.destroy');
 
-            Route::get('{search?}', 'Admin\AccountController@index')->name('admin.account.index');
-            Route::post('search', 'Admin\AccountController@search')->name('admin.account.search');
+            Route::get('{search?}', 'Admin\AccountController@index')->name('account.index');
+            Route::post('search', 'Admin\AccountController@search')->name('account.search');
 
             // Account actions
-            Route::get('{account}/actions/create', 'Admin\AccountActionController@create')->name('admin.account.action.create');
-            Route::post('{account}/actions', 'Admin\AccountActionController@store')->name('admin.account.action.store');
-            Route::get('{account}/actions/{action_id}/edit', 'Admin\AccountActionController@edit')->name('admin.account.action.edit');
-            Route::put('{account}/actions/{action_id}', 'Admin\AccountActionController@update')->name('admin.account.action.update');
-            Route::get('{account}/actions/{action_id}/delete', 'Admin\AccountActionController@delete')->name('admin.account.action.delete');
-            Route::delete('{account}/actions/{action_id}', 'Admin\AccountActionController@destroy')->name('admin.account.action.destroy');
+            Route::get('{account}/actions/create', 'Admin\AccountActionController@create')->name('account.action.create');
+            Route::post('{account}/actions', 'Admin\AccountActionController@store')->name('account.action.store');
+            Route::get('{account}/actions/{action_id}/edit', 'Admin\AccountActionController@edit')->name('account.action.edit');
+            Route::put('{account}/actions/{action_id}', 'Admin\AccountActionController@update')->name('account.action.update');
+            Route::get('{account}/actions/{action_id}/delete', 'Admin\AccountActionController@delete')->name('account.action.delete');
+            Route::delete('{account}/actions/{action_id}', 'Admin\AccountActionController@destroy')->name('account.action.destroy');
         });
     });
 }
