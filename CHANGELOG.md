@@ -15,6 +15,11 @@ v1.3
 - Fix #79 Add a refresh_password parameter to the provisioning URLs
 - Fix #78 Add a APP_ACCOUNTS_EMAIL_UNIQUE environnement setting
 - Fix #30 Remove APP_EVERYONE_IS_ADMIN
+- Fix #97 Validate usernames with a configurable regex
+- Fix #95 PUT /accounts admin endpoint implementation
+- Fix #102 Implement AccountCreationRequestToken
+- Fix #92 Add two new endpoints regarding email account reset and account search per email for admins
+- Fix #94 Implement the deprecated endpoint changes + tests + documentation
 
 v1.2
 ----
