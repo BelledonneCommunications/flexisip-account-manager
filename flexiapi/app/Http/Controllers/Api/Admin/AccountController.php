@@ -124,7 +124,7 @@ class AccountController extends Controller
         $account->activated = $request->has('activated') ? (bool)$request->get('activated') : false;
         $account->ip_address = $request->ip();
         $account->dtmf_protocol = $request->get('dtmf_protocol');
-        $account->creation_time = Carbon::now();
+        $account->created_at = Carbon::now();
         $account->domain = resolveDomain($request);
         $account->user_agent = $request->header('User-Agent') ?? config('app.name');
 

@@ -12,8 +12,9 @@
         @if (file_exists(public_path('css/' . config('app.env') . '.style.css')))
             <link rel="stylesheet" type="text/css" href="{{ asset('css/' . config('app.env') . '.style.css') }}">
         @else
-            <link rel="stylesheet" type="text/css" href="{{ asset('css/far.css') }}">
         @endif
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/far.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/form.css') }}">
         <!--<link rel="stylesheet" type="text/css" href="{{ asset('css/charts.css') }}" >-->
     @endif
 </head>
@@ -22,17 +23,22 @@
     <header>
         @if (config('app.web_panel'))
             <nav>
-                <a href="{{ route('account.home') }}">{{ config('app.name') }}</a>
+                <a id="logo" href="{{ route('account.home') }}"><span class="on_desktop">{{ config('app.name') }}</span></a>
+
+                @if (!isset($welcome) || $welcome == false)
+                    <a id="menu" class="on_mobile" href="#" onclick="document.body.classList.toggle('show_menu')"></a>
+                @endif
+
                 @if (auth()->user())
-                    <a href="{{ route('account.dashboard') }}">
-                        <i class="material-icons">person</i>My Account
+                    <a class="oppose" href="{{ route('account.dashboard') }}">
+                        <i class="material-icons">account_circle</i><span class="on_desktop">{{ auth()->user()->identifier }}</span>
                     </a>
-                    <a href="{{ route('account.logout') }}">
+                    <a class="oppose" href="{{ route('account.logout') }}">
                         <i class="material-icons">logout</i>
                     </a>
                 @else
-                    <a href="{{ route('account.login') }}">
-                        <i class="material-icons">info</i> Login
+                    <a class="oppose" href="{{ route('account.login') }}">
+                        <i class="material-icons">info</i><span class="on_desktop">Login</span>
                     </a>
                 @endif
             </nav>

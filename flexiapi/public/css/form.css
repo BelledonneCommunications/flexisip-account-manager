@@ -1,0 +1,216 @@
+/** Forms **/
+
+.btn {
+    display: inline-block;
+    background-color: var(--main-5);
+    font-weight: 600;
+    border: 1px solid var(--main-5);
+    border-radius: 3rem;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    padding: 1rem 2rem;
+    color: white;
+    margin: 0 1rem;
+}
+
+.btn i {
+    margin-right: 0.5rem;
+    margin-left: -0.5rem;
+    font-size: 2rem;
+    vertical-align: middle;
+}
+
+.oppose {
+    float: right;
+}
+
+.btn[disabled] {
+    color: var(--main-5);
+    border-color: var(--main-5);
+    background-color: var(--main-1);
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.btn:hover {
+    background-color: var(--main-6);
+    border-color: var(--main-6);
+    cursor: pointer;
+}
+
+.btn:active {
+    background-color: var(--main-7);
+    border-color: var(--main-7);
+}
+
+.btn.btn-secondary {
+    background-color: transparent;
+    color: var(--main-5);
+}
+
+.btn.btn-secondary:hover {
+    background-color: var(--main-1);
+}
+
+.btn.btn-secondary:active {
+    background-color: var(--main-5);
+    border-color: var(--main-5);
+    color: white;
+}
+
+form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem 0.5rem;
+}
+
+form.inline {
+    display: block;
+}
+
+form div {
+    position: relative;
+    min-height: 4rem;
+}
+
+form.inline div {
+    display: inline-block;
+    position: relative;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+}
+
+form .large,
+form h2 {
+    grid-column: 1/-1;
+}
+
+@media screen and (max-width: 1024px) {
+    form div {
+        grid-column: 1/-1;
+    }
+}
+
+form small {
+    display: block;
+    font-weight: 300;
+    color: var(--second-6);
+    font-size: 1.25rem;
+    margin-top: 0.25rem;
+}
+
+form label {
+    color: var(--second-6);
+    font-size: 1.5rem;
+}
+
+form input[required]+label:after {
+    content: '*';
+    margin-left: 0.5rem;
+}
+
+form input:not([type=checkbox]) ~ label,
+form select ~ label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-weight: 700;
+}
+
+form:not(.inline) div .btn {
+    position: absolute;
+    bottom: 0;
+}
+
+form div .btn.oppose {
+    right: 0;
+}
+
+form div input,
+form div select {
+    padding: 1rem 2rem;
+    background-color: var(--grey-1);
+    border-radius: 3rem;
+    border: 1px solid var(--grey-2);
+    font-size: 1.5rem;
+}
+
+form div select {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+}
+
+form div.checkbox {
+    min-height: 2rem;
+}
+
+form div.select:after {
+    font-family: 'Material Icons';
+    content: "\e5cf";
+    display: block;
+    font-size: 3rem;
+    color: var(--second-6);
+    position: absolute;
+    right: 1rem;
+    bottom: 0rem;
+    pointer-events: none;
+    line-height: 4rem;
+}
+
+form div input[disabled] {
+    border-color: var(--grey-4);
+    color: var(--grey-4);
+    background-color: var(--grey-2);
+    pointer-events: none;
+}
+
+form div input[type=checkbox] {
+    margin-right: 1rem;
+    accent-color: var(--main-5);
+}
+
+form div input:not([type=checkbox]):not([type=radio]):not(.btn),
+form div select {
+    margin-top: 2.5rem;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+form div input[type=radio] {
+    width: auto;
+    margin: 1rem;
+    margin-top: 3.75rem;
+    accent-color: var(--main-5);
+}
+
+form div input[type=radio] + p {
+    display: inline-block;
+}
+
+form div input:autofill {
+    background: var(--grey-1);
+}
+
+form div input:hover,
+form div select:hover {
+    border-color: var(--second-4);
+}
+
+form div input:focus-visible, form div input:active {
+    color: var(--main-5);
+    border-color: var(--main-5);
+}
+
+form div input:focus-visible+label, form div input:active+label {
+    color: var(--main-5);
+}
+
+form div input:invalid {
+    border-color: var(--danger-6);
+    color: var(--danger-5);
+}
+
+form div input:invalid+label {
+    color: var(--danger-5);
+}

@@ -37,7 +37,7 @@ class RemoveUnconfirmedAccounts extends Command
     public function handle()
     {
         $accounts = Account::where(
-            'creation_time',
+            'created_at',
             '<',
             Carbon::now()->subDays($this->argument('days'))->toDateTimeString()
         );

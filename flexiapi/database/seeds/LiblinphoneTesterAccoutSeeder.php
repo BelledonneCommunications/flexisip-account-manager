@@ -115,7 +115,7 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
             'ip_address' => '',
             'confirmation_key' => $confirmationKey,
             'user_agent' => 'FlexiAPI Seeder',
-            'creation_time' => '2010-01-03 04:30:43'
+            'created_at' => '2010-01-03 04:30:43'
         ];
     }
 

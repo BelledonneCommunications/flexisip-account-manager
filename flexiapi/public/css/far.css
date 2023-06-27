@@ -90,6 +90,11 @@ body {
     --danger-9: rgba(104, 26, 54, 1);
 }
 
+body.show_menu {
+    max-height: 100vh;
+    overflow: hidden;
+}
+
 p,
 a {
     font-size: 1.5rem;
@@ -102,6 +107,11 @@ p {
 
 p b {
     font-weight: bold;
+}
+
+p i {
+    vertical-align: middle;
+    margin-right: 1rem;
 }
 
 p>a:not(.btn),
@@ -186,12 +196,54 @@ header nav a i {
     font-size: 2.5rem;
 }
 
-header nav a:first-child {
+@media screen and (max-width: 800px) {
+    header nav {
+        padding: 1rem;
+    }
+
+    header nav a {
+        padding: 1rem;
+    }
+
+    header nav a i {
+        margin-right: 0;
+    }
+}
+
+header nav a#logo {
     font-weight: 700;
     padding-left: 2rem;
 }
 
-header nav a:first-child::before {
+header nav a#menu {
+    color: var(--main-5);
+}
+
+header nav a#menu:after {
+    display: block;
+    font-family: 'Material Icons';
+    content: "\e5d2";
+    font-size: 3rem;
+}
+
+body.show_menu header nav a#menu:after {
+    content: "\e5cd";
+}
+
+header nav a#logo span {
+    margin-left: 1.5rem;
+}
+
+@media screen and (max-width: 800px) {
+    header nav a#logo {
+        position: absolute;
+        left: calc(50% - 1.5rem);
+        top: 0.75rem;
+        padding: 0;
+    }
+}
+
+header nav a#logo::before {
     content: '';
     width: 3rem;
     height: 3rem;
@@ -202,17 +254,16 @@ header nav a:first-child::before {
     background-position: center;
     background-repeat: no-repeat;
     display: block;
-    margin-right: 1.5rem;
     border-radius: 1rem;
     box-shadow: 0 0 2rem rgba(0, 0, 0, 0.2);
 }
 
-header nav a:nth-child(2) {
+header nav a.oppose {
     margin-left: auto;
 }
 
-header nav a:last-child {
-    padding-right: 2rem;
+header nav a.oppose ~ a.oppose {
+    margin-left: 0;
 }
 
 /** Section **/
@@ -224,9 +275,13 @@ content section {
     box-sizing: border-box;
 }
 
+content nav + section {
+    min-width: calc(80% - 20rem);
+}
+
 /** Sidenav **/
 
-content nav {
+content > nav {
     background-color: var(--main-5);
     width: 20rem;
     margin-left: 0;
@@ -239,9 +294,11 @@ content nav {
     background-position: bottom center;
     background-repeat: repeat-x;
     background-image: url('/img/footer.svg');
+
+    z-index: 1;
 }
 
-content nav a {
+content > nav a {
     color: white;
     font-weight: 600;
     font-size: 1.75rem;
@@ -254,14 +311,34 @@ content nav a {
     position: relative;
 }
 
-content nav a.current {
+@media screen and (max-width: 800px) {
+    content > nav {
+        width: 100%;
+        position: absolute;
+        min-height: 100vh;
+        max-height: 100%;
+        overflow-y: scroll;
+        box-sizing: border-box;
+        border-radius: 0;
+        padding-top: 2rem;
+
+        transition: transform 0.5s ease-in-out;
+        transform: translateX(-100%);
+    }
+
+    body.show_menu content > nav {
+        transform: translateX(0);
+    }
+}
+
+content > nav a.current {
     background-color: white;
     border-radius: 4rem;
     color: var(--main-5);
     box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
 }
 
-content nav a.current:before {
+content > nav a.current:before {
     content: '';
     display: block;
     width: 1rem;
@@ -274,7 +351,7 @@ content nav a.current:before {
     box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
 }
 
-content nav a i {
+content > nav a i {
     margin: 0 1rem;
     margin-left: 2rem;
     font-size: 2rem;
@@ -312,197 +389,16 @@ h1 i {
     margin-right: 1rem;
 }
 
-/** Forms **/
-
-.btn {
-    display: inline-block;
-    background-color: var(--main-5);
-    font-weight: 600;
-    border: 1px solid var(--main-5);
-    border-radius: 3rem;
-    font-size: 1.5rem;
-    line-height: 2rem;
-    padding: 1rem 2rem;
-    color: white;
-    margin: 0 1rem;
+h2 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    padding: 1rem 0;
+    color: var(--second-7);
 }
 
-.btn i {
-    margin-right: 0.5rem;
-    margin-left: -0.5rem;
+h2 i {
     font-size: 2rem;
-    vertical-align: middle;
-}
-
-.oppose {
-    float: right;
-}
-
-.btn[disabled] {
-    color: var(--main-5);
-    border-color: var(--main-5);
-    background-color: var(--main-1);
-    opacity: 0.5;
-    pointer-events: none;
-}
-
-.btn:hover {
-    background-color: var(--main-6);
-    border-color: var(--main-6);
-    cursor: pointer;
-}
-
-.btn:active {
-    background-color: var(--main-7);
-    border-color: var(--main-7);
-}
-
-.btn.btn-secondary {
-    background-color: transparent;
-    color: var(--main-5);
-}
-
-.btn.btn-secondary:hover {
-    background-color: var(--main-1);
-}
-
-.btn.btn-secondary:active {
-    background-color: var(--main-5);
-    border-color: var(--main-5);
-    color: white;
-}
-
-form {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem 0.5rem;
-}
-
-form div {
-    position: relative;
-    min-height: 4rem;
-}
-
-form .large {
-    grid-column: 1/-1;
-}
-
-@media screen and (max-width: 1024px) {
-    form div {
-        grid-column: 1/-1;
-    }
-}
-
-form small {
-    display: block;
-    font-weight: 300;
-    color: var(--second-6);
-    font-size: 1.25rem;
-    margin-top: 0.25rem;
-}
-
-form label {
-    color: var(--second-6);
-    font-size: 1.5rem;
-}
-
-form input[required]+label:after {
-    content: '*';
-    margin-left: 0.5rem;
-}
-
-form input:not([type=checkbox])+label,
-form select+label {
-    position: absolute;
-    top: 0;
-    left: 0;
-    font-weight: 700;
-}
-
-form div .btn {
-    position: absolute;
-    bottom: 0;
-}
-
-form div .btn.oppose {
-    right: 0;
-}
-
-form div input,
-form div select {
-    padding: 1rem 2rem;
-    background-color: var(--grey-1);
-    border-radius: 3rem;
-    border: 1px solid var(--grey-2);
-    font-size: 1.5rem;
-}
-
-form div select {
-    appearance: none;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-}
-
-form div.checkbox {
-    min-height: 2rem;
-}
-
-form div.select:after {
-    font-family: 'Material Icons';
-    content: "\e5cf";
-    display: block;
-    font-size: 3rem;
-    color: var(--second-6);
-    position: absolute;
-    right: 1rem;
-    bottom: 0rem;
-    pointer-events: none;
-    line-height: 4rem;
-}
-
-form div input[disabled] {
-    border-color: var(--grey-4);
-    color: var(--grey-4);
-    background-color: var(--grey-2);
-    pointer-events: none;
-}
-
-form div input[type=checkbox] {
     margin-right: 1rem;
-}
-
-form div input:not([type=checkbox]):not(.btn),
-form div select {
-    margin-top: 2.5rem;
-    box-sizing: border-box;
-    min-width: 65%;
-}
-
-form div input:autofill {
-    background: var(--grey-1);
-}
-
-form div input:hover,
-form div select:hover {
-    border-color: var(--second-4);
-}
-
-form div input:focus-visible, form div input:active {
-    color: var(--main-5);
-    border-color: var(--main-5);
-}
-
-form div input:focus-visible+label, form div input:active+label {
-    color: var(--main-5);
-}
-
-form div input:invalid {
-    border-color: var(--danger-6);
-    color: var(--danger-5);
-}
-
-form div input:invalid+label {
-    color: var(--danger-5);
 }
 
 /** Badge **/
@@ -524,23 +420,30 @@ table {
     width: 100%;
 }
 
-table tr th {
+table tr td,
+table tr th{
+    line-height: 4rem;
+    padding: 0 2rem;
+    font-size: 1.5rem;
+}
+
+table tr th,
+table tr th a {
     text-transform: uppercase;
     font-weight: 600;
     color: var(--second-4);
     text-align: left;
 }
 
+table tr th a i {
+    font-size: 3rem;
+    vertical-align: middle;
+}
+
 table thead {
     border-bottom: 1px solid var(--second-4);
 }
 
-table tr td,
-table tr th {
-    line-height: 4rem;
-    padding: 0 2rem;
-    font-size: 1.5rem;
-}
 
 table tr:nth-child(2n) {
     background-color: var(--grey-1);
@@ -556,7 +459,7 @@ table tr:nth-child(2n) {
     display: none !important;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 800px) {
 
     .on_mobile,
     .on_mobile_after:after {
@@ -571,4 +474,46 @@ table tr:nth-child(2n) {
     .on_desktop {
         display: none !important;
     }
+}
+
+/** Pagination **/
+
+ul.pagination {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+ul.pagination li {
+    display: block;
+}
+
+ul.pagination li .page-link {
+    font-size: 1.6rem;
+    padding: 0.5rem;
+    line-height: 2rem;
+    border-radius: 2rem;
+    margin: 0 0.5rem;
+    text-align: center;
+    min-width: 2rem;
+    display: block;
+    border: 1px solid transparent;
+}
+
+ul.pagination li:not(.disabled).active .page-link {
+    color: white;
+    background-color: var(--main-5);
+}
+
+ul.pagination li:not(.disabled) .page-link {
+    color: var(--main-5);
+}
+ul.pagination li:not(.disabled):not(.active) .page-link:hover {
+    background-color: var(--main-1);
+}
+
+ul.pagination li:not(.disabled) .page-link:hover {
+    border-color: var(--main-5);
 }

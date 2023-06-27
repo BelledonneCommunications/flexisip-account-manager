@@ -73,7 +73,7 @@ class AccountService
         $account->activated = false;
         $account->domain = config('app.sip_domain');
         $account->ip_address = $request->ip();
-        $account->creation_time = Carbon::now();
+        $account->created_at = Carbon::now();
         $account->user_agent = config('app.name');
         $account->dtmf_protocol = $request->get('dtmf_protocol');
         $account->confirmation_key = generatePin();

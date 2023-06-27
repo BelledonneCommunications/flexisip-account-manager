@@ -1,9 +1,5 @@
 @extends('layouts.main')
 
-@section('breadcrumb')
-<li class="breadcrumb-item active" aria-current="page">Accounts</li>
-@endsection
-
 @section('content')
 
     <div>
@@ -14,15 +10,21 @@
         <h1><i class="material-icons">people</i> Account</h1>
     </div>
     <div>
-        {!! Form::open(['route' => 'admin.account.search']) !!}
+        <form class="inline" method="POST" action="{{ route('admin.account.search')}}" accept-charset="UTF-8">
+            @csrf
             <div>
-                {!! Form::text('search', $search, ['placeholder' => 'Search by username: +1234, foo_bar…']) !!}
-                {!! Form::label('search', 'Search') !!}
+                <input placeholder="Search by username: +1234, foo_bar…" name="search" type="text" value="{{ $search }}">
+                <label for="search">Search</label>
             </div>
             <div>
-                <button type="submit" class="btn oppose">Search</button>
+                <input name="updated_date" type="date" value="{{ $updated_date }}">
+                <label for="updated_date">Updated Date</label>
             </div>
-        {!! Form::close() !!}
+            <div>
+                <a href="{{ route('admin.account.index')}}" type="reset" class="btn btn-secondary">Reset</a>
+                <button type="submit" class="btn">Search</button>
+            </div>
+        </form>
     </div>
 
     <br />
@@ -32,14 +34,23 @@
             <tr>
                 <th scope="col">Identifier (email)</th>
                 <th scope="col"></th>
-                <th scope="col">Created</th>
+                <th scope="col">
+                    <a href="{{ route('admin.account.index', ['updated_at_order' => $updated_at_order]) }}">
+                        Updated
+                        @if ($updated_at_order == 'desc')
+                            <i class="material-icons">expand_more</i>
+                        @else
+                            <i class="material-icons">expand_less</i>
+                        @endif
+                    </a>
+                </th>
             </tr>
         </thead>
         <tbody>
             @foreach ($accounts as $account)
                 <tr>
                     <td>
-                        <a href="{{ route('admin.account.show', $account->id) }}">
+                        <a href="{{ route('admin.account.edit', $account->id) }}">
                             {{ $account->identifier }}
                         </a>
                     </td>
@@ -60,7 +71,7 @@
                             <span class="badge badge-info">SHA256</span>
                         @endif
                     </td>
-                    <td>{{ $account->creation_time}}</td>
+                    <td>{{ $account->created_at}}</td>
                 </tr>
             @endforeach
         </tbody>

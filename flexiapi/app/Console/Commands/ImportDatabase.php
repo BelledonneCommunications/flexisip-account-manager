@@ -28,7 +28,6 @@ use App\Admin;
 use App\Alias;
 use App\ApiKey;
 use App\DigestNonce;
-use App\EmailChanged;
 use App\Password;
 use App\PhoneChangeCode;
 
@@ -106,7 +105,7 @@ class ImportDatabase extends Command
                                             // Fix bad creation_time
                                             $creationTime = strtotime($element->creation_time);
                                             if ($creationTime == false || $creationTime < 0) {
-                                                $element->creation_time = gmdate('Y-m-d H:i:s', 1);
+                                                $element->created_at = gmdate('Y-m-d H:i:s', 1);
                                             }
                                             return (array)$element;
                                          })

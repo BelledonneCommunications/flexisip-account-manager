@@ -33,7 +33,7 @@ class StatisticsCruncher
     {
         $data = self::getAccountFrom(Carbon::now()->subMonth())
             ->get(array(
-                DB::raw("date_format(creation_time,'%Y-%m-%d') as moment"),
+                DB::raw("date_format(created_at,'%Y-%m-%d') as moment"),
                 DB::raw('COUNT(*) as "count"')
             ))->each->setAppends([])->pluck('count', 'moment');
 
@@ -43,14 +43,14 @@ class StatisticsCruncher
                       ->from('aliases');
             })
             ->get(array(
-                DB::raw("date_format(creation_time,'%Y-%m-%d') as moment"),
+                DB::raw("date_format(created_at,'%Y-%m-%d') as moment"),
                 DB::raw('COUNT(*) as "count"')
             ))->each->setAppends([])->pluck('count', 'moment');
 
         $dataActivated = self::getAccountFrom(Carbon::now()->subMonth())
             ->where('activated', true)
             ->get(array(
-                DB::raw("date_format(creation_time,'%Y-%m-%d') as moment"),
+                DB::raw("date_format(created_at,'%Y-%m-%d') as moment"),
                 DB::raw('COUNT(*) as "count"')
             ))->each->setAppends([])->pluck('count', 'moment');
 
@@ -61,7 +61,7 @@ class StatisticsCruncher
                       ->from('aliases');
             })
             ->get(array(
-                DB::raw("date_format(creation_time,'%Y-%m-%d') as moment"),
+                DB::raw("date_format(created_at,'%Y-%m-%d') as moment"),
                 DB::raw('COUNT(*) as "count"')
             ))->each->setAppends([])->pluck('count', 'moment');
 
@@ -78,7 +78,7 @@ class StatisticsCruncher
     {
         $data = self::getAccountFrom(Carbon::now()->subWeek())
             ->get(array(
-                DB::raw("date_format(creation_time,'%Y-%m-%d') as moment"),
+                DB::raw("date_format(created_at,'%Y-%m-%d') as moment"),
                 DB::raw('COUNT(*) as "count"')
             ))->each->setAppends([])->pluck('count', 'moment');
 
@@ -88,14 +88,14 @@ class StatisticsCruncher
                       ->from('aliases');
             })
             ->get(array(
-                DB::raw("date_format(creation_time,'%Y-%m-%d') as moment"),
+                DB::raw("date_format(created_at,'%Y-%m-%d') as moment"),
                 DB::raw('COUNT(*) as "count"')
             ))->each->setAppends([])->pluck('count', 'moment');
 
         $dataActivated = self::getAccountFrom(Carbon::now()->subWeek())
             ->where('activated', true)
             ->get(array(
-                DB::raw("date_format(creation_time,'%Y-%m-%d') as moment"),
+                DB::raw("date_format(created_at,'%Y-%m-%d') as moment"),
                 DB::raw('COUNT(*) as "count"')
             ))->each->setAppends([])->pluck('count', 'moment');
 
@@ -106,7 +106,7 @@ class StatisticsCruncher
                       ->from('aliases');
             })
             ->get(array(
-                DB::raw("date_format(creation_time,'%Y-%m-%d') as moment"),
+                DB::raw("date_format(created_at,'%Y-%m-%d') as moment"),
                 DB::raw('COUNT(*) as "count"')
             ))->each->setAppends([])->pluck('count', 'moment');
 
@@ -123,7 +123,7 @@ class StatisticsCruncher
     {
         $data = self::getAccountFrom(Carbon::now()->subDay())
             ->get(array(
-                DB::raw("date_format(creation_time,'%Y-%m-%d %H') as moment"),
+                DB::raw("date_format(created_at,'%Y-%m-%d %H') as moment"),
                 DB::raw('COUNT(*) as "count"')
             ))->each->setAppends([])->pluck('count', 'moment');
 
@@ -133,14 +133,14 @@ class StatisticsCruncher
                       ->from('aliases');
             })
             ->get(array(
-                DB::raw("date_format(creation_time,'%Y-%m-%d %H') as moment"),
+                DB::raw("date_format(created_at,'%Y-%m-%d %H') as moment"),
                 DB::raw('COUNT(*) as "count"')
             ))->each->setAppends([])->pluck('count', 'moment');
 
         $dataActivated = self::getAccountFrom(Carbon::now()->subDay())
             ->where('activated', true)
             ->get(array(
-                DB::raw("date_format(creation_time,'%Y-%m-%d %H') as moment"),
+                DB::raw("date_format(created_at,'%Y-%m-%d %H') as moment"),
                 DB::raw('COUNT(*) as "count"')
             ))->each->setAppends([])->pluck('count', 'moment');
 
@@ -151,7 +151,7 @@ class StatisticsCruncher
                       ->from('aliases');
             })
             ->get(array(
-                DB::raw("date_format(creation_time,'%Y-%m-%d %H') as moment"),
+                DB::raw("date_format(created_at,'%Y-%m-%d %H') as moment"),
                 DB::raw('COUNT(*) as "count"')
             ))->each->setAppends([])->pluck('count', 'moment');
 
@@ -166,7 +166,7 @@ class StatisticsCruncher
 
     private static function getAccountFrom($date)
     {
-        return Account::where('creation_time', '>=', $date)
+        return Account::where('created_at', '>=', $date)
             ->groupBy('moment')
             ->orderBy('moment', 'DESC')
             ->setEagerLoads([]);

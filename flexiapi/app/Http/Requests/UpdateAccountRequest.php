@@ -29,23 +29,24 @@ class UpdateAccountRequest extends FormRequest
                 new BlacklistedUsername,
                 new SIPUsername,
                 Rule::unique('accounts', 'username')->where(function ($query) {
-                    $query->where('domain', config('app.sip_domain'));
-                })->ignore($this->route('id'), 'id'),
+                    $query->where('domain', resolveDomain($this));
+                })->ignore($this->route('account_id'), 'id'),
                 'filled',
             ],
             'email' => [
                 'nullable',
                 'email',
-                config('app.account_email_unique') ? Rule::unique('accounts', 'email')->ignore($this->route('id')) : null
+                config('app.account_email_unique') ? Rule::unique('accounts', 'email')->ignore($this->route('account_id')) : null
             ],
+            'role' => 'in:admin,end_user',
             'password_sha256' => 'nullable|min:3',
             'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
             'phone' => [
                 'nullable',
                 Rule::unique('accounts', 'username')->where(function ($query) {
                     $query->where('domain', config('app.sip_domain'));
-                })->ignore($this->route('id'), 'id'),
-                Rule::unique('aliases', 'alias')->ignore($this->route('id'), 'account_id'),
+                })->ignore($this->route('account_id'), 'id'),
+                Rule::unique('aliases', 'alias')->ignore($this->route('account_id'), 'account_id'),
                 new WithoutSpaces, 'starts_with:+'
             ]
         ];

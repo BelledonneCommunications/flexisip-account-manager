@@ -71,7 +71,7 @@ class GenerateExternalAccounts extends Command
             $account->ip_address = '127.0.0.1';
             $account->user_agent = 'External Account Generator';
             $account->group = $this->argument('group');
-            $account->creation_time = Carbon::now();
+            $account->created_at = Carbon::now();
             $i++;
 
             $account->push($account->toArray());
@@ -80,7 +80,7 @@ class GenerateExternalAccounts extends Command
         Account::insert($accounts->toArray());
 
         $insertedAccounts = Account::where('group', $this->argument('group'))
-            ->orderBy('creation_time', 'desc')
+            ->latest()
             ->take($this->argument('amount'))
             ->get();
 

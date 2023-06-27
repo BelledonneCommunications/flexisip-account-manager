@@ -3,7 +3,7 @@
 @section('content')
     <section>
         <h1>
-            <i class="material-icons">mail</i>
+            <i class="material-icons">call</i>
             @if ($account->phone)
                 Change your phone number
             @else

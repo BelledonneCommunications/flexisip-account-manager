@@ -134,7 +134,7 @@ class AccountController extends Controller
             ? $request->get('domain')
             : config('app.sip_domain');
         $account->ip_address = $request->ip();
-        $account->creation_time = Carbon::now();
+        $account->created_at = Carbon::now();
         $account->user_agent = $request->header('User-Agent') ?? config('app.name');
         $account->provision();
         $account->save();

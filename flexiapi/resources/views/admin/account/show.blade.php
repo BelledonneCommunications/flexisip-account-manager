@@ -32,20 +32,6 @@
 
 <br />
 
-@if ($account->activated)
-    <span class="badge badge-success">Activated</span> <a href="{{ route('admin.account.deactivate', $account->id) }}">Deactivate</a>
-@else
-    <span class="badge badge-danger">Unactivated</span> <a href="{{ route('admin.account.activate', $account->id) }}">Activate</a>
-@endif
-
-<br />
-
-@if ($account->admin)
-    <span class="badge badge-success">Admin</span> <a href="{{ route('admin.account.unadmin', $account->id) }}">Remove admin role</a>
-@else
-    <span class="badge badge-danger">Not Admin</span> <a href="{{ route('admin.account.admin', $account->id) }}">Add admin role</a>
-@endif
-
 <h3 class="mt-3">External Account</h3>
 
 @if ($account->externalAccount)

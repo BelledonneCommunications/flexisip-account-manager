@@ -26,25 +26,36 @@ use Carbon\Carbon;
 
 use App\Account;
 use App\Admin;
-use App\Alias;
 use App\ExternalAccount;
 use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
 
 class AccountController extends Controller
 {
-    public function index(Request $request, $search = '')
+    public function index(Request $request)
     {
-        $accounts = Account::orderBy('creation_time', 'desc')->with('externalAccount');
+        $accounts = Account::orderBy('updated_at', $request->get('updated_at_order', 'desc'))
+            ->with('externalAccount');
 
-        if (!empty($search)) {
-            $accounts = $accounts->where('username', 'like', '%'.$search.'%');
+        if ($request->has('search')) {
+            $accounts = $accounts->where('username', 'like', '%' . $request->get('search') . '%');
+        }
+
+        if ($request->has('updated_date')) {
+            $accounts->whereDate('updated_at', $request->get('updated_date'));
         }
 
         return view('admin.account.index', [
-            'search' => $search,
-            'accounts' => $accounts->paginate(30)->appends($request->query())
+            'search' => $request->get('search'),
+            'updated_date' => $request->get('updated_date'),
+            'accounts' => $accounts->paginate(20)->appends($request->query()),
+            'updated_at_order' => $request->get('updated_at_order') == 'desc' ? 'asc' : 'desc'
         ]);
+    }
+
+    public function search(Request $request)
+    {
+        return redirect()->route('admin.account.index', $request->except('_token'));
     }
 
     public function show(int $id)
@@ -71,9 +82,10 @@ class AccountController extends Controller
         $account->display_name = $request->get('display_name');
         $account->domain = resolveDomain($request);
         $account->ip_address = $request->ip();
-        $account->creation_time = Carbon::now();
+        $account->created_at = Carbon::now();
         $account->user_agent = config('app.name');
         $account->dtmf_protocol = $request->get('dtmf_protocol');
+        $account->activated = $request->has('activated');
         $account->save();
 
         $account->phone = $request->get('phone');
@@ -94,24 +106,26 @@ class AccountController extends Controller
 
     public function update(UpdateAccountRequest $request, $id)
     {
+        $request->validate([
+            'password' => 'confirmed',
+        ]);
+
         $account = Account::findOrFail($id);
         $account->username = $request->get('username');
         $account->email = $request->get('email');
         $account->display_name = $request->get('display_name');
         $account->dtmf_protocol = $request->get('dtmf_protocol');
+        $account->activated = $request->has('activated');
         $account->save();
 
         $account->phone = $request->get('phone');
         $account->fillPassword($request);
 
+        $account->setRole($request->get('role'));
+
         Log::channel('events')->info('Web Admin: Account updated', ['id' => $account->identifier]);
 
         return redirect()->route('admin.account.show', $id);
-    }
-
-    public function search(Request $request)
-    {
-        return redirect()->route('admin.account.index', $request->get('search'));
     }
 
     public function attachExternalAccount(int $id)
@@ -124,28 +138,6 @@ class AccountController extends Controller
         return redirect()->back();
     }
 
-    public function activate(int $id)
-    {
-        $account = Account::findOrFail($id);
-        $account->activated = true;
-        $account->save();
-
-        Log::channel('events')->info('Web Admin: Account activated', ['id' => $account->identifier]);
-
-        return redirect()->back();
-    }
-
-    public function deactivate(int $id)
-    {
-        $account = Account::findOrFail($id);
-        $account->activated = false;
-        $account->save();
-
-        Log::channel('events')->info('Web Admin: Account deactivated', ['id' => $account->identifier]);
-
-        return redirect()->back();
-    }
-
     public function provision(int $id)
     {
         $account = Account::findOrFail($id);
@@ -153,33 +145,6 @@ class AccountController extends Controller
         $account->save();
 
         Log::channel('events')->info('Web Admin: Account provisioned', ['id' => $account->identifier]);
-
-        return redirect()->back();
-    }
-
-    public function admin(int $id)
-    {
-        $account = Account::findOrFail($id);
-
-        $admin = new Admin;
-        $admin->account_id = $account->id;
-        $admin->save();
-
-        Log::channel('events')->info('Web Admin: Account set as admin', ['id' => $account->identifier]);
-
-        return redirect()->back();
-    }
-
-    public function unadmin(Request $request, $id)
-    {
-        $account = Account::findOrFail($id);
-
-        // An admin cannot remove it's own permission
-        if ($account->id == $request->user()->id) abort(403);
-
-        if ($account->admin) $account->admin->delete();
-
-        Log::channel('events')->info('Web Admin: Account unset as admin', ['id' => $account->identifier]);
 
         return redirect()->back();
     }

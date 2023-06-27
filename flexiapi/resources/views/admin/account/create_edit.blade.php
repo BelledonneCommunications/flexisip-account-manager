@@ -1,86 +1,95 @@
 @extends('layouts.main')
 
-@section('breadcrumb')
-<li class="breadcrumb-item" aria-current="page">
-    <a href="{{ route('admin.account.index') }}">Accounts</a>
-</li>
-    @if ($account->id)
-        <li class="breadcrumb-item" aria-current="page">
-            <a href="{{ route('admin.account.show', $account->id) }}">{{ $account->identifier }}</a>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">
-            Edit
-        </li>
-    @else
-        <li class="breadcrumb-item active" aria-current="page">
-            Create
-        </li>
-    @endif
-@endsection
-
 @section('content')
-
-@if ($account->id)
-    <h1>Edit an account</h1>
-@else
-    <h1>Create an account</h1>
-@endif
-
-{!! Form::model($account, [
-    'route' => $account->id
-        ? ['admin.account.update', $account->id]
-        : ['admin.account.store'],
-    'method' => $account->id
-        ? 'put'
-        : 'post'
-]) !!}
     <div>
-        {!! Form::text('username', $account->username, ['placeholder' => 'Username', 'required' => 'required']); !!}
-        {!! Form::label('username', 'Username') !!}
-    </div>
-    <div>
-        @if (config('app.admins_manage_multi_domains'))
-            {!! Form::text('domain', $account->domain ?? config('app.sip_domain'), ['placeholder' => 'domain.com', 'required' => 'required']); !!}
+        <a class="btn oppose btn-secondary" href="{{ route('admin.account.delete', $account->id) }}">
+            <i class="material-icons">delete</i>
+            Delete
+        </a>
+        @if ($account->id)
+            <h1><i class="material-icons">people</i> Edit an account</h1>
+            <p title="{{ $account->updated_at }}">Updated on {{ $account->updated_at->format('d/m/Y')}}
         @else
-            {!! Form::text('domain', $account->domain ?? config('app.sip_domain'), ['placeholder' => 'domain.com', 'disabled']); !!}
+            <h1><i class="material-icons">people</i> Create an account</h1>
         @endif
-        {!! Form::label('domain', 'Domain') !!}
     </div>
 
-    <div>
-        {!! Form::password('password', ['placeholder' => 'Password', 'required']); !!}
-        {!! Form::label('password', ($account->id) ? 'Password (fill to change)' : 'Password') !!}
-    </div>
-    <div>
-        {!! Form::checkbox('password_sha256', 'checked', $account->sha256Password) !!}
-        {!! Form::label('password_sha256', 'Use a SHA-256 encrypted password') !!}
-    </div>
+    <form method="POST"
+        action="{{ $account->id ? route('admin.account.update', $account->id) : route('admin.account.store') }}"
+        accept-charset="UTF-8">
+        @csrf
+        @method($account->id ? 'put' : 'post')
+        <h2>Connexion</h2>
+        <div>
+            <input placeholder="Username" required="required" name="username" type="text" value="{{ $account->username }}">
+            <label for="username">Username</label>
+            @include('parts.errors', ['name' => 'username'])
+        </div>
+        <div>
+            <input placeholder="domain.com" @if (config('app.admins_manage_multi_domains')) required @else disabled @endif name="domain" type="text" value="{{ $account->domain ?? config('app.sip_domain') }}">
+            <label for="domain">Domain</label>
+        </div>
 
-    <div>
-        {!! Form::email('email', $account->email, ['placeholder' => 'Email']); !!}
-        {!! Form::label('email', 'Email') !!}
-    </div>
+        <div>
+            <input placeholder="John Doe" name="display_name" type="text" value="{{ $account->display_name }}">
+            <label for="display_name">Display Name</label>
+            @include('parts.errors', ['name' => 'display_name'])
+        </div>
+        <div></div>
 
-    <div>
-        {!! Form::text('display_name', $account->display_name, ['placeholder' => 'John Doe']); !!}
-        {!! Form::label('display_name', 'Display Name') !!}
-    </div>
+        <div>
+            <input placeholder="Password" name="password" type="password" value="">
+            <label for="password">{{ $account->id ? 'Password (fill to change)' : 'Password' }}</label>
+            @include('parts.errors', ['name' => 'password'])
+        </div>
 
-    <div>
-        {!! Form::text('phone', $account->phone, ['placeholder' => '+12123123']); !!}
-        {!! Form::label('phone', 'Phone') !!}
-    </div>
+        <div>
+            <input placeholder="Password" name="password_confirmation" type="password" value="">
+            <label for="password_confirmation">Confirm password</label>
+            @include('parts.errors', ['name' => 'password_confirmation'])
+        </div>
 
-    <div class="select">
-        {!! Form::select('dtmf_protocol', $protocols, $account->dtmf_protocol); !!}
-        {!! Form::label('dtmf_protocol', 'DTMF Protocol') !!}
-    </div>
 
-    <hr />
-    <div>
-        {!! Form::submit(($account->id) ? 'Update' : 'Create', ['class' => 'btn oppose']) !!}
-    </div>
+        <div>
+            <input placeholder="Email" name="email" type="email" value="{{ $account->email }}">
+            <label for="email">Email</label>
+            @include('parts.errors', ['name' => 'email'])
+        </div>
 
-{!! Form::close() !!}
+        <div>
+            <input placeholder="+12123123" name="phone" type="text" value="{{ $account->phone }}">
+            <label for="phone">Phone</label>
+            @include('parts.errors', ['name' => 'phone'])
+        </div>
 
+        <h2>Other information</h2>
+
+        <div>
+            <input name="activated" type="checkbox" @if ($account->activated)checked @endif>
+            <label>Activated</label>
+        </div>
+
+        <div>
+            <input name="role" value="admin" type="radio" @if ($account->admin)checked @endif>
+            <p>Admin</p>
+            <input name="role" value="end_user" type="radio" @if (!$account->admin)checked @endif>
+            <p>End user</p>
+            <label>Role</label>
+        </div>
+
+        <div class="select">
+            <select name="dtmf_protocol">
+                @foreach ($protocols as $value => $name)
+                    <option value="{{ $value }}" @if( $account->dtmf_protocol == $value )selected="selected"@endif>{{ $name }}</option>
+                @endforeach
+            </select>
+            <label for="dtmf_protocol">DTMF Protocol</label>
+        </div>
+
+        <hr>
+        <div class="large">
+            <input class="btn oppose" type="submit" value="{{ $account->id ? 'Update' : 'Create' }}">
+        </div>
+
+    </form>
 @endsection

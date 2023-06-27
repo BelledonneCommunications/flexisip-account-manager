@@ -37,12 +37,10 @@ class Account extends Authenticatable
 
     protected $with = ['passwords', 'admin', 'alias', 'activationExpiration', 'emailChangeCode', 'types', 'actions'];
     protected $hidden = ['alias', 'expire_time', 'confirmation_key', 'provisioning_token', 'pivot'];
-    protected $dateTimes = ['creation_time'];
     protected $appends = ['realm', 'phone', 'confirmation_key_expires'];
     protected $casts = [
         'activated' => 'boolean',
     ];
-    public $timestamps = false;
 
     public static $dtmfProtocols = ['sipinfo' => 'SIPInfo', 'rfc2833' => 'RFC2833', 'sipmessage' => 'SIP Message'];
 
@@ -307,6 +305,11 @@ class Account extends Authenticatable
             $admin->account_id = $this->id;
             $admin->save();
         }
+    }
+
+    public function setRole(string $role)
+    {
+        $this->setAdminAttribute($role == 'admin');
     }
 
     public function hasTombstone()
