@@ -13,6 +13,7 @@
             <link rel="stylesheet" type="text/css" href="{{ asset('css/' . config('app.env') . '.style.css') }}">
         @else
         @endif
+        <script src="{{ asset('scripts/utils.js') }}""></script>
         <link rel="stylesheet" type="text/css" href="{{ asset('css/far.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/form.css') }}">
         <!--<link rel="stylesheet" type="text/css" href="{{ asset('css/charts.css') }}" >-->

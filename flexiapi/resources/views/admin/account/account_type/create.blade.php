@@ -5,7 +5,7 @@
     <a href="{{ route('admin.account.index') }}">Accounts</a>
 </li>
 <li class="breadcrumb-item" aria-current="page">
-    <a href="{{ route('admin.account.show', $account->id) }}">{{ $account->identifier }}</a>
+    <a href="{{ route('admin.account.edit', $account->id) }}">{{ $account->identifier }}</a>
 </li>
 <li class="breadcrumb-item active" aria-current="page">
     Types
@@ -17,9 +17,9 @@
 <h2>Add a Type to the Account</h2>
 
 @if ($account_types->count() == 0)
-    <div class="alert alert-secondary" role="alert">
+    <p>
         No Account Type to add
-    </div>
+    </p>
 @else
 
 {!! Form::model($account, [

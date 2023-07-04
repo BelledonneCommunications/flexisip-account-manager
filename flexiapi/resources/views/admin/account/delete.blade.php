@@ -1,15 +1,21 @@
 @extends('layouts.main')
 
-<h2>Delete an account</h2>
+@section('content')
+    <h2>Delete an account</h2>
 
-{!! Form::open(['route' => 'admin.account.destroy', 'method' => 'delete']) !!}
+    {!! Form::open(['route' => 'admin.account.destroy', 'method' => 'delete']) !!}
 
-<p>You are going to permanently delete the following account. Please confirm your action.</p>
-<p><b>{{ $account->identifier }}</b></p>
+    <div class="large">
+        <p>You are going to permanently delete the following account. Please confirm your action.<br />
+            <b>{{ $account->identifier }}</b>
+        </p>
 
-{!! Form::hidden('account_id', $account->id) !!}
+        {!! Form::hidden('account_id', $account->id) !!}
+    </div>
+    <div>
+        {!! Form::submit('Delete', ['class' => 'btn']) !!}
 
-{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-centered']) !!}
-{!! Form::close() !!}
+    </div>
 
+    {!! Form::close() !!}
 @endsection

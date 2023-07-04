@@ -5,7 +5,7 @@
     <a href="{{ route('admin.account.index') }}">Accounts</a>
 </li>
 <li class="breadcrumb-item" aria-current="page">
-    <a href="{{ route('admin.account.show', $action->account) }}">{{ $action->account->identifier }}</a>
+    <a href="{{ route('admin.account.edit', $action->account) }}">{{ $action->account->identifier }}</a>
 </li>
 <li class="breadcrumb-item active" aria-current="page">
     Actions

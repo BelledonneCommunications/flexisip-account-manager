@@ -18,11 +18,11 @@
     </div>
 </div>
 
-<table class="table table-responsive-md">
+<table class="table">
     <thead>
         <tr>
-            <th scope="col">Key</th>
-            <th scope="col"></th>
+            <th>Key</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>

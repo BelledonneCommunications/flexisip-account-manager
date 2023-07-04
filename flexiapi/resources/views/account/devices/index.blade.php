@@ -6,11 +6,11 @@
 
 @section('content')
 
-<table class="table table-responsive-md">
+<table class="table">
     <thead>
         <tr>
-            <th scope="col">User Agent</th>
-            <th scope="col"></th>
+            <th>User Agent</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>

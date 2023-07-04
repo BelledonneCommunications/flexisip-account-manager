@@ -10,7 +10,7 @@
     line-height: 2rem;
     padding: 1rem 2rem;
     color: white;
-    margin: 0 1rem;
+    white-space: nowrap;
 }
 
 .btn i {
@@ -58,10 +58,24 @@
     color: white;
 }
 
+.btn.btn-tertiary {
+    background-color: var(--main-1);
+    border-color: transparent;
+    color: var(--main-5);
+}
+
+.btn.btn-tertiary:hover {
+    background-color: var(--main-2);
+}
+
+.btn.btn-tertiary:active {
+    background-color: var(--main-3);
+}
+
 form {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem 0.5rem;
+    gap: 1.5rem 2.5rem;
 }
 
 form.inline {
@@ -83,6 +97,12 @@ form.inline div {
 form .large,
 form h2 {
     grid-column: 1/-1;
+}
+
+form .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    filter: blur(0.25rem);
 }
 
 @media screen and (max-width: 1024px) {
@@ -110,6 +130,7 @@ form input[required]+label:after {
 }
 
 form input:not([type=checkbox]) ~ label,
+form textarea ~ label,
 form select ~ label {
     position: absolute;
     top: 0;
@@ -127,12 +148,14 @@ form div .btn.oppose {
 }
 
 form div input,
+form div textarea,
 form div select {
     padding: 1rem 2rem;
     background-color: var(--grey-1);
     border-radius: 3rem;
     border: 1px solid var(--grey-2);
     font-size: 1.5rem;
+    resize: vertical;
 }
 
 form div select {
@@ -158,19 +181,24 @@ form div.select:after {
     line-height: 4rem;
 }
 
-form div input[disabled] {
+form div input[disabled],
+form div textarea[disabled] {
     border-color: var(--grey-4);
     color: var(--grey-4);
     background-color: var(--grey-2);
     pointer-events: none;
 }
 
-form div input[type=checkbox] {
-    margin-right: 1rem;
+input[type=checkbox] {
     accent-color: var(--main-5);
 }
 
+form div input[type=checkbox] {
+    margin-right: 1rem;
+}
+
 form div input:not([type=checkbox]):not([type=radio]):not(.btn),
+form div textarea,
 form div select {
     margin-top: 2.5rem;
     box-sizing: border-box;
@@ -193,24 +221,33 @@ form div input:autofill {
 }
 
 form div input:hover,
+form div textarea:hover,
 form div select:hover {
     border-color: var(--second-4);
 }
 
-form div input:focus-visible, form div input:active {
+form div input:focus-visible,
+form div input:active,
+form div textarea:focus-visible,
+form div textarea:active {
     color: var(--main-5);
     border-color: var(--main-5);
 }
 
-form div input:focus-visible+label, form div input:active+label {
+form div input:focus-visible+label,
+form div input:active+label,
+form div textarea:focus-visible+label,
+form div textarea:active+label {
     color: var(--main-5);
 }
 
-form div input:invalid {
+form div input:invalid,
+form div textarea:invalid {
     border-color: var(--danger-6);
     color: var(--danger-5);
 }
 
-form div input:invalid+label {
+form div input:invalid+label,
+form div textarea:invalid+label {
     color: var(--danger-5);
 }

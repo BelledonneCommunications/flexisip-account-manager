@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Schema;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 use League\CommonMark\Extension\TableOfContents\TableOfContentsExtension;
+use Illuminate\Support\Facades\DB;
 
 function generateNonce(): string
 {
@@ -129,4 +130,24 @@ function resolveDomain(Request $request): string
         && config('app.admins_manage_multi_domains')
             ? $request->get('domain')
             : config('app.sip_domain');
+}
+
+function resolveUserContacts(Request $request)
+{
+    $selected = ['id', 'username', 'domain', 'activated', 'dtmf_protocol'];
+
+    return Account::whereIn('id', function ($query) use ($request) {
+        $query->select('contact_id')
+            ->from('contacts')
+            ->where('account_id', $request->user()->id)
+            ->union(
+                DB::table('contacts_list_contact')
+                    ->select('contact_id')
+                    ->whereIn('contacts_list_id', function ($query) use ($request) {
+                        $query->select('contacts_list_id')
+                            ->from('account_contacts_list')
+                            ->where('account_id', $request->user()->id);
+                    })
+            );
+    })->select($selected);
 }

@@ -30,6 +30,8 @@ use App\Http\Controllers\Admin\AccountActionController;
 use App\Http\Controllers\Admin\AccountContactController;
 use App\Http\Controllers\Admin\AccountTypeController;
 use App\Http\Controllers\Admin\AccountController as AdminAccountController;
+use App\Http\Controllers\Admin\ContactsListController;
+use App\Http\Controllers\Admin\ContactsListContactController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -127,39 +129,16 @@ if (config('app.web_panel')) {
     Route::get('auth_tokens/qrcode/{token}', 'Account\AuthTokenController@qrcode')->name('auth_tokens.qrcode');
     Route::get('auth_tokens/auth/{token}', 'Account\AuthTokenController@auth')->name('auth_tokens.auth');
 
+    //Route::get('admin/accounts/{acc}/cl/{$cl}/detach', 'Admin\AccountController@detachContactsList')->name('admin.account.contacts_lists.detach2');
     Route::name('admin.')->prefix('admin')->middleware(['auth.admin'])->group(function () {
+
         // Statistics
         Route::get('statistics/day', 'Admin\StatisticsController@showDay')->name('statistics.show.day');
         Route::get('statistics/week', 'Admin\StatisticsController@showWeek')->name('statistics.show.week');
         Route::get('statistics/month', 'Admin\StatisticsController@showMonth')->name('statistics.show.month');
 
-        Route::prefix('accounts')->group(function () {
-            Route::name('account.type.')->prefix('types')->controller(AccountTypeController::class)->group(function () {
-                Route::get('/', 'index')->name('index');
-                Route::get('create', 'create')->name('create');
-                Route::post('/', 'store')->name('store');
-                Route::get('{type_id}/edit', 'edit')->name('edit');
-                Route::put('{type_id}', 'update')->name('update');
-                Route::get('{type_id}/delete', 'delete')->name('delete');
-                Route::delete('{type_id}', 'destroy')->name('destroy');
-            });
-
-            Route::name('account.account_type.')->prefix('{account}/types')->controller(AccountAccountTypeController::class)->group(function () {
-                Route::get('create', 'create')->name('create');
-                Route::post('/', 'store')->name('store');
-                Route::delete('{type_id}', 'destroy')->name('destroy');
-            });
-
-            Route::name('account.contact.')->prefix('{account}/contacts')->controller(AccountContactController::class)->group(function () {
-                Route::get('create', 'create')->name('create');
-                Route::post('/', 'store')->name('store');
-                Route::get('{contact_id}/delete', 'delete')->name('delete');
-                Route::delete('/', 'destroy')->name('destroy');
-            });
-
-            Route::name('account.')->controller(AdminAccountController::class)->group(function () {
-                Route::get('{account_id}/show', 'show')->name('show');
-
+        Route::name('account.')->prefix('accounts')->group(function () {
+            Route::controller(AdminAccountController::class)->group(function () {
                 Route::get('{account_id}/external_account/attach', 'attachExternalAccount')->name('external_account.attach');
 
                 Route::get('{account_id}/provision', 'provision')->name('provision');
@@ -175,15 +154,58 @@ if (config('app.web_panel')) {
 
                 Route::get('/', 'index')->name('index');
                 Route::post('search', 'search')->name('search');
+
+                Route::get('{account_id}/contacts_lists/detach', 'detachContactsList')->name('contacts_lists.detach');
+                Route::post('{account_id}/contacts_lists', 'attachContactsList')->name('contacts_lists.attach');
             });
 
-            Route::name('account.action.')->prefix('{account}/actions')->controller(AccountActionController::class)->group(function () {
+            Route::name('type.')->prefix('types')->controller(AccountTypeController::class)->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('create', 'create')->name('create');
+                Route::post('/', 'store')->name('store');
+                Route::get('{type_id}/edit', 'edit')->name('edit');
+                Route::put('{type_id}', 'update')->name('update');
+                Route::get('{type_id}/delete', 'delete')->name('delete');
+                Route::delete('{type_id}', 'destroy')->name('destroy');
+            });
+
+            Route::name('account_type.')->prefix('{account}/types')->controller(AccountAccountTypeController::class)->group(function () {
+                Route::get('create', 'create')->name('create');
+                Route::post('/', 'store')->name('store');
+                Route::delete('{type_id}', 'destroy')->name('destroy');
+            });
+
+            Route::name('contact.')->prefix('{account}/contacts')->controller(AccountContactController::class)->group(function () {
+                Route::get('create', 'create')->name('create');
+                Route::post('/', 'store')->name('store');
+                Route::get('{contact_id}/delete', 'delete')->name('delete');
+                Route::delete('/', 'destroy')->name('destroy');
+            });
+
+            Route::name('action.')->prefix('{account}/actions')->controller(AccountActionController::class)->group(function () {
                 Route::get('create', 'create')->name('create');
                 Route::post('/', 'store')->name('store');
                 Route::get('{action_id}/edit', 'edit')->name('edit');
                 Route::put('{action_id}', 'update')->name('update');
                 Route::get('{action_id}/delete', 'delete')->name('delete');
                 Route::delete('{action_id}', 'destroy')->name('destroy');
+            });
+        });
+
+        Route::name('contacts_lists.')->prefix('contacts_lists')->controller(ContactsListController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('create', 'create')->name('create');
+            Route::post('/', 'store')->name('store');
+            Route::get('{contacts_list_id}/edit', 'edit')->name('edit');
+            Route::put('{contacts_list_id}', 'update')->name('update');
+            Route::get('{contacts_list_id}/delete', 'delete')->name('delete');
+            Route::delete('{contacts_list_id}', 'destroy')->name('destroy');
+
+            Route::name('contacts.')->prefix('{contacts_list_id}/contacts')->controller(ContactsListContactController::class)->group(function () {
+                Route::get('add', 'add')->name('add');
+                Route::post('search', 'search')->name('search');
+                Route::post('/', 'store')->name('store');
+                Route::delete('/', 'destroy')->name('destroy');
             });
         });
     });

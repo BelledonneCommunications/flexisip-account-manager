@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 use App\Account;
-use App\Admin;
+use App\ContactsList;
 use App\ExternalAccount;
 use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
@@ -58,14 +58,6 @@ class AccountController extends Controller
         return redirect()->route('admin.account.index', $request->except('_token'));
     }
 
-    public function show(int $id)
-    {
-        return view('admin.account.show', [
-            'external_accounts_count' => ExternalAccount::where('used', false)->count(),
-            'account' => Account::findOrFail($id)
-        ]);
-    }
-
     public function create(Request $request)
     {
         return view('admin.account.create_edit', [
@@ -93,14 +85,20 @@ class AccountController extends Controller
 
         Log::channel('events')->info('Web Admin: Account created', ['id' => $account->identifier]);
 
-        return redirect()->route('admin.account.show', $account->id);
+        return redirect()->route('admin.account.edit', $account->id);
     }
 
     public function edit(int $id)
     {
         return view('admin.account.create_edit', [
             'account' => Account::findOrFail($id),
-            'protocols' => [null => 'None'] + Account::$dtmfProtocols
+            'protocols' => [null => 'None'] + Account::$dtmfProtocols,
+            'external_accounts_count' => ExternalAccount::where('used', false)->count(),
+            'contacts_lists' => ContactsList::whereNotIn('id', function ($query) use ($id) {
+                $query->select('contacts_list_id')
+                    ->from('account_contacts_list')
+                    ->where('account_id', $id);
+            })->get()
         ]);
     }
 
@@ -125,7 +123,7 @@ class AccountController extends Controller
 
         Log::channel('events')->info('Web Admin: Account updated', ['id' => $account->identifier]);
 
-        return redirect()->route('admin.account.show', $id);
+        return redirect()->route('admin.account.edit', $id);
     }
 
     public function attachExternalAccount(int $id)
@@ -146,7 +144,7 @@ class AccountController extends Controller
 
         Log::channel('events')->info('Web Admin: Account provisioned', ['id' => $account->identifier]);
 
-        return redirect()->back();
+        return redirect()->back()->withFragment('provisioning');
     }
 
     public function delete(int $id)
@@ -168,5 +166,26 @@ class AccountController extends Controller
         Log::channel('events')->info('Web Admin: Account deleted', ['id' => $account->identifier]);
 
         return redirect()->route('admin.account.index');
+    }
+
+    public function attachContactsList(Request $request, int $id)
+    {
+        $request->validate([
+            'contacts_list_id' => 'required|exists:contacts_lists,id'
+        ]);
+
+        $account = Account::findOrFail($id);
+        $account->contactsLists()->detach([$request->get('contacts_list_id')]);
+        $account->contactsLists()->attach([$request->get('contacts_list_id')]);
+
+        return redirect()->route('admin.account.edit', $id);
+    }
+
+    public function detachContactsList(Request $request, int $id)
+    {
+        $account = Account::findOrFail($id);
+        $account->contactsLists()->detach([$request->get('contacts_list_id')]);
+
+        return redirect()->route('admin.account.edit', $id);
     }
 }

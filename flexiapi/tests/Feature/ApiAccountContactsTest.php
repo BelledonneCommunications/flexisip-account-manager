@@ -22,7 +22,7 @@ namespace Tests\Feature;
 use App\Password;
 use App\AccountType;
 use App\Admin;
-
+use App\ContactsList;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -48,13 +48,13 @@ class ApiAccountContactTest extends TestCase
         $admin->account->generateApiKey();
 
         $this->keyAuthenticated($admin->account)
-            ->json($this->method, $this->route.'/'.$password1->account->id.'/contacts/'.$password2->account->id)
+            ->json($this->method, $this->route . '/' . $password1->account->id . '/contacts/' . $password2->account->id)
             ->assertStatus(200);
 
         $this->assertEquals(1, DB::table('contacts')->count());
 
         $this->keyAuthenticated($admin->account)
-            ->json($this->method, $this->route.'/'.$password1->account->id.'/contacts/'.$password3->account->id)
+            ->json($this->method, $this->route . '/' . $password1->account->id . '/contacts/' . $password3->account->id)
             ->assertStatus(200);
 
         $this->assertEquals(2, DB::table('contacts')->count());
@@ -69,85 +69,132 @@ class ApiAccountContactTest extends TestCase
         $accountType = AccountType::first();
 
         $this->keyAuthenticated($admin->account)
-            ->json($this->method, '/api/accounts/'.$password2->account->id.'/types/'.$accountType->id)
+            ->json($this->method, '/api/accounts/' . $password2->account->id . '/types/' . $accountType->id)
             ->assertStatus(200);
 
         // Action
         $this->keyAuthenticated($admin->account)
-            ->json($this->method, $this->route.'/'.$password2->account->id.'/actions', [
+            ->json($this->method, $this->route . '/' . $password2->account->id . '/actions', [
                 'key' => $actionKey,
                 'code' => $actionCode
             ]);
 
         // Retry
         $this->keyAuthenticated($admin->account)
-             ->json($this->method, $this->route.'/'.$password1->account->id.'/contacts/'.$password2->account->id)
-             ->assertStatus(403);
+            ->json($this->method, $this->route . '/' . $password1->account->id . '/contacts/' . $password2->account->id)
+            ->assertStatus(403);
         $this->assertEquals(2, DB::table('contacts')->count());
 
         $this->keyAuthenticated($admin->account)
-             ->get($this->route.'/'.$password1->account->id.'/contacts')
-             ->assertJson([
+            ->get($this->route . '/' . $password1->account->id . '/contacts')
+            ->assertJson([
                 [
                     'id' => $password2->account->id
                 ]
-             ]);
+            ]);
 
         // /me
         $password1->account->generateApiKey();
         $password1->account->save();
 
         $this->keyAuthenticated($password1->account)
-             ->get($this->route.'/me/contacts')
-             ->assertStatus(200)
-             ->assertJson([[
+            ->get($this->route . '/me/contacts')
+            ->assertStatus(200)
+            ->assertJson([[
                 'username' => $password2->account->username,
                 'activated' => true
-             ]]);
+            ]]);
 
         $this->keyAuthenticated($password1->account)
-             ->get($this->route.'/me/contacts/'.$password2->account->identifier)
-             ->assertStatus(200)
-             ->assertJson([
+            ->get($this->route . '/me/contacts/' . $password2->account->identifier)
+            ->assertStatus(200)
+            ->assertJson([
                 'username' => $password2->account->username,
                 'activated' => true
-             ]);
+            ]);
 
         // Vcard 4.0
         $this->keyAuthenticated($password1->account)
-             ->get('/contacts/vcard')
-             ->assertStatus(200)
-             ->assertSeeText("FN:".$password2->display_name)
-             ->assertSeeText("X-LINPHONE-ACCOUNT-TYPE:".$typeKey)
-             ->assertSeeText("X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:".$password2->dtmf_protocol)
-             ->assertSeeText("X-LINPHONE-ACCOUNT-ACTION:".$actionKey.';'.$actionCode);
+            ->get('/contacts/vcard')
+            ->assertStatus(200)
+            ->assertSeeText("FN:" . $password2->display_name)
+            ->assertSeeText("X-LINPHONE-ACCOUNT-TYPE:" . $typeKey)
+            ->assertSeeText("X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:" . $password2->dtmf_protocol)
+            ->assertSeeText("X-LINPHONE-ACCOUNT-ACTION:" . $actionKey . ';' . $actionCode);
 
         $this->keyAuthenticated($password1->account)
-             ->get('/contacts/vcard/'.$password2->account->identifier)
-             ->assertStatus(200)
-             ->assertSeeText("X-LINPHONE-ACCOUNT-TYPE:".$typeKey)
-             ->assertSeeText("X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:".$password2->dtmf_protocol)
-             ->assertSeeText("X-LINPHONE-ACCOUNT-ACTION:".$actionKey.';'.$actionCode);
+            ->get('/contacts/vcard/' . $password2->account->identifier)
+            ->assertStatus(200)
+            ->assertSeeText("X-LINPHONE-ACCOUNT-TYPE:" . $typeKey)
+            ->assertSeeText("X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:" . $password2->dtmf_protocol)
+            ->assertSeeText("X-LINPHONE-ACCOUNT-ACTION:" . $actionKey . ';' . $actionCode);
 
         $this->keyAuthenticated($password1->account)
-             ->get($this->route.'/me/contacts/'.$password2->account->identifier)
-             ->assertStatus(200)
-             ->assertJson([
+            ->get($this->route . '/me/contacts/' . $password2->account->identifier)
+            ->assertStatus(200)
+            ->assertJson([
                 'username' => $password2->account->username,
                 'activated' => true
-             ]);
+            ]);
 
         // Remove
         $this->keyAuthenticated($admin->account)
-             ->delete($this->route.'/'.$password1->account->id.'/contacts/'.$password2->account->id)
-             ->assertStatus(200);
+            ->delete($this->route . '/' . $password1->account->id . '/contacts/' . $password2->account->id)
+            ->assertStatus(200);
 
         $this->assertEquals(1, DB::table('contacts')->count());
 
         // Retry
         $this->keyAuthenticated($admin->account)
-             ->delete($this->route.'/'.$password1->account->id.'/contacts/'.$password2->account->id)
-             ->assertStatus(403);
+            ->delete($this->route . '/' . $password1->account->id . '/contacts/' . $password2->account->id)
+            ->assertStatus(403);
         $this->assertEquals(1, DB::table('contacts')->count());
+
+        /**
+         * Contacts lists
+         *
+         */
+
+        // This will need to be done through the API
+        $contactList = ContactsList::factory()->create();
+        $contactList->contacts()->attach([$password1->account->id, $password2->account->id, $password3->account->id]);
+
+        $admin->account->contactsLists()->attach([$contactList->id]);
+
+        $this->keyAuthenticated($admin->account)
+            ->get($this->route . '/me/contacts')
+            ->assertStatus(200)
+            ->assertJsonFragment([
+                'username' => $password1->account->username,
+                'activated' => true
+            ])
+            ->assertJsonFragment([
+                'username' => $password2->account->username,
+                'activated' => true
+            ])
+            ->assertJsonFragment([
+                'username' => $password3->account->username,
+                'activated' => true
+            ]);
+
+        $this->keyAuthenticated($admin->account)
+            ->get($this->route . '/me/contacts/' . $password2->account->identifier)
+            ->assertStatus(200)
+            ->assertJsonFragment([
+                'username' => $password2->account->username,
+                'activated' => true
+            ]);
+
+        $this->keyAuthenticated($admin->account)
+            ->get('/contacts/vcard')
+            ->assertStatus(200)
+            ->assertSeeText("FN:" . $password1->display_name)
+            ->assertSeeText("FN:" . $password2->display_name)
+            ->assertSeeText("FN:" . $password3->display_name);
+
+        $this->keyAuthenticated($admin->account)
+            ->get('/contacts/vcard/' . $password2->account->identifier)
+            ->assertStatus(200)
+            ->assertSeeText("FN:" . $password2->display_name);
     }
 }

@@ -54,7 +54,7 @@ class AccountContactController extends Controller
 
         Log::channel('events')->info('Web Admin: Account contact added', ['id' => $account->identifier, 'contact' => $contact->identifier]);
 
-        return redirect()->route('admin.account.show', $account);
+        return redirect()->route('admin.account.edit', $account);
     }
 
     public function delete(int $id, int $contactId)
@@ -78,6 +78,6 @@ class AccountContactController extends Controller
         $request->session()->flash('success', 'Type successfully removed');
         Log::channel('events')->info('Web Admin: Account contact removed', ['id' => $account->identifier, 'contact' => $contact->identifier]);
 
-        return redirect()->route('admin.account.show', $account);
+        return redirect()->route('admin.account.edit', $account);
     }
 }

@@ -2,13 +2,13 @@
 
 @section('content')
 
-    <div>
+    <header>
+        <h1><i class="material-icons">people</i> Account</h1>
         <a class="btn oppose" href="{{ route('admin.account.create') }}">
             <i class="material-icons">add_circle</i>
             Create
         </a>
-        <h1><i class="material-icons">people</i> Account</h1>
-    </div>
+    </header>
     <div>
         <form class="inline" method="POST" action="{{ route('admin.account.search')}}" accept-charset="UTF-8">
             @csrf
@@ -27,14 +27,12 @@
         </form>
     </div>
 
-    <br />
-
-    <table class="table table-responsive-md">
+    <table class="table">
         <thead>
             <tr>
-                <th scope="col">Identifier (email)</th>
-                <th scope="col"></th>
-                <th scope="col">
+                <th>Identifier (email)</th>
+                <th></th>
+                <th>
                     <a href="{{ route('admin.account.index', ['updated_at_order' => $updated_at_order]) }}">
                         Updated
                         @if ($updated_at_order == 'desc')
@@ -71,7 +69,7 @@
                             <span class="badge badge-info">SHA256</span>
                         @endif
                     </td>
-                    <td>{{ $account->created_at}}</td>
+                    <td>{{ $account->updated_at}}</td>
                 </tr>
             @endforeach
         </tbody>
