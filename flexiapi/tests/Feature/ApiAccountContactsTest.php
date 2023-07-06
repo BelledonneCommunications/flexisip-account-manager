@@ -32,6 +32,7 @@ class ApiAccountContactTest extends TestCase
     use RefreshDatabase;
 
     protected $route = '/api/accounts';
+    protected $contactsListsRoute = '/api/contacts_lists';
     protected $method = 'POST';
 
     public function testCreate()
@@ -155,11 +156,50 @@ class ApiAccountContactTest extends TestCase
          *
          */
 
-        // This will need to be done through the API
-        $contactList = ContactsList::factory()->create();
-        $contactList->contacts()->attach([$password1->account->id, $password2->account->id, $password3->account->id]);
+        // Create the Contacts list
+        $contactsListsTitle = 'Contacts List title';
 
-        $admin->account->contactsLists()->attach([$contactList->id]);
+        $this->keyAuthenticated($admin->account)
+            ->json($this->method, $this->contactsListsRoute, [
+                'title' => $contactsListsTitle,
+                'description' => 'Description'
+            ])
+            ->assertStatus(201);
+
+        $this->assertDatabaseHas('contacts_lists', [
+            'title' => $contactsListsTitle
+        ]);
+
+        // Attach the Contacts and the Contacts List
+
+        $contactsList = ContactsList::first();
+
+        $this->keyAuthenticated($admin->account)
+            ->post($this->contactsListsRoute . '/' . $contactsList->id . '/contacts/' . $password1->account->id)
+            ->assertStatus(200);
+
+        $this->keyAuthenticated($admin->account)
+            ->post($this->contactsListsRoute . '/' . $contactsList->id . '/contacts/' . $password2->account->id)
+            ->assertStatus(200);
+
+        $this->keyAuthenticated($admin->account)
+            ->post($this->contactsListsRoute . '/' . $contactsList->id . '/contacts/' . $password3->account->id)
+            ->assertStatus(200);
+
+        $this->keyAuthenticated($admin->account)
+            ->post($this->contactsListsRoute . '/' . $contactsList->id . '/contacts/1234')
+            ->assertStatus(404);
+
+
+        $this->keyAuthenticated($admin->account)
+            ->post($this->route . '/' . $admin->account->id . '/contacts_lists/' . $contactsList->id)
+            ->assertStatus(200);
+
+        $this->keyAuthenticated($admin->account)
+            ->post($this->route . '/' . $admin->account->id . '/contacts_lists/' . $contactsList->id)
+            ->assertStatus(403);
+
+        // Get the contacts and vcards
 
         $this->keyAuthenticated($admin->account)
             ->get($this->route . '/me/contacts')

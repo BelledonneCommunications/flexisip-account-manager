@@ -88,6 +88,14 @@ body {
     --danger-7: rgba(158, 53, 72, 1);
     --danger-8: rgba(127, 37, 61, 1);
     --danger-9: rgba(104, 26, 54, 1);
+
+    --color-orange: rgba(254, 94, 0, 1);
+    --color-grey: rgba(108, 122, 135, 1);
+    --color-green: rgba(79, 174, 128, 1);
+    --color-blue: rgba(9, 197, 244, 1);
+    --color-yellow: rgba(255, 220, 46, 1);
+    --color-pink: rgba(255, 94, 102, 1);
+    --color-purple: rgba(151, 71, 255, 1);
 }
 
 body.show_menu {
@@ -468,6 +476,7 @@ h3 {
     font-size: 1.75rem;
     color: var(--second-6);
     padding: 0.5rem 0;
+    margin-top: 1.25rem;
 }
 
 h4 {
@@ -486,6 +495,18 @@ h4 {
     line-height: 2rem;
     font-size: 1.25rem;
     padding: 0.25rem 1.25rem;
+}
+
+.badge.badge-info {
+    background-color: var(--color-blue);
+}
+
+.badge.badge-success {
+    background-color: var(--color-green);
+}
+
+.badge.badge-warning {
+    background-color: var(--color-yellow);
 }
 
 /** Table **/

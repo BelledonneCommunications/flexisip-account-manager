@@ -29,6 +29,7 @@ use App\Account;
 use App\AccountTombstone;
 use App\AccountType;
 use App\ActivationExpiration;
+use App\ContactsList;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
@@ -203,6 +204,26 @@ class AccountController extends Controller
         }
 
         return Account::findOrFail($id)->types()->detach($typeId);
+    }
+
+    public function contactsListAdd(int $id, int $contactsListId)
+    {
+        if (Account::findOrFail($id)->contactsLists()->pluck('id')->contains($contactsListId)) {
+            abort(403);
+        }
+
+        if (ContactsList::findOrFail($contactsListId)) {
+            return Account::findOrFail($id)->contactsLists()->attach($contactsListId);
+        }
+    }
+
+    public function contactsListRemove(int $id, int $contactsListId)
+    {
+        if (!Account::findOrFail($id)->contactsLists()->pluck('id')->contains($contactsListId)) {
+            abort(403);
+        }
+
+        return Account::findOrFail($id)->contactsLists()->detach($contactsListId);
     }
 
     public function recoverByEmail(int $id)

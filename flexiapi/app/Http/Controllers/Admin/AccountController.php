@@ -168,7 +168,7 @@ class AccountController extends Controller
         return redirect()->route('admin.account.index');
     }
 
-    public function attachContactsList(Request $request, int $id)
+    public function contactsListAdd(Request $request, int $id)
     {
         $request->validate([
             'contacts_list_id' => 'required|exists:contacts_lists,id'
@@ -181,7 +181,7 @@ class AccountController extends Controller
         return redirect()->route('admin.account.edit', $id);
     }
 
-    public function detachContactsList(Request $request, int $id)
+    public function contactsListRemove(Request $request, int $id)
     {
         $account = Account::findOrFail($id);
         $account->contactsLists()->detach([$request->get('contacts_list_id')]);

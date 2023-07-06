@@ -129,7 +129,6 @@ if (config('app.web_panel')) {
     Route::get('auth_tokens/qrcode/{token}', 'Account\AuthTokenController@qrcode')->name('auth_tokens.qrcode');
     Route::get('auth_tokens/auth/{token}', 'Account\AuthTokenController@auth')->name('auth_tokens.auth');
 
-    //Route::get('admin/accounts/{acc}/cl/{$cl}/detach', 'Admin\AccountController@detachContactsList')->name('admin.account.contacts_lists.detach2');
     Route::name('admin.')->prefix('admin')->middleware(['auth.admin'])->group(function () {
 
         // Statistics
@@ -155,8 +154,8 @@ if (config('app.web_panel')) {
                 Route::get('/', 'index')->name('index');
                 Route::post('search', 'search')->name('search');
 
-                Route::get('{account_id}/contacts_lists/detach', 'detachContactsList')->name('contacts_lists.detach');
-                Route::post('{account_id}/contacts_lists', 'attachContactsList')->name('contacts_lists.attach');
+                Route::get('{account_id}/contacts_lists/detach', 'contactsListRemove')->name('contacts_lists.detach');
+                Route::post('{account_id}/contacts_lists', 'contactsListAdd')->name('contacts_lists.attach');
             });
 
             Route::name('type.')->prefix('types')->controller(AccountTypeController::class)->group(function () {

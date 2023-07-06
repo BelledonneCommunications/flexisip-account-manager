@@ -17,6 +17,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use App\Http\Controllers\Api\Admin\AccountActionController;
+use App\Http\Controllers\Api\Admin\AccountContactController;
+use App\Http\Controllers\Api\Admin\AccountController as AdminAccountController;
+use App\Http\Controllers\Api\Admin\AccountTypeController;
+use App\Http\Controllers\Api\Admin\ContactsListController;
 use Illuminate\Http\Request;
 
 Route::get('/', 'Api\ApiController@documentation')->name('api');
@@ -81,41 +86,43 @@ Route::group(['middleware' => ['auth.digest_or_key']], function () {
         Route::post('account_creation_tokens', 'Api\Admin\AccountCreationTokenController@create');
 
         // Accounts
-        Route::get('accounts/{id}/activate', 'Api\Admin\AccountController@activate');
-        Route::get('accounts/{id}/deactivate', 'Api\Admin\AccountController@deactivate');
-        Route::get('accounts/{id}/provision', 'Api\Admin\AccountController@provision');
+        Route::prefix('accounts')->controller(AdminAccountController::class)->group(function () {
+            Route::get('{id}/activate', 'activate');
+            Route::get('{id}/deactivate', 'deactivate');
+            Route::get('{id}/provision', 'provision');
 
-        Route::post('accounts/{id}/recover-by-email', 'Api\Admin\AccountController@recoverByEmail');
+            Route::post('{id}/recover-by-email', 'recoverByEmail');
 
-        Route::post('accounts', 'Api\Admin\AccountController@store');
-        Route::put('accounts/{id}', 'Api\Admin\AccountController@update');
-        Route::get('accounts', 'Api\Admin\AccountController@index');
-        Route::get('accounts/{id}', 'Api\Admin\AccountController@show');
-        Route::delete('accounts/{id}', 'Api\Admin\AccountController@destroy');
-        Route::get('accounts/{sip}/search', 'Api\Admin\AccountController@search');
-        Route::get('accounts/{email}/search-by-email', 'Api\Admin\AccountController@searchByEmail');
+            Route::post('/', 'store');
+            Route::put('{id}', 'update');
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
+            Route::delete('{id}', 'destroy');
+            Route::get('{sip}/search', 'search');
+            Route::get('{email}/search-by-email', 'searchByEmail');
 
-        // Account actions
-        Route::get('accounts/{id}/actions', 'Api\Admin\AccountActionController@index');
-        Route::get('accounts/{id}/actions/{action_id}', 'Api\Admin\AccountActionController@show');
-        Route::post('accounts/{id}/actions', 'Api\Admin\AccountActionController@store');
-        Route::delete('accounts/{id}/actions/{action_id}', 'Api\Admin\AccountActionController@destroy');
-        Route::put('accounts/{id}/actions/{action_id}', 'Api\Admin\AccountActionController@update');
+            Route::post('{id}/types/{type_id}', 'typeAdd');
+            Route::delete('{id}/types/{type_id}', 'typeRemove');
+
+            Route::post('{id}/contacts_lists/{contacts_list_id}', 'contactsListAdd');
+            Route::delete('{id}/contacts_lists/{contacts_list_id}', 'contactsListRemove');
+        });
 
         // Account contacts
-        Route::get('accounts/{id}/contacts', 'Api\Admin\AccountContactController@index');
-        Route::get('accounts/{id}/contacts/{contact_id}', 'Api\Admin\AccountContactController@show');
-        Route::post('accounts/{id}/contacts/{contact_id}', 'Api\Admin\AccountContactController@add');
-        Route::delete('accounts/{id}/contacts/{contact_id}', 'Api\Admin\AccountContactController@remove');
+        Route::prefix('accounts/{id}/contacts')->controller(AccountContactController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{contact_id}', 'show');
+            Route::post('{contact_id}', 'add');
+            Route::delete('{contact_id}', 'remove');
+        });
 
-        // Account types
-        Route::get('account_types', 'Api\Admin\AccountTypeController@index');
-        Route::get('account_types/{id}', 'Api\Admin\AccountTypeController@show');
-        Route::post('account_types', 'Api\Admin\AccountTypeController@store');
-        Route::delete('account_types/{id}', 'Api\Admin\AccountTypeController@destroy');
-        Route::put('account_types/{id}', 'Api\Admin\AccountTypeController@update');
+        Route::apiResource('accounts/{id}/actions', AccountActionController::class);
+        Route::apiResource('account_types', AccountTypeController::class);
 
-        Route::post('accounts/{id}/types/{type_id}', 'Api\Admin\AccountController@typeAdd');
-        Route::delete('accounts/{id}/types/{type_id}', 'Api\Admin\AccountController@typeRemove');
+        Route::apiResource('contacts_lists', ContactsListController::class);
+        Route::prefix('contacts_lists')->controller(ContactsListController::class)->group(function () {
+            Route::post('{id}/contacts/{contacts_id}', 'contactAdd');
+            Route::delete('{id}/contacts/{contacts_id}', 'contactRemove');
+        });
     });
 });

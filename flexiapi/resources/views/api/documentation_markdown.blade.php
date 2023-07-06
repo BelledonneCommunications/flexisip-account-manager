@@ -428,6 +428,46 @@ JSON parameters:
 <span class="badge badge-warning">Admin</span>
 Delete an account related action.
 
+## Contacts Lists
+
+### `GET /contacts_lists`
+<span class="badge badge-warning">Admin</span>
+Show all the contacts lists.
+
+### `GET /contacts_lists/{id}`
+<span class="badge badge-warning">Admin</span>
+Show a contacts list.
+
+### `POST /contacts_lists`
+<span class="badge badge-warning">Admin</span>
+Create a contacts list.
+
+JSON parameters:
+
+* `title` required
+* `description` required
+
+### `PUT /contacts_lists/{id}`
+<span class="badge badge-warning">Admin</span>
+Update a contacts list.
+
+JSON parameters:
+
+* `title` required
+* `description` required
+
+### `DELETE /contacts_lists/{id}`
+<span class="badge badge-warning">Admin</span>
+Delete a contacts list.
+
+### `POST /accounts/{id}/contacts_lists/{contacts_list_id}`
+<span class="badge badge-warning">Admin</span>
+Add a contacts list to the account.
+
+### `DELETE /accounts/{id}/contacts_lists/{contacts_list_id}`
+<span class="badge badge-warning">Admin</span>
+Remove a contacts list from the account.
+
 ## Account Types
 
 ### `GET /account_types`
@@ -464,7 +504,7 @@ Add a type to the account.
 
 ### `DELETE /accounts/{id}/contacts/{type_id}`
 <span class="badge badge-warning">Admin</span>
-Remove a a type from the account.
+Remove a type from the account.
 
 ## Messages
 
