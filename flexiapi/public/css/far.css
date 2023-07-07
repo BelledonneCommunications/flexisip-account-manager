@@ -225,6 +225,7 @@ ul.tabs li.current {
 header nav {
     padding: 3rem 1rem;
     display: flex;
+    min-height: 6rem;
 }
 
 header nav a {
@@ -476,7 +477,6 @@ h3 {
     font-size: 1.75rem;
     color: var(--second-6);
     padding: 0.5rem 0;
-    margin-top: 1.25rem;
 }
 
 h4 {

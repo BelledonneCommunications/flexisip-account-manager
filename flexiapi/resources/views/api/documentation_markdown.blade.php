@@ -460,6 +460,14 @@ JSON parameters:
 <span class="badge badge-warning">Admin</span>
 Delete a contacts list.
 
+### `POST /contacts_lists/{contacts_list_id}/contacts/{contact_id}`
+<span class="badge badge-warning">Admin</span>
+Add a contact to the contacts list.
+
+### `DELETE /contacts_lists/{contacts_list_id}/contacts/{contact_id}`
+<span class="badge badge-warning">Admin</span>
+Remove a contact from the contacts list.
+
 ### `POST /accounts/{id}/contacts_lists/{contacts_list_id}`
 <span class="badge badge-warning">Admin</span>
 Add a contacts list to the account.

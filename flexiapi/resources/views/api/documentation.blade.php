@@ -1,6 +1,8 @@
-@extends('layouts.main')
+@extends('layouts.main', ['welcome' => true])
 
 @section('content')
-    {{-- This view is only a wrapper for the markdown page --}}
-    {!! $documentation !!}
+    <div>
+        {{-- This view is only a wrapper for the markdown page --}}
+        {!! $documentation !!}
+    </div>
 @endsection
