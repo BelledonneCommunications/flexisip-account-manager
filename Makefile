@@ -24,11 +24,9 @@ cleanup-package-semvers:
 
 prepare:
 	cd flexiapi && php composer.phar install --ignore-platform-req=ext-redis --no-dev
-	cd xmlrpc/src && cp ../../flexiapi/composer.phar . && php composer.phar install --ignore-platform-req=ext-redis --no-dev
 
 prepare-dev:
 	cd flexiapi && php composer.phar install --ignore-platform-req=ext-redis
-	cd xmlrpc/src && cp ../../flexiapi/composer.phar . && php composer.phar install --ignore-platform-req=ext-redis
 
 package-common:
 	rm -rf $(OUTPUT_DIR)/flexisip-account-manager
@@ -36,16 +34,10 @@ package-common:
 	mkdir -p $(OUTPUT_DIR)/rpmbuild/SPECS
 	mkdir -p $(OUTPUT_DIR)/rpmbuild/SOURCES
 
-	# XMLRPC
-	cp -R --parents xmlrpc/src/**/*.php $(OUTPUT_DIR)/flexisip-account-manager/
-	cp -R --parents xmlrpc/src/vendor/**/* $(OUTPUT_DIR)/flexisip-account-manager/
-	cp -R --parents xmlrpc/src/api/**/*.php $(OUTPUT_DIR)/flexisip-account-manager/
-	cp -R --parents conf/*.conf $(OUTPUT_DIR)/flexisip-account-manager/
-
 	# FlexiAPI
 	cp -R --parents flexiapi/**/* $(OUTPUT_DIR)/flexisip-account-manager/
 	cp flexiapi/composer* $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
-	cp README.md $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
+	cp README.md $(OUTPUT_DIR)/flexisip-account-manager/
 	cp flexiapi/.env.example $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/.env.example
 	cp flexiapi/artisan $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
 	cp flexiapi/phpunit.xml $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
@@ -53,7 +45,6 @@ package-common:
 	cp flexiapi/phpmd.xml $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
 
 	# General
-	cp xmlrpc/README.md $(OUTPUT_DIR)/flexisip-account-manager/
 	cp -R httpd/ $(OUTPUT_DIR)/flexisip-account-manager/
 	cp -R cron/ $(OUTPUT_DIR)/flexisip-account-manager/
 	cp flexisip-account-manager.spec.run $(OUTPUT_DIR)/rpmbuild/SPECS/flexisip-account-manager.spec

@@ -132,6 +132,11 @@ function resolveDomain(Request $request): string
             : config('app.sip_domain');
 }
 
+function captchaConfigured(): bool
+{
+    return env('NOCAPTCHA_SECRET', false) != false || env('NOCAPTCHA_SITEKEY', false) != false;
+}
+
 function resolveUserContacts(Request $request)
 {
     $selected = ['id', 'username', 'domain', 'activated', 'dtmf_protocol'];

@@ -109,7 +109,6 @@ class AccountController extends Controller
         ]);
 
         $account = Account::findOrFail($id);
-        $account->username = $request->get('username');
         $account->email = $request->get('email');
         $account->display_name = $request->get('display_name');
         $account->dtmf_protocol = $request->get('dtmf_protocol');
@@ -117,7 +116,10 @@ class AccountController extends Controller
         $account->save();
 
         $account->phone = $request->get('phone');
-        $account->fillPassword($request);
+
+        if ($request->filled('password') && $request->filled('password_confirmation')) {
+            $account->fillPassword($request);
+        }
 
         $account->setRole($request->get('role'));
 

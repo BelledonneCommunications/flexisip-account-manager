@@ -22,13 +22,14 @@
         <h2>Connexion</h2>
         <div>
             <input placeholder="Username" required="required" name="username" type="text"
-                value="{{ $account->username }}">
+                value="{{ $account->username }}" @if ($account->id) readonly @endif>
             <label for="username">Username</label>
             @include('parts.errors', ['name' => 'username'])
         </div>
         <div>
             <input placeholder="domain.com" @if (config('app.admins_manage_multi_domains')) required @else disabled @endif name="domain"
-                type="text" value="{{ $account->domain ?? config('app.sip_domain') }}">
+                type="text" value="{{ $account->domain ?? config('app.sip_domain') }}"
+                @if ($account->id) readonly @endif>
             <label for="domain">Domain</label>
         </div>
 
@@ -40,7 +41,7 @@
         <div></div>
 
         <div>
-            <input placeholder="Password" name="password" type="password" value="">
+            <input placeholder="Password" name="password" type="password" value="" autocomplete="off">
             <label for="password">{{ $account->id ? 'Password (fill to change)' : 'Password' }}</label>
             @include('parts.errors', ['name' => 'password'])
         </div>
@@ -188,30 +189,32 @@
                 <b>Identifier:</b> {{ $account->externalAccount->identifier }}<br />
             </p>
         @else
-            <a class="btn btn-sm @if ($external_accounts_count == 0)disabled @endif" href="{{ route('admin.account.external_account.attach', $account->id) }}">Attach an External Account ({{ $external_accounts_count}} left)</a>
+            <a class="btn btn-sm @if ($external_accounts_count == 0) disabled @endif"
+                href="{{ route('admin.account.external_account.attach', $account->id) }}">Attach an External Account
+                ({{ $external_accounts_count }} left)</a>
         @endif
 
         <h2>Actions</h2>
 
         @if ($account->dtmf_protocol)
+            <table class="table">
+                <tbody>
+                    @foreach ($account->actions as $action)
+                        <tr>
+                            <th scope="row">{{ $action->key }}</th>
+                            <td>{{ $action->code }}</td>
+                            <td>
+                                <a class="btn btn-sm mr-2"
+                                    href="{{ route('admin.account.action.edit', [$account, $action->id]) }}">Edit</a>
+                                <a class="btn btn-sm mr-2"
+                                    href="{{ route('admin.account.action.delete', [$account, $action->id]) }}">Delete</a>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
 
-        <table class="table">
-            <tbody>
-                @foreach ($account->actions as $action)
-                    <tr>
-                        <th scope="row">{{ $action->key }}</th>
-                        <td>{{ $action->code }}</td>
-                        <td>
-                            <a class="btn btn-sm mr-2" href="{{ route('admin.account.action.edit', [$account, $action->id]) }}">Edit</a>
-                            <a class="btn btn-sm mr-2" href="{{ route('admin.account.action.delete', [$account, $action->id]) }}">Delete</a>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-
-        <a class="btn btn-sm" href="{{ route('admin.account.action.create', $account) }}">Add</a>
-
+            <a class="btn btn-sm" href="{{ route('admin.account.action.create', $account) }}">Add</a>
         @else
             <p>To manage actions, you must configure the DTMF protocol in the account settings.</p>
         @endif

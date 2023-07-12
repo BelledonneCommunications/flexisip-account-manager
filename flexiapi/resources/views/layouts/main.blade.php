@@ -8,14 +8,12 @@
 
     <title>{{ config('app.name') }}</title>
 
-    @if (config('instance.custom_theme'))
-        @if (file_exists(public_path('css/' . config('app.env') . '.style.css')))
-            <link rel="stylesheet" type="text/css" href="{{ asset('css/' . config('app.env') . '.style.css') }}">
-        @else
-        @endif
-        <script src="{{ asset('scripts/utils.js') }}""></script>
-        <link rel="stylesheet" type="text/css" href="{{ asset('css/far.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ asset('css/form.css') }}">
+    <script src="{{ asset('scripts/utils.js') }}""></script>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/far.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/form.css') }}">
+
+    @if (config('instance.custom_theme') & file_exists(public_path('css/' . config('app.env') . '.style.css')))
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/' . config('app.env') . '.style.css') }}">
         <!--<link rel="stylesheet" type="text/css" href="{{ asset('css/charts.css') }}" >-->
     @endif
 </head>
@@ -24,10 +22,12 @@
     <header>
         @if (config('app.web_panel'))
             <nav>
-                <a id="logo" href="{{ route('account.home') }}"><span class="on_desktop">{{ config('app.name') }}</span></a>
+                <a id="logo" href="{{ route('account.home') }}"><span
+                        class="on_desktop">{{ config('app.name') }}</span></a>
 
                 @if (!isset($welcome) || $welcome == false)
-                    <a id="menu" class="on_mobile" href="#" onclick="document.body.classList.toggle('show_menu')"></a>
+                    <a id="menu" class="on_mobile" href="#"
+                        onclick="document.body.classList.toggle('show_menu')"></a>
                 @endif
 
                 <a class="oppose" href="{{ route('about') }}">
@@ -35,7 +35,8 @@
                 </a>
                 @if (auth()->user())
                     <a class="oppose" href="{{ route('account.dashboard') }}">
-                        <i class="material-icons">account_circle</i><span class="on_desktop">{{ auth()->user()->identifier }}</span>
+                        <i class="material-icons">account_circle</i><span
+                            class="on_desktop">{{ auth()->user()->identifier }}</span>
                     </a>
                     <a class="oppose" href="{{ route('account.logout') }}">
                         <i class="material-icons">logout</i>

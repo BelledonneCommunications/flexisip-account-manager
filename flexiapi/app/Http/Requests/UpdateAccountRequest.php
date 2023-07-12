@@ -44,7 +44,7 @@ class UpdateAccountRequest extends FormRequest
             'phone' => [
                 'nullable',
                 Rule::unique('accounts', 'username')->where(function ($query) {
-                    $query->where('domain', config('app.sip_domain'));
+                    $query->where('domain', resolveDomain($this));
                 })->ignore($this->route('account_id'), 'id'),
                 Rule::unique('aliases', 'alias')->ignore($this->route('account_id'), 'account_id'),
                 new WithoutSpaces, 'starts_with:+'

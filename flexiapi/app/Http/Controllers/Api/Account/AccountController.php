@@ -29,7 +29,6 @@ use Carbon\Carbon;
 
 use App\Account;
 use App\AccountTombstone;
-use App\AccountCreationToken;
 use App\Alias;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use App\Http\Requests\CreateAccountRequest;
@@ -37,7 +36,6 @@ use App\Libraries\OvhSMS;
 use App\Mail\RegisterConfirmation;
 use App\Rules\AccountCreationToken as RulesAccountCreationToken;
 use App\Rules\BlacklistedUsername;
-use App\Rules\IsNotPhoneNumber;
 use App\Rules\NoUppercase;
 use App\Rules\SIPUsername;
 use App\Rules\WithoutSpaces;

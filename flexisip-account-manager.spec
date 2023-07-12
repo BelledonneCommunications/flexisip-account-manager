@@ -3,11 +3,12 @@
 %define build_number MAKE_FILE_BUILD_NUMBER_SEARCH
 %define var_dir /var/opt/belledonne-communications
 %define opt_dir /opt/belledonne-communications/share/flexisip-account-manager
+%define etc_dir /etc/flexisip-account-manager
 
 %if %{with deb}
-    %define env_config_file "/etc/flexisip-account-manager/flexiapi.env"
+    %define env_config_file %{etc_dir}/flexiapi.env
 %else
-    %define env_config_file "$RPM_BUILD_ROOT/etc/flexisip-account-manager/flexiapi.env"
+    %define env_config_file "$RPM_BUILD_ROOT%{etc_dir}/flexiapi.env"
 %endif
 
 %define env_symlink_file %{opt_dir}/flexiapi/.env
@@ -33,7 +34,7 @@ License:        GPL
 URL:            http://www.linphone.org
 Source0:        flexisip-account-manager.tar.gz
 
-Requires:       php >= 8.0, php-gd, php-xmlrpc, php-pdo, php-redis, php-mysqlnd, php-mbstring
+Requires:       php >= 8.0, php-gd, php-pdo, php-redis, php-mysqlnd, php-mbstring
 
 %description
 PHP server for Linphone and Flexisip providing module for account creation.
@@ -44,15 +45,11 @@ PHP server for Linphone and Flexisip providing module for account creation.
 %install
 rm -rf "$RPM_BUILD_ROOT"
 mkdir -p "$RPM_BUILD_ROOT%{opt_dir}"
-cp -R xmlrpc/src/* "$RPM_BUILD_ROOT%{opt_dir}/"
 
 cp -R flexiapi "$RPM_BUILD_ROOT%{opt_dir}"
 cp flexiapi/composer.json "$RPM_BUILD_ROOT%{opt_dir}/flexiapi"
 
 cp README* "$RPM_BUILD_ROOT%{opt_dir}/"
-mkdir -p "$RPM_BUILD_ROOT/etc/flexisip-account-manager"
-cp -R conf/* "$RPM_BUILD_ROOT/etc/flexisip-account-manager/"
-
 mkdir -p $RPM_BUILD_ROOT/etc/cron.daily
 
 mkdir -p $RPM_BUILD_ROOT%{apache_conf_path}
@@ -87,12 +84,12 @@ cp httpd/flexisip-account-manager.conf "$RPM_BUILD_ROOT%{apache_conf_path}/"
     mkdir -p %{var_dir}/flexiapi/bootstrap/cache
 
     mkdir -p %{var_dir}/log
-    touch %{var_dir}/log/account-manager.log
-    chown %{web_user}:%{web_user} %{var_dir}/log/account-manager.log
+    #touch %{var_dir}/log/account-manager.log
+    #chown %{web_user}:%{web_user} %{var_dir}/log/account-manager.log
 
-%if %{without deb}
-    chcon -t httpd_sys_rw_content_t %{var_dir}/log/account-manager.log
-%endif
+#%if %{without deb}
+#    chcon -t httpd_sys_rw_content_t %{var_dir}/log/account-manager.log
+#%endif
 
 %if %{without deb}
     setsebool -P httpd_can_network_connect_db on
@@ -110,8 +107,8 @@ cp httpd/flexisip-account-manager.conf "$RPM_BUILD_ROOT%{apache_conf_path}/"
     # FlexiAPI env file configuration
     if ! test -f %{env_config_file}; then
         cd %{opt_dir}/flexiapi/
-        cp .env.example %{env_config_file}
-
+        mkdir -p %{etc_dir}
+        cp -R .env.example %{env_config_file}
         ln -s %{env_config_file} %{env_symlink_file}
 
         php artisan key:generate
@@ -138,19 +135,9 @@ fi
 
 %files
 %{opt_dir}/flexiapi/
-%{opt_dir}/vendor/
-%{opt_dir}/api/account/*.php
-%{opt_dir}/config/*.php
-%{opt_dir}/database/*.php
-%{opt_dir}/misc/*.php
-%{opt_dir}/objects/*.php
-%{opt_dir}/tools/*.php
-%{opt_dir}/xmlrpc/*.php
 %{opt_dir}/README*
 
 %exclude %{opt_dir}/flexiapi/storage/
-
-%config(noreplace) /etc/flexisip-account-manager/*.conf
 
 %config(noreplace) %{apache_conf_path}/flexisip-account-manager.conf
 %if %{with deb}

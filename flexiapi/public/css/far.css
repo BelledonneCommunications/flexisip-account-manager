@@ -111,6 +111,19 @@ pre {
     color: var(--second-7);
 }
 
+pre {
+    overflow: auto;
+    background-color: var(--second-8);
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+pre code {
+    color: var(--grey-1);
+    font-size: 1.3rem;
+}
+
 ul li {
     margin-left: 2rem;
     list-style-type: disc;
@@ -138,7 +151,7 @@ p i {
 }
 
 code {
-    color: var(--second-6);
+    color: var(--second-7);
     font-family: monospace;
 }
 
@@ -485,6 +498,11 @@ h4 {
     padding: 0.5rem 0;
 }
 
+p + h1, p + h2, p + h3, p + h4,
+ul + h1, ul + h2, ul + h3, ul + h4 {
+    margin-top: 1rem;
+}
+
 /** Badge **/
 
 .badge {
@@ -668,4 +686,19 @@ ul.pagination li:not(.disabled) .page-link:hover {
 
 select.list_toggle {
     display: none;
+}
+
+/** Specific elements */
+
+.table-of-contents {
+    max-width: 40%;
+    float: right;
+}
+
+.card {
+    background-color: var(--grey-2);
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    overflow: hidden;
 }

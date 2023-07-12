@@ -189,6 +189,12 @@ form div textarea[disabled] {
     pointer-events: none;
 }
 
+form div input[readonly],
+form div textarea[readonly] {
+    border-color: var(--grey-2);
+    background-color: var(--grey-2);
+}
+
 input[type=checkbox] {
     accent-color: var(--main-5);
 }

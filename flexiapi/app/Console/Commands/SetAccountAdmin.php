@@ -39,7 +39,12 @@ class SetAccountAdmin extends Command
         $account = Account::withoutGlobalScopes()->where('id', $this->argument('id'))->first();
 
         if (!$account) {
-            $this->error('Account not found, please use an existing SIP address');
+            $this->error('Account not found, please use an existing account id');
+            return 1;
+        }
+
+        if ($account->admin) {
+            $this->error('The account is already having the admin role');
             return 1;
         }
 

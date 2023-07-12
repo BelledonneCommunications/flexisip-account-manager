@@ -34,7 +34,7 @@ class PhoneController extends Controller
 
     public function requestChange(Request $request)
     {
-        //$request->validate(['g-recaptcha-response' => 'required|captcha']);
+        $request->validate(['g-recaptcha-response' => captchaConfigured() ? 'required|captcha': '']);
 
         (new AccountService(api: false))->requestPhoneChange($request);
 

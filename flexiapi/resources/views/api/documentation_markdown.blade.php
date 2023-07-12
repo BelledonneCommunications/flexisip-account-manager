@@ -18,7 +18,7 @@ A `content-type` and `accept` HTTP headers are REQUIRED to use the API properly
 
 Restricted endpoints are protected using a DIGEST authentication or an API Key mechanisms.
 
-#### Access model
+### Access model
 
 The endpoints are accessible using three different models:
 
@@ -26,7 +26,7 @@ The endpoints are accessible using three different models:
 - <span class="badge badge-info">User</span> the endpoint can only be accessed by an authenticated user
 - <span class="badge badge-warning">Admin</span> the endpoint can be only be accessed by an authenticated admin user
 
-#### Using the API Key
+### Using the API Key
 
 You can retrieve an API Key from @if (config('app.web_panel')) [your account panel]({{ route('account.login') }}) @else your account panel @endif or using <a href="#get-accountsmeapikey">the dedicated API endpoint</a>.
 
@@ -46,7 +46,7 @@ Or using a cookie:
 > …
 ```
 
-#### Using DIGEST
+### Using DIGEST
 
 To discover the available hashing algorythm you MUST send an unauthenticated request to one of the restricted endpoints.<br />
 Only DIGEST-MD5 and DIGEST-SHA-256 are supported through the authentication layer.
@@ -583,22 +583,22 @@ Return the authenticated user contacts list, in [vCard 4.0 format](https://datat
 Here is the format of the vCard list returned by the endpoint:
 
 ```
-    BEGIN:VCARD
-    VERSION:4.0
-    KIND:individual
-    IMPP:sip:schoen.tatyana@sip.linphone.org
-    FN:schoen.tatyana@sip.linphone.org
-    X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:sipinfo
-    X-LINPHONE-ACCOUNT-TYPE:phone
-    X-LINPHONE-ACCOUNT-ACTION:action_key;123
-    END:VCARD
-    BEGIN:VCARD
-    VERSION:4.0
-    KIND:individual
-    IMPP:sip:dhand@sip.linphone.org
-    FN:dhand@sip.linphone.org
-    X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:sipinfo
-    END:VCARD
+BEGIN:VCARD
+VERSION:4.0
+KIND:individual
+IMPP:sip:schoen.tatyana@sip.linphone.org
+FN:schoen.tatyana@sip.linphone.org
+X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:sipinfo
+X-LINPHONE-ACCOUNT-TYPE:phone
+X-LINPHONE-ACCOUNT-ACTION:action_key;123
+END:VCARD
+BEGIN:VCARD
+VERSION:4.0
+KIND:individual
+IMPP:sip:dhand@sip.linphone.org
+FN:dhand@sip.linphone.org
+X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:sipinfo
+END:VCARD
 ```
 
 ### `GET /contacts/vcard/{sip}`

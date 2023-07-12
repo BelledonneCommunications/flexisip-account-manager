@@ -6,8 +6,6 @@ Flexisip Account Manager brings several tools in one:
 - a web portal, powered by FlexiAPI
 - a remote provisioning server, able to generate configuration files compatible with Linphone's QrCode-based or URL-based remote provisioning feature
 
-It replaces the historical XMLRPC tool that is still available in `xmlrpc/` for retrocompatibility purpose.
-
 # License
 
 Copyright © Belledonne Communications

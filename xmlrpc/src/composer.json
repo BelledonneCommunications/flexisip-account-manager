@@ -1,5 +1,0 @@
-{
-    "require": {
-        "ovh/php-ovh-sms": "^1.0"
-    }
-}
