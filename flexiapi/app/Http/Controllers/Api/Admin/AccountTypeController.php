@@ -34,8 +34,7 @@ class AccountTypeController extends Controller
 
     public function get(int $accountTypeId)
     {
-        return AccountType::where('id', $accountTypeId)
-                      ->firstOrFail();
+        return AccountType::findOrFail($accountTypeId);
     }
 
     public function store(Request $request)
@@ -57,8 +56,7 @@ class AccountTypeController extends Controller
             'key' => ['alpha_dash', new NoUppercase],
         ]);
 
-        $accountType = AccountType::where('id', $accountTypeId)
-                                  ->firstOrFail();
+        $accountType = AccountType::findOrFail($accountTypeId);
         $accountType->key = $request->get('key');
         $accountType->save();
 

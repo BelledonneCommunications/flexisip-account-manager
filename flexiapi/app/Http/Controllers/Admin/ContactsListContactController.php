@@ -36,7 +36,7 @@ class ContactsListContactController extends Controller
         }
 
         return view('admin.contacts_list.contacts.add', [
-            'contacts_list' => ContactsList::firstOrFail($contactsListId),
+            'contacts_list' => ContactsList::findOrFail($contactsListId),
             'params' => [
                 'search' => $request->get('search'),
                 'contacts_list_id' => $contactsListId,
@@ -61,7 +61,7 @@ class ContactsListContactController extends Controller
             'contacts_ids' => 'required|exists:accounts,id'
         ]);
 
-        $contactsList = ContactsList::firstOrFail($contactsListId);
+        $contactsList = ContactsList::findOrFail($contactsListId);
         $contactsList->contacts()->detach($request->get('contacts_ids')); // Just in case
         $contactsList->contacts()->attach($request->get('contacts_ids'));
 

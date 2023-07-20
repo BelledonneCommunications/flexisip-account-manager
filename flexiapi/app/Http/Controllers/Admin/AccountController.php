@@ -77,7 +77,7 @@ class AccountController extends Controller
         $account->created_at = Carbon::now();
         $account->user_agent = config('app.name');
         $account->dtmf_protocol = $request->get('dtmf_protocol');
-        $account->activated = $request->has('activated');
+        $account->activated = $request->get('activated') == 'true';
         $account->save();
 
         $account->phone = $request->get('phone');
@@ -112,7 +112,7 @@ class AccountController extends Controller
         $account->email = $request->get('email');
         $account->display_name = $request->get('display_name');
         $account->dtmf_protocol = $request->get('dtmf_protocol');
-        $account->activated = $request->has('activated');
+        $account->activated = $request->get('activated') == 'true';
         $account->save();
 
         $account->phone = $request->get('phone');
@@ -180,7 +180,7 @@ class AccountController extends Controller
         $account->contactsLists()->detach([$request->get('contacts_list_id')]);
         $account->contactsLists()->attach([$request->get('contacts_list_id')]);
 
-        return redirect()->route('admin.account.edit', $id);
+        return redirect()->route('admin.account.edit', $id)->withFragment('#contacts_lists');
     }
 
     public function contactsListRemove(Request $request, int $id)
@@ -188,6 +188,6 @@ class AccountController extends Controller
         $account = Account::findOrFail($id);
         $account->contactsLists()->detach([$request->get('contacts_list_id')]);
 
-        return redirect()->route('admin.account.edit', $id);
+        return redirect()->route('admin.account.edit', $id)->withFragment('#contacts_lists');
     }
 }

@@ -629,9 +629,6 @@ table tr.empty td:before {
 
 .chip {
     display: inline-block;
-    background-color: var(--grey-1);
-    border: 1px solid var(--grey-2);
-    border-radius: 3rem;
     line-height: 2.5rem;
     padding: 0 1rem;
 }
@@ -701,4 +698,9 @@ select.list_toggle {
     padding: 1rem;
     margin-bottom: 1rem;
     overflow: hidden;
+}
+
+.disabled {
+    opacity: 0.5;
+    pointer-events: none;
 }

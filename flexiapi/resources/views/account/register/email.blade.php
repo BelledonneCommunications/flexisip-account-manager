@@ -33,6 +33,7 @@
 <div>
     {!! Form::email('email_confirmation', old('email_confirm'), ['placeholder' => 'bob@example.net', 'required']) !!}
     {!! Form::label('email_confirmation', 'Confirm email') !!}
+    @include('parts.errors', ['name' => 'email_confirmation'])
 </div>
 
 <div>
@@ -43,6 +44,7 @@
 <div>
     {!! Form::password('password_confirmation', ['required']) !!}
     {!! Form::label('password_confirmation', 'Confirm password') !!}
+    @include('parts.errors', ['name' => 'password_confirmation'])
 </div>
 
 @if (!empty(config('app.newsletter_registration_address')))

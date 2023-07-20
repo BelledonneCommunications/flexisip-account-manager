@@ -16,8 +16,7 @@ class ContactsListController extends Controller
 
     public function get(int $contactsListId)
     {
-        return ContactsList::where('id', $contactsListId)
-            ->firstOrFail();
+        return ContactsList::findOrFail($contactsListId);
     }
 
     public function store(Request $request)
@@ -42,8 +41,7 @@ class ContactsListController extends Controller
             'description' => ['required']
         ]);
 
-        $contactsList = ContactsList::where('id', $contactsListId)
-            ->firstOrFail();
+        $contactsList = ContactsList::findOrFail($contactsListId);
         $contactsList->title = $request->get('title');
         $contactsList->description = $request->get('description');
         $contactsList->save();

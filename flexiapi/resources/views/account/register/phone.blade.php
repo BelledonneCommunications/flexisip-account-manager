@@ -24,6 +24,13 @@
 </div>
 
 <div>
+    {!! Form::text('phone', old('phone'), ['placeholder' => '+123456789', 'required']) !!}
+    {!! Form::label('phone', 'Phone number') !!}
+    @include('parts.errors', ['name' => 'phone'])
+</div>
+<div></div>
+
+<div>
     {!! Form::password('password', ['required']) !!}
     {!! Form::label('password', 'Password') !!}
     @include('parts.errors', ['name' => 'password'])
@@ -32,13 +39,6 @@
     {!! Form::password('password_confirmation', ['required']) !!}
     {!! Form::label('password_confirmation', 'Confirm password') !!}
 </div>
-
-<div clas="large">
-    {!! Form::text('phone', old('phone'), ['placeholder' => '+123456789', 'required']) !!}
-    {!! Form::label('phone', 'Phone number') !!}
-    @include('parts.errors', ['name' => 'phone'])
-</div>
-
 
 @include('parts.terms')
 

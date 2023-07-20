@@ -53,9 +53,9 @@ class AccountController extends Controller
 
     public function store(CreateAccountRequest $request)
     {
-        $request->validate(['g-recaptcha-response' => captchaConfigured() ? 'required|captcha': '']);
-
         $account = (new AccountService(api: false))->store($request);
+
+        $request->validate(['g-recaptcha-response' => captchaConfigured() ? 'required|captcha': '']);
 
         Auth::login($account);
 

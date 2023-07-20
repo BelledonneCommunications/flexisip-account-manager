@@ -84,12 +84,6 @@ cp httpd/flexisip-account-manager.conf "$RPM_BUILD_ROOT%{apache_conf_path}/"
     mkdir -p %{var_dir}/flexiapi/bootstrap/cache
 
     mkdir -p %{var_dir}/log
-    #touch %{var_dir}/log/account-manager.log
-    #chown %{web_user}:%{web_user} %{var_dir}/log/account-manager.log
-
-#%if %{without deb}
-#    chcon -t httpd_sys_rw_content_t %{var_dir}/log/account-manager.log
-#%endif
 
 %if %{without deb}
     setsebool -P httpd_can_network_connect_db on

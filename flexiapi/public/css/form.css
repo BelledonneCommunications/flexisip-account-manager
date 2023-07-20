@@ -124,9 +124,9 @@ form label {
     font-size: 1.5rem;
 }
 
+form input[type="radio"]~label:after,
 form input[required]+label:after {
     content: '*';
-    margin-left: 0.5rem;
 }
 
 form input:not([type=checkbox]) ~ label,
@@ -247,13 +247,13 @@ form div textarea:active+label {
     color: var(--main-5);
 }
 
-form div input:invalid,
-form div textarea:invalid {
+form div input:invalid:not(:placeholder-shown),
+form div textarea:invalid:not(:placeholder-shown) {
     border-color: var(--danger-6);
     color: var(--danger-5);
 }
 
-form div input:invalid+label,
-form div textarea:invalid+label {
+form div input:invalid:not(:placeholder-shown)+label,
+form div textarea:invalid:not(:placeholder-shown)+label {
     color: var(--danger-5);
 }

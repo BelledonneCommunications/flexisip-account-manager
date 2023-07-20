@@ -8,6 +8,7 @@
                 <i class="material-icons">delete</i>
                 Delete
             </a>
+            <input form="create_edit_contacts_list" class="btn" type="submit" value="{{ $contacts_list->id ? 'Update' : 'Create' }}">
         @else
             <h1><i class="material-icons">account_box</i> Create a Contacts List</h1>
         @endif
@@ -18,6 +19,7 @@
     @endif
 
     <form method="POST"
+        id="create_edit_contacts_list"
         action="{{ $contacts_list->id ? route('admin.contacts_lists.update', $contacts_list->id) : route('admin.contacts_lists.store') }}"
         accept-charset="UTF-8">
         @csrf
@@ -33,14 +35,10 @@
             <label for="description">Description</label>
             @include('parts.errors', ['name' => 'description'])
         </div>
-
-        <div class="large">
-            <input class="btn oppose" type="submit" value="{{ $contacts_list->id ? 'Update' : 'Create' }}">
-        </div>
     </form>
 
     @if ($contacts_list->id)
-        <hr class="clear">
+        <hr>
 
         <header>
             <p class="oppose">
@@ -55,7 +53,7 @@
 
                 <select name="contacts_ids[]" class="list_toggle" data-list-id="d{{ $contacts_list->id }}"></select>
                 <input type="hidden" name="contacts_list_id" value="{{ $contacts_list->id }}">
-                <input class="btn btn-tertiary" type="submit" value="Remove" onclick="Utils.clearStorageList('d{{ $contacts_list->id }}')">
+                <input class="btn btn-tertiary" type="submit" value="Remove contacts" onclick="Utils.clearStorageList('d{{ $contacts_list->id }}')">
             </form>
 
             <a class="btn btn-secondary" href="{{ route('admin.contacts_lists.contacts.add', $contacts_list->id) }}">

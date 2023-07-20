@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\Admin\AccountContactController;
 use App\Http\Controllers\Api\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Api\Admin\AccountTypeController;
 use App\Http\Controllers\Api\Admin\ContactsListController;
+use App\Http\Controllers\Api\StatisticsMessageController;
 use Illuminate\Http\Request;
 
 Route::get('/', 'Api\ApiController@documentation')->name('api');
@@ -123,6 +124,11 @@ Route::group(['middleware' => ['auth.digest_or_key']], function () {
         Route::prefix('contacts_lists')->controller(ContactsListController::class)->group(function () {
             Route::post('{id}/contacts/{contacts_id}', 'contactAdd');
             Route::delete('{id}/contacts/{contacts_id}', 'contactRemove');
+        });
+
+        Route::prefix('statistics/messages')->controller(StatisticsMessageController::class)->group(function () {
+            Route::post('/', 'store');
+            Route::patch('{message_id}/to/{to}/devices/{device_id}', 'storeDevice');
         });
     });
 });

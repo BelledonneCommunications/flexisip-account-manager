@@ -41,13 +41,13 @@
         <div></div>
 
         <div>
-            <input placeholder="Password" name="password" type="password" value="" autocomplete="off">
+            <input placeholder="Password" name="password" type="password" value="" autocomplete="new-password">
             <label for="password">{{ $account->id ? 'Password (fill to change)' : 'Password' }}</label>
             @include('parts.errors', ['name' => 'password'])
         </div>
 
         <div>
-            <input placeholder="Password" name="password_confirmation" type="password" value="">
+            <input placeholder="Password" name="password_confirmation" type="password" value="" autocomplete="off">
             <label for="password_confirmation">Confirm password</label>
             @include('parts.errors', ['name' => 'password_confirmation'])
         </div>
@@ -68,8 +68,11 @@
         <h2>Other information</h2>
 
         <div>
-            <input name="activated" type="checkbox" @if ($account->activated) checked @endif>
-            <label>Activated</label>
+            <input name="activated" value="true" type="radio" @if ($account->activated) checked @endif>
+            <p>Enabled</p>
+            <input name="activated" value="false" type="radio" @if (!$account->activated) checked @endif>
+            <p>Disabled</p>
+            <label>Status</label>
         </div>
 
         <div>
@@ -101,7 +104,30 @@
     <hr class="large">
 
     @if ($account->id)
-        <h2>Contacts Lists</h2>
+        <h2 id="contacts_lists">Contacts Lists</h2>
+
+        @if ($contacts_lists->isNotEmpty())
+            <form method="POST" action="{{ route('admin.account.contacts_lists.attach', $account->id) }}"
+                accept-charset="UTF-8">
+                @csrf
+                @method('post')
+
+                <div class="select">
+                    <select name="contacts_list_id" onchange="this.form.submit()">
+                        <option>
+                            Select a contacts list
+                        </option>
+                        @foreach ($contacts_lists as $contacts_list)
+                            <option value="{{ $contacts_list->id }}">
+                                {{ $contacts_list->title }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <label for="contacts_list_id">Add a Contacts lists</label>
+                </div>
+            </form>
+            <br />
+        @endif
 
         @foreach ($account->contactsLists as $contactsList)
             <p class="chip">
@@ -113,30 +139,6 @@
                 </a>
             </p>
         @endforeach
-
-        <br />
-
-        @if ($contacts_lists->isNotEmpty())
-            <form method="POST" action="{{ route('admin.account.contacts_lists.attach', $account->id) }}"
-                accept-charset="UTF-8">
-                @csrf
-                @method('post')
-
-                <div class="select">
-                    <select name="contacts_list_id">
-                        @foreach ($contacts_lists as $contacts_list)
-                            <option value="{{ $contacts_list->id }}">
-                                {{ $contacts_list->title }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <label for="contacts_list_id">Add a Contacts lists</label>
-                </div>
-                <div>
-                    <input class="btn btn-tertiary" type="submit" value="Add">
-                </div>
-            </form>
-        @endif
 
         <h2>Individual contacts</h2>
 
