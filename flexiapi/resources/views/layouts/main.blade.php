@@ -12,6 +12,9 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/far.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/form.css') }}">
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
     @if (config('instance.custom_theme') & file_exists(public_path('css/' . config('app.env') . '.style.css')))
         <link rel="stylesheet" type="text/css" href="{{ asset('css/' . config('app.env') . '.style.css') }}">
         <!--<link rel="stylesheet" type="text/css" href="{{ asset('css/charts.css') }}" >-->

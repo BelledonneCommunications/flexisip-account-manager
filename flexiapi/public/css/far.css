@@ -637,6 +637,10 @@ table tr.empty td:before {
     margin: 0;
 }
 
+.chip.selected {
+    font-weight: bold;
+}
+
 /** Pagination **/
 
 ul.pagination {
@@ -703,4 +707,8 @@ select.list_toggle {
 .disabled {
     opacity: 0.5;
     pointer-events: none;
+}
+
+#chart {
+    min-height: 80vh;
 }

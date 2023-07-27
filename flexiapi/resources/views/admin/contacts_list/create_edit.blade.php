@@ -4,13 +4,16 @@
     <header>
         @if ($contacts_list->id)
             <h1><i class="material-icons">account_box</i> Edit a Contacts List</h1>
-            <a class="btn oppose btn-secondary" href="{{ route('admin.contacts_lists.delete', $contacts_list->id) }}">
+            <a href="{{ route('admin.contacts_lists.index') }}" class="btn btn-secondary oppose">Cancel</a>
+            <a class="btn btn-secondary" href="{{ route('admin.contacts_lists.delete', $contacts_list->id) }}">
                 <i class="material-icons">delete</i>
                 Delete
             </a>
-            <input form="create_edit_contacts_list" class="btn" type="submit" value="{{ $contacts_list->id ? 'Update' : 'Create' }}">
+            <input form="create_edit_contacts_list" class="btn" type="submit" value="Update">
         @else
             <h1><i class="material-icons">account_box</i> Create a Contacts List</h1>
+            <a href="{{ route('admin.contacts_lists.index') }}" class="btn btn-secondary oppose">Cancel</a>
+            <input form="create_edit_contacts_list" class="btn" type="submit" value="Create">
         @endif
     </header>
 
@@ -18,20 +21,19 @@
         <p title="{{ $contacts_list->updated_at }}">Updated on {{ $contacts_list->updated_at->format('d/m/Y') }}
     @endif
 
-    <form method="POST"
-        id="create_edit_contacts_list"
+    <form method="POST" id="create_edit_contacts_list"
         action="{{ $contacts_list->id ? route('admin.contacts_lists.update', $contacts_list->id) : route('admin.contacts_lists.store') }}"
         accept-charset="UTF-8">
         @csrf
         @method($contacts_list->id ? 'put' : 'post')
         <div>
-            <input placeholder="Name" required="required" name="title" type="text" value="{{ $contacts_list->title }}">
+            <input placeholder="Name" required="required" name="title" type="text" value="{{ $contacts_list->title ?? old('title') }}">
             <label for="username">Name</label>
             @include('parts.errors', ['name' => 'title'])
         </div>
 
         <div>
-            <textarea placeholder="Description" required="required" name="description">{{ $contacts_list->description }}</textarea>
+            <textarea placeholder="Description" name="description">{{ $contacts_list->description ?? old('description') }}</textarea>
             <label for="description">Description</label>
             @include('parts.errors', ['name' => 'description'])
         </div>
@@ -45,15 +47,15 @@
                 <span class="list_toggle" data-list-id="d{{ $contacts_list->id }}"></span> selected
             </p>
 
-            <form method="POST"
-            action="{{ route('admin.contacts_lists.contacts.destroy', $contacts_list->id) }}"
-            accept-charset="UTF-8">
+            <form method="POST" action="{{ route('admin.contacts_lists.contacts.destroy', $contacts_list->id) }}"
+                accept-charset="UTF-8">
                 @csrf
                 @method('delete')
 
                 <select name="contacts_ids[]" class="list_toggle" data-list-id="d{{ $contacts_list->id }}"></select>
                 <input type="hidden" name="contacts_list_id" value="{{ $contacts_list->id }}">
-                <input class="btn btn-tertiary" type="submit" value="Remove contacts" onclick="Utils.clearStorageList('d{{ $contacts_list->id }}')">
+                <input class="btn btn-tertiary" type="submit" value="Remove contacts"
+                    onclick="Utils.clearStorageList('d{{ $contacts_list->id }}')">
             </form>
 
             <a class="btn btn-secondary" href="{{ route('admin.contacts_lists.contacts.add', $contacts_list->id) }}">
@@ -79,7 +81,8 @@
                 @foreach ($contacts_list->contacts as $contact)
                     <tr>
                         <td>
-                            <input class="list_toggle" type="checkbox" data-list-id="d{{ $contacts_list->id }}" data-id="{{ $contact->id }}">
+                            <input class="list_toggle" type="checkbox" data-list-id="d{{ $contacts_list->id }}"
+                                data-id="{{ $contact->id }}">
                         </td>
                         <td>{{ $contact->identifier }}</td>
                     </tr>

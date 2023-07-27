@@ -114,4 +114,4 @@ An adminisator can create, edit and delete account types. Those can be used to c
 
 ## Statistics
 
-The statistics panel show registrations statistics based on their type (mobile and email based registration) and their activations states.
+The statistics panel show different statistics recorder by the Account Manager, they can be explored, filtered and exported.

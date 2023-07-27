@@ -525,20 +525,6 @@ JSON parameters:
 * `to` required, SIP address of the receiver
 * `body` required, content of the message
 
-## Statistics
-
-### `GET /statistics/day`
-<span class="badge badge-warning">Admin</span>
-Retrieve registrations statistics for 24 hours.
-
-### `GET /statistics/week`
-<span class="badge badge-warning">Admin</span>
-Retrieve registrations statistics for a week.
-
-### `GET /statistics/month`
-<span class="badge badge-warning">Admin</span>
-Retrieve registrations statistics for a month.
-
 # Non-API Endpoints
 
 The following URLs are **not API endpoints** they are not returning `JSON` content and they are not located under `/api` but directly under the root path.

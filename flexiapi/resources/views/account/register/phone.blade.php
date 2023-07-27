@@ -31,13 +31,14 @@
 <div></div>
 
 <div>
-    {!! Form::password('password', ['required']) !!}
-    {!! Form::label('password', 'Password') !!}
+    <input required="" name="password" type="password" value="" placeholder="Password">
+    <label for="password">Password</label>
     @include('parts.errors', ['name' => 'password'])
 </div>
 <div>
-    {!! Form::password('password_confirmation', ['required']) !!}
-    {!! Form::label('password_confirmation', 'Confirm password') !!}
+    <input required="" name="password_confirmation" type="password" value="" placeholder="Password confirmation">
+    <label for="password_confirmation">Confirm password</label>
+    @include('parts.errors', ['name' => 'password_confirmation'])
 </div>
 
 @include('parts.terms')

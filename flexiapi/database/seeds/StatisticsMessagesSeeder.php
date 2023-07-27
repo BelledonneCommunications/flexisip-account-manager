@@ -1,7 +1,7 @@
 <?php
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
-    Copyright (C) 2021 Belledonne Communications SARL, All rights reserved.
+    Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -17,27 +17,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Http\Controllers\Api;
+namespace Database\Seeders;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\Database\Seeder;
 
-use App\Libraries\StatisticsCruncher;
+use App\StatisticsMessage;
+use App\StatisticsMessageDevice;
+use Illuminate\Support\Facades\Schema;
 
-class StatisticController extends Controller
+class StatisticsMessagesSeeder extends Seeder
 {
-    public function month(Request $request)
+    public function run()
     {
-        return StatisticsCruncher::month();
-    }
+        Schema::disableForeignKeyConstraints();
+        StatisticsMessageDevice::truncate();
+        StatisticsMessage::truncate();
+        Schema::enableForeignKeyConstraints();
 
-    public function week(Request $request)
-    {
-        return StatisticsCruncher::week();
-    }
-
-    public function day(Request $request)
-    {
-        return StatisticsCruncher::day();
+        StatisticsMessage::factory()
+            ->count(10000)
+            ->create();
     }
 }

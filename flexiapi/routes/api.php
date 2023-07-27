@@ -54,10 +54,6 @@ Route::post('accounts/auth_token', 'Api\Account\AuthTokenController@store');
 Route::get('accounts/me/api_key/{auth_token}', 'Api\Account\ApiKeyController@generateFromToken')->middleware('cookie', 'cookie.encrypt');
 
 Route::group(['middleware' => ['auth.digest_or_key']], function () {
-    Route::get('statistic/month', 'Api\StatisticController@month');
-    Route::get('statistic/week', 'Api\StatisticController@week');
-    Route::get('statistic/day', 'Api\StatisticController@day');
-
     Route::get('accounts/auth_token/{auth_token}/attach', 'Api\Account\AuthTokenController@attach');
 
     Route::get('accounts/me/api_key', 'Api\Account\ApiKeyController@generate')->middleware('cookie', 'cookie.encrypt');

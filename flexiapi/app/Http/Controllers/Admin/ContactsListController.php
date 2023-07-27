@@ -21,6 +21,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\ContactsList;
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
 class ContactsListController extends Controller
@@ -49,8 +50,7 @@ class ContactsListController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required',
-            'description' => 'required'
+            'title' => 'required|unique:contacts_lists'
         ]);
 
         $contactsList = new ContactsList;
@@ -71,8 +71,10 @@ class ContactsListController extends Controller
     public function update(Request $request, int $id)
     {
         $request->validate([
-            'title' => 'required',
-            'description' => 'required'
+            'title' => [
+                'required',
+                Rule::unique('contacts_lists')->ignore($id),
+            ],
         ]);
 
         $contactsList = ContactsList::findOrFail($id);

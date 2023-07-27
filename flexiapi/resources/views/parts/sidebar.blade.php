@@ -7,7 +7,7 @@
     if (auth()->user() && auth()->user()->admin) {
         $items['admin.account.index'] = ['title' => 'Accounts', 'icon' => 'people'];
         $items['admin.contacts_lists.index'] = ['title' => 'Contacts Lists', 'icon' => 'account_box'];
-        $items['admin.statistics.show.day'] = ['title' => 'Statistics', 'icon' => 'analytics'];
+        $items['admin.statistics.show'] = ['title' => 'Statistics', 'icon' => 'analytics'];
     }
 @endphp
 

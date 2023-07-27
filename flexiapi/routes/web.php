@@ -32,7 +32,7 @@ use App\Http\Controllers\Admin\AccountTypeController;
 use App\Http\Controllers\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Admin\ContactsListController;
 use App\Http\Controllers\Admin\ContactsListContactController;
-
+use App\Http\Controllers\Admin\StatisticsController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/login')->name('account.home');
@@ -131,11 +131,11 @@ if (config('app.web_panel')) {
     Route::get('auth_tokens/auth/{token}', 'Account\AuthTokenController@auth')->name('auth_tokens.auth');
 
     Route::name('admin.')->prefix('admin')->middleware(['auth.admin'])->group(function () {
-
-        // Statistics
-        Route::get('statistics/day', 'Admin\StatisticsController@showDay')->name('statistics.show.day');
-        Route::get('statistics/week', 'Admin\StatisticsController@showWeek')->name('statistics.show.week');
-        Route::get('statistics/month', 'Admin\StatisticsController@showMonth')->name('statistics.show.month');
+        Route::name('statistics.')->controller(StatisticsController::class)->prefix('statistics')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/{type?}', 'show')->name('show');
+            Route::post('/', 'edit')->name('edit');
+        });
 
         Route::name('account.')->prefix('accounts')->group(function () {
             Route::controller(AdminAccountController::class)->group(function () {

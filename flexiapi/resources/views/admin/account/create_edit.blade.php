@@ -1,18 +1,24 @@
 @extends('layouts.main')
 
 @section('content')
-    <div>
-        @if ($account->id)
-            <a class="btn oppose btn-secondary" href="{{ route('admin.account.delete', $account->id) }}">
+    @if ($account->id)
+        <header>
+            <h1><i class="material-icons">people</i> Edit an account</h1>
+            <a href="{{ route('admin.account.index') }}" class="btn btn-secondary oppose">Cancel</a>
+            <a class="btn btn-secondary" href="{{ route('admin.account.delete', $account->id) }}">
                 <i class="material-icons">delete</i>
                 Delete
             </a>
-            <h1><i class="material-icons">people</i> Edit an account</h1>
-            <p title="{{ $account->updated_at }}">Updated on {{ $account->updated_at->format('d/m/Y') }}
-            @else
+            <input form="create_edit" class="btn" type="submit" value="Update">
+        </header>
+        <p title="{{ $account->updated_at }}">Updated on {{ $account->updated_at->format('d/m/Y') }}
+    @else
+        <header>
             <h1><i class="material-icons">people</i> Create an account</h1>
-        @endif
-    </div>
+            <a href="{{ route('admin.account.index') }}" class="btn btn-secondary oppose">Cancel</a>
+            <input form="create_edit" class="btn" type="submit" value="Create">
+        </header>
+    @endif
 
     <form method="POST"
         action="{{ $account->id ? route('admin.account.update', $account->id) : route('admin.account.store') }}"
@@ -93,12 +99,6 @@
             <label for="dtmf_protocol">DTMF Protocol</label>
         </div>
 
-    </form>
-
-    <form>
-        <div class="large">
-            <input class="btn oppose" type="submit" value="{{ $account->id ? 'Update' : 'Create' }}" form="create_edit">
-        </div>
     </form>
 
     <hr class="large">
