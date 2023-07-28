@@ -1,5 +1,9 @@
 # Flexisip Account Manager Changelog
 
+v1.3.1
+------
+- Fix #111 Disable phone authentication routes when the related toggle is set to false
+
 v1.3
 ----
 - Fix #90 Deploy packages from release branches as well
