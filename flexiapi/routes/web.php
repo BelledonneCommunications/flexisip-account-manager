@@ -29,9 +29,11 @@ if (config('app.web_panel')) {
     Route::get('authenticate/email/check/{sip}', 'Account\AuthenticateController@checkEmail')->name('account.check.email');
     Route::get('authenticate/email/{code}', 'Account\AuthenticateController@validateEmail')->name('account.authenticate.email_confirm');
 
-    Route::get('login/phone', 'Account\AuthenticateController@loginPhone')->name('account.login_phone');
-    Route::post('authenticate/phone', 'Account\AuthenticateController@authenticatePhone')->name('account.authenticate.phone');
-    Route::post('authenticate/phone/confirm', 'Account\AuthenticateController@validatePhone')->name('account.authenticate.phone_confirm');
+    if (config('app.phone_authentication')) {
+        Route::get('login/phone', 'Account\AuthenticateController@loginPhone')->name('account.login_phone');
+        Route::post('authenticate/phone', 'Account\AuthenticateController@authenticatePhone')->name('account.authenticate.phone');
+        Route::post('authenticate/phone/confirm', 'Account\AuthenticateController@validatePhone')->name('account.authenticate.phone_confirm');
+    }
 
     Route::get('authenticate/qrcode/{token?}', 'Account\AuthenticateController@loginAuthToken')->name('account.authenticate.auth_token');
 }
