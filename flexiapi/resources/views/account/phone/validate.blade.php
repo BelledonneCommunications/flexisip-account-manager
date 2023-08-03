@@ -11,14 +11,16 @@
             <p>Please enter the verification code below:</p>
         </div>
 
-        <div>
-            {!! Form::number('code', null, ['placeholder' => '0000', 'required', 'min' => 0000, 'max' => 9999]) !!}
-            {!! Form::label('code', 'Code') !!}
+        <div class="large">
+            <input oninput="digitFilled(this)" autofocus class="digit" name="number_1" type="number" min="0" max="9">
+            <input oninput="digitFilled(this)" class="digit" name="number_2" type="number" min="0" max="9">
+            <input oninput="digitFilled(this)" class="digit" name="number_3" type="number" min="0" max="9">
+            <input oninput="digitFilled(this)" class="digit" name="number_4" type="number" min="0" max="9">
             @include('parts.errors', ['name' => 'code'])
         </div>
 
         <div>
-            {!! Form::submit('Validate', ['class' => 'btn']) !!}
+            <input class="btn" type="submit" value="Validate">
         </div>
 
         {!! Form::close() !!}

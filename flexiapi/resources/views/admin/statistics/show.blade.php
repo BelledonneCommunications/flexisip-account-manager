@@ -1,6 +1,14 @@
 @extends('layouts.main')
 
+@section('breadcrumb')
+    <li class="breadcrumb-item active" aria-current="page">Statistics</li>
+@endsection
+
 @section('content')
+<header>
+    <h1><i class="material-icons">analytics</i> Statistics</h1>
+</header>
+
     @include('parts.tabs', [
         'items' => [
             route('admin.statistics.show', ['type' => 'messages']) => 'Messages',
@@ -8,7 +16,7 @@
         ],
     ])
 
-    <header>
+    <div>
         <form class="inline" method="POST" action="{{ route('admin.statistics.edit') }}" accept-charset="UTF-8">
             @csrf
             @method('post')
@@ -36,12 +44,15 @@
                     class="chip @if ($by == 'year') selected @endif">Year</a>
             </div>
 
-            <a class="btn btn-secondary" href="{{ route('admin.statistics.show') }}">Reset</a>
-            <a class="btn btn-tertiary" href="{{ route('admin.statistics.show', ['by' => $by, 'type' => $type, 'export' => true] + $request->only(['from', 'to'])) }}">
-                <i class="material-icons">download</i> Export
-            </a>
+            <div class="oppose">
+                <a class="btn btn-secondary" href="{{ route('admin.statistics.show') }}">Reset</a>
+                <a class="btn btn-tertiary"
+                    href="{{ route('admin.statistics.show', ['by' => $by, 'type' => $type, 'export' => true] + $request->only(['from', 'to'])) }}">
+                    <i class="material-icons">download</i> Export
+                </a>
+            </div>
         </form>
-    </header>
+    </div>
 
     @include('parts.graph')
 @endsection

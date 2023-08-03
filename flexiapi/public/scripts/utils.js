@@ -109,3 +109,9 @@ var ListToggle = {
 document.addEventListener("DOMContentLoaded", function(event) {
     ListToggle.init();
 });
+
+function digitFilled(element) {
+    if (element.value.length == 1) {
+        element.nextElementSibling.focus();
+    }
+}

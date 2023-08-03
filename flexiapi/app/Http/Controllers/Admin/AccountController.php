@@ -34,8 +34,13 @@ class AccountController extends Controller
 {
     public function index(Request $request)
     {
-        $accounts = Account::orderBy('updated_at', $request->get('updated_at_order', 'desc'))
-            ->with('externalAccount');
+        $request->validate([
+            'order_by' => 'in:username,updated_at',
+            'order_sort' => 'in:asc,desc',
+        ]);
+
+        $accounts = Account::with('externalAccount', 'contactsLists')
+            ->orderBy($request->get('order_by', 'updated_at'), $request->get('order_sort', 'desc'));
 
         if ($request->has('search')) {
             $accounts = $accounts->where('username', 'like', '%' . $request->get('search') . '%');
@@ -45,17 +50,26 @@ class AccountController extends Controller
             $accounts->whereDate('updated_at', $request->get('updated_date'));
         }
 
+        if ($request->has('contacts_list')) {
+            $accounts->whereHas('contactsLists', function ($query) use ($request) {
+                $query->where('id', $request->get('contacts_list'));
+            });
+        }
+
+        if ($request->has('domain')) {
+            $accounts->where('domain', $request->get('domain'));
+        }
+
         return view('admin.account.index', [
-            'search' => $request->get('search'),
-            'updated_date' => $request->get('updated_date'),
+            'domains' => Account::groupBy('domain')->pluck('domain'),
+            'contacts_lists' => ContactsList::all()->pluck('title', 'id'),
             'accounts' => $accounts->paginate(20)->appends($request->query()),
-            'updated_at_order' => $request->get('updated_at_order') == 'desc' ? 'asc' : 'desc'
         ]);
     }
 
     public function search(Request $request)
     {
-        return redirect()->route('admin.account.index', $request->except('_token'));
+        return redirect()->route('admin.account.index', $request->except('_token', 'query'));
     }
 
     public function create(Request $request)

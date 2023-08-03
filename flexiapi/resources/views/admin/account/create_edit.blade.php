@@ -1,9 +1,16 @@
 @extends('layouts.main')
 
+@section('breadcrumb')
+    <li class="breadcrumb-item" aria-current="page">
+        <a href="{{ route('admin.account.index') }}">Accounts</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Edit</li>
+@endsection
+
 @section('content')
     @if ($account->id)
         <header>
-            <h1><i class="material-icons">people</i> Edit an account</h1>
+            <h1><i class="material-icons">people</i> {{ $account->identifier }}</h1>
             <a href="{{ route('admin.account.index') }}" class="btn btn-secondary oppose">Cancel</a>
             <a class="btn btn-secondary" href="{{ route('admin.account.delete', $account->id) }}">
                 <i class="material-icons">delete</i>

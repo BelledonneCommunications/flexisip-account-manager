@@ -2,7 +2,7 @@
 
 @section('content')
     <section>
-        <h1><i class="material-icons">waving_hand</i> Oh hi!</h1>
+        <h1 style="margin-bottom: 3rem;"><i class="material-icons">waving_hand</i> Welcome on {{ config('app.name') }}</h1>
 
         @if (config('instance.intro_registration'))
             @parsedown(config('instance.intro_registration'))
@@ -11,25 +11,29 @@
         @if (Auth::check())
             @include('parts.already_auth')
         @else
-            {!! Form::open(['route' => 'account.authenticate']) !!}
-            <div class="large">
-                @if (config('app.phone_authentication'))
-                    {!! Form::text('username', old('username'), ['placeholder' => 'username or phone number', 'required']) !!}
-                    {!! Form::label('username', 'Username or phone number') !!}
-                @else
-                    {!! Form::text('username', old('username'), ['placeholder' => 'username', 'required']) !!}
-                    {!! Form::label('username', 'Username') !!}
-                @endif
-            </div>
-            <div class="large">
-                {!! Form::password('password', ['placeholder' => 'myPassword', 'required']) !!}
-                {!! Form::label('password', 'Password') !!}
-            </div>
-            <div class="large">
-                {!! Form::submit('Login', ['class' => 'btn oppose']) !!}
-            </div>
+            <form style="margin-top: 3rem; margin-bottom: 3rem;" method="POST" action="{{ route('account.authenticate') }}" accept-charset="UTF-8">
+                @csrf
+                <div>
+                    @if (config('app.phone_authentication'))
+                        <input placeholder="username or phone number" required="" name="username" type="text"
+                            value="{{ old('username') }}">
+                        <label for="username">Username or phone number</label>
+                    @else
+                        <input placeholder="username" required="" name="username" type="text"
+                            value="{{ old('username') }}">
+                        <label for="username">Username</label>
+                    @endif
+                </div>
+                <div class="on_desktop"></div>
+                <div>
+                    <input placeholder="myPassword" required="" name="password" type="password" value="">
+                    <label for="password">Password</label>
+                </div>
+                <div>
+                    <input class="btn" type="submit" value="Login">
+                </div>
 
-            {!! Form::close() !!}
+            </form>
 
             <br />
 

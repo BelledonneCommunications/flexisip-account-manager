@@ -122,14 +122,23 @@ class AccountService
 
     public function updatePhone(Request $request): ?Account
     {
-        $request->validate([
+        $request->validate($this->api ? [
             'code' => 'required|digits:4'
+        ] : [
+            'number_1' => 'required|digits:1',
+            'number_2' => 'required|digits:1',
+            'number_3' => 'required|digits:1',
+            'number_4' => 'required|digits:1'
         ]);
+
+        $code = $this->api ? $request->get('code')
+            : $request->get('number_1') . $request->get('number_2') . $request->get('number_3') . $request->get('number_4');
 
         $account = $request->user();
 
         $phoneChangeCode = $account->phoneChangeCode()->firstOrFail();
-        if ($phoneChangeCode->code == $request->get('code')) {
+
+        if ($phoneChangeCode->code == $code) {
             $account->alias()->delete();
 
             $alias = new Alias;
@@ -189,14 +198,22 @@ class AccountService
 
     public function updateEmail(Request $request): ?Account
     {
-        $request->validate([
+        $request->validate($this->api ? [
             'code' => 'required|digits:4'
+        ] : [
+            'number_1' => 'required|digits:1',
+            'number_2' => 'required|digits:1',
+            'number_3' => 'required|digits:1',
+            'number_4' => 'required|digits:1'
         ]);
+
+        $code = $this->api ? $request->get('code')
+            : $request->get('number_1') . $request->get('number_2') . $request->get('number_3') . $request->get('number_4');
 
         $account = $request->user();
 
         $emailChangeCode = $account->emailChangeCode()->firstOrFail();
-        if ($emailChangeCode->validate($request->get('code'))) {
+        if ($emailChangeCode->validate($code)) {
             $account->email = $emailChangeCode->email;
             $account->save();
 

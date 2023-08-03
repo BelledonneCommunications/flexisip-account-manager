@@ -2,13 +2,11 @@
 
 @section('content')
     <section>
-        <p class="oppose">
+        <h1><i class="material-icons">account_circle</i> Register</h1>
+        <p style="margin-bottom: 2rem;">
             You already have an account?
             <a class="btn btn-secondary" href="{{ route('account.login') }}">Login</a>
         </p>
-
-        <h1><i class="material-icons">account_circle</i> Register</h1>
-
         @include('parts.tabs.register')
 
         {!! Form::open(['route' => 'account.store']) !!}
@@ -20,7 +18,7 @@
         </div>
 
         <div>
-            <input type="text" name="username" value="{{ $domain }}" disabled>
+            <input type="text" name="domain" value="{{ $domain }}" disabled>
         </div>
 
         <div>

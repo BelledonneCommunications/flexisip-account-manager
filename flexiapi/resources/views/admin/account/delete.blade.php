@@ -1,5 +1,12 @@
 @extends('layouts.main')
 
+@section('breadcrumb')
+    <li class="breadcrumb-item" aria-current="page">
+        <a href="{{ route('admin.account.index') }}">Accounts</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Delete</li>
+@endsection
+
 @section('content')
     <h2>Delete an account</h2>
 

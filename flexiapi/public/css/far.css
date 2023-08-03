@@ -333,11 +333,28 @@ content section {
     box-sizing: border-box;
 }
 
+content section.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+@media screen and (max-width: 800px) {
+    content section.grid {
+        display: block;
+    }
+}
+
+content section.grid header,
+content section.grid .large {
+    grid-column: span 2;
+}
+
 content section header {
     display: flex;
     gap: 1rem;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 3rem;
 }
 
 content section header p {
@@ -354,6 +371,7 @@ content section header > *.oppose {
 
 content nav + section {
     min-width: calc(80% - 20rem);
+    margin-bottom: 4rem;
 }
 
 /** Sidenav **/
@@ -490,6 +508,13 @@ h3 {
     font-size: 1.75rem;
     color: var(--second-6);
     padding: 0.5rem 0;
+    font-weight: bold;
+}
+
+h3 i {
+    line-height: 2rem;
+    margin-right: 1rem;
+    vertical-align: middle;
 }
 
 h4 {
@@ -499,14 +524,20 @@ h4 {
 }
 
 p + h1, p + h2, p + h3, p + h4,
-ul + h1, ul + h2, ul + h3, ul + h4 {
+ul + h1, ul + h2, ul + h3, ul + h4, h3 + p {
     margin-top: 1rem;
+}
+
+.line {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /** Badge **/
 
 .badge {
-    background-color: var(--main-5);
+    background-color: var(--grey-4);
     color: white;
     border-radius: 0.5rem;
     font-weight: 700;
@@ -540,17 +571,18 @@ table tr td a {
 
 table tr td,
 table tr th {
-    line-height: 4rem;
-    padding: 0 1rem;
+    padding: 1rem;
     font-size: 1.5rem;
+}
+
+table tr th {
+    padding: 0 1rem;
+    line-height: 4rem;
 }
 
 table tr td.line,
 table tr th.line {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 0;
+    max-width: 100%;
 }
 
 table tr th,
@@ -562,7 +594,7 @@ table tr th a {
 }
 
 table tr th a i {
-    font-size: 3rem;
+    font-size: 2.5rem;
     vertical-align: middle;
 }
 
@@ -697,7 +729,7 @@ select.list_toggle {
 }
 
 .card {
-    background-color: var(--grey-2);
+    background-color: var(--grey-1);
     border-radius: 1rem;
     padding: 1rem;
     margin-bottom: 1rem;
@@ -711,4 +743,32 @@ select.list_toggle {
 
 #chart {
     min-height: 80vh;
+}
+
+/** Breadcrumb **/
+
+.breadcrumb {
+    margin-bottom: 2rem;
+}
+
+.breadcrumb li {
+    display: inline-block;
+    font-size: 1.5rem;
+    line-height: 2rem;
+}
+
+.breadcrumb li a {
+    color: var(--main-5);
+}
+
+.breadcrumb li.active {
+    color: var(--grey-5);
+}
+
+.breadcrumb li + li:before {
+    content: ">";
+    margin: 0 1rem;
+    font-size: 1rem;
+    line-height: 2rem;
+    display: inline-block;
 }

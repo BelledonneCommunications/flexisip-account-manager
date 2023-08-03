@@ -1,9 +1,16 @@
 @extends('layouts.main')
 
+@section('breadcrumb')
+    <li class="breadcrumb-item" aria-current="page">
+        <a href="{{ route('admin.contacts_lists.index') }}">Contacts Lists</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Edit</li>
+@endsection
+
 @section('content')
     <header>
         @if ($contacts_list->id)
-            <h1><i class="material-icons">account_box</i> Edit a Contacts List</h1>
+            <h1><i class="material-icons">account_box</i> {{ $contacts_list->title }}</h1>
             <a href="{{ route('admin.contacts_lists.index') }}" class="btn btn-secondary oppose">Cancel</a>
             <a class="btn btn-secondary" href="{{ route('admin.contacts_lists.delete', $contacts_list->id) }}">
                 <i class="material-icons">delete</i>
@@ -27,7 +34,8 @@
         @csrf
         @method($contacts_list->id ? 'put' : 'post')
         <div>
-            <input placeholder="Name" required="required" name="title" type="text" value="{{ $contacts_list->title ?? old('title') }}">
+            <input placeholder="Name" required="required" name="title" type="text"
+                value="{{ $contacts_list->title ?? old('title') }}">
             <label for="username">Name</label>
             @include('parts.errors', ['name' => 'title'])
         </div>
@@ -48,14 +56,17 @@
             </p>
 
             <form method="POST" action="{{ route('admin.contacts_lists.contacts.destroy', $contacts_list->id) }}"
-                accept-charset="UTF-8">
+                name="contacts_lists_contacts_destroy" accept-charset="UTF-8">
                 @csrf
                 @method('delete')
 
                 <select name="contacts_ids[]" class="list_toggle" data-list-id="d{{ $contacts_list->id }}"></select>
                 <input type="hidden" name="contacts_list_id" value="{{ $contacts_list->id }}">
-                <input class="btn btn-tertiary" type="submit" value="Remove contacts"
-                    onclick="Utils.clearStorageList('d{{ $contacts_list->id }}')">
+                <a class="btn btn-tertiary"
+                    onclick="Utils.clearStorageList('d{{ $contacts_list->id }}');  document.querySelector('form[name=contacts_lists_contacts_destroy]').submit()">
+                    <i class="material-icons">delete</i>
+                    Remove contacts
+                </a>
             </form>
 
             <a class="btn btn-secondary" href="{{ route('admin.contacts_lists.contacts.add', $contacts_list->id) }}">
@@ -66,7 +77,7 @@
         <table class="large">
             <thead>
                 <tr>
-                    <th>
+                    <th width="1%">
                         <input type="checkbox" onchange="Utils.toggleAll(this)">
                     </th>
                     <th>Username</th>

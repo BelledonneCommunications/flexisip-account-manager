@@ -1,5 +1,12 @@
 @extends('layouts.main')
 
+@section('breadcrumb')
+    <li class="breadcrumb-item" aria-current="page">
+        <a href="{{ route('admin.contacts_lists.index') }}">Contacts Lists</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Delete</li>
+@endsection
+
 @section('content')
     <h2>Delete a Contact List</h2>
 
@@ -15,6 +22,7 @@
             <input name="contacts_lists_id" type="hidden" value="{{ $contacts_list->id }}">
         </div>
         <div>
+            <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}" class="btn btn-secondary">Cancel</a>
             <input class="btn" type="submit" value="Delete">
         </div>
 

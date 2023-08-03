@@ -13,6 +13,10 @@
     white-space: nowrap;
 }
 
+p .btn {
+    margin: 0 1rem;
+}
+
 .btn i {
     margin-right: 0.5rem;
     margin-left: -0.5rem;
@@ -79,7 +83,9 @@ form {
 }
 
 form.inline {
-    display: block;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
 }
 
 form div {
@@ -87,11 +93,34 @@ form div {
     min-height: 4rem;
 }
 
-form.inline div {
+form div .btn,
+form div a.chip {
+    margin-top: 2.5rem;
+}
+
+form div.oppose {
+    justify-content: right;
+}
+
+form div .btn,
+form div .chip {
     display: inline-block;
-    position: relative;
-    margin-right: 1rem;
-    margin-bottom: 1rem;
+    align-self: flex-end;
+}
+
+form div .chip {
+    line-height: 4.5rem;
+}
+
+form.inline div.large {
+    grid-column: span 2;
+    align-items: end;
+}
+
+@media screen and (max-width: 800px) {
+    form.inline div.large {
+        grid-column: span 4;
+    }
 }
 
 form .large,
@@ -105,7 +134,7 @@ form .disabled {
     filter: blur(0.25rem);
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 800px) {
     form div {
         grid-column: 1/-1;
     }
@@ -119,9 +148,18 @@ form small {
     margin-top: 0.25rem;
 }
 
+form small.error {
+    color: var(--danger-6);
+}
+
 form label {
     color: var(--second-6);
     font-size: 1.5rem;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
 }
 
 form input[type="radio"]~label:after,
@@ -129,18 +167,13 @@ form input[required]+label:after {
     content: '*';
 }
 
-form input:not([type=checkbox]) ~ label,
-form textarea ~ label,
-form select ~ label {
+form input:not([type=checkbox])~label,
+form textarea~label,
+form select~label {
     position: absolute;
     top: 0;
     left: 0;
     font-weight: 700;
-}
-
-form:not(.inline) div .btn {
-    position: absolute;
-    bottom: 0;
 }
 
 form div .btn.oppose {
@@ -160,6 +193,7 @@ form div select {
 
 form div select {
     appearance: none;
+    padding-right: 4rem;
     -moz-appearance: none;
     -webkit-appearance: none;
 }
@@ -168,17 +202,26 @@ form div.checkbox {
     min-height: 2rem;
 }
 
+form div.search:after,
 form div.select:after {
     font-family: 'Material Icons';
     content: "\e5cf";
     display: block;
-    font-size: 3rem;
+    font-size: 2.5rem;
     color: var(--second-6);
     position: absolute;
     right: 1rem;
     bottom: 0rem;
     pointer-events: none;
     line-height: 4rem;
+}
+
+form div.search input {
+    padding-right: 4rem;
+}
+
+form div.search:after {
+    content: "\e8b6";
 }
 
 form div input[disabled],
@@ -195,6 +238,19 @@ form div textarea[readonly] {
     background-color: var(--grey-2);
 }
 
+input[type=number].digit {
+    font-size: 3rem;
+    width: 4rem;
+    height: 5rem;
+    -moz-appearance: textfield;
+    -webkit-appearance: textfield;
+    border-radius: 1.5rem;
+    background-color: white;
+    padding: 0.5rem;
+    text-align: center;
+    margin-right: 1rem;
+}
+
 input[type=checkbox] {
     accent-color: var(--main-5);
 }
@@ -203,12 +259,13 @@ form div input[type=checkbox] {
     margin-right: 1rem;
 }
 
-form div input:not([type=checkbox]):not([type=radio]):not(.btn),
+form div input:not([type=checkbox]):not([type=radio]):not([type="number"].digit):not(.btn),
 form div textarea,
 form div select {
     margin-top: 2.5rem;
     box-sizing: border-box;
     width: 100%;
+    height: max-content;
 }
 
 form div input[type=radio] {
@@ -218,7 +275,7 @@ form div input[type=radio] {
     accent-color: var(--main-5);
 }
 
-form div input[type=radio] + p {
+form div input[type=radio]+p {
     display: inline-block;
 }
 

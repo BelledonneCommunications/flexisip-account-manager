@@ -44,7 +44,8 @@
                     <a class="oppose" href="{{ route('account.logout') }}">
                         <i class="material-icons">logout</i>
                     </a>
-                @else
+                @elseif (request()->route() &&
+                        request()->route()->getName() != 'account.login')
                     <a class="oppose" href="{{ route('account.login') }}">
                         <i class="material-icons">info</i><span class="on_desktop">Login</span>
                     </a>
@@ -61,7 +62,16 @@
         @include('parts.errors')
 
         @if (!isset($welcome) || $welcome == false)
-            <section>
+            <section @if (isset($grid) && $grid) class="grid" @endif>
+
+            @hasSection('breadcrumb')
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ route('account.dashboard') }}">Home</a></li>
+                        @yield('breadcrumb')
+                    </ol>
+                </nav>
+            @endif
         @endif
 
         @yield('content')

@@ -1,5 +1,11 @@
 @extends('layouts.main')
 
+@section('breadcrumb')
+    <li class="breadcrumb-item" aria-current="page">
+        Contacts Lists
+    </li>
+@endsection
+
 @section('content')
 
 <header>
@@ -13,19 +19,10 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Name</th>
+            @include('parts.column_sort', ['key' => 'title', 'title' => 'Name'])
             <th>Description</th>
-            <th>Number of Contacts</th>
-            <th>
-                <a href="{{ route('admin.contacts_lists.index', ['updated_at_order' => $updated_at_order]) }}">
-                    Updated
-                    @if ($updated_at_order == 'desc')
-                        <i class="material-icons">expand_more</i>
-                    @else
-                        <i class="material-icons">expand_less</i>
-                    @endif
-                </a>
-            </th>
+            @include('parts.column_sort', ['key' => 'contacts_count', 'title' => 'Contacts'])
+            @include('parts.column_sort', ['key' => 'updated_at', 'title' => 'Updated'])
         </tr>
     </thead>
     <tbody>

@@ -1,30 +1,48 @@
 @extends('layouts.main')
 
+@section('breadcrumb')
+    <li class="breadcrumb-item" aria-current="page">
+        <a href="{{ route('admin.contacts_lists.index') }}">Contacts Lists</a>
+    </li>
+    <li class="breadcrumb-item" aria-current="page">
+        <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}">{{ $contacts_list->title }}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Add contacts</li>
+@endsection
+
 @section('content')
     <header>
-        <h1><i class="material-icons">account_box</i> Contacts List | Add contacts</h1>
-        <p class="oppose">
-            <span class="list_toggle" data-list-id="a{{ $contacts_list->id }}"></span> selected
-        </p>
+        <h1><i class="material-icons">account_box</i> {{ $contacts_list->title }}</h1>
+
+        <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}" class="btn btn-secondary oppose">Cancel</a>
 
         <form method="POST"
         action="{{ route('admin.contacts_lists.contacts.store', $contacts_list->id) }}"
+        name="contacts_lists_contacts_store"
         accept-charset="UTF-8">
             @csrf
             @method('post')
 
             <select name="contacts_ids[]" class="list_toggle" data-list-id="a{{ $contacts_list->id }}"></select>
             <input type="hidden" name="contacts_list_id" value="{{ $contacts_list->id }}">
-            <input class="btn" type="submit" value="Add" onclick="Utils.clearStorageList('a{{ $contacts_list->id }}')">
         </form>
     </header>
 
     <div>
         <form class="inline" method="POST" action="{{ route('admin.contacts_lists.contacts.search', $params) }}" accept-charset="UTF-8">
             @csrf
-            <div>
+            <div class="search large">
                 <input placeholder="Search by username: +1234, foo_bar…" name="search" type="text" value="{{ $params['search'] }}">
                 <label for="search">Search</label>
+            </div>
+            <div class="oppose large">
+                <p>
+                    <span class="list_toggle" data-list-id="a{{ $contacts_list->id }}"></span> selected
+                </p>
+                <a class="btn" onclick="Utils.clearStorageList('a{{ $contacts_list->id }}'); document.querySelector('form[name=contacts_lists_contacts_store]').submit()">
+                    <i class="material-icons">add_circle</i>
+                    Add
+                </a>
             </div>
             <div>
                 <a href="{{ route('admin.contacts_lists.contacts.add', $contacts_list->id) }}" type="reset" class="btn btn-secondary">Reset</a>
@@ -36,7 +54,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>
+                <th width="1%">
                     <input type="checkbox" onchange="Utils.toggleAll(this)">
                 </th>
                 <th>Username</th>

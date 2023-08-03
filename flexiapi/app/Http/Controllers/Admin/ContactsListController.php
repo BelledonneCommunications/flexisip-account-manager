@@ -28,11 +28,17 @@ class ContactsListController extends Controller
 {
     public function index(Request $request)
     {
+        $request->validate([
+            'order_by' => 'in:title,updated_at,contacts_count',
+            'order_sort' => 'in:asc,desc',
+        ]);
+
+        $contactsLists = ContactsList::orderBy($request->get('order_by', 'updated_at'), $request->get('order_sort', 'desc'));
+
         return view('admin.contacts_list.index', [
-            'contacts_lists' => ContactsList::orderBy('updated_at', $request->get('updated_at_order', 'desc'))
+            'contacts_lists' => $contactsLists
                 ->paginate(20)
                 ->appends($request->query()),
-            'updated_at_order' => $request->get('updated_at_order') == 'desc' ? 'asc' : 'desc'
         ]);
     }
 
