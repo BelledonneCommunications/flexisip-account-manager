@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item" aria-current="page">
+    <li class="breadcrumb-item">
         <a href="{{ route('admin.account.index') }}">Accounts</a>
     </li>
     <li class="breadcrumb-item active" aria-current="page">Edit</li>
@@ -19,6 +19,13 @@
             <input form="create_edit" class="btn" type="submit" value="Update">
         </header>
         <p title="{{ $account->updated_at }}">Updated on {{ $account->updated_at->format('d/m/Y') }}
+
+        @include('parts.tabs', [
+            'items' => [
+                route('admin.account.edit', $account->id, ['type' => 'messages']) => 'Information',
+                route('admin.account.device.index', $account->id, ['type' => 'accounts']) => 'Devices',
+            ],
+        ])
     @else
         <header>
             <h1><i class="material-icons">people</i> Create an account</h1>

@@ -12,7 +12,7 @@
     <h1><i class="material-icons">account_box</i> Contacts Lists</h1>
     <a class="btn oppose" href="{{ route('admin.contacts_lists.create') }}">
         <i class="material-icons">add_circle</i>
-        Create
+        New Contacts List
     </a>
 </header>
 
@@ -26,6 +26,11 @@
         </tr>
     </thead>
     <tbody>
+        @if ($contacts_lists->isEmpty())
+            <tr class="empty">
+                <td colspan="4">No Contacts Lists</td>
+            </tr>
+        @endif
         @foreach ($contacts_lists as $contacts_list)
             <tr>
                 <td>

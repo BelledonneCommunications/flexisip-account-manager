@@ -68,7 +68,7 @@ Your account can be deleted from the panel using the @if (config('app.web_panel'
 *The feature is not enabled on this instance.*
 @endif
 
-From the @if (config('app.web_panel'))[devices management panel]({{ route('account.device.index') }}) @else devices management panel @endif you will be able to list and delete the devices attached to your SIP address.
+From the @if (config('app.web_panel'))[devices management panel]({{ route('admin.account.device.index') }}) @else devices management panel @endif an admin will be able to list and delete the devices attached to a SIP account.
 
 # Admin panel
 

@@ -52,7 +52,6 @@ class AccountService
         $rules = [];
         $rules['password'] = 'confirmed';
         $rules['email'] = 'confirmed';
-        $rules['privacy'] = 'accepted';
         $rules['terms'] = 'accepted';
 
         if ($this->api) {

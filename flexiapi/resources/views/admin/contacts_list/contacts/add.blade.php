@@ -1,10 +1,10 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item" aria-current="page">
+    <li class="breadcrumb-item">
         <a href="{{ route('admin.contacts_lists.index') }}">Contacts Lists</a>
     </li>
-    <li class="breadcrumb-item" aria-current="page">
+    <li class="breadcrumb-item">
         <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}">{{ $contacts_list->title }}</a>
     </li>
     <li class="breadcrumb-item active" aria-current="page">Add contacts</li>
@@ -35,18 +35,18 @@
                 <input placeholder="Search by username: +1234, foo_bar…" name="search" type="text" value="{{ $params['search'] }}">
                 <label for="search">Search</label>
             </div>
-            <div class="oppose large">
-                <p>
+            <div>
+                <a href="{{ route('admin.contacts_lists.contacts.add', $contacts_list->id) }}" type="reset" class="btn btn-secondary">Reset</a>
+                <button type="submit" class="btn">Search</button>
+            </div>
+            <div class="oppose">
+                <p style="display: inline-block; margin: 0 1rem;">
                     <span class="list_toggle" data-list-id="a{{ $contacts_list->id }}"></span> selected
                 </p>
                 <a class="btn" onclick="Utils.clearStorageList('a{{ $contacts_list->id }}'); document.querySelector('form[name=contacts_lists_contacts_store]').submit()">
                     <i class="material-icons">add_circle</i>
                     Add
                 </a>
-            </div>
-            <div>
-                <a href="{{ route('admin.contacts_lists.contacts.add', $contacts_list->id) }}" type="reset" class="btn btn-secondary">Reset</a>
-                <button type="submit" class="btn">Search</button>
             </div>
         </form>
     </div>

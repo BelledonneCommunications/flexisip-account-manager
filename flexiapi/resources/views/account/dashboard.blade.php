@@ -26,12 +26,6 @@
             @endif
             <a href="{{ route('account.phone.change') }}">Change my current account phone</a>
         </p>
-        @if (config('app.devices_management') == true)
-            <p>
-                <i class="material-icons">laptop</i>
-                <a href="{{ route('account.device.index') }}">Manage my devices</a>
-            </p>
-        @endif
         <p>
             <i class="material-icons">lock</i>
             <a href="{{ route('account.password') }}">

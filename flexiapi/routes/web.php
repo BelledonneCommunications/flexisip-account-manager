@@ -19,7 +19,6 @@
 
 use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Account\CreationRequestTokenController;
-use App\Http\Controllers\Account\DeviceController;
 use App\Http\Controllers\Account\EmailController;
 use App\Http\Controllers\Account\PasswordController;
 use App\Http\Controllers\Account\PhoneController;
@@ -28,6 +27,7 @@ use App\Http\Controllers\Account\RecoveryController;
 use App\Http\Controllers\Admin\AccountAccountTypeController;
 use App\Http\Controllers\Admin\AccountActionController;
 use App\Http\Controllers\Admin\AccountContactController;
+use App\Http\Controllers\Admin\AccountDeviceController;
 use App\Http\Controllers\Admin\AccountTypeController;
 use App\Http\Controllers\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Admin\ContactsListController;
@@ -116,12 +116,6 @@ if (config('app.web_panel')) {
             Route::post('/', 'update')->name('account.password.update');
         });
 
-        Route::prefix('devices')->controller(DeviceController::class)->group(function () {
-            Route::get('/', 'index')->name('account.device.index');
-            Route::get('delete/{id}', 'delete')->name('account.device.delete');
-            Route::delete('/', 'destroy')->name('account.device.destroy');
-        });
-
         Route::post('auth_tokens', 'Account\AuthTokenController@create')->name('account.auth_tokens.create');
 
         Route::get('auth_tokens/auth/external/{token}', 'Account\AuthTokenController@authExternal')->name('auth_tokens.auth.external');
@@ -179,6 +173,12 @@ if (config('app.web_panel')) {
                 Route::get('create', 'create')->name('create');
                 Route::post('/', 'store')->name('store');
                 Route::get('{contact_id}/delete', 'delete')->name('delete');
+                Route::delete('/', 'destroy')->name('destroy');
+            });
+
+            Route::name('device.')->prefix('{account}/devices')->controller(AccountDeviceController::class)->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('{device_id}/delete', 'delete')->name('delete');
                 Route::delete('/', 'destroy')->name('destroy');
             });
 

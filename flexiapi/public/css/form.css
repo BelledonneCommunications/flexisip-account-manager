@@ -26,6 +26,7 @@ p .btn {
 
 .oppose {
     float: right;
+    text-align: right;
 }
 
 .btn[disabled] {
@@ -249,6 +250,12 @@ input[type=number].digit {
     padding: 0.5rem;
     text-align: center;
     margin-right: 1rem;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 input[type=checkbox] {

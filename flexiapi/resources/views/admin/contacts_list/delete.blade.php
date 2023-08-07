@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item" aria-current="page">
+    <li class="breadcrumb-item">
         <a href="{{ route('admin.contacts_lists.index') }}">Contacts Lists</a>
     </li>
     <li class="breadcrumb-item active" aria-current="page">Delete</li>

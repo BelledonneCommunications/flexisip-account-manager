@@ -17,44 +17,47 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Http\Controllers\Account;
+namespace App\Http\Controllers\Admin;
 
+use App\Account;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Libraries\FlexisipConnector;
 
-class DeviceController extends Controller
+class AccountDeviceController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, Account $account)
     {
         $connector = new FlexisipConnector;
 
         return view(
-            'account.devices.index',
+            'admin.account.device.index',
             [
-                'devices' => $connector->getDevices($request->user()->identifier)
+                'account' => $account,
+                'devices' => $connector->getDevices($account->identifier)
             ]
         );
     }
 
-    public function delete(Request $request, string $uuid)
+    public function delete(Request $request, Account $account, string $uuid)
     {
         $connector = new FlexisipConnector;
 
         return view(
-            'account.devices.delete',
+            'admin.account.device.delete',
             [
-                'device' => $connector->getDevices($request->user()->identifier)
+                'account' => $account,
+                'device' =>  $connector->getDevices($account->identifier)
                     ->where('uuid', $uuid)->first()
             ]
         );
     }
 
-    public function destroy(Request $request)
+    public function destroy(Request $request, Account $account)
     {
         $connector = new FlexisipConnector;
-        $connector->deleteDevice($request->user()->identifier, $request->get('uuid'));
+        $connector->deleteDevice($account->identifier, $request->get('uuid'));
 
-        return redirect()->route('account.device.index');
+        return redirect()->route('admin.account.device.index');
     }
 }

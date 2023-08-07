@@ -1,13 +1,13 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-<li class="breadcrumb-item" aria-current="page">
+<li class="breadcrumb-item">
     <a href="{{ route('admin.account.index') }}">Accounts</a>
 </li>
-<li class="breadcrumb-item" aria-current="page">
+<li class="breadcrumb-item">
     <a href="{{ route('admin.account.edit', $action->account) }}">{{ $action->account->identifier }}</a>
 </li>
-<li class="breadcrumb-item active" aria-current="page">
+<li class="breadcrumb-item active">
     Actions
 </li>
 <li class="breadcrumb-item active" aria-current="page">Delete</li>
