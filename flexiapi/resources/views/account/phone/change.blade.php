@@ -11,7 +11,8 @@
             @endif
         </h1>
 
-        {!! Form::open(['route' => 'account.phone.request_change']) !!}
+        <form method="POST" action="{{ route('account.phone.request_change') }}" accept-charset="UTF-8">
+@csrf
 
         <div class="large">
             @if ($account->phone)
@@ -23,18 +24,18 @@
         </div>
 
         <div class="large">
-            {!! Form::text('phone', null, ['placeholder' => '+12345678', 'required']) !!}
-            {!! Form::label('phone', 'Phone') !!}
+            <input placeholder="+12345678" name="phone" type="text" value="">
+            <label for="phone">Phone</label>
             @include('parts.errors', ['name' => 'phone'])
         </div>
 
         @include('parts.captcha')
 
         <div class="large">
-            {!! Form::submit('Verify', ['class' => 'btn oppose']) !!}
+            <input class="btn oppose" type="submit" value="Verify">
         </div>
 
-        {!! Form::close() !!}
+        </form>
 
     </section>
     <section class="on_desktop">

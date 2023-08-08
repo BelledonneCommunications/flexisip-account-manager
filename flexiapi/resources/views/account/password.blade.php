@@ -1,29 +1,29 @@
 @extends('layouts.main')
 
 @section('content')
+    @if ($account->passwords()->count() > 0)
+        <h2>Change my account password</h2>
+    @else
+        <h2>Set my account password</h2>
+    @endif
 
-@if ($account->passwords()->count() > 0)
-    <h2>Change my account password</h2>
-@else
-    <h2>Set my account password</h2>
-@endif
+    <form method="POST" action="{{ route('account.password.update') }}" accept-charset="UTF-8">
+        @csrf
 
-{!! Form::open(['route' => 'account.password.update']) !!}
+        <div>
+            <input type="password" name="password" required>
+            <label for="password">New password</label>
+        </div>
+        <div>
+            <input type="password_confirmation" name="password_confirmation" required>
+            <label for="password_confirmation">Password confirmation</label>
+        </div>
+        <div>
+            <input type="checkbox" name="password_sha256" checked>
+            <label for="password_sha256">Use a SHA-256 encrypted password. This stronger password might not work with some
+                old SIP clients</label>
+        </div>
 
-<div class="form-group">
-    {!! Form::label('password', 'New password') !!}
-    {!! Form::password('password', ['class' => 'form-control', 'required']) !!}
-</div>
-<div class="form-group">
-    {!! Form::label('password_confirmation', 'Password confirmation') !!}
-    {!! Form::password('password_confirmation', ['class' => 'form-control', 'required']) !!}
-</div>
-<div class="form-check">
-    {!! Form::checkbox('password_sha256', 'checked', $account->passwords()->where('algorithm', 'SHA-256')->exists(), ['class' => 'form-check-input']) !!}
-    {!! Form::label('password_sha256', 'Use a SHA-256 encrypted password. This stronger password might not work with some old SIP clients.', ['class' => 'form-check-label']) !!}
-</div>
-
-{!! Form::submit('Change', ['class' => 'btn btn-primary btn-centered']) !!}
-{!! Form::close() !!}
-
+        <input class="btn btn-primary" type="submit" value="Change">
+    </form>
 @endsection

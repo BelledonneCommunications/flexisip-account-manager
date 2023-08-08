@@ -190,7 +190,6 @@ class ApiAccountContactTest extends TestCase
             ->post($this->contactsListsRoute . '/' . $contactsList->id . '/contacts/1234')
             ->assertStatus(404);
 
-
         $this->keyAuthenticated($admin->account)
             ->post($this->route . '/' . $admin->account->id . '/contacts_lists/' . $contactsList->id)
             ->assertStatus(200);

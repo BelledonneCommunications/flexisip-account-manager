@@ -20,13 +20,13 @@
         </header>
         <p title="{{ $account->updated_at }}">Updated on {{ $account->updated_at->format('d/m/Y') }}
 
-        @include('parts.tabs', [
-            'items' => [
-                route('admin.account.edit', $account->id, ['type' => 'messages']) => 'Information',
-                route('admin.account.device.index', $account->id, ['type' => 'accounts']) => 'Devices',
-            ],
-        ])
-    @else
+            @include('parts.tabs', [
+                'items' => [
+                    route('admin.account.edit', $account->id, ['type' => 'messages']) => 'Information',
+                    route('admin.account.device.index', $account->id, ['type' => 'accounts']) => 'Devices',
+                ],
+            ])
+        @else
         <header>
             <h1><i class="material-icons">people</i> Create an account</h1>
             <a href="{{ route('admin.account.index') }}" class="btn btn-secondary oppose">Cancel</a>
@@ -71,7 +71,6 @@
             <label for="password_confirmation">Confirm password</label>
             @include('parts.errors', ['name' => 'password_confirmation'])
         </div>
-
 
         <div>
             <input placeholder="Email" name="email" type="email" value="{{ $account->email }}">
@@ -205,7 +204,7 @@
                 <b>Identifier:</b> {{ $account->externalAccount->identifier }}<br />
             </p>
         @else
-            <a class="btn btn-sm @if ($external_accounts_count == 0) disabled @endif"
+            <a class="btn @if ($external_accounts_count == 0) disabled @endif"
                 href="{{ route('admin.account.external_account.attach', $account->id) }}">Attach an External Account
                 ({{ $external_accounts_count }} left)</a>
         @endif
@@ -220,9 +219,9 @@
                             <th scope="row">{{ $action->key }}</th>
                             <td>{{ $action->code }}</td>
                             <td>
-                                <a class="btn btn-sm mr-2"
+                                <a class="btn"
                                     href="{{ route('admin.account.action.edit', [$account, $action->id]) }}">Edit</a>
-                                <a class="btn btn-sm mr-2"
+                                <a class="btn"
                                     href="{{ route('admin.account.action.delete', [$account, $action->id]) }}">Delete</a>
                             </td>
                         </tr>
@@ -230,7 +229,7 @@
                 </tbody>
             </table>
 
-            <a class="btn btn-sm" href="{{ route('admin.account.action.create', $account) }}">Add</a>
+            <a class="btn" href="{{ route('admin.account.action.create', $account) }}">Add</a>
         @else
             <p>To manage actions, you must configure the DTMF protocol in the account settings.</p>
         @endif
@@ -243,19 +242,18 @@
                     <tr>
                         <th scope="row">{{ $type->key }}</th>
                         <td>
-                            {!! Form::open(['route' => ['admin.account.account_type.destroy', $account, $type->id], 'method' => 'delete']) !!}
-                            {!! Form::submit('Delete', ['class' => 'btn btn-sm mr-2']) !!}
-                            {!! Form::close() !!}
+                            <form method="POST" action="{{ route('admin.account.account_type.destroy', [$account, $type->id]) }}" accept-charset="UTF-8">
+@csrf
+@method('delete')
+                            <input class="btn" type="submit" value="Delete">
+                            </form>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
 
-        <a class="btn btn-sm" href="{{ route('admin.account.account_type.create', $account) }}">Add</a>
-
-
-
+        <a class="btn" href="{{ route('admin.account.account_type.create', $account) }}">Add</a>
     @endif
 
 @endsection

@@ -10,19 +10,22 @@
 @section('content')
     <h2>Delete an account</h2>
 
-    {!! Form::open(['route' => 'admin.account.destroy', 'method' => 'delete']) !!}
+    <form method="POST" action="{{ route('admin.account.destroy') }}" accept-charset="UTF-8">
+@csrf
+
+    @method('delete')
 
     <div class="large">
         <p>You are going to permanently delete the following account. Please confirm your action.<br />
             <b>{{ $account->identifier }}</b>
         </p>
 
-        {!! Form::hidden('account_id', $account->id) !!}
+        <input name="account_id" type="hidden" value="{{ $account->id }}">
     </div>
     <div>
-        {!! Form::submit('Delete', ['class' => 'btn']) !!}
+        <input class="btn" type="submit" value="Delete">
 
     </div>
 
-    {!! Form::close() !!}
+    </form>
 @endsection

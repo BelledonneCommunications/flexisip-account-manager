@@ -1,45 +1,39 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-<li class="breadcrumb-item">
-    <a href="{{ route('admin.account.index') }}">Accounts</a>
-</li>
-<li class="breadcrumb-item">
-    <a href="{{ route('admin.account.edit', $account->id) }}">{{ $account->identifier }}</a>
-</li>
-<li class="breadcrumb-item active" aria-current="page">
-    Actions
-</li>
+    <li class="breadcrumb-item">
+        <a href="{{ route('admin.account.index') }}">Accounts</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{{ route('admin.account.edit', $account->id) }}">{{ $account->identifier }}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+        Actions
+    </li>
 @endsection
 
 @section('content')
+    @if ($action->id)
+        <h2>Edit an account action</h2>
+    @else
+        <h2>Create an account action</h2>
+    @endif
 
-@if ($action->id)
-    <h2>Edit an account action</h2>
-@else
-    <h2>Create an account action</h2>
-@endif
-
-{!! Form::model($action, [
-    'route' => $action->id
-        ? ['admin.account.action.update', $action->account->id, $action->id]
-        : ['admin.account.action.store', $account->id],
-    'method' => $action->id
-        ? 'put'
-        : 'post'
-]) !!}
-    <div class="form-row">
-        <div class="form-group col-md-12">
-            {!! Form::label('key', 'Key') !!}
-            {!! Form::text('key', $action->key, ['class' => 'form-control', 'placeholder' => 'action_key']); !!}
+    <form method="POST"
+        action="{{ $action->id ? route('admin.account.acton.update', [$action->account->id, $action->id]) : route('admin.account.action.store') }}"
+        accept-charset="UTF-8">
+        @method($action->id ? 'put' : 'post')
+        @csrf
+        <div>
+            <input type="text" name="key" value="{{ $action->key }}" placeholder="action_key">
+            <label for="key">Key</label>
         </div>
-        <div class="form-group col-md-12">
-            {!! Form::label('code', 'Code') !!}
-            {!! Form::text('code', $action->code, ['class' => 'form-control', 'placeholder' => '12ab45']); !!}
+        <div>
+            <input type="text" name="code" value="{{ $action->code }}" placeholder="12ab45">
+            <label for="code">Code</label>
         </div>
-    </div>
-
-{!! Form::submit(($action->id) ? 'Update' : 'Create', ['class' => 'btn btn-success btn-centered']) !!}
-{!! Form::close() !!}
-
+        <div>
+            <input class="btn btn-success" type="submit" value="{{ $action->id ? 'Update' : 'Create' }}">
+        </div>
+    </form>
 @endsection

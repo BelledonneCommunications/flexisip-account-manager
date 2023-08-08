@@ -669,7 +669,6 @@ class ApiAccountTest extends TestCase
             ->assertStatus(422)
             ->assertJsonValidationErrors(['account_creation_token']);
 
-
         $this->json($this->method, $this->route . '/recover-by-phone', [
             'phone' => $phone,
             'account_creation_token' => 'wrong'

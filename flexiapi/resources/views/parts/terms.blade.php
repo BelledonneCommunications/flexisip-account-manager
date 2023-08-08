@@ -1,5 +1,5 @@
 <div class="large checkbox">
-    {!! Form::checkbox('terms', 'true', false, ['id' => 'terms']) !!}
+    <input id="terms" name="terms" type="checkbox" value="false">
     <label for="terms">
         I accept the
         <a href="{{ config('app.terms_of_use_url') }}">Terms and Conditions</a>

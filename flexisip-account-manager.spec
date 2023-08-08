@@ -23,7 +23,6 @@
     %define apache_conf_path /etc/httpd/conf.d
 %endif
 
-
 Name:           bc-flexisip-account-manager
 Version:        MAKE_FILE_VERSION_SEARCH
 Release:        %{build_number}%{?dist}

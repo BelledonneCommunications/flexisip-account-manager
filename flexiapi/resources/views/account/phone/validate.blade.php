@@ -4,7 +4,8 @@
     <section>
         <h1><i class="material-icons">account_circle</i> Validate your phone number</h1>
 
-        {!! Form::open(['route' => 'account.phone.update']) !!}
+        <form method="POST" action="{{ route('account.phone.update') }}" accept-charset="UTF-8">
+@csrf
 
         <div class="large">
             <p>A verification code was sent by SMS on <b>{{ $phoneChangeCode->phone }}</b>.</p>
@@ -23,7 +24,7 @@
             <input class="btn" type="submit" value="Validate">
         </div>
 
-        {!! Form::close() !!}
+        </form>
 
         <div class="large" style="margin-top: 2rem;">
             <p>

@@ -91,7 +91,6 @@ class ContactsListController extends Controller
         return redirect()->route('admin.contacts_lists.index');
     }
 
-
     public function delete(int $id)
     {
         return view('admin.contacts_list.delete', [

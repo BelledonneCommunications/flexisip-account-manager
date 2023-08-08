@@ -10,19 +10,21 @@
     <p>No email yet</p>
 @endif
 
-{!! Form::open(['route' => 'account.email.request_update']) !!}
-<div class="form-group">
-    {!! Form::email('email', old('email'), ['class' => 'form-control', 'placeholder' => 'bob@example.net', 'required']) !!}
-    {!! Form::label('email', 'New email') !!}
+<form method="POST" action="{{ route('account.email.request_update') }}" accept-charset="UTF-8">
+@csrf
+
+<div>
+   <input type="email" name="email" value="{{ old('email') }}" placeholder="bob@example.net" required>
+    <label for="email">New email</label>
 </div>
-<div class="form-group">
-    {!! Form::email('email_confirmation', old('email_confirm'), ['class' => 'form-control', 'placeholder' => 'bob@example.net', 'required']) !!}
-    {!! Form::label('email_confirmation', 'Email confirmation') !!}
+<div>
+   <input type="email" name="email_confirmation" value="{{ old('email_confirm') }}" placeholder="bob@example.net" required>
+    <label for="email_confirmation">Email confirmation</label>
 </div>
 
-{!! Form::hidden('email_current', $account->email) !!}
+<input name="email_current" type="hidden" value="{{ $account->email }}">
 
-{!! Form::submit('Change', ['class' => 'btn btn-primary btn-centered']) !!}
-{!! Form::close() !!}
+<input class="btn btn-primary" type="submit" value="Change">
+</form>
 
 @endsection

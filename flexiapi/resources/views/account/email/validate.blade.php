@@ -4,7 +4,8 @@
     <section>
         <h1 style="margin-bottom: 4rem;"><i class="material-icons">account_circle</i> Validate your email</h1>
 
-        {!! Form::open(['route' => 'account.email.update']) !!}
+        <form method="POST" action="{{ route('account.email.update') }}" accept-charset="UTF-8">
+@csrf
 
         <div class="large">
             <p>A verification code was sent by email on <b>{{ $emailChangeCode->email }}</b>.</p>
@@ -23,7 +24,7 @@
             <input class="btn" type="submit" value="Validate">
         </div>
 
-        {!! Form::close() !!}
+        </form>
 
         <div class="large" style="margin-top: 2rem;">
             <p>

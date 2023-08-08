@@ -8,37 +8,33 @@
             @parsedown(config('instance.intro_registration'))
         @endif
 
-        @if (Auth::check())
-            @include('parts.already_auth')
-        @else
-            <form style="margin-top: 3rem; margin-bottom: 3rem;" method="POST" action="{{ route('account.authenticate') }}" accept-charset="UTF-8">
-                @csrf
-                <div>
-                    @if (config('app.phone_authentication'))
-                        <input placeholder="username or phone number" required="" name="username" type="text"
-                            value="{{ old('username') }}">
-                        <label for="username">Username or phone number</label>
-                    @else
-                        <input placeholder="username" required="" name="username" type="text"
-                            value="{{ old('username') }}">
-                        <label for="username">Username</label>
-                    @endif
-                </div>
-                <div class="on_desktop"></div>
-                <div>
-                    <input placeholder="myPassword" required="" name="password" type="password" value="">
-                    <label for="password">Password</label>
-                </div>
-                <div>
-                    <input class="btn" type="submit" value="Login">
-                </div>
+        <form style="margin-top: 3rem; margin-bottom: 3rem;" method="POST" action="{{ route('account.authenticate') }}" accept-charset="UTF-8">
+            @csrf
+            <div>
+                @if (config('app.phone_authentication'))
+                    <input placeholder="username or phone number" required="" name="username" type="text"
+                        value="{{ old('username') }}">
+                    <label for="username">Username or phone number</label>
+                @else
+                    <input placeholder="username" required="" name="username" type="text"
+                        value="{{ old('username') }}">
+                    <label for="username">Username</label>
+                @endif
+            </div>
+            <div class="on_desktop"></div>
+            <div>
+                <input placeholder="myPassword" required="" name="password" type="password" value="">
+                <label for="password">Password</label>
+            </div>
+            <div>
+                <input class="btn" type="submit" value="Login">
+            </div>
 
-            </form>
+        </form>
 
-            <br />
+        <br />
 
-            @include('parts.recovery')
-        @endif
+        @include('parts.recovery')
 
         @if (publicRegistrationEnabled())
             <br />

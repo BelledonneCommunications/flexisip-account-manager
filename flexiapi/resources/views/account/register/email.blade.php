@@ -9,11 +9,12 @@
         </p>
         @include('parts.tabs.register')
 
-        {!! Form::open(['route' => 'account.store']) !!}
+        <form method="POST" action="{{ route('account.store') }}" accept-charset="UTF-8">
+@csrf
 
         <div>
-            {!! Form::text('username', old('username'), ['placeholder' => 'username', 'required']) !!}
-            {!! Form::label('username', 'Username') !!}
+            <input placeholder="username" name="username" type="text" value="{{ old('username') }}">
+            <label for="username">Username</label>
             @include('parts.errors', ['name' => 'username'])
         </div>
 
@@ -22,13 +23,13 @@
         </div>
 
         <div>
-            {!! Form::email('email', old('email'), ['placeholder' => 'bob@example.net', 'required']) !!}
-            {!! Form::label('email', 'Email') !!}
+           <input type="email" name="email" value="{{ old('email') }}" placeholder="bob@example.net" required>
+            <label for="email">Email</label>
             @include('parts.errors', ['name' => 'email'])
         </div>
         <div>
-            {!! Form::email('email_confirmation', old('email_confirm'), ['placeholder' => 'bob@example.net', 'required']) !!}
-            {!! Form::label('email_confirmation', 'Confirm email') !!}
+           <input type="email" name="email_confirmation" value="{{ old('email_confirm') }}" placeholder="bob@example.net" required>
+            <label for="email_confirmation">Confirm email</label>
             @include('parts.errors', ['name' => 'email_confirmation'])
         </div>
 
@@ -45,18 +46,18 @@
 
         @if (!empty(config('app.newsletter_registration_address')))
             <div class="large checkbox">
-                {!! Form::checkbox('newsletter', 'true', false, ['class' => 'form-check-input', 'id' => 'newsletter']) !!}
-                <label class="form-check-label" for="newsletter">I would like to subscribe to the newsletter</a></label>
+                <input id="newsletter" name="newsletter" type="checkbox" value="true">
+                <label for="newsletter">I would like to subscribe to the newsletter</a></label>
             </div>
         @endif
 
         @include('parts.terms')
 
         <div class="large">
-            {!! Form::submit('Register', ['class' => 'btn oppose']) !!}
+            <input class="btn oppose" type="submit" value="Register">
         </div>
 
-        {!! Form::close() !!}
+        </form>
 
     </section>
     <section class="on_desktop">

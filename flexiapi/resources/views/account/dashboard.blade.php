@@ -67,9 +67,11 @@
             <img src="{{ route('auth_tokens.qrcode', ['token' => $authToken->token]) }}">
             @endforeach
 
-            {!! Form::open(['route' => 'account.auth_tokens.create']) !!}
+            <form method="POST" action="{{ route('account.auth_tokens.create') }}" accept-charset="UTF-8">
+@csrf
+
                 <button type="submit" class="btn btn-primary">Generate</button>
-            {!! Form::close() !!}-->
+            </form>-->
 
     </div>
 
@@ -79,16 +81,18 @@
         <p>You can generate an API key and use it to request the different API endpoints, <a href="{{ route('api') }}">check
                 the related API documentation</a> to know how to use that key.</p>
 
-        {!! Form::open(['route' => 'account.api_key.generate']) !!}
+        <form method="POST" action="{{ route('account.api_key.generate') }}" accept-charset="UTF-8">
+@csrf
+
         <div>
-            <input readonly class="form-control" placeholder="No key yet, press Generate"
+            <input readonly placeholder="No key yet, press Generate"
                 @if ($account->apiKey) value="{{ $account->apiKey->key }}" @endif>
             <label>Key</label>
         </div>
         <div>
             <button type="submit" class="btn btn-primary">Generate</button>
         </div>
-        {!! Form::close() !!}
+        </form>
     </div>
 
     @include('parts.account_variables', ['account' => $account])

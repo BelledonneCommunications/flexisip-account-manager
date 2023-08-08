@@ -9,11 +9,12 @@
         </p>
         @include('parts.tabs.register')
 
-        {!! Form::open(['route' => 'account.store']) !!}
+        <form method="POST" action="{{ route('account.store') }}" accept-charset="UTF-8">
+@csrf
 
         <div>
-            {!! Form::text('username', old('username'), ['placeholder' => 'username', 'required']) !!}
-            {!! Form::label('username', 'Username') !!}
+            <input placeholder="username" name="username" type="text" value="{{ old('username') }}">
+            <label for="username">Username</label>
             @include('parts.errors', ['name' => 'username'])
         </div>
         <div>
@@ -21,8 +22,8 @@
         </div>
 
         <div>
-            {!! Form::text('phone', old('phone'), ['placeholder' => '+123456789', 'required']) !!}
-            {!! Form::label('phone', 'Phone number') !!}
+            <input placeholder="+123456789" name="phone" type="text" value="{{ old('phone') }}">
+            <label for="phone">Phone number</label>
             @include('parts.errors', ['name' => 'phone'])
         </div>
         <div></div>
@@ -42,10 +43,10 @@
         @include('parts.terms')
 
         <div class="large">
-            {!! Form::submit('Register', ['class' => 'btn oppose']) !!}
+            <input class="btn oppose" type="submit" value="Register">
         </div>
 
-        {!! Form::close() !!}
+        </form>
 
     </section>
     <section class="on_desktop">

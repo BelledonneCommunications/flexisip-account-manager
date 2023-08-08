@@ -58,7 +58,6 @@ A `from` (consisting of the user SIP address, prefixed with `sip:`) header is re
 > from: sip:foobar@sip.example.org
 > …
 
-
 < HTTP 401
 < content-type: application/json
 < www-authenticate: Digest realm=test,qop=auth,algorithm=MD5,nonce="{nonce}",opaque="{opaque}"
@@ -86,7 +85,6 @@ An `account_creation_request_token` is a unique token that can be validated and 
 <span class="badge badge-success">Public</span>
 
 Create and return an `account_creation_request_token` that should then be validated to be used.
-
 
 ## Account Creation Tokens
 
@@ -139,7 +137,6 @@ Return `404` if the token is non existing or invalid.
 
 @if(config('app.dangerous_endpoints'))**Enabled on this instance**@else**Not enabled on this instance**@endif
 
-
 <span class="badge badge-success">Public</span>
 <span class="badge badge-warning">Unsecure endpoint</span>
 Create an account.
@@ -177,7 +174,6 @@ Return `404` if the account doesn't exists.
 ### `GET /accounts/{phone}/info-by-phone`
 @if(config('app.dangerous_endpoints'))**Enabled on this instance**@else**Not enabled on this instance**@endif
 
-
 <span class="badge badge-success">Public</span>
 <span class="badge badge-warning">Unsecure endpoint</span>
 Retrieve public information about the account.
@@ -187,7 +183,6 @@ Return `phone: true` if the returned account has a phone number.
 
 ### `POST /accounts/recover-by-phone`
 @if(config('app.dangerous_endpoints'))**Enabled on this instance**@else**Not enabled on this instance**@endif
-
 
 <span class="badge badge-success">Public</span>
 <span class="badge badge-warning">Unsecure endpoint</span>
@@ -201,7 +196,6 @@ JSON parameters:
 
 ### `GET /accounts/{sip}/recover/{recover_key}`
 @if(config('app.dangerous_endpoints'))**Enabled on this instance**@else**Not enabled on this instance**@endif
-
 
 <span class="badge badge-success">Public</span>
 <span class="badge badge-warning">Unsecure endpoint</span>

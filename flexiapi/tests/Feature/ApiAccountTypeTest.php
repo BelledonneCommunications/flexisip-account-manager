@@ -55,7 +55,6 @@ class ApiAccountTypeTest extends TestCase
             ->assertJsonValidationErrorFor('key')
             ->assertStatus(422);
 
-
         // Missing key
         $this->keyAuthenticated($admin->account)
             ->json($this->method, $this->route, [])

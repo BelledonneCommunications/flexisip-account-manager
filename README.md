@@ -77,7 +77,6 @@ On nginx use `fastcgi_param` to pass the parameter directly to PHP.
         fastcgi_param  APP_NAME     "VirtualHost Two";
     }
 
-
 > **Warning** Do not create a cache of your configuration (using `artisan config:cache`) if you have a multi-environnement setup.
 > The cache is always having the priority on the variables set in the configuration files.
 

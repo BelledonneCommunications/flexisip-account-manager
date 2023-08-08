@@ -42,7 +42,7 @@
                 <td>{{ $device->user_agent }}</td>
                 <td>
                     <a type="button"
-                       class="btn btn-danger"
+                       class="btn"
                        href="{{ route('admin.account.device.delete', [$account, $device->uuid]) }}">
                         Delete
                     </a>
@@ -51,6 +51,5 @@
         @endforeach
     </tbody>
 </table>
-
 
 @endsection

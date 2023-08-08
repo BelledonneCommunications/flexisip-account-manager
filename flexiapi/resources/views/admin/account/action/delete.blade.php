@@ -1,31 +1,35 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-<li class="breadcrumb-item">
-    <a href="{{ route('admin.account.index') }}">Accounts</a>
-</li>
-<li class="breadcrumb-item">
-    <a href="{{ route('admin.account.edit', $action->account) }}">{{ $action->account->identifier }}</a>
-</li>
-<li class="breadcrumb-item active">
-    Actions
-</li>
-<li class="breadcrumb-item active" aria-current="page">Delete</li>
+    <li class="breadcrumb-item">
+        <a href="{{ route('admin.account.index') }}">Accounts</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{{ route('admin.account.edit', $action->account) }}">{{ $action->account->identifier }}</a>
+    </li>
+    <li class="breadcrumb-item active">
+        Actions
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Delete</li>
 @endsection
 
 @section('content')
+    <h2>Delete an account action</h2>
 
-<h2>Delete an account action</h2>
+    <form method="POST" action="{{ route('admin.account.action.destroy', [$action->account, $action]) }}"
+        accept-charset="UTF-8">
+        @csrf
+        @method('delete')
 
-{!! Form::open(['route' => ['admin.account.action.destroy', $action->account, $action], 'method' => 'delete']) !!}
+        <div>
+            <p>You are going to permanently delete the following account action. Please confirm your action.</p>
+            <p><b>{{ $action->key }}</b></p>
+        </div>
+        <input name="account_id" type="hidden" value="{{ $action->account->id }}">
+        <input name="action_id" type="hidden" value="{{ $action->id }}">
 
-<p>You are going to permanently delete the following account action. Please confirm your action.</p>
-<p><b>{{ $action->key }}</b></p>
-
-{!! Form::hidden('account_id', $action->account->id) !!}
-{!! Form::hidden('action_id', $action->id) !!}
-
-{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-centered']) !!}
-{!! Form::close() !!}
-
+        <div>
+            <input class="btn" type="submit" value="Delete">
+        </div>
+    </form>
 @endsection

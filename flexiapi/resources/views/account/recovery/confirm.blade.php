@@ -4,17 +4,19 @@
 
 <section>
     <h1><i class="material-icons">account_circle</i> Account recovery</h1>
-    {!! Form::open(['route' => 'account.recovery.confirm']) !!}
+    <form method="POST" action="{{ route('account.recovery.confirm') }}" accept-charset="UTF-8">
+@csrf
+
         <p class="large">Enter the pin code you received to recover your account.</p>
         <div class="large">
-            {!! Form::text('code', old('code'), ['placeholder' => '1234', 'required']) !!}
-            {!! Form::label('code', 'Code') !!}
-            {!! Form::hidden('account_id', $account_id) !!}
+            <input placeholder="1234" name="code" type="text" value="{{ old('code') }}">
+            <label for="code">Code</label>
+            <input name="account_id" type="hidden" value="{{ $account_id }}">
         </div>
         <div class="large">
-            {!! Form::submit('Login', ['class' => 'btn oppose']) !!}
+            <input class="btn oppose" type="submit" value="Login">
         </div>
-    {!! Form::close() !!}
+    </form>
 </section>
 <section class="on_desktop">
     <img src="/img/lock.svg">

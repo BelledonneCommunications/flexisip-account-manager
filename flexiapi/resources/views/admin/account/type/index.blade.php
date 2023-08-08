@@ -32,8 +32,8 @@
                     {{ $type->key }}
                 </td>
                 <td>
-                    <a class="btn btn-sm mr-2" href="{{ route('admin.account.type.edit', [$type->id]) }}">Edit</a>
-                    <a class="btn btn-sm mr-2" href="{{ route('admin.account.type.delete', [$type->id]) }}">Delete</a>
+                    <a class="btn" href="{{ route('admin.account.type.edit', [$type->id]) }}">Edit</a>
+                    <a class="btn" href="{{ route('admin.account.type.delete', [$type->id]) }}">Delete</a>
                 </td>
             </tr>
         @endforeach

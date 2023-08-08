@@ -1,22 +1,23 @@
 @extends('layouts.main')
 
 @section('content')
+    <h2>Delete my account</h2>
 
-<h2>Delete my account</h2>
+    <form method="POST" action="{{ route('account.destroy') }}" accept-charset="UTF-8">
+@csrf
 
-{!! Form::open(['route' => 'account.destroy', 'method' => 'delete']) !!}
+    @method('delete')
 
-<p>You are going to permanently delete your account.</p>
-<p>Please enter your complete username to confirm: <b>{{ $account->identifier }}</b>.</p>
+    <p>You are going to permanently delete your account.</p>
+    <p>Please enter your complete username to confirm: <b>{{ $account->identifier }}</b>.</p>
 
-<div class="form-group">
-    {!! Form::label('identifier', 'Username') !!}
-    {!! Form::text('identifier', old('identifier'), ['class' => 'form-control', 'placeholder' => 'bob@example.net', 'required']) !!}
-</div>
+    <div>
+        <label for="identifier">Username</label>
+        <input placeholder="bob@example.net" name="identifier" type="text" value="{{ old('identifier') }}">
+    </div>
 
-{!! Form::hidden('identifier_confirm', $account->identifier) !!}
+    <input name="identifier_confirm" type="hidden" value="{{ $account->identifier }}">
 
-{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-centered']) !!}
-{!! Form::close() !!}
-
+    <input class="btn" type="submit" value="Delete">
+    </form>
 @endsection
