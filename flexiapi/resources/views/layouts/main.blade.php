@@ -34,20 +34,15 @@
                 @endif
 
                 <a class="oppose" href="{{ route('about') }}">
-                    <i class="material-icons">info</i><span class="on_desktop">About</span>
+                    <i class="material-icons-outlined">info</i><span class="on_desktop">About</span>
                 </a>
                 @if (auth()->user())
                     <a class="oppose" href="{{ route('account.dashboard') }}">
-                        <i class="material-icons">account_circle</i><span
+                        <i class="material-icons-outlined">account_circle</i><span
                             class="on_desktop">{{ auth()->user()->identifier }}</span>
                     </a>
                     <a class="oppose" href="{{ route('account.logout') }}">
-                        <i class="material-icons">logout</i>
-                    </a>
-                @elseif (request()->route() &&
-                        request()->route()->getName() != 'account.login')
-                    <a class="oppose" href="{{ route('account.login') }}">
-                        <i class="material-icons">info</i><span class="on_desktop">Login</span>
+                        <i class="material-icons-outlined">logout</i>
                     </a>
                 @endif
             </nav>

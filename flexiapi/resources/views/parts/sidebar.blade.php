@@ -13,7 +13,7 @@
 
 @foreach ($items as $route => $value)
     <a @if (str_starts_with(url()->current(), route($route)))class="current"@endif href="{{ route($route) }}">
-        <i class="material-icons">{{ $value['icon'] }}</i>
+        <i class="material-icons-outlined">{{ $value['icon'] }}</i>
         {{ $value['title'] }}
     </a>
 @endforeach

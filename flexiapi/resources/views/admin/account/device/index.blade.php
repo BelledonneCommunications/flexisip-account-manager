@@ -13,7 +13,7 @@
 @section('content')
 
 <header>
-    <h1><i class="material-icons">people</i> {{ $account->identifier }}</h1>
+    <h1><i class="material-icons-outlined">people</i> {{ $account->identifier }}</h1>
     <a href="{{ route('admin.account.edit', $account->id) }}" class="btn btn-secondary oppose">Cancel</a>
 </header>
 

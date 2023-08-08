@@ -1,5 +1,5 @@
 <div class="large checkbox">
-    <input id="terms" name="terms" type="checkbox" value="false">
+    <input id="terms" name="terms" type="checkbox">
     <label for="terms">
         I accept the
         <a href="{{ config('app.terms_of_use_url') }}">Terms and Conditions</a>

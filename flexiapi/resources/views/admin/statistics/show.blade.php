@@ -6,7 +6,7 @@
 
 @section('content')
 <header>
-    <h1><i class="material-icons">analytics</i> Statistics</h1>
+    <h1><i class="material-icons-outlined">analytics</i> Statistics</h1>
 </header>
 
     @include('parts.tabs', [
@@ -48,7 +48,7 @@
                 <a class="btn btn-secondary" href="{{ route('admin.statistics.show') }}">Reset</a>
                 <a class="btn btn-tertiary"
                     href="{{ route('admin.statistics.show', ['by' => $by, 'type' => $type, 'export' => true] + $request->only(['from', 'to'])) }}">
-                    <i class="material-icons">download</i> Export
+                    <i class="material-icons-outlined">download</i> Export
                 </a>
             </div>
         </form>

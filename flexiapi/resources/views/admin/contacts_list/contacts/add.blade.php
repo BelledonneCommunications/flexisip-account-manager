@@ -12,7 +12,7 @@
 
 @section('content')
     <header>
-        <h1><i class="material-icons">account_box</i> {{ $contacts_list->title }}</h1>
+        <h1><i class="material-icons-outlined">account_box</i> {{ $contacts_list->title }}</h1>
 
         <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}" class="btn btn-secondary oppose">Cancel</a>
 
@@ -44,7 +44,7 @@
                     <span class="list_toggle" data-list-id="a{{ $contacts_list->id }}"></span> selected
                 </p>
                 <a class="btn" onclick="Utils.clearStorageList('a{{ $contacts_list->id }}'); document.querySelector('form[name=contacts_lists_contacts_store]').submit()">
-                    <i class="material-icons">add_circle</i>
+                    <i class="material-icons-outlined">add_circle</i>
                     Add
                 </a>
             </div>
@@ -62,9 +62,9 @@
                     <a href="{{ route('admin.contacts_lists.contacts.add', $params) }}">
                         Updated
                         @if ($params['updated_at_order'] == 'desc')
-                            <i class="material-icons">expand_more</i>
+                            <i class="material-icons-outlined">expand_more</i>
                         @else
-                            <i class="material-icons">expand_less</i>
+                            <i class="material-icons-outlined">expand_less</i>
                         @endif
                     </a>
                 </th>

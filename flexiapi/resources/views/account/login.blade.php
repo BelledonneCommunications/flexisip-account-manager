@@ -2,7 +2,7 @@
 
 @section('content')
     <section>
-        <h1 style="margin-bottom: 3rem;"><i class="material-icons">waving_hand</i> Welcome on {{ config('app.name') }}</h1>
+        <h1 style="margin-bottom: 3rem;"><i class="material-icons-outlined">waving_hand</i> Welcome on {{ config('app.name') }}</h1>
 
         @if (config('instance.intro_registration'))
             @parsedown(config('instance.intro_registration'))

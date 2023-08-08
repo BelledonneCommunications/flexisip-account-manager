@@ -2,7 +2,7 @@
 
 @section('content')
     <section>
-        <h1><i class="material-icons">account_circle</i> Validate your phone number</h1>
+        <h1><i class="material-icons-outlined">account_circle</i> Validate your phone number</h1>
 
         <form method="POST" action="{{ route('account.phone.update') }}" accept-charset="UTF-8">
 @csrf

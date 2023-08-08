@@ -9,9 +9,9 @@
 @section('content')
 
 <header>
-    <h1><i class="material-icons">account_box</i> Contacts Lists</h1>
+    <h1><i class="material-icons-outlined">account_box</i> Contacts Lists</h1>
     <a class="btn oppose" href="{{ route('admin.contacts_lists.create') }}">
-        <i class="material-icons">add_circle</i>
+        <i class="material-icons-outlined">add_circle</i>
         New Contacts List
     </a>
 </header>

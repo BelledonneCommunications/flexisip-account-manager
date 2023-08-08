@@ -2,7 +2,7 @@
 
 @section('content')
     <section>
-        <h1><i class="material-icons">account_circle</i> Register</h1>
+        <h1><i class="material-icons-outlined">account_circle</i> Register</h1>
         <p style="margin-bottom: 2rem;">
             You already have an account?
             <a class="btn btn-secondary" href="{{ route('account.login') }}">Login</a>
@@ -13,7 +13,7 @@
 @csrf
 
         <div>
-            <input placeholder="username" name="username" type="text" value="{{ old('username') }}">
+            <input placeholder="username" name="username" type="text" value="{{ old('username') }}" required>
             <label for="username">Username</label>
             @include('parts.errors', ['name' => 'username'])
         </div>
