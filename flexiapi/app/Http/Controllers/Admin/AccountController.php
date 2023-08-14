@@ -97,6 +97,9 @@ class AccountController extends Controller
         $account->phone = $request->get('phone');
         $account->fillPassword($request);
 
+        $account->refresh();
+        $account->setRole($request->get('role'));
+
         Log::channel('events')->info('Web Admin: Account created', ['id' => $account->identifier]);
 
         return redirect()->route('admin.account.edit', $account->id);

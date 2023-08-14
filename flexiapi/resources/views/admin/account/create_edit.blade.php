@@ -19,7 +19,6 @@
             <input form="create_edit" class="btn" type="submit" value="Update">
         </header>
         <p title="{{ $account->updated_at }}">Updated on {{ $account->updated_at->format('d/m/Y') }}
-
             @include('parts.tabs', [
                 'items' => [
                     route('admin.account.edit', $account->id, ['type' => 'messages']) => 'Information',
@@ -42,7 +41,7 @@
         <h2>Connexion</h2>
         <div>
             <input placeholder="Username" required="required" name="username" type="text"
-                value="{{ $account->username }}" @if ($account->id) readonly @endif>
+                value="@if ($account->id){{ $account->username }}@else{{ old('username') }}@endif" @if ($account->id) readonly @endif>
             <label for="username">Username</label>
             @include('parts.errors', ['name' => 'username'])
         </div>
@@ -54,32 +53,32 @@
         </div>
 
         <div>
-            <input placeholder="John Doe" name="display_name" type="text" value="{{ $account->display_name }}">
+            <input placeholder="John Doe" name="display_name" type="text" value="@if ($account->id){{ $account->display_name }}@else{{ old('display_name') }}@endif">
             <label for="display_name">Display Name</label>
             @include('parts.errors', ['name' => 'display_name'])
         </div>
         <div></div>
 
         <div>
-            <input placeholder="Password" name="password" type="password" value="" autocomplete="new-password">
+            <input placeholder="Password" name="password" type="password" value="" autocomplete="new-password" @if (!$account->id)required @endif>
             <label for="password">{{ $account->id ? 'Password (fill to change)' : 'Password' }}</label>
             @include('parts.errors', ['name' => 'password'])
         </div>
 
         <div>
-            <input placeholder="Password" name="password_confirmation" type="password" value="" autocomplete="off">
+            <input placeholder="Password" name="password_confirmation" type="password" value="" autocomplete="off" @if (!$account->id)required @endif>
             <label for="password_confirmation">Confirm password</label>
             @include('parts.errors', ['name' => 'password_confirmation'])
         </div>
 
         <div>
-            <input placeholder="Email" name="email" type="email" value="{{ $account->email }}">
+            <input placeholder="Email" name="email" type="email" value="@if ($account->id){{ $account->email }}@else{{ old('email') }}@endif">
             <label for="email">Email</label>
             @include('parts.errors', ['name' => 'email'])
         </div>
 
         <div>
-            <input placeholder="+12123123" name="phone" type="text" value="{{ $account->phone }}">
+            <input placeholder="+12123123" name="phone" type="text" value="@if ($account->id){{ $account->phone }}@else{{ old('phone') }}@endif">
             <label for="phone">Phone</label>
             @include('parts.errors', ['name' => 'phone'])
         </div>
@@ -242,10 +241,12 @@
                     <tr>
                         <th scope="row">{{ $type->key }}</th>
                         <td>
-                            <form method="POST" action="{{ route('admin.account.account_type.destroy', [$account, $type->id]) }}" accept-charset="UTF-8">
-@csrf
-@method('delete')
-                            <input class="btn" type="submit" value="Delete">
+                            <form method="POST"
+                                action="{{ route('admin.account.account_type.destroy', [$account, $type->id]) }}"
+                                accept-charset="UTF-8">
+                                @csrf
+                                @method('delete')
+                                <input class="btn" type="submit" value="Delete">
                             </form>
                         </td>
                     </tr>

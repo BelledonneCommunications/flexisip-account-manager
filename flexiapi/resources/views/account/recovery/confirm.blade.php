@@ -9,8 +9,12 @@
 
         <p class="large">Enter the pin code you received to recover your account.</p>
         <div class="large">
-            <input placeholder="1234" name="code" type="text" value="{{ old('code') }}">
-            <label for="code">Code</label>
+            <input oninput="digitFilled(this)" onfocus="this.value = ''" autofocus class="digit" name="number_1" type="number" min="0" max="9">
+            <input oninput="digitFilled(this)" onfocus="this.value = ''" class="digit" name="number_2" type="number" min="0" max="9">
+            <input oninput="digitFilled(this)" onfocus="this.value = ''" class="digit" name="number_3" type="number" min="0" max="9">
+            <input oninput="digitFilled(this)" onfocus="this.value = ''" class="digit" name="number_4" type="number" min="0" max="9">
+            @include('parts.errors', ['name' => 'code'])
+
             <input name="account_id" type="hidden" value="{{ $account_id }}">
         </div>
         <div class="large">

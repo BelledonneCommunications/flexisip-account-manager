@@ -63,7 +63,7 @@ class AuthenticateController extends Controller
         }
 
         if (!$account) {
-            return redirect()->back()->withErrors(['authentication' => 'The account doesn\'t exists']);
+            return redirect()->back()->withErrors(['authentication' => 'Wrong username or password']);
         }
 
         // Try out the passwords

@@ -45,9 +45,7 @@ class PasswordController extends Controller
         $account->activated = true;
         $account->save();
 
-        $algorithm = $request->has('password_sha256') ? 'SHA-256' : 'MD5';
-
-        $account->updatePassword($request->get('password'), $algorithm);
+        $account->updatePassword($request->get('password'), 'SHA-256');
 
         if ($account->passwords()->count() > 0) {
             Log::channel('events')->info('Web: Password changed', ['id' => $account->identifier]);

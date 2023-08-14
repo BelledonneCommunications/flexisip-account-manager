@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\AccountContactController;
 use App\Http\Controllers\Admin\AccountDeviceController;
 use App\Http\Controllers\Admin\AccountTypeController;
 use App\Http\Controllers\Admin\AccountController as AdminAccountController;
+use App\Http\Controllers\Admin\AccountImportController;
 use App\Http\Controllers\Admin\ContactsListController;
 use App\Http\Controllers\Admin\ContactsListContactController;
 use App\Http\Controllers\Admin\StatisticsController;
@@ -151,6 +152,12 @@ if (config('app.web_panel')) {
 
                 Route::get('{account_id}/contacts_lists/detach', 'contactsListRemove')->name('contacts_lists.detach');
                 Route::post('{account_id}/contacts_lists', 'contactsListAdd')->name('contacts_lists.attach');
+            });
+
+            Route::name('import.')->prefix('import')->controller(AccountImportController::class)->group(function () {
+                Route::get('/', 'create')->name('create');
+                Route::post('/', 'store')->name('store');
+                Route::post('handle', 'handle')->name('handle');
             });
 
             Route::name('type.')->prefix('types')->controller(AccountTypeController::class)->group(function () {

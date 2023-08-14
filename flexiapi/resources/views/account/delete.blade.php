@@ -1,23 +1,36 @@
 @extends('layouts.main')
 
+@section('breadcrumb')
+    <li class="breadcrumb-item active" aria-current="page">Delete</li>
+@endsection
+
 @section('content')
-    <h2>Delete my account</h2>
+    <header>
+        <h1><i class="material-icons-outlined">delete</i> Delete my account</h1>
 
-    <form method="POST" action="{{ route('account.destroy') }}" accept-charset="UTF-8">
-@csrf
+        <a href="{{ route('account.dashboard') }}" class="btn btn-secondary oppose">Cancel</a>
+        <input form="delete" class="btn" type="submit" value="Delete">
+    </header>
 
-    @method('delete')
+    <form id="delete" method="POST" action="{{ route('account.destroy') }}" accept-charset="UTF-8">
+        @csrf
+        @method('delete')
 
-    <p>You are going to permanently delete your account.</p>
-    <p>Please enter your complete username to confirm: <b>{{ $account->identifier }}</b>.</p>
+        <div class="large">
+            <p>You are going to permanently delete your account.</p>
+            <p>Please enter your complete username to confirm: <b>{{ $account->identifier }}</b>.</p>
+        </div>
 
-    <div>
-        <label for="identifier">Username</label>
-        <input placeholder="bob@example.net" name="identifier" type="text" value="{{ old('identifier') }}">
-    </div>
+        <div>
+            <input placeholder="bob@example.net" name="identifier" type="text" value="{{ old('identifier') }}">
+            <label for="identifier">Username</label>
+        </div>
 
-    <input name="identifier_confirm" type="hidden" value="{{ $account->identifier }}">
+        <div class="on_desktop"></div>
 
-    <input class="btn" type="submit" value="Delete">
+        <input name="identifier_confirm" type="hidden" value="{{ $account->identifier }}">
+
+        <div>
+        </div>
     </form>
 @endsection

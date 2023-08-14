@@ -65,16 +65,18 @@ p .btn {
 
 .btn.btn-tertiary {
     background-color: var(--main-1);
-    border-color: transparent;
+    border-color: var(--main-1);
     color: var(--main-5);
 }
 
 .btn.btn-tertiary:hover {
     background-color: var(--main-2);
+    border-color: var(--main-2);
 }
 
 .btn.btn-tertiary:active {
     background-color: var(--main-3);
+    border-color: var(--main-3);
 }
 
 form {
@@ -129,7 +131,7 @@ form h2 {
     grid-column: 1/-1;
 }
 
-form .disabled {
+form .disabled:not(a) {
     opacity: 0.5;
     pointer-events: none;
     filter: blur(0.25rem);
@@ -205,7 +207,7 @@ form div.checkbox {
 
 form div.search:after,
 form div.select:after {
-    font-family: 'Material Icons';
+    font-family: 'Material Icons Outlined';
     content: "\e5cf";
     display: block;
     font-size: 2.5rem;

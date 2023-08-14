@@ -9,7 +9,11 @@
 @section('content')
     <header>
         <h1><i class="material-icons-outlined">people</i> Accounts</h1>
-        <a class="btn oppose" href="{{ route('admin.account.create') }}">
+        <a class="btn btn-secondary oppose" href="{{ route('admin.account.import.create') }}">
+            <i class="material-icons-outlined">publish</i>
+            Import Accounts
+        </a>
+        <a class="btn" href="{{ route('admin.account.create') }}">
             <i class="material-icons-outlined">add_circle</i>
             New Account
         </a>
@@ -75,7 +79,7 @@
         <tbody>
             @if ($accounts->isEmpty())
                 <tr class="empty">
-                    <td colspan="4">No Contacts Lists</td>
+                    <td colspan="4">No Accounts</td>
                 </tr>
             @endif
             @foreach ($accounts as $account)

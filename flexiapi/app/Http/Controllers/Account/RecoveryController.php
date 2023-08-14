@@ -36,6 +36,8 @@ class RecoveryController extends Controller
             'g-recaptcha-response'  => captchaConfigured() ? 'required|captcha' : '',
         ];
 
+        $account = null;
+
         if ($request->get('email')) {
             if (config('app.account_email_unique') == false) {
                 $rules['username'] = 'required';
@@ -94,12 +96,18 @@ class RecoveryController extends Controller
     {
         $request->validate([
             'account_id' => 'required',
-            'code' => 'required|digits:4'
+            'number_1' => 'required|digits:1',
+            'number_2' => 'required|digits:1',
+            'number_3' => 'required|digits:1',
+            'number_4' => 'required|digits:1'
         ]);
+
+        $code = $request->get('number_1') . $request->get('number_2') . $request->get('number_3') . $request->get('number_4');
+
 
         $account = Account::where('id', Crypt::decryptString($request->get('account_id')))->firstOrFail();
 
-        if ($account->recovery_code != $request->get('code')) {
+        if ($account->recovery_code != $code) {
             return redirect()->back()->withErrors([
                 'code' => 'Wrong code'
             ]);

@@ -106,6 +106,7 @@ body.show_menu {
 p,
 a,
 ul li,
+ol li,
 pre {
     font-size: 1.5rem;
     color: var(--second-7);
@@ -124,9 +125,14 @@ pre code {
     font-size: 1.3rem;
 }
 
-ul li {
+ul li,
+ol li {
     margin-left: 2rem;
     list-style-type: disc;
+}
+
+ol li {
+    list-style-type: decimal;
 }
 
 ul li ul li {
@@ -279,20 +285,12 @@ header nav a#menu {
 
 header nav a#menu:after {
     display: block;
-    font-family: 'Material Icons';
+    font-family: 'Material Icons Outlined';
     content: "\e5d2";
     font-size: 3rem;
 }
 
-body.show_menu header nav a#menu:after {
-    content: "\e5cd";
-}
-
-header nav a#logo span {
-    margin-left: 1.5rem;
-}
-
-@media screen and (max-width: 800px) {
+body.show_menu header nav a#menu:after {font-family: 'Material Icons'
     header nav a#logo {
         position: absolute;
         left: calc(50% - 1.5rem);
@@ -314,6 +312,7 @@ header nav a#logo::before {
     display: block;
     border-radius: 1rem;
     box-shadow: 0 0 2rem rgba(0, 0, 0, 0.2);
+    margin-right: 2rem;
 }
 
 header nav a.oppose {
@@ -619,7 +618,7 @@ table tr.empty td {
 
 table tr.empty td:before {
     content: '\e5c9';
-    font-family: 'Material Icons';
+    font-family: 'Material Icons Outlined';
     font-size: 8rem;
     color: var(--second-4);
     display: block;
@@ -753,6 +752,7 @@ select.list_toggle {
     display: inline-block;
     font-size: 1.5rem;
     line-height: 2rem;
+    margin-left: 0;
 }
 
 .breadcrumb li a {
@@ -769,4 +769,54 @@ select.list_toggle {
     font-size: 1rem;
     line-height: 2rem;
     display: inline-block;
+}
+
+/* Steps */
+
+ol.steps {
+    counter-reset: css-counter 0;
+    padding-top: 6.5rem;
+}
+
+ol.steps li {
+    counter-increment: css-counter 1;
+    display: inline-block;
+    position: relative;
+    font-weight: 600;
+    color: var(--grey-5);
+}
+
+ol.steps li + li {
+    margin-left: 9rem;
+}
+
+ol.steps li + li:after {
+    display: block;
+    border-top: 1px solid var(--grey-3);
+    content: "";
+    width: 7rem;
+    position: absolute;
+    top: -3rem;
+    left: -8rem;
+}
+
+ol.steps li:before {
+    content: counter(css-counter);
+    display: block;
+    font-size: 2rem;
+    font-weight: 300;
+    border-radius: 3rem;
+    line-height: 5rem;
+    width: 5rem;
+    text-align: center;
+    border: 1px solid var(--grey-3);
+    position: absolute;
+    left: calc(50% - 2.5rem - 1px);
+    bottom: 3rem;
+}
+
+ol.steps li.active:before {
+    background-color: var(--main-5);
+    border-color: var(--main-5);
+    color: white;
 }

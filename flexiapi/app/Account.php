@@ -41,6 +41,7 @@ class Account extends Authenticatable
     protected $casts = [
         'activated' => 'boolean',
     ];
+    protected $fillable = ['username', 'domain', 'email'];
 
     public static $dtmfProtocols = ['sipinfo' => 'SIPInfo', 'rfc2833' => 'RFC2833', 'sipmessage' => 'SIP Message'];
 

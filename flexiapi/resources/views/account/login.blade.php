@@ -20,6 +20,7 @@
                         value="{{ old('username') }}">
                     <label for="username">Username</label>
                 @endif
+                @include('parts.errors', ['name' => 'authentication'])
             </div>
             <div class="on_desktop"></div>
             <div>

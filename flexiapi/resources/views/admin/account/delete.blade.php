@@ -8,24 +8,23 @@
 @endsection
 
 @section('content')
-    <h2>Delete an account</h2>
+    <header>
+        <h1><i class="material-icons-outlined">delete</i> Delete an account</h1>
 
-    <form method="POST" action="{{ route('admin.account.destroy') }}" accept-charset="UTF-8">
-@csrf
+        <a href="{{ route('admin.account.edit', $account->id) }}" class="btn btn-secondary oppose">Cancel</a>
+        <input form="delete" class="btn" type="submit" value="Delete">
+    </header>
+    <form id="delete" method="POST" action="{{ route('admin.account.destroy') }}" accept-charset="UTF-8">
+        @csrf
+        @method('delete')
 
-    @method('delete')
-
-    <div class="large">
-        <p>You are going to permanently delete the following account. Please confirm your action.<br />
-            <b>{{ $account->identifier }}</b>
-        </p>
-
-        <input name="account_id" type="hidden" value="{{ $account->id }}">
-    </div>
-    <div>
-        <input class="btn" type="submit" value="Delete">
-
-    </div>
-
+        <div class="large">
+            <p>You are going to permanently delete the following account. Please confirm your action.<br />
+                <b>{{ $account->identifier }}</b>
+            </p>
+            <input name="account_id" type="hidden" value="{{ $account->id }}">
+        </div>
+        <div>
+        </div>
     </form>
 @endsection
