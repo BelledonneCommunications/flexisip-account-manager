@@ -1,0 +1,4 @@
+Username,Password,Role,Status,Phone,Email
+john,number9,user,active,+12341234,john@lennon.com
+paul,a_day_in_the_life,admin,active,,paul@apple.com
+ringo,allUneedIsL3ve,user,unactove,+123456,ringo@star.co.uk

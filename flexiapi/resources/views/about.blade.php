@@ -2,7 +2,7 @@
 
 @section('content')
     <div style="max-width: 40rem; width: 100%; padding: 1rem;">
-        <img style="float: right; margin-top: 1rem;" src="/img/logo_linphone.png">
+        <img style="float: right; margin-top: 1rem;" src="{{ asset('img/logo_linphone.png') }}">
         <h2>About</h2>
         <hr />
 

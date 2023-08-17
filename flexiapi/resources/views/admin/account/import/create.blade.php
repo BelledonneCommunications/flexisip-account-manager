@@ -20,7 +20,7 @@
             <li>Import data</li>
         </ol>
 
-        <p>Use this existing (.csv) template or create your own csv file.</p>
+        <p>Use this <a href="{{ route('account.home') }}/accounts_example.csv">existing example (.csv) template</a> or create your own csv file.</p>
 
         <p>
             This file MUST be in csv format and contain at least the following information:

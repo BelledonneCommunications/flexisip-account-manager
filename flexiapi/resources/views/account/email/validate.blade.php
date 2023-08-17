@@ -35,7 +35,7 @@
 
     </section>
     <section class="on_desktop">
-        <img src="/img/lock.svg">
+        <img src="{{ asset('img/lock.svg') }}">
     </section>
 @endsection
 

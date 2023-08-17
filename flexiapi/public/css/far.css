@@ -304,7 +304,7 @@ header nav a#logo::before {
     width: 3rem;
     height: 3rem;
     padding: 1rem;
-    background-image: url('/img/logo.svg');
+    background-image: url('../img/logo.svg');
     background-color: var(--main-5);
     background-size: 3rem;
     background-position: center;
@@ -387,7 +387,7 @@ content > nav {
     background-size: auto 10rem;
     background-position: bottom center;
     background-repeat: repeat-x;
-    background-image: url('/img/footer.svg');
+    background-image: url('../img/footer.svg');
 
     z-index: 1;
 }
@@ -465,7 +465,7 @@ content > nav a i {
 body.welcome::after {
     background-position: bottom center;
     background-repeat: repeat-x;
-    background-image: url('/img/footer.svg');
+    background-image: url('../img/footer.svg');
     display: block;
     height: 10rem;
     width: 100%;

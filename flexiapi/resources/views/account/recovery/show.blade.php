@@ -5,12 +5,15 @@
         <h1><i class="material-icons-outlined">account_circle</i> Account recovery</h1>
         <div>
             <form method="POST" action="{{ route('account.recovery.send') }}" accept-charset="UTF-8">
-@csrf
+                @csrf
 
                 @if ($method == 'email')
-                    <p class="large">Enter your email account to recover it.</p>
                     <div class="large">
-                       <input type="email" name="email" value="{{ old('email') }}" placeholder="bob@example.com" required>
+                        <p class="large">Enter your email account to recover it.</p>
+                        @include('parts.errors', ['name' => 'code'])
+                    </div>
+                    <div class="large">
+                        <input type="email" name="email" value="{{ old('email') }}" placeholder="bob@example.com" required>
                         <label for="email">Email</label>
                         @include('parts.errors', ['name' => 'email'])
                         @include('parts.errors', ['name' => 'identifier'])
@@ -44,6 +47,6 @@
         </div>
     </section>
     <section class="on_desktop">
-        <img src="/img/lock.svg">
+        <img src="{{ asset('img/lock.svg') }}">
     </section>
 @endsection

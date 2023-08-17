@@ -89,6 +89,7 @@ form.inline {
     grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
     margin-bottom: 2rem;
+    clear: both;
 }
 
 form div {

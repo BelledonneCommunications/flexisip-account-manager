@@ -13,8 +13,8 @@
             <input oninput="digitFilled(this)" onfocus="this.value = ''" class="digit" name="number_2" type="number" min="0" max="9">
             <input oninput="digitFilled(this)" onfocus="this.value = ''" class="digit" name="number_3" type="number" min="0" max="9">
             <input oninput="digitFilled(this)" onfocus="this.value = ''" class="digit" name="number_4" type="number" min="0" max="9">
-            @include('parts.errors', ['name' => 'code'])
 
+            <input name="method" type="hidden" value="{{ $method }}">
             <input name="account_id" type="hidden" value="{{ $account_id }}">
         </div>
         <div class="large">
@@ -23,6 +23,6 @@
     </form>
 </section>
 <section class="on_desktop">
-    <img src="/img/lock.svg">
+    <img src="{{ asset('img/lock.svg') }}">
 </section>
 @endsection

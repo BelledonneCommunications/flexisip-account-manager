@@ -50,29 +50,56 @@
     @if ($contacts_list->id)
         <hr>
 
-        <header>
-            <p class="oppose">
-                <span class="list_toggle" data-list-id="d{{ $contacts_list->id }}"></span> selected
-            </p>
+        <a class="btn btn-secondary oppose" href="{{ route('admin.contacts_lists.contacts.add', $contacts_list->id) }}">
+            <i class="material-icons-outlined">add</i> Add contacts
+        </a>
 
-            <form method="POST" action="{{ route('admin.contacts_lists.contacts.destroy', $contacts_list->id) }}"
-                name="contacts_lists_contacts_destroy" accept-charset="UTF-8">
-                @csrf
-                @method('delete')
+        <form  method="POST"
+            action="{{ route('admin.contacts_lists.contacts.destroy', $contacts_list->id) }}"
+            name="contacts_lists_contacts_destroy" accept-charset="UTF-8">
+            @csrf
+            @method('delete')
 
-                <select name="contacts_ids[]" class="list_toggle" data-list-id="d{{ $contacts_list->id }}"></select>
-                <input type="hidden" name="contacts_list_id" value="{{ $contacts_list->id }}">
-                <a class="btn btn-tertiary"
+            <select name="contacts_ids[]" class="list_toggle" data-list-id="d{{ $contacts_list->id }}"></select>
+            <input type="hidden" name="contacts_list_id" value="{{ $contacts_list->id }}">
+        </form>
+
+        <form class="inline" method="POST" action="{{ route('admin.contacts_lists.search', $contacts_list->id) }}"
+            name="contacts_lists_contacts_search" accept-charset="UTF-8">
+            @csrf
+
+            <div class="search">
+                <input placeholder="Search by username: +1234, foo_bar…" name="search" type="text"
+                    value="{{ request()->get('search', '') }}">
+                <label for="search">Search</label>
+            </div>
+            <div class="select">
+                <select name="domain" onchange="this.form.submit()">
+                    <option value="">
+                        Select a domain
+                    </option>
+                    @foreach ($domains as $d)
+                        <option value="{{ $d }}" @if (request()->get('domain', '') == $d) selected="selected" @endif>
+                            {{ $d }}
+                        </option>
+                    @endforeach
+                </select>
+                <label for="domain">Domain</label>
+            </div>
+            <div>
+                <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}" type="reset"
+                    class="btn btn-secondary">Reset</a>
+                <button type="submit" class="btn">Search</button>
+            </div>
+
+            <div>
+                <a class="btn btn-tertiary oppose"
                     onclick="Utils.clearStorageList('d{{ $contacts_list->id }}');  document.querySelector('form[name=contacts_lists_contacts_destroy]').submit()">
                     <i class="material-icons-outlined">delete</i>
-                    Remove contacts
+                    Remove <span class="list_toggle" data-list-id="d{{ $contacts_list->id }}"></span> contacts
                 </a>
-            </form>
-
-            <a class="btn btn-secondary" href="{{ route('admin.contacts_lists.contacts.add', $contacts_list->id) }}">
-                <i class="material-icons-outlined">add</i> Add contacts
-            </a>
-        </header>
+            </div>
+        </form>
 
         <table class="large">
             <thead>
@@ -84,12 +111,12 @@
                 </tr>
             </thead>
             <tbody>
-                @if ($contacts_list->contacts->isEmpty())
+                @if ($contacts->isEmpty())
                     <tr class="empty">
                         <td colspan="2">No Contact</td>
                     </tr>
                 @endif
-                @foreach ($contacts_list->contacts as $contact)
+                @foreach ($contacts as $contact)
                     <tr>
                         <td>
                             <input class="list_toggle" type="checkbox" data-list-id="d{{ $contacts_list->id }}"

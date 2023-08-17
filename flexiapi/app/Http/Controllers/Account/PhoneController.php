@@ -54,6 +54,8 @@ class PhoneController extends Controller
             return redirect()->route('account.dashboard');
         }
 
-        return redirect()->route('account.phone.change');
+        return redirect()->route('account.phone.change')->withErrors([
+            'code' => 'The code entered was not valid'
+        ]);
     }
 }

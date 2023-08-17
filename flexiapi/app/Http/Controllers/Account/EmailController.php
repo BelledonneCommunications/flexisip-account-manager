@@ -54,6 +54,8 @@ class EmailController extends Controller
             return redirect()->route('account.dashboard');
         }
 
-        return redirect()->route('account.email.change');
+        return redirect()->route('account.email.change')->withErrors([
+            'code' => 'The code entered was not valid'
+        ]);
     }
 }

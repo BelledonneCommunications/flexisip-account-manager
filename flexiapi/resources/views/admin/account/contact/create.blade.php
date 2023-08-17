@@ -1,17 +1,25 @@
 @extends('layouts.main')
 
-@section('content')
-    <h2>Add a Contact to the Account</h2>
+@section('breadcrumb')
+    <li class="breadcrumb-item">
+        <a href="{{ route('admin.account.index') }}">Accounts</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Add Contact</li>
+@endsection
 
-    <form method="POST" action="{{ route('admin.account.contact.store', $account->id) }}" accept-charset="UTF-8">
+@section('content')
+    <header>
+        <h1><i class="material-icons-outlined">person_add</i> Add a Contact</h1>
+        <a href="{{ route('admin.account.edit', $account->id) }}" class="btn btn-secondary oppose">Cancel</a>
+        <input form="add_contact" class="btn" type="submit" value="Add">
+    </header>
+    <form id="add_contact" method="POST" action="{{ route('admin.account.contact.store', $account->id) }}" accept-charset="UTF-8">
         @csrf
         @method('post')
         <div>
-            <input placeholder="username@server.com" name="sip" type="text" id="sip">
-            <label for="sip">SIP Address</label>
-        </div>
-        <div>
-            <input class="btn" type="submit" value="Add">
+            <input placeholder="username@server.com" name="sip" type="text" id="sip" required>
+            <label for="sip">Local SIP Address</label>
+            @include('parts.errors', ['name' => 'sip'])
         </div>
     </form>
 @endsection

@@ -1,6 +1,10 @@
 <th class="line">
+    @php
+        $uriParams = $uriParams ?? [];
+    @endphp
+
     <a
-        href="{{ route(request()->route()->getName(), [
+        href="{{ route(request()->route()->getName(), $uriParams + [
             'order_by' => $key,
             'order_sort' => request()->get('order_sort', 'desc') == 'desc' ? 'asc' : 'desc'
             ] + request()->except('_token', 'query')) }}">

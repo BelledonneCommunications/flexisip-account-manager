@@ -42,7 +42,7 @@ body > footer::before {
     width: 100%;
     background-size: 50rem;
     content: '';
-    background-image: url('/img/footer.svg');
+    background-image: url('../img/footer.svg');
     height: 9rem;
 }
 

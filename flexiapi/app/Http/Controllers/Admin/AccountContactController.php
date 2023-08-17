@@ -38,19 +38,21 @@ class AccountContactController extends Controller
 
     public function store(Request $request, int $id)
     {
+        $request->validate([
+            'sip' => 'required',
+        ]);
+
         $account = Account::findOrFail($id);
         $contact = Account::sip($request->get('sip'))->first();
 
         if (!$contact) {
-            $request->session()->flash('error', 'The contact SIP address doesn\'t exists');
-
-            return redirect()->route('admin.account.contact.create', $account);
+            return redirect()->back()->withErrors([
+                'sip' => 'The contact SIP address doesn\'t exists'
+            ]);
         }
 
         $account->contacts()->detach($contact->id);
         $account->contacts()->attach($contact->id);
-
-        $request->session()->flash('success', 'Contact successfully added');
 
         Log::channel('events')->info('Web Admin: Account contact added', ['id' => $account->identifier, 'contact' => $contact->identifier]);
 

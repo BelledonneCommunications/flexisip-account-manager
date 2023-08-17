@@ -50,6 +50,6 @@
 
     </section>
     <section class="on_desktop">
-        <img src="/img/login.svg">
+        <img src="{{ asset('img/login.svg') }}">
     </section>
 @endsection

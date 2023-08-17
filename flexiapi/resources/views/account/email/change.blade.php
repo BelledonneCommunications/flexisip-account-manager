@@ -21,6 +21,8 @@
                     <p>The verification code is invalid.</p>
                     <p>Please enter again your email address to receive a new code.</p>
                 @endif
+
+                @include('parts.errors', ['name' => 'code'])
             </div>
 
             <div class="large">
@@ -38,7 +40,7 @@
 
     </section>
     <section class="on_desktop">
-        <img src="/img/lock.svg">
+        <img src="{{ asset('img/lock.svg') }}">
     </section>
 @endsection
 

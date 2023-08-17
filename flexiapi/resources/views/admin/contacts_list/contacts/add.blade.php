@@ -16,10 +16,8 @@
 
         <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}" class="btn btn-secondary oppose">Cancel</a>
 
-        <form method="POST"
-        action="{{ route('admin.contacts_lists.contacts.store', $contacts_list->id) }}"
-        name="contacts_lists_contacts_store"
-        accept-charset="UTF-8">
+        <form method="POST" action="{{ route('admin.contacts_lists.contacts.store', $contacts_list->id) }}"
+            name="contacts_lists_contacts_store" accept-charset="UTF-8">
             @csrf
             @method('post')
 
@@ -29,23 +27,37 @@
     </header>
 
     <div>
-        <form class="inline" method="POST" action="{{ route('admin.contacts_lists.contacts.search', $params) }}" accept-charset="UTF-8">
+        <form class="inline" method="POST" action="{{ route('admin.contacts_lists.contacts.search', $params) }}"
+            accept-charset="UTF-8">
             @csrf
-            <div class="search large">
-                <input placeholder="Search by username: +1234, foo_bar…" name="search" type="text" value="{{ $params['search'] }}">
+            <div class="search">
+                <input placeholder="Search by username: +1234, foo_bar…" name="search" type="text"
+                    value="{{ request()->get('search', '') }}">
                 <label for="search">Search</label>
             </div>
+            <div class="select">
+                <select name="domain" onchange="this.form.submit()">
+                    <option value="">
+                        Select a domain
+                    </option>
+                    @foreach ($domains as $d)
+                        <option value="{{ $d }}" @if (request()->get('domain', '') == $d) selected="selected" @endif>
+                            {{ $d }}
+                        </option>
+                    @endforeach
+                </select>
+                <label for="domain">Domain</label>
+            </div>
             <div>
-                <a href="{{ route('admin.contacts_lists.contacts.add', $contacts_list->id) }}" type="reset" class="btn btn-secondary">Reset</a>
+                <a href="{{ route('admin.contacts_lists.contacts.add', $contacts_list->id) }}" type="reset"
+                    class="btn btn-secondary">Reset</a>
                 <button type="submit" class="btn">Search</button>
             </div>
             <div class="oppose">
-                <p style="display: inline-block; margin: 0 1rem;">
-                    <span class="list_toggle" data-list-id="a{{ $contacts_list->id }}"></span> selected
-                </p>
-                <a class="btn" onclick="Utils.clearStorageList('a{{ $contacts_list->id }}'); document.querySelector('form[name=contacts_lists_contacts_store]').submit()">
+                <a class="btn"
+                    onclick="Utils.clearStorageList('a{{ $contacts_list->id }}'); document.querySelector('form[name=contacts_lists_contacts_store]').submit()">
                     <i class="material-icons-outlined">add_circle</i>
-                    Add
+                    Add <span class="list_toggle" data-list-id="a{{ $contacts_list->id }}"></span> contacts
                 </a>
             </div>
         </form>
@@ -58,16 +70,11 @@
                     <input type="checkbox" onchange="Utils.toggleAll(this)">
                 </th>
                 <th>Username</th>
-                <th>
-                    <a href="{{ route('admin.contacts_lists.contacts.add', $params) }}">
-                        Updated
-                        @if ($params['updated_at_order'] == 'desc')
-                            <i class="material-icons-outlined">expand_more</i>
-                        @else
-                            <i class="material-icons-outlined">expand_less</i>
-                        @endif
-                    </a>
-                </th>
+                @include('parts.column_sort', [
+                    'key' => 'updated_at',
+                    'title' => 'Updated',
+                    'uriParams' => ['contacts_list_id' => $contacts_list->id],
+                ])
             </tr>
         </thead>
         <tbody>
@@ -79,12 +86,13 @@
             @foreach ($accounts as $account)
                 <tr>
                     <td>
-                        <input class="list_toggle" type="checkbox" data-list-id="a{{ $contacts_list->id }}" data-id="{{ $account->id }}">
+                        <input class="list_toggle" type="checkbox" data-list-id="a{{ $contacts_list->id }}"
+                            data-id="{{ $account->id }}">
                     </td>
                     <td>
                         {{ $account->identifier }}
                     </td>
-                    <td>{{ $account->updated_at}}</td>
+                    <td>{{ $account->updated_at }}</td>
                 </tr>
             @endforeach
         </tbody>

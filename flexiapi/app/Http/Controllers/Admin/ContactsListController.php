@@ -19,6 +19,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Account;
 use App\ContactsList;
 use App\Http\Controllers\Controller;
 use Illuminate\Validation\Rule;
@@ -67,10 +68,29 @@ class ContactsListController extends Controller
         return redirect()->route('admin.contacts_lists.edit', $contactsList->id);
     }
 
-    public function edit(int $id)
+    public function search(Request $request, int $contactsListId)
     {
+        return redirect()->route('admin.contacts_lists.edit', ['contacts_list_id' => $contactsListId] + $request->except('_token'));
+    }
+
+    public function edit(Request $request, int $id)
+    {
+        $contacts = ContactsList::findOrFail($id)->contacts();
+
+        if ($request->has('search')) {
+            $contacts = $contacts->where('username', 'like', '%' . $request->get('search') . '%');
+        }
+
+        if ($request->has('domain')) {
+            $contact = $contacts->where('domain', $request->get('domain'));
+        }
+
+        $contacts = $contacts->get();
+
         return view('admin.contacts_list.create_edit', [
+            'domains' => Account::groupBy('domain')->pluck('domain'),
             'contacts_list' => ContactsList::findOrFail($id),
+            'contacts' => $contacts
         ]);
     }
 

@@ -35,12 +35,15 @@ class ContactsListContactController extends Controller
             $accounts = $accounts->where('username', 'like', '%' . $request->get('search') . '%');
         }
 
+        if ($request->has('domain')) {
+            $accounts = $accounts->where('domain', $request->get('domain'));
+        }
+
         return view('admin.contacts_list.contacts.add', [
+            'domains' => Account::groupBy('domain')->pluck('domain'),
             'contacts_list' => ContactsList::findOrFail($contactsListId),
             'params' => [
-                'search' => $request->get('search'),
-                'contacts_list_id' => $contactsListId,
-                'updated_at_order' => $request->get('updated_at_order') == 'desc' ? 'asc' : 'desc'
+                'contacts_list_id' => $contactsListId
             ],
             'accounts' => $accounts->whereNotIn('id', function ($query) use ($contactsListId) {
                 $query->select('contact_id')

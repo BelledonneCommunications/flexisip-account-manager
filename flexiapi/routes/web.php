@@ -36,7 +36,7 @@ use App\Http\Controllers\Admin\ContactsListContactController;
 use App\Http\Controllers\Admin\StatisticsController;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/login')->name('account.home');
+Route::redirect('/', 'login')->name('account.home');
 Route::get('documentation', 'Account\AccountController@documentation')->name('account.documentation');
 Route::get('about', 'AboutController@about')->name('about');
 
@@ -77,7 +77,7 @@ if (publicRegistrationEnabled()) {
 }
 
 if (config('app.web_panel')) {
-    Route::prefix('recover')->controller(RecoveryController::class)->group(function () {
+    Route::prefix('recovery')->controller(RecoveryController::class)->group(function () {
         Route::get('phone', 'showPhone')->name('account.recovery.show.phone');
         Route::get('email', 'showEmail')->name('account.recovery.show.email');
         Route::post('/', 'send')->name('account.recovery.send');
@@ -203,6 +203,7 @@ if (config('app.web_panel')) {
             Route::get('/', 'index')->name('index');
             Route::get('create', 'create')->name('create');
             Route::post('/', 'store')->name('store');
+            Route::post('{contacts_list_id}/search', 'search')->name('search');
             Route::get('{contacts_list_id}/edit', 'edit')->name('edit');
             Route::put('{contacts_list_id}', 'update')->name('update');
             Route::get('{contacts_list_id}/delete', 'delete')->name('delete');

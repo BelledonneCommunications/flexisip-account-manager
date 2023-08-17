@@ -88,6 +88,7 @@ class RecoveryController extends Controller
         }
 
         return view('account.recovery.confirm', [
+            'method' => $request->get('phone') ? 'phone' : 'email',
             'account_id' => Crypt::encryptString($account->id)
         ]);
     }
@@ -96,6 +97,7 @@ class RecoveryController extends Controller
     {
         $request->validate([
             'account_id' => 'required',
+            'method' => 'in:phone,email',
             'number_1' => 'required|digits:1',
             'number_2' => 'required|digits:1',
             'number_3' => 'required|digits:1',
@@ -104,12 +106,13 @@ class RecoveryController extends Controller
 
         $code = $request->get('number_1') . $request->get('number_2') . $request->get('number_3') . $request->get('number_4');
 
-
         $account = Account::where('id', Crypt::decryptString($request->get('account_id')))->firstOrFail();
 
         if ($account->recovery_code != $code) {
-            return redirect()->back()->withErrors([
-                'code' => 'Wrong code'
+            return redirect()->route($request->get('method') == 'phone'
+                ? 'account.recovery.show.phone'
+                : 'account.recovery.show.email')->withErrors([
+                'code' => 'The code entered was not valid'
             ]);
         }
 
@@ -117,6 +120,6 @@ class RecoveryController extends Controller
         $account->save();
 
         Auth::login($account);
-        return redirect()->route('account.dashboard');
+        return redirect()->route('account.password.update');
     }
 }
