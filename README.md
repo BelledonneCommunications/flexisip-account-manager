@@ -99,7 +99,7 @@ You can then configure your instances with specific values.
 
 If you set `INSTANCE_CUSTOM_THEME` to true, FlexiAPI will try to load a CSS file located in `public/css/$APP_ENV.style.css`. If the file doesn't exists it will fallback to `public/css/style.css`.
 
-We advise you to copy the `style.css` file and rename it to make your custom CSS configurations for your instance.
+You can find an example CSS file at `public/css/custom.style.css`.
 
 #### Flexisip Push notifications pusher
 

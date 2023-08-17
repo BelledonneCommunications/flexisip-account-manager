@@ -1,0 +1,13 @@
+/**
+ * This is an example configuration theme
+ * Feel free to overwrite any rules presents in the base CSS files
+ **/
+
+body {
+    --main-5: rgb(20, 81, 172);
+}
+
+body.welcome::after,
+content > nav {
+    background-image: none;
+}
