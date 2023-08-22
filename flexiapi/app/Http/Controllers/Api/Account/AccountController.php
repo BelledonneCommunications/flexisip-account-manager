@@ -166,6 +166,7 @@ class AccountController extends Controller
             try {
                 Mail::to($account)->send(new RegisterConfirmation($account));
             } catch (\Exception $e) {
+                Log::channel('events')->info('API: Public Register Confirmation email not sent, check errors log', ['id' => $account->identifier]);
                 Log::error('Public Register Confirmation email not sent: ' . $e->getMessage());
             }
         }

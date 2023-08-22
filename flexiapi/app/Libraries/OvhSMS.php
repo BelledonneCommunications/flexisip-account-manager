@@ -47,6 +47,7 @@ class OvhSMS
                 $this->smsService = $smsServices[0];
             }
         } catch (\GuzzleHttp\Exception\ClientException $e) {
+            Log::channel('events')->info('OVH SMS API unreachable, check the errors log');
             Log::error('OVH SMS API not reachable: ' . $e->getMessage());
         }
     }
@@ -79,6 +80,7 @@ class OvhSMS
 
             $this->api->get('/sms/'. $this->smsService . '/jobs');
         } catch (\GuzzleHttp\Exception\ClientException $e) {
+            Log::channel('events')->info('OVH SMS not sent, check the errors log');
             Log::error('OVH SMS not sent: ' . $e->getMessage());
         }
     }
