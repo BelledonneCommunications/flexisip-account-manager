@@ -40,7 +40,7 @@ Once activated {{ $app_name }} will ask your to provide a password to finish you
 
 To authenticate please fill in the username or phone number and password you provided during the registration phase.
 
-If you forgot your password or didn't configured it, you can always recover your account using the recover password forms, using your @if (config('app.web_panel')) [email address]({{ route('account.login_email') }}) @else email address @endif or @if (config('app.web_panel') && config('app.phone_authentication')) [phone number]({{ route('account.login_phone') }}) @else phone number (not enabled) @endif. Once authenticated you will then be able to change your password.
+If you forgot your password or didn't configured it, you can always recover your account using the recover password forms, using your @if (config('app.web_panel')) [email address]({{ route('account.recovery.show.email') }}) @else email address @endif or @if (config('app.web_panel') && config('app.phone_authentication')) [phone number]({{ route('account.recovery.show.phone') }}) @else phone number (not enabled) @endif. Once authenticated you will then be able to change your password.
 
 ## Code based authentication
 
@@ -68,7 +68,7 @@ Your account can be deleted from the panel using the @if (config('app.web_panel'
 *The feature is not enabled on this instance.*
 @endif
 
-From the @if (config('app.web_panel'))[devices management panel]({{ route('admin.account.device.index') }}) @else devices management panel @endif an admin will be able to list and delete the devices attached to a SIP account.
+From the devices management panel an admin will be able to list and delete the devices attached to a SIP account.
 
 # Admin panel
 

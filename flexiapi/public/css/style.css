@@ -177,10 +177,16 @@ content {
 }
 
 body.welcome content {
-    min-height: calc(100vh - 17rem);
+    min-height: calc(100vh - 18rem);
     align-items: center;
     margin: 0 auto;
     max-width: 1024px;
+}
+
+@media screen and (max-width: 800px) {
+    body.welcome content {
+        min-height: calc(100vh - 16rem);
+    }
 }
 
 hr {
@@ -245,7 +251,7 @@ ul.tabs li.current {
 header nav {
     padding: 3rem 1rem;
     display: flex;
-    min-height: 6rem;
+    min-height: 5rem;
 }
 
 header nav a {
@@ -259,20 +265,6 @@ header nav a {
 header nav a i {
     margin-right: 1rem;
     font-size: 2.5rem;
-}
-
-@media screen and (max-width: 800px) {
-    header nav {
-        padding: 1rem;
-    }
-
-    header nav a {
-        padding: 1rem;
-    }
-
-    header nav a i {
-        margin-right: 0;
-    }
 }
 
 header nav a#logo {
@@ -322,6 +314,25 @@ header nav a.oppose {
 
 header nav a.oppose ~ a.oppose {
     margin-left: 0;
+}
+
+@media screen and (max-width: 800px) {
+    header nav {
+        padding: 1rem;
+    }
+
+    header nav a,
+    header nav a#logo {
+        padding: 1rem;
+    }
+
+    header nav a#logo::before {
+        margin-right: 0;
+    }
+
+    header nav a i {
+        margin-right: 0;
+    }
 }
 
 /** Section **/
@@ -464,7 +475,7 @@ content > nav a i {
 /** Footer **/
 
 body.welcome::after {
-    background-position: bottom center;
+    background-position: top center;
     background-repeat: repeat-x;
     background-image: url('../img/footer.svg');
     display: block;
@@ -472,7 +483,8 @@ body.welcome::after {
     width: 100%;
     background-size: 50rem;
     content: '';
-    height: 9rem;
+    height: 5rem;
+    margin-top: 2rem;
 }
 
 /** Titles **/
@@ -485,6 +497,11 @@ h1 {
     display: flex;
     align-items: center;
     margin-right: 1rem;
+    margin-bottom: 1rem;
+}
+
+header > h1 {
+    margin-bottom: 0;
 }
 
 h1 i {
@@ -556,6 +573,10 @@ ul + h1, ul + h2, ul + h3, ul + h4, h3 + p {
 
 .badge.badge-warning {
     background-color: var(--color-yellow);
+}
+
+.badge.badge-error {
+    background-color: var(--color-purple);
 }
 
 /** Table **/
