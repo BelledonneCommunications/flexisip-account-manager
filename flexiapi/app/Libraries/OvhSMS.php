@@ -41,7 +41,7 @@ class OvhSMS
         );
 
         try {
-            $smsServices = $this->api->get('/sms/');
+            $smsServices = $this->api->get('/sms');
 
             if (!empty($smsServices)) {
                 $this->smsService = $smsServices[0];
