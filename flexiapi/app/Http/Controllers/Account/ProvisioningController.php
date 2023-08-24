@@ -144,7 +144,7 @@ class ProvisioningController extends Controller
         }
 
         // Password reset
-        if ($request->has('reset_password')) {
+        if ($account && $request->has('reset_password')) {
             $account->updatePassword(Str::random(10));
         }
 
