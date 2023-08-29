@@ -19,6 +19,7 @@
 
 namespace Tests\Feature;
 
+use App\Account;
 use App\AccountCreationRequestToken;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -102,6 +103,11 @@ class ApiAccountCreationTokenTest extends TestCase
             'account_creation_token' => $token->token
         ]);
         $response->assertStatus(422);
+
+        $this->assertDatabaseHas('account_creation_tokens', [
+            'used' => true,
+            'account_id' => Account::where('username', 'username')->first()->id,
+        ]);
     }
 
     public function testBlacklistedUsername()
