@@ -28,6 +28,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 
 use App\Account;
+use App\AccountCreationToken;
 use App\AccountTombstone;
 use App\Alias;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
@@ -139,6 +140,12 @@ class AccountController extends Controller
 
         $account->updatePassword($request->get('password'), $request->get('algorithm'));
 
+        $token = AccountCreationToken::where('token', $request->get('account_creation_token'))->first();
+        $token->used = true;
+        $token->account_id = $account->id;
+        $token->save();
+
+        Log::channel('events')->info('API: AccountCreationToken redeemed', ['token' => $request->get('account_creation_token')]);
         Log::channel('events')->info('API: Account created using the public endpoint', ['id' => $account->identifier]);
 
         // Send validation by phone
@@ -200,6 +207,12 @@ class AccountController extends Controller
         $account->confirmation_key = generatePin();
         $account->save();
 
+        $token = AccountCreationToken::where('token', $request->get('account_creation_token'))->first();
+        $token->used = true;
+        $token->account_id = $account->id;
+        $token->save();
+
+        Log::channel('events')->info('API: AccountCreationToken redeemed', ['token' => $request->get('account_creation_token')]);
         Log::channel('events')->info('API: Account recovery by phone', ['id' => $account->identifier]);
 
         $ovhSMS = new OvhSMS;

@@ -61,12 +61,6 @@ class AccountService
 
         $request->validate($rules);
 
-        if ($this->api) {
-            $token = AccountCreationToken::where('token', $request->get('account_creation_token'))->first();
-            $token->used = true;
-            $token->save();
-        }
-
         $account = new Account;
         $account->username = $request->get('username');
         $account->activated = false;
@@ -81,6 +75,14 @@ class AccountService
 
         $account->updatePassword($request->get('password'), $request->has('algorithm') ? $request->get('algorithm') : 'SHA-256');
 
+        if ($this->api) {
+            $token = AccountCreationToken::where('token', $request->get('account_creation_token'))->first();
+            $token->used = true;
+            $token->account_id = $account->id;
+            $token->save();
+        }
+
+        Log::channel('events')->info('API: AccountCreationToken redeemed', ['token' => $request->get('account_creation_token')]);
         Log::channel('events')->info('Account Service: Account created', ['id' => $account->identifier]);
 
         if (!$this->api) {

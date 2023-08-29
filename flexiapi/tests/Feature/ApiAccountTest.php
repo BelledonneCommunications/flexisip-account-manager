@@ -685,6 +685,13 @@ class ApiAccountTest extends TestCase
 
         $password->account->refresh();
 
+        // Use the token a second time
+        $this->json($this->method, $this->route . '/recover-by-phone', [
+            'phone' => $phone,
+            'account_creation_token' => $token->token
+        ])
+            ->assertStatus(422);
+
         $this->get($this->route . '/' . $password->account->identifier . '/recover/' . $password->account->confirmation_key)
             ->assertStatus(200)
             ->assertJson([
@@ -717,6 +724,11 @@ class ApiAccountTest extends TestCase
                 'activated' => true,
                 'phone' => false
             ]);
+
+        $this->assertDatabaseHas('account_creation_tokens', [
+            'used' => true,
+            'account_id' => $password->account->id,
+        ]);
     }
 
     /**
@@ -764,6 +776,18 @@ class ApiAccountTest extends TestCase
                 'activated' => false
             ]);
 
+        // Re-use the token
+        $this->withHeaders([
+            'User-Agent' => $userAgent,
+        ])->json($this->method, $this->route . '/public', [
+            'username' => $username . 'foo',
+            'algorithm' => 'SHA-256',
+            'password' => '2',
+            'email' => 'john@doe.tld',
+            'account_creation_token' => $token->token
+        ])
+            ->assertStatus(422);
+
         // Already created
         $this->json($this->method, $this->route . '/public', [
             'username' => $username,
@@ -790,6 +814,11 @@ class ApiAccountTest extends TestCase
             'username' => $username,
             'domain' => config('app.sip_domain'),
             'user_agent' => $userAgent
+        ]);
+
+        $this->assertDatabaseHas('account_creation_tokens', [
+            'used' => true,
+            'account_id' => Account::where('username', $username)->first()->id,
         ]);
     }
 
