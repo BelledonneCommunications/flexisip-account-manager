@@ -27,5 +27,6 @@ class StatisticsMessage extends Model
     use HasFactory;
 
     public $incrementing = false;
+    protected $casts = ['sent_at' => 'datetime'];
     protected $keyType = 'string';
 }

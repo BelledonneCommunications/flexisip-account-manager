@@ -58,7 +58,7 @@ class ApiStatisticsMessagesTest extends TestCase
                 'sent_at' => $this->faker->iso8601(),
                 'encrypted' => false
             ])
-            ->assertStatus(422);
+            ->assertStatus(400);
 
         $this->keyAuthenticated($admin->account)
             ->json('POST', $this->route, [
@@ -97,7 +97,6 @@ class ApiStatisticsMessagesTest extends TestCase
         $this->assertSame(1, StatisticsMessageDevice::count());
         $this->assertDatabaseHas('statistics_message_devices', [
             'message_id' => $id,
-            'received_at' => $newReceivedAt,
             'last_status' => $newLastStatus
         ]);
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\StatisticsMessage;
 use App\StatisticsMessageDevice;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class StatisticsMessageController extends Controller
 {
@@ -28,8 +29,9 @@ class StatisticsMessageController extends Controller
 
         try {
             return $statisticsMessage->saveOrFail();
-        } catch (\Throwable $th) {
-            abort(422);
+        } catch (\Exception $e) {
+            Log::channel('database_errors')->error($e->getMessage());
+            abort(400, 'Database error');
         }
     }
 
@@ -41,9 +43,14 @@ class StatisticsMessageController extends Controller
             'received_at' => 'required|iso_date'
         ]);
 
-        return StatisticsMessageDevice::updateOrCreate(
-            ['message_id' => $messageId, 'to' => $to, 'device_id' => $deviceId],
-            ['last_status' => $request->get('last_status'), 'received_at' => $request->get('received_at')]
-        );
+        try {
+            return StatisticsMessageDevice::updateOrCreate(
+                ['message_id' => $messageId, 'to' => $to, 'device_id' => $deviceId],
+                ['last_status' => $request->get('last_status'), 'received_at' => $request->get('received_at')]
+            );
+        } catch (\Exception $e) {
+            Log::channel('database_errors')->error($e->getMessage());
+            abort(400, 'Database error');
+        }
     }
 }

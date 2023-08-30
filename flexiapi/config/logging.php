@@ -42,6 +42,13 @@ return [
             'days' => 30
         ],
 
+        'database_errors' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/database_errors.log'),
+            'level' => 'error',
+            'days' => 30
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],

@@ -27,6 +27,7 @@ class StatisticsMessageDevice extends Model
     use HasFactory;
 
     protected $fillable = ['message_id', 'to', 'device_id', 'last_status', 'received_at'];
+    protected $casts = ['received_at' => 'datetime'];
 
     public function message()
     {
