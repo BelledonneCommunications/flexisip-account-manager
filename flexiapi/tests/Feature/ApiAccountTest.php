@@ -540,6 +540,32 @@ class ApiAccountTest extends TestCase
             ->assertJsonValidationErrors(['email']);
     }
 
+    public function testNonAsciiPasswordAdmin()
+    {
+        $admin = Admin::factory()->create();
+        $admin->account->generateApiKey();
+        $admin->account->save();
+
+        $username = 'username';
+
+        $response = $this->generateFirstResponse($admin->account->passwords()->first(), $this->method, $this->route);
+        $this->generateSecondResponse($admin->account->passwords()->first(), $response)
+            ->json($this->method, $this->route, [
+                'username' => $username,
+                'email' => 'email@test.com',
+                'domain' => 'server.com',
+                'algorithm' => 'SHA-256',
+                'password' => 'nonascii€',
+            ])
+            ->assertStatus(200);
+
+        $password = Account::where('username', $username)->first()->passwords()->first();
+
+        $response = $this->generateFirstResponse($password, 'GET', '/api/accounts/me');
+        $response = $this->generateSecondResponse($password, $response)
+            ->json('GET', '/api/accounts/me');
+    }
+
     public function testEditAdmin()
     {
         $password = Password::factory()->create();
@@ -554,18 +580,18 @@ class ApiAccountTest extends TestCase
         $password = 'other';
 
         $this->keyAuthenticated($admin->account)
-            ->json('PUT', $this->route. '/1234')
+            ->json('PUT', $this->route . '/1234')
             ->assertStatus(422)
             ->assertJsonValidationErrors(['username']);
 
         $this->keyAuthenticated($admin->account)
-            ->json('PUT', $this->route. '/1234', [
+            ->json('PUT', $this->route . '/1234', [
                 'username' => 'good'
             ])
             ->assertStatus(422);
 
         $this->keyAuthenticated($admin->account)
-            ->json('PUT', $this->route. '/'. $account->id, [
+            ->json('PUT', $this->route . '/' . $account->id, [
                 'username' => $username,
                 'algorithm' => $algorithm,
                 'password' => $password,

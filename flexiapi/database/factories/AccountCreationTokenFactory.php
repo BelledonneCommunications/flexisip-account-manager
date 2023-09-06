@@ -24,6 +24,7 @@ use Illuminate\Support\Str;
 
 use App\AccountCreationToken;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+use Illuminate\Support\Carbon;
 
 class AccountCreationTokenFactory extends Factory
 {
@@ -36,7 +37,8 @@ class AccountCreationTokenFactory extends Factory
             'pn_param' => $this->faker->uuid,
             'pn_prid' => $this->faker->uuid,
             'token' => Str::random(WebAuthenticateController::$emailCodeSize),
-            'used' => false
+            'used' => false,
+            'created_at' => Carbon::now()
         ];
     }
 }

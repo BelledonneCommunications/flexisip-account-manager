@@ -43,20 +43,42 @@ class ApiAccountCreationTokenTest extends TestCase
     protected $pnParam = 'param';
     protected $pnPrid = 'id';
 
-    public function testMandatoryParameters()
-    {
-        $response = $this->json($this->method, $this->tokenRoute);
-        $response->assertStatus(422);
-    }
-
     public function testCorrectParameters()
     {
-        $response = $this->json($this->method, $this->tokenRoute, [
+        $this->assertSame(AccountCreationToken::count(), 0);
+        $this->json($this->method, $this->tokenRoute, [
             'pn_provider' => $this->pnProvider,
             'pn_param' => $this->pnParam,
             'pn_prid' => $this->pnPrid,
-        ]);
-        $response->assertStatus(503);
+        ])->assertStatus(503);
+    }
+
+    public function testMandatoryParameters()
+    {
+        $this->json($this->method, $this->tokenRoute)->assertStatus(422);
+
+        $this->json($this->method, $this->tokenRoute, [
+            'pn_provider' => null,
+            'pn_param' => null,
+            'pn_prid' => null,
+        ])->assertStatus(422);
+    }
+
+    public function testExpiration()
+    {
+        $existing = AccountCreationToken::factory()->create();
+
+        $this->json($this->method, $this->tokenRoute, [
+            'pn_provider' => $this->pnProvider,
+            'pn_param' => $this->pnParam,
+            'pn_prid' => $this->pnPrid,
+        ])->assertStatus(503);
+
+        $this->json($this->method, $this->tokenRoute, [
+            'pn_provider' => $existing->pnProvider,
+            'pn_param' => $existing->pnParam,
+            'pn_prid' => $existing->pnPrid,
+        ])->assertStatus(422);
     }
 
     public function testAdminEndpoint()

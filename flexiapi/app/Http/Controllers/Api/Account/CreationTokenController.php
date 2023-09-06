@@ -19,15 +19,16 @@
 
 namespace App\Http\Controllers\Api\Account;
 
-use App\AccountCreationRequestToken;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 use App\AccountCreationToken;
-use App\Libraries\FlexisipPusherConnector;
+use App\AccountCreationRequestToken;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+use App\Libraries\FlexisipPusherConnector;
 use App\Rules\AccountCreationRequestToken as RulesAccountCreationRequestToken;
 
 class CreationTokenController extends Controller
@@ -39,6 +40,17 @@ class CreationTokenController extends Controller
             'pn_param' => 'required',
             'pn_prid' => 'required',
         ]);
+
+        $last = AccountCreationToken::where('pn_provider', $request->get('pn_provider'))
+            ->where('pn_paparam', $request->get('pn_param'))
+            ->where('pn_prid', $request->get('pn_prid'))
+            ->where('created_at', '>=', Carbon::now()->subMinutes(config('app.account_creation_token_retry_minutes'))->toDateTimeString())
+            ->latest()
+            ->first();
+
+        if ($last) {
+            abort(429, 'Last token requested too recently');
+        }
 
         $token = new AccountCreationToken;
         $token->token = Str::random(WebAuthenticateController::$emailCodeSize);
