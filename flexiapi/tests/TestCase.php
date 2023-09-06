@@ -30,6 +30,9 @@ abstract class TestCase extends BaseTestCase
 
     const ALGORITHMS = ['md5' => 'MD5', 'sha256' => 'SHA-256'];
 
+    protected $route = '/api/accounts/me';
+    protected $method = 'GET';
+
     protected function keyAuthenticated(Account $account)
     {
         return $this->withHeaders([
@@ -37,11 +40,11 @@ abstract class TestCase extends BaseTestCase
         ]);
     }
 
-    protected function generateFirstResponse(Password $password)
+    protected function generateFirstResponse(Password $password, ?string $method = null, ?string $route = null)
     {
         return $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier
-        ])->json($this->method, $this->route);
+        ])->json($method ?? $this->method, $route ?? $this->route);
     }
 
     protected function generateSecondResponse(Password $password, $firstResponse)

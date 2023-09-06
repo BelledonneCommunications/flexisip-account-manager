@@ -39,6 +39,11 @@ return [
     'api_key_expiration_minutes' => env('APP_API_KEY_EXPIRATION_MINUTES', 60),
 
     /**
+     * Amount of minutes before re-authorizing the generation of a new account creation token
+     */
+    'account_creation_token_retry_minutes' => env('APP_API_ACCOUNT_CREATION_TOKEN_RETRY_MINUTES', 60),
+
+    /**
      * External interfaces
      */
     'flexisip_pusher_path' => env('APP_FLEXISIP_PUSHER_PATH', null),
