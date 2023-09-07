@@ -24,6 +24,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 
@@ -67,7 +68,7 @@ class RegisterController extends Controller
 
     public function storeEmail(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'terms' => 'accepted',
             'privacy' => 'accepted',
             'username' => [
@@ -90,6 +91,15 @@ class RegisterController extends Controller
                 ? 'required|email|confirmed|unique:accounts,email'
                 : 'required|email|confirmed',
         ]);
+
+        // Weird workaround to force the injections of the validation errors,
+        // the redirection seems to clear them when the captcha is used
+        if ($validator->fails()) {
+            return view('account.register.email', [
+                'errors' => $validator->messages(),
+                'domain' => '@' . config('app.sip_domain')
+            ]);
+        }
 
         $account = new Account;
         $account->username = $request->get('username');
