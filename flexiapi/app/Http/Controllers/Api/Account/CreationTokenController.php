@@ -42,13 +42,15 @@ class CreationTokenController extends Controller
         ]);
 
         $last = AccountCreationToken::where('pn_provider', $request->get('pn_provider'))
-            ->where('pn_paparam', $request->get('pn_param'))
+            ->where('pn_param', $request->get('pn_param'))
             ->where('pn_prid', $request->get('pn_prid'))
             ->where('created_at', '>=', Carbon::now()->subMinutes(config('app.account_creation_token_retry_minutes'))->toDateTimeString())
+            ->where('used', true)
             ->latest()
             ->first();
 
         if ($last) {
+            Log::channel('events')->info('API: Token throttled', ['token' => $last->token]);
             abort(429, 'Last token requested too recently');
         }
 
