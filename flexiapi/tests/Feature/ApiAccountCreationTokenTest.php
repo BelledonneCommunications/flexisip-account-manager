@@ -64,9 +64,13 @@ class ApiAccountCreationTokenTest extends TestCase
         ])->assertStatus(422);
     }
 
-    public function testExpiration()
+    public function testThrottling()
     {
-        $existing = AccountCreationToken::factory()->create();
+        AccountCreationToken::factory()->create([
+            'pn_provider' => $this->pnProvider,
+            'pn_param' => $this->pnParam,
+            'pn_prid' => $this->pnPrid,
+        ]);
 
         $this->json($this->method, $this->tokenRoute, [
             'pn_provider' => $this->pnProvider,
@@ -74,11 +78,14 @@ class ApiAccountCreationTokenTest extends TestCase
             'pn_prid' => $this->pnPrid,
         ])->assertStatus(503);
 
+        // Redeem all the tokens
+        AccountCreationToken::where('used', false)->update(['used' => true]);
+
         $this->json($this->method, $this->tokenRoute, [
-            'pn_provider' => $existing->pnProvider,
-            'pn_param' => $existing->pnParam,
-            'pn_prid' => $existing->pnPrid,
-        ])->assertStatus(422);
+            'pn_provider' => $this->pnProvider,
+            'pn_param' => $this->pnParam,
+            'pn_prid' => $this->pnPrid,
+        ])->assertStatus(429);
     }
 
     public function testAdminEndpoint()
