@@ -22,7 +22,6 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 
 use App\Account;
-use App\Admin;
 use App\ApiKey;
 use Carbon\Carbon;
 
@@ -40,38 +39,21 @@ class CreateAdminAccountTest extends Command
     {
         $username = 'admin_test';
         $domain = 'sip.example.org';
+
+        $this->call('accounts:create-admin-account', [
+            '--username' => $username,
+            '--domain' => $domain,
+            '--password' => 'admin_test_password'
+        ]);
+
         $secret = 'no_secret_at_all';
 
-        // Delete the existing keys
-        ApiKey::where('key', $secret)->delete();
-
-        // Delete the account if it already exists
         $account = Account::withoutGlobalScopes()
-                          ->where('username', $username)
-                          ->where('domain', $domain)
-                          ->first();
+            ->where('username', $username)
+            ->where('domain', $domain)
+            ->first();
 
-        if ($account) {
-            // We don't have foreign keys yet…
-            $account->admin()->delete();
-            $account->delete();
-        }
-
-        $account = new Account;
-        $account->username = $username;
-        $account->domain = $domain;
-        $account->email = 'admin_test@sip.example.org';
-        $account->activated = true;
-        $account->user_agent = 'Test';
-        $account->ip_address = '0.0.0.0';
-
-        // Create an "old" account to prevent unwanted deletion on the test server
-        $account->created_at = Carbon::now()->subYears(3);
-        $account->save();
-
-        $admin = new Admin;
-        $admin->account_id = $account->id;
-        $admin->save();
+        ApiKey::where('account_id', $account->id)->delete();
 
         $apiKey = new ApiKey;
         $apiKey->account_id = $account->id;
@@ -79,7 +61,7 @@ class CreateAdminAccountTest extends Command
         $apiKey->key = $secret;
         $apiKey->save();
 
-        $this->info('Admin test account created: "sip:' . $username . '@' . $domain . '" | API Key: "' . $secret . '"');
+        $this->info('API Key updated to: ' . $secret);
 
         return 0;
     }

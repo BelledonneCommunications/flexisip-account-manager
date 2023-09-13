@@ -159,6 +159,14 @@ Several other parameters are also available to customize the migration process, 
 
     php artisan -h db:import
 
+### Create an admin account
+
+Create an admin account, an API Key will also be generated along the way, it might expire after a while.
+
+If no parameters are put, a default admin account will be created.
+
+    php artisan accounts:create-admin-account {--u|username=} {--p|password=} {--d|domain=}
+
 ### Clear the expired API Keys
 
 This will remove the API Keys that were not used after `x minutes`.
@@ -189,7 +197,7 @@ The base request will not delete the related tombstones by default. You need to 
 
 ### Set an account admin
 
-This command will set the admin role to any available Flexisip account (the external Flexisip database need to be configured beforehand). You need to use the account DB id as a parameter in this command.
+This command will set the admin role to any available Flexisip account. You need to use the account DB id as a parameter in this command.
 
     php artisan accounts:set-admin {account_id}
 
