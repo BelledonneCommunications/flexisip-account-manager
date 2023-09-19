@@ -17,25 +17,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace Database\Seeders;
+namespace App;
 
-use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-use App\StatisticsMessage;
-use App\StatisticsMessageDevice;
-use Illuminate\Support\Facades\Schema;
-
-class StatisticsMessagesSeeder extends Seeder
+class StatisticsCall extends Model
 {
-    public function run()
-    {
-        Schema::disableForeignKeyConstraints();
-        StatisticsMessageDevice::truncate();
-        StatisticsMessage::truncate();
-        Schema::enableForeignKeyConstraints();
+    use HasFactory;
 
-        StatisticsMessage::factory()
-            ->count(10000)
-            ->create();
-    }
+    public $incrementing = false;
+    protected $casts = ['initiated_at' => 'datetime', 'ended_at' => 'datetime'];
+    protected $keyType = 'string';
 }

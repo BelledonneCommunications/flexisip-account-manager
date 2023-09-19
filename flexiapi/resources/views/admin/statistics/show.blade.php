@@ -13,6 +13,7 @@
         'items' => [
             route('admin.statistics.show', ['type' => 'messages']) => 'Messages',
             route('admin.statistics.show', ['type' => 'accounts']) => 'Accounts',
+            route('admin.statistics.show', ['type' => 'calls']) => 'Calls',
         ],
     ])
 

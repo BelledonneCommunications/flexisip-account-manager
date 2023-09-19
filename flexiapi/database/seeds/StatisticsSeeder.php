@@ -17,20 +17,34 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App;
+namespace Database\Seeders;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\StatisticsCall;
+use App\StatisticsCallDevice;
+use App\StatisticsMessage;
+use App\StatisticsMessageDevice;
 
-class StatisticsMessageDevice extends Model
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
+
+class StatisticsSeeder extends Seeder
 {
-    use HasFactory;
-
-    protected $fillable = ['message_id', 'to_username', 'to_domain', 'device_id', 'last_status', 'received_at'];
-    protected $casts = ['received_at' => 'datetime'];
-
-    public function message()
+    public function run()
     {
-        return $this->hasOne(StatisticsMessage::class, 'id', 'message_id');
+        Schema::disableForeignKeyConstraints();
+        StatisticsMessageDevice::truncate();
+        StatisticsMessage::truncate();
+
+        StatisticsCallDevice::truncate();
+        StatisticsCall::truncate();
+        Schema::enableForeignKeyConstraints();
+
+        StatisticsMessage::factory()
+            ->count(10000)
+            ->create();
+
+        StatisticsCall::factory()
+            ->count(10000)
+            ->create();
     }
 }

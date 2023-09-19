@@ -657,7 +657,7 @@ JSON parameters:
 
 * `id` required, string
 * `from` required, string the sender of the message
-* `sent_at` required, string, format ISO8601, when the mesage was actually sent
+* `sent_at` required, string, format ISO8601, when the message was actually sent
 * `encrypted` required, boolean
 * `conference_id` string
 
@@ -671,6 +671,44 @@ JSON parameters:
 
 * `last_status` required, an integer containing the last status code
 * `received_at` required, format ISO8601, when the message was received
+
+### `POST /statistics/calls`
+
+<span class="badge badge-warning">Admin</span>
+
+Announce the beginning of a call.
+
+JSON parameters:
+
+* `id` required, string
+* `from` required, string the initier of the call
+* `to` required, string the destination of the call
+* `initiated_at` required, string, format ISO8601, when the call was started
+* `ended_at` string, format ISO8601, when the call finished
+* `conference_id` string
+
+### `PATCH /statistics/calls/{call_id}/devices/{device_id}`
+
+<span class="badge badge-warning">Admin</span>
+
+Complete a call status.
+
+JSON parameters:
+
+* `rang_at` format ISO8601, when the device rang
+* `invite_terminated`
+  * `at` format ISO8601, when the invitation ended
+  * `state` the termination state
+
+### `PATCH /statistics/calls/{call_id}`
+
+<span class="badge badge-warning">Admin</span>
+
+Update a call when ending.
+
+JSON parameters:
+
+* `ended_at` required, string, format ISO8601, when the call finished
 
 # Non-API Endpoints
 

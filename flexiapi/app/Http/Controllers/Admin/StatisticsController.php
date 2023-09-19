@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Account;
+use App\StatisticsMessage;
+use App\StatisticsCall;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\StatisticsMessage;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Carbon\CarbonPeriod;
@@ -48,6 +49,12 @@ class StatisticsController extends Controller
                 $dateColumn = 'sent_at';
                 $label = 'Messages';
                 $data = StatisticsMessage::orderBy($dateColumn, 'asc');
+                break;
+
+            case 'calls':
+                $dateColumn = 'initiated_at';
+                $label = 'Calls';
+                $data = StatisticsCall::orderBy($dateColumn, 'asc');
                 break;
 
             case 'accounts':

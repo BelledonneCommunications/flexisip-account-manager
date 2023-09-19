@@ -22,15 +22,15 @@ namespace App;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StatisticsMessageDevice extends Model
+class StatisticsCallDevice extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['message_id', 'to_username', 'to_domain', 'device_id', 'last_status', 'received_at'];
-    protected $casts = ['received_at' => 'datetime'];
+    protected $fillable = ['call_id', 'device_id', 'rang_at', 'invite_terminated_at', 'invite_terminated_state', 'call_id'];
+    protected $casts = ['rang_at' => 'datetime'];
 
-    public function message()
+    public function call()
     {
-        return $this->hasOne(StatisticsMessage::class, 'id', 'message_id');
+        return $this->hasOne(StatisticsCall::class, 'id', 'call_id');
     }
 }

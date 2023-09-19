@@ -45,9 +45,21 @@ class Account extends Authenticatable
 
     public static $dtmfProtocols = ['sipinfo' => 'SIPInfo', 'rfc2833' => 'RFC2833', 'sipmessage' => 'SIP Message'];
 
-    /**
-     * Scopes
-     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleted(function ($item) {
+            StatisticsMessage::where('from_username', $item->username)
+                ->where('from_domain', $item->domain)
+                ->delete();
+
+            StatisticsCall::where('from_username', $item->username)
+                ->where('from_domain', $item->domain)
+                ->delete();
+        });
+    }
+
     protected static function booted()
     {
         static::addGlobalScope('domain', function (Builder $builder) {
@@ -179,8 +191,8 @@ class Account extends Authenticatable
     public function getFullIdentifierAttribute()
     {
         $displayName = $this->attributes['display_name']
-                    ? '"' . $this->attributes['display_name'] . '" '
-                    : '';
+            ? '"' . $this->attributes['display_name'] . '" '
+            : '';
 
         return $displayName . '<sip:' . $this->getIdentifierAttribute() . '>';
     }
