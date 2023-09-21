@@ -32,6 +32,13 @@ use Endroid\QrCode\Writer\PngWriter;
 
 class ProvisioningController extends Controller
 {
+    public function documentation(Request $request)
+    {
+        return view('provisioning.documentation', [
+            'documentation' => markdownDocumentationView('provisioning.documentation_markdown')
+        ]);
+    }
+
     public function qrcode(Request $request, string $provisioningToken)
     {
         $account = Account::withoutGlobalScopes()

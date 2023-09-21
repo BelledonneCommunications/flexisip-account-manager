@@ -60,6 +60,7 @@ Route::group(['middleware' => 'auth.digest_or_key'], function () {
 });
 
 Route::name('provisioning.')->prefix('provisioning')->controller(ProvisioningController::class)->group(function () {
+    Route::get('documentation', 'documentation')->name('documentation');
     Route::get('auth_token/{auth_token}', 'authToken')->name('auth_token');
     Route::get('qrcode/{provisioning_token}', 'qrcode')->name('qrcode');
     Route::get('{provisioning_token?}', 'show')->name('show');

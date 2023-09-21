@@ -34,7 +34,7 @@ class StatisticsCallController extends Controller
             'from' => 'required|string|max:256',
             'to' => 'required|string|max:256',
             'initiated_at' => 'required|iso_date',
-            'ended_at' => 'iso_date',
+            'ended_at' => 'iso_date|nullable',
             'conference_id' => 'string|nullable',
         ]);
 

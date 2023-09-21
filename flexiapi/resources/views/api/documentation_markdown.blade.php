@@ -714,45 +714,6 @@ JSON parameters:
 
 The following URLs are **not API endpoints** they are not returning `JSON` content and they are not located under `/api` but directly under the root path.
 
-## Provisioning
-
-When an account is having an available `provisioning_token` it can be provisioned using the two following URL.
-
-### `GET /provisioning`
-
-<span class="badge badge-success">Public</span>
-
-Return the provisioning information available in the liblinphone configuration file (if correctly configured).
-
-### `GET /provisioning/{provisioning_token}?reset_password`
-
-<span class="badge badge-success">Public</span>
-
-Return the provisioning information available in the liblinphone configuration file.
-If the `provisioning_token` is valid the related account information are added to the returned XML. The account is then considered as "provisioned" and those account related information will be removed in the upcoming requests (the content will be the same as the previous url).
-
-If the account is not activated and the `provisioning_token` is valid. The account will be activated.
-
-URL parameters:
-
-* `reset_password` optional, reset the password while doing the provisioning
-
-### `GET /provisioning/qrcode/{provisioning_token}?reset_password`
-
-<span class="badge badge-success">Public</span>
-
-Return a QRCode that points to the provisioning URL.
-
-URL parameters:
-
-* `reset_password` optional, reset the password while doing the provisioning
-
-### `GET /provisioning/me`
-
-<span class="badge badge-info">User</span>
-
-Return the same base content as the previous URL and the account related information, similar to the `provisioning_token` endpoint. However this endpoint will always return those information.
-
 ## Contacts list
 
 ### `GET /contacts/vcard`
