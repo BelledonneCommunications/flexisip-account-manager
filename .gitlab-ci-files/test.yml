@@ -12,11 +12,8 @@ rocky8-test:
     - php artisan key:generate
     - vendor/bin/phpunit --log-junit $CI_PROJECT_DIR/flexiapi_phpunit.log
 
-debian11-test:
+.debian-test:
   extends: .test
-  image: gitlab.linphone.org:4567/bc/public/docker/debian11-php:$DEBIAN_11_IMAGE_VERSION
-  needs:
-    - debian11-package
   script:
     - pwd
     - apt update
@@ -27,6 +24,18 @@ debian11-test:
     - vendor/bin/phpmd . ansi phpmd.xml
     - php artisan key:generate
     - vendor/bin/phpunit --log-junit $CI_PROJECT_DIR/flexiapi_phpunit.log
+
+debian11-test:
+  extends: .debian-test
+  image: gitlab.linphone.org:4567/bc/public/docker/debian11-php:$DEBIAN_11_IMAGE_VERSION
+  needs:
+    - debian11-package
+
+debian12-test:
+  extends: .debian-test
+  image: gitlab.linphone.org:4567/bc/public/docker/debian12-php:$DEBIAN_12_IMAGE_VERSION
+  needs:
+    - debian12-package
 
 remi-phpredis-test:
   extends: .test
