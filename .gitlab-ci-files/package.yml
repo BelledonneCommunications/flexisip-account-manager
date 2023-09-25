@@ -4,11 +4,18 @@ rocky8-package:
   script:
     - make rpm
 
-debian11-package:
+.debian_package:
   extends: .package
-  image: gitlab.linphone.org:4567/bc/public/docker/debian11-php:$DEBIAN_11_IMAGE_VERSION
   script:
     - make deb
+
+debian11-package:
+  extends: .debian_package
+  image: gitlab.linphone.org:4567/bc/public/docker/debian11-php:$DEBIAN_11_IMAGE_VERSION
+
+debian12-package:
+  extends: .debian_package
+  image: gitlab.linphone.org:4567/bc/public/docker/debian12-php:$DEBIAN_12_IMAGE_VERSION
 
 remi-phpredis-package:
   extends: .remi-package

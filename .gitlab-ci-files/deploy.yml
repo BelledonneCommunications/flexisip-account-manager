@@ -14,6 +14,14 @@ debian11-deploy:
     - debian11-package
     - debian11-test
 
+debian12-deploy:
+  extends: .deploy
+  script:
+    - ./deploy_packages.sh debian bookworm
+  needs:
+    - debian12-package
+    - debian12-test
+
 remi-deploy:
   extends: .deploy
   script:
