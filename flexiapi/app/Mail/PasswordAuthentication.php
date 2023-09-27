@@ -46,7 +46,7 @@ class PasswordAuthentication extends Mailable
                 : 'mails.authentication_text')
             ->with([
                 'link' => route('account.authenticate.email_confirm', [$this->account->confirmation_key]),
-                'provisioning_link' => route('provisioning.show', [
+                'provisioning_link' => route('provisioning.provision', [
                     'provisioning_token' => $this->account->provisioning_token,
                     'reset_password' => true
                 ]),

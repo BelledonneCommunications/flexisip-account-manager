@@ -17,6 +17,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use \Illuminate\Support\Facades\Route;
+
 Route::get('/', 'Account\AccountController@home')->name('account.home');
 Route::get('documentation', 'Account\AccountController@documentation')->name('account.documentation');
 
@@ -49,9 +51,13 @@ Route::group(['middleware' => 'auth.digest_or_key'], function () {
     Route::get('contacts/vcard', 'Account\ContactVcardController@index')->name('account.contacts.vcard.index');
 });
 
-Route::get('provisioning/auth_token/{auth_token}', 'Account\ProvisioningController@authToken')->name('provisioning.auth_token');
-Route::get('provisioning/qrcode/{provisioning_token}', 'Account\ProvisioningController@qrcode')->name('provisioning.qrcode');
-Route::get('provisioning/{provisioning_token?}', 'Account\ProvisioningController@show')->name('provisioning.show');
+Route::name('provisioning.')->prefix('provisioning')->controller('Account\ProvisioningController')->group(function () {
+    Route::get('documentation', 'documentation')->name('documentation');
+    Route::get('auth_token/{auth_token}', 'authToken')->name('auth_token');
+    Route::get('qrcode/{provisioning_token}', 'qrcode')->name('qrcode');
+    Route::get('{provisioning_token}', 'provision')->name('provision');
+    Route::get('/', 'show')->name('show');
+});
 
 if (publicRegistrationEnabled()) {
     if (config('app.phone_authentication')) {
