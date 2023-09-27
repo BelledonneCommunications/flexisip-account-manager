@@ -178,7 +178,7 @@
             <form class="inline">
                 <div>
                     <input type="text" style="min-width: 40rem;" readonly
-                        value="{{ route('provisioning.show', $account->provisioning_token) }}">
+                        value="{{ route('provisioning.provision', $account->provisioning_token) }}">
                     <small>The following link can only be visited once</small>
                 </div>
                 <div>

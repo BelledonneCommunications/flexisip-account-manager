@@ -53,7 +53,7 @@ class ProvisioningController extends Controller
             $params['reset_password'] = true;
         }
 
-        $url = route('provisioning.show', $params);
+        $url = route('provisioning.provision', $params);
 
         $result = Builder::create()
             ->writer(new PngWriter())
@@ -80,7 +80,7 @@ class ProvisioningController extends Controller
             $account = $authToken->account;
             $authToken->delete();
 
-            return $this->show($request, null, $account);
+            return $this->generateProvisioning($request, $account);
         }
 
         abort(404);
@@ -91,10 +91,38 @@ class ProvisioningController extends Controller
      */
     public function me(Request $request)
     {
-        return $this->show($request, null, $request->user());
+        return $this->generateProvisioning($request, $request->user());
     }
 
-    public function show(Request $request, $provisioningToken = null, Account $requestAccount = null)
+    /**
+     * Get the base provisioning, with authentication
+     */
+    public function show(Request $request)
+    {
+        return $this->generateProvisioning($request);
+    }
+
+    /**
+     * Provisioning Token based provisioning
+     */
+    public function provision(Request $request, string $provisioningToken)
+    {
+        $account = Account::withoutGlobalScopes()
+            ->where('provisioning_token', $provisioningToken)
+            ->firstOrFail();
+
+        if ($account->activationExpired() || ($provisioningToken != $account->provisioning_token)) {
+            abort(404);
+        }
+
+        $account->activated = true;
+        $account->provisioning_token = null;
+        $account->save();
+
+        return $this->generateProvisioning($request, $account);
+    }
+
+    private function generateProvisioning(Request $request, Account $account = null)
     {
         // Load the hooks if they exists
         $provisioningHooks = config_path('provisioning_hooks.php');
@@ -139,17 +167,6 @@ class ProvisioningController extends Controller
             }
         }
 
-        $account = null;
-
-        // Account handling
-        if ($requestAccount) {
-            $account = $requestAccount;
-        } elseif ($provisioningToken) {
-            $account = Account::withoutGlobalScopes()
-                ->where('provisioning_token', $provisioningToken)
-                ->first();
-        }
-
         // Password reset
         if ($account && $request->has('reset_password')) {
             $account->updatePassword(Str::random(10));
@@ -164,7 +181,7 @@ class ProvisioningController extends Controller
 
         $config->appendChild($section);
 
-        if ($account && !$account->activationExpired()) {
+        if ($account) {
             $externalAccount = $account->externalAccount;
 
             $section = $dom->createElement('section');
@@ -229,18 +246,6 @@ class ProvisioningController extends Controller
                 $config->appendChild($section);
 
                 $authInfoIndex++;
-            }
-
-            if ($provisioningToken) {
-                // Activate the account
-                if ($account->activated == false
-                    && $provisioningToken == $account->provisioning_token
-                ) {
-                    $account->activated = true;
-                }
-
-                $account->provisioning_token = null;
-                $account->save();
             }
 
             $proxyConfigIndex++;

@@ -46,7 +46,7 @@ class RecoverByCode extends Mailable
                 : 'mails.authentication_text')
             ->with([
                 'recovery_code' => $this->account->recovery_code,
-                'provisioning_link' => route('provisioning.show', [
+                'provisioning_link' => route('provisioning.provision', [
                     'provisioning_token' => $this->account->provisioning_token,
                     'reset_password' => true
                 ]),

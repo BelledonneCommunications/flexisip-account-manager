@@ -41,14 +41,20 @@ When an account is having an available `provisioning_token` it can be provisione
 
 Return the provisioning information available in the liblinphone configuration file (if correctly configured).
 
+### `GET /provisioning/auth_token/{auth_token}`
+
+<span class="badge badge-success">Public</span>
+
+Return the provisioning information available linked to the account that was attached to the `auth_token`.
+
 ### `GET /provisioning/{provisioning_token}?reset_password`
 
 <span class="badge badge-success">Public</span>
 
-Return the provisioning information available in the liblinphone configuration file.
-If the `provisioning_token` is valid the related account information are added to the returned XML. The account is then considered as "provisioned" and those account related information will be removed in the upcoming requests (the content will be the same as the previous url).
+Return the provisioning information available linked to the account related to the `provisioning_token`.
+Return `404` if the `provisioning_token` provided is not valid or expired otherwise.
 
-If the account is not activated and the `provisioning_token` is valid the account will be activated.
+If the account is not activated the account will be activated. The account is then considered as "provisioned".
 
 URL parameters:
 

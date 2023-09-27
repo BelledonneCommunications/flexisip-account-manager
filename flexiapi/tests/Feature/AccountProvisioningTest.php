@@ -104,7 +104,7 @@ class AccountProvisioningTest extends TestCase
         $currentPassword = $password->password;
 
         $provioningUrl = route(
-            'provisioning.show',
+            'provisioning.provision',
             [
                 'provisioning_token' => $password->account->provisioning_token,
                 'reset_password' => true
@@ -132,9 +132,7 @@ class AccountProvisioningTest extends TestCase
     public function testConfirmationKeyProvisioning()
     {
         $response = $this->get($this->route . '/1234');
-        $response->assertStatus(200);
-        $response->assertHeader('Content-Type', 'application/xml');
-        $response->assertDontSee('ha1');
+        $response->assertStatus(404);
 
         $password = Password::factory()->create();
         $password->account->generateApiKey();
@@ -152,9 +150,7 @@ class AccountProvisioningTest extends TestCase
 
         // And then twice
         $response = $this->get($this->route . '/' . $password->account->provisioning_token)
-            ->assertStatus(200)
-            ->assertHeader('Content-Type', 'application/xml')
-            ->assertDontSee('ha1');
+            ->assertStatus(404);
 
         $password->account->refresh();
 

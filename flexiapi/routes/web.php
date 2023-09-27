@@ -63,7 +63,8 @@ Route::name('provisioning.')->prefix('provisioning')->controller(ProvisioningCon
     Route::get('documentation', 'documentation')->name('documentation');
     Route::get('auth_token/{auth_token}', 'authToken')->name('auth_token');
     Route::get('qrcode/{provisioning_token}', 'qrcode')->name('qrcode');
-    Route::get('{provisioning_token?}', 'show')->name('show');
+    Route::get('{provisioning_token}', 'provision')->name('provision');
+    Route::get('/', 'show')->name('show');
 });
 
 if (publicRegistrationEnabled()) {
