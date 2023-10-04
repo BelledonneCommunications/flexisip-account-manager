@@ -77,21 +77,6 @@ class Account extends Authenticatable
 
             $builder->where('domain', config('app.sip_domain'));
         });
-
-        /**
-         * External account handling
-         */
-        static::creating(function ($account) {
-            if (config('app.consume_external_account_on_create') && !getAvailableExternalAccount()) {
-                abort(403, 'Accounts cannot be created on the server');
-            }
-        });
-
-        static::created(function ($account) {
-            if (config('app.consume_external_account_on_create')) {
-                $account->attachExternalAccount();
-            }
-        });
     }
 
     public function scopeSip($query, string $sip)
@@ -136,11 +121,6 @@ class Account extends Authenticatable
     public function apiKey()
     {
         return $this->hasOne(ApiKey::class);
-    }
-
-    public function externalAccount()
-    {
-        return $this->hasOne(ExternalAccount::class);
     }
 
     public function contacts()
@@ -282,17 +262,6 @@ class Account extends Authenticatable
     public function activationExpired(): bool
     {
         return ($this->activationExpiration && $this->activationExpiration->isExpired());
-    }
-
-    public function attachExternalAccount(): bool
-    {
-        $externalAccount = getAvailableExternalAccount();
-
-        if (!$externalAccount) abort(403, 'No External Account left');
-
-        $externalAccount->account_id = $this->id;
-        $externalAccount->used = true;
-        return $externalAccount->save();
     }
 
     public function generateApiKey(): ApiKey

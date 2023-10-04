@@ -21,7 +21,6 @@ The general idea is to allow the clients to access a unique URL returning a cust
 
 * <span class="badge badge-success">Public</span> Expose the linphonerc INI file configuration
 * <span class="badge badge-info">User</span> Inject the authentication information to allow the application to authenticate on the server directly if a valid account is detected using the `provisioning` token
-  * A similar information is also injected if an external account is linked to the main one, the application will then be able to authenticate on both accounts at the same time
 * <span class="badge badge-success">Public</span> <span class="badge badge-info">User</span> Using __Custom Hooks__ an admin is also able to have access to the authenticated User internal object and inject custom XML during the provisioning. See the specific section in the `README.md` to learn more about that feature.
 
 ### Features

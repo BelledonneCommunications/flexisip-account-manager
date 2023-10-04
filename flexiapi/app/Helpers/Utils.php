@@ -21,7 +21,6 @@ use Illuminate\Support\Str;
 
 use App\Account;
 use App\DigestNonce;
-use App\ExternalAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use League\CommonMark\CommonMarkConverter;
@@ -87,28 +86,9 @@ function markdownDocumentationView($view): string
     );
 }
 
-function getAvailableExternalAccount(): ?ExternalAccount
-{
-    if (Schema::hasTable('external_accounts')) {
-        return ExternalAccount::where('used', false)
-            ->where('account_id', null)
-            ->first();
-    }
-
-    return null;
-}
-
 function publicRegistrationEnabled(): bool
 {
-    if (config('app.public_registration')) {
-        if (config('app.consume_external_account_on_create')) {
-            return (bool)getAvailableExternalAccount();
-        }
-
-        return true;
-    }
-
-    return false;
+    return (config('app.public_registration'));
 }
 
 function isRegularExpression($string): bool

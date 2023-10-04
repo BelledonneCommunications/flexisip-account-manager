@@ -98,9 +98,6 @@
                         @endif
                     </td>
                     <td>
-                        @if ($account->externalAccount)
-                            <span class="badge badge-secondary" title="External Account attached">EA</span>
-                        @endif
                         @if ($account->email)
                             <span class="badge badge-info">Email</span>
                         @endif

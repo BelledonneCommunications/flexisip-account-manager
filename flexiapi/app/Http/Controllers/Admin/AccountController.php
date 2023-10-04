@@ -26,7 +26,6 @@ use Carbon\Carbon;
 
 use App\Account;
 use App\ContactsList;
-use App\ExternalAccount;
 use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
 
@@ -39,7 +38,7 @@ class AccountController extends Controller
             'order_sort' => 'in:asc,desc',
         ]);
 
-        $accounts = Account::with('externalAccount', 'contactsLists')
+        $accounts = Account::with('contactsLists')
             ->orderBy($request->get('order_by', 'updated_at'), $request->get('order_sort', 'desc'));
 
         if ($request->has('search')) {
@@ -110,7 +109,6 @@ class AccountController extends Controller
         return view('admin.account.create_edit', [
             'account' => Account::findOrFail($id),
             'protocols' => [null => 'None'] + Account::$dtmfProtocols,
-            'external_accounts_count' => ExternalAccount::where('used', false)->count(),
             'contacts_lists' => ContactsList::whereNotIn('id', function ($query) use ($id) {
                 $query->select('contacts_list_id')
                     ->from('account_contacts_list')
@@ -143,16 +141,6 @@ class AccountController extends Controller
         Log::channel('events')->info('Web Admin: Account updated', ['id' => $account->identifier]);
 
         return redirect()->route('admin.account.edit', $id);
-    }
-
-    public function attachExternalAccount(int $id)
-    {
-        $account = Account::findOrFail($id);
-        $account->attachExternalAccount();
-
-        Log::channel('events')->info('Web Admin: ExternalAccount attached', ['id' => $account->identifier]);
-
-        return redirect()->back();
     }
 
     public function provision(int $id)

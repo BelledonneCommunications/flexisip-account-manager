@@ -138,8 +138,6 @@ if (config('app.web_panel')) {
 
         Route::name('account.')->prefix('accounts')->group(function () {
             Route::controller(AdminAccountController::class)->group(function () {
-                Route::get('{account_id}/external_account/attach', 'attachExternalAccount')->name('external_account.attach');
-
                 Route::get('{account_id}/provision', 'provision')->name('provision');
 
                 Route::get('create', 'create')->name('create');

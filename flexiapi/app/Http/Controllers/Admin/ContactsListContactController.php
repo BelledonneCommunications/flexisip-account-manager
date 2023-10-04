@@ -28,8 +28,7 @@ class ContactsListContactController extends Controller
 {
     public function add(Request $request, int $contactsListId)
     {
-        $accounts = Account::orderBy('updated_at', $request->get('updated_at_order', 'desc'))
-            ->with('externalAccount');
+        $accounts = Account::orderBy('updated_at', $request->get('updated_at_order', 'desc'));
 
         if ($request->has('search')) {
             $accounts = $accounts->where('username', 'like', '%' . $request->get('search') . '%');

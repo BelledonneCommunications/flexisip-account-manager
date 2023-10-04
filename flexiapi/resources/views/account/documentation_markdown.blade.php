@@ -100,14 +100,6 @@ Administrators can create and edit accounts directly from the admin panel. Durin
 
 The deletion of an account is definitive, all the database related data (password, aliases…) will be destroyed after the deletion.
 
-### Attach the account to an External Account
-
-@if (config('app.consume_external_account_on_create') == false)
-*The feature is not enabled on this instance.*
-@endif
-
-It is possible to import external accounts in the application. If this feature is enabled those External Accounts can be attached during the account creation process or afterward using the Account page dedicated button.
-
 ### Create, edit and delete account types
 
 An adminisator can create, edit and delete account types. Those can be used to categorize accounts in clients, they are often used for Internet of Things related devices.

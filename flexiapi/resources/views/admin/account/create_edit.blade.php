@@ -203,18 +203,6 @@
             </p>
         @endif
 
-        <h2>External Account</h2>
-
-        @if ($account->externalAccount)
-            <p>
-                <b>Identifier:</b> {{ $account->externalAccount->identifier }}<br />
-            </p>
-        @else
-            <a class="btn @if ($external_accounts_count == 0) disabled @endif"
-                href="{{ route('admin.account.external_account.attach', $account->id) }}">Attach an External Account
-                ({{ $external_accounts_count }} left)</a>
-        @endif
-
         <h2>Actions</h2>
 
         @if ($account->dtmf_protocol)
