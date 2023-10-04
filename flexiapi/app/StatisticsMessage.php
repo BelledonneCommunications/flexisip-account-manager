@@ -20,13 +20,21 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+
+use Awobaz\Compoships\Compoships;
+use Awobaz\Compoships\Database\Eloquent\Model;
 
 class StatisticsMessage extends Model
 {
     use HasFactory;
+    use Compoships;
 
     public $incrementing = false;
     protected $casts = ['sent_at' => 'datetime'];
     protected $keyType = 'string';
+
+    public function accountFrom()
+    {
+        return $this->belongsTo(Account::class, ['username', 'domain'], ['to_username', 'to_domain']);
+    }
 }

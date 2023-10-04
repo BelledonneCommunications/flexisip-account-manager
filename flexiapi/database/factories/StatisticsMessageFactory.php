@@ -3,9 +3,12 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Awobaz\Compoships\Database\Eloquent\Factories\ComposhipsFactory;
 
 class StatisticsMessageFactory extends Factory
 {
+    use ComposhipsFactory;
+
     public function definition(): array
     {
         return [

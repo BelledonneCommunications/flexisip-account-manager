@@ -20,7 +20,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+
+use Awobaz\Compoships\Database\Eloquent\Model;
 
 class StatisticsMessageDevice extends Model
 {
@@ -32,5 +33,10 @@ class StatisticsMessageDevice extends Model
     public function message()
     {
         return $this->hasOne(StatisticsMessage::class, 'id', 'message_id');
+    }
+
+    public function accountTo()
+    {
+        return $this->belongsTo(Account::class, ['username', 'domain'], ['to_username', 'to_domain']);
     }
 }

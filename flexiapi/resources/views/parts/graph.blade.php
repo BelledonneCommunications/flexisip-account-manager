@@ -1,27 +1,17 @@
-<div id="chart" @if (isset($style))style="{{ $style }}" @endif></div>
+@php($id = generatePin())
+
+<div id="chart-{{ $id }}" class="chart"></div>
 
 <script>
-    const config = {!! $jsonConfig !!};
-
-    chart = document.getElementById('chart');
+    chart = document.getElementById('chart-' + {{ $id }});
     chart.innerHTML = '';
 
     canvas = document.createElement('canvas');
-    canvas.id = 'myChart';
+    canvas.id = 'myChart-' + {{ $id }};
     chart.appendChild(canvas);
 
-    @if (isset($withDataLabel) && $withDataLabel)
-        config.plugins = [ChartDataLabels];
-    @endif
-
-    @if (isset($showLabel) && $showLabel)
-        config.options.plugins.datalabels.formatter = function(value, context) {
-            return value + ' ' + context.dataset.label;
-        }
-    @endif
-
     new Chart(
-        document.getElementById('myChart'),
-        config
+        document.getElementById('myChart-' + {{ $id }}),
+        {!! $jsonConfig !!}
     );
 </script>

@@ -22,11 +22,24 @@ namespace App;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use Awobaz\Compoships\Compoships;
+
 class StatisticsCall extends Model
 {
     use HasFactory;
+    use Compoships;
 
     public $incrementing = false;
     protected $casts = ['initiated_at' => 'datetime', 'ended_at' => 'datetime'];
     protected $keyType = 'string';
+
+    public function accountFrom()
+    {
+        return $this->belongsTo(Account::class, ['username', 'domain'], ['to_username', 'to_domain']);
+    }
+
+    public function accountTo()
+    {
+        return $this->belongsTo(Account::class, ['username', 'domain'], ['to_username', 'to_domain']);
+    }
 }

@@ -31,6 +31,7 @@ use App\Http\Controllers\Admin\AccountDeviceController;
 use App\Http\Controllers\Admin\AccountTypeController;
 use App\Http\Controllers\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Admin\AccountImportController;
+use App\Http\Controllers\Admin\AccountStatisticsController;
 use App\Http\Controllers\Admin\ContactsListController;
 use App\Http\Controllers\Admin\ContactsListContactController;
 use App\Http\Controllers\Admin\StatisticsController;
@@ -132,6 +133,7 @@ if (config('app.web_panel')) {
             Route::get('/', 'index')->name('index');
             Route::get('/{type?}', 'show')->name('show');
             Route::post('/', 'edit')->name('edit');
+            //Route::post('search', 'search')->name('search');
         });
 
         Route::name('account.')->prefix('accounts')->group(function () {
@@ -189,6 +191,11 @@ if (config('app.web_panel')) {
                 Route::get('/', 'index')->name('index');
                 Route::get('{device_id}/delete', 'delete')->name('delete');
                 Route::delete('/', 'destroy')->name('destroy');
+            });
+
+            Route::name('statistics.')->prefix('{account}/statistics')->controller(AccountStatisticsController::class)->group(function () {
+                Route::get('/', 'show')->name('show');
+                Route::post('/', 'edit')->name('edit');
             });
 
             Route::name('action.')->prefix('{account}/actions')->controller(AccountActionController::class)->group(function () {

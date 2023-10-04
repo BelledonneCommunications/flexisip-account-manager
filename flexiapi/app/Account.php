@@ -23,17 +23,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
+
+use Awobaz\Compoships\Compoships;
 
 use App\ApiKey;
 use App\Password;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 
 class Account extends Authenticatable
 {
     use HasFactory;
+    use Compoships;
 
     protected $with = ['passwords', 'admin', 'alias', 'activationExpiration', 'emailChangeCode', 'types', 'actions'];
     protected $hidden = ['alias', 'expire_time', 'confirmation_key', 'provisioning_token', 'pivot'];
@@ -178,6 +181,26 @@ class Account extends Authenticatable
     public function types()
     {
         return $this->belongsToMany(AccountType::class);
+    }
+
+    public function statisticsFromCalls()
+    {
+        return $this->hasMany(StatisticsCall::class, ['from_username', 'from_domain'], ['username', 'domain']);
+    }
+
+    public function statisticsToCalls()
+    {
+        return $this->hasMany(StatisticsCall::class, ['to_username', 'to_domain'], ['username', 'domain']);
+    }
+
+    public function statisticsFromMessages()
+    {
+        return $this->hasMany(StatisticsMessage::class, ['from_username', 'from_domain'], ['username', 'domain']);
+    }
+
+    public function statisticsToMessageDevices()
+    {
+        return $this->hasMany(StatisticsMessageDevice::class, ['to_username', 'to_domain'], ['username', 'domain']);
     }
 
     /**

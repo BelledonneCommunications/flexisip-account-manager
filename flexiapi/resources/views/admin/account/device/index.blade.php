@@ -19,8 +19,9 @@
 
 @include('parts.tabs', [
     'items' => [
-        route('admin.account.edit', $account->id, ['type' => 'messages']) => 'Information',
-        route('admin.account.device.index', $account->id, ['type' => 'accounts']) => 'Devices',
+        route('admin.account.edit', $account->id) => 'Information',
+        route('admin.account.device.index', $account->id) => 'Devices',
+        route('admin.account.statistics.show', $account->id) => 'Statistics',
     ],
 ])
 

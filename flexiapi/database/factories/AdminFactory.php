@@ -22,7 +22,6 @@ namespace Database\Factories;
 use App\Admin;
 use App\Password;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class AdminFactory extends Factory
 {

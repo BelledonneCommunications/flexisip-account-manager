@@ -10,6 +10,7 @@
     "require": {
         "php": ">=8.0.2",
         "anhskohbo/no-captcha": "^3.5",
+        "awobaz/compoships": "^2.2",
         "doctrine/dbal": "^3.6.6",
         "endroid/qr-code": "^4.8.2",
         "fakerphp/faker": "^1.23",

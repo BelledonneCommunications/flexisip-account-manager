@@ -760,7 +760,7 @@ select.list_toggle {
     pointer-events: none;
 }
 
-#chart {
+.chart {
     min-height: 80vh;
 }
 

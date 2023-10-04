@@ -19,6 +19,7 @@
 
 namespace Database\Seeders;
 
+use App\Account;
 use App\StatisticsCall;
 use App\StatisticsCallDevice;
 use App\StatisticsMessage;
@@ -39,12 +40,11 @@ class StatisticsSeeder extends Seeder
         StatisticsCall::truncate();
         Schema::enableForeignKeyConstraints();
 
-        StatisticsMessage::factory()
-            ->count(10000)
-            ->create();
-
-        StatisticsCall::factory()
-            ->count(10000)
+        Account::factory(10)
+            ->hasStatisticsFromMessages(20)
+            ->hasStatisticsToMessageDevices(20)
+            ->hasStatisticsFromCalls(20)
+            ->hasStatisticsToCalls(20)
             ->create();
     }
 }

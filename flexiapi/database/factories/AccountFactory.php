@@ -19,14 +19,17 @@
 
 namespace Database\Factories;
 
-use App\Account;
-use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Awobaz\Compoships\Database\Eloquent\Factories\ComposhipsFactory;
+
+use App\Account;
+use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 
 class AccountFactory extends Factory
 {
     protected $model = Account::class;
+    use ComposhipsFactory;
 
     public function definition()
     {
@@ -39,7 +42,7 @@ class AccountFactory extends Factory
             'confirmation_key' => Str::random(WebAuthenticateController::$emailCodeSize),
             'provisioning_token' => Str::random(WebAuthenticateController::$emailCodeSize),
             'ip_address' => $this->faker->ipv4,
-            'created_at' => $this->faker->dateTime,
+            'created_at' => $this->faker->dateTimeBetween('-1 year'),
             'dtmf_protocol' => array_rand(Account::$dtmfProtocols),
             'activated' => true
         ];
