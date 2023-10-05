@@ -51,8 +51,6 @@ class AccountTypeController extends Controller
         $accountType->key = $request->get('key');
         $accountType->save();
 
-        $request->session()->flash('success', 'Type successfully created');
-
         return redirect()->route('admin.account.type.index');
     }
 
@@ -78,8 +76,6 @@ class AccountTypeController extends Controller
         $accountType->key = $request->get('key');
         $accountType->save();
 
-        $request->session()->flash('success', 'Type successfully updated');
-
         return redirect()->route('admin.account.type.index');
     }
 
@@ -94,8 +90,6 @@ class AccountTypeController extends Controller
     {
         $type = AccountType::findOrFail($typeId);
         $type->delete();
-
-        $request->session()->flash('success', 'Type successfully destroyed');
 
         Log::channel('events')->info('Web Admin: Account type deleted', ['type' => $type->key]);
 

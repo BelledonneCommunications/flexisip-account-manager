@@ -4,8 +4,11 @@
     <li class="breadcrumb-item">
         <a href="{{ route('admin.account.index') }}">Accounts</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">
+    <li class="breadcrumb-item">
         <a href="{{ route('admin.account.type.index') }}">Types</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+        @if ($type->id)Edit @else Create @endif
     </li>
 @endsection
 

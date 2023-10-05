@@ -22,6 +22,7 @@ return [
     'newsletter_registration_address' => env('NEWSLETTER_REGISTRATION_ADDRESS', ''),
     'phone_authentication' => env('PHONE_AUTHENTICATION', true),
     'public_registration' => env('PUBLIC_REGISTRATION', true),
+    'intercom_features' => env('INTERCOM_FEATURES', false),
     'devices_management' => env('DEVICES_MANAGEMENT', false),
     'web_panel' => env('WEB_PANEL', true),
 

@@ -113,6 +113,10 @@ pre {
     color: var(--second-7);
 }
 
+em {
+    font-style: italic;
+}
+
 pre {
     overflow: auto;
     background-color: var(--second-8);

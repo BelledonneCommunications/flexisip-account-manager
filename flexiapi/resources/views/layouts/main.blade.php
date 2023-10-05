@@ -59,7 +59,7 @@
             @hasSection('breadcrumb')
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('account.dashboard') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('account.dashboard') }}">Dashboard</a></li>
                         @yield('breadcrumb')
                     </ol>
                 </nav>

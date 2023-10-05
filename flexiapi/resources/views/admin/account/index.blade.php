@@ -13,6 +13,12 @@
             <i class="material-icons-outlined">publish</i>
             Import Accounts
         </a>
+        @if(config('app.intercom_features'))
+        <a class="btn btn-secondary" href="{{ route('admin.account.type.index') }}">
+            <i class="material-icons-outlined">category</i>
+            Types
+        </a>
+        @endif
         <a class="btn" href="{{ route('admin.account.create') }}">
             <i class="material-icons-outlined">add_circle</i>
             New Account

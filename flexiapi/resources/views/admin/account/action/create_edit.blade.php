@@ -20,7 +20,7 @@
     @endif
 
     <form method="POST"
-        action="{{ $action->id ? route('admin.account.acton.update', [$action->account->id, $action->id]) : route('admin.account.action.store') }}"
+        action="{{ $action->id ? route('admin.account.acton.update', [$action->account->id, $action->id]) : route('admin.account.action.store', $account->id) }}"
         accept-charset="UTF-8">
         @method($action->id ? 'put' : 'post')
         @csrf

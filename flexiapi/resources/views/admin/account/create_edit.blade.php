@@ -203,53 +203,55 @@
             </p>
         @endif
 
-        <h2>Actions</h2>
+        @if(config('app.intercom_features'))
+            <h2>Actions</h2>
 
-        @if ($account->dtmf_protocol)
+            @if ($account->dtmf_protocol)
+                <table class="table">
+                    <tbody>
+                        @foreach ($account->actions as $action)
+                            <tr>
+                                <th scope="row">{{ $action->key }}</th>
+                                <td>{{ $action->code }}</td>
+                                <td>
+                                    <a class="btn"
+                                        href="{{ route('admin.account.action.edit', [$account, $action->id]) }}">Edit</a>
+                                    <a class="btn"
+                                        href="{{ route('admin.account.action.delete', [$account, $action->id]) }}">Delete</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <a class="btn" href="{{ route('admin.account.action.create', $account) }}">Add</a>
+            @else
+                <p>To manage actions, you must configure the DTMF protocol in the account settings.</p>
+            @endif
+
+            <h2>Types</h2>
+
             <table class="table">
                 <tbody>
-                    @foreach ($account->actions as $action)
+                    @foreach ($account->types as $type)
                         <tr>
-                            <th scope="row">{{ $action->key }}</th>
-                            <td>{{ $action->code }}</td>
+                            <th scope="row">{{ $type->key }}</th>
                             <td>
-                                <a class="btn"
-                                    href="{{ route('admin.account.action.edit', [$account, $action->id]) }}">Edit</a>
-                                <a class="btn"
-                                    href="{{ route('admin.account.action.delete', [$account, $action->id]) }}">Delete</a>
+                                <form method="POST"
+                                    action="{{ route('admin.account.account_type.destroy', [$account, $type->id]) }}"
+                                    accept-charset="UTF-8">
+                                    @csrf
+                                    @method('delete')
+                                    <input class="btn" type="submit" value="Delete">
+                                </form>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
 
-            <a class="btn" href="{{ route('admin.account.action.create', $account) }}">Add</a>
-        @else
-            <p>To manage actions, you must configure the DTMF protocol in the account settings.</p>
+            <a class="btn" href="{{ route('admin.account.account_type.create', $account) }}">Add</a>
         @endif
-
-        <h2>Types</h2>
-
-        <table class="table">
-            <tbody>
-                @foreach ($account->types as $type)
-                    <tr>
-                        <th scope="row">{{ $type->key }}</th>
-                        <td>
-                            <form method="POST"
-                                action="{{ route('admin.account.account_type.destroy', [$account, $type->id]) }}"
-                                accept-charset="UTF-8">
-                                @csrf
-                                @method('delete')
-                                <input class="btn" type="submit" value="Delete">
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-
-        <a class="btn" href="{{ route('admin.account.account_type.create', $account) }}">Add</a>
     @endif
 
 @endsection

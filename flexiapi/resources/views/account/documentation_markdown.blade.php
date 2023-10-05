@@ -102,6 +102,10 @@ The deletion of an account is definitive, all the database related data (passwor
 
 ### Create, edit and delete account types
 
+@if (config('app.intercom_features') == false)
+*The feature is not enabled on this instance.*
+@endif
+
 An adminisator can create, edit and delete account types. Those can be used to categorize accounts in clients, they are often used for Internet of Things related devices.
 
 ## Statistics

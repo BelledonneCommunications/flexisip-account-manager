@@ -166,21 +166,32 @@ if (config('app.web_panel')) {
                 Route::post('handle', 'handle')->name('handle');
             });
 
-            Route::name('type.')->prefix('types')->controller(AccountTypeController::class)->group(function () {
-                Route::get('/', 'index')->name('index');
-                Route::get('create', 'create')->name('create');
-                Route::post('/', 'store')->name('store');
-                Route::get('{type_id}/edit', 'edit')->name('edit');
-                Route::put('{type_id}', 'update')->name('update');
-                Route::get('{type_id}/delete', 'delete')->name('delete');
-                Route::delete('{type_id}', 'destroy')->name('destroy');
-            });
+            if (config('app.intercom_features')) {
+                Route::name('type.')->prefix('types')->controller(AccountTypeController::class)->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('{type_id}/edit', 'edit')->name('edit');
+                    Route::put('{type_id}', 'update')->name('update');
+                    Route::get('{type_id}/delete', 'delete')->name('delete');
+                    Route::delete('{type_id}', 'destroy')->name('destroy');
+                });
 
-            Route::name('account_type.')->prefix('{account}/types')->controller(AccountAccountTypeController::class)->group(function () {
-                Route::get('create', 'create')->name('create');
-                Route::post('/', 'store')->name('store');
-                Route::delete('{type_id}', 'destroy')->name('destroy');
-            });
+                Route::name('account_type.')->prefix('{account}/types')->controller(AccountAccountTypeController::class)->group(function () {
+                    Route::get('create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::delete('{type_id}', 'destroy')->name('destroy');
+                });
+
+                Route::name('action.')->prefix('{account}/actions')->controller(AccountActionController::class)->group(function () {
+                    Route::get('create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('{action_id}/edit', 'edit')->name('edit');
+                    Route::put('{action_id}', 'update')->name('update');
+                    Route::get('{action_id}/delete', 'delete')->name('delete');
+                    Route::delete('{action_id}', 'destroy')->name('destroy');
+                });
+            }
 
             Route::name('contact.')->prefix('{account}/contacts')->controller(AccountContactController::class)->group(function () {
                 Route::get('create', 'create')->name('create');
@@ -198,15 +209,6 @@ if (config('app.web_panel')) {
             Route::name('statistics.')->prefix('{account}/statistics')->controller(AccountStatisticsController::class)->group(function () {
                 Route::get('/', 'show')->name('show');
                 Route::post('/', 'edit')->name('edit');
-            });
-
-            Route::name('action.')->prefix('{account}/actions')->controller(AccountActionController::class)->group(function () {
-                Route::get('create', 'create')->name('create');
-                Route::post('/', 'store')->name('store');
-                Route::get('{action_id}/edit', 'edit')->name('edit');
-                Route::put('{action_id}', 'update')->name('update');
-                Route::get('{action_id}/delete', 'delete')->name('delete');
-                Route::delete('{action_id}', 'destroy')->name('destroy');
             });
         });
 

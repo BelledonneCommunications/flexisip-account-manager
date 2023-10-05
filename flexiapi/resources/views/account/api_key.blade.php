@@ -1,9 +1,12 @@
 @extends('layouts.main', ['grid' => true])
 
+@section('breadcrumb')
+    <li class="breadcrumb-item active" aria-current="page">
+        API Key
+    </li>
+@endsection
+
 @section('content')
-    <header>
-        <h1><i class="material-icons-outlined">dashboard</i> Dashboard</h1>
-    </header>
 
     <div class="large">
         <h2><i class="material-icons-outlined">key</i>API Key</h2>
