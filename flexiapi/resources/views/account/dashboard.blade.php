@@ -28,12 +28,19 @@
         </p>
         <p>
             <i class="material-icons-outlined">lock</i>
-            <a href="{{ route('account.password') }}">
+            <a href="{{ route('account.password.show') }}">
                 @if ($account->passwords()->count() > 0)
                     Change my password
                 @else
                     Set my password
                 @endif
+            </a>
+        </p>
+
+        <p>
+            <i class="material-icons-outlined">key</i>
+            <a href="{{ route('account.api_key.show') }}">
+                API Key Management
             </a>
         </p>
 
@@ -73,26 +80,6 @@
                 <button type="submit" class="btn btn-primary">Generate</button>
             </form>-->
 
-    </div>
-
-    <div class="large">
-        <h2><i class="material-icons-outlined">key</i>API Key</h2>
-
-        <p>You can generate an API key and use it to request the different API endpoints, <a href="{{ route('api') }}">check
-                the related API documentation</a> to know how to use that key.</p>
-
-        <form method="POST" action="{{ route('account.api_key.generate') }}" accept-charset="UTF-8">
-@csrf
-
-        <div>
-            <input readonly placeholder="No key yet, press Generate"
-                @if ($account->apiKey) value="{{ $account->apiKey->key }}" @endif>
-            <label>Key</label>
-        </div>
-        <div>
-            <button type="submit" class="btn btn-primary">Generate</button>
-        </div>
-        </form>
     </div>
 
     @include('parts.account_variables', ['account' => $account])

@@ -56,7 +56,7 @@ You can @if (config('app.web_panel')) [change your email address]({{ route('acco
 
 ## Change your password
 
-Your password can also be changed from the @if (config('app.web_panel')) [password change form]({{ route('account.password') }}) @else password change form @endif. You can enable SHA-256 encrypted password when changing it (required for some clients).
+Your password can also be changed from the @if (config('app.web_panel')) [password change form]({{ route('account.password.show') }}) @else password change form @endif. You can enable SHA-256 encrypted password when changing it (required for some clients).
 
 ## Delete your account
 

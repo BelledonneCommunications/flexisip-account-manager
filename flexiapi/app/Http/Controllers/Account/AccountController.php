@@ -43,14 +43,6 @@ class AccountController extends Controller
         ]);
     }
 
-    public function generateApiKey(Request $request)
-    {
-        $account = $request->user();
-        $account->generateApiKey();
-
-        return redirect()->back();
-    }
-
     public function store(CreateAccountRequest $request)
     {
         $account = (new AccountService(api: false))->store($request);

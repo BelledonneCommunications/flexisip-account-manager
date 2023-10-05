@@ -18,6 +18,7 @@
 */
 
 use App\Http\Controllers\Account\AccountController;
+use App\Http\Controllers\Account\ApiKeyController;
 use App\Http\Controllers\Account\CreationRequestTokenController;
 use App\Http\Controllers\Account\EmailController;
 use App\Http\Controllers\Account\PasswordController;
@@ -107,8 +108,6 @@ if (config('app.web_panel')) {
         Route::controller(AccountController::class)->group(function () {
             Route::get('dashboard', 'panel')->name('account.dashboard');
 
-            Route::post('api_key', 'generateApiKey')->name('account.api_key.generate');
-
             Route::get('delete', 'delete')->name('account.delete');
             Route::delete('delete', 'destroy')->name('account.destroy');
         });
@@ -116,8 +115,13 @@ if (config('app.web_panel')) {
         Route::get('logout', 'Account\AuthenticateController@logout')->name('account.logout');
 
         Route::prefix('password')->controller(PasswordController::class)->group(function () {
-            Route::get('/', 'show')->name('account.password');
+            Route::get('/', 'show')->name('account.password.show');
             Route::post('/', 'update')->name('account.password.update');
+        });
+
+        Route::prefix('api_key')->controller(ApiKeyController::class)->group(function () {
+            Route::get('/', 'show')->name('account.api_key.show');
+            Route::post('/', 'update')->name('account.api_key.update');
         });
 
         Route::post('auth_tokens', 'Account\AuthTokenController@create')->name('account.auth_tokens.create');
