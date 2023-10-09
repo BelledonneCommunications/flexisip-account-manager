@@ -108,15 +108,17 @@
             <label>Role</label>
         </div>
 
-        <div class="select">
-            <select name="dtmf_protocol">
-                @foreach ($protocols as $value => $name)
-                    <option value="{{ $value }}" @if ($account->dtmf_protocol == $value) selected="selected" @endif>
-                        {{ $name }}</option>
-                @endforeach
-            </select>
-            <label for="dtmf_protocol">DTMF Protocol</label>
-        </div>
+        @if (config('app.intercom_features'))
+            <div class="select">
+                <select name="dtmf_protocol">
+                    @foreach ($protocols as $value => $name)
+                        <option value="{{ $value }}" @if ($account->dtmf_protocol == $value) selected="selected" @endif>
+                            {{ $name }}</option>
+                    @endforeach
+                </select>
+                <label for="dtmf_protocol">DTMF Protocol</label>
+            </div>
+        @endif
 
     </form>
 
@@ -203,7 +205,7 @@
             </p>
         @endif
 
-        @if(config('app.intercom_features'))
+        @if (config('app.intercom_features'))
             <h2>Actions</h2>
 
             @if ($account->dtmf_protocol)

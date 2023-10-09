@@ -50,6 +50,10 @@ If you forgot your password or didn't configured it, you can always recover your
 
 Once authenticated you will get access to @if (config('app.web_panel')) [your account panel]({{ route('account.dashboard') }}) @else your account panel @endif.
 
+## Generate an API Key
+
+You will be able to generate an API Key allowing you to use the {{ $app_name }} API with the API Key authentication mechanism. Check the related [API Documentation]({{ route('api') }}) to know more about this feature.
+
 ## Change your email address
 
 You can @if (config('app.web_panel')) [change your email address]({{ route('account.email.change') }}) @else change your email address @endif from the panel. A confirmation email containing a unique link will be sent to validate the new one.
@@ -73,10 +77,6 @@ From the devices management panel an admin will be able to list and delete the d
 # Admin panel
 
 This panel is only accessible to admin accounts.
-
-## Generate an API Key
-
-As an administrator, you will be able to generate an API Key allowing you to use the {{ $app_name }} API with the API Key authentication mechanism. Check the related [API Documentation]({{ route('api') }}) to know more about this feature.
 
 ## Accounts administration
 

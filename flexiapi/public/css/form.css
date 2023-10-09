@@ -215,7 +215,7 @@ form div.select:after {
     color: var(--second-6);
     position: absolute;
     right: 1rem;
-    bottom: 0rem;
+    top: 2.75rem;
     pointer-events: none;
     line-height: 4rem;
 }

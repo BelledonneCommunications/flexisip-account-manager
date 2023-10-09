@@ -1,4 +1,4 @@
-@extends('layouts.main', ['grid' => true])
+@extends('layouts.main')
 
 @section('breadcrumb')
     <li class="breadcrumb-item active" aria-current="page">
@@ -13,6 +13,8 @@
 
         <p>You can generate an API key and use it to request the different API endpoints, <a href="{{ route('api') }}">check
                 the related API documentation</a> to know how to use that key.</p>
+
+        <p>An unused key will expires after some times.</p>
 
         <form method="POST" action="{{ route('account.api_key.update') }}" accept-charset="UTF-8">
             @csrf
