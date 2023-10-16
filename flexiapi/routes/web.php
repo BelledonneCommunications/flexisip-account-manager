@@ -135,6 +135,8 @@ if (config('app.web_panel')) {
     Route::name('admin.')->prefix('admin')->middleware(['auth.admin'])->group(function () {
         Route::name('statistics.')->controller(StatisticsController::class)->prefix('statistics')->group(function () {
             Route::get('/', 'index')->name('index');
+            Route::post('call_logs', 'editCallLogs')->name('edit_call_logs');
+            Route::get('call_logs', 'showCallLogs')->name('show_call_logs');
             Route::get('/{type?}', 'show')->name('show');
             Route::post('/', 'edit')->name('edit');
             //Route::post('search', 'search')->name('search');
@@ -208,6 +210,8 @@ if (config('app.web_panel')) {
 
             Route::name('statistics.')->prefix('{account}/statistics')->controller(AccountStatisticsController::class)->group(function () {
                 Route::get('/', 'show')->name('show');
+                Route::post('call_logs', 'editCallLogs')->name('edit_call_logs');
+                Route::get('call_logs', 'showCallLogs')->name('show_call_logs');
                 Route::post('/', 'edit')->name('edit');
             });
         });

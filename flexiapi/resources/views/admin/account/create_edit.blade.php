@@ -19,13 +19,7 @@
             <input form="create_edit" class="btn" type="submit" value="Update">
         </header>
         <p title="{{ $account->updated_at }}">Updated on {{ $account->updated_at->format('d/m/Y') }}
-            @include('parts.tabs', [
-                'items' => [
-                    route('admin.account.edit', $account->id) => 'Information',
-                    route('admin.account.device.index', $account->id) => 'Devices',
-                    route('admin.account.statistics.show', $account->id) => 'Statistics',
-                ],
-            ])
+            @include('admin.account.parts.tabs')
         @else
         <header>
             <h1><i class="material-icons-outlined">people</i> Create an account</h1>

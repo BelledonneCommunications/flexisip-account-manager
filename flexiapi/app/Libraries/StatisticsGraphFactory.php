@@ -20,7 +20,6 @@
 namespace App\Libraries;
 
 use App\Account;
-use App\ContactsList;
 use App\StatisticsCall;
 use App\StatisticsMessage;
 use Carbon\Carbon;
@@ -37,6 +36,7 @@ class StatisticsGraphFactory
     public function __construct(
         private Request $request,
         private string $type = 'messages',
+        public ?string $domain = null, // both from and to filter
         public ?string $fromUsername = null,
         public ?string $fromDomain = null,
         public ?string $toUsername = null,
@@ -53,47 +53,68 @@ class StatisticsGraphFactory
             case 'messages':
                 $dateColumn = 'sent_at';
                 $label = 'Messages';
-                $this->data = StatisticsMessage::orderBy($dateColumn, 'asc');
+                $fromQuery = StatisticsMessage::query();
+                $toQuery = StatisticsMessage::query();
 
                 if (!config('app.admins_manage_multi_domains')) {
-                    $this->data->where('from_domain', config('app.sip_domain'));
+                    $fromQuery->where('from_domain', config('app.sip_domain'));
+                    $toQuery->toDomain($this->domain);
+                } elseif ($this->domain) {
+                    $fromQuery->where('from_domain', $this->domain);
+                    $toQuery->toDomain($this->domain);
                 } elseif ($this->fromDomain) {
-                    $this->data->where('from_domain', $this->fromDomain)->orderBy('from_domain');
+                    $fromQuery->where('from_domain', $this->fromDomain)->orderBy('from_domain');
 
                     if ($this->fromUsername) {
-                        $this->data->where('from_username', $this->fromUsername);
+                        $fromQuery->where('from_username', $this->fromUsername);
                     }
                 } elseif ($this->toDomain && $this->toUsername) {
-                    $this->data->whereIn('id', function ($query) {
-                        $query->select('message_id')
-                            ->from('statistics_message_devices')
-                            ->where('to_username', $this->toUsername)
-                            ->where('to_domain', $this->toDomain);
-                    });
+                    $toQuery->toUsernameDomain($this->toUsername, $this->toDomain);
                 }
+
+                if ($this->request->has('contacts_list')) {
+                    $fromQuery = $fromQuery->fromByContactsList($this->request->get('contacts_list'));
+                    $toQuery = $toQuery->toByContactsList($this->request->get('contacts_list'));
+                }
+
+                $this->data = $fromQuery; //->union($toQuery);
+                $this->data->orderBy($dateColumn, 'asc');
 
                 break;
 
             case 'calls':
                 $dateColumn = 'initiated_at';
                 $label = 'Calls';
-                $this->data = StatisticsCall::orderBy($dateColumn, 'asc');
+                $fromQuery = StatisticsCall::query();
+                $toQuery = StatisticsCall::query();
 
                 if (!config('app.admins_manage_multi_domains')) {
-                    $this->data->where('from_domain', config('app.sip_domain'));
+                    $fromQuery->where('from_domain', config('app.sip_domain'));
+                    $toQuery->where('to_domain', config('app.sip_domain'));
+                } elseif ($this->domain) {
+                    $fromQuery = $fromQuery->where('to_domain', $this->domain);
+                    $toQuery = $toQuery->where('from_domain', $this->domain);
                 } elseif ($this->fromDomain) {
-                    $this->data->where('from_domain', $this->fromDomain)->orderBy('from_domain');
+                    $fromQuery->where('from_domain', $this->fromDomain)->orderBy('from_domain');
 
                     if ($this->fromUsername) {
-                        $this->data->where('from_username', $this->fromUsername);
+                        $fromQuery->where('from_username', $this->fromUsername);
                     }
                 } elseif ($this->toDomain) {
-                    $this->data->where('to_domain', $this->toDomain)->orderBy('to_domain');
+                    $toQuery->where('to_domain', $this->toDomain)->orderBy('to_domain');
 
                     if ($this->toUsername) {
-                        $this->data->where('to_username', $this->toUsername);
+                        $toQuery->where('to_username', $this->toUsername);
                     }
                 }
+
+                if ($this->request->has('contacts_list')) {
+                    $fromQuery = $fromQuery->fromByContactsList($this->request->get('contacts_list'));
+                    $toQuery = $toQuery->toByContactsList($this->request->get('contacts_list'));
+                }
+
+                $this->data = $fromQuery; //->union($toQuery);
+                $this->data->orderBy($dateColumn, 'asc');
 
                 break;
 
@@ -101,10 +122,13 @@ class StatisticsGraphFactory
                 $label = 'Accounts';
                 $this->data = Account::orderBy($dateColumn, 'asc');
 
+                // Accounts doesn't have a from and to
+                $this->domain = $this->domain ?? $this->fromDomain;
+
                 if (!config('app.admins_manage_multi_domains')) {
                     $this->data->where('domain', config('app.sip_domain'));
-                } elseif ($this->fromDomain) {
-                    $this->data->where('domain', $this->fromDomain)->orderBy('domain');
+                } elseif ($this->domain) {
+                    $this->data->where('domain', $this->domain);
 
                     if ($this->fromUsername) {
                         $this->data->where('username', $this->fromUsername);

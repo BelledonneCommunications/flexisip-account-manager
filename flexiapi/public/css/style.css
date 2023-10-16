@@ -113,6 +113,10 @@ pre {
     color: var(--second-7);
 }
 
+b {
+    font-weight: bold;
+}
+
 em {
     font-style: italic;
 }

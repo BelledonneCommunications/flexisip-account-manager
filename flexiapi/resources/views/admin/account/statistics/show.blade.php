@@ -16,13 +16,7 @@
     <h1><i class="material-icons-outlined">people</i> {{ $account->identifier }}</h1>
 </header>
 
-@include('parts.tabs', [
-    'items' => [
-        route('admin.account.edit', $account->id) => 'Information',
-        route('admin.account.device.index', $account->id) => 'Devices',
-        route('admin.account.statistics.show', $account->id) => 'Statistics',
-    ],
-])
+@include('admin.account.parts.tabs')
 
 <div>
     <form class="inline" method="POST" action="{{ route('admin.account.statistics.edit', $account) }}" accept-charset="UTF-8">

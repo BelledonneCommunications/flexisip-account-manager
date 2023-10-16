@@ -34,22 +34,20 @@
             </div>
         @endif
 
-        @if ($type == 'accounts')
-            <div class="select">
-                <select name="contacts_list" onchange="this.form.submit()">
-                    <option value="">
-                        Select a contacts list
+        <div class="select">
+            <select name="contacts_list" onchange="this.form.submit()">
+                <option value="">
+                    Select a contacts list
+                </option>
+                @foreach ($contacts_lists as $key => $name)
+                    <option value="{{ $key }}"
+                        @if (request()->get('contacts_list', '') == $key) selected="selected" @endif>
+                        {{ $name }}
                     </option>
-                    @foreach ($contacts_lists as $key => $name)
-                        <option value="{{ $key }}"
-                            @if (request()->get('contacts_list', '') == $key) selected="selected" @endif>
-                            {{ $name }}
-                        </option>
-                    @endforeach
-                </select>
-                <label for="contacts_list">Contacts list</label>
-            </div>
-        @endif
+                @endforeach
+            </select>
+            <label for="contacts_list">Contacts list</label>
+        </div>
 
         <div>
             <a href="{{ route('admin.statistics.show', ['by' => 'day', 'type' => $type] + $request->only(['from', 'to', 'domain', 'contacts_list'])) }}"

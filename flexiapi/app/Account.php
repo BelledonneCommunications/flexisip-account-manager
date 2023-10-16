@@ -32,6 +32,7 @@ use Awobaz\Compoships\Compoships;
 use App\ApiKey;
 use App\Password;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+use Doctrine\DBAL\Query;
 
 class Account extends Authenticatable
 {
@@ -89,6 +90,16 @@ class Account extends Authenticatable
         };
 
         return $query->where('id', '<', 0);
+    }
+
+    public static function subByContactsList($query, int $contactsListId)
+    {
+        return $query->from('accounts')
+            ->whereIn('id', function ($query) use ($contactsListId) {
+                $query->select('contact_id')
+                    ->from('contacts_list_contact')
+                    ->where('contacts_list_id', $contactsListId);
+            });
     }
 
     /**

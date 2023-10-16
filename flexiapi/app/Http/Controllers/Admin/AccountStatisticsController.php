@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Account;
 use App\Http\Controllers\Controller;
 use App\Libraries\StatisticsGraphFactory;
+use App\StatisticsCall;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AccountStatisticsController extends Controller
 {
@@ -57,6 +59,43 @@ class AccountStatisticsController extends Controller
             'messagesToGraph' => $messagesToGraph,
             'callsFromGraph' => $callsFromGraph,
             'callsToGraph' => $callsToGraph,
+        ]);
+    }
+
+    public function editCallLogs(Request $request, int $accountId)
+    {
+        return redirect()->route('admin.account.statistics.show_call_logs', [
+            'from' => $request->get('from'),
+            'to' => $request->get('to'),
+            'account' => $accountId
+        ]);
+    }
+
+    public function showCallLogs(Request $request, int $accountId)
+    {
+        $account = Account::findOrFail($accountId);
+        $toQuery = DB::table('statistics_calls')
+            ->where('to_domain', $account->domain)
+            ->where('to_username', $account->username);
+        $calls = StatisticsCall::where('from_domain', $account->domain)
+            ->where('from_username', $account->username);
+
+        if ($request->get('to')) {
+            $toQuery = $toQuery->where('initiated_at', '<=', $request->get('to'));
+            $calls = $calls->where('initiated_at', '<=', $request->get('to'));
+        }
+
+        if ($request->get('from')) {
+            $toQuery = $toQuery->where('initiated_at', '>=', $request->get('from'));
+            $calls = $calls->where('initiated_at', '>=', $request->get('from'));
+        }
+
+        $calls = $calls->union($toQuery);
+
+        return view('admin.account.statistics.show_call_logs', [
+            'account' => $account,
+            'calls' => $calls->orderBy('initiated_at', 'desc')->paginate(30),
+            'request' => $request,
         ]);
     }
 }

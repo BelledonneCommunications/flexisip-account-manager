@@ -17,13 +17,7 @@
     <a href="{{ route('admin.account.edit', $account->id) }}" class="btn btn-secondary oppose">Cancel</a>
 </header>
 
-@include('parts.tabs', [
-    'items' => [
-        route('admin.account.edit', $account->id) => 'Information',
-        route('admin.account.device.index', $account->id) => 'Devices',
-        route('admin.account.statistics.show', $account->id) => 'Statistics',
-    ],
-])
+@include('admin.account.parts.tabs')
 
 <table class="table">
     <thead>

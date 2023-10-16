@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Awobaz\Compoships\Compoships;
 use Awobaz\Compoships\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class StatisticsMessage extends Model
 {
@@ -36,5 +37,49 @@ class StatisticsMessage extends Model
     public function accountFrom()
     {
         return $this->belongsTo(Account::class, ['username', 'domain'], ['to_username', 'to_domain']);
+    }
+
+    public function scopeToUsernameDomain(Builder $query, ?string $username, ?string $domain)
+    {
+        return $query->whereIn('id', function ($query) use ($username, $domain) {
+            $query->select('message_id')
+                ->from('statistics_message_devices')
+                ->where('to_username', $username)
+                ->where('to_domain', $domain);
+        });
+    }
+
+    public function scopeToDomain(Builder $query, ?string $domain)
+    {
+        return $query->whereIn('id', function ($query) use ($domain) {
+            $query->select('message_id')
+                ->from('statistics_message_devices')
+                ->where('to_domain', $domain);
+        });
+    }
+    public function scopeToByContactsList(Builder $query, int $contactsListId)
+    {
+        return $query->whereIn('id', function ($query) use ($contactsListId) {
+            $query->select('message_id')
+                ->from('statistics_message_devices')
+                ->whereIn('to_domain', function ($query) use ($contactsListId) {
+                    Account::subByContactsList($query, $contactsListId)
+                        ->select('domain');
+                })->whereIn('to_username', function ($query) use ($contactsListId) {
+                    Account::subByContactsList($query, $contactsListId)
+                        ->select('username');
+                });
+        });
+    }
+
+    public function scopeFromByContactsList(Builder $query, int $contactsListId)
+    {
+        return $query->whereIn('from_domain', function ($query) use ($contactsListId) {
+            Account::subByContactsList($query, $contactsListId)
+                ->select('domain');
+        })->whereIn('from_username', function ($query) use ($contactsListId) {
+            Account::subByContactsList($query, $contactsListId)
+                ->select('username');
+        });
     }
 }

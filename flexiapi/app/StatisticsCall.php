@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use Awobaz\Compoships\Compoships;
+use Illuminate\Database\Eloquent\Builder;
 
 class StatisticsCall extends Model
 {
@@ -41,5 +42,37 @@ class StatisticsCall extends Model
     public function accountTo()
     {
         return $this->belongsTo(Account::class, ['username', 'domain'], ['to_username', 'to_domain']);
+    }
+
+    public function getFromAttribute()
+    {
+        return $this->attributes['from_username'] . '@' . $this->attributes['from_domain'];
+    }
+
+    public function getToAttribute()
+    {
+        return $this->attributes['to_username'] . '@' . $this->attributes['to_domain'];
+    }
+
+    public function scopeToByContactsList(Builder $query, int $contactsListId)
+    {
+        return $query->whereIn('to_domain', function ($query) use ($contactsListId) {
+            Account::subByContactsList($query, $contactsListId)
+                ->select('domain');
+        })->whereIn('to_username', function ($query) use ($contactsListId) {
+            Account::subByContactsList($query, $contactsListId)
+                ->select('username');
+        });
+    }
+
+    public function scopeFromByContactsList(Builder $query, int $contactsListId)
+    {
+        return $query->whereIn('from_domain', function ($query) use ($contactsListId) {
+            Account::subByContactsList($query, $contactsListId)
+                ->select('domain');
+        })->whereIn('from_username', function ($query) use ($contactsListId) {
+            Account::subByContactsList($query, $contactsListId)
+                ->select('username');
+        });
     }
 }
