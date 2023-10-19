@@ -4,6 +4,7 @@ v1.4
 ----
 - Redesign and refactoring of the main UI and panel flows
 - Removal of XMLRPC
+- Add RockyLinux 9 support
 
 v1.3
 ----

@@ -1,25 +1,21 @@
 rocky8-test:
-  extends: .test
+  extends: .rocky-test
   image: gitlab.linphone.org:4567/bc/public/docker/rocky8-php:$ROCKY_8_IMAGE_VERSION
   needs:
     - rocky8-package
+
+rocky9-test:
+  extends: .rocky-test
+  image: gitlab.linphone.org:4567/bc/public/docker/rocky9-php:$ROCKY_9_IMAGE_VERSION
+  needs:
+    - rocky9-package
+
+.rocky-test:
+  extends: .test
   script:
     - yum -y localinstall build/*.rpm
     - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
     - composer install
-    - vendor/bin/phpcs
-    - vendor/bin/phpmd . ansi phpmd.xml
-    - php artisan key:generate
-    - vendor/bin/phpunit --log-junit $CI_PROJECT_DIR/flexiapi_phpunit.log
-
-.debian-test:
-  extends: .test
-  script:
-    - pwd
-    - apt update
-    - apt install -y ./build/*.deb
-    - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
-    - composer install --dev
     - vendor/bin/phpcs
     - vendor/bin/phpmd . ansi phpmd.xml
     - php artisan key:generate
@@ -37,11 +33,24 @@ debian12-test:
   needs:
     - debian12-package
 
-remi-phpredis-test:
+.debian-test:
+  extends: .test
+  script:
+    - pwd
+    - apt update
+    - apt install -y ./build/*.deb
+    - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
+    - composer install --dev
+    - vendor/bin/phpcs
+    - vendor/bin/phpmd . ansi phpmd.xml
+    - php artisan key:generate
+    - vendor/bin/phpunit --log-junit $CI_PROJECT_DIR/flexiapi_phpunit.log
+
+remi-rocky8-test:
   extends: .test
   image: gitlab.linphone.org:4567/bc/public/docker/rocky8-php:$ROCKY_8_IMAGE_VERSION
   needs:
-    - remi-package
+    - remi-rocky8-package
   script:
     - yum -y localinstall build/*.rpm
 

@@ -6,6 +6,14 @@ rocky8-deploy:
     - rocky8-package
     - rocky8-test
 
+rocky9-deploy:
+  extends: .deploy
+  script:
+    - ./deploy_packages.sh rockylinux
+  needs:
+    - rocky9-package
+    - rocky9-test
+
 debian11-deploy:
   extends: .deploy
   script:
@@ -22,13 +30,13 @@ debian12-deploy:
     - debian12-package
     - debian12-test
 
-remi-deploy:
+remi-rocky8-deploy:
   extends: .deploy
   script:
     - ./deploy_packages.sh rockylinux
   needs:
-    - remi-package
-    - remi-phpredis-test
+    - remi-rocky8-package
+    - remi-rocky8-test
 
 .deploy:
   stage: deploy
