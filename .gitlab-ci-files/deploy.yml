@@ -27,9 +27,7 @@ remi-deploy:
   script:
     - ./deploy_packages.sh rockylinux
   needs:
-    - remi-phpredis-package
-    - remi-igbinary-package
-    - remi-msgpack-package
+    - remi-package
     - remi-phpredis-test
 
 .deploy:

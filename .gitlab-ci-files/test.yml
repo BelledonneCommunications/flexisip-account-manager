@@ -41,7 +41,7 @@ remi-phpredis-test:
   extends: .test
   image: gitlab.linphone.org:4567/bc/public/docker/rocky8-php:$ROCKY_8_IMAGE_VERSION
   needs:
-    - remi-phpredis-package
+    - remi-package
   script:
     - yum -y localinstall build/*.rpm
 
