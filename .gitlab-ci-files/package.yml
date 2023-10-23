@@ -1,15 +1,14 @@
 rocky8-package:
-  extends: .rocky-package
+  extends: .package
   image: gitlab.linphone.org:4567/bc/public/docker/rocky8-php:$ROCKY_8_IMAGE_VERSION
+  script:
+    - make rpm-el8
 
 rocky9-package:
-  extends: .rocky-package
-  image: gitlab.linphone.org:4567/bc/public/docker/rocky9-php:$ROCKY_9_IMAGE_VERSION
-
-.rocky-package:
   extends: .package
+  image: gitlab.linphone.org:4567/bc/public/docker/rocky9-php:$ROCKY_9_IMAGE_VERSION
   script:
-    - make rpm
+    - make rpm-el9
 
 debian11-package:
   extends: .debian_package

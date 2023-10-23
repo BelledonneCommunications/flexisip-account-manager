@@ -56,10 +56,15 @@ package-end-common:
 	rm -rf $(OUTPUT_DIR)/flexisip-account-manager
 	rm -rf $(OUTPUT_DIR)/rpmbuild/SPECS $(OUTPUT_DIR)/rpmbuild/SOURCES $(OUTPUT_DIR)/rpmbuild/SRPMS $(OUTPUT_DIR)/rpmbuild/BUILD $(OUTPUT_DIR)/rpmbuild/BUILDROOT
 
-rpm-only:
+rpm-el8-only:
 	rpmbuild -v -bb --define 'dist .el8' --define '_topdir $(OUTPUT_DIR)/rpmbuild' --define "_rpmdir $(OUTPUT_DIR)/rpmbuild" $(OUTPUT_DIR)/rpmbuild/SPECS/flexisip-account-manager.spec
-	@echo "📦✅ RPM Package Created"
+	@echo "📦✅ RPM el8 Package Created"
 
+rpm-el9-only:
+	rpmbuild -v -bb --define 'dist .el9' --define '_topdir $(OUTPUT_DIR)/rpmbuild' --define "_rpmdir $(OUTPUT_DIR)/rpmbuild" $(OUTPUT_DIR)/rpmbuild/SPECS/flexisip-account-manager.spec
+	@echo "📦✅ RPM el9 Package Created"
+
+rpm-cleanup:
 	@echo "🧹 Cleanup"
 	mv rpmbuild/*/*.rpm build/.
 	rm -r rpmbuild
@@ -80,8 +85,10 @@ deb-only:
 
 	mv *.deb build/.
 
-rpm: prepare package-semvers package-common rpm-only cleanup-package-semvers package-end-common
-rpm-dev: prepare-dev package-semvers package-common rpm-only cleanup-package-semvers package-end-common
+rpm-el8: prepare package-semvers package-common rpm-el8-only rpm-cleanup cleanup-package-semvers package-end-common
+rpm-el8-dev: prepare-dev package-semvers package-common rpm-el8-only rpm-cleanup cleanup-package-semvers package-end-common
+rpm-el9: prepare package-semvers package-common rpm-el9-only rpm-cleanup cleanup-package-semvers package-end-common
+rpm-el9-dev: prepare-dev package-semvers package-common rpm-el9-only rpm-cleanup cleanup-package-semvers package-end-common
 deb: prepare package-semvers package-common deb-only cleanup-package-semvers package-end-common
 deb-dev: prepare-dev package-semvers package-common deb-only cleanup-package-semvers package-end-common
 
