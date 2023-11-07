@@ -81,6 +81,10 @@ class AccountController extends Controller
 
     public function store(CreateAccountRequest $request)
     {
+        $request->validate([
+            'password' => 'confirmed'
+        ]);
+
         $account = new Account;
         $account->username = $request->get('username');
         $account->email = $request->get('email');
