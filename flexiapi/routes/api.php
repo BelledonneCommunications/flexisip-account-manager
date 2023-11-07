@@ -57,23 +57,25 @@ Route::get('accounts/me/api_key/{auth_token}', 'Api\Account\ApiKeyController@gen
 Route::group(['middleware' => ['auth.digest_or_key']], function () {
     Route::get('accounts/auth_token/{auth_token}/attach', 'Api\Account\AuthTokenController@attach');
 
-    Route::get('accounts/me/api_key', 'Api\Account\ApiKeyController@generate')->middleware('cookie', 'cookie.encrypt');
+    Route::prefix('accounts/me')->group(function () {
+        Route::get('api_key', 'Api\Account\ApiKeyController@generate')->middleware('cookie', 'cookie.encrypt');
 
-    Route::get('accounts/me', 'Api\Account\AccountController@show');
-    Route::delete('accounts/me', 'Api\Account\AccountController@delete');
-    Route::get('accounts/me/provision', 'Api\Account\AccountController@provision');
+        Route::get('/', 'Api\Account\AccountController@show');
+        Route::delete('/', 'Api\Account\AccountController@delete');
+        Route::get('provision', 'Api\Account\AccountController@provision');
 
-    Route::post('accounts/me/phone/request', 'Api\Account\PhoneController@requestUpdate');
-    Route::post('accounts/me/phone', 'Api\Account\PhoneController@update');
+        Route::post('phone/request', 'Api\Account\PhoneController@requestUpdate');
+        Route::post('phone', 'Api\Account\PhoneController@update');
 
-    Route::get('accounts/me/devices', 'Api\Account\DeviceController@index');
-    Route::delete('accounts/me/devices/{uuid}', 'Api\Account\DeviceController@destroy');
+        Route::get('devices', 'Api\Account\DeviceController@index');
+        Route::delete('devices/{uuid}', 'Api\Account\DeviceController@destroy');
 
-    Route::post('accounts/me/email/request', 'Api\Account\EmailController@requestUpdate');
-    Route::post('accounts/me/password', 'Api\Account\PasswordController@update');
+        Route::post('email/request', 'Api\Account\EmailController@requestUpdate');
+        Route::post('password', 'Api\Account\PasswordController@update');
 
-    Route::get('accounts/me/contacts/{sip}', 'Api\Account\ContactController@show');
-    Route::get('accounts/me/contacts', 'Api\Account\ContactController@index');
+        Route::get('contacts/{sip}', 'Api\Account\ContactController@show');
+        Route::get('contacts', 'Api\Account\ContactController@index');
+    });
 
     Route::group(['middleware' => ['auth.admin']], function () {
         if (!empty(config('app.linphone_daemon_unix_pipe'))) {

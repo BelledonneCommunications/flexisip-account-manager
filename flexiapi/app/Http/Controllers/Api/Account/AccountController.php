@@ -162,7 +162,7 @@ class AccountController extends Controller
             Log::channel('events')->info('API: Account created using the public endpoint by phone', ['id' => $account->identifier]);
 
             $ovhSMS = new OvhSMS;
-            $ovhSMS->send($request->get('phone'), 'Your ' . config('app.name') . ' recovery code is ' . $account->confirmation_key);
+            $ovhSMS->send($request->get('phone'), 'Your ' . config('app.name') . ' creation code is ' . $account->confirmation_key);
         } elseif ($request->has('email')) {
             // Send validation by email
             $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);

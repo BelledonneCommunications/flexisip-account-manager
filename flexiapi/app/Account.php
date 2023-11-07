@@ -32,7 +32,6 @@ use Awobaz\Compoships\Compoships;
 use App\ApiKey;
 use App\Password;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
-use Doctrine\DBAL\Query;
 
 class Account extends Authenticatable
 {
