@@ -81,6 +81,10 @@ class RecoveryController extends Controller
             return redirect()->back()->withErrors(['identifier' => 'The account doesn\'t exists']);
         }
 
+        if ($account->failedRecentRecovery()) {
+            return redirect()->back()->withErrors(['code' => 'Account recovered recently, try again later']);
+        }
+
         if ($request->get('email')) {
             $account = (new AccountService)->recoverByEmail($account);
         } elseif ($request->get('phone')) {
@@ -112,7 +116,7 @@ class RecoveryController extends Controller
             return redirect()->route($request->get('method') == 'phone'
                 ? 'account.recovery.show.phone'
                 : 'account.recovery.show.email')->withErrors([
-                'code' => 'The code entered was not valid'
+                'code' => 'The code entered was not valid, try again later'
             ]);
         }
 

@@ -339,6 +339,12 @@ class Account extends Authenticatable
             ->exists();
     }
 
+    public function failedRecentRecovery(): bool
+    {
+        $oneHourAgo = Carbon::now()->subHour();
+        return !empty($this->recovery_code) && $this->updated_at->greaterThan($oneHourAgo);
+    }
+
     public function updatePassword($newPassword, string $algorithm = 'SHA-256')
     {
         $this->passwords()->delete();
