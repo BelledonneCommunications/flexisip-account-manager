@@ -231,12 +231,14 @@ class AccountController extends Controller
             ? $alias->account
             : Account::sip($sip)->firstOrFail();
 
-        if ($account->confirmation_key != $recoveryKey) abort(404);
+        $confirmationKey = $account->confirmation_key;
+        $account->confirmation_key = null;
+
+        if ($confirmationKey != $recoveryKey) abort(404);
 
         if ($account->activationExpired()) abort(403, 'Activation expired');
 
         $account->activated = true;
-        $account->confirmation_key = null;
         $account->save();
 
         $account->passwords->each(function ($i, $k) {

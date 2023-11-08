@@ -209,6 +209,8 @@ Return `phone: true` if the returned account has a phone number.
 Send a SMS with a recovery PIN code to the `phone` number provided.
 Return `404` if the account doesn't exists.
 
+Can only be used once, a new `recover_key` need to be requested to be called again.
+
 JSON parameters:
 
 * `phone` required the phone number to send the SMS to

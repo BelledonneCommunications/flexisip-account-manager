@@ -669,6 +669,23 @@ class ApiAccountTest extends TestCase
             ->assertStatus(200);
     }
 
+    public function testRecoverTwice()
+    {
+        $confirmationKey = '1234';
+
+        $password = Password::factory()->create();
+        $password->account->generateApiKey();
+        $password->account->confirmation_key = $confirmationKey;
+        $password->account->activated = false;
+        $password->account->save();
+
+        $this->get($this->route . '/' . $password->account->identifier . '/recover/wrongkey')
+            ->assertStatus(404);
+
+        $this->get($this->route . '/' . $password->account->identifier . '/recover/' . $confirmationKey)
+            ->assertStatus(404);
+    }
+
     /**
      * /!\ Dangerous endpoints
      */
