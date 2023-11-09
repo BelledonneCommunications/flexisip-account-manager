@@ -3,8 +3,16 @@
 v1.4
 ----
 - Redesign and refactoring of the main UI and panel flows
+- Complete the statistics and add a specific API to get usage statistics from FlexiAPI
 - Removal of XMLRPC
 - Add RockyLinux 9 support
+- Add Debian 12 to CI
+- Fix #122 Add a new console command CreateFirstAdmin
+- Fix #121 Only apply throttling to redeemed tokens
+- Fix #123 Define a proper documentation for the provisioning flow
+- Fix #124 Return 404 when the account is already provisioned or the provisioning_token not valid
+- Fix #125 Remove the External Accounts feature
+- Fix #19 Set all the ERROR confirmation_key to null in the accounts table
 
 v1.3
 ----
