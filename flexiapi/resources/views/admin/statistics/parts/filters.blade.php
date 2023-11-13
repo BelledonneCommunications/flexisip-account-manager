@@ -15,7 +15,16 @@
             <label for="to">To</label>
         </div>
 
-        <div class="large on_desktop"></div>
+        <div class="large">
+            <a href="{{ route('admin.statistics.show', ['by' => 'day', 'type' => $type] + $request->only(['from', 'to', 'domain', 'contacts_list'])) }}"
+                class="chip @if ($request->get('by', 'day') == 'day') selected @endif">Day</a>
+            <a href="{{ route('admin.statistics.show', ['by' => 'week', 'type' => $type] + $request->only(['from', 'to', 'domain', 'contacts_list'])) }}"
+                class="chip @if ($request->get('by', 'day') == 'week') selected @endif">Week</a>
+            <a href="{{ route('admin.statistics.show', ['by' => 'month', 'type' => $type] + $request->only(['from', 'to', 'domain', 'contacts_list'])) }}"
+                class="chip @if ($request->get('by', 'day') == 'month') selected @endif">Month</a>
+            <a href="{{ route('admin.statistics.show', ['by' => 'year', 'type' => $type] + $request->only(['from', 'to', 'domain', 'contacts_list'])) }}"
+                class="chip @if ($request->get('by', 'day') == 'year') selected @endif">Year</a>
+        </div>
 
         @if (config('app.admins_manage_multi_domains'))
             <div class="select">
@@ -49,18 +58,7 @@
             <label for="contacts_list">Contacts list</label>
         </div>
 
-        <div>
-            <a href="{{ route('admin.statistics.show', ['by' => 'day', 'type' => $type] + $request->only(['from', 'to', 'domain', 'contacts_list'])) }}"
-                class="chip @if ($request->get('by', 'day') == 'day') selected @endif">Day</a>
-            <a href="{{ route('admin.statistics.show', ['by' => 'week', 'type' => $type] + $request->only(['from', 'to', 'domain', 'contacts_list'])) }}"
-                class="chip @if ($request->get('by', 'day') == 'week') selected @endif">Week</a>
-            <a href="{{ route('admin.statistics.show', ['by' => 'month', 'type' => $type] + $request->only(['from', 'to', 'domain', 'contacts_list'])) }}"
-                class="chip @if ($request->get('by', 'day') == 'month') selected @endif">Month</a>
-            <a href="{{ route('admin.statistics.show', ['by' => 'year', 'type' => $type] + $request->only(['from', 'to', 'domain', 'contacts_list'])) }}"
-                class="chip @if ($request->get('by', 'day') == 'year') selected @endif">Year</a>
-        </div>
-
-        <div class="oppose">
+        <div class="oppose large">
             <a class="btn btn-secondary" href="{{ route('admin.statistics.show') }}">Reset</a>
             <a class="btn btn-tertiary"
                 href="{{ route('admin.statistics.show', ['by' => $request->get('by', 'day'), 'type' => $type, 'export' => true] + $request->only(['from', 'to', 'domain'])) }}">
