@@ -4,6 +4,14 @@ Provisioning is a core concept of the FlexiAPI - Linphone clients flow.
 
 ## About
 
+To request the following URLs client MUST add a specific `x-linphone-provisioning` header.
+Otherwise the URLs with always return 400. This specific header is required to prevent unsolicited clients (crawlers, embedders) to consume the tokens.
+
+```
+> GET /provisioning/###
+> x-linphone-provisioning
+```
+
 ### Provisioning XML
 
 ```

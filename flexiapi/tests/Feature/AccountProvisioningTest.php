@@ -41,22 +41,37 @@ class AccountProvisioningTest extends TestCase
 
     public function testBaseProvisioning()
     {
-        $response = $this->get($this->route);
-        $response->assertStatus(200);
-        $response->assertHeader('Content-Type', 'application/xml');
-        $response->assertDontSee('ha1');
+        $this->get($this->route)->assertStatus(400);
+
+        $this->withHeaders([
+            'x-linphone-provisioning' => true,
+        ])->get($this->route)
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/xml')
+            ->assertDontSee('ha1');
+    }
+
+    public function testXLinphoneProvisioningHeader()
+    {
+        $this->withHeaders([
+            'x-linphone-provisioning' => true,
+        ])->get($this->accountRoute)->assertStatus(302);
     }
 
     public function testAuthenticatedProvisioning()
     {
-        $response = $this->get($this->accountRoute);
-        $response->assertStatus(302);
-
         $password = Password::factory()->create();
         $password->account->generateApiKey();
 
+        $this->keyAuthenticated($password->account)
+            ->get($this->accountRoute)
+            ->assertStatus(400);
+
         // Ensure that we get the authentication password once
         $response = $this->keyAuthenticated($password->account)
+            ->withHeaders([
+                'x-linphone-provisioning' => true,
+            ])
             ->get($this->accountRoute)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
@@ -65,6 +80,9 @@ class AccountProvisioningTest extends TestCase
 
         // And then twice
         $response = $this->keyAuthenticated($password->account)
+            ->withHeaders([
+                'x-linphone-provisioning' => true,
+            ])
             ->get($this->accountRoute)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
@@ -80,6 +98,9 @@ class AccountProvisioningTest extends TestCase
 
         // Regenerate a new provisioning token from the authenticated account
         $this->keyAuthenticated($password->account)
+            ->withHeaders([
+                'x-linphone-provisioning' => true,
+            ])
             ->get('/api/accounts/me/provision')
             ->assertStatus(200)
             ->assertSee('provisioning_token')
@@ -88,7 +109,10 @@ class AccountProvisioningTest extends TestCase
         $password->account->refresh();
 
         // And use the fresh provisioning token
-        $this->get($this->route . '/' . $password->account->provisioning_token)
+        $this->withHeaders([
+                'x-linphone-provisioning' => true,
+            ])
+            ->get($this->route . '/' . $password->account->provisioning_token)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee($password->account->username)
@@ -112,13 +136,17 @@ class AccountProvisioningTest extends TestCase
         );
 
         // Check the QRCode
-        $this->get($this->route . '/qrcode/' . $password->account->provisioning_token . '?reset_password')
+        $this->withHeaders([
+                'x-linphone-provisioning' => true,
+            ])->get($this->route . '/qrcode/' . $password->account->provisioning_token . '?reset_password')
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'image/png')
             ->assertHeader('X-Qrcode-URL', $provioningUrl);
 
         // And use the fresh provisioning token
-        $this->get($provioningUrl)
+        $this->withHeaders([
+                'x-linphone-provisioning' => true,
+            ])->get($provioningUrl)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee($password->account->username)
@@ -140,7 +168,10 @@ class AccountProvisioningTest extends TestCase
         $password->account->save();
 
         // Ensure that we get the authentication password once
-        $response = $this->get($this->route . '/' . $password->account->provisioning_token)
+        $response = $this->withHeaders([
+                'x-linphone-provisioning' => true,
+            ])
+            ->get($this->route . '/' . $password->account->provisioning_token)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('ha1');
@@ -161,6 +192,9 @@ class AccountProvisioningTest extends TestCase
         $admin->account->generateApiKey();
 
         $this->keyAuthenticated($admin->account)
+            ->withHeaders([
+                'x-linphone-provisioning' => true,
+            ])
             ->json($this->method, '/api/accounts/' . $password->account->id . '/provision')
             ->assertStatus(200)
             ->assertSee('provisioning_token')
@@ -171,7 +205,10 @@ class AccountProvisioningTest extends TestCase
         $this->assertNotEquals($provisioningToken, $password->account->provisioning_token);
 
         // And then provision one last time
-        $this->get($this->route . '/' . $password->account->provisioning_token)
+        $this->withHeaders([
+                'x-linphone-provisioning' => true,
+            ])
+            ->get($this->route . '/' . $password->account->provisioning_token)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('ha1');
@@ -180,7 +217,10 @@ class AccountProvisioningTest extends TestCase
     public function testAuthTokenProvisioning()
     {
         // Generate a public auth_token and attach it
-        $response = $this->json('POST', '/api/accounts/auth_token')
+        $response = $this->withHeaders([
+                'x-linphone-provisioning' => true,
+            ])
+            ->json('POST', '/api/accounts/auth_token')
             ->assertStatus(201)
             ->assertJson([
                 'token' => true
@@ -192,13 +232,19 @@ class AccountProvisioningTest extends TestCase
         $password->account->generateApiKey();
 
         $this->keyAuthenticated($password->account)
+            ->withHeaders([
+                'x-linphone-provisioning' => true,
+            ])
             ->json($this->method, '/api/accounts/auth_token/' . $authToken . '/attach')
             ->assertStatus(200);
 
         // Use the auth_token to provision the account
         $this->assertEquals(AuthToken::count(), 1);
 
-        $this->get($this->route . '/auth_token/' . $authToken)
+        $this->withHeaders([
+                'x-linphone-provisioning' => true,
+            ])
+            ->get($this->route . '/auth_token/' . $authToken)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('ha1');
@@ -206,7 +252,10 @@ class AccountProvisioningTest extends TestCase
         $this->assertEquals(AuthToken::count(), 0);
 
         // Try to re-use the auth_token
-        $this->get($this->route . '/auth_token/' . $authToken)
+        $this->withHeaders([
+                'x-linphone-provisioning' => true,
+            ])
+            ->get($this->route . '/auth_token/' . $authToken)
             ->assertStatus(404);
     }
 }
