@@ -127,7 +127,7 @@ class RegisterController extends Controller
 
     public function storePhone(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'terms' => 'accepted',
             'privacy' => 'accepted',
             'username' => [
@@ -154,6 +154,15 @@ class RegisterController extends Controller
                 : 'nullable|email',
             'g-recaptcha-response'  => 'required|captcha',
         ]);
+
+        // Weird workaround to force the injections of the validation errors,
+        // the redirection seems to clear them when the captcha is used
+        if ($validator->fails()) {
+            return view('account.register.phone', [
+                'errors' => $validator->messages(),
+                'domain' => '@' . config('app.sip_domain')
+            ]);
+        }
 
         $account = new Account;
         $account->username = !empty($request->get('username'))

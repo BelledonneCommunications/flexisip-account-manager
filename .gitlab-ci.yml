@@ -1,6 +1,6 @@
 variables:
   ROCKY_8_IMAGE_VERSION: 20230330_163028_remove_remi
-  DEBIAN_11_IMAGE_VERSION: 20230322_172926_missing_tools
+  DEBIAN_11_IMAGE_VERSION: 20231127_160206_refresh_php_packages
   DEBIAN_12_IMAGE_VERSION: 20230925_143235_enable_debian12_packaging
   PHP_REDIS_REMI_VERSION: php-pecl-redis5-5.3.6-1
   PHP_IGBINARY_REMI_VERSION: php-pecl-igbinary-3.2.14-1
