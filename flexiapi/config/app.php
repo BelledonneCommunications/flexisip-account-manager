@@ -55,6 +55,7 @@ return [
      */
     'provisioning_rc_file' => env('ACCOUNT_PROVISIONING_RC_FILE', ''),
     'provisioning_overwrite_all' => env('ACCOUNT_PROVISIONING_OVERWRITE_ALL', false),
+    'provisioning_use_x_linphone_provisioning_header' => env('ACCOUNT_PROVISIONING_USE_X_LINPHONE_PROVISIONING_HEADER', true),
 
     /**
      * Set a global realm for all the accounts, if not set, the account domain
