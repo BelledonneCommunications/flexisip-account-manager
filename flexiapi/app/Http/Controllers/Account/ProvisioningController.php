@@ -124,7 +124,8 @@ class ProvisioningController extends Controller
 
     private function generateProvisioning(Request $request, Account $account = null)
     {
-        if (!$request->hasHeader('x-linphone-provisioning')) {
+        if (!$request->hasHeader('x-linphone-provisioning')
+          && config('app.provisioning_use_x_linphone_provisioning_header')) {
             abort(400, 'x-linphone-provisioning header is missing');
         }
 

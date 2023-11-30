@@ -51,6 +51,16 @@ class AccountProvisioningTest extends TestCase
             ->assertDontSee('ha1');
     }
 
+    public function testDisabledProvisioningHeader()
+    {
+        config()->set('app.provisioning_use_x_linphone_provisioning_header', false);
+
+        $this->get($this->route)
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/xml')
+            ->assertDontSee('ha1');
+    }
+
     public function testXLinphoneProvisioningHeader()
     {
         $this->withHeaders([
