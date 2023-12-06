@@ -1,5 +1,8 @@
 # Flexisip Account Manager Changelog
 
+v1.5
+----
+
 v1.4
 ----
 - Redesign and refactoring of the main UI and panel flows
