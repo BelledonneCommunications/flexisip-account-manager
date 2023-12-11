@@ -148,24 +148,10 @@ class Account extends Authenticatable
         return $this->hasMany(DigestNonce::class);
     }
 
-    public function authTokens()
-    {
-        return $this->hasMany(AuthToken::class);
-    }
 
     public function passwords()
     {
         return $this->hasMany(Password::class);
-    }
-
-    public function phoneChangeCode()
-    {
-        return $this->hasOne(PhoneChangeCode::class);
-    }
-
-    public function emailChangeCode()
-    {
-        return $this->hasOne(EmailChangeCode::class);
     }
 
     public function types()
@@ -191,6 +177,24 @@ class Account extends Authenticatable
     public function statisticsToMessageDevices()
     {
         return $this->hasMany(StatisticsMessageDevice::class, ['to_username', 'to_domain'], ['username', 'domain']);
+    }
+
+    /**
+     * Tokens and codes
+     */
+    public function phoneChangeCode()
+    {
+        return $this->hasOne(PhoneChangeCode::class);
+    }
+
+    public function emailChangeCode()
+    {
+        return $this->hasOne(EmailChangeCode::class);
+    }
+
+    public function authTokens()
+    {
+        return $this->hasMany(AuthToken::class);
     }
 
     /**
