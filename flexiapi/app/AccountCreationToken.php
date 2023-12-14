@@ -20,9 +20,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class AccountCreationToken extends Model
+class AccountCreationToken extends Consommable
 {
     use HasFactory;
 
@@ -31,5 +30,11 @@ class AccountCreationToken extends Model
     public function accountCreationRequestToken()
     {
         return $this->hasOne(AccountCreationRequestToken::class, 'acc_creation_token_id');
+    }
+
+    public function consume()
+    {
+        $this->used = true;
+        $this->save();
     }
 }

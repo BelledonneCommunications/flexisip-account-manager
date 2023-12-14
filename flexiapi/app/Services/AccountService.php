@@ -70,14 +70,13 @@ class AccountService
         $account->user_agent = config('app.name');
         $account->dtmf_protocol = $request->get('dtmf_protocol');
         $account->confirmation_key = generatePin();
-        $account->provision();
         $account->save();
 
         $account->updatePassword($request->get('password'), $request->has('algorithm') ? $request->get('algorithm') : 'SHA-256');
 
         if ($this->api) {
             $token = AccountCreationToken::where('token', $request->get('account_creation_token'))->first();
-            $token->used = true;
+            $token->consume();
             $token->account_id = $account->id;
             $token->save();
         }
@@ -109,7 +108,7 @@ class AccountService
 
         $account = $request->user();
 
-        $phoneChangeCode = $account->phoneChangeCode ?? new PhoneChangeCode();
+        $phoneChangeCode = $account->phoneChangeCode ?? new PhoneChangeCode;
         $phoneChangeCode->account_id = $account->id;
         $phoneChangeCode->phone = $request->get('phone');
         $phoneChangeCode->code = generatePin();
@@ -150,8 +149,6 @@ class AccountService
 
             Log::channel('events')->info('Account Service: Account phone changed using SMS', ['id' => $account->identifier]);
 
-            $phoneChangeCode->delete();
-
             $account->activated = true;
             $account->save();
 
@@ -160,7 +157,7 @@ class AccountService
             return $account;
         }
 
-        $phoneChangeCode->delete();
+        $phoneChangeCode->consume();
 
         if ($this->api) {
             abort(403);
@@ -230,7 +227,7 @@ class AccountService
             return $account;
         }
 
-        $emailChangeCode->delete();
+        $emailChangeCode->consume();
 
         if ($this->api) {
             abort(403);
@@ -268,9 +265,10 @@ class AccountService
 
     private function recoverAccount(Account $account): Account
     {
-        $account->recovery_code = generatePin();
+        $account->recover();
         $account->provision();
-        $account->save();
+
+        $account->refresh();
 
         return $account;
     }

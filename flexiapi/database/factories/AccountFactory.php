@@ -40,7 +40,6 @@ class AccountFactory extends Factory
             'email' => $this->faker->email,
             'user_agent' => $this->faker->userAgent,
             'confirmation_key' => Str::random(WebAuthenticateController::$emailCodeSize),
-            'provisioning_token' => Str::random(WebAuthenticateController::$emailCodeSize),
             'ip_address' => $this->faker->ipv4,
             'created_at' => $this->faker->dateTimeBetween('-1 year'),
             'dtmf_protocol' => array_rand(Account::$dtmfProtocols),

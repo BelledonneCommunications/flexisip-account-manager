@@ -38,9 +38,9 @@ class Account extends Authenticatable
     use HasFactory;
     use Compoships;
 
-    protected $with = ['passwords', 'admin', 'alias', 'activationExpiration', 'emailChangeCode', 'types', 'actions'];
-    protected $hidden = ['alias', 'expire_time', 'confirmation_key', 'provisioning_token', 'pivot'];
-    protected $appends = ['realm', 'phone', 'confirmation_key_expires'];
+    protected $with = ['passwords', 'admin', 'alias', 'currentRecoveryCode', 'activationExpiration', 'emailChangeCode', 'types', 'actions'];
+    protected $hidden = ['alias', 'expire_time', 'confirmation_key', 'pivot'];
+    protected $appends = ['realm', 'phone', 'confirmation_key_expires', 'provisioning_token'];
     protected $casts = [
         'activated' => 'boolean',
     ];
@@ -52,14 +52,19 @@ class Account extends Authenticatable
     {
         parent::boot();
 
-        static::deleted(function ($item) {
-            StatisticsMessage::where('from_username', $item->username)
-                ->where('from_domain', $item->domain)
+        static::deleted(function (Account $account) {
+            StatisticsMessage::where('from_username', $account->username)
+                ->where('from_domain', $account->domain)
                 ->delete();
 
-            StatisticsCall::where('from_username', $item->username)
-                ->where('from_domain', $item->domain)
+            StatisticsCall::where('from_username', $account->username)
+                ->where('from_domain', $account->domain)
                 ->delete();
+        });
+
+        static::created(function (Account $account) {
+            $account->provision();
+            $account->refresh();
         });
     }
 
@@ -182,14 +187,44 @@ class Account extends Authenticatable
     /**
      * Tokens and codes
      */
+    public function currentRecoveryCode()
+    {
+        return $this->hasOne(RecoveryCode::class)->whereNotNull('code')->latestOfMany();
+    }
+
+    public function recoveryCodes()
+    {
+        return $this->hasMany(RecoveryCode::class)->latest();
+    }
+
     public function phoneChangeCode()
     {
-        return $this->hasOne(PhoneChangeCode::class);
+        return $this->hasOne(phoneChangeCode::class)->whereNotNull('code')->latestOfMany();
+    }
+
+    public function phoneChangeCodes()
+    {
+        return $this->hasMany(PhoneChangeCode::class)->latest();
     }
 
     public function emailChangeCode()
     {
-        return $this->hasOne(EmailChangeCode::class);
+        return $this->hasOne(EmailChangeCode::class)->whereNotNull('code')->latestOfMany();
+    }
+
+    public function emailChangeCodes()
+    {
+        return $this->hasMany(EmailChangeCode::class)->latest();
+    }
+
+    public function currentProvisioningToken()
+    {
+        return $this->hasOne(ProvisioningToken::class)->where('used', false)->latestOfMany();
+    }
+
+    public function provisioningTokens()
+    {
+        return $this->hasMany(ProvisioningToken::class)->latest();
     }
 
     public function authTokens()
@@ -200,12 +235,30 @@ class Account extends Authenticatable
     /**
      * Attributes
      */
-    public function getIdentifierAttribute()
+    public function getRecoveryCodeAttribute(): ?string
+    {
+        if ($this->currentRecoveryCode) {
+            return $this->currentRecoveryCode->code;
+        }
+
+        return null;
+    }
+
+    public function getProvisioningTokenAttribute(): ?string
+    {
+        if ($this->currentProvisioningToken) {
+            return $this->currentProvisioningToken->token;
+        }
+
+        return null;
+    }
+
+    public function getIdentifierAttribute(): string
     {
         return $this->attributes['username'] . '@' . $this->attributes['domain'];
     }
 
-    public function getFullIdentifierAttribute()
+    public function getFullIdentifierAttribute(): string
     {
         $displayName = $this->attributes['display_name']
             ? '"' . $this->attributes['display_name'] . '" '
@@ -309,10 +362,24 @@ class Account extends Authenticatable
         return $authToken;
     }
 
-    public function provision(): string
+    public function recover(?string $code = null): string
     {
-        $this->provisioning_token = Str::random(WebAuthenticateController::$emailCodeSize);
-        return $this->provisioning_token;
+        $recoveryCode = new RecoveryCode;
+        $recoveryCode->code = $code ?? generatePin();
+        $recoveryCode->account_id = $this->id;
+        $recoveryCode->save();
+
+        return $recoveryCode->code;
+    }
+
+    public function provision(?string $token = null): string
+    {
+        $provisioningToken = new ProvisioningToken;
+        $provisioningToken->token = $token ?? Str::random(WebAuthenticateController::$emailCodeSize);
+        $provisioningToken->account_id = $this->id;
+        $provisioningToken->save();
+
+        return $provisioningToken->token;
     }
 
     public function getAdminAttribute(): bool

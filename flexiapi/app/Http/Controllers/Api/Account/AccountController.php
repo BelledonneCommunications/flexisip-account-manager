@@ -135,13 +135,12 @@ class AccountController extends Controller
         $account->ip_address = $request->ip();
         $account->created_at = Carbon::now();
         $account->user_agent = $request->header('User-Agent') ?? config('app.name');
-        $account->provision();
         $account->save();
 
         $account->updatePassword($request->get('password'), $request->get('algorithm'));
 
         $token = AccountCreationToken::where('token', $request->get('account_creation_token'))->first();
-        $token->used = true;
+        $token->consume();
         $token->account_id = $account->id;
         $token->save();
 
@@ -208,7 +207,7 @@ class AccountController extends Controller
         $account->save();
 
         $token = AccountCreationToken::where('token', $request->get('account_creation_token'))->first();
-        $token->used = true;
+        $token->consume();
         $token->account_id = $account->id;
         $token->save();
 
@@ -255,11 +254,6 @@ class AccountController extends Controller
 
     public function activateEmail(Request $request, string $sip)
     {
-        // For retro-compatibility
-        if ($request->has('code')) {
-            $request->merge(['confirmation_key' => $request->get('code')]);
-        }
-
         $request->validate([
             'confirmation_key' => 'required|size:' . WebAuthenticateController::$emailCodeSize
         ]);
@@ -281,11 +275,6 @@ class AccountController extends Controller
 
     public function activatePhone(Request $request, string $sip)
     {
-        // For retro-compatibility
-        if ($request->has('code')) {
-            $request->merge(['confirmation_key' => $request->get('code')]);
-        }
-
         $request->validate([
             'confirmation_key' => 'required|digits:4'
         ]);

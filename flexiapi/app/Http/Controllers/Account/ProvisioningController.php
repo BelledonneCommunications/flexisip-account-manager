@@ -42,7 +42,12 @@ class ProvisioningController extends Controller
     public function qrcode(Request $request, string $provisioningToken)
     {
         $account = Account::withoutGlobalScopes()
-            ->where('provisioning_token', $provisioningToken)
+            ->where('id', function ($query) use ($provisioningToken) {
+                $query->select('account_id')
+                      ->from('provisioning_tokens')
+                      ->where('used', false)
+                      ->where('token', $provisioningToken);
+            })
             ->firstOrFail();
 
         if ($account->activationExpired()) abort(404);
@@ -108,7 +113,12 @@ class ProvisioningController extends Controller
     public function provision(Request $request, string $provisioningToken)
     {
         $account = Account::withoutGlobalScopes()
-            ->where('provisioning_token', $provisioningToken)
+            ->where('id', function ($query) use ($provisioningToken) {
+                $query->select('account_id')
+                    ->from('provisioning_tokens')
+                    ->where('used', false)
+                    ->where('token', $provisioningToken);
+            })
             ->firstOrFail();
 
         if ($account->activationExpired() || ($provisioningToken != $account->provisioning_token)) {
@@ -116,7 +126,7 @@ class ProvisioningController extends Controller
         }
 
         $account->activated = true;
-        $account->provisioning_token = null;
+        $account->currentProvisioningToken->consume();
         $account->save();
 
         return $this->generateProvisioning($request, $account);

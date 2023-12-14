@@ -370,7 +370,6 @@ class ApiAccountTest extends TestCase
             ]);
 
         $this->assertTrue(empty($response1['confirmation_key']));
-        $this->assertTrue(empty($response1['provisioning_token']));
     }
 
     public function testNotActivated()

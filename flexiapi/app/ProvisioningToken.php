@@ -21,27 +21,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class EmailChangeCode extends Consommable
+class ProvisioningToken extends Consommable
 {
     use HasFactory;
 
-    protected $hidden = ['id', 'account_id', 'code'];
-
-    public function account()
+    public function consume()
     {
-        return $this->belongsTo('App\Account');
-    }
-
-    public function validate(int $code): bool
-    {
-        return ($this->code == $code);
-    }
-
-    public function getObfuscatedEmailAttribute()
-    {
-        $stars = 4; // Min Stars to use
-        $at = strpos($this->attributes['email'], '@');
-        if ($at - 2 > $stars) $stars = $at - 2;
-        return substr($this->attributes['email'], 0, 1) . str_repeat('*', $stars) . substr($this->attributes['email'], $at - 1);
+        $this->used = true;
+        $this->save();
     }
 }

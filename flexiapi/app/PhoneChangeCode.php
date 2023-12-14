@@ -20,9 +20,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class PhoneChangeCode extends Model
+class PhoneChangeCode extends Consommable
 {
     use HasFactory;
 

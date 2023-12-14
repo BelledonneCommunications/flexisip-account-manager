@@ -90,7 +90,7 @@ class CreationTokenController extends Controller
             $accountCreationToken->token = Str::random(WebAuthenticateController::$emailCodeSize);
             $accountCreationToken->save();
 
-            $creationRequestToken->used = true;
+            $creationRequestToken->consume();
             $creationRequestToken->acc_creation_token_id = $accountCreationToken->id;
             $creationRequestToken->save();
 

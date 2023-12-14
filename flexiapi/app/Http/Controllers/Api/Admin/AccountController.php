@@ -131,7 +131,6 @@ class AccountController extends Controller
 
         if (!$request->has('activated') || !(bool)$request->get('activated')) {
             $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
-            $account->provision();
         }
 
         $account->save();

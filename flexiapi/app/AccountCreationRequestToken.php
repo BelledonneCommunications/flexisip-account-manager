@@ -20,9 +20,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class AccountCreationRequestToken extends Model
+class AccountCreationRequestToken extends Consommable
 {
     use HasFactory;
 
@@ -39,5 +38,11 @@ class AccountCreationRequestToken extends Model
         return $this->validated_at == null
             ? route('account.creation_request_token.check', $this->token)
             : null;
+    }
+
+    public function consume()
+    {
+        $this->used = true;
+        $this->save();
     }
 }
