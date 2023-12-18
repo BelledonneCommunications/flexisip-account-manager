@@ -4,5 +4,6 @@
         route('admin.account.statistics.show_call_logs', $account->id) => 'Call Logs',
         route('admin.account.device.index', $account->id) => 'Devices',
         route('admin.account.statistics.show', $account->id) => 'Statistics',
+        route('admin.account.activity.index', $account->id) => 'Activity',
     ],
 ])

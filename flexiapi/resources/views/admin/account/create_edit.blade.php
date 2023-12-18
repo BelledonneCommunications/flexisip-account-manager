@@ -1,9 +1,7 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item">
-        <a href="{{ route('admin.account.index') }}">Accounts</a>
-    </li>
+    @include('admin.account.parts.breadcrumb_accounts_index')
     <li class="breadcrumb-item active" aria-current="page">Edit</li>
 @endsection
 
@@ -203,7 +201,7 @@
             <h2>Actions</h2>
 
             @if ($account->dtmf_protocol)
-                <table class="table">
+                <table>
                     <tbody>
                         @foreach ($account->actions as $action)
                             <tr>
@@ -227,7 +225,7 @@
 
             <h2>Types</h2>
 
-            <table class="table">
+            <table>
                 <tbody>
                     @foreach ($account->types as $type)
                         <tr>

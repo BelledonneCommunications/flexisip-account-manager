@@ -73,7 +73,7 @@
         </form>
     </div>
 
-    <table class="table">
+    <table>
         <thead>
             <tr>
                 @include('parts.column_sort', ['key' => 'username', 'title' => 'Identifier'])

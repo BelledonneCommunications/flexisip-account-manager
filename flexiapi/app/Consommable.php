@@ -13,4 +13,9 @@ abstract class Consommable extends Model
         $this->{$this->consommableAttribute} = null;
         $this->save();
     }
+
+    public function consumed(): bool
+    {
+        return $this->{$this->consommableAttribute} == null;
+    }
 }

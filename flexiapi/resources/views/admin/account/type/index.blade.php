@@ -1,9 +1,7 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item">
-        <a href="{{ route('admin.account.index') }}">Accounts</a>
-    </li>
+    @include('admin.account.parts.breadcrumb_accounts_index')
     <li class="breadcrumb-item" aria-current="page">
         <a href="{{ route('admin.account.type.index') }}">Types</a>
     </li>
@@ -18,7 +16,7 @@
         </a>
     </header>
 
-    <table class="table">
+    <table>
         <thead>
             <tr>
                 <th>Key</th>

@@ -154,10 +154,10 @@ class AccountService
 
             $account->refresh();
 
+            $phoneChangeCode->consume();
+
             return $account;
         }
-
-        $phoneChangeCode->consume();
 
         if ($this->api) {
             abort(403);
@@ -217,7 +217,7 @@ class AccountService
 
             Log::channel('events')->info('Account Service: Account email changed using email', ['id' => $account->identifier]);
 
-            $emailChangeCode->delete();
+            $emailChangeCode->consume();
 
             $account->activated = true;
             $account->save();
@@ -226,8 +226,6 @@ class AccountService
 
             return $account;
         }
-
-        $emailChangeCode->consume();
 
         if ($this->api) {
             abort(403);

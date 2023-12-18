@@ -16,7 +16,7 @@
     </a>
 </header>
 
-<table class="table">
+<table>
     <thead>
         <tr>
             @include('parts.column_sort', ['key' => 'title', 'title' => 'Name'])

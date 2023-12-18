@@ -420,8 +420,6 @@ content > nav a {
     align-items: center;
     line-height: 5rem;
     margin: 1rem 0;
-    margin-left: 2rem;
-    padding-right: 2rem;
     position: relative;
     white-space: nowrap;
 }
@@ -430,19 +428,6 @@ content > nav a.current {
     background-color: white;
     border-radius: 4rem;
     color: var(--main-5);
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
-}
-
-content > nav a.current:after {
-    content: '';
-    display: block;
-    width: 1rem;
-    height: 1rem;
-    background-color: white;
-    border-radius: 1rem;
-    position: absolute;
-    left: -2rem;
-    top: calc(50% - 0.5rem);
     box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
 }
 
@@ -658,6 +643,10 @@ table tr.empty td:before {
     line-height: 8rem;
 }
 
+table.third th {
+    width: 33.33%;
+}
+
 /* Display/hide */
 
 .on_mobile {
@@ -766,6 +755,10 @@ select.list_toggle {
 .disabled {
     opacity: 0.5;
     pointer-events: none;
+}
+
+.crossed {
+    text-decoration: line-through;
 }
 
 .chart {

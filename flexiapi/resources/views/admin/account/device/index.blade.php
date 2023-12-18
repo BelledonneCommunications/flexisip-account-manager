@@ -1,9 +1,7 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-<li class="breadcrumb-item">
-    <a href="{{ route('admin.account.index') }}">Accounts</a>
-</li>
+    @include('admin.account.parts.breadcrumb_accounts_index')
 <li class="breadcrumb-item">
     <a href="{{ route('admin.account.edit', $account) }}">{{ $account->identifier }}</a>
 </li>
@@ -19,7 +17,7 @@
 
 @include('admin.account.parts.tabs')
 
-<table class="table">
+<table>
     <thead>
         <tr>
             <th>User Agent</th>

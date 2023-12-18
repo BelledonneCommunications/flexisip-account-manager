@@ -63,7 +63,7 @@
         </form>
     </div>
 
-    <table class="table">
+    <table>
         <thead>
             <tr>
                 <th width="1%">

@@ -1,9 +1,7 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item">
-        <a href="{{ route('admin.account.index') }}">Accounts</a>
-    </li>
+    @include('admin.account.parts.breadcrumb_accounts_index')
     <li class="breadcrumb-item active" aria-current="page">Import</li>
 @endsection
 
