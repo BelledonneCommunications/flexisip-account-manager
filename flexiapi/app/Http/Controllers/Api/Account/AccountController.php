@@ -31,15 +31,19 @@ use App\Account;
 use App\AccountCreationToken;
 use App\AccountTombstone;
 use App\Alias;
+
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use App\Http\Requests\CreateAccountRequest;
 use App\Libraries\OvhSMS;
 use App\Mail\RegisterConfirmation;
+
 use App\Rules\AccountCreationToken as RulesAccountCreationToken;
 use App\Rules\BlacklistedUsername;
 use App\Rules\NoUppercase;
 use App\Rules\SIPUsername;
 use App\Rules\WithoutSpaces;
+use App\Rules\PasswordAlgorithm;
+
 use App\Services\AccountService;
 
 class AccountController extends Controller
@@ -104,7 +108,7 @@ class AccountController extends Controller
                 }),
                 'filled',
             ],
-            'algorithm' => 'required|in:SHA-256,MD5',
+            'algorithm' => ['required', new PasswordAlgorithm],
             'password' => 'required|filled',
             'domain' => 'min:3',
             'email' => config('app.account_email_unique')

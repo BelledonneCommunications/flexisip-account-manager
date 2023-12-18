@@ -13,7 +13,7 @@
         @endif
 
         <a href="{{ route('account.dashboard') }}" class="btn btn-secondary oppose">Cancel</a>
-        <input form="password_updated" class="btn" type="submit" value="Change">
+        <input form="password_update" class="btn" type="submit" value="Change">
     </header>
 
     <form id="password_update" method="POST" action="{{ route('account.password.update') }}" accept-charset="UTF-8">
@@ -24,7 +24,7 @@
             <label for="password">New password</label>
         </div>
         <div>
-            <input type="password_confirmation" name="password_confirmation" required>
+            <input type="password" name="password_confirmation" required>
             <label for="password_confirmation">Password confirmation</label>
         </div>
     </form>

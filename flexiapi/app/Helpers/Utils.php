@@ -28,6 +28,14 @@ use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 use League\CommonMark\Extension\TableOfContents\TableOfContentsExtension;
 use Illuminate\Support\Facades\DB;
 
+function passwordAlgorithms(): array
+{
+    return [
+        'MD5'     => 'md5',
+        'SHA-256' => 'sha256',
+    ];
+}
+
 function generateNonce(): string
 {
     return Str::random(32);
@@ -45,9 +53,7 @@ function generateValidNonce(Account $account): string
 
 function bchash(string $username, string $domain, string $password, string $algorithm = 'MD5')
 {
-    $algos = ['MD5' => 'md5', 'SHA-256' => 'sha256'];
-
-    return hash($algos[$algorithm], $username . ':' . $domain . ':' . $password);
+    return hash(passwordAlgorithms()[$algorithm], $username . ':' . $domain . ':' . $password);
 }
 
 function generatePin()

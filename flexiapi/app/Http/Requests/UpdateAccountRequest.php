@@ -39,7 +39,6 @@ class UpdateAccountRequest extends FormRequest
                 config('app.account_email_unique') ? Rule::unique('accounts', 'email')->ignore($this->route('account_id')) : null
             ],
             'role' => 'in:admin,end_user',
-            'password_sha256' => 'nullable|min:3',
             'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
             'phone' => [
                 'nullable',

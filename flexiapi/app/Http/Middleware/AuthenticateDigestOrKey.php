@@ -30,11 +30,6 @@ use Validator;
 
 class AuthenticateDigestOrKey
 {
-    const ALGORITHMS = [
-        'MD5'     => 'md5',
-        'SHA-256' => 'sha256',
-    ];
-
     /**
      * Handle an incoming request.
      *
@@ -106,7 +101,7 @@ class AuthenticateDigestOrKey
                 'cnonce'    => 'required',
                 'algorithm' => [
                     'required',
-                    Rule::in(array_keys(self::ALGORITHMS)),
+                    Rule::in(array_keys(passwordAlgorithms())),
                 ],
                 'username'  => 'required|in:'.$username,
             ])->validate();
@@ -130,7 +125,7 @@ class AuthenticateDigestOrKey
                 return $this->generateUnauthorizedResponse($account, 'Wrong algorithm');
             }
 
-            $hash = self::ALGORITHMS[$auth['algorithm']];
+            $hash = passwordAlgorithms()[$auth['algorithm']];
 
             // Hashing and checking
             $a1 = $password->algorithm == 'CLRTXT'
@@ -208,14 +203,14 @@ class AuthenticateDigestOrKey
 
         foreach ($account->passwords as $password) {
             if ($password->algorithm == 'CLRTXT') {
-                foreach (array_keys(self::ALGORITHMS) as $algorithm) {
+                foreach (array_keys(passwordAlgorithms()) as $algorithm) {
                     array_push(
                         $headers,
                         $this->generateAuthHeader($resolvedRealm, $algorithm, $nonce)
                     );
                 }
                 break;
-            } else if (\in_array($password->algorithm, array_keys(self::ALGORITHMS))) {
+            } else if (\in_array($password->algorithm, array_keys(passwordAlgorithms()))) {
                 array_push(
                     $headers,
                     $this->generateAuthHeader($resolvedRealm, $password->algorithm, $nonce)
