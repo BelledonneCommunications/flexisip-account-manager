@@ -7,7 +7,7 @@
 
 @section('content')
     <header>
-        <h1><i class="material-icons-outlined">list</i> Call Logs</h1>
+        <h1><i class="material-symbols-outlined">list</i> Call Logs</h1>
     </header>
 
     @include('admin.account.parts.tabs')

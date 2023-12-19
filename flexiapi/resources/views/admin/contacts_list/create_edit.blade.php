@@ -10,15 +10,15 @@
 @section('content')
     <header>
         @if ($contacts_list->id)
-            <h1><i class="material-icons-outlined">account_box</i> {{ $contacts_list->title }}</h1>
+            <h1><i class="material-symbols-outlined">account_box</i> {{ $contacts_list->title }}</h1>
             <a href="{{ route('admin.contacts_lists.index') }}" class="btn btn-secondary oppose">Cancel</a>
             <a class="btn btn-secondary" href="{{ route('admin.contacts_lists.delete', $contacts_list->id) }}">
-                <i class="material-icons-outlined">delete</i>
+                <i class="material-symbols-outlined">delete</i>
                 Delete
             </a>
             <input form="create_edit_contacts_list" class="btn" type="submit" value="Update">
         @else
-            <h1><i class="material-icons-outlined">account_box</i> Create a Contacts List</h1>
+            <h1><i class="material-symbols-outlined">account_box</i> Create a Contacts List</h1>
             <a href="{{ route('admin.contacts_lists.index') }}" class="btn btn-secondary oppose">Cancel</a>
             <input form="create_edit_contacts_list" class="btn" type="submit" value="Create">
         @endif
@@ -51,7 +51,7 @@
         <hr>
 
         <a class="btn btn-secondary oppose" href="{{ route('admin.contacts_lists.contacts.add', $contacts_list->id) }}">
-            <i class="material-icons-outlined">add</i> Add contacts
+            <i class="material-symbols-outlined">add</i> Add contacts
         </a>
 
         <form  method="POST"
@@ -95,7 +95,7 @@
             <div>
                 <a class="btn btn-tertiary oppose"
                     onclick="Utils.clearStorageList('d{{ $contacts_list->id }}');  document.querySelector('form[name=contacts_lists_contacts_destroy]').submit()">
-                    <i class="material-icons-outlined">delete</i>
+                    <i class="material-symbols-outlined">delete</i>
                     Remove <span class="list_toggle" data-list-id="d{{ $contacts_list->id }}"></span> contacts
                 </a>
             </div>

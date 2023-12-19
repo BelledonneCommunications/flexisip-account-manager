@@ -8,10 +8,10 @@
 @section('content')
     @if ($account->id)
         <header>
-            <h1><i class="material-icons-outlined">people</i> {{ $account->identifier }}</h1>
+            <h1><i class="material-symbols-outlined">people</i> {{ $account->identifier }}</h1>
             <a href="{{ route('admin.account.index') }}" class="btn btn-secondary oppose">Cancel</a>
             <a class="btn btn-secondary" href="{{ route('admin.account.delete', $account->id) }}">
-                <i class="material-icons-outlined">delete</i>
+                <i class="material-symbols-outlined">delete</i>
                 Delete
             </a>
             <input form="create_edit" class="btn" type="submit" value="Update">
@@ -20,7 +20,7 @@
             @include('admin.account.parts.tabs')
         @else
         <header>
-            <h1><i class="material-icons-outlined">people</i> Create an account</h1>
+            <h1><i class="material-symbols-outlined">people</i> Create an account</h1>
             <a href="{{ route('admin.account.index') }}" class="btn btn-secondary oppose">Cancel</a>
             <input form="create_edit" class="btn" type="submit" value="Create">
         </header>
@@ -148,7 +148,7 @@
                     href="{{ route('admin.contacts_lists.edit', ['contacts_list_id' => $contactsList->id]) }}">{{ $contactsList->title }}</a>
                 <a
                     href="{{ route('admin.account.contacts_lists.detach', ['account_id' => $account->id, 'contacts_list_id' => $contactsList->id]) }}">
-                    <i class="material-icons-outlined">close</i>
+                    <i class="material-symbols-outlined">close</i>
                 </a>
             </p>
         @endforeach
@@ -159,7 +159,7 @@
             <p class="chip">
                 <a href="{{ route('admin.account.edit', $account) }}">{{ $contact->identifier }}</a>
                 <a href="{{ route('admin.account.contact.delete', [$account, $contact->id]) }}">
-                    <i class="material-icons-outlined">close</i>
+                    <i class="material-symbols-outlined">close</i>
                 </a>
             </p>
         @endforeach

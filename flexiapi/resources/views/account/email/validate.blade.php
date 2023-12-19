@@ -2,7 +2,7 @@
 
 @section('content')
     <section>
-        <h1 style="margin-bottom: 4rem;"><i class="material-icons-outlined">account_circle</i> Validate your email</h1>
+        <h1 style="margin-bottom: 4rem;"><i class="material-symbols-outlined">account_circle</i> Validate your email</h1>
 
         <form method="POST" action="{{ route('account.email.update') }}" accept-charset="UTF-8">
 @csrf

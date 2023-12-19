@@ -62,7 +62,7 @@
             <a class="btn btn-secondary" href="{{ route('admin.statistics.show') }}">Reset</a>
             <a class="btn btn-tertiary"
                 href="{{ route('admin.statistics.show', ['by' => $request->get('by', 'day'), 'type' => $type, 'export' => true] + $request->only(['from', 'to', 'domain'])) }}">
-                <i class="material-icons-outlined">download</i> Export
+                <i class="material-symbols-outlined">download</i> Export
             </a>
         </div>
     </form>

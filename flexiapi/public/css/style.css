@@ -1,16 +1,15 @@
 @import url('./fonts.css');
 @import url('./form.css');
 
-/* fallback */
 @font-face {
-    font-family: 'Material Icons Outlined';
+    font-family: 'Material Symbols Outlined';
     font-style: normal;
     font-weight: 400;
-    src: url(../fonts/MaterialIcons-Outlined.woff2) format('woff2');
-  }
+    src: url(../fonts/MaterialSymbols-Outlined.woff2) format('woff2');
+}
 
-.material-icons-outlined {
-    font-family: 'Material Icons Outlined';
+.material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
     font-weight: normal;
     font-style: normal;
     line-height: 1;
@@ -291,7 +290,9 @@ header nav a#menu:after {
     font-size: 3rem;
 }
 
-body.show_menu header nav a#menu:after {font-family: 'Material Icons'
+body.show_menu header nav a#menu:after {
+    font-family: 'Material Icons'
+
     header nav a#logo {
         position: absolute;
         left: calc(50% - 1.5rem);
@@ -320,7 +321,7 @@ header nav a.oppose {
     margin-left: auto;
 }
 
-header nav a.oppose ~ a.oppose {
+header nav a.oppose~a.oppose {
     margin-left: 0;
 }
 
@@ -384,18 +385,18 @@ content section header form {
     display: inline-block;
 }
 
-content section header > *.oppose {
+content section header>*.oppose {
     margin-left: auto;
 }
 
-content nav + section {
+content nav+section {
     min-width: calc(80% - 20rem);
     margin-bottom: 4rem;
 }
 
 /** Sidenav **/
 
-content > nav {
+content>nav {
     background-color: var(--main-5);
     width: 20rem;
     margin-left: 0;
@@ -412,7 +413,7 @@ content > nav {
     z-index: 1;
 }
 
-content > nav a {
+content>nav a {
     color: white;
     font-weight: 600;
     font-size: 1.75rem;
@@ -424,21 +425,21 @@ content > nav a {
     white-space: nowrap;
 }
 
-content > nav a.current {
+content>nav a.current {
     background-color: white;
     border-radius: 4rem;
     color: var(--main-5);
     box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
 }
 
-content > nav a i {
+content>nav a i {
     margin: 0 1rem;
     margin-left: 2rem;
     font-size: 2rem;
 }
 
 @media screen and (max-width: 800px) {
-    content > nav {
+    content>nav {
         width: 100%;
         position: absolute;
         min-height: 100vh;
@@ -452,15 +453,15 @@ content > nav a i {
         transform: translateX(-100%);
     }
 
-    content > nav a {
+    content>nav a {
         margin-left: 0;
     }
 
-    content > nav a.current:after {
+    content>nav a.current:after {
         display: none;
     }
 
-    body.show_menu content > nav {
+    body.show_menu content>nav {
         transform: translateX(0);
     }
 }
@@ -493,7 +494,7 @@ h1 {
     margin-bottom: 1rem;
 }
 
-header > h1 {
+header>h1 {
     margin-bottom: 0;
 }
 
@@ -533,8 +534,15 @@ h4 {
     padding: 0.5rem 0;
 }
 
-p + h1, p + h2, p + h3, p + h4,
-ul + h1, ul + h2, ul + h3, ul + h4, h3 + p {
+p+h1,
+p+h2,
+p+h3,
+p+h4,
+ul+h1,
+ul+h2,
+ul+h3,
+ul+h4,
+h3+p {
     margin-top: 1rem;
 }
 
@@ -723,6 +731,7 @@ ul.pagination li:not(.disabled).active .page-link {
 ul.pagination li:not(.disabled) .page-link {
     color: var(--main-5);
 }
+
 ul.pagination li:not(.disabled):not(.active) .page-link:hover {
     background-color: var(--main-1);
 }
@@ -786,7 +795,7 @@ select.list_toggle {
     color: var(--grey-5);
 }
 
-.breadcrumb li + li:before {
+.breadcrumb li+li:before {
     content: ">";
     margin: 0 1rem;
     font-size: 1rem;
@@ -809,11 +818,11 @@ ol.steps li {
     color: var(--grey-5);
 }
 
-ol.steps li + li {
+ol.steps li+li {
     margin-left: 9rem;
 }
 
-ol.steps li + li:after {
+ol.steps li+li:after {
     display: block;
     border-top: 1px solid var(--grey-3);
     content: "";

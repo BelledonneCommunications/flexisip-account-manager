@@ -7,7 +7,7 @@
 
 @section('content')
     <header>
-        <h1><i class="material-icons-outlined">people</i> Import accounts</h1>
+        <h1><i class="material-symbols-outlined">people</i> Import accounts</h1>
         <a href="{{ route('admin.account.index') }}" class="btn btn-secondary oppose">Cancel</a>
 
         <a href="#" onclick="history.back()" class="btn btn-secondary">Previous</a>
@@ -18,7 +18,7 @@
             <input name="domain" type="hidden" value="{{ $domain }}">
             <a type="submit"
                 class="btn @if ($errors->isNotEmpty()) disabled @endif" onclick="document.querySelector('form[name=handle]').submit()">
-                <i class="material-icons-outlined">publish</i>
+                <i class="material-symbols-outlined">publish</i>
                 Import
             </a>
         </form>

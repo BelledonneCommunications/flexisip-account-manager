@@ -3,7 +3,7 @@
 @section('content')
     <section>
         <h1>
-            <i class="material-icons-outlined">mail</i>
+            <i class="material-symbols-outlined">mail</i>
             @if ($account->email)
                 Change your email
             @else

@@ -9,9 +9,9 @@
 
 @section('content')
     <header>
-        <h1><i class="material-icons-outlined">category</i> Types</h1>
+        <h1><i class="material-symbols-outlined">category</i> Types</h1>
         <a class="btn oppose" href="{{ route('admin.account.type.create') }}">
-            <i class="material-icons-outlined">add</i>
+            <i class="material-symbols-outlined">add</i>
             New Type
         </a>
     </header>

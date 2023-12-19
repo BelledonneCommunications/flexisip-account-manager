@@ -7,7 +7,7 @@
 
 @section('content')
     <header>
-        <h1><i class="material-icons-outlined">people</i> Import accounts</h1>
+        <h1><i class="material-symbols-outlined">people</i> Import accounts</h1>
         <a href="{{ route('admin.account.index') }}" class="btn btn-secondary oppose">Cancel</a>
         <input form="import" class="btn" type="submit" value="Next">
     </header>

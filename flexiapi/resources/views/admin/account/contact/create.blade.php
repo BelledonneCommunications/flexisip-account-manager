@@ -7,7 +7,7 @@
 
 @section('content')
     <header>
-        <h1><i class="material-icons-outlined">person_add</i> Add a Contact</h1>
+        <h1><i class="material-symbols-outlined">person_add</i> Add a Contact</h1>
         <a href="{{ route('admin.account.edit', $account->id) }}" class="btn btn-secondary oppose">Cancel</a>
         <input form="add_contact" class="btn" type="submit" value="Add">
     </header>

@@ -11,7 +11,7 @@
 @section('content')
 
 <header>
-    <h1><i class="material-icons-outlined">people</i> {{ $account->identifier }}</h1>
+    <h1><i class="material-symbols-outlined">people</i> {{ $account->identifier }}</h1>
 </header>
 
 @include('admin.account.parts.tabs')
@@ -45,19 +45,19 @@
     </form>
 </div>
 
-<h2><i class="material-icons-outlined">message</i> Messages from the account</h2>
+<h2><i class="material-symbols-outlined">message</i> Messages from the account</h2>
 
 {!! $messagesFromGraph !!}
 
-<h2><i class="material-icons-outlined">message</i> Messages to the account</h2>
+<h2><i class="material-symbols-outlined">message</i> Messages to the account</h2>
 
 {!! $messagesToGraph !!}
 
-<h2><i class="material-icons-outlined">call</i> Calls from the account</h2>
+<h2><i class="material-symbols-outlined">call</i> Calls from the account</h2>
 
 {!! $callsFromGraph !!}
 
-<h2><i class="material-icons-outlined">call</i> Calls to the account</h2>
+<h2><i class="material-symbols-outlined">call</i> Calls to the account</h2>
 
 {!! $callsToGraph !!}
 
