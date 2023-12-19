@@ -208,7 +208,7 @@ form div.checkbox {
 
 form div.search:after,
 form div.select:after {
-    font-family: 'Material Icons Outlined';
+    font-family: 'Material Symbols Outlined';
     content: "\e5cf";
     display: block;
     font-size: 2.5rem;
