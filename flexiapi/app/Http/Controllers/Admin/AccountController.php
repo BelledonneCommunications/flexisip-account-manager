@@ -98,7 +98,7 @@ class AccountController extends Controller
         $account->save();
 
         $account->phone = $request->get('phone');
-        $account->fillPassword($request);
+        $account->updatePassword($request->get('password'));
 
         $account->refresh();
         $account->setRole($request->get('role'));
@@ -136,10 +136,7 @@ class AccountController extends Controller
 
         $account->phone = $request->get('phone');
 
-        if ($request->filled('password') && $request->filled('password_confirmation')) {
-            $account->fillPassword($request);
-        }
-
+        $account->updatePassword($request->get('password'));
         $account->setRole($request->get('role'));
 
         Log::channel('events')->info('Web Admin: Account updated', ['id' => $account->identifier]);

@@ -2,6 +2,19 @@
 
 v1.5
 ----
+- Fix #135 Refactor the password algorithms code
+- Fix #134 Create an Activity view in the Admin > Accounts panel
+- Fix #133 Make the MySQL connection unstrict
+- Fix #132 Move the provisioning_tokens and recovery_codes to dedicated table
+- Fix #130 Drop the group column in the Accounts table
+
+v1.4.2
+------
+- Fix #135 Refactor the password algorithms code
+
+v1.4.1
+------
+- Fix #133 Make the MySQL connection unstrict
 
 v1.4
 ----

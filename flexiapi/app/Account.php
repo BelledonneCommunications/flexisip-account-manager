@@ -416,8 +416,10 @@ class Account extends Authenticatable
         return !empty($this->recovery_code) && $this->updated_at->greaterThan($oneHourAgo);
     }
 
-    public function updatePassword($newPassword, string $algorithm = 'SHA-256')
+    public function updatePassword($newPassword, ?string $algorithm = null)
     {
+        $algorithm = $algorithm ?? config('app.account_default_password_algorithm');
+
         $this->passwords()->delete();
 
         $password = new Password;
@@ -425,14 +427,6 @@ class Account extends Authenticatable
         $password->password = bchash($this->username, $this->resolvedRealm, $newPassword, $algorithm);
         $password->algorithm = $algorithm;
         $password->save();
-    }
-
-    public function fillPassword(Request $request)
-    {
-        if ($request->filled('password')) {
-            $this->algorithm = $request->has('password_sha256') ? 'SHA-256' : 'MD5';
-            $this->updatePassword($request->get('password'), $this->algorithm);
-        }
     }
 
     public function toVcard4()

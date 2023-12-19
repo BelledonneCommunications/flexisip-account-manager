@@ -32,6 +32,7 @@ return [
     'account_email_unique' => env('ACCOUNT_EMAIL_UNIQUE', false),
     'blacklisted_usernames' => env('ACCOUNT_BLACKLISTED_USERNAMES', ''),
     'account_username_regex' => env('ACCOUNT_USERNAME_REGEX', '^[a-z0-9+_.-]*$'),
+    'account_default_password_algorithm' => env('ACCOUNT_DEFAULT_PASSWORD_ALGORITHM', 'SHA-256'),
 
     /**
      * Time limit before the API Key and related cookie are expired

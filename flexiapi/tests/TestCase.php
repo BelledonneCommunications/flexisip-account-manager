@@ -28,8 +28,6 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
-    const ALGORITHMS = ['md5' => 'MD5', 'sha256' => 'SHA-256'];
-
     protected $route = '/api/accounts/me';
     protected $method = 'GET';
 
@@ -88,7 +86,7 @@ abstract class TestCase extends BaseTestCase
             $extractedChallenge['qop'],
             $response,
             $extractedChallenge['opaque'],
-            self::ALGORITHMS[$hash],
+            array_flip(passwordAlgorithms())[$hash],
         );
 
         return 'Digest ' . $digest;

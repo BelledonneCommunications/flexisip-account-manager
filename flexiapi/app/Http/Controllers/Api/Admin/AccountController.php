@@ -33,6 +33,7 @@ use App\ContactsList;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
+use App\Rules\PasswordAlgorithm;
 use App\Services\AccountService;
 
 class AccountController extends Controller
@@ -109,7 +110,7 @@ class AccountController extends Controller
     public function store(CreateAccountRequest $request)
     {
         $request->validate([
-            'algorithm' => 'required|in:SHA-256,MD5',
+            'algorithm' => ['required', new PasswordAlgorithm],
             'admin' => 'boolean|nullable',
             'activated' => 'boolean|nullable',
             'confirmation_key_expires' => [
@@ -158,7 +159,7 @@ class AccountController extends Controller
     public function update(UpdateAccountRequest $request, int $accountId)
     {
         $request->validate([
-            'algorithm' => 'required|in:SHA-256,MD5',
+            'algorithm' => ['required', new PasswordAlgorithm],
             'admin' => 'boolean|nullable',
             'activated' => 'boolean|nullable'
         ]);

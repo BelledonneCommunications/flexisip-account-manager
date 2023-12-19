@@ -19,10 +19,12 @@
 
 namespace App\Http\Controllers\Api\Account;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+
+use App\Http\Controllers\Controller;
+use App\Rules\PasswordAlgorithm;
 
 use App\Mail\ConfirmedRegistration;
 
@@ -31,7 +33,7 @@ class PasswordController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'algorithm' => 'required|in:SHA-256,MD5',
+            'algorithm' => ['required', new PasswordAlgorithm],
             'password' => 'required',
         ]);
 

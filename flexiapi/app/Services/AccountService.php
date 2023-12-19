@@ -72,7 +72,7 @@ class AccountService
         $account->confirmation_key = generatePin();
         $account->save();
 
-        $account->updatePassword($request->get('password'), $request->has('algorithm') ? $request->get('algorithm') : 'SHA-256');
+        $account->updatePassword($request->get('password'), $request->get('algorithm'));
 
         if ($this->api) {
             $token = AccountCreationToken::where('token', $request->get('account_creation_token'))->first();
