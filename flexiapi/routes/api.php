@@ -41,10 +41,11 @@ Route::post('accounts/with-account-creation-token', 'Api\Account\AccountControll
 
 Route::get('accounts/{sip}/info', 'Api\Account\AccountController@info');
 
+// Deprecated endpoints
 Route::post('accounts/{sip}/activate/email', 'Api\Account\AccountController@activateEmail');
 Route::post('accounts/{sip}/activate/phone', 'Api\Account\AccountController@activatePhone');
 
-// /!\ Dangerous endpoints
+// Deprecated endpoints /!\ Dangerous endpoints
 Route::post('accounts/public', 'Api\Account\AccountController@storePublic');
 Route::get('accounts/{sip}/recover/{recovery_key}', 'Api\Account\AccountController@recoverUsingKey');
 Route::post('accounts/recover-by-phone', 'Api\Account\AccountController@recoverByPhone');
@@ -71,6 +72,7 @@ Route::group(['middleware' => ['auth.digest_or_key']], function () {
         Route::delete('devices/{uuid}', 'Api\Account\DeviceController@destroy');
 
         Route::post('email/request', 'Api\Account\EmailController@requestUpdate');
+
         Route::post('password', 'Api\Account\PasswordController@update');
 
         Route::get('contacts/{sip}', 'Api\Account\ContactController@show');
@@ -90,8 +92,6 @@ Route::group(['middleware' => ['auth.digest_or_key']], function () {
             Route::get('{id}/activate', 'activate');
             Route::get('{id}/deactivate', 'deactivate');
             Route::get('{id}/provision', 'provision');
-
-            Route::post('{id}/recover-by-email', 'recoverByEmail');
 
             Route::post('/', 'store');
             Route::put('{id}', 'update');

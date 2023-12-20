@@ -103,6 +103,10 @@ body.show_menu {
     overflow: hidden;
 }
 
+ul {
+    margin-bottom: 1rem;
+}
+
 p,
 a,
 ul li,
@@ -581,6 +585,10 @@ h3+p {
 }
 
 .badge.badge-error {
+    background-color: var(--color-pink);
+}
+
+.badge.badge-message {
     background-color: var(--color-purple);
 }
 

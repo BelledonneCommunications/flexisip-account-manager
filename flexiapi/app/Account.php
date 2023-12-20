@@ -38,8 +38,8 @@ class Account extends Authenticatable
     use HasFactory;
     use Compoships;
 
-    protected $with = ['passwords', 'admin', 'alias', 'currentRecoveryCode', 'activationExpiration', 'emailChangeCode', 'types', 'actions'];
-    protected $hidden = ['alias', 'expire_time', 'confirmation_key', 'pivot'];
+    protected $with = ['passwords', 'admin', 'alias', 'activationExpiration', 'emailChangeCode', 'types', 'actions'];
+    protected $hidden = ['alias', 'expire_time', 'confirmation_key', 'pivot', 'currentProvisioningToken', 'currentRecoveryCode'];
     protected $appends = ['realm', 'phone', 'confirmation_key_expires', 'provisioning_token'];
     protected $casts = [
         'activated' => 'boolean',

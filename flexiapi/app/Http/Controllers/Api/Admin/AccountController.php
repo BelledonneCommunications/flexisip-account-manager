@@ -225,12 +225,4 @@ class AccountController extends Controller
 
         return Account::findOrFail($id)->contactsLists()->detach($contactsListId);
     }
-
-    public function recoverByEmail(int $id)
-    {
-        $account = Account::findOrFail($id);
-        $account = (new AccountService)->recoverByEmail($account);
-
-        return $account->makeVisible(['confirmation_key', 'provisioning_token']);
-    }
 }

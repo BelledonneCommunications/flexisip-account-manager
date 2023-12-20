@@ -144,7 +144,7 @@ Return `404` if the token is non existing or invalid.
 
 ## Accounts
 
-### `POST /accounts/public`
+### <span class="badge badge-message">Deprecated</span> `POST /accounts/public`
 
 @if(!config('app.dangerous_endpoints'))<span class="badge">Disabled</span>@endif
 
@@ -187,7 +187,7 @@ JSON parameters:
 Retrieve public information about the account.
 Return `404` if the account doesn't exists.
 
-### `GET /accounts/{phone}/info-by-phone`
+### <span class="badge badge-message">Deprecated</span> `GET /accounts/{phone}/info-by-phone`
 
 @if(!config('app.dangerous_endpoints'))<span class="badge">Disabled</span>@endif
 
@@ -199,7 +199,7 @@ Return `404` if the account doesn't exists.
 
 Return `phone: true` if the returned account has a phone number.
 
-### `POST /accounts/recover-by-phone`
+### <span class="badge badge-message">Deprecated</span> `POST /accounts/recover-by-phone`
 
 @if(!config('app.dangerous_endpoints'))<span class="badge">Disabled</span>@endif
 
@@ -216,7 +216,7 @@ JSON parameters:
 * `phone` required the phone number to send the SMS to
 * `account_creation_token` the unique `account_creation_token`
 
-### `GET /accounts/{sip}/recover/{recover_key}`
+### <span class="badge badge-message">Deprecated</span> `GET /accounts/{sip}/recover/{recover_key}`
 
 @if(!config('app.dangerous_endpoints'))<span class="badge">Disabled</span>@endif
 
@@ -231,22 +231,28 @@ Return the account information (including the hashed password) if valid.
 
 Return `404` if the account doesn't exists.
 
-### `POST /accounts/{sip}/activate/email`
+### <span class="badge badge-message">Deprecated</span> `POST /accounts/{sip}/activate/email`
+
+<a href="#post-accountsmeemailrequest">Use `POST /accounts/me/email/request` instead</a>.
 
 <span class="badge badge-success">Public</span>
 
 Activate an account using a secret code received by email.
 Return `404` if the account doesn't exists or if the code is incorrect, the validated account otherwise.
+
 JSON parameters:
 
 * `confirmation_key` the confirmation key
 
-### `POST /accounts/{sip}/activate/phone`
+### <span class="badge badge-message">Deprecated</span> `POST /accounts/{sip}/activate/phone`
+
+<a href="#post-accountsmephonerequest">Use `POST /accounts/me/phone/request` instead</a>.
 
 <span class="badge badge-success">Public</span>
 
 Activate an account using a pin code received by phone.
 Return `404` if the account doesn't exists or if the code is incorrect, the validated account otherwise.
+
 JSON parameters:
 
 * `confirmation_key` the PIN code
@@ -293,6 +299,7 @@ Delete the account.
 <span class="badge badge-info">User</span>
 
 Change the account email. An email will be sent to the new email address to confirm the operation.
+
 JSON parameters:
 
 * `email` the new email address, must be unique if `ACCOUNT_EMAIL_UNIQUE` is set to `true`
@@ -302,6 +309,7 @@ JSON parameters:
 <span class="badge badge-info">User</span>
 
 Change the account password.
+
 JSON parameters:
 
 * `algorithm` required, values can be `SHA-256` or `MD5`
@@ -313,7 +321,8 @@ JSON parameters:
 <span class="badge badge-warning">Admin</span>
 
 To create an account directly from the API.
-If `activated` is set to `false` a random generated `confirmation_key` and `provisioning_token` will be returned to allow further activation using the public endpoints and provision the account. Check `confirmation_key_expires` to also set an expiration date on that `confirmation_key`.
+
+<span class="badge badge-message">Deprecated</span> If `activated` is set to `false` a random generated `confirmation_key` and `provisioning_token` will be returned to allow further activation using the public endpoints and provision the account. Check `confirmation_key_expires` to also set an expiration date on that `confirmation_key`.
 
 JSON parameters:
 
@@ -327,7 +336,7 @@ JSON parameters:
 * `admin` optional, a boolean, set to `false` by default, create an admin account
 * `phone` optional, a phone number, set a phone number to the account
 * `dtmf_protocol` optional, values must be `sipinfo`, `sipmessage` or `rfc2833`
-* `confirmation_key_expires` optional, a datetime of this format: Y-m-d H:i:s. Only used when `activated` is not used or `false`. Enforces an expiration date on the returned `confirmation_key`. After that datetime public email or phone activation endpoints will return `403`.
+* <span class="badge badge-message">Deprecated</span> `confirmation_key_expires` optional, a datetime of this format: Y-m-d H:i:s. Only used when `activated` is not used or `false`. Enforces an expiration date on the returned `confirmation_key`. After that datetime public email or phone activation endpoints will return `403`.
 
 ### `PUT /accounts/{id}`
 
@@ -357,12 +366,6 @@ Retrieve all the accounts, paginated.
 <span class="badge badge-warning">Admin</span>
 
 Retrieve a specific account.
-
-### `POST /accounts/{id}/recover-by-email`
-
-<span class="badge badge-warning">Admin</span>
-
-Send the account recovery email containing a fresh `provisioning_token` and `confirmation_key`
 
 ### `GET /accounts/{sip}/search`
 
@@ -407,6 +410,7 @@ Provision an account by generating a fresh `provisioning_token`.
 <span class="badge badge-info">User</span>
 
 Request a specific code by SMS
+
 JSON parameters:
 
 * `phone` the phone number to send the SMS
@@ -415,12 +419,14 @@ JSON parameters:
 
 <span class="badge badge-info">User</span>
 
-Confirm the code received and change the phone number
+Confirm the code received and change the phone number.
+Activate the account.
+
 JSON parameters:
 
 * `code` the received SMS code
 
-Return the updated account
+Return the updated account.
 
 ## Accounts devices
 

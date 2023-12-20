@@ -256,6 +256,9 @@ class AccountController extends Controller
         return (new AccountService)->store($request);
     }
 
+    /**
+     * Deprecated
+     */
     public function activateEmail(Request $request, string $sip)
     {
         $request->validate([
@@ -277,6 +280,9 @@ class AccountController extends Controller
         return $account;
     }
 
+    /**
+     * Deprecated
+     */
     public function activatePhone(Request $request, string $sip)
     {
         $request->validate([
