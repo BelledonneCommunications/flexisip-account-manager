@@ -157,6 +157,22 @@ class Account extends Authenticatable
         });
     }
 
+    public function setDictionaryEntry(string $key, string $value): AccountDictionaryEntry
+    {
+        $entry = $this->dictionaryEntries->where('key', $key)->first();
+
+        if (!$entry) {
+            $entry = new AccountDictionaryEntry;
+        }
+
+        $entry->account_id = $this->id;
+        $entry->key = $key;
+        $entry->value = $value;
+        $entry->save();
+
+        return $entry;
+    }
+
     public function nonces()
     {
         return $this->hasMany(DigestNonce::class);

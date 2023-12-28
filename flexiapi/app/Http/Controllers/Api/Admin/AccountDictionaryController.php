@@ -43,18 +43,7 @@ class AccountDictionaryController extends Controller
             'value' => 'required'
         ]);
 
-        $entry = Account::findOrFail($accountId)->dictionaryEntries()->where('key', $key)->first();
-
-        if (!$entry) {
-            $entry = new AccountDictionaryEntry;
-        }
-
-        $entry->account_id = $accountId;
-        $entry->key = $key;
-        $entry->value = $request->get('value');
-        $entry->save();
-
-        return $entry;
+        return Account::findOrFail($accountId)->setDictionaryEntry($key, $request->get('value'));
     }
 
     public function destroy(Request $request, int $accountId, string $key)

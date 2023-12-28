@@ -336,6 +336,7 @@ JSON parameters:
 * `admin` optional, a boolean, set to `false` by default, create an admin account
 * `phone` optional, a phone number, set a phone number to the account
 * `dtmf_protocol` optional, values must be `sipinfo`, `sipmessage` or `rfc2833`
+* `dictionary` optional, an associative array attached to the account, <a href="#dictionary">see also the related endpoints</a>.
 * <span class="badge badge-message">Deprecated</span> `confirmation_key_expires` optional, a datetime of this format: Y-m-d H:i:s. Only used when `activated` is not used or `false`. Enforces an expiration date on the returned `confirmation_key`. After that datetime public email or phone activation endpoints will return `403`.
 
 ### `PUT /accounts/{id}`

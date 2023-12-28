@@ -7,6 +7,7 @@ use Illuminate\Validation\Rule;
 
 use App\Account;
 use App\Rules\BlacklistedUsername;
+use App\Rules\Dictionary;
 use App\Rules\IsNotPhoneNumber;
 use App\Rules\NoUppercase;
 use App\Rules\SIPUsername;
@@ -36,6 +37,7 @@ class CreateAccountRequest extends FormRequest
                 }),*/
                 'filled',
             ],
+            'dictionary' => [new Dictionary],
             'password' => 'required|min:3',
             'email' => config('app.account_email_unique')
                 ? 'nullable|email|unique:accounts,email'

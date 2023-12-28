@@ -144,6 +144,12 @@ class AccountController extends Controller
             $actionvationExpiration->save();
         }
 
+        if ($request->has('dictionary')) {
+            foreach ($request->get('dictionary') as $key => $value) {
+                $account->setDictionaryEntry($key, $value);
+            }
+        }
+
         $account->updatePassword($request->get('password'), $request->get('algorithm'));
         $account->admin = $request->has('admin') && (bool)$request->get('admin');
         $account->phone = $request->get('phone');

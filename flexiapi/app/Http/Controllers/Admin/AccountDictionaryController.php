@@ -52,11 +52,7 @@ class AccountDictionaryController extends Controller
             'value' => 'required'
         ]);
 
-        $entry = new AccountDictionaryEntry;
-        $entry->account_id = $account->id;
-        $entry->key = $request->get('key');
-        $entry->value = $request->get('value');
-        $entry->save();
+        $account->setDictionaryEntry($request->get('key'), $request->get('value'));
 
         return redirect()->route('admin.account.dictionary.index', $account->id);
     }

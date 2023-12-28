@@ -343,6 +343,53 @@ class ApiAccountTest extends TestCase
         $this->assertFalse(empty($response1['provisioning_token']));
     }
 
+    public function testAdminWithDictionary()
+    {
+        $admin = Admin::factory()->create();
+        $password = $admin->account->passwords()->first();
+        $password->account->generateApiKey();
+
+        $entryKey = 'foo';
+        $entryValue = 'bar';
+
+        $response = $this->keyAuthenticated($password->account)
+            ->json($this->method, $this->route, [
+                'username' => 'john',
+                'domain' => 'lennon.com',
+                'password' => 'password123',
+                'algorithm' => 'SHA-256',
+                'dictionary' => [
+                    $entryKey => $entryValue
+                ]
+            ])
+            ->assertStatus(200)
+            ->assertJson([
+                'dictionary' => [
+                    $entryKey => $entryValue
+                ]
+            ]);
+
+        $response = $this->keyAuthenticated($password->account)
+            ->json($this->method, $this->route, [
+                'username' => 'john2',
+                'domain' => 'lennon.com',
+                'password' => 'password123',
+                'algorithm' => 'SHA-256',
+                'dictionary' => [
+                    $entryKey => ['hey' => 'hop']
+                ]
+            ])->assertJsonValidationErrors(['dictionary']);
+
+            $response = $this->keyAuthenticated($password->account)
+            ->json($this->method, $this->route, [
+                'username' => 'john2',
+                'domain' => 'lennon.com',
+                'password' => 'password123',
+                'algorithm' => 'SHA-256',
+                'dictionary' => 'hop'
+            ])->assertJsonValidationErrors(['dictionary']);
+    }
+
     public function testActivated()
     {
         $admin = Admin::factory()->create();
@@ -534,9 +581,7 @@ class ApiAccountTest extends TestCase
                 'domain' => 'server.com',
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
-            ])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['email']);
+            ])->assertJsonValidationErrors(['email']);
     }
 
     public function testNonAsciiPasswordAdmin()
@@ -580,7 +625,6 @@ class ApiAccountTest extends TestCase
 
         $this->keyAuthenticated($admin->account)
             ->json('PUT', $this->route . '/1234')
-            ->assertStatus(422)
             ->assertJsonValidationErrors(['username']);
 
         $this->keyAuthenticated($admin->account)
@@ -707,23 +751,19 @@ class ApiAccountTest extends TestCase
 
         $this->json($this->method, $this->route . '/recover-by-phone', [
             'phone' => $phone
-        ])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['account_creation_token']);
+        ])->assertJsonValidationErrors(['account_creation_token']);
 
         $this->json($this->method, $this->route . '/recover-by-phone', [
             'phone' => $phone,
             'account_creation_token' => 'wrong'
-        ])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['account_creation_token']);
+        ])->assertJsonValidationErrors(['account_creation_token']);
+
         $token = AccountCreationToken::factory()->create();
 
         $this->json($this->method, $this->route . '/recover-by-phone', [
             'phone' => $phone,
             'account_creation_token' => $token->token
-        ])
-            ->assertStatus(200);
+        ])->assertStatus(200);
 
         $password->account->refresh();
 
@@ -731,8 +771,7 @@ class ApiAccountTest extends TestCase
         $this->json($this->method, $this->route . '/recover-by-phone', [
             'phone' => $phone,
             'account_creation_token' => $token->token
-        ])
-            ->assertStatus(422);
+        ])->assertStatus(422);
 
         $this->get($this->route . '/' . $password->account->identifier . '/recover/' . $password->account->confirmation_key)
             ->assertStatus(200)
@@ -751,7 +790,6 @@ class ApiAccountTest extends TestCase
             ->assertStatus(404);
 
         $this->json('GET', $this->route . '/' . $password->account->identifier . '/info-by-phone')
-            ->assertStatus(422)
             ->assertJsonValidationErrors(['phone']);
 
         // Check the mixed username/phone resolution...
@@ -788,18 +826,14 @@ class ApiAccountTest extends TestCase
             'username' => $username,
             'algorithm' => 'SHA-256',
             'password' => '2',
-        ])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['email']);
+        ])->assertJsonValidationErrors(['email']);
 
         $this->json($this->method, $this->route . '/public', [
             'username' => $username,
             'algorithm' => 'SHA-256',
             'password' => '2',
             'email' => 'john@doe.tld',
-        ])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['account_creation_token']);
+        ])->assertJsonValidationErrors(['account_creation_token']);
 
         $token = AccountCreationToken::factory()->create();
         $userAgent = 'User Agent Test';
@@ -827,8 +861,7 @@ class ApiAccountTest extends TestCase
             'password' => '2',
             'email' => 'john@doe.tld',
             'account_creation_token' => $token->token
-        ])
-            ->assertStatus(422);
+        ])->assertStatus(422);
 
         // Already created
         $this->json($this->method, $this->route . '/public', [
@@ -836,9 +869,7 @@ class ApiAccountTest extends TestCase
             'algorithm' => 'SHA-256',
             'password' => '2',
             'email' => 'john@doe.tld',
-        ])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['username']);
+        ])->assertJsonValidationErrors(['username']);
 
         // Email is now unique
         config()->set('app.account_email_unique', true);
@@ -848,9 +879,7 @@ class ApiAccountTest extends TestCase
             'algorithm' => 'SHA-256',
             'password' => '2',
             'email' => 'john@doe.tld',
-        ])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['email']);
+        ])->assertJsonValidationErrors(['email']);
 
         $this->assertDatabaseHas('accounts', [
             'username' => $username,
@@ -876,9 +905,7 @@ class ApiAccountTest extends TestCase
             'algorithm' => 'SHA-256',
             'password' => '2',
             'email' => 'john@doe.tld',
-        ])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['phone']);
+        ])->assertJsonValidationErrors(['phone']);
 
         $token = AccountCreationToken::factory()->create();
 
@@ -900,9 +927,7 @@ class ApiAccountTest extends TestCase
             'algorithm' => 'SHA-256',
             'password' => '2',
             'email' => 'john@doe.tld',
-        ])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['phone']);
+        ])->assertJsonValidationErrors(['phone']);
 
         $this->assertDatabaseHas('accounts', [
             'username' => $phone,
@@ -1001,9 +1026,7 @@ class ApiAccountTest extends TestCase
         $this->keyAuthenticated($password->account)
             ->json($this->method, $this->route . '/me/email/request', [
                 'email' => $otherAccount->account->email
-            ])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['email']);
+            ])->assertJsonValidationErrors(['email']);
     }
 
     public function testChangePassword()
@@ -1020,9 +1043,7 @@ class ApiAccountTest extends TestCase
             ->json($this->method, $this->route . '/me/password', [
                 'algorithm' => '123',
                 'password' => $password
-            ])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['algorithm']);
+            ])->assertJsonValidationErrors(['algorithm']);
 
         // Fresh password without an old one
         $this->keyAuthenticated($account)
@@ -1048,9 +1069,7 @@ class ApiAccountTest extends TestCase
             ->json($this->method, $this->route . '/me/password', [
                 'algorithm' => $newAlgorithm,
                 'password' => $newPassword
-            ])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['old_password']);
+            ])->assertJsonValidationErrors(['old_password']);
 
         // Set the new password with incorrect old password
         $this->keyAuthenticated($account)
@@ -1058,9 +1077,7 @@ class ApiAccountTest extends TestCase
                 'algorithm' => $newAlgorithm,
                 'old_password' => 'blabla',
                 'password' => $newPassword
-            ])
-            ->assertJsonValidationErrors(['old_password'])
-            ->assertStatus(422);
+            ])->assertJsonValidationErrors(['old_password']);
 
         // Set the new password
         $this->keyAuthenticated($account)

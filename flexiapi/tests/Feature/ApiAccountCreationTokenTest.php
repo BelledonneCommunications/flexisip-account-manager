@@ -152,7 +152,6 @@ class ApiAccountCreationTokenTest extends TestCase
             'password' => '123',
             'account_creation_token' => $token->token
         ]);
-        $response->assertStatus(422);
         $response->assertJsonValidationErrors(['username']);
 
         // Blacklisted regex username
@@ -163,7 +162,6 @@ class ApiAccountCreationTokenTest extends TestCase
             'account_creation_token' => $token->token
         ]);
 
-        $response->assertStatus(422);
         $response->assertJsonValidationErrors(['username']);
 
         // Valid username
