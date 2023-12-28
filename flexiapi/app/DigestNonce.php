@@ -27,6 +27,6 @@ class DigestNonce extends Model
 
     public function account()
     {
-        return $this->belongsTo('App\Account');
+        return $this->belongsTo(Account::class);
     }
 }

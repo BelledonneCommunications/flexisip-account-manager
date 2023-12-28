@@ -2,10 +2,8 @@
 
 @section('breadcrumb')
     @include('admin.account.parts.breadcrumb_accounts_index')
-<li class="breadcrumb-item">
-    <a href="{{ route('admin.account.edit', $account) }}">{{ $account->identifier }}</a>
-</li>
-<li class="breadcrumb-item active" aria-current="page">Devices</li>
+    @include('admin.account.parts.breadcrumb_accounts_edit', ['account' => $account])
+    <li class="breadcrumb-item active" aria-current="page">Devices</li>
 @endsection
 
 @section('content')

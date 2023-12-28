@@ -29,7 +29,7 @@ class EmailChangeCode extends Consommable
 
     public function account()
     {
-        return $this->belongsTo('App\Account');
+        return $this->belongsTo(Account::class);
     }
 
     public function validate(int $code): bool

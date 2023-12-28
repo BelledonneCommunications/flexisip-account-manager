@@ -442,7 +442,7 @@ Return the user registered devices.
 
 Remove one of the user registered devices.
 
-## Accounts contacts
+## Account contacts
 
 ### `GET /accounts/me/contacts`
 
@@ -475,6 +475,30 @@ Add a contact to the list.
 <span class="badge badge-warning">Admin</span>
 
 Remove a contact from the list.
+
+## Dictionary
+
+### `GET /accounts/{id}/dictionary`
+
+<span class="badge badge-warning">Admin</span>
+
+Get all the account dictionary entries.
+
+### `POST /accounts/{id}/dictionary/{key}`
+
+<span class="badge badge-warning">Admin</span>
+
+Add or update a new entry to the dictionary
+
+JSON parameters:
+
+* `value` required, the entry value
+
+### `DELETE /accounts/{id}/dictionary/{key}`
+
+<span class="badge badge-warning">Admin</span>
+
+Remove an entry from the dictionary.
 
 ## Account Actions
 

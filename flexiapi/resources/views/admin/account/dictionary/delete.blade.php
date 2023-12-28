@@ -4,25 +4,25 @@
     @include('admin.account.parts.breadcrumb_accounts_index')
     @include('admin.account.parts.breadcrumb_accounts_edit', ['account' => $account])
     <li class="breadcrumb-item">
-        <a href="{{ route('admin.account.device.index', $account) }}">Devices</a>
+        <a href="{{ route('admin.account.dictionary.index', $account) }}">Dictionary</a>
     </li>
     <li class="breadcrumb-item active" aria-current="page">Delete</li>
 @endsection
 
 @section('content')
-    <h2>Device deletion</h2>
+    <h2>Dictionary entry deletion</h2>
 
     <div>
-        <p>Are you sure you want to delete the following device?</p>
+        <p>Are you sure you want to delete the following dictionary entry?</p>
         <p>
-            <b>User Agent:</b> {{ $device->user_agent }}
+            <b>{{ $entry->key }}:</b> {{ $entry->value }}
         </p>
     </div>
 
-    <form method="POST" action="{{ route('admin.account.device.destroy', $account) }}" accept-charset="UTF-8">
+    <form method="POST" action="{{ route('admin.account.dictionary.destroy', $account) }}" accept-charset="UTF-8">
         @method('delete')
         @csrf
-        <input name="uuid" type="hidden" value="{{ $device->uuid }}">
+        <input name="key" type="hidden" value="{{ $entry->key }}">
         <div>
             <input class="btn" type="submit" value="Delete">
         </div>

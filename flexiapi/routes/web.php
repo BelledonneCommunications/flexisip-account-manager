@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\AccountActionController;
 use App\Http\Controllers\Admin\AccountActivityController;
 use App\Http\Controllers\Admin\AccountContactController;
 use App\Http\Controllers\Admin\AccountDeviceController;
+use App\Http\Controllers\Admin\AccountDictionaryController;
 use App\Http\Controllers\Admin\AccountImportController;
 use App\Http\Controllers\Admin\AccountTypeController;
 use App\Http\Controllers\Admin\AccountController as AdminAccountController;
@@ -206,6 +207,16 @@ if (config('app.web_panel')) {
             Route::name('device.')->prefix('{account}/devices')->controller(AccountDeviceController::class)->group(function () {
                 Route::get('/', 'index')->name('index');
                 Route::get('{device_id}/delete', 'delete')->name('delete');
+                Route::delete('/', 'destroy')->name('destroy');
+            });
+
+            Route::name('dictionary.')->prefix('{account}/dictionary')->controller(AccountDictionaryController::class)->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('create', 'create')->name('create');
+                Route::post('/', 'store')->name('store');
+                Route::get('{entry}/edit', 'edit')->name('edit');
+                Route::put('{entry}', 'update')->name('update');
+                Route::get('{key}/delete', 'delete')->name('delete');
                 Route::delete('/', 'destroy')->name('destroy');
             });
 

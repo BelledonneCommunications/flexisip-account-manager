@@ -2,9 +2,7 @@
 
 @section('breadcrumb')
     @include('admin.account.parts.breadcrumb_accounts_index')
-    <li class="breadcrumb-item">
-        <a href="{{ route('admin.account.edit', $account->id) }}">{{ $account->identifier }}</a>
-    </li>
+    @include('admin.account.parts.breadcrumb_accounts_edit', ['account' => $account])
     <li class="breadcrumb-item active" aria-current="page">
         Actions
     </li>
@@ -18,7 +16,7 @@
     @endif
 
     <form method="POST"
-        action="{{ $action->id ? route('admin.account.acton.update', [$action->account->id, $action->id]) : route('admin.account.action.store', $account->id) }}"
+        action="{{ $action->id ? route('admin.account.action.update', [$action->account->id, $action->id]) : route('admin.account.action.store', $account->id) }}"
         accept-charset="UTF-8">
         @method($action->id ? 'put' : 'post')
         @csrf

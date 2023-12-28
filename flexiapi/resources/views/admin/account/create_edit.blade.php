@@ -2,6 +2,7 @@
 
 @section('breadcrumb')
     @include('admin.account.parts.breadcrumb_accounts_index')
+    @include('admin.account.parts.breadcrumb_accounts_edit', ['account' => $account])
     <li class="breadcrumb-item active" aria-current="page">Edit</li>
 @endsection
 
@@ -188,13 +189,8 @@
                     <small>The current one will be unavailable</small>
                 </div>
             </form>
-            <p class="mt-3">
-            </p>
         @else
-            <p class="mt-3">
-                <a class="btn btn-light" href="{{ route('admin.account.provision', $account->id) }}">Generate a provision
-                    link</a>
-            </p>
+            <a class="btn btn-light" href="{{ route('admin.account.provision', $account->id) }}">Generate a provision link</a>
         @endif
 
         @if (config('app.intercom_features'))

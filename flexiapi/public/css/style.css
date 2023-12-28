@@ -174,7 +174,7 @@ code {
 }
 
 p>a:not(.btn),
-table tr td a:hover,
+table tr td a:not(.btn):hover,
 label>a {
     text-decoration: underline;
     color: var(--main-5);
@@ -658,7 +658,7 @@ table tr.empty td:before {
     color: var(--second-4);
     display: block;
     text-align: center;
-    margin: 12rem;
+    margin: 9rem;
     margin-bottom: 1rem;
     line-height: 8rem;
 }

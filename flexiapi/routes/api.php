@@ -20,6 +20,7 @@
 use App\Http\Controllers\Api\Admin\AccountActionController;
 use App\Http\Controllers\Api\Admin\AccountContactController;
 use App\Http\Controllers\Api\Admin\AccountController as AdminAccountController;
+use App\Http\Controllers\Api\Admin\AccountDictionaryController;
 use App\Http\Controllers\Api\Admin\AccountTypeController;
 use App\Http\Controllers\Api\Admin\ContactsListController;
 use App\Http\Controllers\Api\StatisticsMessageController;
@@ -123,6 +124,13 @@ Route::group(['middleware' => ['auth.digest_or_key']], function () {
         Route::prefix('contacts_lists')->controller(ContactsListController::class)->group(function () {
             Route::post('{id}/contacts/{contacts_id}', 'contactAdd');
             Route::delete('{id}/contacts/{contacts_id}', 'contactRemove');
+        });
+
+        Route::prefix('accounts/{id}/dictionary')->controller(AccountDictionaryController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{key}', 'show');
+            Route::post('{key}', 'set');
+            Route::delete('{key}', 'destroy');
         });
 
         Route::prefix('statistics/messages')->controller(StatisticsMessageController::class)->group(function () {

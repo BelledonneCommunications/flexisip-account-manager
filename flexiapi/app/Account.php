@@ -28,9 +28,6 @@ use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 use Awobaz\Compoships\Compoships;
-
-use App\ApiKey;
-use App\Password;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 
 class Account extends Authenticatable
@@ -38,9 +35,9 @@ class Account extends Authenticatable
     use HasFactory;
     use Compoships;
 
-    protected $with = ['passwords', 'admin', 'alias', 'activationExpiration', 'emailChangeCode', 'types', 'actions'];
-    protected $hidden = ['alias', 'expire_time', 'confirmation_key', 'pivot', 'currentProvisioningToken', 'currentRecoveryCode'];
-    protected $appends = ['realm', 'phone', 'confirmation_key_expires', 'provisioning_token'];
+    protected $with = ['passwords', 'admin', 'alias', 'activationExpiration', 'emailChangeCode', 'types', 'actions', 'dictionaryEntries'];
+    protected $hidden = ['alias', 'expire_time', 'confirmation_key', 'pivot', 'currentProvisioningToken', 'currentRecoveryCode', 'dictionaryEntries'];
+    protected $appends = ['realm', 'phone', 'confirmation_key_expires', 'provisioning_token', 'dictionary'];
     protected $casts = [
         'activated' => 'boolean',
     ];
@@ -146,6 +143,18 @@ class Account extends Authenticatable
     public function contactsLists()
     {
         return $this->belongsToMany(ContactsList::class, 'account_contacts_list', 'account_id', 'contacts_list_id');
+    }
+
+    public function dictionaryEntries()
+    {
+        return $this->hasMany(AccountDictionaryEntry::class);
+    }
+
+    public function getDictionaryAttribute()
+    {
+        return $this->dictionaryEntries->keyBy('key')->map(function ($entry) {
+            return $entry->value;
+        });
     }
 
     public function nonces()

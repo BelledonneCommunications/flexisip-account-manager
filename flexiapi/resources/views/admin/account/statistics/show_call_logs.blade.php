@@ -2,12 +2,13 @@
 
 @section('breadcrumb')
     @include('admin.account.parts.breadcrumb_accounts_index')
-<li class="breadcrumb-item active" aria-current="page">Call Logs</li>
+    @include('admin.account.parts.breadcrumb_accounts_edit', ['account' => $account])
+    <li class="breadcrumb-item active" aria-current="page">Call Logs</li>
 @endsection
 
 @section('content')
     <header>
-        <h1><i class="material-symbols-outlined">list</i> Call Logs</h1>
+        <h1><i class="material-symbols-outlined">people</i> {{ $account->identifier }}</h1>
     </header>
 
     @include('admin.account.parts.tabs')
