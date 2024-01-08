@@ -42,6 +42,12 @@ class AccountService
 {
     public function __construct(public bool $api = true)
     {
+        // Load the hooks if they exists
+        $accountServiceHooks = config_path('account_service_hooks.php');
+
+        if (file_exists($accountServiceHooks)) {
+            require_once($accountServiceHooks);
+        }
     }
 
     /**
@@ -88,6 +94,10 @@ class AccountService
             if (!empty(config('app.newsletter_registration_address')) && $request->has('newsletter')) {
                 Mail::to(config('app.newsletter_registration_address'))->send(new NewsletterRegistration($account));
             }
+        }
+
+        if (function_exists('accountServiceAccountCreatedHook')) {
+            accountServiceAccountCreatedHook($request, $account);
         }
 
         return Account::withoutGlobalScopes()->find($account->id);

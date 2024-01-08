@@ -1,0 +1,22 @@
+<?php
+
+use App\Account;
+use App\Password;
+use Illuminate\Http\Request;
+
+/**
+ * This file contains hooks functions used by the Account Service
+ */
+
+ /**
+  * @brief Run specific code once a fresh account is created
+  * @param Request $request
+  * @param Account $account
+  * @return void
+  */
+function accountServiceAccountCreatedHook(Request $request, Account $account)
+{
+    /*
+
+    */
+}

@@ -142,6 +142,7 @@ If you are planning to send emails using your account manager:
 
 For the web panel, a general documentation is available under the `/documentation` page.
 For the REST API, the `/api` page contains all the required documentation to authenticate and request the API.
+FlexiAPI is also providing endpoints to provision Liblinphone powered devices. You can find more documentation about it on the `/provisioning/documentation` documentation page.
 
 ## Console commands
 
@@ -191,15 +192,19 @@ This command will set the admin role to any available Flexisip account. You need
 
 Once one account is declared as administrator, you can directly configure the other ones using the web panel.
 
+### Seed liblinphone test accounts
+
+You can also seed the tables with test accounts for the liblinphone test suite with the following command (check LiblinphoneTesterAccoutSeeder for the JSON syntax):
+
+    php artisan accounts:seed /path/to/accounts.json
+
 ## Custom email templaces
 
 Some email templates can be customized.
 
 To do so, copy and rename the existing `*_custom.blade.php.example` files into `*custom.blade.php` and adapt the content of the email (HTML and text versions), those files will then replace the default ones.
 
-## Provisioning
-
-FlexiAPI is providing endpoints to provision Liblinphone powered devices. You can find more documentation about it on the `/api#provisioning` documentation page.
+## Hooks
 
 ### Provisioning hooks
 
@@ -208,11 +213,9 @@ The XML returned by the provisioning endpoint can be completed using hooks.
 To do so, copy and rename the `provisioning_hooks.php.example` file into `provisioning_hooks.php` in the configuration directory and complete the functions in the file.
 The functions already contains example codes to show you how the XML can be enhanced or completed.
 
-### Seed liblinphone test accounts
+### Account Service hooks
 
-You can also seed the tables with test accounts for the liblinphone test suite with the following command (check LiblinphoneTesterAccoutSeeder for the JSON syntax):
-
-    php artisan accounts:seed /path/to/accounts.json
+The internal Account Service is also providing hooks. Rename and complete the following file to enable and use them: `account_service_hooks.php.example`.
 
 ## Sending SIP messages from the API
 

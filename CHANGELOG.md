@@ -2,6 +2,7 @@
 
 v1.5
 ----
+- Fix #141 Add a new hook system for the Account Service
 - Fix #138 Add a dictionary attached to the accounts
 - Fix #137 Migrate the icons from Material Icons to Material Symbols
 - Fix #135 Refactor the password algorithms code
