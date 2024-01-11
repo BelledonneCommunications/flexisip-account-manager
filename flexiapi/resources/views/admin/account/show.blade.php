@@ -126,7 +126,7 @@
 
     <br />
     <p>The following link can only be visited once</p>
-    <input class="form-control" type="text" readonly value="{{ route('provisioning.show', $account->provisioning_token) }}">
+    <input class="form-control" type="text" readonly value="{{ route('provisioning.provision', $account->provisioning_token) }}">
     <p class="mt-3">
         <a class="btn btn-light mr-2" href="{{ route('admin.account.provision', $account->id) }}">Renew the provision link</a>
         The current one will be unavailable
