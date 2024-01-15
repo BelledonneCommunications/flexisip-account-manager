@@ -30,4 +30,9 @@ class ProvisioningToken extends Consommable
         $this->used = true;
         $this->save();
     }
+
+    public function consumed(): bool
+    {
+        return $this->used == true;
+    }
 }

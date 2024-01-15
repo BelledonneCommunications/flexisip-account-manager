@@ -25,8 +25,8 @@
         </thead>
         <tbody>
             @foreach ($account->recoveryCodes as $recoveryCode)
-                <tr @if ($recoveryCode->consumed()) class="disabled" @endif>
-                    <td @if ($recoveryCode->consumed())class="crossed" @endif>****</td>
+                <tr @if ($recoveryCode->consumed()) class="disabled crossed" @endif>
+                    <td>****</td>
                     <td>
                         {{ $recoveryCode->created_at }}
                     </td>
@@ -50,8 +50,8 @@
         </thead>
         <tbody>
             @foreach ($account->phoneChangeCodes as $phoneChangeCode)
-                <tr @if ($phoneChangeCode->consumed()) class="disabled" @endif>
-                    <td @if ($phoneChangeCode->consumed())class="crossed" @endif>****</td>
+                <tr @if ($phoneChangeCode->consumed()) class="disabled crossed" @endif>
+                    <td>****</td>
                     <td>
                         {{ $phoneChangeCode->created_at }}
                     </td>
@@ -75,8 +75,8 @@
         </thead>
         <tbody>
             @foreach ($account->emailChangeCodes as $emailChangeCode)
-                <tr @if ($emailChangeCode->consumed()) class="disabled" @endif>
-                    <td @if ($emailChangeCode->consumed())class="crossed" @endif>****</td>
+                <tr @if ($emailChangeCode->consumed()) class="disabled crossed" @endif>
+                    <td>****</td>
                     <td>
                         {{ $emailChangeCode->created_at }}
                     </td>
@@ -100,13 +100,13 @@
         </thead>
         <tbody>
             @foreach ($account->provisioningTokens as $provisioningToken)
-                <tr @if ($provisioningToken->used) class="disabled" @endif>
-                    <td @if ($provisioningToken->used) class="crossed" @endif>{{ $provisioningToken->token }}</td>
+                <tr @if ($provisioningToken->consumed()) class="disabled crossed" @endif>
+                    <td>{{ $provisioningToken->token }}</td>
                     <td>
                         {{ $provisioningToken->created_at }}
                     </td>
                     <td>
-                        {{ $provisioningToken->updated_at }}
+                        {{ $provisioningToken->consumed() ? $provisioningToken->updated_at : '-' }}
                     </td>
                 </tr>
             @endforeach
