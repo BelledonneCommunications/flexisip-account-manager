@@ -441,7 +441,7 @@ class Account extends Authenticatable
         return !empty($this->recovery_code) && $this->updated_at->greaterThan($oneHourAgo);
     }
 
-    public function updatePassword($newPassword, ?string $algorithm = null)
+    public function updatePassword(string $newPassword, ?string $algorithm = null)
     {
         $algorithm = $algorithm ?? config('app.account_default_password_algorithm');
 
