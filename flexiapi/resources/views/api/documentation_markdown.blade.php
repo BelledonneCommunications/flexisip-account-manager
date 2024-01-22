@@ -386,17 +386,29 @@ Search for a specific account by email.
 
 Delete a specific account and its related information.
 
-### `GET /accounts/{id}/activate`
+### `POST /accounts/{id}/activate`
 
 <span class="badge badge-warning">Admin</span>
 
 Activate an account.
 
-### `GET /accounts/{id}/deactivate`
+### `POST /accounts/{id}/deactivate`
 
 <span class="badge badge-warning">Admin</span>
 
 Deactivate an account.
+
+### `POST /accounts/{id}/block`
+
+<span class="badge badge-warning">Admin</span>
+
+Block an account.
+
+### `POST /accounts/{id}/unblock`
+
+<span class="badge badge-warning">Admin</span>
+
+Unblock an account.
 
 ### `GET /accounts/{id}/provision`
 

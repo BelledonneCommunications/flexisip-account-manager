@@ -23,14 +23,11 @@ use App\Password;
 use App\AccountType;
 use App\Admin;
 use App\ContactsList;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class ApiAccountContactTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected $route = '/api/accounts';
     protected $contactsListsRoute = '/api/contacts_lists';
     protected $method = 'POST';

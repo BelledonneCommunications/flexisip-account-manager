@@ -95,6 +95,7 @@ class AccountController extends Controller
         $account->user_agent = config('app.name');
         $account->dtmf_protocol = $request->get('dtmf_protocol');
         $account->activated = $request->get('activated') == 'true';
+        $account->blocked = $request->get('blocked') == 'true';
         $account->save();
 
         $account->phone = $request->get('phone');
@@ -132,6 +133,7 @@ class AccountController extends Controller
         $account->display_name = $request->get('display_name');
         $account->dtmf_protocol = $request->get('dtmf_protocol');
         $account->activated = $request->get('activated') == 'true';
+        $account->blocked = $request->get('blocked') == 'true';
         $account->save();
 
         $account->phone = $request->get('phone');

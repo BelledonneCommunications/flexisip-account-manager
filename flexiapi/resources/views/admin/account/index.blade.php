@@ -104,9 +104,6 @@
                         @endif
                     </td>
                     <td>
-                        @if ($account->email)
-                            <span class="badge badge-info">Email</span>
-                        @endif
                         @if ($account->activated)
                             <span class="badge badge-success" title="Activated">Act.</span>
                         @endif
@@ -115,6 +112,9 @@
                         @endif
                         @if ($account->sha256Password)
                             <span class="badge badge-info">SHA256</span>
+                        @endif
+                        @if ($account->blocked)
+                            <span class="badge badge-error">Blocked</span>
                         @endif
                     </td>
                     <td>{{ $account->updated_at }}</td>

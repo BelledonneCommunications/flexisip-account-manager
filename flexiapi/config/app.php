@@ -52,6 +52,12 @@ return [
     'linphone_daemon_unix_pipe' => env('APP_LINPHONE_DAEMON_UNIX_PATH', null),
 
     /**
+     * Blocking service
+     */
+    'blocking_time_period_check' => env('BLOCKING_TIME_PERIOD_CHECK', 30),
+    'blocking_amount_events_authorized_during_period' => env('BLOCKING_AMOUNT_EVENTS_AUTHORIZED_DURING_PERIOD', 5),
+
+    /**
      * Account provisioning
      */
     'provisioning_rc_file' => env('ACCOUNT_PROVISIONING_RC_FILE', ''),

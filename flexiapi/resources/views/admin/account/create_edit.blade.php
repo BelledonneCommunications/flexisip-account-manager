@@ -39,7 +39,7 @@
         <h2>Connexion</h2>
         <div>
             <input placeholder="Username" required="required" name="username" type="text"
-                value="@if ($account->id) {{ $account->username }}@else{{ old('username') }} @endif"
+                value="@if ($account->id){{ $account->username }}@else{{ old('username') }} @endif"
                 @if ($account->id) readonly @endif>
             <label for="username">Username</label>
             @include('parts.errors', ['name' => 'username'])
@@ -53,7 +53,7 @@
 
         <div>
             <input placeholder="John Doe" name="display_name" type="text"
-                value="@if ($account->id) {{ $account->display_name }}@else{{ old('display_name') }} @endif">
+                value="@if ($account->id){{ $account->display_name }}@else{{ old('display_name') }} @endif">
             <label for="display_name">Display Name</label>
             @include('parts.errors', ['name' => 'display_name'])
         </div>
@@ -95,6 +95,14 @@
             <input name="activated" value="false" type="radio" @if (!$account->activated) checked @endif>
             <p>Disabled</p>
             <label>Status</label>
+        </div>
+
+        <div>
+            <input name="blocked" value="false" type="radio" @if (!$account->blocked) checked @endif>
+            <p>Unblocked</p>
+            <input name="blocked" value="true" type="radio" @if ($account->blocked) checked @endif>
+            <p>Blocked</p>
+            <label>Blocked account</label>
         </div>
 
         <div>

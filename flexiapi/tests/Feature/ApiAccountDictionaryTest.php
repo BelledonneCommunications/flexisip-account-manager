@@ -23,14 +23,11 @@ use App\Password;
 use App\AccountType;
 use App\Admin;
 use App\ContactsList;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class ApiAccountDictionaryTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected $route = '/api/accounts';
     protected $method = 'POST';
 
@@ -49,7 +46,7 @@ class ApiAccountDictionaryTest extends TestCase
 
         // First key
         $this->keyAuthenticated($admin->account)
-            ->json($this->method, $this->route . '/' . $account->id . ' /dictionary/' . $key , [
+            ->json($this->method, $this->route . '/' . $account->id . ' /dictionary/' . $key, [
                 'value' => $value
             ])->assertStatus(201);
 
@@ -71,7 +68,7 @@ class ApiAccountDictionaryTest extends TestCase
 
         // Update
         $this->keyAuthenticated($admin->account)
-            ->json($this->method, $this->route . '/' . $account->id . ' /dictionary/' . $key , [
+            ->json($this->method, $this->route . '/' . $account->id . ' /dictionary/' . $key, [
                 'value' => $newValue
             ])->assertStatus(200);
 
@@ -84,7 +81,7 @@ class ApiAccountDictionaryTest extends TestCase
 
         // Second key
         $this->keyAuthenticated($admin->account)
-            ->json($this->method, $this->route . '/' . $account->id . ' /dictionary/' . $secondKey , [
+            ->json($this->method, $this->route . '/' . $account->id . ' /dictionary/' . $secondKey, [
                 'value' => $newValue
             ])->assertStatus(201);
 

@@ -23,13 +23,20 @@ use App\Password;
 use App\Account;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
+    use RefreshDatabase;
 
     protected $route = '/api/accounts/me';
     protected $method = 'GET';
+
+    protected function disableBlockingService()
+    {
+        config()->set('app.blocking_amount_events_authorized_during_period', 0);
+    }
 
     protected function keyAuthenticated(Account $account)
     {
@@ -41,14 +48,14 @@ abstract class TestCase extends BaseTestCase
     protected function generateFirstResponse(Password $password, ?string $method = null, ?string $route = null)
     {
         return $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier
+            'From' => 'sip:' . $password->account->identifier
         ])->json($method ?? $this->method, $route ?? $this->route);
     }
 
     protected function generateSecondResponse(Password $password, $firstResponse)
     {
         return $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier,
+            'From' => 'sip:' . $password->account->identifier,
             'Authorization' => $this->generateDigest($password, $firstResponse),
         ]);
     }

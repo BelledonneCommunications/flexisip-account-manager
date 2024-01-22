@@ -27,14 +27,10 @@ use App\ActivationExpiration;
 use App\Admin;
 use App\Alias as AppAlias;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-
 use Tests\TestCase;
 
 class ApiAccountTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected $route = '/api/accounts';
     protected $method = 'POST';
 
@@ -380,14 +376,14 @@ class ApiAccountTest extends TestCase
                 ]
             ])->assertJsonValidationErrors(['dictionary']);
 
-            $response = $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route, [
-                'username' => 'john2',
-                'domain' => 'lennon.com',
-                'password' => 'password123',
-                'algorithm' => 'SHA-256',
-                'dictionary' => 'hop'
-            ])->assertJsonValidationErrors(['dictionary']);
+        $response = $this->keyAuthenticated($password->account)
+        ->json($this->method, $this->route, [
+            'username' => 'john2',
+            'domain' => 'lennon.com',
+            'password' => 'password123',
+            'algorithm' => 'SHA-256',
+            'dictionary' => 'hop'
+        ])->assertJsonValidationErrors(['dictionary']);
     }
 
     public function testActivated()
@@ -506,7 +502,7 @@ class ApiAccountTest extends TestCase
         $password->account->activated = false;
         $password->account->save();
 
-        $expiration = new ActivationExpiration;
+        $expiration = new ActivationExpiration();
         $expiration->account_id = $password->account->id;
         $expiration->expires = Carbon::now()->subYear();
         $expiration->save();
@@ -698,7 +694,7 @@ class ApiAccountTest extends TestCase
 
         $phone = '+1234';
 
-        $alias = new AppAlias;
+        $alias = new AppAlias();
         $alias->alias = $phone;
         $alias->domain = $password->account->domain;
         $alias->account_id = $password->account->id;
@@ -743,7 +739,7 @@ class ApiAccountTest extends TestCase
 
         config()->set('app.dangerous_endpoints', true);
 
-        $alias = new AppAlias;
+        $alias = new AppAlias();
         $alias->alias = $phone;
         $alias->domain = $password->account->domain;
         $alias->account_id = $password->account->id;
@@ -949,7 +945,7 @@ class ApiAccountTest extends TestCase
         $password->account->activated = false;
         $password->account->save();
 
-        $expiration = new ActivationExpiration;
+        $expiration = new ActivationExpiration();
         $expiration->account_id = $password->account->id;
         $expiration->expires = Carbon::now()->subYear();
         $expiration->save();
@@ -984,6 +980,8 @@ class ApiAccountTest extends TestCase
 
     public function testChangeEmail()
     {
+        $this->disableBlockingService();
+
         $password = Password::factory()->create();
         $otherAccount = Password::factory()->create();
         $password->account->generateApiKey();
@@ -1109,7 +1107,7 @@ class ApiAccountTest extends TestCase
 
         // deactivate
         $this->keyAuthenticated($admin->account)
-            ->get($this->route . '/' . $password->account->id . '/deactivate')
+            ->post($this->route . '/' . $password->account->id . '/deactivate')
             ->assertStatus(200)
             ->assertJson([
                 'activated' => false
@@ -1123,7 +1121,7 @@ class ApiAccountTest extends TestCase
             ]);
 
         $this->keyAuthenticated($admin->account)
-            ->get($this->route . '/' . $password->account->id . '/activate')
+            ->post($this->route . '/' . $password->account->id . '/activate')
             ->assertStatus(200)
             ->assertJson([
                 'activated' => true
@@ -1225,7 +1223,8 @@ class ApiAccountTest extends TestCase
             ->assertStatus(200)
             ->assertJson([
                 'confirmation_key_expires' => '2040-12-12 12:12:12'
-            ]);;
+            ]);
+        ;
     }
 
     public function testDelete()

@@ -23,14 +23,11 @@ use App\Password;
 use App\AccountType;
 use App\Admin;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class ApiAccountTypeTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected $route = '/api/account_types';
     protected $method = 'POST';
 

@@ -21,17 +21,13 @@ namespace Tests\Feature;
 
 use App\Account;
 use App\AccountCreationRequestToken;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-
 use App\AccountCreationToken;
 use App\Admin;
+use Tests\TestCase;
 use Carbon\Carbon;
 
 class ApiAccountCreationTokenTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected $tokenRoute = '/api/account_creation_tokens/send-by-push';
     protected $tokenRequestRoute = '/api/account_creation_request_tokens';
     protected $tokenUsingCreationTokenRoute = '/api/account_creation_tokens/using-account-creation-request-token';

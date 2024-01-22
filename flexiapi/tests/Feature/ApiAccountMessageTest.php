@@ -21,14 +21,11 @@ namespace Tests\Feature;
 
 use App\Admin;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
 class ApiAccountMessageTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected $route = '/api/messages';
     protected $method = 'POST';
 

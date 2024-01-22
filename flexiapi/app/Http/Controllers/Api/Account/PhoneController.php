@@ -19,15 +19,20 @@
 
 namespace App\Http\Controllers\Api\Account;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
 use App\Services\AccountService;
+use App\Services\BlockingService;
+
+use Illuminate\Http\Request;
 
 class PhoneController extends Controller
 {
     public function requestUpdate(Request $request)
     {
+        if ((new BlockingService($request->user()))->checkBlock()) {
+            return abort(403, 'Account blocked');
+        }
+
         return (new AccountService)->requestPhoneChange($request);
     }
 

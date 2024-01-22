@@ -21,14 +21,10 @@ namespace Tests\Feature;
 
 use App\Password;
 use App\PhoneChangeCode;
-
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ApiAccountPhoneChangeTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected $route = '/api/accounts/me/phone';
     protected $method = 'POST';
 

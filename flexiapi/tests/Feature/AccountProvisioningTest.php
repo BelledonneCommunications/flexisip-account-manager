@@ -19,7 +19,6 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 use App\Password;
@@ -29,8 +28,6 @@ use App\AuthToken;
 
 class AccountProvisioningTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected $route = '/provisioning';
     protected $accountRoute = '/provisioning/me';
     protected $method = 'GET';

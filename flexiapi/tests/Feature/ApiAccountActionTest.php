@@ -23,13 +23,10 @@ use App\Password;
 use App\AccountAction;
 use App\Admin;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ApiAccountActionTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected $route = '/api/accounts';
     protected $method = 'POST';
 

@@ -21,13 +21,10 @@ namespace Tests\Feature;
 
 use App\Password;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ApiAuthenticationTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected $route = '/api/accounts/me';
     protected $method = 'GET';
 

@@ -19,15 +19,11 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-
 use App\Password;
 
 class ApiAccountApiKeyTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected $route = '/api/accounts/me/api_key';
     protected $method = 'GET';
 

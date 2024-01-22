@@ -36,6 +36,11 @@ class AccountController extends Controller
         ]);
     }
 
+    public function blocked(Request $request)
+    {
+        return view('account.blocked');
+    }
+
     public function panel(Request $request)
     {
         return view('account.dashboard', [
@@ -47,7 +52,7 @@ class AccountController extends Controller
     {
         $account = (new AccountService(api: false))->store($request);
 
-        $request->validate(['g-recaptcha-response' => captchaConfigured() ? 'required|captcha': '']);
+        $request->validate(['g-recaptcha-response' => captchaConfigured() ? 'required|captcha' : '']);
 
         Auth::login($account);
 
@@ -74,7 +79,7 @@ class AccountController extends Controller
         $request->validate(['identifier' => 'required|same:identifier_confirm']);
 
         if (!$request->user()->hasTombstone()) {
-            $tombstone = new AccountTombstone;
+            $tombstone = new AccountTombstone();
             $tombstone->username = $request->user()->username;
             $tombstone->domain = $request->user()->domain;
             $tombstone->save();

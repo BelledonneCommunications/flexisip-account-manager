@@ -36,6 +36,10 @@ class PhoneController extends Controller
     {
         $request->validate(['g-recaptcha-response' => captchaConfigured() ? 'required|captcha': '']);
 
+        if ((new BlockingService($request->user()))->checkBlock()) {
+            return redirect()->route('account.blocked');
+        }
+
         (new AccountService(api: false))->requestPhoneChange($request);
 
         return redirect()->route('account.phone.validate');

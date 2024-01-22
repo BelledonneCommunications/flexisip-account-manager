@@ -17,22 +17,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Http\Controllers\Api\Account;
+namespace App\Http\Middleware;
 
-use App\Http\Controllers\Controller;
-use App\Services\AccountService;
-use App\Services\BlockingService;
-
+use Closure;
 use Illuminate\Http\Request;
 
-class EmailController extends Controller
+class CheckBlocked
 {
-    public function requestUpdate(Request $request)
+    public function handle(Request $request, Closure $next)
     {
-        if ((new BlockingService($request->user()))->checkBlock()) {
-            return abort(403, 'Account blocked');
+        if ($request->user()->blocked) {
+            abort(403, 'Account blocked');
         }
 
-        (new AccountService)->requestEmailChange($request);
+        return $next($request);
     }
 }

@@ -23,13 +23,12 @@ use App\Account;
 use App\Admin;
 use App\StatisticsCallDevice;
 use App\StatisticsMessageDevice;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class ApiStatisticsTest extends TestCase
 {
-    use WithFaker, RefreshDatabase;
+    use WithFaker;
 
     protected $routeMessages = '/api/statistics/messages';
     protected $routeCalls = '/api/statistics/calls';

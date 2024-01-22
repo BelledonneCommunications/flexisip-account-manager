@@ -91,6 +91,12 @@ Route::middleware(['web_panel_enabled'])->group(function () {
     });
 
     Route::middleware(['auth'])->group(function () {
+        Route::get('logout', 'Account\AuthenticateController@logout')->name('account.logout');
+    });
+
+    Route::middleware(['auth', 'auth.check_blocked'])->group(function () {
+        Route::get('blocked', 'Account\AccountController@blocked')->name('account.blocked');
+
         // Email change and validation
         Route::prefix('email')->controller(EmailController::class)->group(function () {
             Route::get('change', 'change')->name('account.email.change');
@@ -114,8 +120,6 @@ Route::middleware(['web_panel_enabled'])->group(function () {
             Route::delete('delete', 'destroy')->name('account.destroy');
         });
 
-        Route::get('logout', 'Account\AuthenticateController@logout')->name('account.logout');
-
         Route::prefix('password')->controller(PasswordController::class)->group(function () {
             Route::get('/', 'show')->name('account.password.show');
             Route::post('/', 'update')->name('account.password.update');
@@ -134,7 +138,7 @@ Route::middleware(['web_panel_enabled'])->group(function () {
     Route::get('auth_tokens/qrcode/{token}', 'Account\AuthTokenController@qrcode')->name('auth_tokens.qrcode');
     Route::get('auth_tokens/auth/{token}', 'Account\AuthTokenController@auth')->name('auth_tokens.auth');
 
-    Route::name('admin.')->prefix('admin')->middleware(['auth.admin'])->group(function () {
+    Route::name('admin.')->prefix('admin')->middleware(['auth.admin', 'auth.check_blocked'])->group(function () {
         Route::name('statistics.')->controller(StatisticsController::class)->prefix('statistics')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::post('call_logs', 'editCallLogs')->name('edit_call_logs');

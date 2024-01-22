@@ -36,6 +36,10 @@ class EmailController extends Controller
     {
         $request->validate(['g-recaptcha-response' => captchaConfigured() ? 'required|captcha': '']);
 
+        if ((new BlockingService($request->user()))->checkBlock()) {
+            return redirect()->route('account.blocked');
+        }
+
         (new AccountService(api: false))->requestEmailChange($request);
 
         return redirect()->route('account.email.validate');

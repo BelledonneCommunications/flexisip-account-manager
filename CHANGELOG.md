@@ -13,6 +13,8 @@ v1.5
 - Fix #133 Make the MySQL connection unstrict
 - Fix #132 Move the provisioning_tokens and recovery_codes to dedicated table
 - Fix #130 Drop the group column in the Accounts table
+- Fix FLEXIAPI-132 Refactor the Provisioning to remove proxy_default_values
+- Fix FLEXIAPI-134 Add a system to detect and block abusive accounts
 
 v1.4.4
 ------

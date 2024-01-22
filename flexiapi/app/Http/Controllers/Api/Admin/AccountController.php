@@ -96,6 +96,28 @@ class AccountController extends Controller
         return $account;
     }
 
+    public function block(int $id)
+    {
+        $account = Account::findOrFail($id);
+        $account->blocked = true;
+        $account->save();
+
+        Log::channel('events')->info('API Admin: Account blocked', ['id' => $account->identifier]);
+
+        return $account;
+    }
+
+    public function unblock(int $id)
+    {
+        $account = Account::findOrFail($id);
+        $account->blocked = false;
+        $account->save();
+
+        Log::channel('events')->info('API Admin: Account unblocked', ['id' => $account->identifier]);
+
+        return $account;
+    }
+
     public function provision(int $id)
     {
         $account = Account::findOrFail($id);

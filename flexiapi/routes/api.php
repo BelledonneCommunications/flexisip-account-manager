@@ -56,7 +56,7 @@ Route::post('accounts/auth_token', 'Api\Account\AuthTokenController@store');
 
 Route::get('accounts/me/api_key/{auth_token}', 'Api\Account\ApiKeyController@generateFromToken')->middleware('cookie', 'cookie.encrypt');
 
-Route::group(['middleware' => ['auth.digest_or_key']], function () {
+Route::group(['middleware' => ['auth.digest_or_key', 'auth.check_blocked']], function () {
     Route::get('accounts/auth_token/{auth_token}/attach', 'Api\Account\AuthTokenController@attach');
 
     Route::prefix('accounts/me')->group(function () {
@@ -90,8 +90,10 @@ Route::group(['middleware' => ['auth.digest_or_key']], function () {
 
         // Accounts
         Route::prefix('accounts')->controller(AdminAccountController::class)->group(function () {
-            Route::get('{id}/activate', 'activate');
-            Route::get('{id}/deactivate', 'deactivate');
+            Route::post('{id}/activate', 'activate');
+            Route::post('{id}/deactivate', 'deactivate');
+            Route::post('{id}/block', 'block');
+            Route::post('{id}/unblock', 'unblock');
             Route::get('{id}/provision', 'provision');
 
             Route::post('/', 'store');
