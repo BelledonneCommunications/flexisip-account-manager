@@ -136,7 +136,10 @@ class AccountController extends Controller
 
         $account->phone = $request->get('phone');
 
-        $account->updatePassword($request->get('password'));
+        if ($request->get('password')) {
+            $account->updatePassword($request->get('password'));
+        }
+
         $account->setRole($request->get('role'));
 
         Log::channel('events')->info('Web Admin: Account updated', ['id' => $account->identifier]);
