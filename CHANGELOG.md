@@ -3,6 +3,22 @@
 v1.5
 ----
 
+v1.4.4
+------
+- Fix FLEXIAPI-136 Refactor the Web Panel toggle mechanism and move it to a proper Middleware
+
+v1.4.3
+------
+- Fix FLEXIAPI-133 Use the correct breadcrumb on create and fix a password update related issue on update
+
+v1.4.2
+------
+- Fix #135 Refactor the password algorithms code
+
+v1.4.1
+------
+- Fix #133 Make the MySQL connection unstrict
+
 v1.4
 ----
 - Redesign and refactoring of the main UI and panel flows

@@ -92,11 +92,6 @@ function markdownDocumentationView($view): string
     );
 }
 
-function publicRegistrationEnabled(): bool
-{
-    return (config('app.public_registration'));
-}
-
 function isRegularExpression($string): bool
 {
     set_error_handler(function () {

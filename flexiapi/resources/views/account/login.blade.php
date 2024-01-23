@@ -37,7 +37,7 @@
 
         @include('parts.recovery')
 
-        @if (publicRegistrationEnabled())
+        @if (config('app.public_registration'))
             <br />
             <br />
 
