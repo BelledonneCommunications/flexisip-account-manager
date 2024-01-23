@@ -2,6 +2,9 @@
 
 v1.5
 ----
+- Fix FLEXIAPI-136 Refactor the Web Panel toggle mechanism and move it to a proper Middleware
+- Fix FLEXIAPI-133 Use the correct breadcrumb on create and fix a password
+- Fix #143 Ensure that the ProvisioningToken model behave likes all the other Consommable
 - Fix #141 Add a new hook system for the Account Service
 - Fix #138 Add a dictionary attached to the accounts
 - Fix #137 Migrate the icons from Material Icons to Material Symbols
@@ -10,6 +13,14 @@ v1.5
 - Fix #133 Make the MySQL connection unstrict
 - Fix #132 Move the provisioning_tokens and recovery_codes to dedicated table
 - Fix #130 Drop the group column in the Accounts table
+
+v1.4.4
+------
+- Fix FLEXIAPI-136 Refactor the Web Panel toggle mechanism and move it to a proper Middleware
+
+v1.4.3
+------
+- Fix FLEXIAPI-133 Use the correct breadcrumb on create and fix a password update related issue on update
 
 v1.4.2
 ------

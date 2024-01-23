@@ -72,6 +72,7 @@ class Kernel extends HttpKernel
         'auth.admin' => \App\Http\Middleware\AuthenticateAdmin::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.digest_or_key' => \App\Http\Middleware\AuthenticateDigestOrKey::class,
+        'web_panel_enabled' => \App\Http\Middleware\IsWebPanelEnabled::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,

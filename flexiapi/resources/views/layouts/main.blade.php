@@ -20,30 +20,28 @@
 
 <body class="@if (isset($welcome) && $welcome) welcome @endif">
     <header>
-        @if (config('app.web_panel'))
-            <nav>
-                <a id="logo" href="{{ route('account.home') }}"><span
-                        class="on_desktop">{{ config('app.name') }}</span></a>
+        <nav>
+            <a id="logo" href="{{ route('account.home') }}"><span
+                    class="on_desktop">{{ config('app.name') }}</span></a>
 
-                @if (!isset($welcome) || $welcome == false)
-                    <a id="menu" class="on_mobile" href="#"
-                        onclick="document.body.classList.toggle('show_menu')"></a>
-                @endif
+            @if (!isset($welcome) || $welcome == false)
+                <a id="menu" class="on_mobile" href="#"
+                    onclick="document.body.classList.toggle('show_menu')"></a>
+            @endif
 
-                <a class="oppose" href="{{ route('about') }}">
-                    <i class="material-symbols-outlined">info</i><span class="on_desktop">About</span>
+            <a class="oppose" href="{{ route('about') }}">
+                <i class="material-symbols-outlined">info</i><span class="on_desktop">About</span>
+            </a>
+            @if (auth()->user())
+                <a class="oppose" href="{{ route('account.dashboard') }}">
+                    <i class="material-symbols-outlined">account_circle</i><span
+                        class="on_desktop">{{ auth()->user()->identifier }}</span>
                 </a>
-                @if (auth()->user())
-                    <a class="oppose" href="{{ route('account.dashboard') }}">
-                        <i class="material-symbols-outlined">account_circle</i><span
-                            class="on_desktop">{{ auth()->user()->identifier }}</span>
-                    </a>
-                    <a class="oppose" href="{{ route('account.logout') }}">
-                        <i class="material-symbols-outlined">logout</i>
-                    </a>
-                @endif
-            </nav>
-        @endif
+                <a class="oppose" href="{{ route('account.logout') }}">
+                    <i class="material-symbols-outlined">logout</i>
+                </a>
+            @endif
+        </nav>
     </header>
 
     <content>

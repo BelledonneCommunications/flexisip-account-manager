@@ -44,15 +44,15 @@ Route::redirect('/', 'login')->name('account.home');
 Route::get('documentation', 'Account\AccountController@documentation')->name('account.documentation');
 Route::get('about', 'AboutController@about')->name('about');
 
-if (config('app.web_panel')) {
+Route::middleware(['web_panel_enabled'])->group(function () {
     Route::get('login', 'Account\AuthenticateController@login')->name('account.login');
     Route::post('authenticate', 'Account\AuthenticateController@authenticate')->name('account.authenticate');
     Route::get('authenticate/qrcode/{token?}', 'Account\AuthenticateController@loginAuthToken')->name('account.authenticate.auth_token');
-}
 
-Route::prefix('creation_token')->controller(CreationRequestTokenController::class)->group(function () {
-    Route::get('check/{token}', 'check')->name('account.creation_request_token.check');
-    Route::post('validate', 'validateToken')->name('account.creation_request_token.validate');
+    Route::prefix('creation_token')->controller(CreationRequestTokenController::class)->group(function () {
+        Route::get('check/{token}', 'check')->name('account.creation_request_token.check');
+        Route::post('validate', 'validateToken')->name('account.creation_request_token.validate');
+    });
 });
 
 Route::group(['middleware' => 'auth.digest_or_key'], function () {
@@ -71,18 +71,18 @@ Route::name('provisioning.')->prefix('provisioning')->controller(ProvisioningCon
     Route::get('/', 'show')->name('show');
 });
 
-if (publicRegistrationEnabled()) {
-    Route::redirect('register', 'register/email')->name('account.register');
+Route::middleware(['web_panel_enabled'])->group(function () {
+    if (config('app.public_registration')) {
+        Route::redirect('register', 'register/email')->name('account.register');
 
-    if (config('app.phone_authentication')) {
-        Route::get('register/phone', 'Account\RegisterController@registerPhone')->name('account.register.phone');
+        if (config('app.phone_authentication')) {
+            Route::get('register/phone', 'Account\RegisterController@registerPhone')->name('account.register.phone');
+        }
+
+        Route::get('register/email', 'Account\RegisterController@registerEmail')->name('account.register.email');
+        Route::post('accounts', 'Account\AccountController@store')->name('account.store');
     }
 
-    Route::get('register/email', 'Account\RegisterController@registerEmail')->name('account.register.email');
-    Route::post('accounts', 'Account\AccountController@store')->name('account.store');
-}
-
-if (config('app.web_panel')) {
     Route::prefix('recovery')->controller(RecoveryController::class)->group(function () {
         Route::get('phone', 'showPhone')->name('account.recovery.show.phone');
         Route::get('email', 'showEmail')->name('account.recovery.show.email');
@@ -250,4 +250,4 @@ if (config('app.web_panel')) {
             });
         });
     });
-}
+});
