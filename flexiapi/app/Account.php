@@ -224,7 +224,7 @@ class Account extends Authenticatable
 
     public function phoneChangeCode()
     {
-        return $this->hasOne(phoneChangeCode::class)->whereNotNull('code')->latestOfMany();
+        return $this->hasOne(PhoneChangeCode::class)->whereNotNull('code')->latestOfMany();
     }
 
     public function phoneChangeCodes()

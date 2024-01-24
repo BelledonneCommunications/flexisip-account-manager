@@ -147,17 +147,14 @@ class ProvisioningController extends Controller
         }
 
         $dom = new \DOMDocument('1.0', 'UTF-8');
+        $xpath = new \DOMXpath($dom);
         $config = $dom->createElement('config');
         $config->setAttribute('xmlns', 'http://www.linphone.org/xsds/lpconfig.xsd');
-        //$config->setAttribute('xsi:schemaLocation', 'http://www.linphone.org/xsds/lpconfig.xsd lpconfig.xsd');
-        //$config->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
 
         $dom->appendChild($config);
 
         // Default RC file handling
         $rcFile = config('app.provisioning_rc_file');
-        $proxyConfigIndex = 0;
-        $authInfoIndex = 0;
 
         if (file_exists($rcFile)) {
             $rc = parse_ini_file($rcFile, true);
@@ -165,12 +162,6 @@ class ProvisioningController extends Controller
             foreach ($rc as $sectionName => $values) {
                 $section = $dom->createElement('section');
                 $section->setAttribute('name', $sectionName);
-
-                if (Str::startsWith($sectionName, "proxy_config_")) {
-                    $proxyConfigIndex++;
-                } elseif (Str::startsWith($sectionName, "auth_info_")) {
-                    $authInfoIndex++;
-                }
 
                 foreach ($values as $key => $value) {
                     $entry = $dom->createElement('entry', $value);
@@ -197,19 +188,15 @@ class ProvisioningController extends Controller
         $config->appendChild($section);
 
         if ($account) {
-            $section = $dom->createElement('section');
-            $section->setAttribute('name', 'proxy_' . $proxyConfigIndex);
+            $section = $xpath->query("//section[@name='proxy_0']")->item(0);
+
+            if ($section == null) {
+                $section = $dom->createElement('section');
+                $section->setAttribute('name', 'proxy_0');
+            }
 
             $entry = $dom->createElement('entry', $account->fullIdentifier);
             $entry->setAttribute('name', 'reg_identity');
-            $section->appendChild($entry);
-
-            $entry = $dom->createElement('entry', 1);
-            $entry->setAttribute('name', 'reg_sendregister');
-            $section->appendChild($entry);
-
-            $entry = $dom->createElement('entry', 'push_notification');
-            $entry->setAttribute('name', 'refkey');
             $section->appendChild($entry);
 
             // Complete the section with the Proxy hook
@@ -220,10 +207,15 @@ class ProvisioningController extends Controller
             $config->appendChild($section);
 
             $passwords = $account->passwords()->get();
+            $authInfoIndex = 0;
 
             foreach ($passwords as $password) {
-                $section = $dom->createElement('section');
-                $section->setAttribute('name', 'auth_info_' . $authInfoIndex);
+                $section = $xpath->query("//section[@name='auth_info_" . $authInfoIndex . "']")->item(0);
+
+                if ($section == null) {
+                    $section = $dom->createElement('section');
+                    $section->setAttribute('name', 'auth_info_' . $authInfoIndex);
+                }
 
                 $entry = $dom->createElement('entry', $account->username);
                 $entry->setAttribute('name', 'username');
@@ -254,8 +246,6 @@ class ProvisioningController extends Controller
 
                 $authInfoIndex++;
             }
-
-            $proxyConfigIndex++;
         }
 
         // Complete the section with the Auth hook
