@@ -26,10 +26,11 @@ use Illuminate\Support\Str;
 
 class AuthTokenController extends Controller
 {
-    public function store()
+    public function store(Request $request)
     {
         $authToken = new AuthToken;
         $authToken->token = Str::random(32);
+        $authToken->fillRequestInfo($request);
         $authToken->save();
 
         return $authToken;

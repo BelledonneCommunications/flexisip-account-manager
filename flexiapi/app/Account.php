@@ -392,6 +392,11 @@ class Account extends Authenticatable
         $recoveryCode = new RecoveryCode;
         $recoveryCode->code = $code ?? generatePin();
         $recoveryCode->account_id = $this->id;
+
+        if (request()) {
+            $recoveryCode->fillRequestInfo(request());
+        }
+
         $recoveryCode->save();
 
         return $recoveryCode->code;
@@ -402,6 +407,11 @@ class Account extends Authenticatable
         $provisioningToken = new ProvisioningToken;
         $provisioningToken->token = $token ?? Str::random(WebAuthenticateController::$emailCodeSize);
         $provisioningToken->account_id = $this->id;
+
+        if (request()) {
+            $provisioningToken->fillRequestInfo(request());
+        }
+
         $provisioningToken->save();
 
         return $provisioningToken->token;

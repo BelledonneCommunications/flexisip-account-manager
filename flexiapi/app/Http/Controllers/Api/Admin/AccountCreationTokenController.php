@@ -32,6 +32,7 @@ class AccountCreationTokenController extends Controller
     {
         $token = new AccountCreationToken;
         $token->token = Str::random(WebAuthenticateController::$emailCodeSize);
+        $token->fillRequestInfo($request);
         $token->save();
 
         return $token;

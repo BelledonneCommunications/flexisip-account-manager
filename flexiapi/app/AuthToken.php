@@ -4,9 +4,8 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class AuthToken extends Model
+class AuthToken extends Consommable
 {
     use HasFactory;
 

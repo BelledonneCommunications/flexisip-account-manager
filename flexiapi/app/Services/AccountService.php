@@ -122,6 +122,7 @@ class AccountService
         $phoneChangeCode->account_id = $account->id;
         $phoneChangeCode->phone = $request->get('phone');
         $phoneChangeCode->code = generatePin();
+        $phoneChangeCode->fillRequestInfo($request);
         $phoneChangeCode->save();
 
         Log::channel('events')->info('Account Service: Account phone change requested by SMS', ['id' => $account->identifier]);
@@ -197,6 +198,7 @@ class AccountService
         $emailChangeCode->account_id = $account->id;
         $emailChangeCode->email = $request->get('email');
         $emailChangeCode->code = generatePin();
+        $emailChangeCode->fillRequestInfo($request);
         $emailChangeCode->save();
 
         Log::channel('events')->info('Account Service: Account email change requested by email', ['id' => $account->identifier]);

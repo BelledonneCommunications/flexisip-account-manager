@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 abstract class Consommable extends Model
 {
@@ -12,6 +13,12 @@ abstract class Consommable extends Model
     {
         $this->{$this->consommableAttribute} = null;
         $this->save();
+    }
+
+    public function fillRequestInfo(Request $request)
+    {
+        $this->ip = $request->ip();
+        $this->user_agent = $request->userAgent();
     }
 
     public function consumed(): bool

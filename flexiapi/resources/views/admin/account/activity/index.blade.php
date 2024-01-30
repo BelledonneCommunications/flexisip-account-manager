@@ -21,6 +21,7 @@
                 <th>Recovery Codes</th>
                 <th>Created</th>
                 <th>Used</th>
+                <th>IP</th>
             </tr>
         </thead>
         <tbody>
@@ -32,6 +33,9 @@
                     </td>
                     <td>
                         {{ $recoveryCode->created_at != $recoveryCode->updated_at ? $recoveryCode->updated_at : '-' }}
+                    </td>
+                    <td title="{{ $recoveryCode->user_agent }}">
+                        {{ $recoveryCode->ip ? $recoveryCode->ip : '-' }}
                     </td>
                 </tr>
             @endforeach
@@ -46,6 +50,7 @@
                 <th>Phone Change requests</th>
                 <th>Created</th>
                 <th>Used</th>
+                <th>IP</th>
             </tr>
         </thead>
         <tbody>
@@ -57,6 +62,9 @@
                     </td>
                     <td>
                         {{ $phoneChangeCode->created_at != $phoneChangeCode->updated_at ? $phoneChangeCode->updated_at : '-' }}
+                    </td>
+                    <td title="{{ $phoneChangeCode->user_agent }}">
+                        {{ $phoneChangeCode->ip ? $phoneChangeCode->ip : '-' }}
                     </td>
                 </tr>
             @endforeach
@@ -71,6 +79,7 @@
                 <th>Email Change requests</th>
                 <th>Created</th>
                 <th>Used</th>
+                <th>IP</th>
             </tr>
         </thead>
         <tbody>
@@ -82,6 +91,9 @@
                     </td>
                     <td>
                         {{ $emailChangeCode->created_at != $emailChangeCode->updated_at ? $emailChangeCode->updated_at : '-' }}
+                    </td>
+                    <td title="{{ $emailChangeCode->user_agent }}">
+                        {{ $emailChangeCode->ip ? $emailChangeCode->ip : '-' }}
                     </td>
                 </tr>
             @endforeach
@@ -96,6 +108,7 @@
                 <th>Provisioning Tokens</th>
                 <th>Created</th>
                 <th>Used</th>
+                <th>IP</th>
             </tr>
         </thead>
         <tbody>
@@ -107,6 +120,9 @@
                     </td>
                     <td>
                         {{ $provisioningToken->consumed() ? $provisioningToken->updated_at : '-' }}
+                    </td>
+                    <td title="{{ $provisioningToken->user_agent }}">
+                        {{ $provisioningToken->ip ? $provisioningToken->ip : '-' }}
                     </td>
                 </tr>
             @endforeach

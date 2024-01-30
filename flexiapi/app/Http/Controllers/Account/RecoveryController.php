@@ -137,8 +137,7 @@ class RecoveryController extends Controller
             ]);
         }
 
-        $account->recovery_code = null;
-        $account->save();
+        $account->currentRecoveryCode->consume();
 
         Auth::login($account);
         return redirect()->route('account.password.update');

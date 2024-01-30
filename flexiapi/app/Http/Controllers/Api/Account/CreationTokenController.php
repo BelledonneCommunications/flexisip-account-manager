@@ -59,6 +59,7 @@ class CreationTokenController extends Controller
         $token->pn_provider = $request->get('pn_provider');
         $token->pn_param = $request->get('pn_param');
         $token->pn_prid = $request->get('pn_prid');
+        $token->fillRequestInfo($request);
 
         // Send the token to the device via Push Notification
         $fp = new FlexisipPusherConnector($token->pn_provider, $token->pn_param, $token->pn_prid);
@@ -88,6 +89,7 @@ class CreationTokenController extends Controller
         if ($creationRequestToken && $creationRequestToken->validated_at != null) {
             $accountCreationToken = new AccountCreationToken;
             $accountCreationToken->token = Str::random(WebAuthenticateController::$emailCodeSize);
+            $accountCreationToken->fillRequestInfo($request);
             $accountCreationToken->save();
 
             $creationRequestToken->consume();

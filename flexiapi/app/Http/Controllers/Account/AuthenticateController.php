@@ -91,6 +91,7 @@ class AuthenticateController extends Controller
         if ($authToken == null) {
             $authToken = new AuthToken;
             $authToken->token = Str::random(32);
+            $authToken->fillRequestInfo($request);
             $authToken->save();
 
             return redirect()->route('account.authenticate.auth_token', ['token' => $authToken->token]);

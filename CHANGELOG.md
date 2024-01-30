@@ -2,8 +2,11 @@
 
 v1.5
 ----
+- Fix FLEXIAPI-138 Add ip and user_agent columns to all the tokens and code tables, fill the values when required and display them in the admin
 - Fix FLEXIAPI-136 Refactor the Web Panel toggle mechanism and move it to a proper Middleware
+- Fix FLEXIAPI-134 Add a system to detect and block abusive accounts
 - Fix FLEXIAPI-133 Use the correct breadcrumb on create and fix a password
+- Fix FLEXIAPI-132 Refactor the Provisioning to remove proxy_default_values
 - Fix #143 Ensure that the ProvisioningToken model behave likes all the other Consommable
 - Fix #141 Add a new hook system for the Account Service
 - Fix #138 Add a dictionary attached to the accounts
@@ -13,8 +16,6 @@ v1.5
 - Fix #133 Make the MySQL connection unstrict
 - Fix #132 Move the provisioning_tokens and recovery_codes to dedicated table
 - Fix #130 Drop the group column in the Accounts table
-- Fix FLEXIAPI-132 Refactor the Provisioning to remove proxy_default_values
-- Fix FLEXIAPI-134 Add a system to detect and block abusive accounts
 
 v1.4.4
 ------
