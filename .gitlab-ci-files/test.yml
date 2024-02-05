@@ -36,7 +36,6 @@ debian12-test:
 .debian-test:
   extends: .test
   script:
-    - pwd
     - apt update
     - apt install -y ./build/*.deb
     - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
@@ -53,6 +52,29 @@ remi-rocky8-test:
     - remi-rocky8-package
   script:
     - yum -y localinstall build/*.rpm
+
+mysql-latest-test:
+  extends: .test
+  image: gitlab.linphone.org:4567/bc/public/docker/debian12-php:$DEBIAN_12_IMAGE_VERSION
+  needs:
+    - debian12-package
+  services:
+    - mysql
+  variables:
+    MYSQL_ROOT_PASSWORD: flexiapi
+    MYSQL_DATABASE: flexiapi
+    DB_HOST: mysql
+    DB_DATABASE: flexiapi
+    DB_PASSWORD: flexiapi
+    DB_USERNAME: root
+  script:
+    - apt update
+    - apt install -y ./build/*.deb
+    - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
+    - composer install --dev
+    - php artisan db:show
+    - php artisan migrate
+    - php artisan migrate:rollback
 
 .test:
   tags: ["docker"]

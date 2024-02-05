@@ -46,8 +46,18 @@ class AddUniqueAccountsPasswordsAliasesTable extends Migration
             $table->dropUnique(['username', 'domain']);
         });
 
+        // Some versions of MySQL have a weird behavior between their FK and indexes
+        // See https://stackoverflow.com/questions/8482346/mysql-cannot-drop-index-needed-in-a-foreign-key-constraint
+        // We need to drop the foreign key to recreate it just after...
+
         Schema::table('passwords', function (Blueprint $table) {
+            $table->dropForeign('passwords_account_id_foreign');
             $table->dropUnique(['account_id', 'algorithm']);
+        });
+
+        Schema::table('passwords', function (Blueprint $table) {
+            $table->foreign('account_id')->references('id')
+                ->on('accounts')->onDelete('cascade');
         });
 
         Schema::table('aliases', function (Blueprint $table) {

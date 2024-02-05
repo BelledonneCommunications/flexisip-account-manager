@@ -91,6 +91,7 @@ return new class extends Migration
         });
 
         Schema::table('statistics_message_devices', function(Blueprint $table) {
+            $table->dropForeign('statistics_message_devices_message_id_foreign');
             $table->dropUnique('statistics_message_devices_message_id_to_u_to_d_device_id_unique');
             $table->dropColumn('to_username');
             $table->dropColumn('to_domain');
