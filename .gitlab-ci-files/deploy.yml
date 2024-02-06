@@ -38,6 +38,14 @@ remi-rocky8-deploy:
     - remi-rocky8-package
     - remi-rocky8-test
 
+remi-rocky9-deploy:
+  extends: .deploy
+  script:
+    - ./deploy_packages.sh rockylinux
+  needs:
+    - remi-rocky9-package
+    - remi-rocky9-test
+
 .deploy:
   stage: deploy
   tags: ["docker"]

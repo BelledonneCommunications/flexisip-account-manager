@@ -53,6 +53,14 @@ remi-rocky8-test:
   script:
     - yum -y localinstall build/*.rpm
 
+remi-rocky9-test:
+  extends: .test
+  image: gitlab.linphone.org:4567/bc/public/docker/rocky9-php:$ROCKY_9_IMAGE_VERSION
+  needs:
+    - remi-rocky9-package
+  script:
+    - yum -y localinstall build/*.rpm
+
 mysql-latest-test:
   extends: .test
   image: gitlab.linphone.org:4567/bc/public/docker/debian12-php:$DEBIAN_12_IMAGE_VERSION
