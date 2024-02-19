@@ -38,8 +38,8 @@ class Device extends Model
             }
 
             // User agent
-            if (count($line) == 4) {
-                $result['userAgent'] = substr($line[3], 0, -1);
+            if (count($line) == 3) {
+                $result['userAgent'] = substr($line[2], 0, -1);
             }
         }
 
