@@ -34,7 +34,6 @@ use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateContro
 use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
 use App\Rules\PasswordAlgorithm;
-use App\Services\AccountService;
 
 class AccountController extends Controller
 {

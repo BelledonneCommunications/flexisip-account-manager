@@ -22,6 +22,7 @@ namespace App\Http\Controllers\Account;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\AccountService;
+use App\Services\BlockingService;
 
 class EmailController extends Controller
 {

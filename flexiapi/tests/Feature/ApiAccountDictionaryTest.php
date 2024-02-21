@@ -20,10 +20,7 @@
 namespace Tests\Feature;
 
 use App\Password;
-use App\AccountType;
 use App\Admin;
-use App\ContactsList;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class ApiAccountDictionaryTest extends TestCase
@@ -84,7 +81,6 @@ class ApiAccountDictionaryTest extends TestCase
             ->json($this->method, $this->route . '/' . $account->id . ' /dictionary/' . $secondKey, [
                 'value' => $newValue
             ])->assertStatus(201);
-
 
         $this->keyAuthenticated($admin->account)
             ->get($this->route . '/' . $account->id . ' /dictionary')

@@ -56,7 +56,7 @@ class AuthenticateDigestOrKey
                 return $response;
             }
 
-            return $this->generateUnauthorizedResponse();
+            return $this->generateUnauthorizedResponse(null, 'Invalid API Key');
         }
 
         Validator::make(['from' => $request->header('From')], [

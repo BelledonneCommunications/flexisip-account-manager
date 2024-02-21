@@ -568,9 +568,19 @@ h3+p {
     color: white;
     border-radius: 0.5rem;
     font-weight: 700;
-    line-height: 2rem;
+    line-height: 2.25rem;
     font-size: 1.25rem;
-    padding: 0.25rem 1.25rem;
+    padding: 0 1.25rem;
+    vertical-align: bottom;
+    display: inline-block;
+}
+
+h3 .badge {
+    margin-left: 1rem;
+}
+
+h3 .badge + .badge {
+    margin-left: 0;
 }
 
 .badge.badge-info {
