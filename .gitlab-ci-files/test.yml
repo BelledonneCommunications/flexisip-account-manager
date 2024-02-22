@@ -15,6 +15,7 @@ rocky9-test:
   script:
     - yum -y localinstall build/*.rpm
     - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
+    - php -v
     - composer install
     - vendor/bin/phpcs
     - vendor/bin/phpmd . ansi phpmd.xml
