@@ -120,7 +120,7 @@ function captchaConfigured(): bool
 
 function resolveUserContacts(Request $request)
 {
-    $selected = ['id', 'username', 'domain', 'activated', 'dtmf_protocol'];
+    $selected = ['id', 'username', 'domain', 'activated', 'dtmf_protocol', 'display_name'];
 
     return Account::whereIn('id', function ($query) use ($request) {
         $query->select('contact_id')

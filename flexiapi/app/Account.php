@@ -473,8 +473,8 @@ IMPP:sip:' . $this->getIdentifierAttribute();
 
         $vcard .= '
 FN:';
-        $vcard .= !empty($this->attributes['display_name'])
-            ? $this->attributes['display_name']
+        $vcard .= !empty($this->display_name)
+            ? $this->display_name
             : $this->getIdentifierAttribute();
 
         if ($this->dtmf_protocol) {

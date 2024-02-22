@@ -35,7 +35,7 @@ class AccountFactory extends Factory
     {
         return [
             'username' => $this->faker->username,
-            'display_name' => $this->faker->username,
+            'display_name' => $this->faker->name,
             'domain' => config('app.sip_domain'),
             'email' => $this->faker->email,
             'user_agent' => $this->faker->userAgent,
