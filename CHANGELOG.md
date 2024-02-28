@@ -3,6 +3,15 @@
 v1.5
 ----
 
+v1.4.6
+------
+- Fix FLEXIAPI-142 PUT /accounts endpoint doesn't allow overiding values anymore
+- Fix typos and dependencies
+
+v1.4.5
+------
+- Fix FLEXIAPI-132 Refactor the Provisioning to remove proxy_default_values
+
 v1.4.4
 ------
 - Fix FLEXIAPI-136 Refactor the Web Panel toggle mechanism and move it to a proper Middleware
