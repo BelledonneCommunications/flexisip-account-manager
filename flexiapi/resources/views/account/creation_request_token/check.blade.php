@@ -8,7 +8,7 @@
 
                 <input name="account_creation_request_token" type="hidden" value="{{ $account_creation_request_token->token }}">
                 @include('parts.captcha')
-                <input class="btn btn-primary" type="submit" value="I\'m not a robot">
+                <input class="btn btn-primary" type="submit" value="I'm not a robot">
             </form>
         </div>
     </div>

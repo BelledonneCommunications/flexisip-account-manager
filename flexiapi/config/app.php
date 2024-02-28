@@ -13,9 +13,10 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Account Manager'),
     'sip_domain' => env('APP_SIP_DOMAIN', 'sip.domain.com'),
 
+    'project_url' => env('APP_PROJECT_URL', ''),
     'terms_of_use_url' => env('TERMS_OF_USE_URL', ''),
     'privacy_policy_url' => env('PRIVACY_POLICY_URL', ''),
 

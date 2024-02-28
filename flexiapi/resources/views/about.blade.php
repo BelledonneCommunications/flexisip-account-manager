@@ -6,7 +6,9 @@
         <h2>About</h2>
         <hr />
 
-        <p><a href="https://linphone.org/">https://linphone.org</a></p>
+        @if (!empty(config('app.project_url')))
+            <p><a href="{{ config('app.project_url') }}">{{ config('app.project_url') }}</a></p>
+        @endif
 
         <p><a href="{{ config('app.terms_of_use_url') }}">Terms and Conditions</a> and <a
                 href="{{ config('app.privacy_policy_url') }}">Privacy policy</a></p>
