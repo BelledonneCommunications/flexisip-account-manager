@@ -618,6 +618,7 @@ class ApiAccountTest extends TestCase
         $username = 'changed';
         $algorithm = 'MD5';
         $password = 'other';
+        $newDisplayName = 'new_display_name';
 
         $this->keyAuthenticated($admin->account)
             ->json('PUT', $this->route . '/1234')
@@ -634,12 +635,22 @@ class ApiAccountTest extends TestCase
                 'username' => $username,
                 'algorithm' => $algorithm,
                 'password' => $password,
+                'display_name' => $newDisplayName
+            ])
+            ->assertStatus(200);
+
+        $this->keyAuthenticated($admin->account)
+            ->json('PUT', $this->route . '/' . $account->id, [
+                'username' => $username,
+                'algorithm' => $algorithm,
+                'password' => $password,
             ])
             ->assertStatus(200);
 
         $this->assertDatabaseHas('accounts', [
             'id' => $account->id,
-            'username' => $username
+            'username' => $username,
+            'display_name' => null
         ]);
 
         $this->assertDatabaseHas('passwords', [
