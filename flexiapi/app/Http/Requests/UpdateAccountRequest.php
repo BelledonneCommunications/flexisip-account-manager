@@ -30,13 +30,13 @@ class UpdateAccountRequest extends FormRequest
                 new SIPUsername,
                 Rule::unique('accounts', 'username')->where(function ($query) {
                     $query->where('domain', resolveDomain($this));
-                })->ignore($this->route('account_id'), 'id'),
+                })->ignore($this->route('id'), 'id'),
                 'filled',
             ],
             'email' => [
                 'nullable',
                 'email',
-                config('app.account_email_unique') ? Rule::unique('accounts', 'email')->ignore($this->route('account_id')) : null
+                config('app.account_email_unique') ? Rule::unique('accounts', 'email')->ignore($this->route('id')) : null
             ],
             'role' => 'in:admin,end_user',
             'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
@@ -44,8 +44,8 @@ class UpdateAccountRequest extends FormRequest
                 'nullable',
                 Rule::unique('accounts', 'username')->where(function ($query) {
                     $query->where('domain', resolveDomain($this));
-                })->ignore($this->route('account_id'), 'id'),
-                Rule::unique('aliases', 'alias')->ignore($this->route('account_id'), 'account_id'),
+                })->ignore($this->route('id'), 'id'),
+                Rule::unique('aliases', 'alias')->ignore($this->route('id'), 'account_id'),
                 new WithoutSpaces, 'starts_with:+'
             ]
         ];
