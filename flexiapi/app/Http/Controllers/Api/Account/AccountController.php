@@ -261,6 +261,11 @@ class AccountController extends Controller
      */
     public function activateEmail(Request $request, string $sip)
     {
+        // For retro-compatibility
+        if ($request->has('code')) {
+            $request->merge(['confirmation_key' => $request->get('code')]);
+        }
+
         $request->validate([
             'confirmation_key' => 'required|size:' . WebAuthenticateController::$emailCodeSize
         ]);
@@ -285,6 +290,11 @@ class AccountController extends Controller
      */
     public function activatePhone(Request $request, string $sip)
     {
+        // For retro-compatibility
+        if ($request->has('code')) {
+            $request->merge(['confirmation_key' => $request->get('code')]);
+        }
+
         $request->validate([
             'confirmation_key' => 'required|digits:4'
         ]);
