@@ -43,7 +43,7 @@ class AuthTokenController extends Controller
             ->data(
                 $authToken->account_id
                 ? route('auth_tokens.auth', ['token' => $authToken->token])
-                : route('auth_tokens.auth.external', ['token' => $authToken->token])
+                : route('account.auth_tokens.auth.external', ['token' => $authToken->token])
             )
             ->encoding(new Encoding('UTF-8'))
             ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())

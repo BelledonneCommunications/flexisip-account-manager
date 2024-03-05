@@ -555,6 +555,10 @@ h3+p {
     margin-top: 1rem;
 }
 
+h3+p:has(span.badge) {
+    margin-top: 0;
+}
+
 .line {
     overflow: hidden;
     text-overflow: ellipsis;

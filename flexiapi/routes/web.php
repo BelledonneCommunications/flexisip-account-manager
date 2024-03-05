@@ -20,6 +20,7 @@
 use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Account\ApiKeyController;
 use App\Http\Controllers\Account\CreationRequestTokenController;
+use App\Http\Controllers\Account\DeviceController;
 use App\Http\Controllers\Account\EmailController;
 use App\Http\Controllers\Account\PasswordController;
 use App\Http\Controllers\Account\PhoneController;
@@ -94,44 +95,47 @@ Route::middleware(['web_panel_enabled'])->group(function () {
         Route::get('logout', 'Account\AuthenticateController@logout')->name('account.logout');
     });
 
-    Route::middleware(['auth', 'auth.check_blocked'])->group(function () {
-        Route::get('blocked', 'Account\AccountController@blocked')->name('account.blocked');
+    Route::name('account.')->middleware(['auth', 'auth.check_blocked'])->group(function () {
+        Route::get('blocked', 'Account\AccountController@blocked')->name('blocked');
 
-        // Email change and validation
         Route::prefix('email')->controller(EmailController::class)->group(function () {
-            Route::get('change', 'change')->name('account.email.change');
-            Route::post('change', 'requestChange')->name('account.email.request_change');
-            Route::get('validate', 'validateChange')->name('account.email.validate');
-            Route::post('/', 'store')->name('account.email.update');
+            Route::get('change', 'change')->name('email.change');
+            Route::post('change', 'requestChange')->name('email.request_change');
+            Route::get('validate', 'validateChange')->name('email.validate');
+            Route::post('/', 'store')->name('email.update');
         });
 
-        // Phone change and validation
         Route::prefix('phone')->controller(PhoneController::class)->group(function () {
-            Route::get('change', 'change')->name('account.phone.change');
-            Route::post('change', 'requestChange')->name('account.phone.request_change');
-            Route::get('validate', 'validateChange')->name('account.phone.validate');
-            Route::post('/', 'store')->name('account.phone.update');
+            Route::get('change', 'change')->name('phone.change');
+            Route::post('change', 'requestChange')->name('phone.request_change');
+            Route::get('validate', 'validateChange')->name('phone.validate');
+            Route::post('/', 'store')->name('phone.update');
+        });
+
+        Route::name('device.')->prefix('devices')->controller(DeviceController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('{device_id}/delete', 'delete')->name('delete');
+            Route::delete('/', 'destroy')->name('destroy');
         });
 
         Route::controller(AccountController::class)->group(function () {
-            Route::get('dashboard', 'panel')->name('account.dashboard');
+            Route::get('dashboard', 'panel')->name('dashboard');
 
-            Route::get('delete', 'delete')->name('account.delete');
-            Route::delete('delete', 'destroy')->name('account.destroy');
+            Route::get('delete', 'delete')->name('delete');
+            Route::delete('delete', 'destroy')->name('destroy');
         });
 
         Route::prefix('password')->controller(PasswordController::class)->group(function () {
-            Route::get('/', 'show')->name('account.password.show');
-            Route::post('/', 'update')->name('account.password.update');
+            Route::get('/', 'show')->name('password.show');
+            Route::post('/', 'update')->name('password.update');
         });
 
         Route::prefix('api_key')->controller(ApiKeyController::class)->group(function () {
-            Route::get('/', 'show')->name('account.api_key.show');
-            Route::post('/', 'update')->name('account.api_key.update');
+            Route::get('/', 'show')->name('api_key.show');
+            Route::post('/', 'update')->name('api_key.update');
         });
 
-        Route::post('auth_tokens', 'Account\AuthTokenController@create')->name('account.auth_tokens.create');
-
+        Route::post('auth_tokens', 'Account\AuthTokenController@create')->name('auth_tokens.create');
         Route::get('auth_tokens/auth/external/{token}', 'Account\AuthTokenController@authExternal')->name('auth_tokens.auth.external');
     });
 

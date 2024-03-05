@@ -72,7 +72,8 @@ You can find more documentation on the related [IETF RFC-7616](https://tools.iet
 
 ## Ping
 
-### `GET /ping` <span class="badge badge-success">Public</span>
+### `GET /ping`
+<span class="badge badge-success">Public</span>
 
 Returns `pong`
 
@@ -80,7 +81,8 @@ Returns `pong`
 
 An `account_creation_request_token` is a unique token that can be validated and then used to generate a valid `account_creation_token`.
 
-### `POST /account_creation_request_tokens` <span class="badge badge-success">Public</span>
+### `POST /account_creation_request_tokens`
+<span class="badge badge-success">Public</span>
 
 Create and return an `account_creation_request_token` that should then be validated to be used.
 
@@ -88,7 +90,8 @@ Create and return an `account_creation_request_token` that should then be valida
 
 An `account_creation_token` is a unique token that allow the creation of a **unique** account.
 
-### `POST /account_creation_tokens/send-by-push` <span class="badge badge-success">Public</span>
+### `POST /account_creation_tokens/send-by-push`
+<span class="badge badge-success">Public</span>
 
 Create and send an `account_creation_token` using a push notification to the device.
 Return `403` if a token was already sent, or if the tokens limit is reached for this device.
@@ -100,7 +103,8 @@ JSON parameters:
 * `pn_param` the push notification parameter
 * `pn_prid` the push notification unique id
 
-### `POST /account_creation_tokens/using-account-creation-request-token` <span class="badge badge-success">Public</span>
+### `POST /account_creation_tokens/using-account-creation-request-token`
+<span class="badge badge-success">Public</span>
 
 Create an `account_creation_token` using an `account_creation_request_token`.
 Return an `account_creation_token`.
@@ -110,19 +114,22 @@ JSON parameters:
 
 * `account_creation_request_token` required
 
-### `POST /account_creation_tokens` <span class="badge badge-warning">Admin</span>
+### `POST /account_creation_tokens`
+<span class="badge badge-warning">Admin</span>
 
 Create and return an `account_creation_token`.
 
 ## Auth Tokens
 
-### `POST /accounts/auth_token` <span class="badge badge-success">Public</span>
+### `POST /accounts/auth_token`
+<span class="badge badge-success">Public</span>
 
 Generate an `auth_token`. To attach the generated token to an account see [`auth_token` attachement endpoint](#get-accountsauthtokenauthtokenattach).
 
 Return the `auth_token` object.
 
-### `GET /accounts/auth_token/{auth_token}/attach` <span class="badge badge-info">User</span>
+### `GET /accounts/auth_token/{auth_token}/attach`
+<span class="badge badge-info">User</span>
 
 Attach a publicly generated authentication token to the currently authenticated account.
 
@@ -130,7 +137,8 @@ Return `404` if the token is non existing or invalid.
 
 ## Accounts
 
-### `POST /accounts/public` <span class="badge badge-message">Deprecated</span> @if(!config('app.dangerous_endpoints'))<span class="badge">Disabled</span>@endif <span class="badge badge-success">Public</span> <span class="badge badge-error">Unsecure endpoint</span>
+### `POST /accounts/public`
+<span class="badge badge-message">Deprecated</span> @if(!config('app.dangerous_endpoints'))<span class="badge">Disabled</span>@endif <span class="badge badge-success">Public</span> <span class="badge badge-error">Unsecure endpoint</span>
 
 Create an account.
 Return `422` if the parameters are invalid.
@@ -146,7 +154,8 @@ JSON parameters:
 * `phone` required if `username` not set, optional if `email` set, a phone number, set a phone number to the account
 * `account_creation_token` the unique `account_creation_token`
 
-### `POST /accounts/with-account-creation-token` <span class="badge badge-success">Public</span>
+### `POST /accounts/with-account-creation-token`
+<span class="badge badge-success">Public</span>
 
 Create an account using an `account_creation_token`.
 Return `422` if the parameters are invalid or if the token is expired.
@@ -159,19 +168,22 @@ JSON parameters:
 * `account_creation_token` the unique `account_creation_token`
 * `dtmf_protocol` optional, values must be `sipinfo`, `sipmessage` or `rfc2833`
 
-### `GET /accounts/{sip}/info` <span class="badge badge-success">Public</span>
+### `GET /accounts/{sip}/info`
+<span class="badge badge-success">Public</span>
 
 Retrieve public information about the account.
 Return `404` if the account doesn't exists.
 
-### `GET /accounts/{phone}/info-by-phone` <span class="badge badge-message">Deprecated</span>  @if(!config('app.dangerous_endpoints'))<span class="badge">Disabled</span>@endif <span class="badge badge-success">Public</span> <span class="badge badge-error">Unsecure endpoint</span>
+### `GET /accounts/{phone}/info-by-phone`
+<span class="badge badge-message">Deprecated</span>  @if(!config('app.dangerous_endpoints'))<span class="badge">Disabled</span>@endif <span class="badge badge-success">Public</span> <span class="badge badge-error">Unsecure endpoint</span>
 
 Retrieve public information about the account.
 Return `404` if the account doesn't exists.
 
 Return `phone: true` if the returned account has a phone number.
 
-### `POST /accounts/recover-by-phone` <span class="badge badge-message">Deprecated</span> @if(!config('app.dangerous_endpoints'))<span class="badge">Disabled</span>@endif <span class="badge badge-success">Public</span> <span class="badge badge-error">Unsecure endpoint</span>
+### `POST /accounts/recover-by-phone`
+<span class="badge badge-message">Deprecated</span> @if(!config('app.dangerous_endpoints'))<span class="badge">Disabled</span>@endif <span class="badge badge-success">Public</span> <span class="badge badge-error">Unsecure endpoint</span>
 
 Send a SMS with a recovery PIN code to the `phone` number provided.
 Return `404` if the account doesn't exists.
@@ -183,7 +195,8 @@ JSON parameters:
 * `phone` required the phone number to send the SMS to
 * `account_creation_token` the unique `account_creation_token`
 
-### `GET /accounts/{sip}/recover/{recover_key}` <span class="badge badge-message">Deprecated</span> @if(!config('app.dangerous_endpoints'))<span class="badge">Disabled</span>@endif <span class="badge badge-success">Public</span> <span class="badge badge-error">Unsecure endpoint</span>
+### `GET /accounts/{sip}/recover/{recover_key}`
+<span class="badge badge-message">Deprecated</span> @if(!config('app.dangerous_endpoints'))<span class="badge">Disabled</span>@endif <span class="badge badge-success">Public</span> <span class="badge badge-error">Unsecure endpoint</span>
 
 Activate the account if the correct `recover_key` is provided.
 
@@ -193,7 +206,8 @@ Return the account information (including the hashed password) if valid.
 
 Return `404` if the account doesn't exists.
 
-### `POST /accounts/{sip}/activate/email` <span class="badge badge-message">Deprecated</span> <span class="badge badge-success">Public</span>
+### `POST /accounts/{sip}/activate/email`
+<span class="badge badge-message">Deprecated</span> <span class="badge badge-success">Public</span>
 
 <a href="#post-accountsmeemailrequest">Use `POST /accounts/me/email/request` instead</a>.
 
@@ -204,7 +218,8 @@ JSON parameters:
 
 * `confirmation_key` the confirmation key
 
-### `POST /accounts/{sip}/activate/phone` <span class="badge badge-message">Deprecated</span> <span class="badge badge-success">Public</span>
+### `POST /accounts/{sip}/activate/phone`
+<span class="badge badge-message">Deprecated</span> <span class="badge badge-success">Public</span>
 
 <a href="#post-accountsmephonerequest">Use `POST /accounts/me/phone/request` instead</a>.
 
@@ -215,7 +230,8 @@ JSON parameters:
 
 * `confirmation_key` the PIN code
 
-### `GET /accounts/me/api_key/{auth_token}` <span class="badge badge-success">Public</span>
+### `GET /accounts/me/api_key/{auth_token}`
+<span class="badge badge-success">Public</span>
 
 Generate and retrieve a fresh API Key from an `auth_token`. The `auth_token` must be attached to an existing account, see [`auth_token` attachement endpoint](#get-accountsauthtokenauthtokenattach) to do so.
 
@@ -223,26 +239,31 @@ Return `404` if the token is invalid or not attached.
 
 This endpoint is also setting the API Key as a Cookie.
 
-### `GET /accounts/me/api_key` <span class="badge badge-info">User</span>
+### `GET /accounts/me/api_key`
+<span class="badge badge-info">User</span>
 
 Generate and retrieve a fresh API Key.
 This endpoint is also setting the API Key as a Cookie.
 
-### `GET /accounts/me` <span class="badge badge-info">User</span>
+### `GET /accounts/me`
+<span class="badge badge-info">User</span>
 
 Retrieve the account information.
 
-### `GET /accounts/me/provision` <span class="badge badge-info">User</span>
+### `GET /accounts/me/provision`
+<span class="badge badge-info">User</span>
 
 Provision the account by generating a fresh `provisioning_token`.
 
 Return the account object.
 
-### `DELETE /accounts/me` <span class="badge badge-info">User</span>
+### `DELETE /accounts/me`
+<span class="badge badge-info">User</span>
 
 Delete the account.
 
-### `POST /accounts/me/password` <span class="badge badge-info">User</span>
+### `POST /accounts/me/password`
+<span class="badge badge-info">User</span>
 
 Change the account password.
 
@@ -252,7 +273,8 @@ JSON parameters:
 * `old_password` required if the password is already set, the old password
 * `password` required, the new password
 
-### `POST /accounts` <span class="badge badge-warning">Admin</span>
+### `POST /accounts`
+<span class="badge badge-warning">Admin</span>
 
 To create an account directly from the API. <span class="badge badge-message">Deprecated</span> If `activated` is set to `false` a random generated `confirmation_key` and `provisioning_token` will be returned to allow further activation using the public endpoints and provision the account. Check `confirmation_key_expires` to also set an expiration date on that `confirmation_key`.
 
@@ -271,7 +293,8 @@ JSON parameters:
 * `dictionary` optional, an associative array attached to the account, <a href="#dictionary">see also the related endpoints</a>.
 * <span class="badge badge-message">Deprecated</span> `confirmation_key_expires` optional, a datetime of this format: Y-m-d H:i:s. Only used when `activated` is not used or `false`. Enforces an expiration date on the returned `confirmation_key`. After that datetime public email or phone activation endpoints will return `403`.
 
-### `PUT /accounts/{id}` <span class="badge badge-warning">Admin</span>
+### `PUT /accounts/{id}`
+<span class="badge badge-warning">Admin</span>
 
 Update an existing account.
 
@@ -286,49 +309,60 @@ JSON parameters:
 * `phone` optional, a phone number, set a phone number to the account
 * `dtmf_protocol` optional, values must be `sipinfo`, `sipmessage` or `rfc2833`
 
-### `GET /accounts` <span class="badge badge-warning">Admin</span>
+### `GET /accounts`
+<span class="badge badge-warning">Admin</span>
 
 Retrieve all the accounts, paginated.
 
-### `GET /accounts/{id}` <span class="badge badge-warning">Admin</span>
+### `GET /accounts/{id}`
+<span class="badge badge-warning">Admin</span>
 
 Retrieve a specific account.
 
-### `GET /accounts/{sip}/search` <span class="badge badge-warning">Admin</span>
+### `GET /accounts/{sip}/search`
+<span class="badge badge-warning">Admin</span>
 
 Search for a specific account by sip address.
 
-### `GET /accounts/{email}/search-by-email` <span class="badge badge-warning">Admin</span>
+### `GET /accounts/{email}/search-by-email`
+<span class="badge badge-warning">Admin</span>
 
 Search for a specific account by email.
 
-### `DELETE /accounts/{id}` <span class="badge badge-warning">Admin</span>
+### `DELETE /accounts/{id}`
+<span class="badge badge-warning">Admin</span>
 
 Delete a specific account and its related information.
 
-### `POST /accounts/{id}/activate` <span class="badge badge-warning">Admin</span>
+### `POST /accounts/{id}/activate`
+<span class="badge badge-warning">Admin</span>
 
 Activate an account.
 
-### `POST /accounts/{id}/deactivate` <span class="badge badge-warning">Admin</span>
+### `POST /accounts/{id}/deactivate`
+<span class="badge badge-warning">Admin</span>
 
 Deactivate an account.
 
-### `POST /accounts/{id}/block` <span class="badge badge-warning">Admin</span>
+### `POST /accounts/{id}/block`
+<span class="badge badge-warning">Admin</span>
 
 Block an account.
 
-### `POST /accounts/{id}/unblock` <span class="badge badge-warning">Admin</span>
+### `POST /accounts/{id}/unblock`
+<span class="badge badge-warning">Admin</span>
 
 Unblock an account.
 
-### `GET /accounts/{id}/provision` <span class="badge badge-warning">Admin</span>
+### `GET /accounts/{id}/provision`
+<span class="badge badge-warning">Admin</span>
 
 Provision an account by generating a fresh `provisioning_token`.
 
 ## Accounts email
 
-### `POST /accounts/me/email/request` <span class="badge badge-info">User</span>
+### `POST /accounts/me/email/request`
+<span class="badge badge-info">User</span>
 
 Change the account email. An email will be sent to the new email address to confirm the operation.
 
@@ -338,7 +372,8 @@ JSON parameters:
 
 ## Accounts phone number
 
-### `POST /accounts/me/phone/request` <span class="badge badge-info">User</span>
+### `POST /accounts/me/phone/request`
+<span class="badge badge-info">User</span>
 
 Request a specific code by SMS
 
@@ -346,7 +381,8 @@ JSON parameters:
 
 * `phone` the phone number to send the SMS
 
-### `POST /accounts/me/phone` <span class="badge badge-info">User</span>
+### `POST /accounts/me/phone`
+<span class="badge badge-info">User</span>
 
 Confirm the code received and change the phone number.
 Activate the account.
@@ -359,45 +395,54 @@ Return the updated account.
 
 ## Accounts devices
 
-### `GET /accounts/me/devices` <span class="badge badge-info">User</span>
+### `GET /accounts/me/devices`
+<span class="badge badge-info">User</span>
 
 Return the user registered devices.
 
-### `DELETE /accounts/me/devices/{uuid}` <span class="badge badge-info">User</span>
+### `DELETE /accounts/me/devices/{uuid}`
+<span class="badge badge-info">User</span>
 
 Remove one of the user registered devices.
 
 ## Account contacts
 
-### `GET /accounts/me/contacts` <span class="badge badge-info">User</span>
+### `GET /accounts/me/contacts`
+<span class="badge badge-info">User</span>
 
 Return the user contacts.
 
-### `GET /accounts/me/contacts/{sip}` <span class="badge badge-info">User</span>
+### `GET /accounts/me/contacts/{sip}`
+<span class="badge badge-info">User</span>
 
 Return a user contact.
 
 ## Contacts
 
-### `GET /accounts/{id}/contacts` <span class="badge badge-warning">Admin</span>
+### `GET /accounts/{id}/contacts`
+<span class="badge badge-warning">Admin</span>
 
 Get all the account contacts.
 
-### `POST /accounts/{id}/contacts/{contact_id}` <span class="badge badge-warning">Admin</span>
+### `POST /accounts/{id}/contacts/{contact_id}`
+<span class="badge badge-warning">Admin</span>
 
 Add a contact to the list.
 
-### `DELETE /accounts/{id}/contacts/{contact_id}` <span class="badge badge-warning">Admin</span>
+### `DELETE /accounts/{id}/contacts/{contact_id}`
+<span class="badge badge-warning">Admin</span>
 
 Remove a contact from the list.
 
 ## Dictionary
 
-### `GET /accounts/{id}/dictionary` <span class="badge badge-warning">Admin</span>
+### `GET /accounts/{id}/dictionary`
+<span class="badge badge-warning">Admin</span>
 
 Get all the account dictionary entries.
 
-### `POST /accounts/{id}/dictionary/{key}` <span class="badge badge-warning">Admin</span>
+### `POST /accounts/{id}/dictionary/{key}`
+<span class="badge badge-warning">Admin</span>
 
 Add or update a new entry to the dictionary
 
@@ -405,7 +450,8 @@ JSON parameters:
 
 * `value` required, the entry value
 
-### `DELETE /accounts/{id}/dictionary/{key}` <span class="badge badge-warning">Admin</span>
+### `DELETE /accounts/{id}/dictionary/{key}`
+<span class="badge badge-warning">Admin</span>
 
 Remove an entry from the dictionary.
 
@@ -413,15 +459,18 @@ Remove an entry from the dictionary.
 
 The following endpoints will return `403 Forbidden` if the requested account doesn't have a DTMF protocol configured.
 
-### `GET /accounts/{id}/actions` <span class="badge badge-warning">Admin</span>
+### `GET /accounts/{id}/actions`
+<span class="badge badge-warning">Admin</span>
 
 Show an account related actions.
 
-### `GET /accounts/{id}/actions/{action_id}` <span class="badge badge-warning">Admin</span>
+### `GET /accounts/{id}/actions/{action_id}`
+<span class="badge badge-warning">Admin</span>
 
 Show an account related action.
 
-### `POST /accounts/{id}/actions/` <span class="badge badge-warning">Admin</span>
+### `POST /accounts/{id}/actions/`
+<span class="badge badge-warning">Admin</span>
 
 Create an account action.
 
@@ -430,7 +479,8 @@ JSON parameters:
 * `key` required, alpha numeric with dashes, lowercase
 * `code` required, alpha numeric, lowercase
 
-### `PUT /accounts/{id}/actions/{action_id}` <span class="badge badge-warning">Admin</span>
+### `PUT /accounts/{id}/actions/{action_id}`
+<span class="badge badge-warning">Admin</span>
 
 Create an account action.
 
@@ -439,21 +489,25 @@ JSON parameters:
 * `key` required, alpha numeric with dashes, lowercase
 * `code` required, alpha numeric, lowercase
 
-### `DELETE /accounts/{id}/actions/{action_id}` <span class="badge badge-warning">Admin</span>
+### `DELETE /accounts/{id}/actions/{action_id}`
+<span class="badge badge-warning">Admin</span>
 
 Delete an account related action.
 
 ## Contacts Lists
 
-### `GET /contacts_lists` <span class="badge badge-warning">Admin</span>
+### `GET /contacts_lists`
+<span class="badge badge-warning">Admin</span>
 
 Show all the contacts lists.
 
-### `GET /contacts_lists/{id}` <span class="badge badge-warning">Admin</span>
+### `GET /contacts_lists/{id}`
+<span class="badge badge-warning">Admin</span>
 
 Show a contacts list.
 
-### `POST /contacts_lists` <span class="badge badge-warning">Admin</span>
+### `POST /contacts_lists`
+<span class="badge badge-warning">Admin</span>
 
 Create a contacts list.
 
@@ -462,7 +516,8 @@ JSON parameters:
 * `title` required
 * `description` required
 
-### `PUT /contacts_lists/{id}` <span class="badge badge-warning">Admin</span>
+### `PUT /contacts_lists/{id}`
+<span class="badge badge-warning">Admin</span>
 
 Update a contacts list.
 
@@ -471,37 +526,45 @@ JSON parameters:
 * `title` required
 * `description` required
 
-### `DELETE /contacts_lists/{id}` <span class="badge badge-warning">Admin</span>
+### `DELETE /contacts_lists/{id}`
+<span class="badge badge-warning">Admin</span>
 
 Delete a contacts list.
 
-### `POST /contacts_lists/{contacts_list_id}/contacts/{contact_id}` <span class="badge badge-warning">Admin</span>
+### `POST /contacts_lists/{contacts_list_id}/contacts/{contact_id}`
+<span class="badge badge-warning">Admin</span>
 
 Add a contact to the contacts list.
 
-### `DELETE /contacts_lists/{contacts_list_id}/contacts/{contact_id}` <span class="badge badge-warning">Admin</span>
+### `DELETE /contacts_lists/{contacts_list_id}/contacts/{contact_id}`
+<span class="badge badge-warning">Admin</span>
 
 Remove a contact from the contacts list.
 
-### `POST /accounts/{id}/contacts_lists/{contacts_list_id}` <span class="badge badge-warning">Admin</span>
+### `POST /accounts/{id}/contacts_lists/{contacts_list_id}`
+<span class="badge badge-warning">Admin</span>
 
 Add a contacts list to the account.
 
-### `DELETE /accounts/{id}/contacts_lists/{contacts_list_id}` <span class="badge badge-warning">Admin</span>
+### `DELETE /accounts/{id}/contacts_lists/{contacts_list_id}`
+<span class="badge badge-warning">Admin</span>
 
 Remove a contacts list from the account.
 
 ## Account Types
 
-### `GET /account_types` <span class="badge badge-warning">Admin</span>
+### `GET /account_types`
+<span class="badge badge-warning">Admin</span>
 
 Show all the account types.
 
-### `GET /account_types/{id}` <span class="badge badge-warning">Admin</span>
+### `GET /account_types/{id}`
+<span class="badge badge-warning">Admin</span>
 
 Show an account type.
 
-### `POST /account_types` <span class="badge badge-warning">Admin</span>
+### `POST /account_types`
+<span class="badge badge-warning">Admin</span>
 
 Create an account type.
 
@@ -509,7 +572,8 @@ JSON parameters:
 
 * `key` required, alpha numeric with dashes, lowercase
 
-### `PUT /account_types/{id}` <span class="badge badge-warning">Admin</span>
+### `PUT /account_types/{id}`
+<span class="badge badge-warning">Admin</span>
 
 Update an account type.
 
@@ -517,21 +581,25 @@ JSON parameters:
 
 * `key` required, alpha numeric with dashes, lowercase
 
-### `DELETE /account_types/{id}` <span class="badge badge-warning">Admin</span>
+### `DELETE /account_types/{id}`
+<span class="badge badge-warning">Admin</span>
 
 Delete an account type.
 
-### `POST /accounts/{id}/types/{type_id}` <span class="badge badge-warning">Admin</span>
+### `POST /accounts/{id}/types/{type_id}`
+<span class="badge badge-warning">Admin</span>
 
 Add a type to the account.
 
-### `DELETE /accounts/{id}/contacts/{type_id}` <span class="badge badge-warning">Admin</span>
+### `DELETE /accounts/{id}/contacts/{type_id}`
+<span class="badge badge-warning">Admin</span>
 
 Remove a type from the account.
 
 ## Messages
 
-### `POST /messages` <span class="badge badge-warning">Admin</span>
+### `POST /messages`
+<span class="badge badge-warning">Admin</span>
 
 Send a message over SIP.
 
@@ -544,7 +612,8 @@ JSON parameters:
 
 FlexiAPI can record logs generated by the FlexiSIP server and compile them into statistics.
 
-### `POST /statistics/messages` <span class="badge badge-warning">Admin</span>
+### `POST /statistics/messages`
+<span class="badge badge-warning">Admin</span>
 
 Announce the creation of a message.
 
@@ -556,7 +625,8 @@ JSON parameters:
 * `encrypted` required, boolean
 * `conference_id` string
 
-### `PATCH /statistics/messages/{message_id}/to/{to}/devices/{device_id}` <span class="badge badge-warning">Admin</span>
+### `PATCH /statistics/messages/{message_id}/to/{to}/devices/{device_id}`
+<span class="badge badge-warning">Admin</span>
 
 Complete a message status.
 
@@ -565,7 +635,8 @@ JSON parameters:
 * `last_status` required, an integer containing the last status code
 * `received_at` required, format ISO8601, when the message was received
 
-### `POST /statistics/calls` <span class="badge badge-warning">Admin</span>
+### `POST /statistics/calls`
+<span class="badge badge-warning">Admin</span>
 
 Announce the beginning of a call.
 
@@ -578,7 +649,8 @@ JSON parameters:
 * `ended_at` string, format ISO8601, when the call finished
 * `conference_id` string
 
-### `PATCH /statistics/calls/{call_id}/devices/{device_id}` <span class="badge badge-warning">Admin</span>
+### `PATCH /statistics/calls/{call_id}/devices/{device_id}`
+<span class="badge badge-warning">Admin</span>
 
 Complete a call status.
 
@@ -589,7 +661,8 @@ JSON parameters:
   * `at` format ISO8601, when the invitation ended
   * `state` the termination state
 
-### `PATCH /statistics/calls/{call_id}` <span class="badge badge-warning">Admin</span>
+### `PATCH /statistics/calls/{call_id}`
+<span class="badge badge-warning">Admin</span>
 
 Update a call when ending.
 
@@ -603,7 +676,8 @@ The following URLs are **not API endpoints** they are not returning `JSON` conte
 
 ## Contacts list
 
-### `GET /contacts/vcard` <span class="badge badge-info">User</span>
+### `GET /contacts/vcard`
+<span class="badge badge-info">User</span>
 
 Return the authenticated user contacts list, in [vCard 4.0 format](https://datatracker.ietf.org/doc/html/rfc6350).
 
@@ -628,6 +702,7 @@ X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:sipinfo
 END:VCARD
 ```
 
-### `GET /contacts/vcard/{sip}` <span class="badge badge-info">User</span>
+### `GET /contacts/vcard/{sip}`
+<span class="badge badge-info">User</span>
 
 Return a specific user authenticated contact, in [vCard 4.0 format](https://datatracker.ietf.org/doc/html/rfc6350).

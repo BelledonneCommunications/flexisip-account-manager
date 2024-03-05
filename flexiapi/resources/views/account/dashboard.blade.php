@@ -27,6 +27,12 @@
             <a href="{{ route('account.phone.change') }}">Change my current account phone</a>
         </p>
         <p>
+            <i class="material-symbols-outlined">devices</i>
+            <a href="{{ route('account.device.index') }}">
+                Edit my devices
+            </a>
+        </p>
+        <p>
             <i class="material-symbols-outlined">lock</i>
             <a href="{{ route('account.password.show') }}">
                 @if ($account->passwords()->count() > 0)
