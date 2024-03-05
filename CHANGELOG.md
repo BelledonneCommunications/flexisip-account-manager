@@ -2,6 +2,11 @@
 
 v1.5
 ----
+- Fix FLEXIAPI-145 Put back the 'code' parameter as an alias for the 'confirmation_key' for the activateEmail and activatePhone endpoints
+- Fix FLEXIAPI-144 Introduce APP_FLEXISIP_PUSHER_FIREBASE_KEYSMAP as a replacement for APP_FLEXISIP_PUSHER_FIREBASE_KEY
+- Fix FLEXIAPI-142 PUT /accounts endpoint doesn't allow overiding values anymore
+- Fix FLEXIAPI-140 Fix the display_name attribute in the Vcard4 render
+- Fix FLEXIAPI-139 Refactor the email and phone API documentation
 - Fix FLEXIAPI-138 Add ip and user_agent columns to all the tokens and code tables, fill the values when required and display them in the admin
 - Fix FLEXIAPI-136 Refactor the Web Panel toggle mechanism and move it to a proper Middleware
 - Fix FLEXIAPI-134 Add a system to detect and block abusive accounts

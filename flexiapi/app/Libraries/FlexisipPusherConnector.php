@@ -23,10 +23,11 @@ use Illuminate\Support\Facades\Log;
 
 class FlexisipPusherConnector
 {
-    private $pusherPath;
-    private $pnProvider;
-    private $pnParam;
-    private $pnPrid;
+    private ?string $pusherPath = null;
+    private ?string $pnProvider = null;
+    private ?string $pnParam = null;
+    private ?string $pnPrid = null;
+    private ?string $pusherFirebaseKey = null;
 
     public function __construct(string $pnProvider, string $pnParam, string $pnPrid)
     {
@@ -35,8 +36,25 @@ class FlexisipPusherConnector
         $this->pnParam = $pnParam;
         $this->pnPrid = $pnPrid;
 
-        if ($this->pnProvider == 'fcm' && config('app.flexisip_pusher_firebase_key') == null) {
-            Log::error('Firebase pusher key not configured');
+        if ($this->pnProvider == 'fcm' && config('app.flexisip_pusher_firebase_keysmap') == null) {
+            Log::error('Firebase pusher keysmap not configured');
+        }
+
+        $firebaseKeysmap = explode(' ', config('app.flexisip_pusher_firebase_keysmap'));
+
+        if (count($firebaseKeysmap) > 0) {
+            $pusherFirebaseKeysmap = [];
+
+            foreach ($firebaseKeysmap as $map) {
+                if (str_contains($map, ':')) {
+                    list($id, $value) = explode(':', $map);
+                    $pusherFirebaseKeysmap[$id] = $value;
+                }
+            }
+
+            if (array_key_exists($pnParam, $pusherFirebaseKeysmap)) {
+                $this->pusherFirebaseKey = $pusherFirebaseKeysmap[$pnParam];
+            }
         }
     }
 
@@ -51,9 +69,13 @@ class FlexisipPusherConnector
                 . " --pn-prid " . $this->pnPrid
                 . " --customPayload '" . $payload . "'";
 
-            $command .= in_array($this->pnProvider, ['apns', 'apns.dev'])
-                ? " --apple-push-type Background"
-                : " --key " . config('app.flexisip_pusher_firebase_key');
+            if (in_array($this->pnProvider, ['apns', 'apns.dev'])) {
+                $command .= " --apple-push-type Background";
+            }
+
+            if ($this->pusherFirebaseKey) {
+                $command .= " --key " . $this->pusherFirebaseKey;
+            }
 
             $output = null;
             $retval = null;

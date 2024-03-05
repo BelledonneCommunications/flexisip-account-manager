@@ -103,7 +103,7 @@ You can find an example CSS file at `public/css/custom.style.css`.
 
 #### Flexisip Push notifications pusher
 
-The API endpoint `POST /account_creation_tokens/send-by-push` uses the `flexisip_pusher` binary delivered by the [Flexisip](https://gitlab.linphone.org/BC/public/flexisip) project (and related package). You must configure the `APP_FLEXISIP_PUSHER_PATH` and `APP_FLEXISIP_PUSHER_FIREBASE_KEY` environnement variables to point to the correct binary.
+The API endpoint `POST /account_creation_tokens/send-by-push` uses the `flexisip_pusher` binary delivered by the [Flexisip](https://gitlab.linphone.org/BC/public/flexisip) project (and related package). You must configure the `APP_FLEXISIP_PUSHER_PATH` and `APP_FLEXISIP_PUSHER_FIREBASE_KEYSMAP` environnement variables to point to the correct binary.
 
     APP_FLEXISIP_PUSHER_PATH=/opt/belledonne-communications/bin/flexisip_pusher
 
