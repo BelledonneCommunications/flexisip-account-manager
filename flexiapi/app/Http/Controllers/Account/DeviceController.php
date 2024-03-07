@@ -46,7 +46,7 @@ class DeviceController extends Controller
             'account.device.delete',
             [
                 'account' => $request->user(),
-                'devices' => $connector->getDevices($request->user()->identifier)
+                'device' => $connector->getDevices($request->user()->identifier)
                     ->where('uuid', $uuid)->first()
             ]
         );
