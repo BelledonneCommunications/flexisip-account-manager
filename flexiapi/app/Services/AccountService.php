@@ -21,9 +21,11 @@ namespace App\Services;
 
 use App\Account;
 use App\AccountCreationToken;
+use App\ActivationExpiration;
 use App\Alias;
 use App\EmailChangeCode;
 use App\Http\Requests\CreateAccountRequest;
+use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use App\Libraries\OvhSMS;
 use App\Mail\NewsletterRegistration;
 use App\Mail\RecoverByCode;
@@ -32,11 +34,13 @@ use App\PhoneChangeCode;
 use Illuminate\Support\Facades\Log;
 
 use App\Rules\AccountCreationToken as RulesAccountCreationToken;
+use App\Rules\PasswordAlgorithm;
 use App\Rules\WithoutSpaces;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class AccountService
 {
@@ -53,7 +57,7 @@ class AccountService
     /**
      * Account creation
      */
-    public function store(CreateAccountRequest $request): Account
+    public function store(CreateAccountRequest $request, bool $asAdmin = false): Account
     {
         $rules = [];
         $rules['password'] = 'confirmed';
@@ -62,12 +66,25 @@ class AccountService
 
         if ($this->api) {
             $rules = [];
-            $rules['account_creation_token'] = ['required', new RulesAccountCreationToken];
+            $rules['account_creation_token'] = ['required', new RulesAccountCreationToken()];
+
+            if ($asAdmin) {
+                $rules = [];
+                $rules['algorithm'] = ['required', new PasswordAlgorithm()];
+                $rules['admin'] = 'boolean|nullable';
+                $rules['activated'] = 'boolean|nullable';
+                $rules['confirmation_key_expires'] = [
+                    'date_format:Y-m-d H:i:s',
+                    'nullable',
+                ];
+            }
         }
+
+
 
         $request->validate($rules);
 
-        $account = new Account;
+        $account = new Account();
         $account->username = $request->get('username');
         $account->activated = false;
         $account->domain = config('app.sip_domain');
@@ -75,12 +92,43 @@ class AccountService
         $account->created_at = Carbon::now();
         $account->user_agent = config('app.name');
         $account->dtmf_protocol = $request->get('dtmf_protocol');
-        $account->confirmation_key = generatePin();
+
+        if ($asAdmin) {
+            $account->email = $request->get('email');
+            $account->display_name = $request->get('display_name');
+            $account->activated = $request->has('activated') ? (bool)$request->get('activated') : false;
+            $account->domain = resolveDomain($request);
+            $account->user_agent = $request->header('User-Agent') ?? config('app.name');
+        }
+
+        if ($account->activated == false) {
+            $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
+        }
+
         $account->save();
+
+        if ($asAdmin) {
+            if ((!$request->has('activated') || !(bool)$request->get('activated'))
+            && $request->has('confirmation_key_expires')) {
+                $actionvationExpiration = new ActivationExpiration();
+                $actionvationExpiration->account_id = $account->id;
+                $actionvationExpiration->expires = $request->get('confirmation_key_expires');
+                $actionvationExpiration->save();
+            }
+
+            if ($request->has('dictionary')) {
+                foreach ($request->get('dictionary') as $key => $value) {
+                    $account->setDictionaryEntry($key, $value);
+                }
+            }
+
+            $account->admin = $request->has('admin') && (bool)$request->get('admin');
+            $account->phone = $request->get('phone');
+        }
 
         $account->updatePassword($request->get('password'), $request->get('algorithm'));
 
-        if ($this->api) {
+        if ($this->api && !$asAdmin) {
             $token = AccountCreationToken::where('token', $request->get('account_creation_token'))->first();
             $token->consume();
             $token->account_id = $account->id;
@@ -88,7 +136,8 @@ class AccountService
         }
 
         Log::channel('events')->info('API: AccountCreationToken redeemed', ['token' => $request->get('account_creation_token')]);
-        Log::channel('events')->info('Account Service: Account created', ['id' => $account->identifier]);
+
+        Log::channel('events')->info($asAdmin ? 'Account Service as Admin: Account created' : 'Account Service: Account created', ['id' => $account->identifier]);
 
         if (!$this->api) {
             if (!empty(config('app.newsletter_registration_address')) && $request->has('newsletter')) {
@@ -112,13 +161,13 @@ class AccountService
             'phone' => [
                 'required', 'unique:aliases,alias',
                 'unique:accounts,username',
-                new WithoutSpaces, 'starts_with:+'
+                new WithoutSpaces(), 'starts_with:+'
             ]
         ]);
 
         $account = $request->user();
 
-        $phoneChangeCode = $account->phoneChangeCode ?? new PhoneChangeCode;
+        $phoneChangeCode = $account->phoneChangeCode ?? new PhoneChangeCode();
         $phoneChangeCode->account_id = $account->id;
         $phoneChangeCode->phone = $request->get('phone');
         $phoneChangeCode->code = generatePin();
@@ -127,7 +176,7 @@ class AccountService
 
         Log::channel('events')->info('Account Service: Account phone change requested by SMS', ['id' => $account->identifier]);
 
-        $ovhSMS = new OvhSMS;
+        $ovhSMS = new OvhSMS();
         $ovhSMS->send($request->get('phone'), 'Your ' . config('app.name') . ' validation code is ' . $phoneChangeCode->code);
     }
 
@@ -152,7 +201,7 @@ class AccountService
         if ($phoneChangeCode->code == $code) {
             $account->alias()->delete();
 
-            $alias = new Alias;
+            $alias = new Alias();
             $alias->alias = $phoneChangeCode->phone;
             $alias->domain = config('app.sip_domain');
             $alias->account_id = $account->id;
@@ -194,7 +243,7 @@ class AccountService
 
         $account = $request->user();
 
-        $emailChangeCode = $account->emailChangeCode ?? new EmailChangeCode;
+        $emailChangeCode = $account->emailChangeCode ?? new EmailChangeCode();
         $emailChangeCode->account_id = $account->id;
         $emailChangeCode->email = $request->get('email');
         $emailChangeCode->code = generatePin();
@@ -265,7 +314,7 @@ class AccountService
     {
         $account = $this->recoverAccount($account);
 
-        $ovhSMS = new OvhSMS;
+        $ovhSMS = new OvhSMS();
         $ovhSMS->send($account->phone, 'Your ' . config('app.name') . ' validation code is ' . $account->recovery_code);
 
         Log::channel('events')->info('Account Service: Sending recovery SMS', ['id' => $account->identifier]);

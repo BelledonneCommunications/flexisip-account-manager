@@ -34,6 +34,7 @@ use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateContro
 use App\Http\Requests\CreateAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
 use App\Rules\PasswordAlgorithm;
+use App\Services\AccountService;
 
 class AccountController extends Controller
 {
@@ -130,57 +131,7 @@ class AccountController extends Controller
 
     public function store(CreateAccountRequest $request)
     {
-        $request->validate([
-            'algorithm' => ['required', new PasswordAlgorithm],
-            'admin' => 'boolean|nullable',
-            'activated' => 'boolean|nullable',
-            'confirmation_key_expires' => [
-                'date_format:Y-m-d H:i:s',
-                'nullable',
-            ]
-        ]);
-
-        $account = new Account;
-        $account->username = $request->get('username');
-        $account->email = $request->get('email');
-        $account->display_name = $request->get('display_name');
-        $account->activated = $request->has('activated') ? (bool)$request->get('activated') : false;
-        $account->ip_address = $request->ip();
-        $account->dtmf_protocol = $request->get('dtmf_protocol');
-        $account->created_at = Carbon::now();
-        $account->domain = resolveDomain($request);
-        $account->user_agent = $request->header('User-Agent') ?? config('app.name');
-
-        if (!$request->has('activated') || !(bool)$request->get('activated')) {
-            $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
-        }
-
-        $account->save();
-
-        if ((!$request->has('activated') || !(bool)$request->get('activated'))
-         && $request->has('confirmation_key_expires')) {
-            $actionvationExpiration = new ActivationExpiration;
-            $actionvationExpiration->account_id = $account->id;
-            $actionvationExpiration->expires = $request->get('confirmation_key_expires');
-            $actionvationExpiration->save();
-        }
-
-        if ($request->has('dictionary')) {
-            foreach ($request->get('dictionary') as $key => $value) {
-                $account->setDictionaryEntry($key, $value);
-            }
-        }
-
-        $account->updatePassword($request->get('password'), $request->get('algorithm'));
-        $account->admin = $request->has('admin') && (bool)$request->get('admin');
-        $account->phone = $request->get('phone');
-
-        // Full reload
-        $account = Account::withoutGlobalScopes()->find($account->id);
-
-        Log::channel('events')->info('API Admin: Account created', ['id' => $account->identifier]);
-
-        return $account->makeVisible(['confirmation_key', 'provisioning_token']);
+        return (new AccountService)->store($request, asAdmin: true)->makeVisible(['confirmation_key', 'provisioning_token']);
     }
 
     public function update(UpdateAccountRequest $request, int $accountId)
