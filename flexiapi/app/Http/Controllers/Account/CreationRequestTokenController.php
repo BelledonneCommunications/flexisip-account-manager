@@ -51,7 +51,7 @@ class CreationRequestTokenController extends Controller
                 'required',
                 new RulesAccountCreationRequestToken
             ],
-            'g-recaptcha-response'  => captchaConfigured() ? 'required|captcha' : '',
+            'h-captcha-response'  => captchaConfigured() ? 'required|HCaptcha' : '',
         ]);
 
         $accountCreationRequestToken = AccountCreationRequestToken::where('token', $request->get('account_creation_request_token'))->firstOrFail();

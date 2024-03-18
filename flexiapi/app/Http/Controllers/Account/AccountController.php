@@ -52,7 +52,7 @@ class AccountController extends Controller
     {
         $account = (new AccountService(api: false))->store($request);
 
-        $request->validate(['g-recaptcha-response' => captchaConfigured() ? 'required|captcha' : '']);
+        $request->validate(['h-captcha-response' => captchaConfigured() ? 'required|HCaptcha' : '']);
 
         Auth::login($account);
 

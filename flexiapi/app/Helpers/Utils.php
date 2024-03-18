@@ -115,7 +115,7 @@ function resolveDomain(Request $request): string
 
 function captchaConfigured(): bool
 {
-    return env('NOCAPTCHA_SECRET', false) != false || env('NOCAPTCHA_SITEKEY', false) != false;
+    return env('HCAPTCHA_SECRET', false) != false || env('HCAPTCHA_SITEKEY', false) != false;
 }
 
 function resolveUserContacts(Request $request)

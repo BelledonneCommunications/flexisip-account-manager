@@ -35,7 +35,7 @@ class EmailController extends Controller
 
     public function requestChange(Request $request)
     {
-        $request->validate(['g-recaptcha-response' => captchaConfigured() ? 'required|captcha': '']);
+        $request->validate(['h-captcha-response' => captchaConfigured() ? 'required|HCaptcha': '']);
 
         if ((new BlockingService($request->user()))->checkBlock()) {
             return redirect()->route('account.blocked');

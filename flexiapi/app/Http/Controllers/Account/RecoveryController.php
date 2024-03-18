@@ -50,7 +50,7 @@ class RecoveryController extends Controller
         $rules = [
             'email' => 'required_without:phone|email|exists:accounts,email',
             'phone' => 'required_without:email|starts_with:+',
-            'g-recaptcha-response'  => captchaConfigured() ? 'required|captcha' : '',
+            'h-captcha-response'  => captchaConfigured() ? 'required|HCaptcha' : '',
         ];
 
         $account = null;

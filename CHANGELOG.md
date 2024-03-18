@@ -2,6 +2,8 @@
 
 v1.5
 ----
+- Fix FLEXIAPI-151 Migrate to hCaptcha
+- Fix FLEXIAPI-150 Use the same account_id parameter for both API and Web routes
 - Fix FLEXIAPI-148 Reuse AccountService in the POST /api/accounts admin endpoint
 - FIX FLEXIAPI-146 Allow users to manage their own devices
 - Fix FLEXIAPI-145 Put back the 'code' parameter as an alias for the 'confirmation_key' for the activateEmail and activatePhone endpoints

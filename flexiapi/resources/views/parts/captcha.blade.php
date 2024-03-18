@@ -1,7 +1,7 @@
 @if (captchaConfigured())
     <div class="large">
-        {!! NoCaptcha::renderJs() !!}
-        {!! NoCaptcha::display() !!}
-        @include('parts.errors', ['name' => 'g-recaptcha-response'])
+        {!! HCaptcha::renderJs() !!}
+        {!! HCaptcha::display() !!}
+        @include('parts.errors', ['name' => 'h-captcha-response'])
     </div>
 @endif

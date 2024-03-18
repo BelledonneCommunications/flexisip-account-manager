@@ -9,7 +9,6 @@
     "license": "MIT",
     "require": {
         "php": ">=8.0.2",
-        "anhskohbo/no-captcha": "^3.5",
         "awobaz/compoships": "^2.2",
         "doctrine/dbal": "^3.6",
         "endroid/qr-code": "^4.8",
@@ -21,7 +20,8 @@
         "parsedown/laravel": "^1.2",
         "phpunit/phpunit": "^9.6",
         "react/socket": "^1.14",
-        "respect/validation": "^2.2"
+        "respect/validation": "^2.2",
+        "scyllaly/hcaptcha": "^4.4"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",
