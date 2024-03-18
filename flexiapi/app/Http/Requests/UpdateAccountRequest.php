@@ -30,7 +30,7 @@ class UpdateAccountRequest extends FormRequest
                 new SIPUsername,
                 Rule::unique('accounts', 'username')->where(function ($query) {
                     $query->where('domain', resolveDomain($this));
-                })->ignore($this->route('id'), 'id'),
+                })->ignore($this->route('account_id'), 'id'),
                 'filled',
             ],
             'email' => [

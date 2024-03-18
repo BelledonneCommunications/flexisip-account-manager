@@ -90,25 +90,25 @@ Route::group(['middleware' => ['auth.digest_or_key', 'auth.check_blocked']], fun
 
         // Accounts
         Route::prefix('accounts')->controller(AdminAccountController::class)->group(function () {
-            Route::post('{id}/activate', 'activate');
-            Route::post('{id}/deactivate', 'deactivate');
-            Route::post('{id}/block', 'block');
-            Route::post('{id}/unblock', 'unblock');
-            Route::get('{id}/provision', 'provision');
+            Route::post('{account_id}/activate', 'activate');
+            Route::post('{account_id}/deactivate', 'deactivate');
+            Route::post('{account_id}/block', 'block');
+            Route::post('{account_id}/unblock', 'unblock');
+            Route::get('{account_id}/provision', 'provision');
 
             Route::post('/', 'store');
-            Route::put('{id}', 'update');
+            Route::put('{account_id}', 'update');
             Route::get('/', 'index');
-            Route::get('{id}', 'show');
-            Route::delete('{id}', 'destroy');
+            Route::get('{account_id}', 'show');
+            Route::delete('{account_id}', 'destroy');
             Route::get('{sip}/search', 'search');
             Route::get('{email}/search-by-email', 'searchByEmail');
 
-            Route::post('{id}/types/{type_id}', 'typeAdd');
-            Route::delete('{id}/types/{type_id}', 'typeRemove');
+            Route::post('{account_id}/types/{type_id}', 'typeAdd');
+            Route::delete('{account_id}/types/{type_id}', 'typeRemove');
 
-            Route::post('{id}/contacts_lists/{contacts_list_id}', 'contactsListAdd');
-            Route::delete('{id}/contacts_lists/{contacts_list_id}', 'contactsListRemove');
+            Route::post('{account_id}/contacts_lists/{contacts_list_id}', 'contactsListAdd');
+            Route::delete('{account_id}/contacts_lists/{contacts_list_id}', 'contactsListRemove');
         });
 
         // Account contacts

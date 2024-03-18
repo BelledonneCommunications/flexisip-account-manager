@@ -43,9 +43,9 @@ class AccountController extends Controller
         return Account::without(['passwords', 'admin'])->paginate(20);
     }
 
-    public function show($id)
+    public function show($accountId)
     {
-        return Account::without(['passwords', 'admin'])->findOrFail($id)->makeVisible(['confirmation_key', 'provisioning_token']);
+        return Account::without(['passwords', 'admin'])->findOrFail($accountId)->makeVisible(['confirmation_key', 'provisioning_token']);
     }
 
     public function search(string $sip)
@@ -58,9 +58,9 @@ class AccountController extends Controller
         return Account::where('email', $email)->firstOrFail();
     }
 
-    public function destroy($id)
+    public function destroy($accountId)
     {
-        $account = Account::findOrFail($id);
+        $account = Account::findOrFail($accountId);
 
         if (!$account->hasTombstone()) {
             $tombstone = new AccountTombstone;
@@ -74,9 +74,9 @@ class AccountController extends Controller
         $account->delete();
     }
 
-    public function activate(int $id)
+    public function activate(int $accountId)
     {
-        $account = Account::findOrFail($id);
+        $account = Account::findOrFail($accountId);
         $account->activated = true;
         $account->save();
 
@@ -85,9 +85,9 @@ class AccountController extends Controller
         return $account;
     }
 
-    public function deactivate(int $id)
+    public function deactivate(int $accountId)
     {
-        $account = Account::findOrFail($id);
+        $account = Account::findOrFail($accountId);
         $account->activated = false;
         $account->save();
 
@@ -96,9 +96,9 @@ class AccountController extends Controller
         return $account;
     }
 
-    public function block(int $id)
+    public function block(int $accountId)
     {
-        $account = Account::findOrFail($id);
+        $account = Account::findOrFail($accountId);
         $account->blocked = true;
         $account->save();
 
@@ -107,9 +107,9 @@ class AccountController extends Controller
         return $account;
     }
 
-    public function unblock(int $id)
+    public function unblock(int $accountId)
     {
-        $account = Account::findOrFail($id);
+        $account = Account::findOrFail($accountId);
         $account->blocked = false;
         $account->save();
 
@@ -118,9 +118,9 @@ class AccountController extends Controller
         return $account;
     }
 
-    public function provision(int $id)
+    public function provision(int $accountId)
     {
-        $account = Account::findOrFail($id);
+        $account = Account::findOrFail($accountId);
         $account->provision();
         $account->save();
 
@@ -164,43 +164,43 @@ class AccountController extends Controller
         return $account->makeVisible(['confirmation_key', 'provisioning_token']);
     }
 
-    public function typeAdd(int $id, int $typeId)
+    public function typeAdd(int $accountId, int $typeId)
     {
-        if (Account::findOrFail($id)->types()->pluck('id')->contains($typeId)) {
+        if (Account::findOrFail($accountId)->types()->pluck('id')->contains($typeId)) {
             abort(403);
         }
 
         if (AccountType::findOrFail($typeId)) {
-            return Account::findOrFail($id)->types()->attach($typeId);
+            return Account::findOrFail($accountId)->types()->attach($typeId);
         }
     }
 
-    public function typeRemove(int $id, int $typeId)
+    public function typeRemove(int $accountId, int $typeId)
     {
-        if (!Account::findOrFail($id)->types()->pluck('id')->contains($typeId)) {
+        if (!Account::findOrFail($accountId)->types()->pluck('id')->contains($typeId)) {
             abort(403);
         }
 
-        return Account::findOrFail($id)->types()->detach($typeId);
+        return Account::findOrFail($accountId)->types()->detach($typeId);
     }
 
-    public function contactsListAdd(int $id, int $contactsListId)
+    public function contactsListAdd(int $accountId, int $contactsListId)
     {
-        if (Account::findOrFail($id)->contactsLists()->pluck('id')->contains($contactsListId)) {
+        if (Account::findOrFail($accountId)->contactsLists()->pluck('id')->contains($contactsListId)) {
             abort(403);
         }
 
         if (ContactsList::findOrFail($contactsListId)) {
-            return Account::findOrFail($id)->contactsLists()->attach($contactsListId);
+            return Account::findOrFail($accountId)->contactsLists()->attach($contactsListId);
         }
     }
 
-    public function contactsListRemove(int $id, int $contactsListId)
+    public function contactsListRemove(int $accountId, int $contactsListId)
     {
-        if (!Account::findOrFail($id)->contactsLists()->pluck('id')->contains($contactsListId)) {
+        if (!Account::findOrFail($accountId)->contactsLists()->pluck('id')->contains($contactsListId)) {
             abort(403);
         }
 
-        return Account::findOrFail($id)->contactsLists()->detach($contactsListId);
+        return Account::findOrFail($accountId)->contactsLists()->detach($contactsListId);
     }
 }
