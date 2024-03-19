@@ -21,17 +21,14 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
 
 use App\Account;
 use App\AccountTombstone;
 use App\AccountType;
-use App\ActivationExpiration;
 use App\ContactsList;
-use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use App\Http\Requests\CreateAccountRequest;
+use App\Http\Requests\CreateAccountWithoutUsernamePhoneCheck;
 use App\Http\Requests\UpdateAccountRequest;
 use App\Rules\PasswordAlgorithm;
 use App\Services\AccountService;
@@ -129,7 +126,7 @@ class AccountController extends Controller
         return $account->makeVisible(['provisioning_token']);
     }
 
-    public function store(CreateAccountRequest $request)
+    public function store(CreateAccountWithoutUsernamePhoneCheck $request)
     {
         return (new AccountService)->store($request, asAdmin: true)->makeVisible(['confirmation_key', 'provisioning_token']);
     }

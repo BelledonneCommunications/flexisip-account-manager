@@ -39,7 +39,7 @@
         <h2>Connexion</h2>
         <div>
             <input placeholder="Username" required="required" name="username" type="text"
-                value="@if ($account->id){{ $account->username }}@else{{ old('username') }} @endif"
+                value="@if($account->id){{ $account->username }}@else{{ old('username') }}@endif"
                 @if ($account->id) readonly @endif>
             <label for="username">Username</label>
             @include('parts.errors', ['name' => 'username'])
@@ -53,7 +53,7 @@
 
         <div>
             <input placeholder="John Doe" name="display_name" type="text"
-                value="@if ($account->id){{ $account->display_name }}@else{{ old('display_name') }} @endif">
+                value="@if($account->id){{ $account->display_name }}@else{{ old('display_name') }}@endif">
             <label for="display_name">Display Name</label>
             @include('parts.errors', ['name' => 'display_name'])
         </div>
@@ -75,14 +75,14 @@
 
         <div>
             <input placeholder="Email" name="email" type="email"
-                value="@if ($account->id) {{ $account->email }}@else{{ old('email') }} @endif">
+                value="@if($account->id){{ $account->email }}@else{{ old('email') }}@endif">
             <label for="email">Email</label>
             @include('parts.errors', ['name' => 'email'])
         </div>
 
         <div>
             <input placeholder="+12123123" name="phone" type="text"
-                value="@if ($account->id) {{ $account->phone }}@else{{ old('phone') }} @endif">
+                value="@if($account->id){{ $account->phone }}@else{{ old('phone') }}@endif">
             <label for="phone">Phone</label>
             @include('parts.errors', ['name' => 'phone'])
         </div>

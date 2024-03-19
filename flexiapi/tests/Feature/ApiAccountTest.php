@@ -86,15 +86,25 @@ class ApiAccountTest extends TestCase
         $username = '+33612121212';
         $domain = 'example.com';
 
-        $response = $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($password->account)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'domain' => $domain,
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
-            ]);
+            ])
+            ->assertJsonValidationErrors(['username']);
 
-        $response->assertJsonValidationErrors(['username']);
+        config()->set('app.allow_phone_number_username_admin_api', true);
+
+        $this->keyAuthenticated($password->account)
+            ->json($this->method, $this->route, [
+                'username' => $username,
+                'domain' => $domain,
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+            ])
+            ->assertStatus(200);
     }
 
     public function testUsernameNotSIP()

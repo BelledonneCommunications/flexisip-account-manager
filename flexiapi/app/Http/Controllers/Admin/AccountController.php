@@ -26,7 +26,7 @@ use Carbon\Carbon;
 
 use App\Account;
 use App\ContactsList;
-use App\Http\Requests\CreateAccountRequest;
+use App\Http\Requests\CreateAccountWithoutUsernamePhoneCheck;
 use App\Http\Requests\UpdateAccountRequest;
 
 class AccountController extends Controller
@@ -79,7 +79,7 @@ class AccountController extends Controller
         ]);
     }
 
-    public function store(CreateAccountRequest $request)
+    public function store(CreateAccountWithoutUsernamePhoneCheck $request)
     {
         $request->validate([
             'password' => 'confirmed'
