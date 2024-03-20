@@ -2,6 +2,7 @@
 
 v1.5
 ----
+- Fix FLEXIAPI-153 Add phone and email to be changed in the Activity panel
 - Fix FLEXIAPI-151 Migrate to hCaptcha
 - Fix FLEXIAPI-150 Use the same account_id parameter for both API and Web routes
 - Fix FLEXIAPI-148 Reuse AccountService in the POST /api/accounts admin endpoint
