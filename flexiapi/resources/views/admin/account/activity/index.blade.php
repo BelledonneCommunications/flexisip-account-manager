@@ -56,7 +56,7 @@
         <tbody>
             @foreach ($account->phoneChangeCodes as $phoneChangeCode)
                 <tr @if ($phoneChangeCode->consumed()) class="disabled crossed" @endif>
-                    <td>{{ $phoneChangeCode->phone }}<td>
+                    <td>{{ $phoneChangeCode->phone }}</td>
                     <td>
                         {{ $phoneChangeCode->created_at }}
                     </td>

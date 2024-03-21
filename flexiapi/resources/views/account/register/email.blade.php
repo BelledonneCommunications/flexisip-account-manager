@@ -10,7 +10,7 @@
         @include('parts.tabs.register')
 
         <form method="POST" action="{{ route('account.store') }}" accept-charset="UTF-8">
-@csrf
+        @csrf
 
         <div>
             <input placeholder="username" name="username" type="text" value="{{ old('username') }}" required>
@@ -34,12 +34,12 @@
         </div>
 
         <div>
-            <input required="" name="password" type="password" value="" placeholder="Password">
+            <input required="" name="password" type="password" value="{{ old('password') }}" placeholder="Password">
             <label for="password">Password</label>
             @include('parts.errors', ['name' => 'password'])
         </div>
         <div>
-            <input required="" name="password_confirmation" type="password" value="" placeholder="Password confirmation">
+            <input required="" name="password_confirmation" type="password" value="{{ old('password_confirmation') }}" placeholder="Password confirmation">
             <label for="password_confirmation">Confirm password</label>
             @include('parts.errors', ['name' => 'password_confirmation'])
         </div>

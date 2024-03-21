@@ -50,9 +50,9 @@ class AccountController extends Controller
 
     public function store(CreateAccountRequest $request)
     {
-        $account = (new AccountService(api: false))->store($request);
-
         $request->validate(['h-captcha-response' => captchaConfigured() ? 'required|HCaptcha' : '']);
+
+        $account = (new AccountService(api: false))->store($request);
 
         Auth::login($account);
 
