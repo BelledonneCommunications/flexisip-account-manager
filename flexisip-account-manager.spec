@@ -33,7 +33,7 @@ License:        GPL
 URL:            http://www.linphone.org
 Source0:        flexisip-account-manager.tar.gz
 
-Requires:       php >= 8.0, php-gd, php-pdo, php-redis, php-mysqlnd, php-mbstring
+Requires:       php >= 8.0, php-gd, php-pdo, php-redis, php-mysqlnd, php-mbstring, php-sodium
 
 %description
 PHP server for Linphone and Flexisip providing module for account creation.

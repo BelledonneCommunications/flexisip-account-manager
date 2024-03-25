@@ -39,13 +39,14 @@ use App\Http\Controllers\Admin\AccountStatisticsController;
 use App\Http\Controllers\Admin\ContactsListController;
 use App\Http\Controllers\Admin\ContactsListContactController;
 use App\Http\Controllers\Admin\StatisticsController;
+use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', 'login')->name('account.home');
 Route::get('documentation', 'Account\AccountController@documentation')->name('account.documentation');
 Route::get('about', 'AboutController@about')->name('about');
 
-Route::middleware(['web_panel_enabled'])->group(function () {
+Route::group(['middleware' => 'web_panel_enabled'], function () {
     Route::get('login', 'Account\AuthenticateController@login')->name('account.login');
     Route::post('authenticate', 'Account\AuthenticateController@authenticate')->name('account.authenticate');
     Route::get('authenticate/qrcode/{token?}', 'Account\AuthenticateController@loginAuthToken')->name('account.authenticate.auth_token');
@@ -56,7 +57,7 @@ Route::middleware(['web_panel_enabled'])->group(function () {
     });
 });
 
-Route::group(['middleware' => 'auth.digest_or_key'], function () {
+Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key']], function () {
     Route::get('provisioning/me', 'Account\ProvisioningController@me')->name('provisioning.me');
 
     // Vcard 4.0
@@ -72,7 +73,7 @@ Route::name('provisioning.')->prefix('provisioning')->controller(ProvisioningCon
     Route::get('/', 'show')->name('show');
 });
 
-Route::middleware(['web_panel_enabled'])->group(function () {
+Route::group(['middleware' => 'web_panel_enabled'], function () {
     if (config('app.public_registration')) {
         Route::redirect('register', 'register/email')->name('account.register');
 

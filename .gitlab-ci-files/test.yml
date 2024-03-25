@@ -15,7 +15,7 @@ rocky9-test:
   script:
     - yum -y localinstall build/*.rpm
     - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
-    - composer install
+    - composer install --ignore-platform-req=ext-sodium # Rocky 8 use the external library
     - vendor/bin/phpcs
     - vendor/bin/phpmd . ansi phpmd.xml
     - php artisan key:generate

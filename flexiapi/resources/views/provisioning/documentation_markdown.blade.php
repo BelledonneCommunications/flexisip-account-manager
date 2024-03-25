@@ -2,6 +2,10 @@
 
 Provisioning is a core concept of the FlexiAPI - Linphone clients flow.
 
+## Authentication
+
+Please check the <a href="{{ route('api') }}#about--auth">About & Auth</a> section of the API.
+
 ## About
 
 To request the following URLs client MUST add a specific `x-linphone-provisioning` header.

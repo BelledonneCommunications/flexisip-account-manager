@@ -45,6 +45,20 @@ Or using a cookie:
 > …
 ```
 
+### Using a JWT token
+
+You can use a <a href="https://jwt.io/">JWT</a> token to authenticate on the API.
+
+To do so you MUST inject it as an `Authorization: Bearer` header and configure the API with the public key of the token emitter.
+
+```
+> GET /api/{endpoint}
+> Authorization: Bearer {your-jwt-token}
+> …
+```
+
+The API will then check if the token was signed properly, is still valid and authenticate a user that is actually available in the system.
+
 ### Using DIGEST
 
 To discover the available hashing algorythm you MUST send an unauthenticated request to one of the restricted endpoints.<br />

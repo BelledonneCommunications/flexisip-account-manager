@@ -2,6 +2,12 @@ rocky8-package:
   extends: .package
   image: gitlab.linphone.org:4567/bc/public/docker/rocky8-php:$ROCKY_8_IMAGE_VERSION
   script:
+    # We install this dependency only for the pipeline
+    - dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.rpm
+    - dnf -y module reset php
+    - dnf -y module enable php:remi-8.0
+    - dnf -y update php\*
+    - dnf -y install php-sodium
     - make rpm-el8
 
 rocky9-package:

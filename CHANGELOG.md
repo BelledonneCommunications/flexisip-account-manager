@@ -10,6 +10,7 @@ v1.5
 - FIX FLEXIAPI-146 Allow users to manage their own devices
 - Fix FLEXIAPI-145 Put back the 'code' parameter as an alias for the 'confirmation_key' for the activateEmail and activatePhone endpoints
 - Fix FLEXIAPI-144 Introduce APP_FLEXISIP_PUSHER_FIREBASE_KEYSMAP as a replacement for APP_FLEXISIP_PUSHER_FIREBASE_KEY
+- Fix FLEXIAPI-143 JWT Authentication layer on the API
 - Fix FLEXIAPI-142 PUT /accounts endpoint doesn't allow overiding values anymore
 - Fix FLEXIAPI-140 Fix the display_name attribute in the Vcard4 render
 - Fix FLEXIAPI-139 Refactor the email and phone API documentation

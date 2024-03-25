@@ -39,6 +39,10 @@ class AuthenticateDigestOrKey
      */
     public function handle($request, Closure $next)
     {
+        if ($request->bearerToken() && Auth::check()) {
+            return $next($request);
+        }
+
         // Key authentication
 
         if ($request->header('x-api-key') || $request->cookie('x-api-key')) {

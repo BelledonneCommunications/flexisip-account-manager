@@ -15,6 +15,7 @@
         "fakerphp/faker": "^1.23",
         "laravel/framework": "^9.52",
         "laravel/tinker": "^2.8",
+        "lcobucci/jwt": "^4.3",
         "namoshek/laravel-redis-sentinel": "^0.1",
         "ovh/ovh": "^3.2",
         "parsedown/laravel": "^1.2",

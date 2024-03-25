@@ -30,4 +30,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'jwt' => [
+        'rsa_public_key_pem' => env('JWT_RSA_PUBLIC_KEY_PEM'),
+      ],
+
 ];

@@ -56,7 +56,7 @@ Route::post('accounts/auth_token', 'Api\Account\AuthTokenController@store');
 
 Route::get('accounts/me/api_key/{auth_token}', 'Api\Account\ApiKeyController@generateFromToken')->middleware('cookie', 'cookie.encrypt');
 
-Route::group(['middleware' => ['auth.digest_or_key', 'auth.check_blocked']], function () {
+Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blocked']], function () {
     Route::get('accounts/auth_token/{auth_token}/attach', 'Api\Account\AuthTokenController@attach');
 
     Route::prefix('accounts/me')->group(function () {
