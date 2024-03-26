@@ -22,7 +22,6 @@ namespace Tests\Feature;
 use App\Account;
 use App\AccountCreationRequestToken;
 use App\AccountCreationToken;
-use App\Admin;
 use Tests\TestCase;
 use Carbon\Carbon;
 
@@ -86,10 +85,10 @@ class ApiAccountCreationTokenTest extends TestCase
 
     public function testAdminEndpoint()
     {
-        $admin = Admin::factory()->create();
-        $admin->account->generateApiKey();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateApiKey();
 
-        $response = $this->keyAuthenticated($admin->account)
+        $response = $this->keyAuthenticated($admin)
             ->json($this->method, $this->adminRoute)
             ->assertStatus(201);
 

@@ -39,6 +39,17 @@ class PasswordFactory extends Factory
         ];
     }
 
+    public function admin()
+    {
+        return $this->state(function (array $attributes) {
+            $account = Account::find($attributes['account_id']);
+            $account->admin = true;
+            $account->save();
+
+            return $attributes;
+        });
+    }
+
     public function sha256()
     {
         return $this->state(function (array $attributes) {
@@ -55,11 +66,9 @@ class PasswordFactory extends Factory
 
     public function clrtxt()
     {
-        return $this->state(function (array $attributes) {
-            return [
-                'password'   => 'testtest',
-                'algorithm'  => 'CLRTXT',
-            ];
-        });
+        return $this->state(fn (array $attributes) => [
+            'password'   => 'testtest',
+            'algorithm'  => 'CLRTXT',
+        ]);
     }
 }

@@ -23,7 +23,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
 use App\Account;
-use App\Admin;
 use App\ApiKey;
 use Carbon\Carbon;
 
@@ -78,14 +77,11 @@ class CreateAdminAccount extends Command
         $account->activated = true;
         $account->user_agent = 'Test';
         $account->ip_address = '0.0.0.0';
+        $account->admin = true;
 
         // Create an "old" account to prevent unwanted deletion on the test server
         $account->created_at = Carbon::now()->subYears(3);
         $account->save();
-
-        $admin = new Admin;
-        $admin->account_id = $account->id;
-        $admin->save();
 
         $apiKey = new ApiKey;
         $apiKey->account_id = $account->id;

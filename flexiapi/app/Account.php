@@ -35,7 +35,7 @@ class Account extends Authenticatable
     use HasFactory;
     use Compoships;
 
-    protected $with = ['passwords', 'admin', 'alias', 'activationExpiration', 'emailChangeCode', 'types', 'actions', 'dictionaryEntries'];
+    protected $with = ['passwords', 'alias', 'activationExpiration', 'emailChangeCode', 'types', 'actions', 'dictionaryEntries'];
     protected $hidden = ['alias', 'expire_time', 'confirmation_key', 'pivot', 'currentProvisioningToken', 'currentRecoveryCode', 'dictionaryEntries'];
     protected $appends = ['realm', 'phone', 'confirmation_key_expires', 'provisioning_token', 'dictionary'];
     protected $casts = [
@@ -417,25 +417,17 @@ class Account extends Authenticatable
         return $provisioningToken->token;
     }
 
-    public function getAdminAttribute(): bool
-    {
-        return ($this->admin()->exists());
-    }
-
-    public function setAdminAttribute(bool $isAdmin)
-    {
-        $this->admin()->delete();
-
-        if ($isAdmin) {
-            $admin = new Admin;
-            $admin->account_id = $this->id;
-            $admin->save();
-        }
-    }
-
     public function setRole(string $role)
     {
-        $this->setAdminAttribute($role == 'admin');
+        if ($role == 'end_user') {
+            $this->admin = false;
+        }
+
+        if ($role == 'admin') {
+            $this->admin = true;
+        }
+
+        $this->save();
     }
 
     public function hasTombstone()

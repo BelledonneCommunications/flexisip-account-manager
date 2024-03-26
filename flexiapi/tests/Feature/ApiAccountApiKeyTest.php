@@ -19,8 +19,8 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
 use App\Password;
+use Tests\TestCase;
 
 class ApiAccountApiKeyTest extends TestCase
 {

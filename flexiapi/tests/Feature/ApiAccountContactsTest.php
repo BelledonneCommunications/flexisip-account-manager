@@ -19,10 +19,10 @@
 
 namespace Tests\Feature;
 
-use App\Password;
+use App\Account;
 use App\AccountType;
-use App\Admin;
 use App\ContactsList;
+use App\Password;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -42,23 +42,23 @@ class ApiAccountContactTest extends TestCase
         $actionKey = '123';
         $actionCode = '123';
 
-        $admin = Admin::factory()->create();
-        $admin->account->generateApiKey();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateApiKey();
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $password1->account->id . '/contacts/' . $password2->account->id)
             ->assertStatus(200);
 
         $this->assertEquals(1, DB::table('contacts')->count());
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $password1->account->id . '/contacts/' . $password3->account->id)
             ->assertStatus(200);
 
         $this->assertEquals(2, DB::table('contacts')->count());
 
         // Type
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, '/api/account_types', [
                 'key' => $typeKey,
             ])
@@ -66,24 +66,24 @@ class ApiAccountContactTest extends TestCase
 
         $accountType = AccountType::first();
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, '/api/accounts/' . $password2->account->id . '/types/' . $accountType->id)
             ->assertStatus(200);
 
         // Action
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $password2->account->id . '/actions', [
                 'key' => $actionKey,
                 'code' => $actionCode
             ]);
 
         // Retry
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $password1->account->id . '/contacts/' . $password2->account->id)
             ->assertStatus(403);
         $this->assertEquals(2, DB::table('contacts')->count());
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $password1->account->id . '/contacts')
             ->assertJson([
                 [
@@ -136,14 +136,14 @@ class ApiAccountContactTest extends TestCase
             ]);
 
         // Remove
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->delete($this->route . '/' . $password1->account->id . '/contacts/' . $password2->account->id)
             ->assertStatus(200);
 
         $this->assertEquals(1, DB::table('contacts')->count());
 
         // Retry
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->delete($this->route . '/' . $password1->account->id . '/contacts/' . $password2->account->id)
             ->assertStatus(403);
         $this->assertEquals(1, DB::table('contacts')->count());
@@ -156,7 +156,7 @@ class ApiAccountContactTest extends TestCase
         // Create the Contacts list
         $contactsListsTitle = 'Contacts List title';
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->contactsListsRoute, [
                 'title' => $contactsListsTitle,
                 'description' => 'Description'
@@ -171,33 +171,33 @@ class ApiAccountContactTest extends TestCase
 
         $contactsList = ContactsList::first();
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->post($this->contactsListsRoute . '/' . $contactsList->id . '/contacts/' . $password1->account->id)
             ->assertStatus(200);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->post($this->contactsListsRoute . '/' . $contactsList->id . '/contacts/' . $password2->account->id)
             ->assertStatus(200);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->post($this->contactsListsRoute . '/' . $contactsList->id . '/contacts/' . $password3->account->id)
             ->assertStatus(200);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->post($this->contactsListsRoute . '/' . $contactsList->id . '/contacts/1234')
             ->assertStatus(404);
 
-        $this->keyAuthenticated($admin->account)
-            ->post($this->route . '/' . $admin->account->id . '/contacts_lists/' . $contactsList->id)
+        $this->keyAuthenticated($admin)
+            ->post($this->route . '/' . $admin->id . '/contacts_lists/' . $contactsList->id)
             ->assertStatus(200);
 
-        $this->keyAuthenticated($admin->account)
-            ->post($this->route . '/' . $admin->account->id . '/contacts_lists/' . $contactsList->id)
+        $this->keyAuthenticated($admin)
+            ->post($this->route . '/' . $admin->id . '/contacts_lists/' . $contactsList->id)
             ->assertStatus(403);
 
         // Get the contacts and vcards
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->get($this->route . '/me/contacts')
             ->assertStatus(200)
             ->assertJsonFragment([
@@ -213,7 +213,7 @@ class ApiAccountContactTest extends TestCase
                 'activated' => true
             ]);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->get($this->route . '/me/contacts/' . $password2->account->identifier)
             ->assertStatus(200)
             ->assertJsonFragment([
@@ -221,14 +221,14 @@ class ApiAccountContactTest extends TestCase
                 'activated' => true
             ]);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->get('/contacts/vcard')
             ->assertStatus(200)
             ->assertSeeText("FN:" . $password1->display_name)
             ->assertSeeText("FN:" . $password2->display_name)
             ->assertSeeText("FN:" . $password3->display_name);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->get('/contacts/vcard/' . $password2->account->identifier)
             ->assertStatus(200)
             ->assertSeeText("FN:" . $password2->display_name);

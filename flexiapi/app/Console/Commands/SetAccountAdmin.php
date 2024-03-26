@@ -22,7 +22,6 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 
 use App\Account;
-use App\Admin;
 
 class SetAccountAdmin extends Command
 {
@@ -48,9 +47,8 @@ class SetAccountAdmin extends Command
             return 1;
         }
 
-        $admin = new Admin;
-        $admin->account_id = $account->id;
-        $admin->save();
+        $account->admin = true;
+        $account->save();
 
         $this->info('Account '.$account->identifier.' is now admin');
 

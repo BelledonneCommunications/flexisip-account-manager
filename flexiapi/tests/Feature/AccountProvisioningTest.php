@@ -19,12 +19,10 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-
-use App\Password;
-use App\Admin;
-use App\Account as DBAccount;
+use App\Account;
 use App\AuthToken;
+use App\Password;
+use Tests\TestCase;
 
 class AccountProvisioningTest extends TestCase
 {
@@ -75,7 +73,7 @@ class AccountProvisioningTest extends TestCase
             ->assertStatus(400);
 
         // Ensure that we get the authentication password once
-        $response = $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($password->account)
             ->withHeaders([
                 'x-linphone-provisioning' => true,
             ])
@@ -86,7 +84,7 @@ class AccountProvisioningTest extends TestCase
             ->assertSee('contacts-vcard-list');
 
         // And then twice
-        $response = $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($password->account)
             ->withHeaders([
                 'x-linphone-provisioning' => true,
             ])
@@ -186,7 +184,7 @@ class AccountProvisioningTest extends TestCase
             ->assertSee('ha1');
 
         // Check if the account has been activated
-        $this->assertEquals(true, DBAccount::where('id', $password->account->id)->first()->activated);
+        $this->assertEquals(true, Account::where('id', $password->account->id)->first()->activated);
 
         // And then twice
         $response = $this->get($this->route . '/' . $password->account->provisioning_token)
@@ -197,10 +195,10 @@ class AccountProvisioningTest extends TestCase
         $provisioningToken = $password->account->provisioning_token;
 
         // Refresh the provisioning_token
-        $admin = Admin::factory()->create();
-        $admin->account->generateApiKey();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateApiKey();
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->withHeaders([
                 'x-linphone-provisioning' => true,
             ])

@@ -99,6 +99,7 @@ class AccountService
             $account->activated = $request->has('activated') ? (bool)$request->get('activated') : false;
             $account->domain = resolveDomain($request);
             $account->user_agent = $request->header('User-Agent') ?? config('app.name');
+            $account->admin = $request->has('admin') && (bool)$request->get('admin');
         }
 
         if ($account->activated == false) {
@@ -122,7 +123,6 @@ class AccountService
                 }
             }
 
-            $account->admin = $request->has('admin') && (bool)$request->get('admin');
             $account->phone = $request->get('phone');
         }
 

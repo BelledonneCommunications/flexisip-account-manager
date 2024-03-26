@@ -146,11 +146,10 @@ class AccountController extends Controller
         $account->dtmf_protocol = $request->get('dtmf_protocol');
         $account->domain = resolveDomain($request);
         $account->user_agent = $request->header('User-Agent') ?? config('app.name');
-
+        $account->admin = $request->has('admin') && (bool)$request->get('admin');
         $account->save();
 
         $account->updatePassword($request->get('password'), $request->get('algorithm'));
-        $account->admin = $request->has('admin') && (bool)$request->get('admin');
         $account->phone = $request->get('phone');
 
         // Full reload

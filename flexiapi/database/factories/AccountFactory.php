@@ -28,8 +28,8 @@ use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateContro
 
 class AccountFactory extends Factory
 {
-    protected $model = Account::class;
     use ComposhipsFactory;
+    protected $model = Account::class;
 
     public function definition()
     {
@@ -43,7 +43,15 @@ class AccountFactory extends Factory
             'ip_address' => $this->faker->ipv4,
             'created_at' => $this->faker->dateTimeBetween('-1 year'),
             'dtmf_protocol' => array_rand(Account::$dtmfProtocols),
-            'activated' => true
+            'activated' => true,
+            'admin' => false
         ];
+    }
+
+    public function admin()
+    {
+        return $this->state(fn (array $attributes) => [
+            'admin' => true,
+        ]);
     }
 }

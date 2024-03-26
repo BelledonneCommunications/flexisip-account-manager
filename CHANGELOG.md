@@ -16,6 +16,7 @@ v1.5
 - Fix FLEXIAPI-139 Refactor the email and phone API documentation
 - Fix FLEXIAPI-138 Add ip and user_agent columns to all the tokens and code tables, fill the values when required and display them in the admin
 - Fix FLEXIAPI-136 Refactor the Web Panel toggle mechanism and move it to a proper Middleware
+- Fix FLEXIAPI-135 Merge the admins table in the accounts table
 - Fix FLEXIAPI-134 Add a system to detect and block abusive accounts
 - Fix FLEXIAPI-133 Use the correct breadcrumb on create and fix a password
 - Fix FLEXIAPI-132 Refactor the Provisioning to remove proxy_default_values

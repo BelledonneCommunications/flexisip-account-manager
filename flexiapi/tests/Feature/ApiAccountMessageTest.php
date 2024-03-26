@@ -19,8 +19,7 @@
 
 namespace Tests\Feature;
 
-use App\Admin;
-
+use App\Password;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
@@ -31,8 +30,7 @@ class ApiAccountMessageTest extends TestCase
 
     public function testRequest()
     {
-        $admin = Admin::factory()->create();
-        $password = $admin->account->passwords()->first();
+        $password = Password::factory()->admin()->create();
         $password->account->generateApiKey();
 
         $this->keyAuthenticated($password->account)

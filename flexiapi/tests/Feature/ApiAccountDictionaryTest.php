@@ -20,7 +20,7 @@
 namespace Tests\Feature;
 
 use App\Password;
-use App\Admin;
+use App\Account;
 use Tests\TestCase;
 
 class ApiAccountDictionaryTest extends TestCase
@@ -33,8 +33,8 @@ class ApiAccountDictionaryTest extends TestCase
         $password = Password::factory()->create();
         $account = $password->account;
 
-        $admin = Admin::factory()->create();
-        $admin->account->generateApiKey();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateApiKey();
 
         $key = 'foo';
         $value = 'bar';
@@ -42,19 +42,19 @@ class ApiAccountDictionaryTest extends TestCase
         $secondKey = 'waza';
 
         // First key
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . ' /dictionary/' . $key, [
                 'value' => $value
             ])->assertStatus(201);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . ' /dictionary')
             ->assertStatus(200)
             ->assertJson([
                 $key => $value
             ]);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id)
             ->assertStatus(200)
             ->assertJson([
@@ -64,12 +64,12 @@ class ApiAccountDictionaryTest extends TestCase
             ]);
 
         // Update
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . ' /dictionary/' . $key, [
                 'value' => $newValue
             ])->assertStatus(200);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . ' /dictionary')
             ->assertStatus(200)
             ->assertJson([
@@ -77,12 +77,12 @@ class ApiAccountDictionaryTest extends TestCase
             ]);
 
         // Second key
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . ' /dictionary/' . $secondKey, [
                 'value' => $newValue
             ])->assertStatus(201);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . ' /dictionary')
             ->assertStatus(200)
             ->assertJson([
@@ -91,11 +91,11 @@ class ApiAccountDictionaryTest extends TestCase
             ]);
 
         // Delete
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->delete($this->route . '/' . $account->id . ' /dictionary/' . $key)
             ->assertStatus(200);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . ' /dictionary')
             ->assertStatus(200)
             ->assertJson([

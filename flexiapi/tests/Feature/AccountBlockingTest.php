@@ -19,9 +19,8 @@
 
 namespace Tests\Feature;
 
-use App\Admin;
+use App\Account;
 use App\Password;
-
 use Tests\TestCase;
 
 class AccountBlockingTest extends TestCase
@@ -52,20 +51,20 @@ class AccountBlockingTest extends TestCase
         $password = Password::factory()->create();
         $password->account->generateApiKey();
 
-        $admin = Admin::factory()->create();
-        $admin->account->generateApiKey();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateApiKey();
 
         $this->keyAuthenticated($password->account)
             ->get($this->route . '/me')->assertStatus(200);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $password->account->id .'/block')
             ->assertStatus(200);
 
         $this->keyAuthenticated($password->account)
             ->get($this->route . '/me')->assertStatus(403);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $password->account->id .'/unblock')
             ->assertStatus(200);
 

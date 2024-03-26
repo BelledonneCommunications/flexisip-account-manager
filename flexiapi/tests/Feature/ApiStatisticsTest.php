@@ -20,7 +20,6 @@
 namespace Tests\Feature;
 
 use App\Account;
-use App\Admin;
 use App\StatisticsCallDevice;
 use App\StatisticsMessageDevice;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -35,8 +34,8 @@ class ApiStatisticsTest extends TestCase
 
     public function testMessages()
     {
-        $admin = Admin::factory()->create();
-        $admin->account->generateApiKey();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateApiKey();
 
         $id = '1234';
         $fromUsername = 'username';
@@ -47,7 +46,7 @@ class ApiStatisticsTest extends TestCase
             'domain' => $fromDomain,
         ]);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json('POST', $this->routeMessages, [
                 'id' => $id,
                 'from' => $fromUsername . '@' . $fromDomain,
@@ -60,7 +59,7 @@ class ApiStatisticsTest extends TestCase
             'id' => $id
         ]);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json('POST', $this->routeMessages, [
                 'id' => $id,
                 'from' => $this->faker->email(),
@@ -69,7 +68,7 @@ class ApiStatisticsTest extends TestCase
             ])
             ->assertStatus(400);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json('POST', $this->routeMessages, [
                 'id' => $id,
                 'from' => $this->faker->email(),
@@ -89,14 +88,14 @@ class ApiStatisticsTest extends TestCase
         $newReceivedAt = $this->faker->iso8601();
         $newLastStatus = 201;
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json('PATCH', $this->routeMessages . '/' . $id . '/to/' . $to . ' /devices/' . $device, [
                 'last_status' => $lastStatus,
                 'received_at' => $receivedAt
             ])
             ->assertStatus(201);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json('PATCH', $this->routeMessages . '/' . $id . '/to/' . $to . ' /devices/' . $device, [
                 'last_status' => $newLastStatus,
                 'received_at' => $newReceivedAt
@@ -109,7 +108,7 @@ class ApiStatisticsTest extends TestCase
             'last_status' => $newLastStatus
         ]);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json('PATCH', $this->routeMessages . '/' . $id . '/to/' . $this->faker->email() . ' /devices/' . $this->faker->uuid(), [
                 'last_status' => $newLastStatus,
                 'received_at' => $newReceivedAt
@@ -128,8 +127,8 @@ class ApiStatisticsTest extends TestCase
 
     public function testCalls()
     {
-        $admin = Admin::factory()->create();
-        $admin->account->generateApiKey();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateApiKey();
 
         $id = '1234';
         $fromUsername = 'username';
@@ -142,7 +141,7 @@ class ApiStatisticsTest extends TestCase
             'domain' => $fromDomain,
         ]);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json('POST', $this->routeCalls, [
                 'id' => $id,
                 'from' => $fromUsername . '@' . $fromDomain,
@@ -155,7 +154,7 @@ class ApiStatisticsTest extends TestCase
             'id' => $id
         ]);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json('POST', $this->routeCalls, [
                 'id' => $id,
                 'from' => $fromUsername . '@' . $fromDomain,
@@ -172,7 +171,7 @@ class ApiStatisticsTest extends TestCase
         $rangAt = $this->faker->iso8601();
         $newRangAt = $this->faker->iso8601();
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json('PATCH', $this->routeCalls . '/' . $id . '/devices/' . $device, [
                 'rang_at' => $rangAt,
                 'invite_terminated' => [
@@ -182,7 +181,7 @@ class ApiStatisticsTest extends TestCase
             ])
             ->assertStatus(201);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json('PATCH', $this->routeCalls . '/' . $id . '/devices/' . $device, [
                 'rang_at' => $newRangAt,
                 'invite_terminated' => [
@@ -192,7 +191,7 @@ class ApiStatisticsTest extends TestCase
             ])
             ->assertStatus(200);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json('PATCH', $this->routeCalls . '/' . $id . '/devices/' . $device, [
                 'invite_terminated' => [
                     'state' => 'declined'
@@ -200,7 +199,7 @@ class ApiStatisticsTest extends TestCase
             ])
             ->assertStatus(422);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json('PATCH', $this->routeCalls . '/' . $id . '/devices/' . $device, [
                 'rang_at' => $this->faker->iso8601()
             ])
@@ -212,7 +211,7 @@ class ApiStatisticsTest extends TestCase
 
         $endedAt = $this->faker->iso8601();
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json('PATCH', $this->routeCalls . '/' . $id, [
                 'ended_at' => $endedAt
             ])

@@ -21,8 +21,7 @@ namespace Tests\Feature;
 
 use App\Password;
 use App\AccountType;
-use App\Admin;
-
+use App\Account;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -33,10 +32,10 @@ class ApiAccountTypeTest extends TestCase
 
     public function testCreate()
     {
-        $admin = Admin::factory()->create();
-        $admin->account->generateApiKey();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateApiKey();
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'key' => 'phone',
             ])
@@ -45,7 +44,7 @@ class ApiAccountTypeTest extends TestCase
         $this->assertEquals(1, AccountType::count());
 
         // Same key
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'key' => 'phone',
             ])
@@ -53,18 +52,18 @@ class ApiAccountTypeTest extends TestCase
             ->assertStatus(422);
 
         // Missing key
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [])
             ->assertStatus(422);
 
         // Invalid key
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'key' => 'Abc1234',
             ])
             ->assertStatus(422);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->get($this->route)
             ->assertJson([
                 [
@@ -75,10 +74,10 @@ class ApiAccountTypeTest extends TestCase
 
     public function testDelete()
     {
-        $admin = Admin::factory()->create();
-        $admin->account->generateApiKey();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateApiKey();
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'key' => 'phone',
             ])
@@ -87,7 +86,7 @@ class ApiAccountTypeTest extends TestCase
         $this->assertEquals(1, AccountType::count());
         $accountType = AccountType::first();
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->delete($this->route . '/' . $accountType->id)
             ->assertStatus(200);
 
@@ -96,10 +95,10 @@ class ApiAccountTypeTest extends TestCase
 
     public function testUpdate()
     {
-        $admin = Admin::factory()->create();
-        $admin->account->generateApiKey();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateApiKey();
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'key' => 'phone',
             ])
@@ -108,13 +107,13 @@ class ApiAccountTypeTest extends TestCase
         $this->assertEquals(1, AccountType::count());
         $accountType = AccountType::first();
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json('PUT', $this->route . '/' . $accountType->id, [
                 'key' => 'door',
             ])
             ->assertStatus(200);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->get($this->route)
             ->assertJson([
                 [
@@ -125,10 +124,10 @@ class ApiAccountTypeTest extends TestCase
 
     public function testAccountAddType()
     {
-        $admin = Admin::factory()->create();
-        $admin->account->generateApiKey();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateApiKey();
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'key' => 'phone',
             ])
@@ -141,15 +140,15 @@ class ApiAccountTypeTest extends TestCase
         $accountType = AccountType::first();
         $password = Password::factory()->create();
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, '/api/accounts/' . $password->account->id . '/types/' . $accountType->id)
             ->assertStatus(200);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, '/api/accounts/' . $password->account->id . '/types/' . $accountType->id)
             ->assertStatus(403);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->get('/api/accounts/' . $password->account->id)
             ->assertJson([
                 'types' => [
@@ -161,14 +160,14 @@ class ApiAccountTypeTest extends TestCase
             ]);
 
         // Remove
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->delete('/api/accounts/' . $password->account->id . '/types/' . $accountType->id)
             ->assertStatus(200);
 
         $this->assertEquals(0, DB::table('account_account_type')->count());
 
         // Retry
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->delete('/api/accounts/' . $password->account->id . '/types/' . $accountType->id)
             ->assertStatus(403);
         $this->assertEquals(0, DB::table('account_account_type')->count());

@@ -19,10 +19,9 @@
 
 namespace Tests\Feature;
 
-use App\Password;
+use App\Account;
 use App\AccountAction;
-use App\Admin;
-
+use App\Password;
 use Tests\TestCase;
 
 class ApiAccountActionTest extends TestCase
@@ -34,10 +33,10 @@ class ApiAccountActionTest extends TestCase
     {
         $password = Password::factory()->create();
 
-        $admin = Admin::factory()->create();
-        $admin->account->generateApiKey();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateApiKey();
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
                 'key' => '123',
                 'code' => '123'
@@ -47,21 +46,21 @@ class ApiAccountActionTest extends TestCase
         $this->assertEquals(1, AccountAction::count());
 
         // Missing key
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
         ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
             'code' => '123'
         ])
         ->assertStatus(422);
 
         // Invalid key
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
         ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
             'key' => 'Abc1234',
             'code' => '123'
         ])
         ->assertStatus(422);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->get($this->route.'/'.$password->account->id.'/actions')
             ->assertJson([
                 [
@@ -74,18 +73,18 @@ class ApiAccountActionTest extends TestCase
         $password->account->dtmf_protocol = null;
         $password->account->save();
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
         ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
             'key' => 'abc1234',
             'code' => '123'
         ])
         ->assertStatus(403);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->get($this->route.'/'.$password->account->id.'/actions')
             ->assertStatus(403);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->get($this->route.'/'.$password->account->id)
             ->assertStatus(200)
             ->assertJsonPath('actions', []);
@@ -95,10 +94,10 @@ class ApiAccountActionTest extends TestCase
     {
         $password = Password::factory()->create();
 
-        $admin = Admin::factory()->create();
-        $admin->account->generateApiKey();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateApiKey();
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
                 'key' => '123',
                 'code' => '123'
@@ -108,7 +107,7 @@ class ApiAccountActionTest extends TestCase
         $this->assertEquals(1, AccountAction::count());
         $accountAction = AccountAction::first();
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->delete($this->route.'/'.$password->account->id.'/actions/'.$accountAction->id)
             ->assertStatus(200);
 
@@ -119,10 +118,10 @@ class ApiAccountActionTest extends TestCase
     {
         $password = Password::factory()->create();
 
-        $admin = Admin::factory()->create();
-        $admin->account->generateApiKey();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateApiKey();
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
                 'key' => '123',
                 'code' => '123'
@@ -132,14 +131,14 @@ class ApiAccountActionTest extends TestCase
         $this->assertEquals(1, AccountAction::count());
         $accountAction = AccountAction::first();
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->json('PUT', $this->route.'/'.$password->account->id.'/actions/'.$accountAction->id, [
                 'key' => '123',
                 'code' => 'abc'
             ])
             ->assertStatus(200);
 
-        $this->keyAuthenticated($admin->account)
+        $this->keyAuthenticated($admin)
             ->get($this->route.'/'.$password->account->id.'/actions')
             ->assertJson([
                 [
