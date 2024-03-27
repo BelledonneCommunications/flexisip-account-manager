@@ -77,7 +77,6 @@ class AccountContactController extends Controller
 
         $account->contacts()->detach($contact->id);
 
-        $request->session()->flash('success', 'Type successfully removed');
         Log::channel('events')->info('Web Admin: Account contact removed', ['id' => $account->identifier, 'contact' => $contact->identifier]);
 
         return redirect()->route('admin.account.edit', $account);

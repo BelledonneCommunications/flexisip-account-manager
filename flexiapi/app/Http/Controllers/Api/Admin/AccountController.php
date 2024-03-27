@@ -27,10 +27,8 @@ use App\Account;
 use App\AccountTombstone;
 use App\AccountType;
 use App\ContactsList;
-use App\Http\Requests\CreateAccountRequest;
-use App\Http\Requests\CreateAccountWithoutUsernamePhoneCheck;
-use App\Http\Requests\UpdateAccountRequest;
-use App\Rules\PasswordAlgorithm;
+use App\Http\Requests\Account\Create\Api\AsAdminRequest;
+use App\Http\Requests\Account\Update\Api\AsAdminRequest as ApiAsAdminRequest;
 use App\Services\AccountService;
 
 class AccountController extends Controller
@@ -55,7 +53,7 @@ class AccountController extends Controller
         return Account::where('email', $email)->firstOrFail();
     }
 
-    public function destroy($accountId)
+    public function destroy(Request $request, int $accountId)
     {
         $account = Account::findOrFail($accountId);
 
@@ -66,9 +64,9 @@ class AccountController extends Controller
             $tombstone->save();
         }
 
-        Log::channel('events')->info('API Admin: Account destroyed', ['id' => $account->identifier]);
+        (new AccountService)->destroy($request, $accountId);
 
-        $account->delete();
+        Log::channel('events')->info('API Admin: Account destroyed', ['id' => $account->identifier]);
     }
 
     public function activate(int $accountId)
@@ -126,34 +124,14 @@ class AccountController extends Controller
         return $account->makeVisible(['provisioning_token']);
     }
 
-    public function store(CreateAccountWithoutUsernamePhoneCheck $request)
+    public function store(AsAdminRequest $request)
     {
-        return (new AccountService)->store($request, asAdmin: true)->makeVisible(['confirmation_key', 'provisioning_token']);
+        return (new AccountService)->store($request)->makeVisible(['confirmation_key', 'provisioning_token']);
     }
 
-    public function update(UpdateAccountRequest $request, int $accountId)
+    public function update(ApiAsAdminRequest $request, int $accountId)
     {
-        $request->validate([
-            'algorithm' => ['required', new PasswordAlgorithm],
-            'admin' => 'boolean|nullable',
-            'activated' => 'boolean|nullable'
-        ]);
-
-        $account = Account::findOrFail($accountId);
-        $account->username = $request->get('username');
-        $account->email = $request->get('email');
-        $account->display_name = $request->get('display_name');
-        $account->dtmf_protocol = $request->get('dtmf_protocol');
-        $account->domain = resolveDomain($request);
-        $account->user_agent = $request->header('User-Agent') ?? config('app.name');
-        $account->admin = $request->has('admin') && (bool)$request->get('admin');
-        $account->save();
-
-        $account->updatePassword($request->get('password'), $request->get('algorithm'));
-        $account->phone = $request->get('phone');
-
-        // Full reload
-        $account = Account::withoutGlobalScopes()->find($account->id);
+        $account = (new AccountService)->update($request, $accountId);
 
         Log::channel('events')->info('API Admin: Account updated', ['id' => $account->identifier]);
 

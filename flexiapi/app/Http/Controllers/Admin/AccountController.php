@@ -22,12 +22,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
 
 use App\Account;
 use App\ContactsList;
-use App\Http\Requests\CreateAccountWithoutUsernamePhoneCheck;
+use App\Http\Requests\Account\Create\Web\AsAdminRequest;
+use App\Http\Requests\Account\Update\Web\AsAdminRequest as WebAsAdminRequest;
 use App\Http\Requests\UpdateAccountRequest;
+use App\Services\AccountService;
 
 class AccountController extends Controller
 {
@@ -79,30 +80,9 @@ class AccountController extends Controller
         ]);
     }
 
-    public function store(CreateAccountWithoutUsernamePhoneCheck $request)
+    public function store(AsAdminRequest $request)
     {
-        $request->validate([
-            'password' => 'confirmed'
-        ]);
-
-        $account = new Account;
-        $account->username = $request->get('username');
-        $account->email = $request->get('email');
-        $account->display_name = $request->get('display_name');
-        $account->domain = resolveDomain($request);
-        $account->ip_address = $request->ip();
-        $account->created_at = Carbon::now();
-        $account->user_agent = config('app.name');
-        $account->dtmf_protocol = $request->get('dtmf_protocol');
-        $account->activated = $request->get('activated') == 'true';
-        $account->blocked = $request->get('blocked') == 'true';
-        $account->save();
-
-        $account->phone = $request->get('phone');
-        $account->updatePassword($request->get('password'));
-
-        $account->refresh();
-        $account->setRole($request->get('role'));
+        $account = (new AccountService)->store($request);
 
         Log::channel('events')->info('Web Admin: Account created', ['id' => $account->identifier]);
 
@@ -122,27 +102,9 @@ class AccountController extends Controller
         ]);
     }
 
-    public function update(UpdateAccountRequest $request, $id)
+    public function update(WebAsAdminRequest $request, int $id)
     {
-        $request->validate([
-            'password' => 'confirmed',
-        ]);
-
-        $account = Account::findOrFail($id);
-        $account->email = $request->get('email');
-        $account->display_name = $request->get('display_name');
-        $account->dtmf_protocol = $request->get('dtmf_protocol');
-        $account->activated = $request->get('activated') == 'true';
-        $account->blocked = $request->get('blocked') == 'true';
-        $account->save();
-
-        $account->phone = $request->get('phone');
-
-        if ($request->get('password')) {
-            $account->updatePassword($request->get('password'));
-        }
-
-        $account->setRole($request->get('role'));
+        $account = (new AccountService)->update($request, $id);
 
         Log::channel('events')->info('Web Admin: Account updated', ['id' => $account->identifier]);
 
@@ -172,9 +134,8 @@ class AccountController extends Controller
     public function destroy(Request $request)
     {
         $account = Account::findOrFail($request->get('account_id'));
-        $account->delete();
 
-        $request->session()->flash('success', 'Account successfully destroyed');
+        (new AccountService)->destroy($request, $request->get('account_id'));
 
         Log::channel('events')->info('Web Admin: Account deleted', ['id' => $account->identifier]);
 

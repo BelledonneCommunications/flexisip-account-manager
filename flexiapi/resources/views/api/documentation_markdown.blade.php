@@ -310,16 +310,17 @@ JSON parameters:
 ### `PUT /accounts/{id}`
 <span class="badge badge-warning">Admin</span>
 
-Update an existing account.
+Update an existing account. Ensure to resend all the parameters to not reset them.
 
 JSON parameters:
 
 * `username` unique username, minimum 6 characters
+* `domain` **not configurable by default**. Only configurable if `APP_ADMINS_MANAGE_MULTI_DOMAINS` is set to `true` in the global configuration. Otherwise `APP_SIP_DOMAIN` is used.
 * `password` required minimum 6 characters
 * `algorithm` required, values can be `SHA-256` or `MD5`
 * `display_name` optional, string
 * `email` optional, must be an email, must be unique if `ACCOUNT_EMAIL_UNIQUE` is set to `true`
-* `admin` optional, a boolean, set to `false` by default, create an admin account
+* `admin` optional, a boolean, set to `false` by default
 * `phone` optional, a phone number, set a phone number to the account
 * `dtmf_protocol` optional, values must be `sipinfo`, `sipmessage` or `rfc2833`
 

@@ -54,7 +54,6 @@ class AccountActionController extends Controller
         $accountAction->code = $request->get('code');
         $accountAction->save();
 
-        $request->session()->flash('success', 'Action successfully created');
         Log::channel('events')->info('Web Admin: Account action created', ['id' => $account->identifier, 'action' => $accountAction->key]);
 
         return redirect()->route('admin.account.edit', $accountAction->account);
@@ -90,7 +89,6 @@ class AccountActionController extends Controller
         $accountAction->code = $request->get('code');
         $accountAction->save();
 
-        $request->session()->flash('success', 'Action successfully updated');
         Log::channel('events')->info('Web Admin: Account action updated', ['id' => $account->identifier, 'action' => $accountAction->key]);
 
         return redirect()->route('admin.account.edit', $account);
@@ -115,8 +113,6 @@ class AccountActionController extends Controller
                         ->where('id', $actionId)
                         ->firstOrFail();
         $accountAction->delete();
-
-        $request->session()->flash('success', 'Action successfully destroyed');
 
         Log::channel('events')->info('Web Admin: Account action deleted', ['id' => $accountAction->account->identifier, 'action_id' => $accountAction->key]);
 

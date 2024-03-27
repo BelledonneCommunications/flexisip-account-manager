@@ -20,3 +20,29 @@ function accountServiceAccountCreatedHook(Request $request, Account $account)
 
     */
 }
+
+ /**
+  * @brief Run specific code if an account was edited
+  * @param Request $request
+  * @param Account $account
+  * @return void
+  */
+function accountServiceAccountEditedHook(Request $request, Account $account)
+{
+    /*
+
+    */
+}
+
+ /**
+  * @brief Run specific code if an account was destroed
+  * @param Request $request
+  * @param Account $account
+  * @return void
+  */
+function accountServiceAccountDestroyedHook(Request $request, Account $account)
+{
+    /*
+
+    */
+}

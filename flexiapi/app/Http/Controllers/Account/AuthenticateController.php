@@ -103,8 +103,6 @@ class AuthenticateController extends Controller
 
             $authToken->delete();
 
-            $request->session()->flash('success', 'Successfully authenticated');
-
             return redirect()->route('account.dashboard');
         }
 

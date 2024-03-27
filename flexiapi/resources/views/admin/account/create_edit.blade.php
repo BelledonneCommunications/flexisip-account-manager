@@ -255,5 +255,4 @@
             <a class="btn" href="{{ route('admin.account.account_type.create', $account) }}">Add</a>
         @endif
     @endif
-
 @endsection

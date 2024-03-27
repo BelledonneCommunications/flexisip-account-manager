@@ -120,11 +120,6 @@ class Account extends Authenticatable
         return $this->hasOne(ActivationExpiration::class);
     }
 
-    public function admin()
-    {
-        return $this->hasOne(Admin::class);
-    }
-
     public function alias()
     {
         return $this->hasOne(Alias::class);
@@ -430,11 +425,25 @@ class Account extends Authenticatable
         $this->save();
     }
 
-    public function hasTombstone()
+    public function hasTombstone(): bool
     {
         return AccountTombstone::where('username', $this->attributes['username'])
             ->where('domain', $this->attributes['domain'])
             ->exists();
+    }
+
+    public function createTombstone(): bool
+    {
+        if (!$this->hasTombstone()) {
+            $tombstone = new AccountTombstone();
+            $tombstone->username = $this->attributes['username'];
+            $tombstone->domain = $this->attributes['domain'];
+            $tombstone->save();
+
+            return true;
+        }
+
+        return false;
     }
 
     public function failedRecentRecovery(): bool

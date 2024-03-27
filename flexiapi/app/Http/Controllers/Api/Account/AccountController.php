@@ -29,11 +29,10 @@ use Carbon\Carbon;
 
 use App\Account;
 use App\AccountCreationToken;
-use App\AccountTombstone;
 use App\Alias;
 
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
-use App\Http\Requests\CreateAccountRequest;
+use App\Http\Requests\Account\Create\Api\Request as ApiRequest;
 use App\Libraries\OvhSMS;
 use App\Mail\RegisterConfirmation;
 
@@ -251,7 +250,7 @@ class AccountController extends Controller
         return $account;
     }
 
-    public function store(CreateAccountRequest $request)
+    public function store(ApiRequest $request)
     {
         return (new AccountService)->store($request);
     }
@@ -334,14 +333,10 @@ class AccountController extends Controller
 
     public function delete(Request $request)
     {
-        if (!$request->user()->hasTombstone()) {
-            $tombstone = new AccountTombstone;
-            $tombstone->username = $request->user()->username;
-            $tombstone->domain = $request->user()->domain;
-            $tombstone->save();
-        }
+        $request->user()->createTombstone();
 
-        return Account::where('id', $request->user()->id)
-            ->delete();
+        (new AccountService)->destroy($request, $request->user()->id);
+
+        return true;
     }
 }

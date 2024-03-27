@@ -23,8 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
-use App\AccountTombstone;
-use App\Http\Requests\CreateAccountRequest;
+use App\Http\Requests\Account\Create\Web\Request as WebRequest;
 use App\Services\AccountService;
 
 class AccountController extends Controller
@@ -48,11 +47,9 @@ class AccountController extends Controller
         ]);
     }
 
-    public function store(CreateAccountRequest $request)
+    public function store(WebRequest $request)
     {
-        $request->validate(['h-captcha-response' => captchaConfigured() ? 'required|HCaptcha' : '']);
-
-        $account = (new AccountService(api: false))->store($request);
+        $account = (new AccountService())->store($request);
 
         Auth::login($account);
 
@@ -78,14 +75,10 @@ class AccountController extends Controller
     {
         $request->validate(['identifier' => 'required|same:identifier_confirm']);
 
-        if (!$request->user()->hasTombstone()) {
-            $tombstone = new AccountTombstone();
-            $tombstone->username = $request->user()->username;
-            $tombstone->domain = $request->user()->domain;
-            $tombstone->save();
-        }
+        $request->user()->createTombstone();
 
-        $request->user()->delete();
+        (new AccountService)->destroy($request, $request->user()->id);
+
         Auth::logout();
 
         return redirect()->route('account.login');

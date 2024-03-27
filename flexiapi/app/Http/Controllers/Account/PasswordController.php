@@ -49,13 +49,11 @@ class PasswordController extends Controller
 
         if ($account->passwords()->count() > 0) {
             Log::channel('events')->info('Web: Password changed', ['id' => $account->identifier]);
-            $request->session()->flash('success', 'Password successfully changed');
 
             return redirect()->route('account.dashboard');
         }
 
         Log::channel('events')->info('Web: Password set for the first time', ['id' => $account->identifier]);
-        $request->session()->flash('success', 'Password successfully set. Your SIP account creation process is now finished.');
 
         if (!empty($account->email)) {
             Mail::to($account)->send(new ConfirmedRegistration($account));

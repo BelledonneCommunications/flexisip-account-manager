@@ -72,8 +72,6 @@ class AuthTokenController extends Controller
 
         $authToken->delete();
 
-        $request->session()->flash('success', 'Successfully authenticated');
-
         return redirect()->route('account.dashboard');
     }
 
@@ -87,8 +85,6 @@ class AuthTokenController extends Controller
         if (!$authToken->account_id) {
             $authToken->account_id = $request->user()->id;
             $authToken->save();
-
-            $request->session()->flash('success', 'External device successfully authenticated');
         }
 
         return redirect()->route('account.dashboard');

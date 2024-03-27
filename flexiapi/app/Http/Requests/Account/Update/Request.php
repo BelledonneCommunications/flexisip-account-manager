@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Account\Update;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 use App\Account;
 use App\Rules\BlacklistedUsername;
-use App\Rules\Dictionary;
 use App\Rules\IsNotPhoneNumber;
 use App\Rules\NoUppercase;
 use App\Rules\SIPUsername;
 use App\Rules\WithoutSpaces;
 
-class CreateAccountRequest extends FormRequest
+class Request extends FormRequest
 {
     public function authorize()
     {
@@ -31,22 +30,22 @@ class CreateAccountRequest extends FormRequest
                 new SIPUsername,
                 Rule::unique('accounts', 'username')->where(function ($query) {
                     $query->where('domain', resolveDomain($this));
-                }),
-                Rule::unique('accounts_tombstones', 'username')->where(function ($query) {
-                    $query->where('domain', resolveDomain($this));
-                }),
+                })->ignore($this->route('account_id'), 'id'),
                 'filled',
             ],
-            'dictionary' => [new Dictionary],
-            'password' => 'required|min:3',
-            'email' => config('app.account_email_unique')
-                ? 'nullable|email|unique:accounts,email'
-                : 'nullable|email',
+            'email' => [
+                'nullable',
+                'email',
+                config('app.account_email_unique') ? Rule::unique('accounts', 'email')->ignore($this->route('id')) : null
+            ],
+            'role' => 'in:admin,end_user',
             'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
             'phone' => [
                 'nullable',
-                'unique:aliases,alias',
-                'unique:accounts,username',
+                Rule::unique('accounts', 'username')->where(function ($query) {
+                    $query->where('domain', resolveDomain($this));
+                })->ignore($this->route('id'), 'id'),
+                Rule::unique('aliases', 'alias')->ignore($this->route('account_id'), 'account_id'),
                 new WithoutSpaces, 'starts_with:+'
             ]
         ];

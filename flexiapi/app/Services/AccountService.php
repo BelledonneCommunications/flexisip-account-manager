@@ -24,8 +24,9 @@ use App\AccountCreationToken;
 use App\ActivationExpiration;
 use App\Alias;
 use App\EmailChangeCode;
-use App\Http\Requests\CreateAccountRequest;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+use App\Http\Requests\Account\Create\Request as CreateRequest;
+use App\Http\Requests\Account\Update\Request as UpdateRequest;
 use App\Libraries\OvhSMS;
 use App\Mail\NewsletterRegistration;
 use App\Mail\RecoverByCode;
@@ -33,8 +34,6 @@ use App\Mail\RegisterValidation;
 use App\PhoneChangeCode;
 use Illuminate\Support\Facades\Log;
 
-use App\Rules\AccountCreationToken as RulesAccountCreationToken;
-use App\Rules\PasswordAlgorithm;
 use App\Rules\WithoutSpaces;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
@@ -57,33 +56,8 @@ class AccountService
     /**
      * Account creation
      */
-    public function store(CreateAccountRequest $request, bool $asAdmin = false): Account
+    public function store(CreateRequest $request): Account
     {
-        $rules = [];
-        $rules['password'] = 'confirmed';
-        $rules['email'] = 'confirmed';
-        $rules['terms'] = 'accepted';
-
-        if ($this->api) {
-            $rules = [];
-            $rules['account_creation_token'] = ['required', new RulesAccountCreationToken()];
-
-            if ($asAdmin) {
-                $rules = [];
-                $rules['algorithm'] = ['required', new PasswordAlgorithm()];
-                $rules['admin'] = 'boolean|nullable';
-                $rules['activated'] = 'boolean|nullable';
-                $rules['confirmation_key_expires'] = [
-                    'date_format:Y-m-d H:i:s',
-                    'nullable',
-                ];
-            }
-        }
-
-
-
-        $request->validate($rules);
-
         $account = new Account();
         $account->username = $request->get('username');
         $account->activated = false;
@@ -93,7 +67,7 @@ class AccountService
         $account->user_agent = config('app.name');
         $account->dtmf_protocol = $request->get('dtmf_protocol');
 
-        if ($asAdmin) {
+        if ($request->asAdmin) {
             $account->email = $request->get('email');
             $account->display_name = $request->get('display_name');
             $account->activated = $request->has('activated') ? (bool)$request->get('activated') : false;
@@ -108,7 +82,7 @@ class AccountService
 
         $account->save();
 
-        if ($asAdmin) {
+        if ($request->asAdmin) {
             if ((!$request->has('activated') || !(bool)$request->get('activated'))
             && $request->has('confirmation_key_expires')) {
                 $actionvationExpiration = new ActivationExpiration();
@@ -128,18 +102,23 @@ class AccountService
 
         $account->updatePassword($request->get('password'), $request->get('algorithm'));
 
-        if ($this->api && !$asAdmin) {
+        if ($request->api && !$request->asAdmin) {
             $token = AccountCreationToken::where('token', $request->get('account_creation_token'))->first();
             $token->consume();
             $token->account_id = $account->id;
             $token->save();
+
+            Log::channel('events')->info('API: AccountCreationToken redeemed', ['token' => $request->get('account_creation_token')]);
         }
 
-        Log::channel('events')->info('API: AccountCreationToken redeemed', ['token' => $request->get('account_creation_token')]);
+        Log::channel('events')->info(
+            $request->asAdmin
+                ? 'Account Service as Admin: Account created'
+                : 'Account Service: Account created',
+            ['id' => $account->identifier]
+        );
 
-        Log::channel('events')->info($asAdmin ? 'Account Service as Admin: Account created' : 'Account Service: Account created', ['id' => $account->identifier]);
-
-        if (!$this->api) {
+        if (!$request->api) {
             if (!empty(config('app.newsletter_registration_address')) && $request->has('newsletter')) {
                 Mail::to(config('app.newsletter_registration_address'))->send(new NewsletterRegistration($account));
             }
@@ -150,6 +129,82 @@ class AccountService
         }
 
         return Account::withoutGlobalScopes()->find($account->id);
+    }
+
+    /**
+     * Account update
+     */
+    public function update(UpdateRequest $request, int $accountId): ?Account
+    {
+        $account = Account::findOrFail($accountId);
+
+        if ($request->asAdmin) {
+            $account->username = $request->get('username') ?? $account->username;
+            $account->domain = $request->has('domain') ? resolveDomain($request) : $account->domain;
+            $account->email = $request->get('email');
+            $account->display_name = $request->get('display_name');
+            $account->dtmf_protocol = $request->get('dtmf_protocol');
+            $account->user_agent = $request->header('User-Agent') ?? config('app.name');
+            $account->admin = $request->has('admin') && (bool)$request->get('admin');
+
+            if ($request->api && $request->has('admin')) {
+                $account->admin = (bool)$request->get('admin');
+            }
+
+            if (!$request->api && $request->has('role')) {
+                $account->setRole($request->get('role'));
+            }
+
+            if (!$request->api && $request->has('activated')) {
+                $account->activated = $request->get('activated') == 'true';
+            }
+
+            if (!$request->api && $request->has('blocked')) {
+                $account->blocked = $request->get('blocked') == 'true';
+            }
+
+            if ($request->get('password')) {
+                $account->updatePassword(
+                    $request->get('password'),
+                    $request->api ? $request->get('algorithm') : null
+                );
+            }
+
+            $account->save();
+
+            $account->phone = $request->get('phone');
+        }
+
+        Log::channel('events')->info(
+            $request->asAdmin
+                ? 'Account Service as Admin: Account updated'
+                : 'Account Service: Account updated',
+            ['id' => $account->identifier]
+        );
+
+        if (function_exists('accountServiceAccountEditedHook')) {
+            accountServiceAccountEditedHook($request, $account);
+        }
+
+        return Account::withoutGlobalScopes()->find($account->id);
+    }
+
+    /**
+     * Account destroy
+     */
+    public function destroy(Request $request, int $accountId)
+    {
+        $account = Account::findOrFail($accountId);
+        $account->delete();
+
+        Log::channel('events')->info(
+            'Account Service: Account destroyed',
+            ['id' => $account->identifier]
+        );
+
+        if (function_exists('accountServiceAccountDestroyedHook')) {
+            accountServiceAccountDestroyedHook($request, $account);
+        }
     }
 
     /**

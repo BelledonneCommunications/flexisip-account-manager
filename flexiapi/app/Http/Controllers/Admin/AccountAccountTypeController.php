@@ -53,7 +53,6 @@ class AccountAccountTypeController extends Controller
         $account->types()->detach($request->get('account_type_id'));
         $account->types()->attach($request->get('account_type_id'));
 
-        $request->session()->flash('success', 'Type successfully added');
         Log::channel('events')->info('Web Admin: Account type attached', ['id' => $account->identifier, 'type_id' => $request->get('account_type_id')]);
 
         return redirect()->route('admin.account.edit', $account);
@@ -65,7 +64,6 @@ class AccountAccountTypeController extends Controller
 
         $account->types()->detach($typeId);
 
-        $request->session()->flash('success', 'Type successfully removed');
         Log::channel('events')->info('Web Admin: Account type detached', ['id' => $account->identifier, 'type_id' => $request->get('account_type_id')]);
 
         return redirect()->route('admin.account.edit', $account);
