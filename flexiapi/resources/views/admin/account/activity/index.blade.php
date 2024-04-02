@@ -14,11 +14,40 @@
 
 @include('admin.account.parts.tabs')
 
-@if ($account->recoveryCodes->isNotEmpty())
+@if ($account->accountCreationToken)
+    <h3>Account Creation Token</h3>
     <table class="third">
         <thead>
             <tr>
-                <th>Recovery Codes</th>
+                <th>Code</th>
+                <th>Created</th>
+                <th>Used</th>
+                <th>IP</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr @if ($account->accountCreationToken->consumed()) class="disabled crossed" @endif>
+                <td>****</td>
+                <td>
+                    {{ $account->accountCreationToken->created_at }}
+                </td>
+                <td>
+                    {{ $account->accountCreationToken->created_at != $account->accountCreationToken->updated_at ? $account->accountCreationToken->updated_at : '-' }}
+                </td>
+                <td title="{{ $account->accountCreationToken->user_agent }}">
+                    {{ $account->accountCreationToken->ip ? $account->accountCreationToken->ip : '-' }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+@endif
+
+@if ($account->recoveryCodes->isNotEmpty())
+    <h3>Recovery Codes</h3>
+    <table class="third">
+        <thead>
+            <tr>
+                <th>Code</th>
                 <th>Created</th>
                 <th>Used</th>
                 <th>IP</th>
@@ -44,10 +73,11 @@
 @endif
 
 @if ($account->phoneChangeCodes->isNotEmpty())
+    <h3>Phone Change requests</h3>
     <table class="third">
         <thead>
             <tr>
-                <th>Phone Change requests</th>
+                <th>Phone</th>
                 <th>Created</th>
                 <th>Used</th>
                 <th>IP</th>
@@ -73,10 +103,11 @@
 @endif
 
 @if ($account->emailChangeCodes->isNotEmpty())
+    <h3>Email Change requests</h3>
     <table class="third">
         <thead>
             <tr>
-                <th>Email Change requests</th>
+                <th>Email</th>
                 <th>Created</th>
                 <th>Used</th>
                 <th>IP</th>
@@ -102,10 +133,11 @@
 @endif
 
 @if ($account->provisioningTokens->isNotEmpty())
+    <h3>Provisioning tokens</h3>
     <table class="third">
         <thead>
             <tr>
-                <th>Provisioning Tokens</th>
+                <th>Token</th>
                 <th>Created</th>
                 <th>Used</th>
                 <th>IP</th>

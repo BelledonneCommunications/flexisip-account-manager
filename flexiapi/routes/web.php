@@ -106,12 +106,14 @@ Route::group(['middleware' => 'web_panel_enabled'], function () {
             Route::post('/', 'store')->name('email.update');
         });
 
-        Route::prefix('phone')->controller(PhoneController::class)->group(function () {
-            Route::get('change', 'change')->name('phone.change');
-            Route::post('change', 'requestChange')->name('phone.request_change');
-            Route::get('validate', 'validateChange')->name('phone.validate');
-            Route::post('/', 'store')->name('phone.update');
-        });
+        if (config('app.phone_authentication')) {
+            Route::prefix('phone')->controller(PhoneController::class)->group(function () {
+                Route::get('change', 'change')->name('phone.change');
+                Route::post('change', 'requestChange')->name('phone.request_change');
+                Route::get('validate', 'validateChange')->name('phone.validate');
+                Route::post('/', 'store')->name('phone.update');
+            });
+        }
 
         Route::name('device.')->prefix('devices')->controller(DeviceController::class)->group(function () {
             Route::get('/', 'index')->name('index');

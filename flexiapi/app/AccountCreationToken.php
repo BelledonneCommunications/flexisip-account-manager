@@ -32,9 +32,19 @@ class AccountCreationToken extends Consommable
         return $this->hasOne(AccountCreationRequestToken::class, 'acc_creation_token_id');
     }
 
+    public function account()
+    {
+        return $this->belongsTo(Account::class);
+    }
+
     public function consume()
     {
         $this->used = true;
         $this->save();
+    }
+
+    public function consumed(): bool
+    {
+        return $this->used == true;
     }
 }

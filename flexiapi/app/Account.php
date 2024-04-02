@@ -247,6 +247,11 @@ class Account extends Authenticatable
         return $this->hasMany(ProvisioningToken::class)->latest();
     }
 
+    public function accountCreationToken()
+    {
+        return $this->hasOne(AccountCreationToken::class);
+    }
+
     public function authTokens()
     {
         return $this->hasMany(AuthToken::class);

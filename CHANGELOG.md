@@ -2,6 +2,7 @@
 
 v1.5
 ----
+- Fix FLEXIAPI-156 Disable the Phone change web form when PHONE_AUTHENTICATION is disabled
 - Fix FLEXIAPI-155 Add a new accountServiceAccountUpdatedHook and accountServiceAccountDeletedHook
 - Fix FLEXIAPI-153 Add phone and email to be changed in the Activity panel
 - Fix FLEXIAPI-151 Migrate to hCaptcha

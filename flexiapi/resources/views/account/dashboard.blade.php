@@ -17,15 +17,18 @@
             <a href="{{ route('account.email.change') }}">Change my current account email</a>
         </p>
 
-        <p>
-            <i class="material-symbols-outlined">call</i>
-            @if (!empty($account->phone))
-                {{ $account->phone }}
-            @else
-                No phone yet
-            @endif
-            <a href="{{ route('account.phone.change') }}">Change my current account phone</a>
-        </p>
+        @if (config('app.phone_authentication'))
+            <p>
+                <i class="material-symbols-outlined">call</i>
+                @if (!empty($account->phone))
+                    {{ $account->phone }}
+                @else
+                    No phone yet
+                @endif
+                <a href="{{ route('account.phone.change') }}">Change my current account phone</a>
+            </p>
+        @endif
+
         <p>
             <i class="material-symbols-outlined">devices</i>
             <a href="{{ route('account.device.index') }}">
