@@ -102,7 +102,7 @@ Create and return an `account_creation_request_token` that should then be valida
 
 ## Account Creation Tokens
 
-An `account_creation_token` is a unique token that allow the creation of a **unique** account.
+An `account_creation_token` is a unique token that allow the creation or the validation of a unique account.
 
 ### `POST /account_creation_tokens/send-by-push`
 <span class="badge badge-success">Public</span>
@@ -390,7 +390,9 @@ JSON parameters:
 ### `POST /accounts/me/phone/request`
 <span class="badge badge-info">User</span>
 
-Request a specific code by SMS
+Request a specific code by SMS.
+
+Will return `403` if the account doesn't have a validated <a href='#account-creation-tokens'>Account Creation Token</a> attached to it.
 
 JSON parameters:
 

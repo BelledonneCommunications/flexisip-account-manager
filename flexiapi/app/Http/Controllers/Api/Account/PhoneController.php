@@ -33,6 +33,10 @@ class PhoneController extends Controller
             return abort(403, 'Account blocked');
         }
 
+        if (!$request->user()->accountCreationToken?->consumed()) {
+            return abort(403, 'Account unvalidated');
+        }
+
         return (new AccountService)->requestPhoneChange($request);
     }
 

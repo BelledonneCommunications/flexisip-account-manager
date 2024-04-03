@@ -19,7 +19,7 @@
 
 namespace Tests\Feature;
 
-use App\Password;
+use App\Account;
 use App\PhoneChangeCode;
 use Tests\TestCase;
 
@@ -30,21 +30,33 @@ class ApiAccountPhoneChangeTest extends TestCase
 
     public function testRequest()
     {
-        $password = Password::factory()->create();
-        $password->account->generateApiKey();
+        $account = Account::factory()->withConsumedAccountCreationToken()->create();
+        $account->generateApiKey();
 
-        $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($account)
             ->json($this->method, $this->route.'/request', [
                 'phone' => 'blabla'
             ])
             ->assertStatus(422);
 
         // Send a SMS
-        /*$this->keyAuthenticated($password->account)
+        /*$this->keyAuthenticated($account)
             ->json($this->method, $this->route.'/request', [
                 'phone' => '+3312345678'
             ])
             ->assertStatus(200);*/
+    }
+
+    public function testUnvalidatedAccount()
+    {
+        $account = Account::factory()->create();
+        $account->generateApiKey();
+
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->route.'/request', [
+                'phone' => 'blabla'
+            ])
+            ->assertStatus(403);
     }
 
     public function testConfirmLongCode()

@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Awobaz\Compoships\Database\Eloquent\Factories\ComposhipsFactory;
 
 use App\Account;
+use App\AccountCreationToken;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 
 class AccountFactory extends Factory
@@ -53,5 +54,16 @@ class AccountFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'admin' => true,
         ]);
+    }
+
+    public function withConsumedAccountCreationToken()
+    {
+        return $this->state(fn (array $attributes) => [])->afterCreating(function (Account $account) {
+            $accountCreationToken = new AccountCreationToken;
+            $accountCreationToken->token = 'test_token';
+            $accountCreationToken->account_id = $account->id;
+            $accountCreationToken->used = true;
+            $accountCreationToken->save();
+        });
     }
 }

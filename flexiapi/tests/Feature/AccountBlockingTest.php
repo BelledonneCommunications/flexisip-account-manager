@@ -20,7 +20,6 @@
 namespace Tests\Feature;
 
 use App\Account;
-use App\Password;
 use Tests\TestCase;
 
 class AccountBlockingTest extends TestCase
@@ -30,17 +29,17 @@ class AccountBlockingTest extends TestCase
 
     public function testBlocking()
     {
-        $password = Password::factory()->create();
-        $password->account->generateApiKey();
+        $account = Account::factory()->withConsumedAccountCreationToken()->create();
+        $account->generateApiKey();
 
         config()->set('app.blocking_amount_events_authorized_during_period', 2);
 
-        $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($account)
             ->json($this->method, $this->route . '/me/phone/request', [
                 'phone' => '+331234'
             ])->assertStatus(200);
 
-        $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($account)
             ->json($this->method, $this->route . '/me/email/request', [
                 'email' => 'foo@bar.com'
             ])->assertStatus(403);
@@ -48,27 +47,27 @@ class AccountBlockingTest extends TestCase
 
     public function testAdminBlocking()
     {
-        $password = Password::factory()->create();
-        $password->account->generateApiKey();
+        $account = Account::factory()->create();
+        $account->generateApiKey();
 
         $admin = Account::factory()->admin()->create();
         $admin->generateApiKey();
 
-        $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($account)
             ->get($this->route . '/me')->assertStatus(200);
 
         $this->keyAuthenticated($admin)
-            ->json($this->method, $this->route . '/' . $password->account->id .'/block')
+            ->json($this->method, $this->route . '/' . $account->id .'/block')
             ->assertStatus(200);
 
-        $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($account)
             ->get($this->route . '/me')->assertStatus(403);
 
         $this->keyAuthenticated($admin)
-            ->json($this->method, $this->route . '/' . $password->account->id .'/unblock')
+            ->json($this->method, $this->route . '/' . $account->id .'/unblock')
             ->assertStatus(200);
 
-        $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($account)
             ->get($this->route . '/me')->assertStatus(200);
     }
 }
