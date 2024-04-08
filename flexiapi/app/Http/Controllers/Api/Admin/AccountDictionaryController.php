@@ -21,18 +21,17 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Account;
-use App\AccountDictionaryEntry;
 
 use Illuminate\Http\Request;
 
 class AccountDictionaryController extends Controller
 {
-    public function index(Request $request, int $accountId)
+    public function index(int $accountId)
     {
         return Account::findOrFail($accountId)->dictionary;
     }
 
-    public function show(Request $request, int $accountId, string $key)
+    public function show(int $accountId, string $key)
     {
         return Account::findOrFail($accountId)->dictionaryEntries()->where('key', $key)->first();
     }
@@ -46,7 +45,7 @@ class AccountDictionaryController extends Controller
         return Account::findOrFail($accountId)->setDictionaryEntry($key, $request->get('value'));
     }
 
-    public function destroy(Request $request, int $accountId, string $key)
+    public function destroy(int $accountId, string $key)
     {
         return Account::findOrFail($accountId)->dictionaryEntries()->where('key', $key)->delete();
     }

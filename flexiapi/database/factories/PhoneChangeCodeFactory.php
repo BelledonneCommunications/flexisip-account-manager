@@ -19,7 +19,7 @@
 
 namespace Database\Factories;
 
-use App\Password;
+use App\Account;
 use App\PhoneChangeCode;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -29,11 +29,11 @@ class PhoneChangeCodeFactory extends Factory
 
     public function definition()
     {
-        $password = Password::factory()->create();
-        $password->account->generateApiKey();
+        $account = Account::factory()->create();
+        $account->generateApiKey();
 
         return [
-            'account_id' => $password->account->id,
+            'account_id' => $account->id,
             'code'   => generatePin(),
             'phone'  => '+3312341234',
         ];
