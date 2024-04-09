@@ -83,12 +83,7 @@ class CreateAdminAccount extends Command
         $account->created_at = Carbon::now()->subYears(3);
         $account->save();
 
-        $apiKey = new ApiKey;
-        $apiKey->account_id = $account->id;
-        $apiKey->last_used_at = Carbon::now();
-        $apiKey->key = Str::random(10);
-        $apiKey->save();
-
+        $account->generateApiKey();
         $account->updatePassword($password);
 
         $this->info('Admin test account created: "' . $username . '@' . $domain . '" | Password: "' . $password . '" | API Key: "' . $apiKey->key . '"');

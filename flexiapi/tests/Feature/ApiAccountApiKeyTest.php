@@ -19,7 +19,10 @@
 
 namespace Tests\Feature;
 
+use App\Account;
+use App\ApiKey;
 use App\Password;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class ApiAccountApiKeyTest extends TestCase
@@ -51,6 +54,31 @@ class ApiAccountApiKeyTest extends TestCase
         $response2->assertStatus(200)
                   ->assertSee($password->account->apiKey->key)
                   ->assertPlainCookie('x-api-key', $password->account->apiKey->key);
+    }
+
+    public function testRequest()
+    {
+        $account = Account::factory()->create();
+        $account->generateApiKey();
+
+        $this->keyAuthenticated($account)
+            ->json($this->method, '/api/accounts/me')
+            ->assertStatus(200);
+
+        $this->keyAuthenticated($account)
+            ->json($this->method, '/api/accounts/me')
+            ->assertStatus(200);
+
+        $this->assertDatabaseHas('api_keys', [
+            'account_id' => $account->id,
+            'requests' => 2
+        ]);
+
+        DB::table('api_keys')->update(['ip' => 'no_localhost']);
+
+        $this->keyAuthenticated($account)
+            ->json($this->method, '/api/accounts/me')
+            ->assertStatus(401);
     }
 
     public function testAuthToken()

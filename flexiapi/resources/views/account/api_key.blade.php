@@ -7,7 +7,6 @@
 @endsection
 
 @section('content')
-
     <div class="large">
         <h2><i class="material-symbols-outlined">key</i>API Key</h2>
 
@@ -16,15 +15,21 @@
 
         <p>An unused key will expires after some times.</p>
 
+        @if ($account->apiKey)
+            <h3>Current Api Key</h3>
+            <form>
+                <div>
+                    <input type="text" readonly value="{{ $account->apiKey->key }}">
+                    <label>Key</label>
+                    <small>Can only be used from the following ip: {{ $account->apiKey->ip }} | {{ $account->apiKey->requests }} requests</small>
+                </div>
+            </form>
+        @endif
+
         <form method="POST" action="{{ route('account.api_key.update') }}" accept-charset="UTF-8">
             @csrf
             <div>
-                <input readonly placeholder="No key yet, press Generate"
-                    @if ($account->apiKey) value="{{ $account->apiKey->key }}" @endif>
-                <label>Key</label>
-            </div>
-            <div>
-                <button type="submit" class="btn btn-primary">Generate</button>
+                <button type="submit" class="btn btn-primary">@if ($account->apiKey)Refresh the current key @else Generate a new key @endif</button>
             </div>
         </form>
     </div>

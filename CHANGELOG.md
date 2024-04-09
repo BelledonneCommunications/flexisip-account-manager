@@ -7,6 +7,7 @@ v1.5
 - Fix FLEXIAPI-156 Disable the Phone change web form when PHONE_AUTHENTICATION is disabled
 - Fix FLEXIAPI-155 Add a new accountServiceAccountUpdatedHook and accountServiceAccountDeletedHook
 - Fix FLEXIAPI-153 Add phone and email to be changed in the Activity panel
+- Fix FLEXIAPI-152 API Key usage clarification
 - Fix FLEXIAPI-151 Migrate to hCaptcha
 - Fix FLEXIAPI-150 Use the same account_id parameter for both API and Web routes
 - Fix FLEXIAPI-149 Add a toggle to disable phone check on username for admin endpoints and forms

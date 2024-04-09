@@ -34,7 +34,7 @@ class ApiKeyController extends Controller
     public function update(Request $request)
     {
         $account = $request->user();
-        $account->generateApiKey();
+        $account->generateApiKey($request);
 
         return redirect()->back();
     }

@@ -116,7 +116,7 @@ pre {
     color: var(--second-7);
 }
 
-b {
+b, strong {
     font-weight: bold;
 }
 

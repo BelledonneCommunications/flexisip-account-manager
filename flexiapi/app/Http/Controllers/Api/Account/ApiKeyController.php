@@ -29,7 +29,7 @@ class ApiKeyController extends Controller
     public function generate(Request $request)
     {
         $account = $request->user();
-        $account->generateApiKey();
+        $account->generateApiKey($request);
 
         $account->refresh();
         Cookie::queue('x-api-key', $account->apiKey->key, config('app.api_key_expiration_minutes'));
@@ -37,12 +37,12 @@ class ApiKeyController extends Controller
         return $account->apiKey->key;
     }
 
-    public function generateFromToken(string $token)
+    public function generateFromToken(Request $request, string $token)
     {
         $authToken = AuthToken::where('token', $token)->valid()->firstOrFail();
 
         if ($authToken->account) {
-            $authToken->account->generateApiKey();
+            $authToken->account->generateApiKey($request);
 
             $authToken->account->refresh();
             Cookie::queue('x-api-key', $authToken->account->apiKey->key, config('app.api_key_expiration_minutes'));

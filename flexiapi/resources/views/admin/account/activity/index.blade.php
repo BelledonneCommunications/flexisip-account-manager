@@ -14,6 +14,40 @@
 
 @include('admin.account.parts.tabs')
 
+@if ($account->apiKey)
+    <h3>Api Key</h3>
+    <table class="third">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Created</th>
+                <th>Last usage</th>
+                <th>IP</th>
+                <th>Requests</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    {{ $account->apiKey->key }}
+                </td>
+                <td>
+                    {{ $account->apiKey->created_at }}
+                </td>
+                <td>
+                    {{ $account->apiKey->last_used_at }}
+                </td>
+                <td>
+                    {{ $account->apiKey->ip ?? '-' }}
+                </td>
+                <td>
+                    {{ $account->apiKey->requests }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+@endif
+
 @if ($account->accountCreationToken)
     <h3>Account Creation Token</h3>
     <table class="third">

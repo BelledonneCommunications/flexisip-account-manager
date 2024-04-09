@@ -26,6 +26,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
 use Closure;
+use Illuminate\Http\Request;
 use Validator;
 
 class AuthenticateDigestOrKey
@@ -37,7 +38,7 @@ class AuthenticateDigestOrKey
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         if ($request->bearerToken() && Auth::check()) {
             return $next($request);
@@ -50,8 +51,9 @@ class AuthenticateDigestOrKey
                 $query->withoutGlobalScopes();
             }])->where('key', $request->header('x-api-key') ?? $request->cookie('x-api-key'))->first();
 
-            if ($apiKey) {
+            if ($apiKey && ($apiKey->ip == null || $apiKey->ip == $request->ip())) {
                 $apiKey->last_used_at = Carbon::now();
+                $apiKey->requests = $apiKey->requests + 1;
                 $apiKey->save();
 
                 Auth::login($apiKey->account);

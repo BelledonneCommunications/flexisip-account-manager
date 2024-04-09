@@ -356,7 +356,7 @@ class Account extends Authenticatable
         return ($this->activationExpiration && $this->activationExpiration->isExpired());
     }
 
-    public function generateApiKey(): ApiKey
+    public function generateApiKey(?Request $request = null): ApiKey
     {
         $this->apiKey()->delete();
 
@@ -364,6 +364,7 @@ class Account extends Authenticatable
         $apiKey->account_id = $this->id;
         $apiKey->last_used_at = Carbon::now();
         $apiKey->key = Str::random(40);
+        $apiKey->ip = $request ? $request->ip() : '127.0.0.1';
         $apiKey->save();
 
         return $apiKey;

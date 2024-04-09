@@ -29,6 +29,8 @@ The endpoints are accessible using three different models:
 
 You can retrieve an API Key from @if (config('app.web_panel')) [your account panel]({{ route('account.login') }}) @else your account panel @endif or using <a href="#get-accountsmeapikey">the dedicated API endpoint</a>.
 
+**The generated API Key will be restricted to the IP that generates it and will be destroyed if not used after some times.**
+
 You can then use your freshly generated key by adding a new `x-api-key` header to your API requests:
 
 ```
