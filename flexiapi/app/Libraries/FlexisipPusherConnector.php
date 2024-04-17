@@ -47,7 +47,8 @@ class FlexisipPusherConnector
 
             foreach ($firebaseKeysmap as $map) {
                 if (str_contains($map, ':')) {
-                    list($id, $value) = explode(':', $map);
+                    //We put the explode limit to 2 to also support legacy firebase keys format (number:alphanum:alphanumsymb)
+                    list($id, $value) = explode(':', $map, 2);
                     $pusherFirebaseKeysmap[$id] = $value;
                 }
             }
