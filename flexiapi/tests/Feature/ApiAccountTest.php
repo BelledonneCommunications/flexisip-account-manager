@@ -23,7 +23,6 @@ use App\Account;
 use App\AccountCreationToken;
 use App\AccountTombstone;
 use App\ActivationExpiration;
-use App\Alias as AppAlias;
 use App\Password;
 use Carbon\Carbon;
 use Tests\TestCase;
@@ -687,22 +686,16 @@ class ApiAccountTest extends TestCase
             'activated' => true
         ]);
 
-        // Recover by alias
+        // Recover by phone
 
         $newConfirmationKey = '1345';
-
-        $password->account->confirmation_key = $newConfirmationKey;
-        $password->account->save();
-
         $phone = '+1234';
 
-        $alias = new AppAlias();
-        $alias->alias = $phone;
-        $alias->domain = $password->account->domain;
-        $alias->account_id = $password->account->id;
-        $alias->save();
+        $password->account->confirmation_key = $newConfirmationKey;
+        $password->account->phone = $phone;
+        $password->account->save();
 
-        $this->get($this->route . '/' . $phone . '@' . $alias->domain . '/recover/' . $newConfirmationKey)
+        $this->get($this->route . '/' . $phone . '@' . $password->account->domain . '/recover/' . $newConfirmationKey)
             ->assertJson(['passwords' => [[
                 'password' => $password->password,
                 'algorithm' => $password->algorithm
@@ -737,15 +730,10 @@ class ApiAccountTest extends TestCase
         $password = Password::factory()->create();
         $password->account->generateApiKey();
         $password->account->activated = false;
+        $password->account->phone = $phone;
         $password->account->save();
 
         config()->set('app.dangerous_endpoints', true);
-
-        $alias = new AppAlias();
-        $alias->alias = $phone;
-        $alias->domain = $password->account->domain;
-        $alias->account_id = $password->account->id;
-        $alias->save();
 
         $this->json($this->method, $this->route . '/recover-by-phone', [
             'phone' => $phone
@@ -792,9 +780,8 @@ class ApiAccountTest extends TestCase
 
         // Check the mixed username/phone resolution...
         $password->account->username = $phone;
+        $password->account->phone = null;
         $password->account->save();
-
-        $alias->delete();
 
         $this->get($this->route . '/' . $phone . '/info-by-phone')
             ->assertStatus(200)
@@ -929,11 +916,7 @@ class ApiAccountTest extends TestCase
 
         $this->assertDatabaseHas('accounts', [
             'username' => $phone,
-            'domain' => config('app.sip_domain')
-        ]);
-
-        $this->assertDatabaseHas('aliases', [
-            'alias' => $phone,
+            'phone' => $phone,
             'domain' => config('app.sip_domain')
         ]);
     }

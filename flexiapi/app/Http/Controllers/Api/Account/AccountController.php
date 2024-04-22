@@ -29,7 +29,6 @@ use Carbon\Carbon;
 
 use App\Account;
 use App\AccountCreationToken;
-use App\Alias;
 
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use App\Http\Requests\Account\Create\Api\Request as ApiRequest;
@@ -72,16 +71,16 @@ class AccountController extends Controller
             'phone' => ['required', new WithoutSpaces, 'starts_with:+']
         ]);
 
-        $alias = Alias::where('alias', $phone)->first();
-        $account = $alias
-            ? $alias->account
-            // Injecting the default sip domain to try to resolve the account
-            : Account::sip($phone . '@' . config('app.sip_domain'))->firstOrFail();
+        $account = Account::where('domain', config('app.sip_domain'))
+            ->where(function ($query) use ($phone) {
+                $query->where('username', $phone)
+                    ->orWhere('phone', $phone);
+            })->firstOrFail();
 
         return \response()->json([
             'activated' => $account->activated,
             'realm' => $account->realm,
-            'phone' => (bool)$alias
+            'phone' => (bool)$account->phone
         ]);
     }
 
@@ -116,7 +115,7 @@ class AccountController extends Controller
             'phone' => [
                 'required_without:email',
                 'required_without:username',
-                'unique:aliases,alias',
+                'unique:accounts,phone',
                 'unique:accounts,username',
                 new WithoutSpaces, 'starts_with:+'
             ],
@@ -152,12 +151,7 @@ class AccountController extends Controller
 
         // Send validation by phone
         if ($request->has('phone')) {
-            $alias = new Alias;
-            $alias->alias = $request->get('phone');
-            $alias->domain = config('app.sip_domain');
-            $alias->account_id = $account->id;
-            $alias->save();
-
+            $account->phone = $request->get('phone');
             $account->confirmation_key = generatePin();
             $account->save();
 
@@ -201,11 +195,7 @@ class AccountController extends Controller
             ]
         ]);
 
-        $alias = Alias::where('alias', $request->get('phone'))->first();
-        $account = $alias
-            ? $alias->account
-            : Account::sip($request->get('phone') . '@' . config('app.sip_domain'))->firstOrFail();
-
+        $account = Account::where('phone', $request->get('phone'))->first();
         $account->confirmation_key = generatePin();
         $account->save();
 
@@ -228,10 +218,13 @@ class AccountController extends Controller
     {
         if (!config('app.dangerous_endpoints')) return abort(404);
 
-        $alias = Alias::sip($sip)->first();
-        $account = $alias
-            ? $alias->account
-            : Account::sip($sip)->firstOrFail();
+        list($username, $domain) = explode('@', $sip);
+
+        $account = Account::where('domain', $domain)
+            ->where(function ($query) use ($username) {
+                $query->where('username', $username)
+                      ->orWhere('phone', $username);
+            })->firstOrFail();
 
         $confirmationKey = $account->confirmation_key;
         $account->confirmation_key = null;

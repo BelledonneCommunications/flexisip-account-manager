@@ -20,11 +20,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Account;
-use App\Alias;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\File;
 
@@ -114,8 +112,8 @@ class AccountImportController extends Controller
             }
         }
 
-        $existingPhones = Alias::whereIn('alias', $lines->pluck('phone')->all())
-            ->pluck('alias');
+        $existingPhones = Account::whereIn('phone', $lines->pluck('phone')->all())
+            ->pluck('phone');
 
         if ($existingPhones->isNotEmpty()) {
             $this->errors['Those phones numbers already exists'] = $existingPhones->join(', ', ' and ');

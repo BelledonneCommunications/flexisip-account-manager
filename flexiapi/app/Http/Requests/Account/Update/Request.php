@@ -45,7 +45,7 @@ class Request extends FormRequest
                 Rule::unique('accounts', 'username')->where(function ($query) {
                     $query->where('domain', resolveDomain($this));
                 })->ignore($this->route('id'), 'id'),
-                Rule::unique('aliases', 'alias')->ignore($this->route('account_id'), 'account_id'),
+                Rule::unique('accounts', 'phone')->ignore($this->route('account_id'), 'id'),
                 new WithoutSpaces, 'starts_with:+'
             ]
         ];

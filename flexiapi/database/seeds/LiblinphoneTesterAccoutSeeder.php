@@ -9,11 +9,10 @@ use Illuminate\Support\Facades\DB;
 /**
  * This seeder is only used for liblinphone related tests
  * The JSON MUST respect the following format. type: range requires a range object.
- * alias and passwords are optionnal.
+ * passwords is optionnal.
  * [
  *   {"type": "account", "id": <id>, "username": "<username>", "domain": "<domain>",
- *       "passwords": [{ "hash": "<hash>", "algorithm": "<algorithm>"}],
- *       "alias": { "alias": "<alias>", "domain": "<domain>"}
+ *       "passwords": [{ "hash": "<hash>", "algorithm": "<algorithm>"}]
  *   },
  *   {"type": "range", "id": "%id%", "username": "user_%usernamePostfix%", "domain": "<domain>",
  *       "iteration": 2000,
@@ -29,7 +28,6 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
     {
         $accounts = [];
         $passwords = [];
-        $aliases = [];
 
         foreach ($json as $element) {
             if ($element->type == 'account') {
@@ -55,17 +53,6 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
                             )
                         );
                     }
-                }
-
-                if (isset($element->alias)) {
-                    array_push(
-                        $aliases,
-                        $this->generateAliasArray(
-                            $element->id,
-                            $element->alias->alias,
-                            $element->alias->domain
-                        )
-                    );
                 }
             }
 
@@ -98,7 +85,6 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
         // And seed the fresh ones
         DB::table('accounts')->insert($accounts);
         DB::table('passwords')->insert($passwords);
-        DB::table('aliases')->insert($aliases);
     }
 
     private function generateAccountArray(
@@ -128,18 +114,6 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
             'account_id' => $accountId,
             'password' => $password,
             'algorithm' => $algorythm
-        ];
-    }
-
-    private function generateAliasArray(
-        int $accountId,
-        string $alias,
-        string $domain
-    ): array {
-        return [
-            'account_id' => $accountId,
-            'alias' => $alias,
-            'domain' => $domain
         ];
     }
 }

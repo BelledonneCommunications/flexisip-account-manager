@@ -35,9 +35,9 @@ class Account extends Authenticatable
     use HasFactory;
     use Compoships;
 
-    protected $with = ['passwords', 'alias', 'activationExpiration', 'emailChangeCode', 'types', 'actions', 'dictionaryEntries'];
-    protected $hidden = ['alias', 'expire_time', 'confirmation_key', 'pivot', 'currentProvisioningToken', 'currentRecoveryCode', 'dictionaryEntries'];
-    protected $appends = ['realm', 'phone', 'confirmation_key_expires', 'provisioning_token', 'dictionary'];
+    protected $with = ['passwords', 'activationExpiration', 'emailChangeCode', 'types', 'actions', 'dictionaryEntries'];
+    protected $hidden = ['expire_time', 'confirmation_key', 'pivot', 'currentProvisioningToken', 'currentRecoveryCode', 'dictionaryEntries'];
+    protected $appends = ['realm', 'confirmation_key_expires', 'provisioning_token', 'dictionary'];
     protected $casts = [
         'activated' => 'boolean',
     ];
@@ -84,9 +84,9 @@ class Account extends Authenticatable
     public function scopeSip($query, string $sip)
     {
         if (\str_contains($sip, '@')) {
-            list($usernane, $domain) = explode('@', $sip);
+            list($username, $domain) = explode('@', $sip);
 
-            return $query->where('username', $usernane)
+            return $query->where('username', $username)
                 ->where('domain', $domain);
         };
 
@@ -118,11 +118,6 @@ class Account extends Authenticatable
     public function activationExpiration()
     {
         return $this->hasOne(ActivationExpiration::class);
-    }
-
-    public function alias()
-    {
-        return $this->hasOne(Alias::class);
     }
 
     public function apiKey()
@@ -300,28 +295,6 @@ class Account extends Authenticatable
     public function getResolvedRealmAttribute()
     {
         return config('app.realm') ?? $this->domain;
-    }
-
-    public function getPhoneAttribute()
-    {
-        if ($this->alias) {
-            return $this->alias->alias;
-        }
-
-        return null;
-    }
-
-    public function setPhoneAttribute(?string $phone)
-    {
-        $this->alias()->delete();
-
-        if (!empty($phone)) {
-            $alias = new Alias;
-            $alias->alias = $phone;
-            $alias->domain = config('app.sip_domain');
-            $alias->account_id = $this->id;
-            $alias->save();
-        }
     }
 
     public function getConfirmationKeyExpiresAttribute()

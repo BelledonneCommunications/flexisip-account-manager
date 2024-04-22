@@ -45,7 +45,7 @@ class Request extends FormRequest
             'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
             'phone' => [
                 'nullable',
-                'unique:aliases,alias',
+                'unique:accounts,phone',
                 'unique:accounts,username',
                 new WithoutSpaces(), 'starts_with:+'
             ]

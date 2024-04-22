@@ -20,7 +20,6 @@
 namespace App\Http\Controllers\Account;
 
 use App\Account;
-use App\Alias;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\AccountService;
@@ -73,24 +72,16 @@ class RecoveryController extends Controller
 
             $account = $account->first();
 
-            // Try alias
             if (!$account) {
-                $alias = Alias::where('alias', $request->get('username'))->first();
-
-                if ($alias && $alias->account->email == $request->get('email')) {
-                    $account = $alias->account;
-                }
+                $account = Account::where('phone', $request->get('username'))
+                    ->where('email', $request->get('email'))
+                    ->first();
             }
         } elseif ($request->get('phone')) {
             $account = Account::where('username', $request->get('phone'))->first();
 
-            // Try alias
             if (!$account) {
-                $alias = Alias::where('alias', $request->get('phone'))->first();
-
-                if ($alias) {
-                    $account = $alias->account;
-                }
+                $account = Account::where('phone', $request->get('phone'))->first();
             }
         }
 

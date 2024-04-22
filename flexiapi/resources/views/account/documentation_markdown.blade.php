@@ -98,7 +98,7 @@ Administrators can create and edit accounts directly from the admin panel. Durin
 
 ### Delete an account
 
-The deletion of an account is definitive, all the database related data (password, aliases…) will be destroyed after the deletion.
+The deletion of an account is definitive, all the database related data (password…) will be destroyed after the deletion.
 
 ### Create, edit and delete account types
 

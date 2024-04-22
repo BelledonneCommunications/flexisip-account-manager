@@ -22,7 +22,6 @@ namespace App\Services;
 use App\Account;
 use App\AccountCreationToken;
 use App\ActivationExpiration;
-use App\Alias;
 use App\EmailChangeCode;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use App\Http\Requests\Account\Create\Request as CreateRequest;
@@ -98,6 +97,7 @@ class AccountService
             }
 
             $account->phone = $request->get('phone');
+            $account->save();
         }
 
         $account->updatePassword($request->get('password'), $request->get('algorithm'));
@@ -170,9 +170,8 @@ class AccountService
                 );
             }
 
-            $account->save();
-
             $account->phone = $request->get('phone');
+            $account->save();
         }
 
         Log::channel('events')->info(
@@ -214,7 +213,7 @@ class AccountService
     {
         $request->validate([
             'phone' => [
-                'required', 'unique:aliases,alias',
+                'required', 'unique:accounts,phone',
                 'unique:accounts,username',
                 new WithoutSpaces(), 'starts_with:+'
             ]
@@ -254,18 +253,11 @@ class AccountService
         $phoneChangeCode = $account->phoneChangeCode()->firstOrFail();
 
         if ($phoneChangeCode->code == $code) {
-            $account->alias()->delete();
-
-            $alias = new Alias();
-            $alias->alias = $phoneChangeCode->phone;
-            $alias->domain = config('app.sip_domain');
-            $alias->account_id = $account->id;
-            $alias->save();
-
-            Log::channel('events')->info('Account Service: Account phone changed using SMS', ['id' => $account->identifier]);
-
+            $account->phone = $phoneChangeCode->phone;
             $account->activated = true;
             $account->save();
+
+            Log::channel('events')->info('Account Service: Account phone changed using SMS', ['id' => $account->identifier]);
 
             $account->refresh();
 

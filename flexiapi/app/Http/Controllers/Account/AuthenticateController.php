@@ -25,7 +25,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 use App\Account;
-use App\Alias;
 use App\AuthToken;
 
 class AuthenticateController extends Controller
@@ -53,13 +52,8 @@ class AuthenticateController extends Controller
         $account = Account::where('username', $request->get('username'))
             ->first();
 
-        // Try alias
         if (!$account) {
-            $alias = Alias::where('alias', $request->get('username'))->first();
-
-            if ($alias) {
-                $account = $alias->account;
-            }
+            $account = Account::where('phone', $request->get('username'))->first();
         }
 
         if (!$account) {
