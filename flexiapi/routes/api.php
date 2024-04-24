@@ -17,6 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use App\Http\Controllers\Api\Account\VcardsStorageController;
 use App\Http\Controllers\Api\Admin\AccountActionController;
 use App\Http\Controllers\Api\Admin\AccountContactController;
 use App\Http\Controllers\Api\Admin\AccountController as AdminAccountController;
@@ -78,6 +79,8 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
 
         Route::get('contacts/{sip}', 'Api\Account\ContactController@show');
         Route::get('contacts', 'Api\Account\ContactController@index');
+
+        Route::apiResource('vcards-storage', VcardsStorageController::class);
     });
 
     Route::group(['middleware' => ['auth.admin']], function () {

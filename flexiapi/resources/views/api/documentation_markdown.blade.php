@@ -436,6 +436,41 @@ Return the user contacts.
 
 Return a user contact.
 
+## Account vCards storage
+
+### `POST /accounts/me/vcards-storage`
+<span class="badge badge-info">User</span>
+
+Store a vCard.
+
+JSON parameters:
+
+* `vcard`, mandatory, a valid vCard having a mandatory `UID` parameter that is uniquelly identifying it. This `UID` parameter will then be used to manipulate the vcard through the following endpoints as `uuid`.
+
+### `PUT /accounts/me/vcards-storage/{uuid}`
+<span class="badge badge-info">User</span>
+
+Update a vCard.
+
+JSON parameters:
+
+* `vcard`, mandatory, a valid vCard having a mandatory `UID` parameter that is uniquelly identifying it and is the same as the `uuid` parameter.
+
+### `GET /accounts/me/vcards-storage`
+<span class="badge badge-info">User</span>
+
+Return the list of stored vCards
+
+### `GET /accounts/me/vcards-storage/{uuid}`
+<span class="badge badge-info">User</span>
+
+Return a stored vCard
+
+### `DELETE /accounts/me/vcards-storage/{uuid}`
+<span class="badge badge-info">User</span>
+
+Delete a stored vCard
+
 ## Contacts
 
 ### `GET /accounts/{id}/contacts`
@@ -725,3 +760,23 @@ END:VCARD
 <span class="badge badge-info">User</span>
 
 Return a specific user authenticated contact, in [vCard 4.0 format](https://datatracker.ietf.org/doc/html/rfc6350).
+
+## vCards Storage
+
+The following headers are mandatory to access the following endpoints:
+
+```
+> content-type: text/vcard
+> accept: text/vcard
+```
+
+### `GET /vcards-storage`
+
+<span class="badge badge-info">User</span>
+
+Return the list of stored vCards
+
+### `GET /vcards-storage/{uuid}`
+<span class="badge badge-info">User</span>
+
+Return a stored vCard

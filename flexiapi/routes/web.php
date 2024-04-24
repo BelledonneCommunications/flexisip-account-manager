@@ -39,7 +39,6 @@ use App\Http\Controllers\Admin\AccountStatisticsController;
 use App\Http\Controllers\Admin\ContactsListController;
 use App\Http\Controllers\Admin\ContactsListContactController;
 use App\Http\Controllers\Admin\StatisticsController;
-use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', 'login')->name('account.home');
@@ -60,9 +59,13 @@ Route::group(['middleware' => 'web_panel_enabled'], function () {
 Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key']], function () {
     Route::get('provisioning/me', 'Account\ProvisioningController@me')->name('provisioning.me');
 
-    // Vcard 4.0
+    // vCard 4.0
     Route::get('contacts/vcard/{sip}', 'Account\ContactVcardController@show')->name('account.contacts.vcard.show');
     Route::get('contacts/vcard', 'Account\ContactVcardController@index')->name('account.contacts.vcard.index');
+
+    // vCards Storage
+    Route::get('vcards-storage/{uuid}', 'Account\VcardsStorageController@show')->name('account.vcards-storage.show');
+    Route::get('vcards-storage/', 'Account\VcardsStorageController@index')->name('account.vcards-storage.index');
 });
 
 Route::name('provisioning.')->prefix('provisioning')->controller(ProvisioningController::class)->group(function () {

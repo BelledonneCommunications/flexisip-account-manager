@@ -130,6 +130,11 @@ class Account extends Authenticatable
         return $this->belongsToMany(Account::class, 'contacts', 'account_id', 'contact_id');
     }
 
+    public function vcardsStorage()
+    {
+        return $this->hasMany(VcardStorage::class);
+    }
+
     public function contactsLists()
     {
         return $this->belongsToMany(ContactsList::class, 'account_contacts_list', 'account_id', 'contacts_list_id');
