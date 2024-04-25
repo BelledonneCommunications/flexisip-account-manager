@@ -40,7 +40,7 @@ FN:Simone Perreault
 UID:' . $uid . '
 END:VCARD
 ';
-        $uid2 = 'urn:uuid: a5b33443-687c-4d19-bdd0-b30cf76bf96d';
+        $uid2 = 'urn:uuid:a5b33443-687c-4d19-bdd0-b30cf76bf96d';
         $secondVcard =
 'BEGIN:VCARD
 VERSION:4.0
@@ -136,25 +136,25 @@ END:VCARD'
             ]);
 
         // Vcard format endpoints
-        $this->keyAuthenticated($account)
+        /*$this->keyAuthenticated($account)
             ->get('vcards-storage')
-            ->assertStatus(404);
+            ->assertStatus(404);*/
 
         $this->keyAuthenticated($account)
-            ->withHeaders([
+            /*->withHeaders([
                 'content-type' => 'text/vcard',
                 'accept' => 'text/vcard',
-            ])
+            ])*/
             ->get('vcards-storage')
             ->assertStatus(200)
             ->assertSee($lastVcard)
             ->assertSee($secondVcard);
 
         $this->keyAuthenticated($account)
-            ->withHeaders([
+            /*->withHeaders([
                 'content-type' => 'text/vcard',
                 'accept' => 'text/vcard',
-            ])
+            ])*/
             ->get('vcards-storage/' . $uid)
             ->assertStatus(200)
             ->assertSee($lastVcard);

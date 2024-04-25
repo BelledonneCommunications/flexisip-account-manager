@@ -763,12 +763,13 @@ Return a specific user authenticated contact, in [vCard 4.0 format](https://data
 
 ## vCards Storage
 
+<!---
 The following headers are mandatory to access the following endpoints:
-
 ```
 > content-type: text/vcard
 > accept: text/vcard
 ```
+--->
 
 ### `GET /vcards-storage`
 
