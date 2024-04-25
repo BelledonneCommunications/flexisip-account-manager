@@ -17,31 +17,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Http\Controllers\Api\Account;
+namespace Database\Factories;
 
-use App\Http\Controllers\Controller;
-use App\Services\AccountService;
-use App\Services\BlockingService;
+use App\Account;
+use App\EmailChangeCode;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-use Illuminate\Http\Request;
-
-class EmailController extends Controller
+class EmailChangeCodeFactory extends Factory
 {
-    public function requestUpdate(Request $request)
+    protected $model = EmailChangeCode::class;
+
+    public function definition()
     {
-        if ((new BlockingService($request->user()))->checkBlock()) {
-            return abort(403, 'Account blocked');
-        }
+        $account = Account::factory()->create();
+        $account->generateApiKey();
 
-        if (!$request->user()->accountCreationToken?->consumed()) {
-            return abort(403, 'Account unvalidated');
-        }
-
-        (new AccountService)->requestEmailChange($request);
-    }
-
-    public function update(Request $request)
-    {
-        return (new AccountService)->updateEmail($request);
+        return [
+            'account_id' => $account->id,
+            'code'   => generatePin(),
+            'email'  => $this->faker->email,
+        ];
     }
 }

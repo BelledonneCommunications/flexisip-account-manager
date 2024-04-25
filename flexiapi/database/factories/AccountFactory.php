@@ -38,7 +38,6 @@ class AccountFactory extends Factory
             'username' => $this->faker->username,
             'display_name' => $this->faker->name,
             'domain' => config('app.sip_domain'),
-            'email' => $this->faker->email,
             'user_agent' => $this->faker->userAgent,
             'confirmation_key' => Str::random(WebAuthenticateController::$emailCodeSize),
             'ip_address' => $this->faker->ipv4,
@@ -53,6 +52,13 @@ class AccountFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'admin' => true,
+        ]);
+    }
+
+    public function withEmail()
+    {
+        return $this->state(fn (array $attributes) => [
+            'email' => $this->faker->email,
         ]);
     }
 

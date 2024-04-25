@@ -20,31 +20,58 @@
 namespace Tests\Feature;
 
 use App\Account;
-use App\PhoneChangeCode;
+use App\EmailChangeCode;
 use Tests\TestCase;
 
-class ApiAccountPhoneChangeTest extends TestCase
+class ApiAccountEmailChangeTest extends TestCase
 {
-    protected $route = '/api/accounts/me/phone';
+    protected $route = '/api/accounts/me/email';
     protected $method = 'POST';
 
     public function testRequest()
     {
         $account = Account::factory()->withConsumedAccountCreationToken()->create();
         $account->generateApiKey();
+        $otherAccount = Account::factory()->withEmail()->create();
+        $account->generateApiKey();
+        $newEmail = 'test@test.com';
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route.'/request', [
-                'phone' => 'blabla'
+                'email' => 'blabla'
             ])
             ->assertStatus(422);
 
-        // Send a SMS
-        /*$this->keyAuthenticated($account)
+        $this->keyAuthenticated($account)
             ->json($this->method, $this->route.'/request', [
-                'phone' => '+3312345678'
+                'email' => $newEmail
             ])
-            ->assertStatus(200);*/
+            ->assertStatus(200);
+
+        // Same email
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->route.'/request', [
+                'email' => $account->email
+            ])
+            ->assertStatus(422);
+
+        $this->keyAuthenticated($account)
+            ->get('/api/accounts/me')
+            ->assertStatus(200)
+            ->assertJson([
+                'username' => $account->username,
+                'email_change_code' => [
+                    'email' => $newEmail
+                ]
+            ]);
+
+        // Email already exists
+        config()->set('app.account_email_unique', true);
+
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->route . '/request', [
+                'email' => $otherAccount->email
+            ])->assertJsonValidationErrors(['email']);
     }
 
     public function testUnvalidatedAccount()
@@ -54,16 +81,16 @@ class ApiAccountPhoneChangeTest extends TestCase
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route.'/request', [
-                'phone' => 'blabla'
+                'email' => 'test@test.com'
             ])
             ->assertStatus(403);
     }
 
     public function testConfirmWrongCode()
     {
-        $phoneChange = PhoneChangeCode::factory()->create();
+        $emailChange = EmailChangeCode::factory()->create();
 
-        $this->keyAuthenticated($phoneChange->account)
+        $this->keyAuthenticated($emailChange->account)
             ->json($this->method, $this->route, [
                 'code' => 'wrong'
             ])
@@ -72,30 +99,30 @@ class ApiAccountPhoneChangeTest extends TestCase
 
     public function testConfirmGoodCode()
     {
-        $phoneChange = PhoneChangeCode::factory()->create();
-        $phone = $phoneChange->phone;
+        $emailChange = EmailChangeCode::factory()->create();
+        $email = $emailChange->email;
 
-        $this->keyAuthenticated($phoneChange->account)
+        $this->keyAuthenticated($emailChange->account)
             ->get('/api/accounts/me')
             ->assertStatus(200)
             ->assertJson([
-                'phone' => null
+                'email' => null
             ]);
 
-        $this->keyAuthenticated($phoneChange->account)
+        $this->keyAuthenticated($emailChange->account)
             ->json($this->method, $this->route, [
-                'code' => $phoneChange->code
+                'code' => $emailChange->code
             ])
             ->assertStatus(200)
             ->assertJson([
-                'phone' => $phone,
+                'email' => $email,
             ]);
 
-        $this->keyAuthenticated($phoneChange->account)
+        $this->keyAuthenticated($emailChange->account)
             ->get('/api/accounts/me')
             ->assertStatus(200)
             ->assertJson([
-                'phone' => $phone
+                'email' => $email
             ]);
     }
 }

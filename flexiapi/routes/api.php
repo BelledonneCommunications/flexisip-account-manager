@@ -74,6 +74,7 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
         Route::delete('devices/{uuid}', 'Api\Account\DeviceController@destroy');
 
         Route::post('email/request', 'Api\Account\EmailController@requestUpdate');
+        Route::post('email', 'Api\Account\EmailController@update');
 
         Route::post('password', 'Api\Account\PasswordController@update');
 

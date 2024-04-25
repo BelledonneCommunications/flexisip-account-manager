@@ -2,6 +2,7 @@
 
 v1.5
 ----
+- Fix FLEXIAPI-168 Add POST /accounts/me/email to confirm the email change
 - Fix FLEXIAPI-166 Reimplement the deprecated email validation URL
 - Fix FLEXIAPI-165 Remove for now text/vcard header constraint
 - Fix FLEXIAPI-164 Add vcards-storage endpoints

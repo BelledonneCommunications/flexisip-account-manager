@@ -381,18 +381,32 @@ Provision an account by generating a fresh `provisioning_token`.
 ### `POST /accounts/me/email/request`
 <span class="badge badge-info">User</span>
 
-Change the account email. An email will be sent to the new email address to confirm the operation.
+Request to change the account email. An email will be sent to the new email address to confirm the operation.
+
+Will return `403` if the account doesn't have a validated <a href='#account-creation-tokens'>Account Creation Token</a> attached to it.
 
 JSON parameters:
 
 * `email` the new email address, must be unique if `ACCOUNT_EMAIL_UNIQUE` is set to `true`
+
+### `POST /accounts/me/email`
+<span class="badge badge-info">User</span>
+
+Confirm the code received and change the email.
+Activate the account.
+
+JSON parameters:
+
+* `code` the received SMS code
+
+Return the updated account.
 
 ## Accounts phone number
 
 ### `POST /accounts/me/phone/request`
 <span class="badge badge-info">User</span>
 
-Request a specific code by SMS.
+Request a specific code by SMS to change the phone number.
 
 Will return `403` if the account doesn't have a validated <a href='#account-creation-tokens'>Account Creation Token</a> attached to it.
 

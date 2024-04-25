@@ -963,55 +963,6 @@ class ApiAccountTest extends TestCase
         ]);
     }
 
-    public function testChangeEmail()
-    {
-        $this->disableBlockingService();
-
-        $password = Password::factory()->create();
-        $otherAccount = Password::factory()->create();
-        $password->account->generateApiKey();
-        $newEmail = 'new_email@test.com';
-
-        // Bad email
-        $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route . '/me/email/request', [
-                'email' => 'gnap'
-            ])
-            ->assertStatus(422);
-
-        // Same email
-        $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route . '/me/email/request', [
-                'email' => $password->account->email
-            ])
-            ->assertStatus(422);
-
-        // Correct email
-        $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route . '/me/email/request', [
-                'email' => $newEmail
-            ])
-            ->assertStatus(200);
-
-        $this->keyAuthenticated($password->account)
-            ->get($this->route . '/me')
-            ->assertStatus(200)
-            ->assertJson([
-                'username' => $password->account->username,
-                'email_change_code' => [
-                    'email' => $newEmail
-                ]
-            ]);
-
-        // Email already exists
-        config()->set('app.account_email_unique', true);
-
-        $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route . '/me/email/request', [
-                'email' => $otherAccount->account->email
-            ])->assertJsonValidationErrors(['email']);
-    }
-
     public function testChangePassword()
     {
         $account = Account::factory()->create();
@@ -1085,35 +1036,35 @@ class ApiAccountTest extends TestCase
 
     public function testActivateDeactivate()
     {
-        $password = Password::factory()->create();
+        $account = Account::factory()->withEmail()->create();
 
         $admin = Account::factory()->admin()->create();
         $admin->generateApiKey();
 
         // deactivate
         $this->keyAuthenticated($admin)
-            ->post($this->route . '/' . $password->account->id . '/deactivate')
+            ->post($this->route . '/' . $account->id . '/deactivate')
             ->assertStatus(200)
             ->assertJson([
                 'activated' => false
             ]);
 
         $this->keyAuthenticated($admin)
-            ->get($this->route . '/' . $password->account->id)
+            ->get($this->route . '/' . $account->id)
             ->assertStatus(200)
             ->assertJson([
                 'activated' => false
             ]);
 
         $this->keyAuthenticated($admin)
-            ->post($this->route . '/' . $password->account->id . '/activate')
+            ->post($this->route . '/' . $account->id . '/activate')
             ->assertStatus(200)
             ->assertJson([
                 'activated' => true
             ]);
 
         $this->keyAuthenticated($admin)
-            ->get($this->route . '/' . $password->account->id)
+            ->get($this->route . '/' . $account->id)
             ->assertStatus(200)
             ->assertJson([
                 'activated' => true
@@ -1121,18 +1072,18 @@ class ApiAccountTest extends TestCase
 
         // Search feature
         $this->keyAuthenticated($admin)
-            ->get($this->route . '/' . $password->account->identifier . '/search')
+            ->get($this->route . '/' . $account->identifier . '/search')
             ->assertStatus(200)
             ->assertJson([
-                'id' => $password->account->id,
+                'id' => $account->id,
                 'activated' => true
             ]);
 
         $this->keyAuthenticated($admin)
-            ->get($this->route . '/' . $password->account->email . '/search-by-email')
+            ->get($this->route . '/' . $account->email . '/search-by-email')
             ->assertStatus(200)
             ->assertJson([
-                'id' => $password->account->id,
+                'id' => $account->id,
                 'activated' => true
             ]);
 
