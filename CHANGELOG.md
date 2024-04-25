@@ -2,6 +2,7 @@
 
 v1.5
 ----
+- Fix FLEXIAPI-166 Reimplement the deprecated email validation URL
 - Fix FLEXIAPI-165 Remove for now text/vcard header constraint
 - Fix FLEXIAPI-164 Add vcards-storage endpoints
 - Fix FLEXIAPI-162 Drop the aliases table and migrate the data to the phone column

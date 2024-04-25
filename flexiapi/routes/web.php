@@ -50,6 +50,9 @@ Route::group(['middleware' => 'web_panel_enabled'], function () {
     Route::post('authenticate', 'Account\AuthenticateController@authenticate')->name('account.authenticate');
     Route::get('authenticate/qrcode/{token?}', 'Account\AuthenticateController@loginAuthToken')->name('account.authenticate.auth_token');
 
+    // Deprecated
+    Route::get('authenticate/email/{code}', 'Account\AuthenticateController@validateEmail')->name('account.authenticate.email_confirm');
+
     Route::prefix('creation_token')->controller(CreationRequestTokenController::class)->group(function () {
         Route::get('check/{token}', 'check')->name('account.creation_request_token.check');
         Route::post('validate', 'validateToken')->name('account.creation_request_token.validate');
