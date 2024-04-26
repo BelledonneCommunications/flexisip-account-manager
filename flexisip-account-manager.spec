@@ -11,6 +11,7 @@
     %define env_config_file "$RPM_BUILD_ROOT%{etc_dir}/flexiapi.env"
 %endif
 
+
 %define env_symlink_file %{opt_dir}/flexiapi/.env
 
 %bcond_with deb
@@ -65,65 +66,89 @@ cp httpd/flexisip-account-manager.conf "$RPM_BUILD_ROOT%{apache_conf_path}/"
 
 # POST INSTALLATION
 
-%post
-%if %{without deb}
-    if [ $1 -eq 1 ] ; then
-%endif
+%posttrans
+# Create the var directory if it doesn't exists
 
-    # Create the var directory if it doesn't exists
+# FlexiAPI logs file
+mkdir -p %{var_dir}/log/flexiapi
 
-    # FlexiAPI logs file
-    mkdir -p %{var_dir}/log/flexiapi
+# FlexiAPI base directories setup and rights
+mkdir -p %{var_dir}/flexiapi/storage/app/public
+mkdir -p %{var_dir}/flexiapi/storage/framework/cache/data
+mkdir -p %{var_dir}/flexiapi/storage/framework/sessions
+mkdir -p %{var_dir}/flexiapi/storage/framework/testing
+mkdir -p %{var_dir}/flexiapi/storage/framework/views
+mkdir -p %{var_dir}/flexiapi/bootstrap/cache
 
-    # FlexiAPI base directories setup and rights
-    mkdir -p %{var_dir}/flexiapi/storage/app/public
-    mkdir -p %{var_dir}/flexiapi/storage/framework/cache/data
-    mkdir -p %{var_dir}/flexiapi/storage/framework/sessions
-    mkdir -p %{var_dir}/flexiapi/storage/framework/testing
-    mkdir -p %{var_dir}/flexiapi/storage/framework/views
-    mkdir -p %{var_dir}/flexiapi/bootstrap/cache
+mkdir -p %{var_dir}/log
 
-    mkdir -p %{var_dir}/log
+chown -R %{web_user}:%{web_user} %{var_dir}/log
+chown -R %{web_user}:%{web_user} %{var_dir}/flexiapi/storage
+chown -R %{web_user}:%{web_user} %{var_dir}/flexiapi/bootstrap
+chown -R %{web_user}:%{web_user} %{var_dir}/log/flexiapi
 
-%if %{without deb}
+# Forces the creation of the symbolic links event if they already exists
+ln -sf %{var_dir}/log/flexiapi %{var_dir}/flexiapi/storage/logs
+ln -sf %{var_dir}/flexiapi/storage %{opt_dir}/flexiapi/.
+
+# if selinux is installed on the system (even if not enabled)
+which setsebool > /dev/null 2>&1
+if [ $? -eq 0 ] ; then
+    setsebool -P httpd_can_network_connect on
     setsebool -P httpd_can_network_connect_db on
-%endif
+    setsebool -P httpd_can_sendmail on
 
-    chown -R %{web_user}:%{web_user} %{var_dir}/log
-    chown -R %{web_user}:%{web_user} %{var_dir}/flexiapi/storage
-    chown -R %{web_user}:%{web_user} %{var_dir}/flexiapi/bootstrap
-    chown -R %{web_user}:%{web_user} %{var_dir}/log/flexiapi
+    semanage fcontext -a -t var_log_t %{var_dir}/log 2>/dev/null || :
+    semanage fcontext -a -t httpd_log_t "%{var_dir}/log/flexiapi(./*)?" 2>/dev/null || :
+    restorecon %{var_dir}/log || :
+    restorecon -R %{var_dir}/log/flexiapi || :
 
-    # Forces the creation of the symbolic links event if they already exists
-    ln -sf %{var_dir}/log/flexiapi %{var_dir}/flexiapi/storage/logs
-    ln -sf %{var_dir}/flexiapi/storage %{opt_dir}/flexiapi/.
+    semanage fcontext -a -t httpd_sys_rw_content_t "%{var_dir}/flexiapi/storage(/.*)?" 2>/dev/null || :
+    restorecon -R %{var_dir}/flexiapi/storage || :
 
-    # FlexiAPI env file configuration
-    if ! test -f %{env_config_file}; then
-        cd %{opt_dir}/flexiapi/
-        mkdir -p %{etc_dir}
-        cp -R .env.example %{env_config_file}
-        ln -s %{env_config_file} %{env_symlink_file}
-
-        php artisan key:generate
-    fi
-
-    # Link it once more
-    ln -sf %{env_config_file} %{env_symlink_file}
-
-    # Check if there is a migration
-    if cd %{opt_dir}/flexiapi/ && php artisan migrate:status | grep -q No; then
-        echo " "
-        echo "All the following commands need to be run with the web user"
-        echo "sudo -su %{web_user}"
-        echo "You need to migrate the database to finish the setup:"
-        echo "%{web_user}$ cd %{opt_dir}/flexiapi/"
-        echo %{web_user}$ php artisan migrate
-    fi
-
-%if %{without deb}
+    semanage fcontext -a -t httpd_sys_rw_content_t "%{opt_dir}/flexiapi/storage(/.*)?" 2>/dev/null || :
+    restorecon -R %{opt_dir}/flexiapi/storage || :
 fi
-%endif
+
+# FlexiAPI env file configuration
+if ! test -f %{env_config_file}; then
+    cd %{opt_dir}/flexiapi/
+    mkdir -p %{etc_dir}
+    cp -R .env.example %{env_config_file}
+    ln -s %{env_config_file} %{env_symlink_file}
+
+    php artisan key:generate
+fi
+
+# Link it once more
+ln -sf %{env_config_file} %{env_symlink_file}
+
+# Check if there is a migration
+if cd %{opt_dir}/flexiapi/ && php artisan migrate:status | grep -q No; then
+    echo " "
+    echo "All the following commands need to be run with the web user"
+    echo "sudo -su %{web_user}"
+    echo "You need to migrate the database to finish the setup:"
+    echo "%{web_user}$ cd %{opt_dir}/flexiapi/"
+    echo %{web_user}$ php artisan migrate
+fi
+
+
+%postun
+# Final removal.
+# if selinux is installed on the system (even if not enabled)
+which setsebool > /dev/null 2>&1
+if [ $? -eq 0 ] ; then
+    semanage fcontext -d -t httpd_log_t "%{var_dir}/log/flexiapi(./*)?" 2>/dev/null || :
+    semanage fcontext -d -t httpd_sys_rw_content_t "%{var_dir}/flexiapi/storage(/.*)?" 2>/dev/null || :
+    semanage fcontext -d -t httpd_sys_rw_content_t "%{opt_dir}/flexiapi/storage(/.*)?" 2>/dev/null || :
+    if [ $1 -eq 0 ] ; then
+        restorecon -R %{var_dir}/log/flexiapi || :
+        restorecon -R %{var_dir}/flexiapi/storage || :
+        restorecon -R %{opt_dir}/flexiapi/storage || :
+    fi
+fi
+
 
 # FILES
 

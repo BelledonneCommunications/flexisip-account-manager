@@ -72,6 +72,7 @@ rpm-cleanup:
 	rm -r rpmbuild
 
 deb-only:
+	sed -i 's/posttrans/post/g' $(OUTPUT_DIR)/rpmbuild/SPECS/flexisip-account-manager.spec
 	rpmbuild -v -bb --with deb --define '_topdir $(OUTPUT_DIR)/rpmbuild' --define "_rpmfilename tmp.rpm" --define "_rpmdir $(OUTPUT_DIR)/rpmbuild" $(OUTPUT_DIR)/rpmbuild/SPECS/flexisip-account-manager.spec
 	fakeroot alien -g -k --scripts $(OUTPUT_DIR)/rpmbuild/tmp.rpm
 	rm -r $(OUTPUT_DIR)/rpmbuild
