@@ -33,15 +33,15 @@ class AuthenticateJWT
 
             switch ($token->headers()->get('alg')) {
                 case 'RS256':
-                    $signer = new Sha256;
+                    $signer = new Sha256();
                     break;
 
                 case 'RS384':
-                    $signer = new Sha384;
+                    $signer = new Sha384();
                     break;
 
                 case 'RS512':
-                    $signer = new Sha512;
+                    $signer = new Sha512();
                     break;
             }
 
@@ -57,9 +57,20 @@ class AuthenticateJWT
                 abort(403, 'Expired JWT token');
             }
 
-            $account = Account::withoutGlobalScopes()
-                              ->where('email', $token->claims()->get('email'))
-                              ->first();
+            $account = null;
+
+            if ($token->claims()->has(config('services.jwt.sip_identifier'))) {
+                list($username, $domain) = parseSIP($token->claims()->get(config('services.jwt.sip_identifier')));
+
+                $account = Account::withoutGlobalScopes()
+                                  ->where('username', $username)
+                                  ->where('domain', $domain)
+                                  ->first();
+            } elseif ($token->claims()->has('email')) {
+                $account = Account::withoutGlobalScopes()
+                                  ->where('email', $token->claims()->get('email'))
+                                  ->first();
+            }
 
             if (!$account) {
                 abort(403, 'The JWT token is not related to someone in the system');

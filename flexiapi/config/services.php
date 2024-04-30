@@ -32,6 +32,7 @@ return [
 
     'jwt' => [
         'rsa_public_key_pem' => env('JWT_RSA_PUBLIC_KEY_PEM'),
-      ],
+        'sip_identifier' => env('JWT_SIP_IDENTIFIER', 'sip_identity'),
+    ],
 
 ];

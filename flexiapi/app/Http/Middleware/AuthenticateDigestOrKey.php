@@ -70,7 +70,7 @@ class AuthenticateDigestOrKey
         ])->validate();
 
         $from = $this->extractFromHeader($request->header('From'));
-        list($username, $domain) = explode('@', $from);
+        list($username, $domain) = parseSIP($from);
 
         $account = Account::withoutGlobalScopes()
                           ->where('username', $username)
@@ -234,7 +234,7 @@ class AuthenticateDigestOrKey
 
     private function extractFromHeader(string $string): string
     {
-        list($from) = explode(';', \substr($string, 4));
+        list($from) = explode(';', $string);
         return \rawurldecode($from);
     }
 

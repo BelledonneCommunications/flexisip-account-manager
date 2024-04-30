@@ -22,7 +22,6 @@ use Illuminate\Support\Str;
 use App\Account;
 use App\DigestNonce;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Schema;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 use League\CommonMark\Extension\TableOfContents\TableOfContentsExtension;
@@ -51,23 +50,23 @@ function generateValidNonce(Account $account): string
     return $nonce->nonce;
 }
 
-function bchash(string $username, string $domain, string $password, string $algorithm = 'MD5')
+function bchash(string $username, string $domain, string $password, string $algorithm = 'MD5'): string
 {
     return hash(passwordAlgorithms()[$algorithm], $username . ':' . $domain . ':' . $password);
 }
 
-function generatePin()
+function generatePin(): int
 {
     return mt_rand(1000, 9999);
 }
 
-function percent($value, $max)
+function percent($value, $max): float
 {
     if ($max == 0) $max = 1;
     return round(($value * 100) / $max, 2);
 }
 
-function markdownDocumentationView($view): string
+function markdownDocumentationView(string $view): string
 {
     $converter = new CommonMarkConverter([
         'heading_permalink' => [
@@ -92,7 +91,12 @@ function markdownDocumentationView($view): string
     );
 }
 
-function isRegularExpression($string): bool
+function parseSIP(string $sipAdress): array
+{
+    return explode('@', \substr($sipAdress, 4));
+}
+
+function isRegularExpression(string $string): bool
 {
     set_error_handler(function () {
     }, E_WARNING);

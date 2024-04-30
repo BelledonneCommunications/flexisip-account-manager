@@ -24,6 +24,7 @@ use DateTimeImmutable;
 use Lcobucci\Clock\FrozenClock;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\JwtFacade;
+use Lcobucci\JWT\UnencryptedToken;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Signer\Rsa\Sha512;
@@ -68,14 +69,38 @@ class AccountJWTAuthenticationTest extends TestCase
             ): Builder => $builder->withClaim('email', $password->account->email)
         );
 
-        $this->withHeaders([
-                'Authorization' => 'Bearer ' . $token->toString(),
-                'x-linphone-provisioning' => true,
-            ])
-            ->get($this->accountRoute)
-            ->assertStatus(200)
-            ->assertHeader('Content-Type', 'application/xml')
-            ->assertSee('ha1');
+        $this->checkToken($token);
+
+        // SIP identifier
+
+        // This line shoudn't be required, but the pipeline doesn't get the default value somehow
+        config()->set('services.jwt.sip_identifier', 'sip_identity');
+
+        $token = (new JwtFacade(null, $clock))->issue(
+            new Sha256(),
+            InMemory::plainText($this->serverPrivateKeyPem),
+            static fn (
+                Builder $builder,
+                DateTimeImmutable $issuedAt
+            ): Builder => $builder->withClaim('sip_identity', 'sip:' . $password->account->username . '@' . $password->account->domain)
+        );
+
+        $this->checkToken($token);
+
+        // Custom SIP identifier
+        $otherIdentifier = 'sip_other_identifier';
+        config()->set('services.jwt.sip_identifier', $otherIdentifier);
+
+        $token = (new JwtFacade(null, $clock))->issue(
+            new Sha256(),
+            InMemory::plainText($this->serverPrivateKeyPem),
+            static fn (
+                Builder $builder,
+                DateTimeImmutable $issuedAt
+            ): Builder => $builder->withClaim($otherIdentifier, 'sip:' . $password->account->username . '@' . $password->account->domain)
+        );
+
+        $this->checkToken($token);
 
         // Sha512
         $token = (new JwtFacade(null, $clock))->issue(
@@ -87,17 +112,9 @@ class AccountJWTAuthenticationTest extends TestCase
             ): Builder => $builder->withClaim('email', $password->account->email)
         );
 
-        $this->withHeaders([
-                'Authorization' => 'Bearer ' . $token->toString(),
-                'x-linphone-provisioning' => true,
-            ])
-            ->get($this->accountRoute)
-            ->assertStatus(200)
-            ->assertHeader('Content-Type', 'application/xml')
-            ->assertSee('ha1');
+        $this->checkToken($token);
 
         // Expired token
-
         $oldClock = new FrozenClock(new DateTimeImmutable('2022-06-24 22:51:10'));
 
         $token = (new JwtFacade(null, $oldClock))->issue(
@@ -154,5 +171,17 @@ class AccountJWTAuthenticationTest extends TestCase
             ])
             ->get($this->accountRoute)
             ->assertStatus(403);
+    }
+
+    private function checkToken(UnencryptedToken $token): void
+    {
+        $this->withHeaders([
+                'Authorization' => 'Bearer ' . $token->toString(),
+                'x-linphone-provisioning' => true,
+            ])
+            ->get($this->accountRoute)
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/xml')
+            ->assertSee('ha1');
     }
 }
