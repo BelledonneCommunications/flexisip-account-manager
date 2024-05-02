@@ -2,6 +2,7 @@
 
 v1.5
 ----
+- Fix FLEXIAPI-170 Fix undefined variable apiKey in CreateAdminAccount
 - Fix FLEXIAPI-168 Add POST /accounts/me/email to confirm the email change
 - Fix FLEXIAPI-167 Add the handling of a custom identifier for the JWT tokens on top of the email one
 - Fix FLEXIAPI-166 Reimplement the deprecated email validation URL

@@ -86,7 +86,7 @@ class CreateAdminAccount extends Command
         $account->generateApiKey();
         $account->updatePassword($password);
 
-        $this->info('Admin test account created: "' . $username . '@' . $domain . '" | Password: "' . $password . '" | API Key: "' . $apiKey->key . '"');
+        $this->info('Admin test account created: "' . $username . '@' . $domain . '" | Password: "' . $password . '" | API Key: "' . $account->apiKey->key . '"');
 
         return 0;
     }
