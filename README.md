@@ -154,7 +154,7 @@ Create an admin account, an API Key will also be generated along the way, it mig
 
 If no parameters are put, a default admin account will be created.
 
-    php artisan accounts:create-admin-account {--u|username=} {--p|password=} {--d|domain=}
+    php artisan accounts:create-admin-account {-u|username=} {-p|password=} {-d|domain=}
 
 ### Clear the expired API Keys
 
