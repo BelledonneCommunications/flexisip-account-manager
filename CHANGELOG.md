@@ -2,6 +2,7 @@
 
 v1.5
 ----
+- Fix FLEXIAPI-174 Check if the phone is valid before trying to recover it (deprecated endpoint)
 - Fix FLEXIAPI-173 Wrong route in validateEmail (deprecated)
 - Fix FLEXIAPI-171 Fix README documentation for CreateAdminAccount
 - Fix FLEXIAPI-170 Fix undefined variable apiKey in CreateAdminAccount

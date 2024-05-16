@@ -187,7 +187,7 @@ class AccountController extends Controller
 
         $request->validate([
             'phone' => [
-                'required', new WithoutSpaces, 'starts_with:+'
+                'required', new WithoutSpaces, 'starts_with:+', 'exists:accounts,phone'
             ],
             'account_creation_token' => [
                 'required',

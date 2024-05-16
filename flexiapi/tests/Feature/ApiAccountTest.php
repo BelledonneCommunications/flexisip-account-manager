@@ -746,6 +746,12 @@ class ApiAccountTest extends TestCase
 
         $token = AccountCreationToken::factory()->create();
 
+        // Wrong phone
+        $this->json($this->method, $this->route . '/recover-by-phone', [
+            'phone' => '+331234', // wrong phone number
+            'account_creation_token' => $token->token
+        ])->assertJsonValidationErrors(['phone']);
+
         $this->json($this->method, $this->route . '/recover-by-phone', [
             'phone' => $phone,
             'account_creation_token' => $token->token
