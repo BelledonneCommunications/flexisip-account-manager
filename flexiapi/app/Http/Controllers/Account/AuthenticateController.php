@@ -94,7 +94,7 @@ class AuthenticateController extends Controller
 
         Auth::login($account);
 
-        return redirect()->route('dashboard');
+        return redirect()->route('account.dashboard');
     }
 
     public function loginAuthToken(Request $request, ?string $token = null)

@@ -2,6 +2,7 @@
 
 v1.5
 ----
+- Fix FLEXIAPI-173 Wrong route in validateEmail (deprecated)
 - Fix FLEXIAPI-171 Fix README documentation for CreateAdminAccount
 - Fix FLEXIAPI-170 Fix undefined variable apiKey in CreateAdminAccount
 - Fix FLEXIAPI-168 Add POST /accounts/me/email to confirm the email change
