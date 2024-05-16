@@ -26,25 +26,16 @@ class Device extends Model
 {
     public function fromRedisContact(string $contact)
     {
-        // Ugly :'(
-        $result = [];
-        $exploded = explode(';', urldecode($contact));
+        preg_match("/<(.*)>;(.*)/", $contact, $matches);
 
-        foreach ($exploded as $line) {
-            $line = explode('=', $line);
+        $parsed = parse_url($matches[1]);
+        parse_str($parsed["query"], $query);
 
-            if (count($line) == 2) {
-                $result[trim($line[0])] = $line[1];
-            }
+        parse_str(str_replace(";", "&", $parsed["path"]), $sipParams);
+        parse_str(str_replace(";", "&", $matches[2]), $sipHeaders);
 
-            // User agent
-            if (count($line) == 4) {
-                $result['userAgent'] = substr($line[3], 0, -1);
-            }
-        }
-
-        $this->uuid = \substr($result['sip.instance'], 2, -2);
-        $this->update_time = Carbon::createFromTimestamp($result['updatedAt']);
-        $this->user_agent = $result['userAgent'];
+        $this->uuid = substr($sipHeaders['sip_instance'], 2, -2);
+        $this->update_time = Carbon::createFromTimestamp($sipParams['updatedAt']);
+        $this->user_agent = $query["user-agent"];
     }
 }

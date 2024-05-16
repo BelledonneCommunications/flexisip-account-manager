@@ -2,6 +2,7 @@
 
 v1.5
 ----
+- Fix FLEXIAPI-175 and FLEXISIP-231 Rewrite the Redis contacts parser to handle properly SIP uris (thanks @thibault.lemaire !)
 - Fix FLEXIAPI-174 Check if the phone is valid before trying to recover it (deprecated endpoint)
 - Fix FLEXIAPI-173 Wrong route in validateEmail (deprecated)
 - Fix FLEXIAPI-171 Fix README documentation for CreateAdminAccount
