@@ -47,4 +47,16 @@ class AccountCreationToken extends Consommable
     {
         return $this->used == true;
     }
+
+    public function toLog()
+    {
+        return [
+            'token' => $this->token,
+            'pn_param' => $this->pn_param,
+            'used' => $this->used,
+            'account_id' => $this->account_id,
+            'ip' => $this->ip,
+            'user_agent' => $this->user_agent,
+        ];
+    }
 }

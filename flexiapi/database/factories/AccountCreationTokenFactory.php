@@ -33,11 +33,13 @@ class AccountCreationTokenFactory extends Factory
     public function definition()
     {
         return [
-            'pn_provider' => $this->faker->uuid,
-            'pn_param' => $this->faker->uuid,
-            'pn_prid' => $this->faker->uuid,
+            'pn_provider' => $this->faker->uuid(),
+            'pn_param' => $this->faker->uuid(),
+            'pn_prid' => $this->faker->uuid(),
             'token' => Str::random(WebAuthenticateController::$emailCodeSize),
             'used' => false,
+            'ip' => $this->faker->ipv4(),
+            'user_agent' => $this->faker->userAgent(),
             'created_at' => Carbon::now()
         ];
     }

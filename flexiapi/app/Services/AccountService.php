@@ -108,7 +108,7 @@ class AccountService
             $token->account_id = $account->id;
             $token->save();
 
-            Log::channel('events')->info('API: AccountCreationToken redeemed', ['token' => $request->get('account_creation_token')]);
+            Log::channel('events')->info('API: AccountCreationToken redeemed', ['account_creation_token' => $token->toLog()]);
         }
 
         Log::channel('events')->info(

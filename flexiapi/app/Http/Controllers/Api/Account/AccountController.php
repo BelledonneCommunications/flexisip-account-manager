@@ -146,8 +146,8 @@ class AccountController extends Controller
         $token->account_id = $account->id;
         $token->save();
 
-        Log::channel('events')->info('API: AccountCreationToken redeemed', ['token' => $request->get('account_creation_token')]);
-        Log::channel('events')->info('API: Account created using the public endpoint', ['id' => $account->identifier]);
+        Log::channel('events')->info('API deprecated - Store public: AccountCreationToken redeemed', ['account_creation_token' => $token->toLog()]);
+        Log::channel('events')->info('API deprecated - Store public: Account created', ['id' => $account->identifier]);
 
         // Send validation by phone
         if ($request->has('phone')) {
@@ -155,7 +155,7 @@ class AccountController extends Controller
             $account->confirmation_key = generatePin();
             $account->save();
 
-            Log::channel('events')->info('API: Account created using the public endpoint by phone', ['id' => $account->identifier]);
+            Log::channel('events')->info('API deprecated: Account created using the public endpoint by phone', ['id' => $account->identifier]);
 
             $ovhSMS = new OvhSMS;
             $ovhSMS->send($request->get('phone'), 'Your ' . config('app.name') . ' creation code is ' . $account->confirmation_key);
@@ -164,12 +164,12 @@ class AccountController extends Controller
             $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
             $account->save();
 
-            Log::channel('events')->info('API: Account created using the public endpoint by email', ['id' => $account->identifier]);
+            Log::channel('events')->info('API deprecated - Store public: Account created using the public endpoint by email', ['id' => $account->identifier]);
 
             try {
                 Mail::to($account)->send(new RegisterConfirmation($account));
             } catch (\Exception $e) {
-                Log::channel('events')->info('API: Public Register Confirmation email not sent, check errors log', ['id' => $account->identifier]);
+                Log::channel('events')->info('API deprecated - Store public: Public Register Confirmation email not sent, check errors log', ['id' => $account->identifier]);
                 Log::error('Public Register Confirmation email not sent: ' . $e->getMessage());
             }
         }
@@ -204,8 +204,8 @@ class AccountController extends Controller
         $token->account_id = $account->id;
         $token->save();
 
-        Log::channel('events')->info('API: AccountCreationToken redeemed', ['token' => $request->get('account_creation_token')]);
-        Log::channel('events')->info('API: Account recovery by phone', ['id' => $account->identifier]);
+        Log::channel('events')->info('API deprecated - Account recovery: AccountCreationToken redeemed', ['account_creation_token' => $token->toLog()]);
+        Log::channel('events')->info('API deprecated - Account recovery: Account recovery by phone', ['id' => $account->identifier]);
 
         $ovhSMS = new OvhSMS;
         $ovhSMS->send($request->get('phone'), 'Your ' . config('app.name') . ' recovery code is ' . $account->confirmation_key);
