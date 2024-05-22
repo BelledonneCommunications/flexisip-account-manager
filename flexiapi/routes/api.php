@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Api\Admin\AccountDictionaryController;
 use App\Http\Controllers\Api\Admin\AccountTypeController;
 use App\Http\Controllers\Api\Admin\ContactsListController;
+use App\Http\Controllers\Api\Admin\VcardsStorageController as AdminVcardsStorageController;
 use App\Http\Controllers\Api\StatisticsMessageController;
 use App\Http\Controllers\Api\StatisticsCallController;
 use Illuminate\Http\Request;
@@ -108,6 +109,9 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
             Route::get('{sip}/search', 'search');
             Route::get('{email}/search-by-email', 'searchByEmail');
 
+            Route::get('{account_id}/devices', 'Api\Admin\DeviceController@index');
+            Route::delete('{account_id}/devices/{uuid}', 'Api\Admin\DeviceController@destroy');
+
             Route::post('{account_id}/types/{type_id}', 'typeAdd');
             Route::delete('{account_id}/types/{type_id}', 'typeRemove');
 
@@ -125,6 +129,7 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
 
         Route::apiResource('accounts/{id}/actions', AccountActionController::class);
         Route::apiResource('account_types', AccountTypeController::class);
+        Route::apiResource('accounts/{account_id}/vcards-storage', AdminVcardsStorageController::class);
 
         Route::apiResource('contacts_lists', ContactsListController::class);
         Route::prefix('contacts_lists')->controller(ContactsListController::class)->group(function () {

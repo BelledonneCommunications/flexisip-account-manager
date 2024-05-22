@@ -22,21 +22,26 @@ namespace Tests\Feature;
 use App\Account;
 use Tests\TestCase;
 
-class ApiAccountVcardsStorageTest extends TestCase
+class ApiVcardsStorageTest extends TestCase
 {
     protected $route = '/api/accounts/me/vcards-storage';
     protected $method = 'POST';
 
-    public function testCrud()
+    public function testAccountCrud()
     {
+        $admin = Account::factory()->admin()->create();
+        $admin->generateApiKey();
+
         $account = Account::factory()->create();
         $account->generateApiKey();
+
+        $adminRoute = '/api/accounts/' . $account->id . '/vcards-storage';
 
         $uid = 'urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6';
         $lastVcard =
 'BEGIN:VCARD
 VERSION:4.0
-FN:Simone Perreault
+FN:Jhonny English
 UID:' . $uid . '
 END:VCARD
 ';
@@ -48,10 +53,25 @@ FN:Simone Perreault
 UID:' . $uid2 . '
 END:VCARD
 ';
+        $uid3 = 'urn:uuid:a5b33443-687c-4d19-bdd0-b30cf76bfc4d';
+        $thirdVcard =
+'BEGIN:VCARD
+VERSION:4.0
+FN:Jean Jannot
+UID:' . $uid3 . '
+END:VCARD
+';
 
         // Missing vcard
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
+                'foo' => 'bar'
+            ])
+            ->assertJsonValidationErrors(['vcard']);
+
+        // Admin vcard
+        $this->keyAuthenticated($admin)
+            ->json($this->method, $adminRoute, [
                 'foo' => 'bar'
             ])
             ->assertJsonValidationErrors(['vcard']);
@@ -77,6 +97,12 @@ UID:' . $uid . '
 END:VCARD'
             ])->assertStatus(200);
 
+        // Admin create
+        $this->keyAuthenticated($admin)
+            ->json($this->method, $adminRoute, [
+                'vcard' => $thirdVcard])
+            ->assertStatus(200);
+
         // Again...
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
@@ -99,6 +125,10 @@ END:VCARD'
 
         $this->assertDatabaseHas('vcards_storage', [
             'uuid' => $uid2
+        ]);
+
+        $this->assertDatabaseHas('vcards_storage', [
+            'uuid' => $uid3
         ]);
 
         // Update
@@ -130,6 +160,14 @@ END:VCARD'
         // Get
         $this->keyAuthenticated($account)
             ->get($this->route . '/' . $uid)
+            ->assertStatus(200)
+            ->assertJson([
+                'vcard' => $lastVcard
+            ]);
+
+        // Admin get
+        $this->keyAuthenticated($admin)
+            ->get($adminRoute . '/' . $uid)
             ->assertStatus(200)
             ->assertJson([
                 'vcard' => $lastVcard
