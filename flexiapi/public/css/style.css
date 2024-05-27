@@ -36,7 +36,7 @@
 }
 
 html {
-    font-size: 10px;
+    font-size: 62%;
 }
 
 body {
@@ -484,7 +484,7 @@ body.welcome::after {
     display: block;
     height: 10rem;
     width: 100%;
-    background-size: 50rem;
+    background-size: 51rem;
     content: '';
     height: 5rem;
     margin-top: 2rem;
@@ -676,10 +676,6 @@ table tr.empty td:before {
     margin: 9rem;
     margin-bottom: 1rem;
     line-height: 8rem;
-}
-
-table.third th {
-    width: 33.33%;
 }
 
 /* Display/hide */

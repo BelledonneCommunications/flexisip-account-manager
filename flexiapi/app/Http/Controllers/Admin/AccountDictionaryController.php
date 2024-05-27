@@ -27,26 +27,28 @@ use App\AccountDictionaryEntry;
 
 class AccountDictionaryController extends Controller
 {
-    public function index(Request $request, Account $account)
+    public function index(int $accountId)
     {
         return view(
             'admin.account.dictionary.index',
             [
-                'account' => $account
+                'account' => Account::findOrFail($accountId)
             ]
         );
     }
 
-    public function create(Request $request, Account $account)
+    public function create(int $accountId)
     {
         return view('admin.account.dictionary.create_edit', [
-            'account' => $account,
+            'account' => Account::findOrFail($accountId),
             'entry' => new AccountDictionaryEntry
         ]);
     }
 
-    public function store(Request $request, Account $account)
+    public function store(Request $request, int $accountId)
     {
+        $account = Account::findOrFail($accountId);
+
         $request->validate([
             'key' => 'required',
             'value' => 'required'
@@ -57,19 +59,23 @@ class AccountDictionaryController extends Controller
         return redirect()->route('admin.account.dictionary.index', $account->id);
     }
 
-    public function edit(Account $account, string $key)
+    public function edit(int $accountId, string $key)
     {
+        $account = Account::findOrFail($accountId);
+
         return view('admin.account.dictionary.create_edit', [
             'account' => $account,
             'entry' => $account->dictionaryEntries()->where('key', $key)->firstOrFail()
         ]);
     }
 
-    public function update(Request $request, Account $account, int $entryId)
+    public function update(Request $request, int $accountId, int $entryId)
     {
         $request->validate([
             'value' => 'required'
         ]);
+
+        $account = Account::findOrFail($accountId);
 
         $entry = $account->dictionaryEntries()->findOrFail($entryId);
         $entry->value = $request->get('value');
@@ -78,8 +84,10 @@ class AccountDictionaryController extends Controller
         return redirect()->route('admin.account.dictionary.index', $account->id);
     }
 
-    public function delete(Request $request, Account $account, string $key)
+    public function delete(int $accountId, string $key)
     {
+        $account = Account::findOrFail($accountId);
+
         return view(
             'admin.account.dictionary.delete',
             [
@@ -89,8 +97,9 @@ class AccountDictionaryController extends Controller
         );
     }
 
-    public function destroy(Request $request, Account $account)
+    public function destroy(Request $request, int $accountId)
     {
+        $account = Account::findOrFail($accountId);
         $account->dictionaryEntries()->where('key', $request->get('key'))->delete();
 
         return redirect()->route('admin.account.dictionary.index', $account);

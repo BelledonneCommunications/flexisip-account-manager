@@ -26,9 +26,10 @@ use App\Libraries\FlexisipConnector;
 
 class AccountDeviceController extends Controller
 {
-    public function index(Request $request, Account $account)
+    public function index(int $accountId)
     {
         $connector = new FlexisipConnector;
+        $account = Account::findOrFail($accountId);
 
         return view(
             'admin.account.device.index',
@@ -39,9 +40,10 @@ class AccountDeviceController extends Controller
         );
     }
 
-    public function delete(Request $request, Account $account, string $uuid)
+    public function delete(int $accountId, string $uuid)
     {
         $connector = new FlexisipConnector;
+        $account = Account::findOrFail($accountId);
 
         return view(
             'admin.account.device.delete',
@@ -53,10 +55,10 @@ class AccountDeviceController extends Controller
         );
     }
 
-    public function destroy(Request $request, Account $account)
+    public function destroy(Request $request, int $accountId)
     {
         $connector = new FlexisipConnector;
-        $connector->deleteDevice($account->identifier, $request->get('uuid'));
+        $connector->deleteDevice(Account::findOrFail($accountId)->identifier, $request->get('uuid'));
 
         return redirect()->route('admin.account.device.index');
     }

@@ -27,7 +27,6 @@ use App\Account;
 use App\ContactsList;
 use App\Http\Requests\Account\Create\Web\AsAdminRequest;
 use App\Http\Requests\Account\Update\Web\AsAdminRequest as WebAsAdminRequest;
-use App\Http\Requests\UpdateAccountRequest;
 use App\Services\AccountService;
 
 class AccountController extends Controller
@@ -89,31 +88,31 @@ class AccountController extends Controller
         return redirect()->route('admin.account.edit', $account->id);
     }
 
-    public function edit(int $id)
+    public function edit(int $accountId)
     {
         return view('admin.account.create_edit', [
-            'account' => Account::findOrFail($id),
+            'account' => Account::findOrFail($accountId),
             'protocols' => [null => 'None'] + Account::$dtmfProtocols,
-            'contacts_lists' => ContactsList::whereNotIn('id', function ($query) use ($id) {
+            'contacts_lists' => ContactsList::whereNotIn('id', function ($query) use ($accountId) {
                 $query->select('contacts_list_id')
                     ->from('account_contacts_list')
-                    ->where('account_id', $id);
+                    ->where('account_id', $accountId);
             })->get()
         ]);
     }
 
-    public function update(WebAsAdminRequest $request, int $id)
+    public function update(WebAsAdminRequest $request, int $accountId)
     {
-        $account = (new AccountService)->update($request, $id);
+        $account = (new AccountService)->update($request, $accountId);
 
         Log::channel('events')->info('Web Admin: Account updated', ['id' => $account->identifier]);
 
-        return redirect()->route('admin.account.edit', $id);
+        return redirect()->route('admin.account.edit', $accountId);
     }
 
-    public function provision(int $id)
+    public function provision(int $accountId)
     {
-        $account = Account::findOrFail($id);
+        $account = Account::findOrFail($accountId);
         $account->provision();
         $account->save();
 
@@ -122,9 +121,9 @@ class AccountController extends Controller
         return redirect()->back()->withFragment('provisioning');
     }
 
-    public function delete(int $id)
+    public function delete(int $accountId)
     {
-        $account = Account::findOrFail($id);
+        $account = Account::findOrFail($accountId);
 
         return view('admin.account.delete', [
             'account' => $account
@@ -142,24 +141,24 @@ class AccountController extends Controller
         return redirect()->route('admin.account.index');
     }
 
-    public function contactsListAdd(Request $request, int $id)
+    public function contactsListAdd(Request $request, int $accountId)
     {
         $request->validate([
             'contacts_list_id' => 'required|exists:contacts_lists,id'
         ]);
 
-        $account = Account::findOrFail($id);
+        $account = Account::findOrFail($accountId);
         $account->contactsLists()->detach([$request->get('contacts_list_id')]);
         $account->contactsLists()->attach([$request->get('contacts_list_id')]);
 
-        return redirect()->route('admin.account.edit', $id)->withFragment('#contacts_lists');
+        return redirect()->route('admin.account.edit', $accountId)->withFragment('#contacts_lists');
     }
 
-    public function contactsListRemove(Request $request, int $id)
+    public function contactsListRemove(Request $request, int $accountId)
     {
-        $account = Account::findOrFail($id);
+        $account = Account::findOrFail($accountId);
         $account->contactsLists()->detach([$request->get('contacts_list_id')]);
 
-        return redirect()->route('admin.account.edit', $id)->withFragment('#contacts_lists');
+        return redirect()->route('admin.account.edit', $accountId)->withFragment('#contacts_lists');
     }
 }

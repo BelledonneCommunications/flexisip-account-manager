@@ -16,7 +16,7 @@
 
 @if ($account->apiKey)
     <h3>Api Key</h3>
-    <table class="third">
+    <table>
         <thead>
             <tr>
                 <th>Code</th>
@@ -50,7 +50,7 @@
 
 @if ($account->accountCreationToken)
     <h3>Account Creation Token</h3>
-    <table class="third">
+    <table>
         <thead>
             <tr>
                 <th>Code</th>
@@ -78,7 +78,7 @@
 
 @if ($account->recoveryCodes->isNotEmpty())
     <h3>Recovery Codes</h3>
-    <table class="third">
+    <table>
         <thead>
             <tr>
                 <th>Code</th>
@@ -108,10 +108,11 @@
 
 @if ($account->phoneChangeCodes->isNotEmpty())
     <h3>Phone Change requests</h3>
-    <table class="third">
+    <table>
         <thead>
             <tr>
                 <th>Phone</th>
+                <th>Code</th>
                 <th>Created</th>
                 <th>Used</th>
                 <th>IP</th>
@@ -121,6 +122,7 @@
             @foreach ($account->phoneChangeCodes as $phoneChangeCode)
                 <tr @if ($phoneChangeCode->consumed()) class="disabled crossed" @endif>
                     <td>{{ $phoneChangeCode->phone }}</td>
+                    <td>{{ $phoneChangeCode->code ?? '-' }}</td>
                     <td>
                         {{ $phoneChangeCode->created_at }}
                     </td>
@@ -138,10 +140,11 @@
 
 @if ($account->emailChangeCodes->isNotEmpty())
     <h3>Email Change requests</h3>
-    <table class="third">
+    <table>
         <thead>
             <tr>
                 <th>Email</th>
+                <th>Code</th>
                 <th>Created</th>
                 <th>Used</th>
                 <th>IP</th>
@@ -151,6 +154,7 @@
             @foreach ($account->emailChangeCodes as $emailChangeCode)
                 <tr @if ($emailChangeCode->consumed()) class="disabled crossed" @endif>
                     <td>{{ $emailChangeCode->email }}</td>
+                    <td>{{ $emailChangeCode->code ?? '-' }}</td>
                     <td>
                         {{ $emailChangeCode->created_at }}
                     </td>
@@ -168,7 +172,7 @@
 
 @if ($account->provisioningTokens->isNotEmpty())
     <h3>Provisioning tokens</h3>
-    <table class="third">
+    <table>
         <thead>
             <tr>
                 <th>Token</th>

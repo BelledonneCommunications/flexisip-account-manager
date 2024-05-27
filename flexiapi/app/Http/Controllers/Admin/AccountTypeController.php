@@ -86,7 +86,7 @@ class AccountTypeController extends Controller
         ]);
     }
 
-    public function destroy(Request $request, int $typeId)
+    public function destroy(int $typeId)
     {
         $type = AccountType::findOrFail($typeId);
         $type->delete();

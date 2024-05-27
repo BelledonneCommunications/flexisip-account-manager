@@ -29,9 +29,9 @@ use App\Rules\NoUppercase;
 
 class AccountActionController extends Controller
 {
-    public function create(int $id)
+    public function create(int $accountId)
     {
-        $account = Account::findOrFail($id);
+        $account = Account::findOrFail($accountId);
 
         return view('admin.account.action.create_edit', [
             'action' => new AccountAction,
@@ -39,9 +39,9 @@ class AccountActionController extends Controller
         ]);
     }
 
-    public function store(Request $request, int $id)
+    public function store(Request $request, int $accountId)
     {
-        $account = Account::findOrFail($id);
+        $account = Account::findOrFail($accountId);
 
         $request->validate([
             'key' => ['required', 'alpha_dash', new NoUppercase],
@@ -59,9 +59,9 @@ class AccountActionController extends Controller
         return redirect()->route('admin.account.edit', $accountAction->account);
     }
 
-    public function edit(int $id, int $actionId)
+    public function edit(int $accountId, int $actionId)
     {
-        $account = Account::findOrFail($id);
+        $account = Account::findOrFail($accountId);
 
         $accountAction = $account->actions()
             ->where('id', $actionId)
@@ -73,9 +73,9 @@ class AccountActionController extends Controller
         ]);
     }
 
-    public function update(Request $request, int $id, int $actionId)
+    public function update(Request $request, int $accountId, int $actionId)
     {
-        $account = Account::findOrFail($id);
+        $account = Account::findOrFail($accountId);
 
         $request->validate([
             'key' => ['alpha_dash', new NoUppercase],
@@ -94,9 +94,9 @@ class AccountActionController extends Controller
         return redirect()->route('admin.account.edit', $account);
     }
 
-    public function delete(int $id, int $actionId)
+    public function delete(int $accountId, int $actionId)
     {
-        $account = Account::findOrFail($id);
+        $account = Account::findOrFail($accountId);
 
         return view('admin.account.action.delete', [
             'action' => $account->actions()
@@ -105,9 +105,9 @@ class AccountActionController extends Controller
         ]);
     }
 
-    public function destroy(Request $request, int $id, int $actionId)
+    public function destroy(Request $request, int $accountId, int $actionId)
     {
-        $account = Account::findOrFail($id);
+        $account = Account::findOrFail($accountId);
 
         $accountAction = $account->actions()
                         ->where('id', $actionId)
