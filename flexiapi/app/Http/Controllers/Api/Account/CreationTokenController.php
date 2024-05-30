@@ -101,4 +101,22 @@ class CreationTokenController extends Controller
 
         return abort(404);
     }
+
+    public function consume(Request $request)
+    {
+        $accountCreationToken = AccountCreationToken::where('token', $request->get('account_creation_token'))
+            ->where('used', false)
+            ->where('account_id', null)
+            ->first();
+
+        if ($accountCreationToken) {
+            $accountCreationToken->account_id = $request->user()->id;
+            $accountCreationToken->fillRequestInfo($request);
+            $accountCreationToken->consume();
+
+            return $accountCreationToken;
+        }
+
+        return abort(404);
+    }
 }

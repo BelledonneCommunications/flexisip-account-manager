@@ -18,6 +18,7 @@ v1.5
 - Fix FLEXIAPI-163 Complete AccountService hooks
 - Fix FLEXIAPI-162 Drop the aliases table and migrate the data to the phone column
 - Fix FLEXIAPI-161 Complete the Dictionary tests to cover the collection accessor
+- Fix FLEXIAPI-159 Add the account_creation_tokens/consume endpoint
 - Fix FLEXIAPI-158 Restrict the phone number change API endpoint to return 403 if the account doesn't have a validated Account Creation Token
 - Fix FLEXIAPI-156 Disable the Phone change web form when PHONE_AUTHENTICATION is disabled
 - Fix FLEXIAPI-155 Add a new accountServiceAccountUpdatedHook and accountServiceAccountDeletedHook

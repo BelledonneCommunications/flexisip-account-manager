@@ -20,6 +20,7 @@
 namespace Tests\Feature;
 
 use App\Account;
+use App\AccountCreationToken;
 use App\PhoneChangeCode;
 use Tests\TestCase;
 

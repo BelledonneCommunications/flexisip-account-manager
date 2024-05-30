@@ -28,6 +28,7 @@ use Carbon\Carbon;
 class ApiAccountCreationTokenTest extends TestCase
 {
     protected $tokenRoute = '/api/account_creation_tokens/send-by-push';
+    protected $tokenConsumeRoute = '/api/account_creation_tokens/consume';
     protected $tokenRequestRoute = '/api/account_creation_request_tokens';
     protected $tokenUsingCreationTokenRoute = '/api/account_creation_tokens/using-account-creation-request-token';
     protected $accountRoute = '/api/accounts/with-account-creation-token';
@@ -200,5 +201,38 @@ class ApiAccountCreationTokenTest extends TestCase
             AccountCreationRequestToken::where('token', $creationRequestToken)->first()->accountCreationToken->id,
             AccountCreationToken::where('token', $creationToken)->first()->id
         );
+    }
+
+    public function testConsume()
+    {
+        $account = Account::factory()->create();
+        $account->generateApiKey();
+
+        $accountCreationToken = AccountCreationToken::factory()->create();
+        $token = $accountCreationToken->token;
+
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->tokenConsumeRoute, [
+                'account_creation_token' => '123'
+            ])
+            ->assertStatus(404);
+
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->tokenConsumeRoute, [
+                'account_creation_token' => $token
+            ])
+            ->assertStatus(200);
+
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->tokenConsumeRoute, [
+                'account_creation_token' => $token
+            ])
+            ->assertStatus(404);
+
+        $this->keyAuthenticated($account)
+            ->json($this->method, '/api/accounts/me/phone/request', [
+                'phone' => '+33123'
+            ])
+            ->assertStatus(200);
     }
 }

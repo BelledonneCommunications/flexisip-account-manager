@@ -130,6 +130,18 @@ JSON parameters:
 
 * `account_creation_request_token` required
 
+### `POST /account_creation_tokens/consume`
+<span class="badge badge-info">User</span>
+
+Consume an `account_creation_token` and link it to the authenticated account.
+Return an `account_creation_token`.
+
+Return `404` if the `account_creation_token` provided is not valid.
+
+JSON parameters:
+
+* `account_creation_token` required
+
 ### `POST /account_creation_tokens`
 <span class="badge badge-warning">Admin</span>
 
@@ -401,7 +413,7 @@ Activate the account.
 
 JSON parameters:
 
-* `code` the received SMS code
+* `code` the code received by email
 
 Return the updated account.
 
