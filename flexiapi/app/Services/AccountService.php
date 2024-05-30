@@ -125,6 +125,7 @@ class AccountService
         }
 
         if (function_exists('accountServiceAccountCreatedHook')) {
+            $account->refresh();
             accountServiceAccountCreatedHook($request, $account);
         }
 
@@ -172,6 +173,14 @@ class AccountService
 
             $account->phone = $request->get('phone');
             $account->save();
+
+            if ($request->has('dictionary')) {
+                $account->dictionaryEntries()->delete();
+
+                foreach ($request->get('dictionary') as $key => $value) {
+                    $account->setDictionaryEntry($key, $value);
+                }
+            }
         }
 
         Log::channel('events')->info(
@@ -182,6 +191,7 @@ class AccountService
         );
 
         if (function_exists('accountServiceAccountEditedHook')) {
+            $account->refresh();
             accountServiceAccountEditedHook($request, $account);
         }
 

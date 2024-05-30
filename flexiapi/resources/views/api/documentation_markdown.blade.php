@@ -326,6 +326,10 @@ JSON parameters:
 * `phone` optional, a phone number, set a phone number to the account
 * `dtmf_protocol` optional, values must be `sipinfo`, `sipmessage` or `rfc2833`
 
+Using this endpoint you can also set a fresh dictionnary if the parameter is set. The existing dictionary entries will be destroyed.
+
+* `dictionary` optional, an associative array attached to the account, <a href="#dictionary">see also the related endpoints</a>.
+
 ### `GET /accounts`
 <span class="badge badge-warning">Admin</span>
 

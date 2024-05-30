@@ -344,8 +344,10 @@ class ApiAccountTest extends TestCase
 
         $entryKey = 'foo';
         $entryValue = 'bar';
+        $entryNewKey = 'new_key';
+        $entryNewValue = 'new_value';
 
-        $this->keyAuthenticated($admin)
+        $result = $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'username' => 'john',
                 'domain' => 'lennon.com',
@@ -361,6 +363,8 @@ class ApiAccountTest extends TestCase
                     $entryKey => $entryValue
                 ]
             ]);
+
+        $accountId = $result->json('id');
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
@@ -381,6 +385,43 @@ class ApiAccountTest extends TestCase
                 'algorithm' => 'SHA-256',
                 'dictionary' => 'hop'
         ])->assertJsonValidationErrors(['dictionary']);
+
+        // Account update
+
+        $this->keyAuthenticated($admin)
+            ->json('PUT', $this->route . '/' . $accountId, [
+                'username' => 'john3',
+                'password' => 'bar',
+                'algorithm' => 'SHA-256',
+                'dictionary' => [
+                    $entryNewKey => $entryNewValue
+                ]
+            ])
+            ->assertJsonMissing([
+                'dictionary' => [
+                    $entryKey => $entryValue
+                ]
+            ])
+            ->assertJson([
+                'dictionary' => [
+                    $entryNewKey => $entryNewValue
+                ]
+            ])
+            ->assertStatus(200);
+
+        $this->keyAuthenticated($admin)
+            ->json('GET', $this->route . '/' . $accountId)
+            ->assertStatus(200)
+            ->assertJsonMissing([
+                'dictionary' => [
+                    $entryKey => $entryValue
+                ]
+            ])
+            ->assertJson([
+                'dictionary' => [
+                    $entryNewKey => $entryNewValue
+                ]
+            ]);
     }
 
     public function testActivated()
