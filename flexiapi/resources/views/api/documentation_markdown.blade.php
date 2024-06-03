@@ -25,6 +25,31 @@ The endpoints are accessible using three different models:
 - <span class="badge badge-info">User</span> the endpoint can only be accessed by an authenticated user
 - <span class="badge badge-warning">Admin</span> the endpoint can be only be accessed by an authenticated admin user
 
+### Localization
+
+You can add an [`Accept-Language`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language) header to your request to translate the responses, and especially errors messages, in a specific language.
+
+Currently supported languages: @php
+    echo implode(', ', config('app.authorized_locales'))
+@endphp
+
+```
+> GET /api/{endpoint}
+> Accept-Language: fr
+> …
+
+< HTTP 422
+< {
+<   "message": "Le champ pseudo est obligatoire.",
+<   "errors": {
+<     "username": [
+<       0 => "Le champ pseudo est obligatoire."
+<     ]
+<   }
+< }
+
+```
+
 ### Using the API Key
 
 You can retrieve an API Key from @if (config('app.web_panel')) [your account panel]({{ route('account.login') }}) @else your account panel @endif or using <a href="#get-accountsmeapikey">the dedicated API endpoint</a>.

@@ -20,7 +20,6 @@
 namespace Tests\Feature;
 
 use App\Account;
-use App\ApiKey;
 use App\Password;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;

@@ -57,6 +57,7 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:600,1', // move to 600 instead of 60
             'bindings',
+            'localization',
         ],
     ];
 
@@ -85,6 +86,7 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'localization' => \App\Http\Middleware\Localization::class,
     ];
 
     /**

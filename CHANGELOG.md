@@ -3,6 +3,7 @@
 v1.5
 ----
 - Fix FLEXIAPI-180 Fix the token and activation flow for the provisioning with token endpoint when the header is missing
+- Fix FLEXIAPI-179 Add Localization support as a Middleware that handles Accept-Language HTTP header
 - Fix FLEXIAPI-178 Show the unused code in the Activity tab of the accounts in the admin panel
 - Fix FLEXIAPI-177 Complete vcards-storage and devices related endpoints with their User/Admin ones
 - Fix FLEXIAPI-176 Improve logs for the deprecated endpoints and AccountCreationToken related serialization
