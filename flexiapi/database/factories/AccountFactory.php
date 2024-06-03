@@ -55,6 +55,13 @@ class AccountFactory extends Factory
         ]);
     }
 
+    public function deactivated()
+    {
+        return $this->state(fn (array $attributes) => [
+            'activated' => false,
+        ]);
+    }
+
     public function withEmail()
     {
         return $this->state(fn (array $attributes) => [

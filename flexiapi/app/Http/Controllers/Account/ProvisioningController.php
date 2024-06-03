@@ -96,6 +96,8 @@ class ProvisioningController extends Controller
      */
     public function me(Request $request)
     {
+        $this->checkProvisioningHeader($request);
+
         return $this->generateProvisioning($request, $request->user());
     }
 
@@ -104,6 +106,8 @@ class ProvisioningController extends Controller
      */
     public function show(Request $request)
     {
+        $this->checkProvisioningHeader($request);
+
         return $this->generateProvisioning($request);
     }
 
@@ -112,6 +116,8 @@ class ProvisioningController extends Controller
      */
     public function provision(Request $request, string $provisioningToken)
     {
+        $this->checkProvisioningHeader($request);
+
         $account = Account::withoutGlobalScopes()
             ->where('id', function ($query) use ($provisioningToken) {
                 $query->select('account_id')
@@ -132,13 +138,16 @@ class ProvisioningController extends Controller
         return $this->generateProvisioning($request, $account);
     }
 
-    private function generateProvisioning(Request $request, Account $account = null)
+    private function checkProvisioningHeader(Request $request)
     {
         if (!$request->hasHeader('x-linphone-provisioning')
           && config('app.provisioning_use_x_linphone_provisioning_header')) {
             abort(400, 'x-linphone-provisioning header is missing');
         }
+    }
 
+    private function generateProvisioning(Request $request, Account $account = null)
+    {
         // Load the hooks if they exists
         $provisioningHooks = config_path('provisioning_hooks.php');
 

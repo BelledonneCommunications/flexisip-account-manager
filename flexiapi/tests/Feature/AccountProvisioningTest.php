@@ -56,6 +56,35 @@ class AccountProvisioningTest extends TestCase
             ->assertDontSee('ha1');
     }
 
+    public function testDontProvisionHeaderDisabled()
+    {
+        $account = Account::factory()->deactivated()->create();
+        $account->generateApiKey();
+
+        $this->assertEquals(false, $account->activated);
+        $this->assertFalse($account->currentProvisioningToken->used);
+
+        // /provisioning/me
+        $this->keyAuthenticated($account)
+            ->get($this->accountRoute)
+            ->assertStatus(400);
+
+        $account->refresh();
+
+        $this->assertEquals(false, $account->activated);
+        $this->assertFalse($account->currentProvisioningToken->used);
+
+        // /provisioning/{token}
+        $this->keyAuthenticated($account)
+            ->get($this->route . '/' . $account->currentProvisioningToken->token)
+            ->assertStatus(400);
+
+        $account->refresh();
+
+        $this->assertEquals(false, $account->activated);
+        $this->assertFalse($account->currentProvisioningToken->used);
+    }
+
     public function testXLinphoneProvisioningHeader()
     {
         $this->withHeaders([
@@ -166,7 +195,9 @@ class AccountProvisioningTest extends TestCase
 
     public function testConfirmationKeyProvisioning()
     {
-        $response = $this->get($this->route . '/1234');
+        $response = $this->withHeaders([
+            'x-linphone-provisioning' => true,
+        ])->get($this->route . '/1234');
         $response->assertStatus(404);
 
         $password = Password::factory()->create();

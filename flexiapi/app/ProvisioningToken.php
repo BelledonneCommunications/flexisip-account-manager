@@ -25,6 +25,10 @@ class ProvisioningToken extends Consommable
 {
     use HasFactory;
 
+    protected $casts = [
+        'used' => 'boolean',
+    ];
+
     public function consume()
     {
         $this->used = true;
