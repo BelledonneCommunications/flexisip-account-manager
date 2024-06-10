@@ -42,7 +42,15 @@ class AccountDictionaryController extends Controller
             'value' => 'required'
         ]);
 
-        return Account::findOrFail($accountId)->setDictionaryEntry($key, $request->get('value'));
+        $account = Account::findOrFail($accountId);
+        $result = $account->setDictionaryEntry($key, $request->get('value'));
+
+        if (function_exists('accountServiceAccountEditedHook')) {
+            $account->refresh();
+            accountServiceAccountEditedHook($request, $account);
+        }
+
+        return $result;
     }
 
     public function destroy(int $accountId, string $key)

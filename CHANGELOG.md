@@ -2,6 +2,7 @@
 
 v1.5
 ----
+- Fix FLEXIAPI-183 Complete the account hooks on the dictionnary actions
 - Fix FLEXIAPI-181 Replace APP_ADMINS_MANAGE_MULTI_DOMAINS with APP_SUPER_ADMINS_SIP_DOMAINS
 - Fix FLEXIAPI-180 Fix the token and activation flow for the provisioning with token endpoint when the header is missing
 - Fix FLEXIAPI-179 Add Localization support as a Middleware that handles Accept-Language HTTP header

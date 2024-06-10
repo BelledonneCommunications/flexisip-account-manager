@@ -56,6 +56,11 @@ class AccountDictionaryController extends Controller
 
         $account->setDictionaryEntry($request->get('key'), $request->get('value'));
 
+        if (function_exists('accountServiceAccountEditedHook')) {
+            $account->refresh();
+            accountServiceAccountEditedHook($request, $account);
+        }
+
         return redirect()->route('admin.account.dictionary.index', $account->id);
     }
 
@@ -80,6 +85,11 @@ class AccountDictionaryController extends Controller
         $entry = $account->dictionaryEntries()->findOrFail($entryId);
         $entry->value = $request->get('value');
         $entry->save();
+
+        if (function_exists('accountServiceAccountEditedHook')) {
+            $account->refresh();
+            accountServiceAccountEditedHook($request, $account);
+        }
 
         return redirect()->route('admin.account.dictionary.index', $account->id);
     }
