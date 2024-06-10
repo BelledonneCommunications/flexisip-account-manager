@@ -73,19 +73,7 @@
                     value="{{ request()->get('search', '') }}">
                 <label for="search">Search</label>
             </div>
-            <div class="select">
-                <select name="domain" onchange="this.form.submit()">
-                    <option value="">
-                        Select a domain
-                    </option>
-                    @foreach ($domains as $d)
-                        <option value="{{ $d }}" @if (request()->get('domain', '') == $d) selected="selected" @endif>
-                            {{ $d }}
-                        </option>
-                    @endforeach
-                </select>
-                <label for="domain">Domain</label>
-            </div>
+            @include('admin.account.parts.forms.select_domain')
             <div>
                 <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}" type="reset"
                     class="btn btn-secondary">Reset</a>

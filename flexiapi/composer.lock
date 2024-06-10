@@ -2921,16 +2921,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.72.3",
+            "version": "2.72.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "0c6fd108360c562f6e4fd1dedb8233b423e91c83"
+                "reference": "afd46589c216118ecd48ff2b95d77596af1e57ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/0c6fd108360c562f6e4fd1dedb8233b423e91c83",
-                "reference": "0c6fd108360c562f6e4fd1dedb8233b423e91c83",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/afd46589c216118ecd48ff2b95d77596af1e57ed",
+                "reference": "afd46589c216118ecd48ff2b95d77596af1e57ed",
                 "shasum": ""
             },
             "require": {
@@ -2964,8 +2964,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-3.x": "3.x-dev",
-                    "dev-master": "2.x-dev"
+                    "dev-master": "3.x-dev",
+                    "dev-2.x": "2.x-dev"
                 },
                 "laravel": {
                     "providers": [
@@ -3024,7 +3024,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-25T10:35:09+00:00"
+            "time": "2024-06-03T19:18:41+00:00"
         },
         {
             "name": "nette/schema",
@@ -4508,16 +4508,16 @@
         },
         {
             "name": "psy/psysh",
-            "version": "v0.12.3",
+            "version": "v0.12.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "b6b6cce7d3ee8fbf31843edce5e8f5a72eff4a73"
+                "reference": "2fd717afa05341b4f8152547f142cd2f130f6818"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/b6b6cce7d3ee8fbf31843edce5e8f5a72eff4a73",
-                "reference": "b6b6cce7d3ee8fbf31843edce5e8f5a72eff4a73",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/2fd717afa05341b4f8152547f142cd2f130f6818",
+                "reference": "2fd717afa05341b4f8152547f142cd2f130f6818",
                 "shasum": ""
             },
             "require": {
@@ -4581,9 +4581,9 @@
             ],
             "support": {
                 "issues": "https://github.com/bobthecow/psysh/issues",
-                "source": "https://github.com/bobthecow/psysh/tree/v0.12.3"
+                "source": "https://github.com/bobthecow/psysh/tree/v0.12.4"
             },
-            "time": "2024-04-02T15:57:53+00:00"
+            "time": "2024-06-10T01:18:23+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -5618,20 +5618,20 @@
         },
         {
             "name": "scyllaly/hcaptcha",
-            "version": "4.4.5",
+            "version": "4.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Scyllaly/hcaptcha.git",
-                "reference": "3c133dfe684d34570e911de11098ebaa0d2c369d"
+                "reference": "5b7d5ec5430014bbf2b44831cef3ddf9d3ded451"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Scyllaly/hcaptcha/zipball/3c133dfe684d34570e911de11098ebaa0d2c369d",
-                "reference": "3c133dfe684d34570e911de11098ebaa0d2c369d",
+                "url": "https://api.github.com/repos/Scyllaly/hcaptcha/zipball/5b7d5ec5430014bbf2b44831cef3ddf9d3ded451",
+                "reference": "5b7d5ec5430014bbf2b44831cef3ddf9d3ded451",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "5.*|6.*|7.*|8.*|^9.0|10.*",
+                "illuminate/support": "5.*|6.*|7.*|8.*|^9.0|10.*|^11.0",
                 "php": ">=5.5.5"
             },
             "require-dev": {
@@ -5671,9 +5671,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Scyllaly/hcaptcha/issues",
-                "source": "https://github.com/Scyllaly/hcaptcha/tree/4.4.5"
+                "source": "https://github.com/Scyllaly/hcaptcha/tree/4.4.6"
             },
-            "time": "2023-03-14T16:36:21+00:00"
+            "time": "2024-06-08T15:55:53+00:00"
         },
         {
             "name": "sebastian/cli-parser",

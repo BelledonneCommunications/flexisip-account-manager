@@ -40,7 +40,7 @@ class AccountController extends Controller
         return view('account.blocked');
     }
 
-    public function panel(Request $request)
+    public function dashboard(Request $request)
     {
         return view('account.dashboard', [
             'account' => $request->user()

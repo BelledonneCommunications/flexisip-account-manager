@@ -33,7 +33,7 @@ class AuthenticateController extends Controller
 
     public function login(Request $request)
     {
-        if (auth()->user()) {
+        if (Auth::user()) {
             return redirect()->route('account.dashboard');
         }
 

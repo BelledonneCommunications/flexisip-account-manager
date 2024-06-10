@@ -330,6 +330,10 @@ header nav a.oppose~a.oppose {
     margin-left: 0;
 }
 
+header nav span.badge {
+    margin-left: 1rem;
+}
+
 @media screen and (max-width: 800px) {
     header nav {
         padding: 1rem;

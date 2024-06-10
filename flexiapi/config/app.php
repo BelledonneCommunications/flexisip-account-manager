@@ -15,6 +15,7 @@ return [
 
     'name' => env('APP_NAME', 'Account Manager'),
     'sip_domain' => env('APP_SIP_DOMAIN', 'sip.domain.com'),
+    'super_admins_sip_domains' => env('APP_SUPER_ADMINS_SIP_DOMAINS', ''),
 
     'project_url' => env('APP_PROJECT_URL', ''),
     'terms_of_use_url' => env('TERMS_OF_USE_URL', ''),
@@ -71,12 +72,6 @@ return [
      * will be used as a fallback
      */
     'realm' => env('ACCOUNT_REALM', null),
-
-    /**
-     * Allow admins to handle all the accounts in the database
-     * ENABLE IT AT YOUR OWN RISKS IN PRODUCTION
-     */
-    'admins_manage_multi_domains' => env('APP_ADMINS_MANAGE_MULTI_DOMAINS', false),
 
     /**
      * /!\ Enable dangerous endpoints required for fallback

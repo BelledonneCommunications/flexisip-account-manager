@@ -111,8 +111,7 @@ function resolveDomain(Request $request): string
 {
     return $request->has('domain')
         && $request->user()
-        && $request->user()->admin
-        && config('app.admins_manage_multi_domains')
+        && $request->user()->superAdmin
         ? $request->get('domain')
         : config('app.sip_domain');
 }

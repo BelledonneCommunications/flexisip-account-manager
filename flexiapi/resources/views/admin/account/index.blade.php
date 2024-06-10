@@ -35,19 +35,7 @@
                 <label for="search">Search</label>
             </div>
             <div class="large on_desktop"></div>
-            <div class="select">
-                <select name="domain" onchange="this.form.submit()">
-                    <option value="">
-                        Select a domain
-                    </option>
-                    @foreach ($domains as $d)
-                        <option value="{{ $d }}" @if (request()->get('domain', '') == $d) selected="selected" @endif>
-                            {{ $d }}
-                        </option>
-                    @endforeach
-                </select>
-                <label for="domain">Domain</label>
-            </div>
+            @include('admin.account.parts.forms.select_domain')
             <div class="select">
                 <select name="contacts_list" onchange="this.form.submit()">
                     <option value="">
@@ -107,7 +95,9 @@
                         @if ($account->activated)
                             <span class="badge badge-success" title="Activated">Act.</span>
                         @endif
-                        @if ($account->admin)
+                        @if ($account->superAdmin)
+                            <span class="badge badge-error" title="Admin">Super Adm.</span>
+                        @elseif ($account->admin)
                             <span class="badge badge-primary" title="Admin">Adm.</span>
                         @endif
                         @if ($account->sha256Password)

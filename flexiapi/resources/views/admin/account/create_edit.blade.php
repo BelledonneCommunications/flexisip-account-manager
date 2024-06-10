@@ -45,7 +45,7 @@
             @include('parts.errors', ['name' => 'username'])
         </div>
         <div>
-            <input placeholder="domain.com" @if (config('app.admins_manage_multi_domains')) required @else disabled @endif name="domain"
+            <input placeholder="domain.com" @if (auth()->user()?->superAdmin) required @else disabled @endif name="domain"
                 type="text" value="{{ $account->domain ?? config('app.sip_domain') }}"
                 @if ($account->id) readonly @endif>
             <label for="domain">Domain</label>

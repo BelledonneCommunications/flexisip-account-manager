@@ -180,7 +180,7 @@ class ApiAccountTest extends TestCase
     {
         $configDomain = 'sip.domain.com';
         config()->set('app.sip_domain', $configDomain);
-        config()->set('app.admins_manage_multi_domains', true);
+        config()->set('app.super_admins_sip_domains', $configDomain);
 
         $password = Password::factory()->admin()->create();
         $password->account->generateApiKey();
@@ -242,8 +242,9 @@ class ApiAccountTest extends TestCase
     public function testDomainInTestDeployment()
     {
         $configDomain = 'testdomain.com';
-        config()->set('app.admins_manage_multi_domains', true);
-        config()->set('app.sip_domain', 'anotherdomain.com');
+        $adminDomain = 'admindomain.com';
+        config()->set('app.super_admins_sip_domains', $adminDomain);
+        config()->set('app.sip_domain', $adminDomain);
 
         $password = Password::factory()->admin()->create();
         $username = 'foobar';

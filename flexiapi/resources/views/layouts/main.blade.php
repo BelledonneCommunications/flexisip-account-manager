@@ -34,8 +34,14 @@
             </a>
             @if (auth()->user())
                 <a class="oppose" href="{{ route('account.dashboard') }}">
-                    <i class="material-symbols-outlined">account_circle</i><span
-                        class="on_desktop">{{ auth()->user()->identifier }}</span>
+                    <i class="material-symbols-outlined">account_circle</i>
+                    <span class="on_desktop">{{ auth()->user()->identifier }}</span>
+
+                    @if (auth()->user()->superAdmin)
+                        <span class="badge badge-error" title="Admin">Super Adm.</span>
+                    @elseif (auth()->user()->admin)
+                        <span class="badge badge-primary" title="Admin">Adm.</span>
+                    @endif
                 </a>
                 <a class="oppose" href="{{ route('account.logout') }}">
                     <i class="material-symbols-outlined">logout</i>

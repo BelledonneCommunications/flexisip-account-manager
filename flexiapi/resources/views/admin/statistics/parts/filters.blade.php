@@ -26,22 +26,7 @@
                 class="chip @if ($request->get('by', 'day') == 'year') selected @endif">Year</a>
         </div>
 
-        @if (config('app.admins_manage_multi_domains'))
-            <div class="select">
-                <select name="domain" onchange="this.form.submit()">
-                    <option value="">
-                        Select a domain
-                    </option>
-                    @foreach ($domains as $d)
-                        <option value="{{ $d }}"
-                            @if (request()->get('domain', '') == $d) selected="selected" @endif>
-                            {{ $d }}
-                        </option>
-                    @endforeach
-                </select>
-                <label for="domain">Domain</label>
-            </div>
-        @endif
+        @include('admin.account.parts.forms.select_domain')
 
         <div class="select">
             <select name="contacts_list" onchange="this.form.submit()">

@@ -128,7 +128,7 @@ Route::group(['middleware' => 'web_panel_enabled'], function () {
         });
 
         Route::controller(AccountController::class)->group(function () {
-            Route::get('dashboard', 'panel')->name('dashboard');
+            Route::get('dashboard', 'dashboard')->name('dashboard');
 
             Route::get('delete', 'delete')->name('delete');
             Route::delete('delete', 'destroy')->name('destroy');

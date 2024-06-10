@@ -27,6 +27,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\StatisticsGraphFactory;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StatisticsController extends Controller
 {
@@ -65,7 +66,7 @@ class StatisticsController extends Controller
             return $graph->export();
         }
 
-        if (config('app.admins_manage_multi_domains')) {
+        if (Auth::user()?->superAdmin) {
             switch ($type) {
                 case 'messages':
                     $domains = StatisticsMessage::groupBy('from_domain')->pluck('from_domain');

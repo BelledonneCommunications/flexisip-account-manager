@@ -336,7 +336,7 @@ JSON parameters:
 * `username` unique username, minimum 6 characters
 * `password` required minimum 6 characters
 * `algorithm` required, values can be `SHA-256` or `MD5`
-* `domain` **not configurable by default**. Only configurable if `APP_ADMINS_MANAGE_MULTI_DOMAINS` is set to `true` in the global configuration. Otherwise `APP_SIP_DOMAIN` is used.
+* `domain` **not configurable by default**. Only configurable if the admin is a super admin. Otherwise `APP_SIP_DOMAIN` is used.
 * `activated` optional, a boolean, set to `false` by default
 * `display_name` optional, string
 * `email` optional, must be an email, must be unique if `ACCOUNT_EMAIL_UNIQUE` is set to `true`
@@ -354,7 +354,7 @@ Update an existing account. Ensure to resend all the parameters to not reset the
 JSON parameters:
 
 * `username` unique username, minimum 6 characters
-* `domain` **not configurable by default**. Only configurable if `APP_ADMINS_MANAGE_MULTI_DOMAINS` is set to `true` in the global configuration. Otherwise `APP_SIP_DOMAIN` is used.
+* `domain` **not configurable by default**. Only configurable if the admin is a super admin. Otherwise `APP_SIP_DOMAIN` is used.
 * `password` required minimum 6 characters
 * `algorithm` required, values can be `SHA-256` or `MD5`
 * `display_name` optional, string

@@ -68,7 +68,7 @@ class Account extends Authenticatable
     protected static function booted()
     {
         static::addGlobalScope('domain', function (Builder $builder) {
-            if (Auth::hasUser() && Auth::user()->admin && config('app.admins_manage_multi_domains')) {
+            if (Auth::hasUser() && Auth::user()->superAdmin) {
                 return;
             }
 
@@ -319,6 +319,23 @@ class Account extends Authenticatable
     public function getResolvedDtmfProtocolAttribute()
     {
         return self::$dtmfProtocols[$this->attributes['dtmf_protocol']];
+    }
+
+    public function getSuperAdminAttribute(): bool
+    {
+        $domains = config('app.super_admins_sip_domains');
+
+        if (empty($domains)) {
+            return false;
+        }
+
+        $domains = explode(',', $domains);
+
+        if (empty($domains)) {
+            return false;
+        }
+
+        return $this->admin && in_array($this->domain, $domains);
     }
 
     /**

@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -56,7 +57,7 @@ class StatisticsGraphFactory
                 $fromQuery = StatisticsMessage::query();
                 $toQuery = StatisticsMessage::query();
 
-                if (!config('app.admins_manage_multi_domains')) {
+                if (!Auth::user()?->isAdmin) {
                     $fromQuery->where('from_domain', config('app.sip_domain'));
                     $toQuery->toDomain($this->domain);
                 } elseif ($this->domain) {
@@ -88,7 +89,7 @@ class StatisticsGraphFactory
                 $fromQuery = StatisticsCall::query();
                 $toQuery = StatisticsCall::query();
 
-                if (!config('app.admins_manage_multi_domains')) {
+                if (!Auth::user()?->superAdmin) {
                     $fromQuery->where('from_domain', config('app.sip_domain'));
                     $toQuery->where('to_domain', config('app.sip_domain'));
                 } elseif ($this->domain) {
@@ -125,7 +126,7 @@ class StatisticsGraphFactory
                 // Accounts doesn't have a from and to
                 $this->domain = $this->domain ?? $this->fromDomain;
 
-                if (!config('app.admins_manage_multi_domains')) {
+                if (!Auth::user()?->isAdmin) {
                     $this->data->where('domain', config('app.sip_domain'));
                 } elseif ($this->domain) {
                     $this->data->where('domain', $this->domain);
