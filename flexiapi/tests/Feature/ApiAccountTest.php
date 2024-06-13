@@ -73,6 +73,17 @@ class ApiAccountTest extends TestCase
             ]);
     }
 
+    public function testEmptyDevices()
+    {
+        $account = Account::factory()->create();
+        $account->generateApiKey();
+
+        $this->keyAuthenticated($account)
+            ->get($this->route . '/me/devices')
+            ->assertStatus(200)
+            ->assertSee('{}');
+    }
+
     public function testUsernameNotPhone()
     {
         $password = Password::factory()->admin()->create();
@@ -438,7 +449,7 @@ class ApiAccountTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->json('GET', $this->route . '/' . $accountId)
-            ->assertSee(['"dictionary":null'], false)
+            ->assertSee(['"dictionary":{}'], false)
             ->assertStatus(200);
     }
 

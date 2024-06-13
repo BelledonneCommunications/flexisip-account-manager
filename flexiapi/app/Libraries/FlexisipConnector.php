@@ -22,6 +22,7 @@ namespace App\Libraries;
 use App\Device;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Log;
+use stdClass;
 
 class FlexisipConnector
 {
@@ -40,6 +41,8 @@ class FlexisipConnector
         } catch (\Throwable $th) {
             Log::error('Redis server issue: ' . $th->getMessage());
         }
+
+        if ($devices->isEmpty()) return new stdClass;
 
         return $devices->keyBy('uuid');
     }

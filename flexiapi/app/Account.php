@@ -30,6 +30,7 @@ use Carbon\Carbon;
 
 use Awobaz\Compoships\Compoships;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+use stdClass;
 
 class Account extends Authenticatable
 {
@@ -141,9 +142,9 @@ class Account extends Authenticatable
         return $this->hasMany(AccountDictionaryEntry::class);
     }
 
-    public function getDictionaryAttribute(): ?Collection
+    public function getDictionaryAttribute()
     {
-        if ($this->dictionaryEntries->isEmpty()) return null;
+        if ($this->dictionaryEntries->isEmpty()) return new stdClass;
 
         return $this->dictionaryEntries->keyBy('key')->map(function ($entry) {
             return $entry->value;

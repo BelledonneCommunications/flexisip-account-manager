@@ -1,7 +1,8 @@
 # Flexisip Account Manager Changelog
 
 v1.5
-----
+---
+- Fix FLEXIAPI-186 Ensure that empty objects are serialized in JSON as objects and not empty arrays
 - Fix FLEXIAPI-185 Return null if the account dictionary is empty in the API
 - Fix FLEXIAPI-184 Append phone_change_code and email_change_code to the admin /accounts/<id> endpoint if they are available
 - Fix FLEXIAPI-183 Complete the account hooks on the dictionnary actions
