@@ -367,6 +367,8 @@ Using this endpoint you can also set a fresh dictionnary if the parameter is set
 
 * `dictionary` optional, an associative array attached to the account, <a href="#dictionary">see also the related endpoints</a>.
 
+This endpoint also return the current `phone_change_code` and `email_change_code` if they are available.
+
 ### `GET /accounts`
 <span class="badge badge-warning">Admin</span>
 

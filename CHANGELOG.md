@@ -2,6 +2,7 @@
 
 v1.5
 ----
+- Fix FLEXIAPI-184 Append phone_change_code and email_change_code to the admin /accounts/<id> endpoint if they are available
 - Fix FLEXIAPI-183 Complete the account hooks on the dictionnary actions
 - Fix FLEXIAPI-181 Replace APP_ADMINS_MANAGE_MULTI_DOMAINS with APP_SUPER_ADMINS_SIP_DOMAINS
 - Fix FLEXIAPI-180 Fix the token and activation flow for the provisioning with token endpoint when the header is missing

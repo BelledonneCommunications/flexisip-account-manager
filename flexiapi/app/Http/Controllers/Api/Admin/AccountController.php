@@ -35,12 +35,24 @@ class AccountController extends Controller
 {
     public function index(Request $request)
     {
-        return Account::without(['passwords', 'admin'])->paginate(20);
+        return Account::without(['passwords', 'admin'])->with(['phoneChangeCode', 'emailChangeCode'])->paginate(20);
     }
 
-    public function show($accountId)
+    public function show(Request $request, $accountId)
     {
-        return Account::without(['passwords', 'admin'])->findOrFail($accountId)->makeVisible(['confirmation_key', 'provisioning_token']);
+        $account = Account::without(['passwords', 'admin'])->with(['phoneChangeCode', 'emailChangeCode'])->findOrFail($accountId);
+
+        if ($request->user()->admin) {
+            if ($account->phoneChangeCode) {
+                $account->phoneChangeCode->makeVisible(['code']);
+            }
+
+            if ($account->emailChangeCode) {
+                $account->emailChangeCode->makeVisible(['code']);
+            }
+        }
+
+        return $account;
     }
 
     public function search(string $sip)

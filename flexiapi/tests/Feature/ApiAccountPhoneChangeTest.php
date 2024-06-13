@@ -76,12 +76,26 @@ class ApiAccountPhoneChangeTest extends TestCase
         $phoneChange = PhoneChangeCode::factory()->create();
         $phone = $phoneChange->phone;
 
+        $admin = Account::factory()->admin()->create();
+        $admin->generateApiKey();
+
         $this->keyAuthenticated($phoneChange->account)
             ->get('/api/accounts/me')
             ->assertStatus(200)
             ->assertJson([
                 'phone' => null
             ]);
+
+        // Check who can see the code
+        $this->keyAuthenticated($admin)
+            ->json('GET', '/api/accounts/' . $phoneChange->account->id)
+            ->assertStatus(200)
+            ->assertSee($phoneChange->code);
+
+        $this->keyAuthenticated($phoneChange->account)
+            ->json('GET', '/api/accounts/me')
+            ->assertStatus(200)
+            ->assertDontSee($phoneChange->code);
 
         $this->keyAuthenticated($phoneChange->account)
             ->json($this->method, $this->route, [
@@ -98,5 +112,11 @@ class ApiAccountPhoneChangeTest extends TestCase
             ->assertJson([
                 'phone' => $phone
             ]);
+
+        // Check that the code is gone
+        $this->keyAuthenticated($admin)
+            ->json('GET', '/api/accounts/' . $phoneChange->account->id)
+            ->assertStatus(200)
+            ->assertDontSee($phoneChange->code);
     }
 }

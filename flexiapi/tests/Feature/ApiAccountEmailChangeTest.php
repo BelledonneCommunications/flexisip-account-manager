@@ -102,12 +102,26 @@ class ApiAccountEmailChangeTest extends TestCase
         $emailChange = EmailChangeCode::factory()->create();
         $email = $emailChange->email;
 
+        $admin = Account::factory()->admin()->create();
+        $admin->generateApiKey();
+
         $this->keyAuthenticated($emailChange->account)
             ->get('/api/accounts/me')
             ->assertStatus(200)
             ->assertJson([
                 'email' => null
             ]);
+
+        // Check who can see the code
+        $this->keyAuthenticated($admin)
+            ->json('GET', '/api/accounts/' . $emailChange->account->id)
+            ->assertStatus(200)
+            ->assertSee($emailChange->code);
+
+        $this->keyAuthenticated($emailChange->account)
+            ->json('GET', '/api/accounts/me')
+            ->assertStatus(200)
+            ->assertDontSee($emailChange->code);
 
         $this->keyAuthenticated($emailChange->account)
             ->json($this->method, $this->route, [
@@ -124,5 +138,11 @@ class ApiAccountEmailChangeTest extends TestCase
             ->assertJson([
                 'email' => $email
             ]);
+
+        // Check that the code is gone
+        $this->keyAuthenticated($admin)
+            ->json('GET', '/api/accounts/' . $emailChange->account->id)
+            ->assertStatus(200)
+            ->assertDontSee($emailChange->code);
     }
 }
