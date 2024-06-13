@@ -423,6 +423,23 @@ class ApiAccountTest extends TestCase
                     $entryNewKey => $entryNewValue
                 ]
             ]);
+
+        // Clear
+
+        $this->keyAuthenticated($admin)
+            ->json('PUT', $this->route . '/' . $accountId, [
+                'username' => 'john3',
+                'password' => 'bar',
+                'algorithm' => 'SHA-256',
+                'dictionary' => []
+            ])
+            ->assertJson(['dictionary' => null])
+            ->assertStatus(200);
+
+        $this->keyAuthenticated($admin)
+            ->json('GET', $this->route . '/' . $accountId)
+            ->assertSee(['"dictionary":null'], false)
+            ->assertStatus(200);
     }
 
     public function testActivated()

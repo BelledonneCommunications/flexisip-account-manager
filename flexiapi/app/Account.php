@@ -22,6 +22,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Collection;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -140,8 +141,10 @@ class Account extends Authenticatable
         return $this->hasMany(AccountDictionaryEntry::class);
     }
 
-    public function getDictionaryAttribute()
+    public function getDictionaryAttribute(): ?Collection
     {
+        if ($this->dictionaryEntries->isEmpty()) return null;
+
         return $this->dictionaryEntries->keyBy('key')->map(function ($entry) {
             return $entry->value;
         });
