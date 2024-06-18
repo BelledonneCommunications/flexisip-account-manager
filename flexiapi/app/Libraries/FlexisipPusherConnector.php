@@ -67,7 +67,7 @@ class FlexisipPusherConnector
             $command = $this->pusherPath
                 . " --pn-provider '" . $this->pnProvider . "'"
                 . " --pn-param '" . $this->pnParam . "'"
-                . " --pn-prid " . $this->pnPrid
+                . " --pn-prid '" . $this->pnPrid . "'"
                 . " --customPayload '" . $payload . "'";
 
             if (in_array($this->pnProvider, ['apns', 'apns.dev'])) {
