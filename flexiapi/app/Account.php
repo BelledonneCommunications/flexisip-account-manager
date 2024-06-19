@@ -22,7 +22,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Collection;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -153,11 +152,8 @@ class Account extends Authenticatable
 
     public function setDictionaryEntry(string $key, string $value): AccountDictionaryEntry
     {
-        $entry = $this->dictionaryEntries->where('key', $key)->first();
-
-        if (!$entry) {
-            $entry = new AccountDictionaryEntry;
-        }
+        $this->dictionaryEntries()->where('key', $key)->delete();
+        $entry = new AccountDictionaryEntry;
 
         $entry->account_id = $this->id;
         $entry->key = $key;

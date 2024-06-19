@@ -421,6 +421,29 @@ class ApiAccountTest extends TestCase
             ])
             ->assertStatus(200);
 
+        // ...twice
+
+        $this->keyAuthenticated($admin)
+            ->json('PUT', $this->route . '/' . $accountId, [
+                'username' => 'john3',
+                'password' => 'bar',
+                'algorithm' => 'SHA-256',
+                'dictionary' => [
+                    $entryNewKey => $entryNewValue
+                ]
+            ])
+            ->assertJsonMissing([
+                'dictionary' => [
+                    $entryKey => $entryValue
+                ]
+            ])
+            ->assertJson([
+                'dictionary' => [
+                    $entryNewKey => $entryNewValue
+                ]
+            ])
+            ->assertStatus(200);
+
         $this->keyAuthenticated($admin)
             ->json('GET', $this->route . '/' . $accountId)
             ->assertStatus(200)
