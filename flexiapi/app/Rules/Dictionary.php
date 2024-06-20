@@ -19,6 +19,6 @@ class Dictionary implements Rule
 
     public function message()
     {
-        return 'The dictionary must be an assiocative dictionary of strings';
+        return 'The dictionary must be an associative dictionary of strings';
     }
 }
