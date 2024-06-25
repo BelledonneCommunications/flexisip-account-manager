@@ -21,9 +21,11 @@
             </a>
             <input form="create_edit" class="btn" type="submit" value="Update">
         </header>
-        <p title="{{ $account->updated_at }}">Updated on {{ $account->updated_at->format('d/m/Y') }}
-            @include('admin.account.parts.tabs')
-        @else
+        @if ($account->updated_at)
+            <p title="{{ $account->updated_at }}">Updated on {{ $account->updated_at->format('d/m/Y') }}
+        @endif
+        @include('admin.account.parts.tabs')
+    @else
         <header>
             <h1><i class="material-symbols-outlined">people</i> Create an account</h1>
             <a href="{{ route('admin.account.index') }}" class="btn btn-secondary oppose">Cancel</a>

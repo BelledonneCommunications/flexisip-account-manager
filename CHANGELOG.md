@@ -2,6 +2,7 @@
 
 v1.5
 ---
+- Fix FLEXIAPI-195 Fix LiblinphoneTesterAccoutSeeder to fit with the latest Account related changes
 - Fix FLEXIAPI-193 Typo
 - Fix FLEXIAPI-192 Clear and upgrade properly the account dictionary entries if the entries are already existing
 - Fix FLEXIAPI-191 Add quotes for the pn-prid parameter in FlexisipPusherConnector

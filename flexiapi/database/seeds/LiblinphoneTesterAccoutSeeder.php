@@ -37,6 +37,7 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
                         $element->id,
                         $element->username,
                         $element->domain,
+                        $element->phone ?? null,
                         $element->activated ?? true,
                         $element->confirmation_key ?? null
                     )
@@ -64,6 +65,7 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
                             str_replace('%id%', $element->idStart + $i, $element->id),
                             str_replace('%usernamePostfix%', $element->usernameStart + $i, $element->username),
                             $element->domain,
+                            $element->phone ?? null,
                             $element->activated ?? true,
                             $element->confirmation_key ?? null
                         )
@@ -88,14 +90,14 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
     }
 
     private function generateAccountArray(
-        int $id, string $username,
-        string $domain, bool $activated = true,
-        string $confirmationKey = null
+        int $id, string $username, string $domain, string $phone = null,
+        bool $activated = true, string $confirmationKey = null
     ): array {
         return [
             'id' => $id,
             'username' => $username,
             'domain' => $domain,
+            'phone' => $phone,
             'email' => rawurlencode($username) . '@' . $domain,
             'activated' => $activated,
             'ip_address' => '',
