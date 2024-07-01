@@ -20,16 +20,17 @@
 namespace App\Http\Controllers\Api\Account;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Libraries\FlexisipConnector;
+use Illuminate\Http\Request;
+use stdClass;
 
 class DeviceController extends Controller
 {
     public function index(Request $request)
     {
-        $connector = new FlexisipConnector;
+        $devices = (new FlexisipConnector)->getDevices($request->user()->identifier);
 
-        return $connector->getDevices($request->user()->identifier);
+        return ($devices->isEmpty()) ? new stdClass : $devices;
     }
 
     public function destroy(Request $request, string $uuid)

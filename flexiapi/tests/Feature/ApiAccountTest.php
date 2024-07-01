@@ -24,6 +24,7 @@ use App\AccountCreationToken;
 use App\AccountTombstone;
 use App\ActivationExpiration;
 use App\Password;
+use App\SipDomain;
 use Carbon\Carbon;
 use Tests\TestCase;
 
@@ -86,14 +87,13 @@ class ApiAccountTest extends TestCase
 
     public function testUsernameNotPhone()
     {
-        $password = Password::factory()->admin()->create();
-        $password->account->generateApiKey();
-        //$password->account->save();
+        $account = Account::factory()->admin()->create();
+        $account->generateApiKey();
 
         $username = '+33612121212';
-        $domain = 'example.com';
+        $domain = SipDomain::first()->domain;
 
-        $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'domain' => $domain,
@@ -104,7 +104,7 @@ class ApiAccountTest extends TestCase
 
         config()->set('app.allow_phone_number_username_admin_api', true);
 
-        $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'domain' => $domain,
@@ -118,10 +118,9 @@ class ApiAccountTest extends TestCase
     {
         $password = Password::factory()->admin()->create();
         $password->account->generateApiKey();
-        //$password->account->save();
 
         $username = 'blabla🔥';
-        $domain = 'example.com';
+        $domain = SipDomain::first()->domain;
 
         $this->keyAuthenticated($password->account)
             ->json($this->method, $this->route, [
@@ -161,7 +160,7 @@ class ApiAccountTest extends TestCase
 
         $password = Password::factory()->admin()->create();
         $username = 'foobar';
-        $domain = 'example.com';
+        $domain = SipDomain::first()->domain;
 
         config()->set('app.admins_manage_multi_domains', false);
 
@@ -191,53 +190,48 @@ class ApiAccountTest extends TestCase
     {
         $configDomain = 'sip.domain.com';
         config()->set('app.sip_domain', $configDomain);
-        config()->set('app.super_admins_sip_domains', $configDomain);
 
-        $password = Password::factory()->admin()->create();
-        $password->account->generateApiKey();
-        $password->account->save();
+        $account = Account::factory()->superAdmin()->create();
+        $account->generateApiKey();
+        $account->save();
 
         $username = 'foobar';
-        $domain1 = 'example.com';
-        $domain2 = 'foobar.com';
+        $domain1 = SipDomain::first()->domain;
+        $domain2 = SipDomain::factory()->secondDomain()->create()->domain;
 
-        $response0 = $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'domain' => $domain1,
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
-            ]);
-
-        $response0
+            ])
             ->assertStatus(200)
             ->assertJson([
                 'username' => $username,
                 'domain' => $domain1
             ]);
 
-        $response1 = $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'domain' => $domain2,
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
-            ]);
-
-        $response1
+            ])
             ->assertStatus(200)
             ->assertJson([
                 'username' => $username,
                 'domain' => $domain2
             ]);
 
-        $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($account)
             ->get($this->route)
             ->assertStatus(200)
             ->assertJson(['data' => [
                 [
-                    'username' => $password->account->username,
-                    'domain' => $password->account->domain
+                    'username' => $account->username,
+                    'domain' => $account->domain
                 ],
                 [
                     'username' => $username,
@@ -250,12 +244,68 @@ class ApiAccountTest extends TestCase
             ]]);
     }
 
+    public function testCreateDomainAsAdmin()
+    {
+        $admin = Account::factory()->admin()->create();
+        $admin->generateApiKey();
+        $admin->save();
+
+        $username = 'foo';
+        $newDomain = 'new.domain';
+
+        // Standard admin
+        $this->keyAuthenticated($admin)
+            ->json($this->method, $this->route, [
+                'username' => $username,
+                'domain' => $newDomain,
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+            ])
+            ->assertStatus(422);
+
+        $this->keyAuthenticated($admin)
+            ->json($this->method, $this->route, [
+                'username' => $username,
+                'domain' => $admin->domain,
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+            ])
+            ->assertStatus(200);
+    }
+
+    public function testCreateDomainAsSuperAdmin()
+    {
+        $superAdmin = Account::factory()->superAdmin()->create();
+        $superAdmin->generateApiKey();
+        $superAdmin->save();
+
+        $username = 'foo';
+        $newDomain = 'new.domain';
+
+        // Super admin
+        $this->keyAuthenticated($superAdmin)
+            ->json($this->method, $this->route, [
+                'username' => $username,
+                'domain' => $newDomain,
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+            ])
+            ->assertStatus(200)
+            ->assertJson([
+                'username' => $username,
+                'domain' => $newDomain
+            ]);
+
+        $this->assertDatabaseHas('sip_domains', [
+            'domain' => $newDomain
+        ]);
+    }
+
+
     public function testDomainInTestDeployment()
     {
         $configDomain = 'testdomain.com';
-        $adminDomain = 'admindomain.com';
-        config()->set('app.super_admins_sip_domains', $adminDomain);
-        config()->set('app.sip_domain', $adminDomain);
+        config()->set('app.sip_domain', $configDomain);
 
         $password = Password::factory()->admin()->create();
         $username = 'foobar';
@@ -358,11 +408,12 @@ class ApiAccountTest extends TestCase
         $entryValue = 'bar';
         $entryNewKey = 'new_key';
         $entryNewValue = 'new_value';
+        $domain = SipDomain::first()->domain;
 
         $result = $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'username' => 'john',
-                'domain' => 'lennon.com',
+                'domain' => $domain,
                 'password' => 'password123',
                 'algorithm' => 'SHA-256',
                 'dictionary' => [
@@ -381,7 +432,7 @@ class ApiAccountTest extends TestCase
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'username' => 'john2',
-                'domain' => 'lennon.com',
+                'domain' => $domain,
                 'password' => 'password123',
                 'algorithm' => 'SHA-256',
                 'dictionary' => [
@@ -392,7 +443,7 @@ class ApiAccountTest extends TestCase
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'username' => 'john2',
-                'domain' => 'lennon.com',
+                'domain' => $domain,
                 'password' => 'password123',
                 'algorithm' => 'SHA-256',
                 'dictionary' => 'hop'
@@ -479,7 +530,6 @@ class ApiAccountTest extends TestCase
     public function testActivated()
     {
         $password = Password::factory()->admin()->create();
-
         $username = 'username';
 
         $response0 = $this->generateFirstResponse($password);
@@ -672,13 +722,14 @@ class ApiAccountTest extends TestCase
         $password->account->generateApiKey();
 
         $username = 'username';
+        $domain = SipDomain::first()->domain;
 
         $response = $this->generateFirstResponse($password, $this->method, $this->route);
         $this->generateSecondResponse($password, $response)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'email' => 'email@test.com',
-                'domain' => 'server.com',
+                'domain' => $domain,
                 'algorithm' => 'SHA-256',
                 'password' => 'nonascii€',
             ])

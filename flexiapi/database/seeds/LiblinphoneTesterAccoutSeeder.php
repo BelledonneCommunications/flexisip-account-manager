@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Account;
+use App\SipDomain;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -28,6 +29,7 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
     {
         $accounts = [];
         $passwords = [];
+        $domains = [];
 
         foreach ($json as $element) {
             if ($element->type == 'account') {
@@ -42,6 +44,8 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
                         $element->confirmation_key ?? null
                     )
                 );
+
+                if(!in_array($element->domain, $domains)) array_push($domains, $element->domain);
 
                 if (isset($element->passwords)) {
                     foreach ($element->passwords as $password) {
@@ -76,6 +80,8 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
                         $this->generatePasswordArray($element->idStart + $i, 'secret', 'CLRTXT')
                     );
                 }
+
+                if(!in_array($element->domain, $domains)) array_push($domains, $element->domain);
             }
         }
 
@@ -83,6 +89,13 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
         $ids = array_map(function($account) { return (int)$account['id']; }, $accounts);
 
         Account::withoutGlobalScopes()->whereIn('id', $ids)->delete();
+
+        // Create the domains
+        foreach ($domains as $domain) {
+            $sipDomain = SipDomain::where('domain', $domain)->firstOrNew();
+            $sipDomain->domain = $domain;
+            $sipDomain->save();
+        }
 
         // And seed the fresh ones
         DB::table('accounts')->insert($accounts);

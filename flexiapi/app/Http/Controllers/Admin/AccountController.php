@@ -28,6 +28,7 @@ use App\ContactsList;
 use App\Http\Requests\Account\Create\Web\AsAdminRequest;
 use App\Http\Requests\Account\Update\Web\AsAdminRequest as WebAsAdminRequest;
 use App\Services\AccountService;
+use App\SipDomain;
 
 class AccountController extends Controller
 {
@@ -75,6 +76,9 @@ class AccountController extends Controller
     {
         return view('admin.account.create_edit', [
             'account' => new Account,
+            'domains' => $request->user()?->superAdmin
+                ? SipDomain::all()
+                : SipDomain::where('domain', $request->user()->domain)->get(),
             'protocols' => [null => 'None'] + Account::$dtmfProtocols
         ]);
     }
@@ -88,11 +92,16 @@ class AccountController extends Controller
         return redirect()->route('admin.account.edit', $account->id);
     }
 
-    public function edit(int $accountId)
+    public function edit(Request $request, int $accountId)
     {
+        $account = Account::findOrFail($accountId);
+
         return view('admin.account.create_edit', [
-            'account' => Account::findOrFail($accountId),
+            'account' => $account,
             'protocols' => [null => 'None'] + Account::$dtmfProtocols,
+            'domains' => $request->user()?->superAdmin
+                ? SipDomain::all()
+                : SipDomain::where('domain', $account->domain)->get(),
             'contacts_lists' => ContactsList::whereNotIn('id', function ($query) use ($accountId) {
                 $query->select('contacts_list_id')
                     ->from('account_contacts_list')

@@ -26,6 +26,7 @@ use Awobaz\Compoships\Database\Eloquent\Factories\ComposhipsFactory;
 use App\Account;
 use App\AccountCreationToken;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
+use App\SipDomain;
 
 class AccountFactory extends Factory
 {
@@ -34,10 +35,14 @@ class AccountFactory extends Factory
 
     public function definition()
     {
+        $domain = SipDomain::count() == 0
+            ? SipDomain::factory()->create()
+            : SipDomain::first();
+
         return [
             'username' => $this->faker->username,
             'display_name' => $this->faker->name,
-            'domain' => config('app.sip_domain'),
+            'domain' => $domain->domain,
             'user_agent' => $this->faker->userAgent,
             'confirmation_key' => Str::random(WebAuthenticateController::$emailCodeSize),
             'ip_address' => $this->faker->ipv4,
@@ -53,6 +58,19 @@ class AccountFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'admin' => true,
         ]);
+    }
+
+    public function superAdmin()
+    {
+        return $this->state(function (array $attributes) {
+            $sipDomain = SipDomain::where('domain', $attributes['domain'])->first();
+            $sipDomain->super = true;
+            $sipDomain->save();
+
+            return [
+                'admin' => true,
+            ];
+        });
     }
 
     public function deactivated()

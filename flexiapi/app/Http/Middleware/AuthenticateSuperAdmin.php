@@ -17,31 +17,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Console\Commands;
+namespace App\Http\Middleware;
 
-use Illuminate\Console\Command;
-use Carbon\Carbon;
+use Closure;
 
-use App\DigestNonce;
-
-class ClearNonces extends Command
+class AuthenticateSuperAdmin
 {
-    protected $signature = 'digest:clear-nonces {minutes}';
-    protected $description = 'Clear the expired DIGEST nonces after n minutes';
-
-    public function __construct()
+    public function handle($request, Closure $next)
     {
-        parent::__construct();
-    }
+        if (!$request->user() || !$request->user()->superAdmin) {
+            return abort(403, 'Unauthorized area');
+        }
 
-    public function handle()
-    {
-        $count = DigestNonce::where(
-            'created_at',
-            '<',
-            Carbon::now()->subMinutes($this->argument('minutes'))->toDateTimeString()
-        )->delete();
-
-        $this->info($count . ' expired nonces deleted');
+        return $next($request);
     }
 }

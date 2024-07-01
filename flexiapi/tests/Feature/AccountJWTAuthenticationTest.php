@@ -19,6 +19,7 @@
 
 namespace Tests\Feature;
 
+use App\Account;
 use App\Password;
 use DateTimeImmutable;
 use Lcobucci\Clock\FrozenClock;

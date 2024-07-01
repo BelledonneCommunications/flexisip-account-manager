@@ -20,11 +20,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 use App\Account;
-use App\ApiKey;
-use Carbon\Carbon;
+use App\SipDomain;
 
 class CreateAdminAccount extends Command
 {
@@ -38,6 +37,8 @@ class CreateAdminAccount extends Command
 
     public function handle()
     {
+        $sipDomains = SipDomain::all('domain')->pluck('domain');
+
         $this->info('Your will create a new admin account in the database, existing accounts with the same credentials will be overwritten');
 
         $username = $this->option('username');
@@ -49,7 +50,7 @@ class CreateAdminAccount extends Command
         }
 
         if (!$this->option('domain')) {
-            $domain = $this->ask('What will be the admin domain? Default: ' . config('app.sip_domain'));
+            $domain = $this->ask('What will be the admin domain? Default: ' . $sipDomains->first());
         }
 
         if (!$this->option('password')) {
@@ -57,8 +58,14 @@ class CreateAdminAccount extends Command
         }
 
         $username = $username ?? 'admin';
-        $domain = $domain ?? config('app.sip_domain');
+        $domain = $domain ?? $sipDomains->first();
         $password = $password ?? 'change_me';
+
+        if (!$sipDomains->contains($domain)) {
+            $this->error('The domain must be one of the following ones: ' . $sipDomains->implode(', '));
+            $this->comment('You can create an extra domain using the dedicated console command');
+            return Command::FAILURE;
+        }
 
         // Delete the account if it already exists
         $account = Account::withoutGlobalScopes()

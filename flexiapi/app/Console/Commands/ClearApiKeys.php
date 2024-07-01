@@ -19,10 +19,10 @@
 
 namespace App\Console\Commands;
 
-use App\ApiKey;
 use Illuminate\Console\Command;
-
 use Carbon\Carbon;
+
+use App\ApiKey;
 
 class ClearApiKeys extends Command
 {

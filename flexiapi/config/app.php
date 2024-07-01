@@ -15,7 +15,6 @@ return [
 
     'name' => env('APP_NAME', 'Account Manager'),
     'sip_domain' => env('APP_SIP_DOMAIN', 'sip.domain.com'),
-    'super_admins_sip_domains' => env('APP_SUPER_ADMINS_SIP_DOMAINS', ''),
 
     'project_url' => env('APP_PROJECT_URL', ''),
     'terms_of_use_url' => env('TERMS_OF_USE_URL', ''),

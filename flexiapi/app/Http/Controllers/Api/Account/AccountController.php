@@ -43,6 +43,7 @@ use App\Rules\WithoutSpaces;
 use App\Rules\PasswordAlgorithm;
 
 use App\Services\AccountService;
+use App\SipDomain;
 
 class AccountController extends Controller
 {

@@ -24,6 +24,7 @@ use Carbon\Carbon;
 
 class Device extends Model
 {
+    protected $fillable = ['user_agent'];
     public function fromRedisContact(string $contact)
     {
         preg_match("/<(.*)>;(.*)/", $contact, $matches);

@@ -37,6 +37,7 @@ class Request extends FormRequest
                 }),
                 'filled',
             ],
+            'domain' => 'exists:sip_domains,domain',
             'dictionary' => [new Dictionary()],
             'password' => 'required|min:3',
             'email' => config('app.account_email_unique')

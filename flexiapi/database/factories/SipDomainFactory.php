@@ -17,31 +17,26 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Console\Commands;
+namespace Database\Factories;
 
-use Illuminate\Console\Command;
-use Carbon\Carbon;
+use App\SipDomain;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-use App\DigestNonce;
-
-class ClearNonces extends Command
+class SipDomainFactory extends Factory
 {
-    protected $signature = 'digest:clear-nonces {minutes}';
-    protected $description = 'Clear the expired DIGEST nonces after n minutes';
+    protected $model = SipDomain::class;
 
-    public function __construct()
+    public function definition()
     {
-        parent::__construct();
+        return [
+            'domain' => config('app.sip_domain'),
+        ];
     }
 
-    public function handle()
+    public function secondDomain()
     {
-        $count = DigestNonce::where(
-            'created_at',
-            '<',
-            Carbon::now()->subMinutes($this->argument('minutes'))->toDateTimeString()
-        )->delete();
-
-        $this->info($count . ' expired nonces deleted');
+        return $this->state(fn (array $attributes) => [
+            'domain' => 'second_' . config('app.sip_domain'),
+        ]);
     }
 }

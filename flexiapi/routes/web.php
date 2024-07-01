@@ -38,6 +38,7 @@ use App\Http\Controllers\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Admin\AccountStatisticsController;
 use App\Http\Controllers\Admin\ContactsListController;
 use App\Http\Controllers\Admin\ContactsListContactController;
+use App\Http\Controllers\Admin\SipDomainController;
 use App\Http\Controllers\Admin\StatisticsController;
 use Illuminate\Support\Facades\Route;
 
@@ -152,6 +153,12 @@ Route::group(['middleware' => 'web_panel_enabled'], function () {
     Route::get('auth_tokens/auth/{token}', 'Account\AuthTokenController@auth')->name('auth_tokens.auth');
 
     Route::name('admin.')->prefix('admin')->middleware(['auth.admin', 'auth.check_blocked'])->group(function () {
+
+        Route::middleware(['auth.super_admin'])->group(function () {
+            Route::resource('sip_domains', SipDomainController::class);
+            Route::get('sip_domains/delete/{id}', 'Admin\SipDomainController@delete')->name('sip_domains.delete');
+        });
+
         Route::name('statistics.')->controller(StatisticsController::class)->prefix('statistics')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::post('call_logs', 'editCallLogs')->name('edit_call_logs');

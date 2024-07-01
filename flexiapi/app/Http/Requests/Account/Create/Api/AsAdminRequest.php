@@ -7,6 +7,7 @@ use App\Http\Requests\Api as RequestsApi;
 use App\Http\Requests\AsAdmin;
 use App\Rules\IsNotPhoneNumber;
 use App\Rules\PasswordAlgorithm;
+use App\SipDomain;
 
 class AsAdminRequest extends Request
 {
@@ -28,6 +29,10 @@ class AsAdminRequest extends Request
             'date_format:Y-m-d H:i:s',
             'nullable',
         ];
+
+        if ($this->user()->superAdmin) {
+            $rules['domain'] = '';
+        }
 
         if (config('app.allow_phone_number_username_admin_api') == true) {
             array_splice(

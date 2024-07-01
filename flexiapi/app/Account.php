@@ -168,7 +168,6 @@ class Account extends Authenticatable
         return $this->hasMany(DigestNonce::class);
     }
 
-
     public function passwords()
     {
         return $this->hasMany(Password::class);
@@ -323,19 +322,7 @@ class Account extends Authenticatable
 
     public function getSuperAdminAttribute(): bool
     {
-        $domains = config('app.super_admins_sip_domains');
-
-        if (empty($domains)) {
-            return false;
-        }
-
-        $domains = explode(',', $domains);
-
-        if (empty($domains)) {
-            return false;
-        }
-
-        return $this->admin && in_array($this->domain, $domains);
+        return SipDomain::where('domain', $this->domain)->where('super', true)->exists() && $this->admin;
     }
 
     /**

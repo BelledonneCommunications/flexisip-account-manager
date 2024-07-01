@@ -27,19 +27,20 @@
             <tr class="empty">
                 <td colspan="3">No Devices</td>
             </tr>
+        @else
+            @foreach ($devices as $device)
+                <tr>
+                    <td>{{ $device->user_agent }}</td>
+                    <td>
+                        <a type="button"
+                        class="btn"
+                        href="{{ route('admin.account.device.delete', [$account, $device->uuid]) }}">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            @endforeach
         @endif
-        @foreach ($devices as $device)
-            <tr>
-                <td>{{ $device->user_agent }}</td>
-                <td>
-                    <a type="button"
-                       class="btn"
-                       href="{{ route('admin.account.device.delete', [$account, $device->uuid]) }}">
-                        Delete
-                    </a>
-                </td>
-            </tr>
-        @endforeach
     </tbody>
 </table>
 

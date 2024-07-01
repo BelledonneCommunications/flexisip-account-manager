@@ -19,9 +19,10 @@
 
 namespace App\Console\Commands;
 
-use App\AccountTombstone;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Carbon\Carbon;
+
+use App\AccountTombstone;
 
 class ClearOldAccountsTombstones extends Command
 {

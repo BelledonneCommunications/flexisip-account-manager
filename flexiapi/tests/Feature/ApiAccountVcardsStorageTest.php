@@ -22,7 +22,7 @@ namespace Tests\Feature;
 use App\Account;
 use Tests\TestCase;
 
-class ApiVcardsStorageTest extends TestCase
+class ApiAccountVcardsStorageTest extends TestCase
 {
     protected $route = '/api/accounts/me/vcards-storage';
     protected $method = 'POST';

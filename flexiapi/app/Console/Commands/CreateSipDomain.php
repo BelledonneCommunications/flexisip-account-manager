@@ -19,29 +19,32 @@
 
 namespace App\Console\Commands;
 
+use App\SipDomain;
 use Illuminate\Console\Command;
-use Carbon\Carbon;
 
-use App\DigestNonce;
-
-class ClearNonces extends Command
+class CreateSipDomain extends Command
 {
-    protected $signature = 'digest:clear-nonces {minutes}';
-    protected $description = 'Clear the expired DIGEST nonces after n minutes';
-
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected $signature = 'sip_domains:create-update {domain} {--super}';
+    protected $description = 'Create a SIP Domain';
 
     public function handle()
     {
-        $count = DigestNonce::where(
-            'created_at',
-            '<',
-            Carbon::now()->subMinutes($this->argument('minutes'))->toDateTimeString()
-        )->delete();
+        $this->info('Your will create or update a SIP Domain in the database');
 
-        $this->info($count . ' expired nonces deleted');
+        $sipDomain = SipDomain::where('domain', $this->argument('domain'))->firstOrNew();
+        $sipDomain->domain = $this->argument('domain');
+
+        $sipDomain->exists
+            ? $this->info('The domain already exists, updating it')
+            : $this->info('A new domain will be created');
+
+        $sipDomain->super = (bool)$this->option('super');
+        $sipDomain->super
+            ? $this->info('Set as a super domain')
+            : $this->info('Set as a normal domain');
+
+        $sipDomain->save();
+
+        return Command::SUCCESS;
     }
 }

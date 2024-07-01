@@ -26,7 +26,7 @@ use App\Password;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class ApiAccountContactTest extends TestCase
+class ApiAccountContactsTest extends TestCase
 {
     protected $route = '/api/accounts';
     protected $contactsListsRoute = '/api/contacts_lists';

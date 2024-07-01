@@ -20,10 +20,11 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Carbon\Carbon;
 
 use App\Account;
 use App\ApiKey;
-use Carbon\Carbon;
+use App\SipDomain;
 
 class CreateAdminAccountTest extends Command
 {
@@ -39,6 +40,11 @@ class CreateAdminAccountTest extends Command
     {
         $username = 'admin_test';
         $domain = 'sip.example.org';
+
+        $this->call('sip_domains:create-update', [
+            'domain' => $domain,
+            '--super' => 'true'
+        ]);
 
         $this->call('accounts:create-admin-account', [
             '--username' => $username,

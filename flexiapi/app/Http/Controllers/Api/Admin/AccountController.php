@@ -30,6 +30,7 @@ use App\ContactsList;
 use App\Http\Requests\Account\Create\Api\AsAdminRequest;
 use App\Http\Requests\Account\Update\Api\AsAdminRequest as ApiAsAdminRequest;
 use App\Services\AccountService;
+use App\SipDomain;
 
 class AccountController extends Controller
 {
@@ -70,13 +71,13 @@ class AccountController extends Controller
         $account = Account::findOrFail($accountId);
 
         if (!$account->hasTombstone()) {
-            $tombstone = new AccountTombstone;
+            $tombstone = new AccountTombstone();
             $tombstone->username = $account->username;
             $tombstone->domain = $account->domain;
             $tombstone->save();
         }
 
-        (new AccountService)->destroy($request, $accountId);
+        (new AccountService())->destroy($request, $accountId);
 
         Log::channel('events')->info('API Admin: Account destroyed', ['id' => $account->identifier]);
     }
@@ -138,12 +139,21 @@ class AccountController extends Controller
 
     public function store(AsAdminRequest $request)
     {
-        return (new AccountService)->store($request)->makeVisible(['confirmation_key', 'provisioning_token']);
+        // Create the missing SipDomain
+        if ($request->user()->superAdmin
+            && $request->has('domain')
+            && !SipDomain::pluck('domain')->contains($request->get('domain'))) {
+            $sipDomain = new SipDomain();
+            $sipDomain->domain = $request->get('domain');
+            $sipDomain->save();
+        }
+
+        return (new AccountService())->store($request)->makeVisible(['confirmation_key', 'provisioning_token']);
     }
 
     public function update(ApiAsAdminRequest $request, int $accountId)
     {
-        $account = (new AccountService)->update($request, $accountId);
+        $account = (new AccountService())->update($request, $accountId);
 
         Log::channel('events')->info('API Admin: Account updated', ['id' => $account->identifier]);
 

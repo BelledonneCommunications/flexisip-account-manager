@@ -46,10 +46,13 @@
             <label for="username">Username</label>
             @include('parts.errors', ['name' => 'username'])
         </div>
-        <div>
-            <input placeholder="domain.com" @if (auth()->user()?->superAdmin) required @else disabled @endif name="domain"
-                type="text" value="{{ $account->domain ?? config('app.sip_domain') }}"
-                @if ($account->id) readonly @endif>
+        <div class="select">
+            <select name="domain" @if (auth()->user()?->superAdmin) required @else disabled @endif>
+                @foreach ($domains as $sipDomain)
+                    <option value="{{ $sipDomain->domain }}" @if ($account->domain == $sipDomain->domain) selected="selected" @endif>
+                        {{ $sipDomain->domain }}</option>
+                @endforeach
+            </select>
             <label for="domain">Domain</label>
         </div>
 

@@ -19,17 +19,18 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Account;
 use App\Http\Controllers\Controller;
 use App\Libraries\FlexisipConnector;
+use App\Account;
+use stdClass;
 
 class DeviceController extends Controller
 {
     public function index(int $accountId)
     {
-        $connector = new FlexisipConnector;
+        $devices = (new FlexisipConnector)->getDevices(Account::findOrFail($accountId)->identifier);
 
-        return $connector->getDevices(Account::findOrFail($accountId)->identifier);
+        return ($devices->isEmpty()) ? new stdClass : $devices;
     }
 
     public function destroy(int $accountId, string $uuid)

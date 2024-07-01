@@ -42,8 +42,6 @@ class FlexisipConnector
             Log::error('Redis server issue: ' . $th->getMessage());
         }
 
-        if ($devices->isEmpty()) return new stdClass;
-
         return $devices->keyBy('uuid');
     }
 

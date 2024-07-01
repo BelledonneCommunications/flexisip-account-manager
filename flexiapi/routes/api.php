@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Api\Admin\AccountDictionaryController;
 use App\Http\Controllers\Api\Admin\AccountTypeController;
 use App\Http\Controllers\Api\Admin\ContactsListController;
+use App\Http\Controllers\Api\Admin\SipDomainController;
 use App\Http\Controllers\Api\Admin\VcardsStorageController as AdminVcardsStorageController;
 use App\Http\Controllers\Api\StatisticsMessageController;
 use App\Http\Controllers\Api\StatisticsCallController;
@@ -90,6 +91,17 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
         if (!empty(config('app.linphone_daemon_unix_pipe'))) {
             Route::post('messages', 'Api\Admin\MessageController@send');
         }
+
+        // Super admin
+        Route::group(['middleware' => ['auth.super_admin']], function () {
+            Route::prefix('sip_domains')->controller(SipDomainController::class)->group(function () {
+                Route::get('/', 'index');
+                Route::get('{domain}', 'show');
+                Route::post('/', 'store');
+                Route::put('{domain}', 'update');
+                Route::delete('{domain}', 'destroy');
+            });
+        });
 
         // Account creation token
         Route::post('account_creation_tokens', 'Api\Admin\AccountCreationTokenController@create');
