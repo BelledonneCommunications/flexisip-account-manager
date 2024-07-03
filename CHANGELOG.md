@@ -3,6 +3,10 @@
 v1.5
 ----
 
+v1.4.7
+------
+- Fix FLEXIAPI-175 and FLEXISIP-231 Rewrite the Redis contacts parser to handle properly SIP uris (thanks @thibault.lemaire !)
+
 v1.4.6
 ------
 - Fix FLEXIAPI-142 PUT /accounts endpoint doesn't allow overiding values anymore
