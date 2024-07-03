@@ -1,5 +1,8 @@
 # Flexisip Account Manager Changelog
 
+v1.6 (master)
+-------------
+
 v1.5
 ---
 - Fix FLEXIAPI-195 Fix LiblinphoneTesterAccoutSeeder to fit with the latest Account related changes
