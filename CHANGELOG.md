@@ -3,6 +3,15 @@
 v1.5
 ----
 
+v1.4.9
+------
+- Complete the missing changelog
+
+v1.4.8
+------
+- Fix FLEXIAPI-166 Reimplement the deprecated email validation URL
+- Fix FLEXIAPI-140 Select the display_name attribute from the database to inject...
+
 v1.4.7
 ------
 - Fix FLEXIAPI-175 and FLEXISIP-231 Rewrite the Redis contacts parser to handle properly SIP uris (thanks @thibault.lemaire !)
