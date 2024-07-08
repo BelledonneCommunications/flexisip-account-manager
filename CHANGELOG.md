@@ -63,6 +63,28 @@ v1.5
 - Fix #132 Move the provisioning_tokens and recovery_codes to dedicated table
 - Fix #130 Drop the group column in the Accounts table
 
+v1.4.9
+------
+- Complete the missing changelog
+
+v1.4.8
+------
+- Fix FLEXIAPI-166 Reimplement the deprecated email validation URL
+- Fix FLEXIAPI-140 Select the display_name attribute from the database to inject...
+
+v1.4.7
+------
+- Fix FLEXIAPI-175 and FLEXISIP-231 Rewrite the Redis contacts parser to handle properly SIP uris (thanks @thibault.lemaire !)
+
+v1.4.6
+------
+- Fix FLEXIAPI-142 PUT /accounts endpoint doesn't allow overiding values anymore
+- Fix typos and dependencies
+
+v1.4.5
+------
+- Fix FLEXIAPI-132 Refactor the Provisioning to remove proxy_default_values
+
 v1.4.4
 ------
 - Fix FLEXIAPI-136 Refactor the Web Panel toggle mechanism and move it to a proper Middleware
