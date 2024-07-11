@@ -17,16 +17,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Accounts;
 
 use Illuminate\Console\Command;
 use Carbon\Carbon;
 
 use App\Account;
 use App\ApiKey;
-use App\SipDomain;
 
-class CreateAdminAccountTest extends Command
+class CreateAdminTest extends Command
 {
     protected $signature = 'accounts:create-admin-test';
     protected $description = 'Create a test admin account, only for tests purpose';

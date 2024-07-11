@@ -43,4 +43,11 @@ class AccountCreationTokenFactory extends Factory
             'created_at' => Carbon::now()
         ];
     }
+
+    public function expired()
+    {
+        return $this->state(fn (array $attributes) => [
+            'created_at' => Carbon::now()->subMinutes(1000)
+        ]);
+    }
 }

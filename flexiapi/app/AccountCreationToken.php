@@ -26,6 +26,8 @@ class AccountCreationToken extends Consommable
     use HasFactory;
 
     protected $hidden = ['id', 'updated_at', 'created_at'];
+    protected $appends = ['expire_at'];
+    protected ?string $configExpirationMinutesKey = 'account_creation_token_expiration_minutes';
 
     public function accountCreationRequestToken()
     {

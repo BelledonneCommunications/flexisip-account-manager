@@ -74,6 +74,29 @@ class ApiAccountEmailChangeTest extends TestCase
             ])->assertJsonValidationErrors(['email']);
     }
 
+    public function testCodeExpiration()
+    {
+        $account = Account::factory()->withConsumedAccountCreationToken()->create();
+        $account->generateApiKey();
+
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->route.'/request', [
+                'email' => 'new@email.com'
+            ])
+            ->assertStatus(200);
+
+        config()->set('app.email_change_code_expiration_minutes', 10);
+
+        EmailChangeCode::where('id', $account->emailChangeCode->id)
+            ->update(['created_at' => $account->emailChangeCode->created_at->subMinutes(1000)]);
+
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->route, [
+                'code' => $account->emailChangeCode->code
+            ])
+            ->assertStatus(410);
+    }
+
     public function testUnvalidatedAccount()
     {
         $account = Account::factory()->create();

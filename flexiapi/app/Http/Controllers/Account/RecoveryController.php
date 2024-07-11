@@ -120,6 +120,14 @@ class RecoveryController extends Controller
 
         $account = Account::where('id', Crypt::decryptString($request->get('account_id')))->firstOrFail();
 
+        if ($account->currentRecoveryCode->expired()) {
+            return redirect()->route($request->get('method') == 'phone'
+                ? 'account.recovery.show.phone'
+                : 'account.recovery.show.email')->withErrors([
+                'code' => 'The code is expired'
+            ]);
+        }
+
         if ($account->recovery_code != $code) {
             return redirect()->route($request->get('method') == 'phone'
                 ? 'account.recovery.show.phone'

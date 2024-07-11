@@ -17,16 +17,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Accounts;
 
 use Illuminate\Console\Command;
+use Carbon\Carbon;
 
-use App\Account;
+use App\AccountTombstone;
 
-class SetAccountAdmin extends Command
+class ClearAccountsTombstones extends Command
 {
-    protected $signature = 'accounts:set-admin {id}';
-    protected $description = 'Give the admin role to an account';
+    protected $signature = 'accounts:clear-accounts-tombstones {days} {--apply}';
+    protected $description = 'Clear deleted accounts tombstones after n days';
 
     public function __construct()
     {
@@ -35,23 +36,20 @@ class SetAccountAdmin extends Command
 
     public function handle()
     {
-        $account = Account::withoutGlobalScopes()->where('id', $this->argument('id'))->first();
+        $tombstones = AccountTombstone::where(
+            'created_at',
+            '<',
+            Carbon::now()->subDays($this->argument('days'))->toDateTimeString()
+        );
 
-        if (!$account) {
-            $this->error('Account not found, please use an existing account id');
-            return 1;
+        if ($this->option('apply')) {
+            $this->info($tombstones->count() . ' tombstones deleted');
+            $tombstones->delete();
+
+            return 0;
         }
 
-        if ($account->admin) {
-            $this->error('The account is already having the admin role');
-            return 1;
-        }
-
-        $account->admin = true;
-        $account->save();
-
-        $this->info('Account '.$account->identifier.' is now admin');
-
+        $this->info($tombstones->count() . ' tombstones to delete');
         return 0;
     }
 }

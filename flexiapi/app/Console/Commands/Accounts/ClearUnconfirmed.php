@@ -17,17 +17,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Accounts;
 
 use Illuminate\Console\Command;
 use Carbon\Carbon;
 
-use App\AccountTombstone;
+use App\Account;
 
-class ClearOldAccountsTombstones extends Command
+class ClearUnconfirmed extends Command
 {
-    protected $signature = 'accounts:clear-accounts-tombstones {days} {--apply}';
-    protected $description = 'Clear deleted accounts tombstones after n days';
+    protected $signature = 'accounts:clear-unconfirmed {days} {--apply} {--and-confirmed}';
+    protected $description = 'Clear unconfirmed accounts after n days';
 
     public function __construct()
     {
@@ -36,20 +36,27 @@ class ClearOldAccountsTombstones extends Command
 
     public function handle()
     {
-        $tombstones = AccountTombstone::where(
+        $accounts = Account::where(
             'created_at',
             '<',
             Carbon::now()->subDays($this->argument('days'))->toDateTimeString()
         );
 
+        if (!$this->option('and-confirmed')) {
+            $accounts = $accounts->where('activated', false);
+        }
+
+        $count = $accounts->count();
+
         if ($this->option('apply')) {
-            $this->info($tombstones->count() . ' tombstones deleted');
-            $tombstones->delete();
+            $this->info($count . ' accounts in deletion…');
+            $accounts->delete();
+            $this->info($count . ' accounts deleted');
 
             return 0;
         }
 
-        $this->info($tombstones->count() . ' tombstones to delete');
+        $this->info($count . ' accounts to delete');
         return 0;
     }
 }

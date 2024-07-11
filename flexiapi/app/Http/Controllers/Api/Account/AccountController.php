@@ -36,6 +36,7 @@ use App\Libraries\OvhSMS;
 use App\Mail\RegisterConfirmation;
 
 use App\Rules\AccountCreationToken as RulesAccountCreationToken;
+use App\Rules\AccountCreationTokenNotExpired;
 use App\Rules\BlacklistedUsername;
 use App\Rules\NoUppercase;
 use App\Rules\SIPUsername;
@@ -43,7 +44,6 @@ use App\Rules\WithoutSpaces;
 use App\Rules\PasswordAlgorithm;
 
 use App\Services\AccountService;
-use App\SipDomain;
 
 class AccountController extends Controller
 {
@@ -122,7 +122,8 @@ class AccountController extends Controller
             ],
             'account_creation_token' => [
                 'required',
-                new RulesAccountCreationToken
+                new RulesAccountCreationToken,
+                new AccountCreationTokenNotExpired
             ]
         ]);
 
@@ -192,7 +193,8 @@ class AccountController extends Controller
             ],
             'account_creation_token' => [
                 'required',
-                new RulesAccountCreationToken
+                new RulesAccountCreationToken,
+                new AccountCreationTokenNotExpired
             ]
         ]);
 

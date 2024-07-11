@@ -22,6 +22,8 @@ namespace Tests\Feature;
 use App\Account;
 use App\AuthToken;
 use App\Password;
+use App\ProvisioningToken;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class AccountProvisioningTest extends TestCase
@@ -134,9 +136,6 @@ class AccountProvisioningTest extends TestCase
 
         // Regenerate a new provisioning token from the authenticated account
         $this->keyAuthenticated($password->account)
-            ->withHeaders([
-                'x-linphone-provisioning' => true,
-            ])
             ->get('/api/accounts/me/provision')
             ->assertStatus(200)
             ->assertSee('provisioning_token')
@@ -230,9 +229,6 @@ class AccountProvisioningTest extends TestCase
         $admin->generateApiKey();
 
         $this->keyAuthenticated($admin)
-            ->withHeaders([
-                'x-linphone-provisioning' => true,
-            ])
             ->json($this->method, '/api/accounts/' . $password->account->id . '/provision')
             ->assertStatus(200)
             ->assertSee('provisioning_token')
@@ -255,10 +251,7 @@ class AccountProvisioningTest extends TestCase
     public function testAuthTokenProvisioning()
     {
         // Generate a public auth_token and attach it
-        $response = $this->withHeaders([
-                'x-linphone-provisioning' => true,
-            ])
-            ->json('POST', '/api/accounts/auth_token')
+        $response = $this->json('POST', '/api/accounts/auth_token')
             ->assertStatus(201)
             ->assertJson([
                 'token' => true
@@ -270,9 +263,6 @@ class AccountProvisioningTest extends TestCase
         $password->account->generateApiKey();
 
         $this->keyAuthenticated($password->account)
-            ->withHeaders([
-                'x-linphone-provisioning' => true,
-            ])
             ->json($this->method, '/api/accounts/auth_token/' . $authToken . '/attach')
             ->assertStatus(200);
 
@@ -295,5 +285,39 @@ class AccountProvisioningTest extends TestCase
             ])
             ->get($this->route . '/auth_token/' . $authToken)
             ->assertStatus(404);
+    }
+
+    public function testTokenExpiration()
+    {
+        $account = Account::factory()->create();
+        $account->generateApiKey();
+        $expirationMinutes = 10;
+
+        $this->keyAuthenticated($account)
+            ->get('/api/accounts/me/provision')
+            ->assertStatus(200)
+            ->assertJson([
+                'provisioning_token_expire_at' => null
+            ]);
+
+        config()->set('app.provisioning_token_expiration_minutes', $expirationMinutes);
+
+        $this->keyAuthenticated($account)
+            ->get('/api/accounts/me/provision')
+            ->assertStatus(200)
+            ->assertJson([
+                'provisioning_token_expire_at' => $account->currentProvisioningToken->created_at->addMinutes($expirationMinutes)->toJSON()
+            ]);
+
+        $account->refresh();
+
+        ProvisioningToken::where('id', $account->currentProvisioningToken->id)
+            ->update(['created_at' => $account->currentProvisioningToken->created_at->subMinutes(1000)]);
+
+        $this->withHeaders([
+            'x-linphone-provisioning' => true,
+        ])
+            ->get($this->route . '/' . $account->provisioning_token)
+            ->assertStatus(410);
     }
 }

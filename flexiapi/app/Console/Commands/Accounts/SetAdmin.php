@@ -17,17 +17,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Accounts;
 
 use Illuminate\Console\Command;
-use Carbon\Carbon;
 
 use App\Account;
 
-class RemoveUnconfirmedAccounts extends Command
+class SetAdmin extends Command
 {
-    protected $signature = 'accounts:clear-unconfirmed {days} {--apply} {--and-confirmed}';
-    protected $description = 'Clear unconfirmed accounts after n days';
+    protected $signature = 'accounts:set-admin {id}';
+    protected $description = 'Give the admin role to an account';
 
     public function __construct()
     {
@@ -36,27 +35,23 @@ class RemoveUnconfirmedAccounts extends Command
 
     public function handle()
     {
-        $accounts = Account::where(
-            'created_at',
-            '<',
-            Carbon::now()->subDays($this->argument('days'))->toDateTimeString()
-        );
+        $account = Account::withoutGlobalScopes()->where('id', $this->argument('id'))->first();
 
-        if (!$this->option('and-confirmed')) {
-            $accounts = $accounts->where('activated', false);
+        if (!$account) {
+            $this->error('Account not found, please use an existing account id');
+            return 1;
         }
 
-        $count = $accounts->count();
-
-        if ($this->option('apply')) {
-            $this->info($count . ' accounts in deletion…');
-            $accounts->delete();
-            $this->info($count . ' accounts deleted');
-
-            return 0;
+        if ($account->admin) {
+            $this->error('The account is already having the admin role');
+            return 1;
         }
 
-        $this->info($count . ' accounts to delete');
+        $account->admin = true;
+        $account->save();
+
+        $this->info('Account '.$account->identifier.' is now admin');
+
         return 0;
     }
 }

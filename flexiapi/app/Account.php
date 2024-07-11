@@ -38,7 +38,7 @@ class Account extends Authenticatable
 
     protected $with = ['passwords', 'activationExpiration', 'emailChangeCode', 'types', 'actions', 'dictionaryEntries'];
     protected $hidden = ['expire_time', 'confirmation_key', 'pivot', 'currentProvisioningToken', 'currentRecoveryCode', 'dictionaryEntries'];
-    protected $appends = ['realm', 'confirmation_key_expires', 'provisioning_token', 'dictionary'];
+    protected $appends = ['realm', 'confirmation_key_expires', 'provisioning_token', 'provisioning_token_expire_at', 'dictionary'];
     protected $casts = [
         'activated' => 'boolean',
     ];
@@ -267,6 +267,15 @@ class Account extends Authenticatable
     {
         if ($this->currentProvisioningToken) {
             return $this->currentProvisioningToken->token;
+        }
+
+        return null;
+    }
+
+    public function getProvisioningTokenExpireAtAttribute(): ?string
+    {
+        if ($this->currentProvisioningToken) {
+            return $this->currentProvisioningToken->expire_at;
         }
 
         return null;

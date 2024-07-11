@@ -45,6 +45,7 @@ class RecoverByCode extends Mailable
                 ? 'mails.authentication_text_custom'
                 : 'mails.authentication_text')
             ->with([
+                'expiration_minutes' => config('app.recovery_code_expiration_minutes'),
                 'recovery_code' => $this->account->recovery_code,
                 'provisioning_link' => route('provisioning.provision', [
                     'provisioning_token' => $this->account->provisioning_token,

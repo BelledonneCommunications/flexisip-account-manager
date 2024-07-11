@@ -40,7 +40,11 @@ return [
      * Time limit before the API Key and related cookie are expired
      */
     'api_key_expiration_minutes' => env('APP_API_KEY_EXPIRATION_MINUTES', 60),
-
+    'account_creation_token_expiration_minutes' => env('APP_ACCOUNT_CREATION_TOKEN_EXPIRATION_MINUTES', 0),
+    'email_change_code_expiration_minutes' => env('APP_EMAIL_CHANGE_CODE_EXPIRATION_MINUTES', 10),
+    'phone_change_code_expiration_minutes' => env('APP_PHONE_CHANGE_CODE_EXPIRATION_MINUTES', 10),
+    'recovery_code_expiration_minutes' => env('APP_RECOVERY_CODE_EXPIRATION_MINUTES', 10),
+    'provisioning_token_expiration_minutes' => env('APP_PROVISIONING_TOKEN_EXPIRATION_MINUTES', 0),
     /**
      * Amount of minutes before re-authorizing the generation of a new account creation token
      */

@@ -9,7 +9,12 @@
 
                 @if ($method == 'email')
                     <div class="large">
-                        <p class="large">Enter your email account to recover it.</p>
+                        <p class="large">
+                            Enter your email account to recover it.
+                            @if (config('app.recovery_code_expiration_minutes') > 0)
+                                <br /> The code will be available {{ config('app.recovery_code_expiration_minutes') }} minutes.
+                            @endif
+                        </p>
                         @include('parts.errors', ['name' => 'code'])
                     </div>
                     <div class="large">
@@ -29,7 +34,12 @@
                         </div>
                     @endif
                 @elseif($method == 'phone')
-                    <p class="large">Enter your phone number to recover your account.</p>
+                    <p class="large">
+                        Enter your phone number to recover your account.
+                        @if (config('app.recovery_code_expiration_minutes') > 0)
+                            <br />The code will be available {{ config('app.recovery_code_expiration_minutes') }} minutes.
+                        @endif
+                    </p>
                     <div>
                         <input placeholder="+123456789" name="phone" type="text" value="{{ old('phone') }}">
                         <label for="phone">Phone</label>

@@ -17,13 +17,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Accounts;
 
 use Database\Seeders\LiblinphoneTesterAccoutSeeder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 
-class RunAccountSeeder extends Command
+class Seed extends Command
 {
     protected $signature = 'accounts:seed {json-file-path}';
     protected $description = 'Seed some accounts from a JSON file';

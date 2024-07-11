@@ -17,9 +17,22 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Http\Requests;
+namespace App\Rules;
 
-trait AsAdmin
+use App\AccountCreationToken as AppAccountCreationToken;
+use Illuminate\Contracts\Validation\Rule;
+
+class AccountCreationTokenNotExpired implements Rule
 {
-    public $asAdmin = true;
+    public function passes($attribute, $value)
+    {
+        $token = AppAccountCreationToken::where('token', $value)->where('used', false)->first();
+
+        return $token && !$token->expired();
+    }
+
+    public function message()
+    {
+        return 'The provided token is expired';
+    }
 }

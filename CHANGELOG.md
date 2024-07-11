@@ -1,5 +1,9 @@
 # Flexisip Account Manager Changelog
 
+v1.6
+----
+- Fix FLEXIAPI-192 Add DotEnv configuration to allow the expiration of tokens and codes in the app
+
 v1.5
 ---
 - Fix FLEXIAPI-195 Fix LiblinphoneTesterAccoutSeeder to fit with the latest Account related changes

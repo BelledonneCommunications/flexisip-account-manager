@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Accounts;
 
 use Illuminate\Console\Command;
 use Carbon\Carbon;
@@ -37,6 +37,11 @@ class ClearApiKeys extends Command
     public function handle()
     {
         $minutes = $this->argument('minutes') ?? config('app.api_key_expiration_minutes');
+
+        if ($minutes == 0) {
+            $this->info('Expiration time is set to 0, nothing to clear');
+            return 0;
+        }
 
         $this->info('Deleting api keys unused after ' . $minutes . ' minutes');
 

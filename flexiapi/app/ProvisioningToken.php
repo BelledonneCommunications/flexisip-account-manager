@@ -25,6 +25,7 @@ class ProvisioningToken extends Consommable
 {
     use HasFactory;
 
+    protected ?string $configExpirationMinutesKey = 'provisioning_token_expiration_minutes';
     protected $casts = [
         'used' => 'boolean',
     ];

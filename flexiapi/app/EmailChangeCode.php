@@ -25,6 +25,7 @@ class EmailChangeCode extends Consommable
 {
     use HasFactory;
 
+    protected ?string $configExpirationMinutesKey = 'email_change_code_expiration_minutes';
     protected $hidden = ['id', 'account_id', 'code'];
 
     public function account()

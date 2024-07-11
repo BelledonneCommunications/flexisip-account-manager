@@ -6,7 +6,7 @@
 
 <p class="text-center">
     @yield('message')
-    <br />
+    <br /><br />
     <a class="btn btn-secondary mt-5" href="{{ route('account.home') }}">
         Go back to the homepage
     </a>

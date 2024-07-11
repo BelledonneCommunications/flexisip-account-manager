@@ -262,6 +262,10 @@ class AccountService
 
         $phoneChangeCode = $account->phoneChangeCode()->firstOrFail();
 
+        if ($phoneChangeCode->expired()) {
+            return abort(410, 'Expired code');
+        }
+
         if ($phoneChangeCode->code == $code) {
             $account->phone = $phoneChangeCode->phone;
             $account->activated = true;
@@ -329,6 +333,11 @@ class AccountService
         $account = $request->user();
 
         $emailChangeCode = $account->emailChangeCode()->firstOrFail();
+
+        if ($emailChangeCode->expired()) {
+            return abort(410, 'Expired code');
+        }
+
         if ($emailChangeCode->validate($code)) {
             $account->email = $emailChangeCode->email;
             $account->save();
@@ -371,8 +380,14 @@ class AccountService
     {
         $account = $this->recoverAccount($account);
 
+        $message = 'Your ' . config('app.name') . ' validation code is ' . $account->recovery_code . ' .';
+
+        if (config('app.recovery_code_expiration_minutes') > 0) {
+            $message .= 'The code is available for ' . config('app.recovery_code_expiration_minutes') . ' minutes';
+        }
+
         $ovhSMS = new OvhSMS();
-        $ovhSMS->send($account->phone, 'Your ' . config('app.name') . ' validation code is ' . $account->recovery_code);
+        $ovhSMS->send($account->phone, $message);
 
         Log::channel('events')->info('Account Service: Sending recovery SMS', ['id' => $account->identifier]);
 
@@ -383,7 +398,6 @@ class AccountService
     {
         $account->recover();
         $account->provision();
-
         $account->refresh();
 
         return $account;

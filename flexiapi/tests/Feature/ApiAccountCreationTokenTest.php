@@ -91,11 +91,19 @@ class ApiAccountCreationTokenTest extends TestCase
 
         $response = $this->keyAuthenticated($admin)
             ->json($this->method, $this->adminRoute)
-            ->assertStatus(201);
+            ->assertStatus(201)
+            ->assertJson(['expire_at' => null]);
 
         $this->assertDatabaseHas('account_creation_tokens', [
             'token' => $response->json()['token']
         ]);
+
+        config()->set('app.account_creation_token_expiration_minutes', 10);
+
+        $response = $this->keyAuthenticated($admin)
+            ->json($this->method, $this->adminRoute)
+            ->assertStatus(201)
+            ->assertJson(['expire_at' => AccountCreationToken::latest()->first()->expire_at]);
     }
 
     public function testInvalidToken()
@@ -103,36 +111,48 @@ class ApiAccountCreationTokenTest extends TestCase
         $token = AccountCreationToken::factory()->create();
 
         // Invalid token
-        $response = $this->json($this->method, $this->accountRoute, [
+        $this->json($this->method, $this->accountRoute, [
             'username' => 'username',
             'algorithm' => 'SHA-256',
             'password' => '123',
             'account_creation_token' => '0123456789abc'
-        ]);
-        $response->assertStatus(422);
+        ])->assertStatus(422);
 
         // Valid token
-        $response = $this->json($this->method, $this->accountRoute, [
+        $this->json($this->method, $this->accountRoute, [
             'username' => 'username',
             'algorithm' => 'SHA-256',
             'password' => '123',
             'account_creation_token' => $token->token
-        ]);
-        $response->assertStatus(200);
+        ])->assertStatus(200);
 
         // Expired token
-        $response = $this->json($this->method, $this->accountRoute, [
+        $this->json($this->method, $this->accountRoute, [
             'username' => 'username2',
             'algorithm' => 'SHA-256',
             'password' => '123',
             'account_creation_token' => $token->token
-        ]);
-        $response->assertStatus(422);
+        ])->assertStatus(422);
 
         $this->assertDatabaseHas('account_creation_tokens', [
             'used' => true,
             'account_id' => Account::where('username', 'username')->first()->id,
         ]);
+    }
+
+    public function testTokenExpiration()
+    {
+        $token = AccountCreationToken::factory()->expired()->create();
+
+        config()->set('app.account_creation_token_expiration_minutes', 10);
+
+        $this->json($this->method, $this->accountRoute, [
+            'username' => 'username',
+            'algorithm' => 'SHA-256',
+            'password' => '123',
+            'account_creation_token' => $token->token
+        ])->assertStatus(422)
+        ->assertJsonValidationErrors(['account_creation_token']);
     }
 
     public function testBlacklistedUsername()
@@ -142,33 +162,28 @@ class ApiAccountCreationTokenTest extends TestCase
         config()->set('app.blacklisted_usernames', 'foobar,blacklisted,username-.*');
 
         // Blacklisted username
-        $response = $this->json($this->method, $this->accountRoute, [
+        $this->json($this->method, $this->accountRoute, [
             'username' => 'blacklisted',
             'algorithm' => 'SHA-256',
             'password' => '123',
             'account_creation_token' => $token->token
-        ]);
-        $response->assertJsonValidationErrors(['username']);
+        ])->assertJsonValidationErrors(['username']);
 
         // Blacklisted regex username
-        $response = $this->json($this->method, $this->accountRoute, [
+        $this->json($this->method, $this->accountRoute, [
             'username' => 'username-gnap',
             'algorithm' => 'SHA-256',
             'password' => '123',
             'account_creation_token' => $token->token
-        ]);
-
-        $response->assertJsonValidationErrors(['username']);
+        ])->assertJsonValidationErrors(['username']);
 
         // Valid username
-        $response = $this->json($this->method, $this->accountRoute, [
+        $this->json($this->method, $this->accountRoute, [
             'username' => 'valid-username',
             'algorithm' => 'SHA-256',
             'password' => '123',
             'account_creation_token' => $token->token
-        ]);
-
-        $response->assertStatus(200);
+        ])->assertStatus(200);
     }
 
     public function testAccountCreationRequestToken()

@@ -48,6 +48,29 @@ class ApiAccountPhoneChangeTest extends TestCase
             ->assertStatus(200);*/
     }
 
+    public function testCodeExpiration()
+    {
+        $account = Account::factory()->withConsumedAccountCreationToken()->create();
+        $account->generateApiKey();
+
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->route.'/request', [
+                'phone' => '+123123'
+            ])
+            ->assertStatus(200);
+
+        config()->set('app.phone_change_code_expiration_minutes', 10);
+
+        PhoneChangeCode::where('id', $account->phoneChangeCode->id)
+            ->update(['created_at' => $account->phoneChangeCode->created_at->subMinutes(1000)]);
+
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->route, [
+                'code' => $account->phoneChangeCode->code
+            ])
+            ->assertStatus(410);
+    }
+
     public function testUnvalidatedAccount()
     {
         $account = Account::factory()->create();
