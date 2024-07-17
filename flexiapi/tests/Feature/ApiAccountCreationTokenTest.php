@@ -246,7 +246,7 @@ class ApiAccountCreationTokenTest extends TestCase
 
         $this->keyAuthenticated($account)
             ->json($this->method, '/api/accounts/me/phone/request', [
-                'phone' => '+33123'
+                'phone' => '+33612312312'
             ])
             ->assertStatus(200);
     }

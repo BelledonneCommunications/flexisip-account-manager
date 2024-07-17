@@ -21,7 +21,7 @@ namespace Tests;
 
 use App\Password;
 use App\Account;
-
+use App\PhoneCountry;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -32,6 +32,15 @@ abstract class TestCase extends BaseTestCase
 
     protected $route = '/api/accounts/me';
     protected $method = 'GET';
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        PhoneCountry::truncate();
+        PhoneCountry::factory()->france()->activated()->create();
+        PhoneCountry::factory()->netherlands()->create();
+    }
 
     protected function disableBlockingService()
     {

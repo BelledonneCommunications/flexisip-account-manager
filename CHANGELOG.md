@@ -3,6 +3,7 @@
 v1.6
 ----
 - Fix FLEXIAPI-192 Add DotEnv configuration to allow the expiration of tokens and codes in the app
+- Fix FLEXIAPI-196 Add a phone validation system by country code with configuration panels and related tests and documentation
 
 v1.5
 ---

@@ -36,7 +36,7 @@ class AccountBlockingTest extends TestCase
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route . '/me/phone/request', [
-                'phone' => '+331234'
+                'phone' => '+33612312312'
             ])->assertStatus(200);
 
         $this->keyAuthenticated($account)

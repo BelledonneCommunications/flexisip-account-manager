@@ -31,9 +31,9 @@ use App\Mail\NewsletterRegistration;
 use App\Mail\RecoverByCode;
 use App\Mail\RegisterValidation;
 use App\PhoneChangeCode;
+use App\Rules\FilteredPhone;
 use Illuminate\Support\Facades\Log;
 
-use App\Rules\WithoutSpaces;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
@@ -223,9 +223,10 @@ class AccountService
     {
         $request->validate([
             'phone' => [
+                'phone',
+                new FilteredPhone,
                 'required', 'unique:accounts,phone',
                 'unique:accounts,username',
-                new WithoutSpaces(), 'starts_with:+'
             ]
         ]);
 

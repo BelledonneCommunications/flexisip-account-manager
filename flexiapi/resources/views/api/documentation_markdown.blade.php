@@ -243,7 +243,7 @@ JSON parameters:
 * `algorithm` required, values can be `SHA-256` or `MD5`
 * `domain` if not set the value is enforced to the default registration domain set in the global configuration
 * `email` optional if `phone` set, an email, set an email to the account, must be unique if `ACCOUNT_EMAIL_UNIQUE` is set to `true`
-* `phone` required if `username` not set, optional if `email` set, a phone number, set a phone number to the account
+* `phone` required if `username` not set, optional if `email` set, a valid phone number, set a phone number to the account
 * `account_creation_token` the unique `account_creation_token`
 
 ### `POST /accounts/with-account-creation-token`
@@ -284,7 +284,7 @@ Can only be used once, a new `recover_key` need to be requested to be called aga
 
 JSON parameters:
 
-* `phone` required the phone number to send the SMS to
+* `phone` required, the phone number to send the SMS to
 * `account_creation_token` the unique `account_creation_token`
 
 ### `GET /accounts/{sip}/recover/{recover_key}`
@@ -380,7 +380,7 @@ JSON parameters:
 * `display_name` optional, string
 * `email` optional, must be an email, must be unique if `ACCOUNT_EMAIL_UNIQUE` is set to `true`
 * `admin` optional, a boolean, set to `false` by default, create an admin account
-* `phone` optional, a phone number, set a phone number to the account
+* `phone` optional, a valid phone number, set a phone number to the account
 * `dtmf_protocol` optional, values must be `sipinfo`, `sipmessage` or `rfc2833`
 * `dictionary` optional, an associative array attached to the account, <a href="#dictionary">see also the related endpoints</a>.
 * <span class="badge badge-message">Deprecated</span> `confirmation_key_expires` optional, a datetime of this format: Y-m-d H:i:s. Only used when `activated` is not used or `false`. Enforces an expiration date on the returned `confirmation_key`. After that datetime public email or phone activation endpoints will return `403`.
@@ -399,7 +399,7 @@ JSON parameters:
 * `display_name` optional, string
 * `email` optional, must be an email, must be unique if `ACCOUNT_EMAIL_UNIQUE` is set to `true`
 * `admin` optional, a boolean, set to `false` by default
-* `phone` optional, a phone number, set a phone number to the account
+* `phone` optional, a valid phone number, set a phone number to the account
 * `dtmf_protocol` optional, values must be `sipinfo`, `sipmessage` or `rfc2833`
 
 Using this endpoint you can also set a fresh dictionnary if the parameter is set. The existing dictionary entries will be destroyed.
@@ -764,6 +764,17 @@ JSON parameters:
 
 * `to` required, SIP address of the receiver
 * `body` required, content of the message
+
+## Phone Countries
+
+The phone numbers managed by FlexiAPI are validated against a list of countries that can be managed in the admin web panels.
+
+### `GET /phones_countries`
+<span class="badge badge-success">Public</span>
+
+Return the list of Phone Countries and their current status.
+
+If a country is deactivated all the new submitted phones submitted on the platform will be blocked.
 
 ## Statistics
 

@@ -432,6 +432,7 @@ content>nav a {
     margin: 1rem 0;
     position: relative;
     white-space: nowrap;
+    padding: 0 1rem;
 }
 
 content>nav a.current {
@@ -446,8 +447,7 @@ content>nav a.current i {
 }
 
 content>nav a i {
-    margin: 0 1rem;
-    margin-left: 2rem;
+    margin-right: 0.75rem;
     font-size: 2rem;
 }
 

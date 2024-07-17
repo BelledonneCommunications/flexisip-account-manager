@@ -20,6 +20,7 @@
         "ovh/ovh": "^3.2",
         "parsedown/laravel": "^1.2",
         "phpunit/phpunit": "^9.6",
+        "propaganistas/laravel-phone": "^5.1",
         "react/socket": "^1.14",
         "respect/validation": "^2.2",
         "sabre/vobject": "^4.5",

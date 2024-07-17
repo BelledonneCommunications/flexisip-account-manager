@@ -11,6 +11,7 @@
 
         if (auth()->user()->superAdmin) {
             $items['admin.sip_domains.index'] = ['title' => 'SIP Domains', 'icon' => 'dns'];
+            $items['admin.phone_countries.index'] = ['title' => 'Phone Countries', 'icon' => 'flag'];
         }
     }
 @endphp

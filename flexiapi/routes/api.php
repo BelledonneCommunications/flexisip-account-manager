@@ -59,6 +59,8 @@ Route::post('accounts/auth_token', 'Api\Account\AuthTokenController@store');
 
 Route::get('accounts/me/api_key/{auth_token}', 'Api\Account\ApiKeyController@generateFromToken')->middleware('cookie', 'cookie.encrypt');
 
+Route::get('phone_countries', 'Api\PhoneCountryController@index');
+
 Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blocked']], function () {
     Route::get('accounts/auth_token/{auth_token}/attach', 'Api\Account\AuthTokenController@attach');
     Route::post('account_creation_tokens/consume', 'Api\Account\CreationTokenController@consume');

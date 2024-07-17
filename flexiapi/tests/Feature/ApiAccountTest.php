@@ -869,7 +869,7 @@ class ApiAccountTest extends TestCase
      */
     public function testRecoverPhone()
     {
-        $phone = '+3361234';
+        $phone = '+33612312312';
 
         $password = Password::factory()->create();
         $password->account->generateApiKey();
@@ -892,7 +892,7 @@ class ApiAccountTest extends TestCase
 
         // Wrong phone
         $this->json($this->method, $this->route . '/recover-by-phone', [
-            'phone' => '+331234', // wrong phone number
+            'phone' => '+33612312313', // wrong phone number
             'account_creation_token' => $token->token
         ])->assertJsonValidationErrors(['phone']);
 
@@ -923,7 +923,10 @@ class ApiAccountTest extends TestCase
             ]);
 
         $this->get($this->route . '/+1234/info-by-phone')
-            ->assertStatus(404);
+            ->assertStatus(302);
+
+        $this->get($this->route . '/+33612312312/info-by-phone')
+            ->assertStatus(200);
 
         $this->json('GET', $this->route . '/' . $password->account->identifier . '/info-by-phone')
             ->assertJsonValidationErrors(['phone']);
@@ -1030,7 +1033,7 @@ class ApiAccountTest extends TestCase
 
     public function testCreatePublicPhone()
     {
-        $phone = '+12345';
+        $phone = '+33612312312';
 
         config()->set('app.dangerous_endpoints', true);
 

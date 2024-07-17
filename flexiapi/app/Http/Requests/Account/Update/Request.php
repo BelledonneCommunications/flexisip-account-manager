@@ -24,10 +24,10 @@ use Illuminate\Validation\Rule;
 
 use App\Account;
 use App\Rules\BlacklistedUsername;
+use App\Rules\FilteredPhone;
 use App\Rules\IsNotPhoneNumber;
 use App\Rules\NoUppercase;
 use App\Rules\SIPUsername;
-use App\Rules\WithoutSpaces;
 
 class Request extends FormRequest
 {
@@ -60,11 +60,12 @@ class Request extends FormRequest
             'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
             'phone' => [
                 'nullable',
+                'phone',
+                new FilteredPhone,
                 Rule::unique('accounts', 'username')->where(function ($query) {
                     $query->where('domain', resolveDomain($this));
                 })->ignore($this->route('id'), 'id'),
                 Rule::unique('accounts', 'phone')->ignore($this->route('account_id'), 'id'),
-                new WithoutSpaces, 'starts_with:+'
             ]
         ];
     }

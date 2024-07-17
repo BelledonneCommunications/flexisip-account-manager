@@ -38,9 +38,9 @@ use App\Mail\RegisterConfirmation;
 use App\Rules\AccountCreationToken as RulesAccountCreationToken;
 use App\Rules\AccountCreationTokenNotExpired;
 use App\Rules\BlacklistedUsername;
+use App\Rules\FilteredPhone;
 use App\Rules\NoUppercase;
 use App\Rules\SIPUsername;
-use App\Rules\WithoutSpaces;
 use App\Rules\PasswordAlgorithm;
 
 use App\Services\AccountService;
@@ -69,7 +69,7 @@ class AccountController extends Controller
 
         $request->merge(['phone' => $phone]);
         $request->validate([
-            'phone' => ['required', new WithoutSpaces, 'starts_with:+']
+            'phone' => ['required', 'phone', new FilteredPhone]
         ]);
 
         $account = Account::where('domain', config('app.sip_domain'))
@@ -116,9 +116,10 @@ class AccountController extends Controller
             'phone' => [
                 'required_without:email',
                 'required_without:username',
+                'phone',
+                new FilteredPhone,
                 'unique:accounts,phone',
                 'unique:accounts,username',
-                new WithoutSpaces, 'starts_with:+'
             ],
             'account_creation_token' => [
                 'required',
@@ -189,7 +190,7 @@ class AccountController extends Controller
 
         $request->validate([
             'phone' => [
-                'required', new WithoutSpaces, 'starts_with:+', 'exists:accounts,phone'
+                'required', 'phone', new FilteredPhone, 'exists:accounts,phone'
             ],
             'account_creation_token' => [
                 'required',

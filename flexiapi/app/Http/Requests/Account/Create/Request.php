@@ -25,10 +25,10 @@ use Illuminate\Validation\Rule;
 use App\Account;
 use App\Rules\BlacklistedUsername;
 use App\Rules\Dictionary;
+use App\Rules\FilteredPhone;
 use App\Rules\IsNotPhoneNumber;
 use App\Rules\NoUppercase;
 use App\Rules\SIPUsername;
-use App\Rules\WithoutSpaces;
 
 class Request extends FormRequest
 {
@@ -65,7 +65,8 @@ class Request extends FormRequest
                 'nullable',
                 'unique:accounts,phone',
                 'unique:accounts,username',
-                new WithoutSpaces(), 'starts_with:+'
+                'phone',
+                new FilteredPhone
             ]
         ];
     }
