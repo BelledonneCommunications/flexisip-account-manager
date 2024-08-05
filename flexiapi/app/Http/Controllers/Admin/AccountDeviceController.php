@@ -58,8 +58,10 @@ class AccountDeviceController extends Controller
     public function destroy(Request $request, int $accountId)
     {
         $connector = new FlexisipConnector;
-        $connector->deleteDevice(Account::findOrFail($accountId)->identifier, $request->get('uuid'));
+        $account = Account::findOrFail($accountId);
 
-        return redirect()->route('admin.account.device.index');
+        $connector->deleteDevice($account->identifier, $request->get('uuid'));
+
+        return redirect()->route('admin.account.device.index', $account);
     }
 }
