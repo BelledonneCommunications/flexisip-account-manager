@@ -7,6 +7,7 @@ v1.6
 
 v1.5
 ---
+- Fix FLEXIAPI-202 Add account parameter to the redirection in the destroy admin route
 - Fix FLEXIAPI-195 Fix LiblinphoneTesterAccoutSeeder to fit with the latest Account related changes
 - Fix FLEXIAPI-193 Typo
 - Fix FLEXIAPI-192 Clear and upgrade properly the account dictionary entries if the entries are already existing
