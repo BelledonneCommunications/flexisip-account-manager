@@ -38,13 +38,36 @@
             </div>
         @endif
 
-        <div>
-            <input name="super" value="true" type="radio" @if ($sip_domain->super) checked @endif>
-            <p>Enabled</p>
-            <input name="super" value="false" type="radio" @if (!$sip_domain->super) checked @endif>
-            <p>Disabled</p>
-            <label>Super domain</label>
+        @include('parts.form.toggle', ['key' => 'super', 'label' => 'Super domain'])
+
+        <h3 class="large">Features</h3>
+
+        @include('parts.form.toggle', ['object' => $sip_domain, 'key' => 'disable_chat_feature', 'label' => 'Chat feature', 'reverse' => true])
+        @include('parts.form.toggle', ['object' => $sip_domain, 'key' => 'disable_meetings_feature', 'label' => 'Meeting feature', 'reverse' => true])
+        @include('parts.form.toggle', ['object' => $sip_domain, 'key' => 'disable_broadcast_feature', 'label' => 'Conference feature', 'reverse' => true])
+        @include('parts.form.toggle', ['object' => $sip_domain, 'key' => 'hide_settings', 'label' => 'General settings', 'reverse' => true])
+        @include('parts.form.toggle', ['object' => $sip_domain, 'key' => 'hide_account_settings', 'label' => 'Account settings', 'reverse' => true])
+        @include('parts.form.toggle', ['object' => $sip_domain, 'key' => 'disable_call_recordings_feature', 'label' => 'Record audio/video calls', 'reverse' => true])
+
+        <h3 class="large">General toggles</h3>
+
+        @include('parts.form.toggle', ['key' => 'only_display_sip_uri_username', 'label' => 'Only display usernames (hide SIP addresses)'])
+
+        <div class="select">
+            <select name="max_account">
+                @foreach ([0 => 'No limit', 1 => 'One', 2 => 'Two', 3 => 'Three', 4 => 'Four', 5 => 'Five'] as $key => $value)
+                    <option value="{{ $key }}" @if ($sip_domain->max_account == $key) selected="selected" @endif>
+                        {{ $value }}</option>
+                @endforeach
+            </select>
+            <label for="domain">Max account authorized</label>
         </div>
+
+        <h3 class="large">Assistant</h3>
+
+        @include('parts.form.toggle', ['key' => 'assistant_hide_create_account', 'label' => 'Account creation panel', 'reverse' => true])
+        @include('parts.form.toggle', ['key' => 'assistant_disable_qr_code', 'label' => 'QR Code scanning panel', 'reverse' => true])
+        @include('parts.form.toggle', ['key' => 'assistant_hide_third_party_account', 'label' => 'Third party SIP panel', 'reverse' => true])
 
     </form>
 @endsection

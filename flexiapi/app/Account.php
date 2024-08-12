@@ -178,6 +178,11 @@ class Account extends Authenticatable
         return $this->belongsToMany(AccountType::class);
     }
 
+    public function sipDomain()
+    {
+        return $this->hasOne(SipDomain::class, 'domain', 'domain');
+    }
+
     public function statisticsFromCalls()
     {
         return $this->hasMany(StatisticsCall::class, ['from_username', 'from_domain'], ['username', 'domain']);

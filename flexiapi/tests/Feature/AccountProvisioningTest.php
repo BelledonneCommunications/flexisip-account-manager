@@ -23,6 +23,7 @@ use App\Account;
 use App\AuthToken;
 use App\Password;
 use App\ProvisioningToken;
+use App\SipDomain;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -123,6 +124,27 @@ class AccountProvisioningTest extends TestCase
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('ha1');
+    }
+
+    public function testUiSectionProvisioning()
+    {
+        $secondDomain = SipDomain::factory()->create();
+
+        $password = Password::factory()->create();
+        $password->account->generateApiKey();
+        $password->account->domain = $secondDomain->domain;
+        $password->account->save();
+
+        $this->keyAuthenticated($password->account)
+            ->withHeaders([
+                'x-linphone-provisioning' => true,
+            ])
+            ->get($this->accountRoute)
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/xml')
+            ->assertSee('ha1')
+            ->assertSee('disable_call_recordings_feature')
+            ->assertSee('ui');
     }
 
     public function testAuthenticatedReProvisioning()

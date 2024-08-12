@@ -40,6 +40,11 @@ function generateNonce(): string
     return Str::random(32);
 }
 
+function getRequestBoolean(Request $request, string $key): bool
+{
+    return $request->has($key) ? $request->get($key) == "true" : false;
+}
+
 function generateValidNonce(Account $account): string
 {
     $nonce = new DigestNonce();

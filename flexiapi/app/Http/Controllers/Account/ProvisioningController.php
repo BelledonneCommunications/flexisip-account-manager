@@ -201,6 +201,35 @@ class ProvisioningController extends Controller
         $config->appendChild($section);
 
         if ($account) {
+            $ui = $xpath->query("//section[@name='ui']")->item(0);
+
+            if ($ui == null && $account->sipDomain) {
+                $section = $dom->createElement('section');
+                $section->setAttribute('name', 'ui');
+
+                foreach ([
+                    'super',
+                    'disable_chat_feature',
+                    'disable_meetings_feature',
+                    'disable_broadcast_feature',
+                    'hide_settings',
+                    'hide_account_settings',
+                    'disable_call_recordings_feature',
+                    'only_display_sip_uri_username',
+                    'assistant_hide_create_account',
+                    'assistant_disable_qr_code',
+                    'assistant_hide_third_party_account',
+                    'max_account',
+                ] as $key) {
+                    // Cast the booleans into integers
+                    $entry = $dom->createElement('entry', (int)$account->sipDomain->$key);
+                    $entry->setAttribute('name', $key);
+                    $section->appendChild($entry);
+                }
+
+                $config->appendChild($section);
+            }
+
             $section = $xpath->query("//section[@name='proxy_0']")->item(0);
 
             if ($section == null) {

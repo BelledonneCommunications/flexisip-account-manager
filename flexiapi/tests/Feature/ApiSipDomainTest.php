@@ -76,7 +76,7 @@ class ApiSipDomainTest extends TestCase
 
         $thirdDomain = 'third.domain';
 
-        $this->keyAuthenticated($admin)
+        $response = $this->keyAuthenticated($admin)
             -> json('POST', $this->route, [
                 'domain' => $thirdDomain,
                 'super' => false
@@ -95,9 +95,18 @@ class ApiSipDomainTest extends TestCase
             ->json('PUT', $this->route . '/' . $thirdDomain, [
                 'super' => true
             ])
+            ->assertStatus(422);
+
+        $json = $response->json();
+        $json['super'] = true;
+        $json['hide_settings'] = true;
+
+        $this->keyAuthenticated($admin)
+            ->json('PUT', $this->route . '/' . $thirdDomain, $json)
             ->assertJsonFragment([
                 'domain' => $thirdDomain,
-                'super' => true
+                'super' => true,
+                'hide_settings' => true
             ])
             ->assertStatus(200);
 

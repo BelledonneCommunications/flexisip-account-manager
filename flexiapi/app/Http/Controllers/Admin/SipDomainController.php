@@ -47,7 +47,7 @@ class SipDomainController extends Controller
 
         $sipDomain = new SipDomain;
         $sipDomain->domain = $request->get('domain');
-        $sipDomain->super = $request->has('super') ? (bool)$request->get('super') == "true" : false;
+        $sipDomain = $this->setConfig($request, $sipDomain);
         $sipDomain->save();
 
         return redirect()->route('admin.sip_domains.index');
@@ -62,11 +62,37 @@ class SipDomainController extends Controller
 
     public function update(Request $request, int $id)
     {
+        $request->validate([
+            'max_account' => 'required|integer',
+        ]);
+
         $sipDomain = SipDomain::findOrFail($id);
-        $sipDomain->super = $request->has('super') ? $request->get('super') == "true" : false;
+        $sipDomain = $this->setConfig($request, $sipDomain);
         $sipDomain->save();
 
-        return redirect()->route('admin.sip_domains.index');
+        return redirect()->back();
+    }
+
+    private function setConfig(Request $request, SipDomain $sipDomain)
+    {
+        $request->validate([
+            'max_account' => 'required|integer',
+        ]);
+
+        $sipDomain->super = getRequestBoolean($request, 'super');
+        $sipDomain->disable_chat_feature = getRequestBoolean($request, 'disable_chat_feature');
+        $sipDomain->disable_meetings_feature = getRequestBoolean($request, 'disable_meetings_feature');
+        $sipDomain->disable_broadcast_feature = getRequestBoolean($request, 'disable_broadcast_feature');
+        $sipDomain->hide_settings = getRequestBoolean($request, 'hide_settings');
+        $sipDomain->max_account = $request->get('max_account', 0);
+        $sipDomain->hide_account_settings = getRequestBoolean($request, 'hide_account_settings');
+        $sipDomain->disable_call_recordings_feature = getRequestBoolean($request, 'disable_call_recordings_feature');
+        $sipDomain->only_display_sip_uri_username = getRequestBoolean($request, 'only_display_sip_uri_username');
+        $sipDomain->assistant_hide_create_account = getRequestBoolean($request, 'assistant_hide_create_account');
+        $sipDomain->assistant_disable_qr_code = getRequestBoolean($request, 'assistant_disable_qr_code');
+        $sipDomain->assistant_hide_third_party_account = getRequestBoolean($request, 'assistant_hide_third_party_account');
+
+        return $sipDomain;
     }
 
     public function delete(int $id)

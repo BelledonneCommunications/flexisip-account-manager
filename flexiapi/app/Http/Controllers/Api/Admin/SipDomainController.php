@@ -35,15 +35,26 @@ class SipDomainController extends Controller
     {
         $request->validate([
             'domain' => 'required|unique:sip_domains',
-            'super' => 'required|boolean',
         ]);
 
         $sipDomain = new SipDomain;
         $sipDomain->domain = $request->get('domain');
-        $sipDomain->super = $request->has('super') ? (bool)$request->get('super') : false;
+        $this->setRequestBoolean($request, $sipDomain, 'super');
+        $this->setRequestBoolean($request, $sipDomain, 'disable_chat_feature');
+        $this->setRequestBoolean($request, $sipDomain, 'disable_meetings_feature');
+        $this->setRequestBoolean($request, $sipDomain, 'disable_broadcast_feature');
+        $this->setRequestBoolean($request, $sipDomain, 'hide_settings');
+        $this->setRequestBoolean($request, $sipDomain, 'hide_account_settings');
+        $this->setRequestBoolean($request, $sipDomain, 'disable_call_recordings_feature');
+        $this->setRequestBoolean($request, $sipDomain, 'only_display_sip_uri_username');
+        $this->setRequestBoolean($request, $sipDomain, 'assistant_hide_create_account');
+        $this->setRequestBoolean($request, $sipDomain, 'assistant_disable_qr_code');
+        $this->setRequestBoolean($request, $sipDomain, 'assistant_hide_third_party_account');
+        $sipDomain->max_account = $request->get('max_account', 0);
+
         $sipDomain->save();
 
-        return $sipDomain;
+        return $sipDomain->refresh();
     }
 
     public function show(string $domain)
@@ -55,13 +66,42 @@ class SipDomainController extends Controller
     {
         $request->validate([
             'super' => 'required|boolean',
+            'disable_chat_feature' => 'required|boolean',
+            'disable_meetings_feature' => 'required|boolean',
+            'disable_broadcast_feature' => 'required|boolean',
+            'hide_settings' => 'required|boolean',
+            'hide_account_settings' => 'required|boolean',
+            'disable_call_recordings_feature' => 'required|boolean',
+            'only_display_sip_uri_username' => 'required|boolean',
+            'assistant_hide_create_account' => 'required|boolean',
+            'assistant_disable_qr_code' => 'required|boolean',
+            'assistant_hide_third_party_account' => 'required|boolean',
+            'max_account' => 'required|integer',
         ]);
 
         $sipDomain = SipDomain::where('domain', $domain)->firstOrFail();
-        $sipDomain->super = $request->has('super') ? (bool)$request->get('super') : false;
+        $sipDomain->super = $request->get('super');
+        $sipDomain->disable_chat_feature = $request->get('disable_chat_feature');
+        $sipDomain->disable_meetings_feature = $request->get('disable_meetings_feature');
+        $sipDomain->disable_broadcast_feature = $request->get('disable_broadcast_feature');
+        $sipDomain->hide_settings = $request->get('hide_settings');
+        $sipDomain->hide_account_settings = $request->get('hide_account_settings');
+        $sipDomain->disable_call_recordings_feature = $request->get('disable_call_recordings_feature');
+        $sipDomain->only_display_sip_uri_username = $request->get('only_display_sip_uri_username');
+        $sipDomain->assistant_hide_create_account = $request->get('assistant_hide_create_account');
+        $sipDomain->assistant_disable_qr_code = $request->get('assistant_disable_qr_code');
+        $sipDomain->assistant_hide_third_party_account = $request->get('assistant_hide_third_party_account');
+        $sipDomain->max_account = $request->get('max_account', 0);
         $sipDomain->save();
 
         return $sipDomain;
+    }
+
+    private function setRequestBoolean(Request $request, SipDomain $sipDomain, string $key)
+    {
+        if ($request->has($key)) {
+            $sipDomain->$key = (bool)$request->get($key);
+        }
     }
 
     public function destroy(string $domain)

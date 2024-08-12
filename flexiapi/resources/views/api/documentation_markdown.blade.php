@@ -149,8 +149,19 @@ Create a new `sip_domain`.
 
 JSON parameters:
 
-* `domain` required, the domain to use, must be unique
-* `super` required, boolean, set the domain as a Super Domain
+* `domain` **required**, the domain to use, must be unique
+* `super` **required**, boolean, set the domain as a Super Domain
+* `disable_chat_feature` boolean, disable the chat feature, default to `false`
+* `disable_meetings_feature` boolean, disable the meeting feature, default to `false`
+* `disable_broadcast_feature` boolean, disable the broadcast feature, default to `true`
+* `hide_settings` boolean, hide the app settings, default to `false`
+* `hide_account_settings` boolean, disable the account settings, default to `false`
+* `disable_call_recordings_feature` boolean, disable the call recording feature, default to `false`
+* `only_display_sip_uri_username` boolean, hide the SIP uris in the app, default to `false`
+* `assistant_hide_create_account` boolean, disable the account creation assistant, default to `false`
+* `assistant_disable_qr_code` boolean, disable the QR code feature in the assistant, default to `false`
+* `assistant_hide_third_party_account` boolean, disable the call recording feature, default to `false`
+* `max_account` integer, the maximum number of accounts configurable in the app, default to `0` (infinite)
 
 ### `PUT /sip_domains/{domain}`
 <span class="badge badge-error">Super Admin</span>
@@ -159,7 +170,18 @@ Update an existing `sip_domain`.
 
 JSON parameters:
 
-* `super` required, boolean, set the domain as a Super Domain
+* `super` **required**, boolean, set the domain as a Super Domain
+* `disable_chat_feature` **required**, boolean
+* `disable_meetings_feature` **required**, boolean
+* `disable_broadcast_feature` **required**, boolean
+* `hide_settings` **required**, boolean
+* `hide_account_settings` **required**, boolean
+* `disable_call_recordings_feature` **required**, boolean
+* `only_display_sip_uri_username` **required**, boolean
+* `assistant_hide_create_account` **required**, boolean
+* `assistant_disable_qr_code` **required**, boolean
+* `assistant_hide_third_party_account` **required**, boolean
+* `max_account` **required**, integer
 
 ### `DELETE /sip_domains/{domain}`
 <span class="badge badge-error">Super Admin</span>
@@ -192,7 +214,7 @@ Return `404` if the `account_creation_request_token` provided is not valid or ex
 
 JSON parameters:
 
-* `account_creation_request_token` required
+* `account_creation_request_token` **required**
 
 ### `POST /account_creation_tokens/consume`
 <span class="badge badge-info">User</span>
@@ -204,7 +226,7 @@ Return `404` if the `account_creation_token` provided is not valid.
 
 JSON parameters:
 
-* `account_creation_token` required
+* `account_creation_token` **required**
 
 ### `POST /account_creation_tokens`
 <span class="badge badge-warning">Admin</span>
@@ -238,12 +260,12 @@ Send an email with the activation key if `email` is set, send an SMS otherwise.
 
 JSON parameters:
 
-* `username` required if `phone` not set, unique username, minimum 6 characters
-* `password` required minimum 6 characters
-* `algorithm` required, values can be `SHA-256` or `MD5`
+* `username` **required** if `phone` not set, unique username, minimum 6 characters
+* `password` **required** minimum 6 characters
+* `algorithm` **required**, values can be `SHA-256` or `MD5`
 * `domain` if not set the value is enforced to the default registration domain set in the global configuration
 * `email` optional if `phone` set, an email, set an email to the account, must be unique if `ACCOUNT_EMAIL_UNIQUE` is set to `true`
-* `phone` required if `username` not set, optional if `email` set, a valid phone number, set a phone number to the account
+* `phone` **required** if `username` not set, optional if `email` set, a valid phone number, set a phone number to the account
 * `account_creation_token` the unique `account_creation_token`
 
 ### `POST /accounts/with-account-creation-token`
@@ -255,8 +277,8 @@ Return `422` if the parameters are invalid or if the token is expired.
 JSON parameters:
 
 * `username` unique username, minimum 6 characters
-* `password` required minimum 6 characters
-* `algorithm` required, values can be `SHA-256` or `MD5`
+* `password` **required** minimum 6 characters
+* `algorithm` **required**, values can be `SHA-256` or `MD5`
 * `account_creation_token` the unique `account_creation_token`
 * `dtmf_protocol` optional, values must be `sipinfo`, `sipmessage` or `rfc2833`
 
@@ -284,7 +306,7 @@ Can only be used once, a new `recover_key` need to be requested to be called aga
 
 JSON parameters:
 
-* `phone` required, the phone number to send the SMS to
+* `phone` **required**, the phone number to send the SMS to
 * `account_creation_token` the unique `account_creation_token`
 
 ### `GET /accounts/{sip}/recover/{recover_key}`
@@ -361,9 +383,9 @@ Change the account password.
 
 JSON parameters:
 
-* `algorithm` required, values can be `SHA-256` or `MD5`
-* `old_password` required if the password is already set, the old password
-* `password` required, the new password
+* `algorithm` **required**, values can be `SHA-256` or `MD5`
+* `old_password` **required** if the password is already set, the old password
+* `password` **required**, the new password
 
 ### `POST /accounts`
 <span class="badge badge-warning">Admin</span>
@@ -373,8 +395,8 @@ To create an account directly from the API. <span class="badge badge-message">De
 JSON parameters:
 
 * `username` unique username, minimum 6 characters
-* `password` required minimum 6 characters
-* `algorithm` required, values can be `SHA-256` or `MD5`
+* `password` **required** minimum 6 characters
+* `algorithm` **required**, values can be `SHA-256` or `MD5`
 * `domain` **not configurable by default**. Only configurable if the admin is a super admin. Otherwise `APP_SIP_DOMAIN` is used. If the domain is not available in the `sip_domains` list, it will be created automatically.
 * `activated` optional, a boolean, set to `false` by default
 * `display_name` optional, string
@@ -394,8 +416,8 @@ JSON parameters:
 
 * `username` unique username, minimum 6 characters
 * `domain` **not configurable by default**. Only configurable if the admin is a super admin. Otherwise `APP_SIP_DOMAIN` is used.
-* `password` required minimum 6 characters
-* `algorithm` required, values can be `SHA-256` or `MD5`
+* `password` **required** minimum 6 characters
+* `algorithm` **required**, values can be `SHA-256` or `MD5`
 * `display_name` optional, string
 * `email` optional, must be an email, must be unique if `ACCOUNT_EMAIL_UNIQUE` is set to `true`
 * `admin` optional, a boolean, set to `false` by default
@@ -605,7 +627,7 @@ Add or update a new entry to the dictionary
 
 JSON parameters:
 
-* `value` required, the entry value
+* `value` **required**, the entry value
 
 ### `DELETE /accounts/{id}/dictionary/{key}`
 <span class="badge badge-warning">Admin</span>
@@ -633,8 +655,8 @@ Create an account action.
 
 JSON parameters:
 
-* `key` required, alpha numeric with dashes, lowercase
-* `code` required, alpha numeric, lowercase
+* `key` **required**, alpha numeric with dashes, lowercase
+* `code` **required**, alpha numeric, lowercase
 
 ### `PUT /accounts/{id}/actions/{action_id}`
 <span class="badge badge-warning">Admin</span>
@@ -643,8 +665,8 @@ Create an account action.
 
 JSON parameters:
 
-* `key` required, alpha numeric with dashes, lowercase
-* `code` required, alpha numeric, lowercase
+* `key` **required**, alpha numeric with dashes, lowercase
+* `code` **required**, alpha numeric, lowercase
 
 ### `DELETE /accounts/{id}/actions/{action_id}`
 <span class="badge badge-warning">Admin</span>
@@ -670,8 +692,8 @@ Create a contacts list.
 
 JSON parameters:
 
-* `title` required
-* `description` required
+* `title` **required**
+* `description` **required**
 
 ### `PUT /contacts_lists/{id}`
 <span class="badge badge-warning">Admin</span>
@@ -680,8 +702,8 @@ Update a contacts list.
 
 JSON parameters:
 
-* `title` required
-* `description` required
+* `title` **required**
+* `description` **required**
 
 ### `DELETE /contacts_lists/{id}`
 <span class="badge badge-warning">Admin</span>
@@ -727,7 +749,7 @@ Create an account type.
 
 JSON parameters:
 
-* `key` required, alpha numeric with dashes, lowercase
+* `key` **required**, alpha numeric with dashes, lowercase
 
 ### `PUT /account_types/{id}`
 <span class="badge badge-warning">Admin</span>
@@ -736,7 +758,7 @@ Update an account type.
 
 JSON parameters:
 
-* `key` required, alpha numeric with dashes, lowercase
+* `key` **required**, alpha numeric with dashes, lowercase
 
 ### `DELETE /account_types/{id}`
 <span class="badge badge-warning">Admin</span>
@@ -762,8 +784,8 @@ Send a message over SIP.
 
 JSON parameters:
 
-* `to` required, SIP address of the receiver
-* `body` required, content of the message
+* `to` **required**, SIP address of the receiver
+* `body` **required**, content of the message
 
 ## Phone Countries
 
@@ -787,10 +809,10 @@ Announce the creation of a message.
 
 JSON parameters:
 
-* `id` required, string
-* `from` required, string the sender of the message
-* `sent_at` required, string, format ISO8601, when the message was actually sent
-* `encrypted` required, boolean
+* `id` **required**, string
+* `from` **required**, string the sender of the message
+* `sent_at` **required**, string, format ISO8601, when the message was actually sent
+* `encrypted` **required**, boolean
 * `conference_id` string
 
 ### `PATCH /statistics/messages/{message_id}/to/{to}/devices/{device_id}`
@@ -800,8 +822,8 @@ Complete a message status.
 
 JSON parameters:
 
-* `last_status` required, an integer containing the last status code
-* `received_at` required, format ISO8601, when the message was received
+* `last_status` **required**, an integer containing the last status code
+* `received_at` **required**, format ISO8601, when the message was received
 
 ### `POST /statistics/calls`
 <span class="badge badge-warning">Admin</span>
@@ -810,10 +832,10 @@ Announce the beginning of a call.
 
 JSON parameters:
 
-* `id` required, string
-* `from` required, string the initier of the call
-* `to` required, string the destination of the call
-* `initiated_at` required, string, format ISO8601, when the call was started
+* `id` **required**, string
+* `from` **required**, string the initier of the call
+* `to` **required**, string the destination of the call
+* `initiated_at` **required**, string, format ISO8601, when the call was started
 * `ended_at` string, format ISO8601, when the call finished
 * `conference_id` string
 
@@ -836,7 +858,7 @@ Update a call when ending.
 
 JSON parameters:
 
-* `ended_at` required, string, format ISO8601, when the call finished
+* `ended_at` **required**, string, format ISO8601, when the call finished
 
 # Non-API Endpoints
 

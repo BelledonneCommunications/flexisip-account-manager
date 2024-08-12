@@ -94,13 +94,7 @@
 
         <h2>Other information</h2>
 
-        <div>
-            <input name="activated" value="true" type="radio" @if ($account->activated) checked @endif>
-            <p>Enabled</p>
-            <input name="activated" value="false" type="radio" @if (!$account->activated) checked @endif>
-            <p>Disabled</p>
-            <label>Status</label>
-        </div>
+        @include('parts.form.toggle', ['object' => $account, 'key' => 'activated', 'label' => 'Status'])
 
         <div>
             <input name="blocked" value="false" type="radio" @if (!$account->blocked) checked @endif>
