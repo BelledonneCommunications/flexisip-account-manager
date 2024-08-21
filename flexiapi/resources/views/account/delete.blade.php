@@ -18,12 +18,12 @@
 
         <div class="large">
             <p>You are going to permanently delete your account.</p>
-            <p>Please enter your complete username to confirm: <b>{{ $account->identifier }}</b>.</p>
+            <p>Please enter your complete SIP address to confirm: <b>{{ $account->identifier }}</b>.</p>
         </div>
 
         <div>
             <input placeholder="bob@example.net" name="identifier" type="text" value="{{ old('identifier') }}">
-            <label for="identifier">Username</label>
+            <label for="identifier">SIP address</label>
         </div>
 
         <div class="on_desktop"></div>
