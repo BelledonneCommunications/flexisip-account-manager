@@ -5,6 +5,7 @@ v1.6
 - Fix FLEXIAPI-192 Add DotEnv configuration to allow the expiration of tokens and codes in the app
 - Fix FLEXIAPI-196 Add a phone validation system by country code with configuration panels and related tests and documentation
 - Fix FLEXIAPI-203 Implement domain based Linphone configuration, add documentation, complete API endpoints, complete provisioning XML
+- Fix FLEXIAPI-208 Add SMS templates documentation
 
 v1.5
 ---

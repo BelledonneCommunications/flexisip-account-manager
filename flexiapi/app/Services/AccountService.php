@@ -241,8 +241,14 @@ class AccountService
 
         Log::channel('events')->info('Account Service: Account phone change requested by SMS', ['id' => $account->identifier]);
 
+        $message = 'Your ' . config('app.name') . ' validation code is ' . $phoneChangeCode->code . '.';
+
+        if (config('app.recovery_code_expiration_minutes') > 0) {
+            $message .= ' The code is available for ' . config('app.recovery_code_expiration_minutes') . ' minutes';
+        }
+
         $ovhSMS = new OvhSMS();
-        $ovhSMS->send($request->get('phone'), 'Your ' . config('app.name') . ' validation code is ' . $phoneChangeCode->code);
+        $ovhSMS->send($request->get('phone'), $message);
     }
 
     public function updatePhone(Request $request): ?Account
@@ -381,10 +387,10 @@ class AccountService
     {
         $account = $this->recoverAccount($account);
 
-        $message = 'Your ' . config('app.name') . ' validation code is ' . $account->recovery_code . ' .';
+        $message = 'Your ' . config('app.name') . ' validation code is ' . $account->recovery_code . '.';
 
         if (config('app.recovery_code_expiration_minutes') > 0) {
-            $message .= 'The code is available for ' . config('app.recovery_code_expiration_minutes') . ' minutes';
+            $message .= ' The code is available for ' . config('app.recovery_code_expiration_minutes') . ' minutes';
         }
 
         $ovhSMS = new OvhSMS();
