@@ -204,6 +204,15 @@ You can also seed the tables with test accounts for the liblinphone test suite w
 
     php artisan accounts:seed /path/to/accounts.json
 
+## SMS templates
+
+To send SMS to the USA some providers need to validate their templates before transfering them, see [Sending SMS messages to the USA - OVH](https://help.ovhcloud.com/csm/en-ie-sms-sending-sms-to-usa?id=kb_article_view&sysparm_article=KB0051359).
+
+Here are the currently used SMS templates in the app to declare in your provider panel:
+
+- Recovery code: `Your #APP_NAME# creation code is #CODE#`
+- Creation code: `Your #APP_NAME# recovery code is #CODE#`
+
 ## Custom email templaces
 
 Some email templates can be customized.
