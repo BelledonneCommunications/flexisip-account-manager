@@ -210,8 +210,8 @@ To send SMS to the USA some providers need to validate their templates before tr
 
 Here are the currently used SMS templates in the app to declare in your provider panel:
 
-- Recovery code: `Your #APP_NAME# creation code is #CODE#`
-- Creation code: `Your #APP_NAME# recovery code is #CODE#`
+- Creation code: `Your #APP_NAME# creation code is #CODE#`. Sent to confirm the creation of the account by SMS.
+- Recovery code: `Your #APP_NAME# recovery code is #CODE#`. Sent to recover the account by SMS.
 
 ## Custom email templaces
 
