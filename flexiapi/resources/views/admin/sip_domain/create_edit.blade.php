@@ -38,7 +38,7 @@
             </div>
         @endif
 
-        @include('parts.form.toggle', ['key' => 'super', 'label' => 'Super domain'])
+        @include('parts.form.toggle', ['object' => $sip_domain, 'key' => 'super', 'label' => 'Super domain'])
 
         <h3 class="large">Features</h3>
 
@@ -51,7 +51,7 @@
 
         <h3 class="large">General toggles</h3>
 
-        @include('parts.form.toggle', ['key' => 'only_display_sip_uri_username', 'label' => 'Only display usernames (hide SIP addresses)'])
+        @include('parts.form.toggle', ['object' => $sip_domain, 'key' => 'only_display_sip_uri_username', 'label' => 'Only display usernames (hide SIP addresses)'])
 
         <div class="select">
             <select name="max_account">
@@ -65,9 +65,9 @@
 
         <h3 class="large">Assistant</h3>
 
-        @include('parts.form.toggle', ['key' => 'assistant_hide_create_account', 'label' => 'Account creation panel', 'reverse' => true])
-        @include('parts.form.toggle', ['key' => 'assistant_disable_qr_code', 'label' => 'QR Code scanning panel', 'reverse' => true])
-        @include('parts.form.toggle', ['key' => 'assistant_hide_third_party_account', 'label' => 'Third party SIP panel', 'reverse' => true])
+        @include('parts.form.toggle', ['object' => $sip_domain, 'key' => 'assistant_hide_create_account', 'label' => 'Account creation panel', 'reverse' => true])
+        @include('parts.form.toggle', ['object' => $sip_domain, 'key' => 'assistant_disable_qr_code', 'label' => 'QR Code scanning panel', 'reverse' => true])
+        @include('parts.form.toggle', ['object' => $sip_domain, 'key' => 'assistant_hide_third_party_account', 'label' => 'Third party SIP panel', 'reverse' => true])
 
     </form>
 @endsection
