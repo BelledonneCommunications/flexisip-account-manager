@@ -6,6 +6,7 @@ v1.6
 - Fix FLEXIAPI-196 Add a phone validation system by country code with configuration panels and related tests and documentation
 - Fix FLEXIAPI-203 Implement domain based Linphone configuration, add documentation, complete API endpoints, complete provisioning XML
 - Fix FLEXIAPI-208 Add SMS templates documentation
+- Fix FLEXIAPI-211 Add a JSON validation middleware + test
 
 v1.5
 ---

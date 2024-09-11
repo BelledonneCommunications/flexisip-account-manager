@@ -22,6 +22,7 @@ namespace Tests\Feature;
 use App\Account;
 use App\AccountCreationRequestToken;
 use App\AccountCreationToken;
+use App\Http\Middleware\ValidateJSON;
 use Tests\TestCase;
 use Carbon\Carbon;
 
@@ -39,6 +40,27 @@ class ApiAccountCreationTokenTest extends TestCase
     protected $pnParam = 'param';
     protected $pnPrid = 'id';
 
+    public function testInvalidJSON()
+    {
+        $this->call(
+            $this->method,
+            $this->tokenRoute,
+            [],
+            [],
+            [],
+            $this->transformHeadersToServerVars(
+                [
+                    'content-type' => 'application/json',
+                    'accept' => 'application/json',
+                ]
+            ),
+            '{"first_name": "John", "last_name": "Smith", "is_alive": true, "age": 27,'
+        )->assertStatus(400)
+        ->assertJsonPath(
+            'message',
+            fn ($error) => substr($error, 0, strlen(ValidateJSON::$message)) == ValidateJSON::$message
+        );
+    }
     public function testCorrectParameters()
     {
         $this->assertSame(AccountCreationToken::count(), 0);

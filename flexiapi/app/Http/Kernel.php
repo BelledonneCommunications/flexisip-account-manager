@@ -57,6 +57,7 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:600,1', // move to 600 instead of 60
             'bindings',
+            'validate_json',
             'localization',
         ],
     ];
@@ -76,6 +77,7 @@ class Kernel extends HttpKernel
         'auth.digest_or_key' => \App\Http\Middleware\AuthenticateDigestOrKey::class,
         'auth.jwt' => \App\Http\Middleware\AuthenticateJWT::class,
         'auth.check_blocked' => \App\Http\Middleware\CheckBlocked::class,
+        'validate_json' => \App\Http\Middleware\ValidateJSON::class,
         'web_panel_enabled' => \App\Http\Middleware\IsWebPanelEnabled::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
