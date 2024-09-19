@@ -50,7 +50,9 @@ class ProvisioningController extends Controller
             })
             ->firstOrFail();
 
-        if ($account->activationExpired()) abort(404);
+        if ($account->activationExpired()) {
+            abort(404);
+        }
 
         $params = ['provisioning_token' => $provisioningToken];
 
@@ -235,6 +237,7 @@ class ProvisioningController extends Controller
             if ($section == null) {
                 $section = $dom->createElement('section');
                 $section->setAttribute('name', 'proxy_0');
+                $config->appendChild($section);
             }
 
             $entry = $dom->createElement('entry', $account->fullIdentifier);
@@ -246,10 +249,81 @@ class ProvisioningController extends Controller
                 provisioningProxyHook($section, $request, $account);
             }
 
-            $config->appendChild($section);
-
             $passwords = $account->passwords()->get();
             $authInfoIndex = 0;
+
+            // CoTURN
+            if (config('app.coturn_session_ttl_minutes') > 0
+            && !empty(config('app.coturn_server_host'))
+            && !empty(config('app.coturn_static_auth_secret'))) {
+                $user = 'foo';
+                $secret = config('app.coturn_static_auth_secret');
+
+                $ttl = config('app.coturn_session_ttl_minutes') * 60;
+                $time = time() + $ttl;
+                $username = $time . ':' . Str::random(16);
+                $password = base64_encode(hash_hmac('sha1', $username, $secret, true));
+
+                // net
+                $section = $xpath->query("//section[@name='net']")->item(0);
+
+                if ($section == null) {
+                    $section = $dom->createElement('section');
+                    $section->setAttribute('name', 'net');
+                    $config->appendChild($section);
+                }
+
+                $ref = Str::random(8);
+
+                $entry = $dom->createElement('entry', $ref);
+                $entry->setAttribute('name', 'nat_policy_ref');
+                $section->appendChild($entry);
+
+                // nat_policy_0
+                $section = $dom->createElement('section');
+                $section->setAttribute('name', 'nat_policy_0');
+                $config->appendChild($section);
+
+                $entry = $dom->createElement('entry', $ref);
+                $entry->setAttribute('name', 'ref');
+                $section->appendChild($entry);
+
+                $entry = $dom->createElement('entry', config('app.coturn_server_host'));
+                $entry->setAttribute('name', 'stun_server');
+                $section->appendChild($entry);
+
+                $entry = $dom->createElement('entry', $username);
+                $entry->setAttribute('name', 'stun_server_username');
+                $section->appendChild($entry);
+
+                $entry = $dom->createElement('entry', 'turn,ice');
+                $entry->setAttribute('name', 'protocols');
+                $section->appendChild($entry);
+
+                // auth_info_x
+                $section = $xpath->query("//section[@name='auth_info_" . $authInfoIndex . "']")->item(0);
+
+                if ($section == null) {
+                    $section = $dom->createElement('section');
+                    $section->setAttribute('name', 'auth_info_' . $authInfoIndex);
+                    $config->appendChild($section);
+                    $authInfoIndex++;
+                }
+
+                $entry = $dom->createElement('entry', $username);
+                $entry->setAttribute('name', 'username');
+                $section->appendChild($entry);
+
+                $entry = $dom->createElement('entry', $password);
+                $entry->setAttribute('name', 'passwd');
+                $section->appendChild($entry);
+
+                if (!empty(config('app.coturn_realm'))) {
+                    $entry = $dom->createElement('entry', config('app.coturn_realm'));
+                    $entry->setAttribute('name', 'realm');
+                    $section->appendChild($entry);
+                }
+            }
 
             foreach ($passwords as $password) {
                 $section = $xpath->query("//section[@name='auth_info_" . $authInfoIndex . "']")->item(0);
@@ -257,6 +331,7 @@ class ProvisioningController extends Controller
                 if ($section == null) {
                     $section = $dom->createElement('section');
                     $section->setAttribute('name', 'auth_info_' . $authInfoIndex);
+                    $config->appendChild($section);
                 }
 
                 $entry = $dom->createElement('entry', $account->username);
@@ -283,8 +358,6 @@ class ProvisioningController extends Controller
                 if (function_exists('provisioningAuthHook')) {
                     provisioningAuthHook($section, $request, $password);
                 }
-
-                $config->appendChild($section);
 
                 $authInfoIndex++;
             }

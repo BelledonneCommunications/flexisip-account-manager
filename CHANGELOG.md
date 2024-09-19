@@ -7,6 +7,7 @@ v1.6
 - Fix FLEXIAPI-203 Implement domain based Linphone configuration, add documentation, complete API endpoints, complete provisioning XML
 - Fix FLEXIAPI-208 Add SMS templates documentation
 - Fix FLEXIAPI-211 Add a JSON validation middleware + test
+- Fix FLEXIAPI-212 Add CoTURN credentials support in the provisioning
 
 v1.5
 ---

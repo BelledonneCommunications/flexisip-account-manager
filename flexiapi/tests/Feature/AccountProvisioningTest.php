@@ -95,7 +95,7 @@ class AccountProvisioningTest extends TestCase
         ])->get($this->accountRoute)->assertStatus(302);
     }
 
-    public function testAuthenticatedProvisioning()
+    public function testAuthenticatedWithPasswordProvisioning()
     {
         $password = Password::factory()->create();
         $password->account->generateApiKey();
@@ -341,5 +341,44 @@ class AccountProvisioningTest extends TestCase
         ])
             ->get($this->route . '/' . $account->provisioning_token)
             ->assertStatus(410);
+    }
+
+    public function testCoTURN()
+    {
+        $account = Account::factory()->create();
+        $account->generateApiKey();
+
+        $host = 'coturn.tld';
+        $realm = 'realm.tld';
+
+        config()->set('app.coturn_server_host', $host);
+        config()->set('app.coturn_static_auth_secret', 'secret');
+
+        $response = $this->withHeaders([
+                'x-linphone-provisioning' => true,
+            ])
+            ->keyAuthenticated($account)
+            ->get($this->accountRoute)
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/xml')
+            ->assertSee($host)
+            ->assertSee('nat_policy_ref')
+            ->assertSee('stun_server_username')
+            ->assertSee('nat_policy_0')
+            ->assertDontSee('realm')
+            ->assertDontSee($realm);
+
+        config()->set('app.coturn_realm', $realm);
+
+        $response = $this->withHeaders([
+                'x-linphone-provisioning' => true,
+            ])
+            ->keyAuthenticated($account)
+            ->get($this->accountRoute)
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/xml')
+            ->assertSee($host)
+            ->assertSee('realm')
+            ->assertSee($realm);
     }
 }
