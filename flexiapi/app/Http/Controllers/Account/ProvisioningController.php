@@ -253,16 +253,8 @@ class ProvisioningController extends Controller
             $authInfoIndex = 0;
 
             // CoTURN
-            if (config('app.coturn_session_ttl_minutes') > 0
-            && !empty(config('app.coturn_server_host'))
-            && !empty(config('app.coturn_static_auth_secret'))) {
-                $user = 'foo';
-                $secret = config('app.coturn_static_auth_secret');
-
-                $ttl = config('app.coturn_session_ttl_minutes') * 60;
-                $time = time() + $ttl;
-                $username = $time . ':' . Str::random(16);
-                $password = base64_encode(hash_hmac('sha1', $username, $secret, true));
+            if (hasCoTURNConfigured()) {
+                list($username, $password) = array_values(getCoTURNCredentials());
 
                 // net
                 $section = $xpath->query("//section[@name='net']")->item(0);
@@ -317,12 +309,6 @@ class ProvisioningController extends Controller
                 $entry = $dom->createElement('entry', $password);
                 $entry->setAttribute('name', 'passwd');
                 $section->appendChild($entry);
-
-                if (!empty(config('app.coturn_realm'))) {
-                    $entry = $dom->createElement('entry', config('app.coturn_realm'));
-                    $entry->setAttribute('name', 'realm');
-                    $section->appendChild($entry);
-                }
             }
 
             foreach ($passwords as $password) {

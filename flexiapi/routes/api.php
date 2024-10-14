@@ -68,6 +68,8 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
     Route::prefix('accounts/me')->group(function () {
         Route::get('api_key', 'Api\Account\ApiKeyController@generate')->middleware('cookie', 'cookie.encrypt');
 
+        Route::get('services/turn', 'Api\Account\AccountController@turnService');
+
         Route::get('/', 'Api\Account\AccountController@show');
         Route::delete('/', 'Api\Account\AccountController@delete');
         Route::get('provision', 'Api\Account\AccountController@provision');

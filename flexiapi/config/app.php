@@ -56,7 +56,6 @@ return [
     'coturn_server_host' => env('COTURN_SERVER_HOST', null),
     'coturn_session_ttl_minutes' => (int)env('COTURN_SESSION_TTL_MINUTES', 60 * 24),
     'coturn_static_auth_secret' => env('COTURN_STATIC_AUTH_SECRET', null),
-    'coturn_realm' => env('COTURN_REALM', null),
 
     /**
      * External interfaces

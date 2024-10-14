@@ -61,6 +61,27 @@ class AccountController extends Controller
     }
 
     /**
+     * Get services credentials
+     */
+    public function turnService(Request $request)
+    {
+        if (hasCoturnConfigured()) {
+            list($username, $password) = array_values(getCoTURNCredentials());
+
+            return [
+                'username' => $username,
+                'password' => $password,
+                'ttl' => config('app.coturn_session_ttl_minutes') * 60,
+                'uris' => [
+                    'turn:' . config('app.coturn_server_host'),
+                ]
+            ];
+        }
+
+        return abort(404, 'No TURN service configured');
+    }
+
+    /**
      * /!\ Dangerous endpoint, disabled by default
      */
     public function phoneInfo(Request $request, string $phone)

@@ -98,6 +98,30 @@ function markdownDocumentationView(string $view): string
     );
 }
 
+function hasCoTURNConfigured(): bool
+{
+    return config('app.coturn_session_ttl_minutes') > 0
+        && !empty(config('app.coturn_server_host'))
+        && !empty(config('app.coturn_static_auth_secret'));
+}
+
+function getCoTURNCredentials(): array
+{
+    $user = Str::random(8);
+    $secret = config('app.coturn_static_auth_secret');
+
+    $ttl = config('app.coturn_session_ttl_minutes') * 60;
+    $time = time() + $ttl;
+
+    $username = $time . ':' . Str::random(16);
+    $password = base64_encode(hash_hmac('sha1', $username, $secret, true));
+
+    return [
+        'username' => $username,
+        'password' => $password,
+    ];
+}
+
 function parseSIP(string $sipAdress): array
 {
     return explode('@', \substr($sipAdress, 4));

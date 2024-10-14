@@ -8,6 +8,7 @@ v1.6
 - Fix FLEXIAPI-208 Add SMS templates documentation
 - Fix FLEXIAPI-211 Add a JSON validation middleware + test
 - Fix FLEXIAPI-212 Add CoTURN credentials support in the provisioning
+- Fix FLEXIAPI-213 Add TURN credentials support in the API as defined in draft-uberti-behave-turn-rest-00
 
 v1.5
 ---

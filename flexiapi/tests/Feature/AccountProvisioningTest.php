@@ -351,6 +351,10 @@ class AccountProvisioningTest extends TestCase
         $host = 'coturn.tld';
         $realm = 'realm.tld';
 
+        $this->keyAuthenticated($account)
+            ->get('/api/accounts/me/services/turn')
+            ->assertStatus(404);
+
         config()->set('app.coturn_server_host', $host);
         config()->set('app.coturn_static_auth_secret', 'secret');
 
@@ -364,21 +368,13 @@ class AccountProvisioningTest extends TestCase
             ->assertSee($host)
             ->assertSee('nat_policy_ref')
             ->assertSee('stun_server_username')
-            ->assertSee('nat_policy_0')
-            ->assertDontSee('realm')
-            ->assertDontSee($realm);
+            ->assertSee('nat_policy_0');
 
-        config()->set('app.coturn_realm', $realm);
-
-        $response = $this->withHeaders([
-                'x-linphone-provisioning' => true,
-            ])
-            ->keyAuthenticated($account)
-            ->get($this->accountRoute)
+        $this->keyAuthenticated($account)
+            ->get('/api/accounts/me/services/turn')
             ->assertStatus(200)
-            ->assertHeader('Content-Type', 'application/xml')
-            ->assertSee($host)
-            ->assertSee('realm')
-            ->assertSee($realm);
+            ->assertJson([
+                'ttl' => config()->get('app.coturn_session_ttl_minutes') * 60
+            ]);
     }
 }

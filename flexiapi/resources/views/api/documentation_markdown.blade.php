@@ -364,6 +364,11 @@ This endpoint is also setting the API Key as a Cookie.
 
 Retrieve the account information.
 
+### `GET /accounts/me/services/turn`
+<span class="badge badge-info">User</span>
+
+If configured, returns valid TURN credentials following the [draft-uberti-behave-turn-rest-00 IEFT Draft](https://datatracker.ietf.org/doc/html/draft-uberti-behave-turn-rest-00).
+
 ### `GET /accounts/me/provision`
 <span class="badge badge-info">User</span>
 
