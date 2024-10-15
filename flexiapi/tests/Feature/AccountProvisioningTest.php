@@ -92,7 +92,7 @@ class AccountProvisioningTest extends TestCase
     {
         $this->withHeaders([
             'x-linphone-provisioning' => true,
-        ])->get($this->accountRoute)->assertStatus(302);
+        ])->get($this->accountRoute)->assertStatus(401);
     }
 
     public function testAuthenticatedWithPasswordProvisioning()

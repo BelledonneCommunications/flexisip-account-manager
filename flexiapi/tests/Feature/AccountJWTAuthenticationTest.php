@@ -39,6 +39,8 @@ class AccountJWTAuthenticationTest extends TestCase
     protected $serverPrivateKeyPem = null;
     protected $serverPublicKeyPem = null;
 
+    protected $routeAccountMe = '/api/accounts/me';
+
     public function setUp(): void
     {
         parent::setUp();
@@ -172,6 +174,46 @@ class AccountJWTAuthenticationTest extends TestCase
             ])
             ->get($this->accountRoute)
             ->assertStatus(403);
+    }
+
+    public function testAuthBearerUrl()
+    {
+        $server = 'https://auth_bearer.com/';
+        config()->set('app.account_authentication_bearer_url', $server);
+
+        $password = Password::factory()->create();
+
+        $response = $this->json($this->method, $this->routeAccountMe)
+            ->assertStatus(401);
+
+        $this->assertStringContainsString(
+            'Bearer authz_server="' . $server . '"',
+            $response->headers->all()['www-authenticate'][0]
+        );
+
+        // Wrong From
+        $reponse = $this
+            ->withHeaders(['From' => 'sip:missing@username'])
+            ->json($this->method, $this->routeAccountMe)
+            ->assertStatus(401);
+
+        $this->assertStringContainsString(
+            'Bearer authz_server="' . $server . '"',
+            $response->headers->all()['www-authenticate'][0]
+        );
+
+        // Wrong bearer message
+        $reponse = $this
+            ->withHeaders([
+                'Authorization' => 'Bearer 1234'
+            ])
+            ->json($this->method, $this->routeAccountMe)
+            ->assertStatus(401);
+
+        $this->assertStringContainsString(
+            'Bearer authz_server="' . $server . '"',
+            $response->headers->all()['www-authenticate'][0]
+        );
     }
 
     private function checkToken(UnencryptedToken $token): void

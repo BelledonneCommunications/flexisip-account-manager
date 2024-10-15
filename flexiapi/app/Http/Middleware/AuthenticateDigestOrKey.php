@@ -25,8 +25,8 @@ use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
-use Closure;
 use Illuminate\Http\Request;
+use Closure;
 use Validator;
 
 class AuthenticateDigestOrKey
@@ -58,9 +58,9 @@ class AuthenticateDigestOrKey
             return $this->generateUnauthorizedResponse(null, 'Invalid API Key');
         }
 
-        Validator::make(['from' => $request->header('From')], [
-            'from'    => 'required',
-        ])->validate();
+        if (empty($request->header('From'))) {
+            return $this->generateUnauthorizedResponse(null, 'From header is required or invalid token');
+        }
 
         $from = $this->extractFromHeader($request->header('From'));
         list($username, $domain) = parseSIP($from);
@@ -70,7 +70,7 @@ class AuthenticateDigestOrKey
                           ->where('domain', $domain)
                           ->firstOrFail();
 
-        $resolvedRealm = config('app.realm') ?? $domain;
+        $resolvedRealm = config('app.account_realm') ?? $domain;
 
         // DIGEST authentication
 
@@ -132,7 +132,8 @@ class AuthenticateDigestOrKey
                 : $password->password; // username:realm/domain:password
             $a2 = hash($hash, $request->method().':'.$auth['uri']);
 
-            $validResponse = hash($hash,
+            $validResponse = hash(
+                $hash,
                 $a1.
                 ':'.$auth['nonce'].
                 ':'.$auth['nc'].
@@ -161,7 +162,7 @@ class AuthenticateDigestOrKey
 
     private function generateUnauthorizedResponse(?Account $account = null, $message = 'Unauthenticated request')
     {
-        $response = new Response;
+        $response = new Response();
 
         if ($account) {
             $nonce = generateValidNonce($account);
@@ -198,7 +199,7 @@ class AuthenticateDigestOrKey
     private function generateAuthHeaders(Account $account, string $nonce): array
     {
         $headers = [];
-        $resolvedRealm = config('app.realm') ?? $account->domain;
+        $resolvedRealm = config('app.account_realm') ?? $account->domain;
 
         foreach ($account->passwords as $password) {
             if ($password->algorithm == 'CLRTXT') {
@@ -209,7 +210,7 @@ class AuthenticateDigestOrKey
                     );
                 }
                 break;
-            } else if (\in_array($password->algorithm, array_keys(passwordAlgorithms()))) {
+            } elseif (\in_array($password->algorithm, array_keys(passwordAlgorithms()))) {
                 array_push(
                     $headers,
                     $this->generateAuthHeader($resolvedRealm, $password->algorithm, $nonce)

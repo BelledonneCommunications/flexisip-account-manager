@@ -181,7 +181,7 @@ class ApiAccountCreationTokenTest extends TestCase
     {
         $token = AccountCreationToken::factory()->create();
 
-        config()->set('app.blacklisted_usernames', 'foobar,blacklisted,username-.*');
+        config()->set('app.account_blacklisted_usernames', 'foobar,blacklisted,username-.*');
 
         // Blacklisted username
         $this->json($this->method, $this->accountRoute, [

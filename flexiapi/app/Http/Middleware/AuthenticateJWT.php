@@ -24,6 +24,7 @@ use Closure;
 use DateTimeImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Response;
 
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token\Parser;
@@ -94,6 +95,21 @@ class AuthenticateJWT
             }
 
             Auth::login($account);
+
+            return $next($request);
+        }
+
+        if (!empty(config('app.account_authentication_bearer_url'))) {
+            $response = new Response();
+
+            $response->header(
+                'WWW-Authenticate',
+                'Bearer authz_server="' . config('app.account_authentication_bearer_url') . '"'
+            );
+
+            $response->setStatusCode(401);
+
+            return $response;
         }
 
         return $next($request);

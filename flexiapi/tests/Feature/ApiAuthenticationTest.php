@@ -32,7 +32,7 @@ class ApiAuthenticationTest extends TestCase
     {
         Password::factory()->create();
         $response = $this->json($this->method, $this->route);
-        $response->assertStatus(422);
+        $response->assertStatus(401);
     }
 
     public function testWrongFrom()
@@ -204,7 +204,7 @@ class ApiAuthenticationTest extends TestCase
     public function testAuthenticationSHA265FromCLRTXTWithRealm()
     {
         $realm = 'realm.com';
-        config()->set('app.realm', $realm);
+        config()->set('app.account_realm', $realm);
 
         $password = Password::factory()->clrtxt()->create();
         $response = $this->generateFirstResponse($password);
@@ -230,7 +230,8 @@ class ApiAuthenticationTest extends TestCase
     public function testAuthenticationBadPassword()
     {
         $password = Password::factory()->create();
-        $response = $this->generateFirstResponse($password);;
+        $response = $this->generateFirstResponse($password);
+        ;
         $password->password = 'wrong';
 
         $response = $this->generateSecondResponse($password, $response)

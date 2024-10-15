@@ -37,7 +37,7 @@ class ApiAccountTest extends TestCase
     {
         Password::factory()->create();
         $response = $this->json($this->method, $this->route);
-        $response->assertStatus(422);
+        $response->assertStatus(401);
     }
 
     public function testNotAdminForbidden()
@@ -588,7 +588,7 @@ class ApiAccountTest extends TestCase
         $password->account->save();
 
         $realm = 'realm.com';
-        config()->set('app.realm', $realm);
+        config()->set('app.account_realm', $realm);
 
         /**
          * Public information

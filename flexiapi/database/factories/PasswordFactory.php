@@ -30,7 +30,7 @@ class PasswordFactory extends Factory
     public function definition()
     {
         $account = Account::factory()->create();
-        $realm = config('app.realm') ?? $account->domain;
+        $realm = config('app.account_realm') ?? $account->domain;
 
         return [
             'account_id' => $account->id,
@@ -54,7 +54,7 @@ class PasswordFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             $account = Account::find($attributes['account_id']);
-            $realm = config('app.realm') ?? $account->domain;
+            $realm = config('app.account_realm') ?? $account->domain;
 
             return [
                 'password'   => hash('sha256', $account->username.':'.$realm.':testtest'),

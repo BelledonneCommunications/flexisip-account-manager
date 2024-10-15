@@ -25,8 +25,8 @@ class BlacklistedUsername implements Rule
 {
     public function passes($attribute, $value)
     {
-        if (!empty(config('app.blacklisted_usernames'))) {
-            foreach (explode(',', config('app.blacklisted_usernames')) as $username) {
+        if (!empty(config('app.account_blacklisted_usernames'))) {
+            foreach (explode(',', config('app.account_blacklisted_usernames')) as $username) {
                 if ($value == $username) return false;
 
                 // Regex rules

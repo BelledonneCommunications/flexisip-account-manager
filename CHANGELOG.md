@@ -9,6 +9,7 @@ v1.6
 - Fix FLEXIAPI-211 Add a JSON validation middleware + test
 - Fix FLEXIAPI-212 Add CoTURN credentials support in the provisioning
 - Fix FLEXIAPI-213 Add TURN credentials support in the API as defined in draft-uberti-behave-turn-rest-00
+- Fix FLEXIAPI-216 Implement the RFC 8898 partially... for HTTP
 
 v1.5
 ---

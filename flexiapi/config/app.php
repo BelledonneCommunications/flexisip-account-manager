@@ -30,11 +30,18 @@ return [
     'proxy_registrar_address' => env('ACCOUNT_PROXY_REGISTRAR_ADDRESS', 'sip.domain.com'),
     'transport_protocol_text' => env('ACCOUNT_TRANSPORT_PROTOCOL_TEXT', 'TLS (recommended), TCP or UDP'),
 
-    'account_email_unique' => env('ACCOUNT_EMAIL_UNIQUE', false),
     'allow_phone_number_username_admin_api' => env('APP_ALLOW_PHONE_NUMBER_USERNAME_ADMIN_API', false),
-    'blacklisted_usernames' => env('ACCOUNT_BLACKLISTED_USERNAMES', ''),
+    'account_blacklisted_usernames' => env('ACCOUNT_BLACKLISTED_USERNAMES', ''),
+    'account_email_unique' => env('ACCOUNT_EMAIL_UNIQUE', false),
     'account_username_regex' => env('ACCOUNT_USERNAME_REGEX', '^[a-z0-9+_.-]*$'),
     'account_default_password_algorithm' => env('ACCOUNT_DEFAULT_PASSWORD_ALGORITHM', 'SHA-256'),
+    'account_authentication_bearer_url' => env('ACCOUNT_AUTHENTICATION_BEARER_URL', null),
+
+    /**
+     * Set a global realm for all the accounts, if not set, the account domain
+     * will be used as a fallback
+     */
+    'account_realm' => env('ACCOUNT_REALM', null),
 
     /**
      * Time limit before the API Key and related cookie are expired
@@ -76,12 +83,6 @@ return [
     'provisioning_rc_file' => env('ACCOUNT_PROVISIONING_RC_FILE', ''),
     'provisioning_overwrite_all' => env('ACCOUNT_PROVISIONING_OVERWRITE_ALL', false),
     'provisioning_use_x_linphone_provisioning_header' => env('ACCOUNT_PROVISIONING_USE_X_LINPHONE_PROVISIONING_HEADER', true),
-
-    /**
-     * Set a global realm for all the accounts, if not set, the account domain
-     * will be used as a fallback
-     */
-    'realm' => env('ACCOUNT_REALM', null),
 
     /**
      * /!\ Enable dangerous endpoints required for fallback
