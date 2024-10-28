@@ -178,8 +178,8 @@ class AccountJWTAuthenticationTest extends TestCase
 
     public function testAuthBearerUrl()
     {
-        $server = 'https://auth_bearer.com/';
-        config()->set('app.account_authentication_bearer_url', $server);
+        $value = 'authz_server="https://auth_bearer.com/" realm="realm"';
+        config()->set('app.account_authentication_bearer', $value);
 
         $password = Password::factory()->create();
 
@@ -187,7 +187,7 @@ class AccountJWTAuthenticationTest extends TestCase
             ->assertStatus(401);
 
         $this->assertStringContainsString(
-            'Bearer authz_server="' . $server . '"',
+            'Bearer ' . $value,
             $response->headers->all()['www-authenticate'][0]
         );
 
@@ -198,7 +198,7 @@ class AccountJWTAuthenticationTest extends TestCase
             ->assertStatus(401);
 
         $this->assertStringContainsString(
-            'Bearer authz_server="' . $server . '"',
+            'Bearer ' . $value,
             $response->headers->all()['www-authenticate'][0]
         );
 
@@ -211,7 +211,7 @@ class AccountJWTAuthenticationTest extends TestCase
             ->assertStatus(401);
 
         $this->assertStringContainsString(
-            'Bearer authz_server="' . $server . '"',
+            'Bearer ' . $value,
             $response->headers->all()['www-authenticate'][0]
         );
     }

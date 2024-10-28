@@ -35,7 +35,7 @@ return [
     'account_email_unique' => env('ACCOUNT_EMAIL_UNIQUE', false),
     'account_username_regex' => env('ACCOUNT_USERNAME_REGEX', '^[a-z0-9+_.-]*$'),
     'account_default_password_algorithm' => env('ACCOUNT_DEFAULT_PASSWORD_ALGORITHM', 'SHA-256'),
-    'account_authentication_bearer_url' => env('ACCOUNT_AUTHENTICATION_BEARER_URL', null),
+    'account_authentication_bearer' => env('ACCOUNT_AUTHENTICATION_BEARER', null),
 
     /**
      * Set a global realm for all the accounts, if not set, the account domain

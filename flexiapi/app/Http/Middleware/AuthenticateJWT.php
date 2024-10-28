@@ -99,12 +99,12 @@ class AuthenticateJWT
             return $next($request);
         }
 
-        if (!empty(config('app.account_authentication_bearer_url'))) {
+        if (!empty(config('app.account_authentication_bearer'))) {
             $response = new Response();
 
             $response->header(
                 'WWW-Authenticate',
-                'Bearer authz_server="' . config('app.account_authentication_bearer_url') . '"'
+                'Bearer ' . config('app.account_authentication_bearer')
             );
 
             $response->setStatusCode(401);
