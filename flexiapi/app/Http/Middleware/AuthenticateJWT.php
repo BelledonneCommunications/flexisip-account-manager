@@ -120,7 +120,7 @@ class AuthenticateJWT
         $response = new Response();
         $response->header(
             'WWW-Authenticate',
-            'Bearer error="' . $error .'", "'. $description . '"'
+            'Bearer error="' . $error .'", error_description="'. $description . '"'
         );
         $response->setStatusCode(401);
 
