@@ -10,6 +10,7 @@ v1.6
 - Fix FLEXIAPI-212 Add CoTURN credentials support in the provisioning
 - Fix FLEXIAPI-213 Add TURN credentials support in the API as defined in draft-uberti-behave-turn-rest-00
 - Fix FLEXIAPI-216 Implement the RFC 8898 partially... for HTTP
+- Fix FLEXIAPI-239 Ensure to return the correct error codes as stated in the RFC6750 section 3.1
 
 v1.5
 ---

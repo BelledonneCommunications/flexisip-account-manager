@@ -129,15 +129,16 @@ class AccountJWTAuthenticationTest extends TestCase
             ): Builder => $builder->withClaim('email', $password->account->email)
         );
 
-        $this->withHeaders([
+        $response = $this->withHeaders([
                 'Authorization' => 'Bearer ' . $token->toString(),
                 'x-linphone-provisioning' => true,
             ])
             ->get($this->accountRoute)
-            ->assertStatus(403);
+            ->assertStatus(401);
 
-        // Expired token
+       $this->assertStringContainsString('invalid_token', $response->headers->get('WWW-Authenticate'));
 
+        // Wrong email
         $token = (new JwtFacade(null, $clock))->issue(
             new Sha256(),
             InMemory::plainText($this->serverPrivateKeyPem),
@@ -155,7 +156,6 @@ class AccountJWTAuthenticationTest extends TestCase
             ->assertStatus(403);
 
         // Wrong signature key
-
         $keys = openssl_pkey_new(array("private_key_bits" => 4096,"private_key_type" => OPENSSL_KEYTYPE_RSA));
         openssl_pkey_export($keys, $wrongServerPrivateKeyPem);
 
@@ -173,7 +173,7 @@ class AccountJWTAuthenticationTest extends TestCase
                 'x-linphone-provisioning' => true,
             ])
             ->get($this->accountRoute)
-            ->assertStatus(403);
+            ->assertStatus(401);
     }
 
     public function testAuthBearerUrl()

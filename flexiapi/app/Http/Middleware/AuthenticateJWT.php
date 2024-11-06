@@ -41,7 +41,7 @@ class AuthenticateJWT
     {
         if ($request->bearerToken() && config('services.jwt.rsa_public_key_pem')) {
             if (!extension_loaded('sodium')) {
-                abort(403, "Your PHP setup doesn't have the Sodium extension loaded");
+                abort(403, "PHP Sodium extension isn't loaded");
             }
 
             $publicKey = InMemory::plainText(config('services.jwt.rsa_public_key_pem'));
@@ -64,15 +64,15 @@ class AuthenticateJWT
             }
 
             if ($signer == null) {
-                abort(403, 'Unsupported RSA signature');
+                return $this->generateUnauthorizedBearerResponse('invalid_token', 'Unsupported RSA signature');
             }
 
             if (!(new Validator())->validate($token, new SignedWith($signer, $publicKey))) {
-                abort(403, 'Invalid JWT token signature');
+                return $this->generateUnauthorizedBearerResponse('invalid_token', 'Invalid JWT token signature');
             }
 
             if ($token->isExpired(new DateTimeImmutable())) {
-                abort(403, 'Expired JWT token');
+                return $this->generateUnauthorizedBearerResponse('invalid_token', 'Expired JWT token');
             }
 
             $account = null;
@@ -113,5 +113,17 @@ class AuthenticateJWT
         }
 
         return $next($request);
+    }
+
+    private function generateUnauthorizedBearerResponse(string $error, string $description): Response
+    {
+        $response = new Response();
+        $response->header(
+            'WWW-Authenticate',
+            'Bearer error="' . $error .'", "'. $description . '"'
+        );
+        $response->setStatusCode(401);
+
+        return $response;
     }
 }
