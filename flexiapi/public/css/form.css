@@ -208,14 +208,14 @@ form div.checkbox {
 
 form div.search:after,
 form div.select:after {
-    font-family: 'Material Symbols Outlined';
-    content: "\e5cf";
+    font-family: 'Phosphor';
+    content: "\e136";
     display: block;
     font-size: 2.5rem;
     color: var(--second-6);
     position: absolute;
     right: 1rem;
-    top: 2.75rem;
+    top: 2.6rem;
     pointer-events: none;
     line-height: 4rem;
 }
@@ -225,7 +225,7 @@ form div.search input {
 }
 
 form div.search:after {
-    content: "\e8b6";
+    content: "\e30c";
 }
 
 form div input[disabled],

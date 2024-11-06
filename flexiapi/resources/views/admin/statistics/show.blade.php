@@ -6,7 +6,7 @@
 
 @section('content')
     <header>
-        <h1><i class="material-symbols-outlined">analytics</i> Statistics</h1>
+        <h1><i class="ph">chart-donut</i> Statistics</h1>
     </header>
 
     @include('admin.statistics.parts.tabs')

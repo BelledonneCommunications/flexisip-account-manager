@@ -2,7 +2,7 @@
 
 @section('content')
     <section>
-        <h1><i class="material-symbols-outlined">account_circle</i> Register</h1>
+        <h1><i class="ph">user-circle</i> Register</h1>
         <p style="margin-bottom: 2rem;">
             You already have an account?
             <a class="btn btn-secondary" href="{{ route('account.login') }}">Login</a>

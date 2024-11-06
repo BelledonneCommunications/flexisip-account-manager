@@ -9,7 +9,7 @@
 
 @section('content')
     <header>
-        <h1><i class="material-symbols-outlined">delete</i> Delete a SIP Domain</h1>
+        <h1><i class="ph">trash</i> Delete a SIP Domain</h1>
         <a href="{{ route('admin.sip_domains.edit', $sip_domain->id) }}" class="btn btn-secondary oppose">Cancel</a>
         <input form="delete" class="btn" type="submit" value="Delete">
     </header>

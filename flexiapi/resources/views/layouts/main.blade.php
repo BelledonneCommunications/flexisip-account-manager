@@ -30,11 +30,11 @@
             @endif
 
             <a class="oppose" href="{{ route('about') }}">
-                <i class="material-symbols-outlined">info</i><span class="on_desktop">About</span>
+                <i class="ph">info</i><span class="on_desktop">About</span>
             </a>
             @if (auth()->user())
                 <a class="oppose" href="{{ route('account.dashboard') }}">
-                    <i class="material-symbols-outlined">account_circle</i>
+                    <i class="ph">user</i>
                     <span class="on_desktop">{{ auth()->user()->identifier }}</span>
 
                     @if (auth()->user()->superAdmin)
@@ -44,7 +44,7 @@
                     @endif
                 </a>
                 <a class="oppose" href="{{ route('account.logout') }}">
-                    <i class="material-symbols-outlined">logout</i>
+                    <i class="ph">sign-out</i>
                 </a>
             @endif
         </nav>

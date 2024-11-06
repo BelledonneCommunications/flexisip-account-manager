@@ -9,9 +9,9 @@
 @section('content')
 
 <header>
-    <h1><i class="material-symbols-outlined">dns</i> SIP Domains</h1>
+    <h1><i class="ph">hard-drives</i> SIP Domains</h1>
     <a class="btn oppose" href="{{ route('admin.sip_domains.create') }}">
-        <i class="material-symbols-outlined">add_circle</i>
+        <i class="ph">plus</i>
         New SIP Domain
     </a>
 </header>

@@ -2,13 +2,13 @@
 
 @section('content')
     <header>
-        <h1><i class="material-symbols-outlined">dashboard</i> Dashboard</h1>
+        <h1><i class="ph">gauge</i> Dashboard</h1>
     </header>
 
     <div class="card">
-        <h3><i class="material-symbols-outlined">waving_hand</i> Welcome back</h3>
+        <h3><i class="ph">hand-waving</i> Welcome back</h3>
         <p>
-            <i class="material-symbols-outlined">email</i>
+            <i class="ph">envelope</i>
             @if (!empty($account->email))
                 {{ $account->email }}
             @else
@@ -19,7 +19,7 @@
 
         @if (config('app.phone_authentication'))
             <p>
-                <i class="material-symbols-outlined">call</i>
+                <i class="ph">phone</i>
                 @if (!empty($account->phone))
                     {{ $account->phone }}
                 @else
@@ -30,13 +30,13 @@
         @endif
 
         <p>
-            <i class="material-symbols-outlined">devices</i>
+            <i class="ph">devices</i>
             <a href="{{ route('account.device.index') }}">
                 Edit my devices
             </a>
         </p>
         <p>
-            <i class="material-symbols-outlined">lock</i>
+            <i class="ph">lock</i>
             <a href="{{ route('account.password.show') }}">
                 @if ($account->passwords()->count() > 0)
                     Change my password
@@ -47,31 +47,31 @@
         </p>
 
         <p>
-            <i class="material-symbols-outlined">key</i>
+            <i class="ph">key</i>
             <a href="{{ route('account.api_key.show') }}">
                 API Key Management
             </a>
         </p>
 
         <p>
-            <i class="material-symbols-outlined">delete</i>
+            <i class="ph">trash</i>
             <a href="{{ route('account.delete') }}">Delete my account</a>
         </p>
     </div>
 
     <div class="card">
-        <h3><i class="material-symbols-outlined">person</i> Account information</h3>
+        <h3><i class="ph">person</i> Account information</h3>
 
-        <p><i class="material-symbols-outlined">alternate_email</i> SIP address: sip:{{ $account->identifier }}</p>
-        <p><i class="material-symbols-outlined">person</i> Username: {{ $account->username }}</p>
-        <p><i class="material-symbols-outlined">dns</i> Domain: {{ $account->domain }}</p>
+        <p><i class="ph">envelope</i> SIP address: sip:{{ $account->identifier }}</p>
+        <p><i class="ph">user</i> Username: {{ $account->username }}</p>
+        <p><i class="ph">hard-drives</i> Domain: {{ $account->domain }}</p>
 
         @if (!empty(config('app.proxy_registrar_address')))
-            <p><i class="material-symbols-outlined">lan</i> Proxy/registrar address: sip:{{ config('app.proxy_registrar_address') }}
+            <p><i class="ph">lan</i> Proxy/registrar address: sip:{{ config('app.proxy_registrar_address') }}
             </p>
         @endif
         @if (!empty(config('app.transport_protocol_text')))
-            <p><i class="material-symbols-outlined">settings_ethernet</i> Transport: {{ config('app.transport_protocol_text') }} </p>
+            <p><i class="ph">sliders</i> Transport: {{ config('app.transport_protocol_text') }} </p>
         @endif
 
         <!--<h3 class="mt-3">Automatic authentication</h3>

@@ -8,19 +8,19 @@
 
 @section('content')
     <header>
-        <h1><i class="material-symbols-outlined">people</i> Accounts</h1>
+        <h1><i class="ph">users</i> Accounts</h1>
         <a class="btn btn-secondary oppose" href="{{ route('admin.account.import.create') }}">
-            <i class="material-symbols-outlined">publish</i>
+            <i class="ph">download-simple</i>
             Import Accounts
         </a>
         @if(config('app.intercom_features'))
         <a class="btn btn-secondary" href="{{ route('admin.account.type.index') }}">
-            <i class="material-symbols-outlined">category</i>
+            <i class="ph">shapes</i>
             Types
         </a>
         @endif
         <a class="btn" href="{{ route('admin.account.create') }}">
-            <i class="material-symbols-outlined">add_circle</i>
+            <i class="ph">plus</i>
             New Account
         </a>
     </header>

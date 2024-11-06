@@ -10,15 +10,15 @@
 @section('content')
     <header>
         @if ($sip_domain->id)
-            <h1><i class="material-symbols-outlined">dns</i> {{ $sip_domain->domain }}</h1>
+            <h1><i class="material-symbols-outlined">hard-drives</i> {{ $sip_domain->domain }}</h1>
             <a href="{{ route('admin.sip_domains.index') }}" class="btn btn-secondary oppose">Cancel</a>
             <a class="btn btn-secondary" href="{{ route('admin.sip_domains.delete', $sip_domain->id) }}">
-                <i class="material-symbols-outlined">delete</i>
+                <i class="ph">trash</i>
                 Delete
             </a>
             <input form="create_edit_sip_domains" class="btn" type="submit" value="Update">
         @else
-            <h1><i class="material-symbols-outlined">account_box</i> Create a SIP Domain</h1>
+            <h1><i class="ph">user-rectangle</i> Create a SIP Domain</h1>
             <a href="{{ route('admin.sip_domains.index') }}" class="btn btn-secondary oppose">Cancel</a>
             <input form="create_edit_sip_domains" class="btn" type="submit" value="Create">
         @endif

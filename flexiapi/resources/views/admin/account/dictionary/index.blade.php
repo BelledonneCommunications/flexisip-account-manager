@@ -9,10 +9,10 @@
 @section('content')
 
 <header>
-    <h1><i class="material-symbols-outlined">people</i> {{ $account->identifier }}</h1>
+    <h1><i class="ph">users</i> {{ $account->identifier }}</h1>
     <a href="{{ route('admin.account.edit', $account->id) }}" class="btn btn-secondary oppose">Cancel</a>
     <a class="btn" href="{{ route('admin.account.dictionary.create', $account) }}">
-        <i class="material-symbols-outlined">add_circle</i>
+        <i class="ph">plus</i>
         New Entry
     </a>
 </header>

@@ -8,7 +8,7 @@
 
 @section('content')
     <div class="large">
-        <h2><i class="material-symbols-outlined">key</i>API Key</h2>
+        <h2><i class="ph">key</i>API Key</h2>
 
         <p>You can generate an API key and use it to request the different API endpoints, <a href="{{ route('api') }}">check
                 the related API documentation</a> to know how to use that key.</p>

@@ -9,13 +9,13 @@
 @section('content')
 
 <header>
-    <h1><i class="material-symbols-outlined">flag</i> Phone Countries</h1>
+    <h1><i class="ph">flag</i> Phone Countries</h1>
     <a class="btn btn-secondary oppose" href="{{ route('admin.phone_countries.activate_all') }}">
-        <i class="material-symbols-outlined">add_circle</i>
+        <i class="ph">plus</i>
         Activate All
     </a>
     <a class="btn btn-secondary" href="{{ route('admin.phone_countries.deactivate_all') }}">
-        <i class="material-symbols-outlined">remove_circle</i>
+        <i class="ph">trash</i>
         Deactivate All
     </a>
 </header>

@@ -8,7 +8,7 @@
 
 @section('content')
     <header>
-        <h1><i class="material-symbols-outlined">delete</i> Delete an account</h1>
+        <h1><i class="ph">trash</i> Delete an account</h1>
 
         <a href="{{ route('admin.account.edit', $account->id) }}" class="btn btn-secondary oppose">Cancel</a>
         <input form="delete" class="btn" type="submit" value="Delete">

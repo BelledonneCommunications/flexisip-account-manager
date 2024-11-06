@@ -7,7 +7,7 @@
 @section('content')
 
     <header>
-        <h1><i class="material-symbols-outlined">devices</i> Devices management</h1>
+        <h1><i class="ph">devices</i> Devices management</h1>
     </header>
 
     <table>
