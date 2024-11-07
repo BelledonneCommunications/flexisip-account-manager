@@ -117,10 +117,15 @@ class AuthenticateJWT
 
     private function generateUnauthorizedBearerResponse(string $error, string $description): Response
     {
+        $bearer = 'Bearer ' . config('app.account_authentication_bearer');
+        $bearer .= !empty(config('app.account_authentication_bearer'))
+            ? ', '
+            : '';
+
         $response = new Response();
         $response->header(
             'WWW-Authenticate',
-            'Bearer error="' . $error .'", error_description="'. $description . '"'
+            $bearer . 'error="' . $error . '", error_description="'. $description . '"'
         );
         $response->setStatusCode(401);
 

@@ -57,6 +57,8 @@ class AccountJWTAuthenticationTest extends TestCase
 
         $password = Password::factory()->create();
 
+        $bearer = 'authz_server="https://sso.test/", realm="sip.test.org"';
+
         config()->set('services.jwt.rsa_public_key_pem', $this->serverPublicKeyPem);
 
         $this->get($this->route)->assertStatus(400);
@@ -136,7 +138,20 @@ class AccountJWTAuthenticationTest extends TestCase
             ->get($this->accountRoute)
             ->assertStatus(401);
 
-       $this->assertStringContainsString('invalid_token', $response->headers->get('WWW-Authenticate'));
+        $this->assertStringContainsString('invalid_token', $response->headers->get('WWW-Authenticate'));
+
+        // ...with the bearer
+        config()->set('app.account_authentication_bearer', $bearer);
+
+        $response = $this->withHeaders([
+                'Authorization' => 'Bearer ' . $token->toString(),
+                'x-linphone-provisioning' => true,
+            ])
+            ->get($this->accountRoute)
+            ->assertStatus(401);
+
+        $this->assertStringContainsString($bearer . ', ', $response->headers->get('WWW-Authenticate'));
+        $this->assertStringContainsString('invalid_token', $response->headers->get('WWW-Authenticate'));
 
         // Wrong email
         $token = (new JwtFacade(null, $clock))->issue(
