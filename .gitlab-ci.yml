@@ -1,8 +1,8 @@
 variables:
-  ROCKY_8_IMAGE_VERSION: 20230330_163028_remove_remi
-  ROCKY_9_IMAGE_VERSION: 20240314_163316_add_php_sodium
-  DEBIAN_11_IMAGE_VERSION: 20240221_140459_package_upgrade_02_24
-  DEBIAN_12_IMAGE_VERSION: 20230925_143235_enable_debian12_packaging
+  ROCKY_8_IMAGE_VERSION: 20241112_111033_update_package_and_dependencies
+  ROCKY_9_IMAGE_VERSION: 20241112_115442_add_php_sodium
+  DEBIAN_11_IMAGE_VERSION: 20241112_113527_update_package_and_dependencies
+  DEBIAN_12_IMAGE_VERSION:  20241112_113948_update_package_and_dependencies
   PHP_REDIS_REMI_VERSION: php-pecl-redis5-5.3.6-1
   PHP_IGBINARY_REMI_VERSION: php-pecl-igbinary-3.2.14-1
   PHP_MSGPACK_REMI_VERSION: php-pecl-msgpack-2.2.0-1
