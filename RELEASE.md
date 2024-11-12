@@ -1,9 +1,27 @@
 # Releases
 
-
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
+
+## [1.6] - 2024-11-12
+
+## Added
+
+- **Allow the expiration of tokens and codes in the DotEnv configuration**
+    - **New DotEnv variables:** check all the new `*_EXPIRATION_MINUTES` for each token and code in `.env.example`
+- **Phone validation system by country code:** all the provided phone numbers are now properly validated and some countries can be forbidden
+- **SIP Domain management:** the account domains are now managed in a set of panels and API endpoints, this is the base of the upcoming space administration system
+- **JSON validation in the API:** the provised JSON is now validated and returns an error if an issue is detected
+- **CoTURN credentials support:** TURN credentials can now be generated and return through the provisioning feature
+
+## Changed
+
+- **Replace Material Icons with Phosphor**
+
+## Deprecated
+
+- **Last major version supporting the deprecated endpoints of the API**
 
 ## [1.5] - 2024-08-29
 
