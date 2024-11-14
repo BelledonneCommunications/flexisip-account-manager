@@ -1,5 +1,9 @@
 # Flexisip Account Manager Changelog
 
+v1.7
+----
+- Fix FLEXIAPI-206 Upgrade to Laravel 10, PHP 8.1 minimum and bump all the related dependencies
+
 v1.6
 ----
 - Fix FLEXIAPI-192 Add DotEnv configuration to allow the expiration of tokens and codes in the app

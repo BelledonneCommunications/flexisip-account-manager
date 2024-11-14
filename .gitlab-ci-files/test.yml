@@ -3,16 +3,19 @@ rocky8-test:
   image: gitlab.linphone.org:4567/bc/public/docker/rocky8-php:$ROCKY_8_IMAGE_VERSION
   needs:
     - rocky8-package
+    - remi-rocky8-package
 
 rocky9-test:
   extends: .rocky-test
   image: gitlab.linphone.org:4567/bc/public/docker/rocky9-php:$ROCKY_9_IMAGE_VERSION
   needs:
     - rocky9-package
+    - remi-rocky9-package
 
 .rocky-test:
   extends: .test
   script:
+    - ls build
     - yum -y localinstall build/*.rpm
     - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
     - composer install --ignore-platform-req=ext-sodium # Rocky 8 use the external library
@@ -39,7 +42,10 @@ debian12-test:
     - apt update
     - apt install -y ./build/*.deb
     - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
-    - composer install --dev
+    - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    - php composer-setup.php
+    - php -r "unlink('composer-setup.php');"
+    - php composer.phar install
     - vendor/bin/phpcs
     - vendor/bin/phpmd . ansi phpmd.xml
     - php artisan key:generate
@@ -50,6 +56,14 @@ remi-rocky8-test:
   image: gitlab.linphone.org:4567/bc/public/docker/rocky8-php:$ROCKY_8_IMAGE_VERSION
   needs:
     - remi-rocky8-package
+  script:
+    - yum -y localinstall build/*.rpm
+
+remi-rocky9-test:
+  extends: .test
+  image: gitlab.linphone.org:4567/bc/public/docker/rocky9-php:$ROCKY_9_IMAGE_VERSION
+  needs:
+    - remi-rocky9-package
   script:
     - yum -y localinstall build/*.rpm
 

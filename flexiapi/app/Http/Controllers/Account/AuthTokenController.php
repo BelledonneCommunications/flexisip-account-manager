@@ -25,7 +25,7 @@ use Illuminate\Http\Request;
 
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\Writer\PngWriter;
 
 use Illuminate\Support\Facades\Auth;
@@ -46,7 +46,7 @@ class AuthTokenController extends Controller
                 : route('account.auth_tokens.auth.external', ['token' => $authToken->token])
             )
             ->encoding(new Encoding('UTF-8'))
-            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
             ->size(300)
             ->margin(10)
             ->build();
