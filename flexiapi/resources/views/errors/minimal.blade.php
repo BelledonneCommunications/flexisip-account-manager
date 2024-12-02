@@ -2,7 +2,7 @@
 
 @section('content')
 
-<h2 class="text-center pt-5">@yield('code') - @yield('title')</h2>
+<h2>@yield('code') - @yield('title')</h2>
 
 <p class="text-center">
     @yield('message')

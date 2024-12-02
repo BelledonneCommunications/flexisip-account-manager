@@ -28,7 +28,7 @@ use App\ContactsList;
 use App\Http\Requests\Account\Create\Web\AsAdminRequest;
 use App\Http\Requests\Account\Update\Web\AsAdminRequest as WebAsAdminRequest;
 use App\Services\AccountService;
-use App\SipDomain;
+use App\Space;
 
 class AccountController extends Controller
 {
@@ -61,6 +61,9 @@ class AccountController extends Controller
         }
 
         return view('admin.account.index', [
+            'space' => (!$request->user()->superAdmin)
+                ? $request->user()->space
+                : null,
             'domains' => Account::groupBy('domain')->pluck('domain'),
             'contacts_lists' => ContactsList::all()->pluck('title', 'id'),
             'accounts' => $accounts->paginate(20)->appends($request->query()),
@@ -74,11 +77,21 @@ class AccountController extends Controller
 
     public function create(Request $request)
     {
+        $account = new Account;
+
+        if ($request->has('admin')) {
+            $account->admin = true;
+        }
+
+        if ($request->has('domain')) {
+            $account->domain = $request->get('domain');
+        }
+
         return view('admin.account.create_edit', [
-            'account' => new Account,
+            'account' => $account,
             'domains' => $request->user()?->superAdmin
-                ? SipDomain::all()
-                : SipDomain::where('domain', $request->user()->domain)->get(),
+                ? Space::notFull()->get()
+                : Space::where('domain', $request->user()->domain)->get(),
             'protocols' => [null => 'None'] + Account::$dtmfProtocols
         ]);
     }
@@ -100,8 +113,8 @@ class AccountController extends Controller
             'account' => $account,
             'protocols' => [null => 'None'] + Account::$dtmfProtocols,
             'domains' => $request->user()?->superAdmin
-                ? SipDomain::all()
-                : SipDomain::where('domain', $account->domain)->get(),
+                ? Space::all()
+                : Space::where('domain', $account->domain)->get(),
             'contacts_lists' => ContactsList::whereNotIn('id', function ($query) use ($accountId) {
                 $query->select('contacts_list_id')
                     ->from('account_contacts_list')

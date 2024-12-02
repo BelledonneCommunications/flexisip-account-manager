@@ -13,7 +13,7 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('css/' . config('app.env') . '.style.css') }}">
     @endif
 
-    <script src="{{ asset('scripts/utils.js') }}""></script>
+    <script src="{{ asset('scripts/utils.js') }}"></script>
     <script src="{{ asset('scripts/chart.js') }}"></script>
     <script src="{{ asset('scripts/chartjs-plugin-datalabels@2.0.0') }}"></script>
 </head>
@@ -63,7 +63,7 @@
             @hasSection('breadcrumb')
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('account.dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('account.dashboard') }}">My Account</a></li>
                         @yield('breadcrumb')
                     </ol>
                 </nav>

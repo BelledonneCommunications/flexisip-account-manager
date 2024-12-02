@@ -23,6 +23,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 use App\Account;
+use App\Space;
 use App\Rules\BlacklistedUsername;
 use App\Rules\Dictionary;
 use App\Rules\FilteredPhone;
@@ -34,7 +35,8 @@ class Request extends FormRequest
 {
     public function authorize()
     {
-        return true;
+        $space = Space::where('domain', resolveDomain($this))->first();
+        return ($space && !$space->isFull());
     }
 
     public function rules()
@@ -54,7 +56,7 @@ class Request extends FormRequest
                 }),
                 'filled',
             ],
-            'domain' => 'exists:sip_domains,domain',
+            'domain' => 'exists:spaces,domain',
             'dictionary' => [new Dictionary()],
             'password' => 'required|min:3',
             'email' => config('app.account_email_unique')

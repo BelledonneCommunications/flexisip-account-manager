@@ -57,7 +57,7 @@ package-end-common:
 	rm -rf $(OUTPUT_DIR)/rpmbuild/SPECS $(OUTPUT_DIR)/rpmbuild/SOURCES $(OUTPUT_DIR)/rpmbuild/SRPMS $(OUTPUT_DIR)/rpmbuild/BUILD $(OUTPUT_DIR)/rpmbuild/BUILDROOT
 
 rpm-el8-only:
-	sed -i 's/Requires:.*/Requires:       php >= 8.0, php-gd, php-pdo, php-redis, php-mysqlnd, php-mbstring/g' $(OUTPUT_DIR)/rpmbuild/SPECS/flexisip-account-manager.spec
+	sed -i 's/Requires:.*/Requires: php >= 8.1, php-gd, php-pdo, php-redis, php-mysqlnd, php-mbstring/g' $(OUTPUT_DIR)/rpmbuild/SPECS/flexisip-account-manager.spec
 	rpmbuild -v -bb --define 'dist .el8' --define '_topdir $(OUTPUT_DIR)/rpmbuild' --define "_rpmdir $(OUTPUT_DIR)/rpmbuild" $(OUTPUT_DIR)/rpmbuild/SPECS/flexisip-account-manager.spec
 	@echo "📦✅ RPM el8 Package Created"
 
@@ -75,7 +75,7 @@ deb-only:
 	fakeroot alien -g -k --scripts $(OUTPUT_DIR)/rpmbuild/tmp.rpm
 	rm -r $(OUTPUT_DIR)/rpmbuild
 	rm -rf $(OUTPUT_DIR)/*.orig
-	sed -i 's/Depends:.*/Depends: $${shlibs:Depends}, php (>= 8.0), php-xml, php-pdo, php-gd, php-redis, php-mysql, php-mbstring, php-sqlite3/g' $(OUTPUT_DIR)/bc-flexisip-account-manager*/debian/control
+	sed -i 's/Depends:.*/Depends: $${shlibs:Depends}, php (>= 8.1), php-xml, php-pdo, php-gd, php-redis, php-mysql, php-mbstring, php-sqlite3/g' $(OUTPUT_DIR)/bc-flexisip-account-manager*/debian/control
 
 	cd `ls -rt $(OUTPUT_DIR) | tail -1` && dpkg-buildpackage --no-sign
 	@echo "📦✅ DEB Package Created"

@@ -1,8 +1,7 @@
 variables:
   ROCKY_8_IMAGE_VERSION: 20241113_143521_update_php_82
   ROCKY_9_IMAGE_VERSION: 20241114_161138_remove_redis
-  DEBIAN_11_IMAGE_VERSION: 20241112_113527_update_package_and_dependencies
-  DEBIAN_12_IMAGE_VERSION:  20241112_113948_update_package_and_dependencies
+  DEBIAN_12_IMAGE_VERSION: 20241112_113948_update_package_and_dependencies
   PHP_REDIS_REMI_VERSION: php-pecl-redis6-6.1.0-1
   PHP_IGBINARY_REMI_VERSION: php-pecl-igbinary-3.2.16-2
   PHP_MSGPACK_REMI_VERSION: php-pecl-msgpack-2.2.0-3

@@ -24,7 +24,7 @@ use App\Http\Controllers\Api\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Api\Admin\AccountDictionaryController;
 use App\Http\Controllers\Api\Admin\AccountTypeController;
 use App\Http\Controllers\Api\Admin\ContactsListController;
-use App\Http\Controllers\Api\Admin\SipDomainController;
+use App\Http\Controllers\Api\Admin\SpaceController;
 use App\Http\Controllers\Api\Admin\VcardsStorageController as AdminVcardsStorageController;
 use App\Http\Controllers\Api\StatisticsMessageController;
 use App\Http\Controllers\Api\StatisticsCallController;
@@ -61,7 +61,7 @@ Route::get('accounts/me/api_key/{auth_token}', 'Api\Account\ApiKeyController@gen
 
 Route::get('phone_countries', 'Api\PhoneCountryController@index');
 
-Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blocked']], function () {
+Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blocked', 'space.expired']], function () {
     Route::get('accounts/auth_token/{auth_token}/attach', 'Api\Account\AuthTokenController@attach');
     Route::post('account_creation_tokens/consume', 'Api\Account\CreationTokenController@consume');
 
@@ -98,7 +98,7 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
 
         // Super admin
         Route::group(['middleware' => ['auth.super_admin']], function () {
-            Route::prefix('sip_domains')->controller(SipDomainController::class)->group(function () {
+            Route::prefix('spaces')->controller(SpaceController::class)->group(function () {
                 Route::get('/', 'index');
                 Route::get('{domain}', 'show');
                 Route::post('/', 'store');

@@ -30,7 +30,7 @@ use App\ContactsList;
 use App\Http\Requests\Account\Create\Api\AsAdminRequest;
 use App\Http\Requests\Account\Update\Api\AsAdminRequest as ApiAsAdminRequest;
 use App\Services\AccountService;
-use App\SipDomain;
+use App\Space;
 
 class AccountController extends Controller
 {
@@ -139,14 +139,15 @@ class AccountController extends Controller
 
     public function store(AsAdminRequest $request)
     {
-        // Create the missing SipDomain
-        if ($request->user()->superAdmin
+        // Create the missing Space
+        /*if ($request->user()->superAdmin
             && $request->has('domain')
-            && !SipDomain::pluck('domain')->contains($request->get('domain'))) {
-            $sipDomain = new SipDomain();
-            $sipDomain->domain = $request->get('domain');
-            $sipDomain->save();
-        }
+            && !Space::pluck('domain')->contains($request->get('domain'))) {
+            $space = new Space();
+            $space->domain = $request->get('domain');
+            $space->host = $request->get('host');
+            $space->save();
+        }*/
 
         return (new AccountService())->store($request)->makeVisible(['confirmation_key', 'provisioning_token']);
     }

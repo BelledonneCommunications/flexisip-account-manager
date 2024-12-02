@@ -23,7 +23,7 @@ use App\Account;
 use App\AuthToken;
 use App\Password;
 use App\ProvisioningToken;
-use App\SipDomain;
+use App\Space;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -128,7 +128,7 @@ class AccountProvisioningTest extends TestCase
 
     public function testUiSectionProvisioning()
     {
-        $secondDomain = SipDomain::factory()->create();
+        $secondDomain = Space::factory()->create();
 
         $password = Password::factory()->create();
         $password->account->generateApiKey();

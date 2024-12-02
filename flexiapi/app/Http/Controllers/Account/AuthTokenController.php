@@ -72,7 +72,7 @@ class AuthTokenController extends Controller
 
         $authToken->delete();
 
-        return redirect()->route('account.dashboard');
+        return redirect()->route('account.home');
     }
 
     /**
@@ -87,6 +87,6 @@ class AuthTokenController extends Controller
             $authToken->save();
         }
 
-        return redirect()->route('account.dashboard');
+        return redirect()->route('account.home');
     }
 }

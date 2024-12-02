@@ -23,11 +23,6 @@ use App\Http\Requests\Account\Create\Request as CreateRequest;
 
 class Request extends CreateRequest
 {
-    public function authorize()
-    {
-        return true;
-    }
-
     public function rules()
     {
         $rules = parent::rules();

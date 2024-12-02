@@ -127,7 +127,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
-
+    'root_domain' => env('APP_ROOT_DOMAIN', null),
     'asset_url' => env('ASSET_URL', null),
 
     /*

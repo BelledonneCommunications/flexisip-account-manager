@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Account;
-use App\SipDomain;
+use App\Space;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -92,9 +92,9 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
 
         // Create the domains
         foreach ($domains as $domain) {
-            $sipDomain = SipDomain::where('domain', $domain)->firstOrNew();
-            $sipDomain->domain = $domain;
-            $sipDomain->save();
+            $space = Space::where('domain', $domain)->firstOrNew();
+            $space->domain = $domain;
+            $space->save();
         }
 
         // And seed the fresh ones

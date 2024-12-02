@@ -21,7 +21,7 @@ namespace Tests\Feature;
 
 use App\Account;
 use App\PhoneCountry;
-use App\SipDomain;
+use App\Space;
 use Tests\TestCase;
 
 class ApiPhoneCountryTest extends TestCase

@@ -39,7 +39,7 @@ use App\Http\Controllers\Admin\AccountStatisticsController;
 use App\Http\Controllers\Admin\ContactsListController;
 use App\Http\Controllers\Admin\ContactsListContactController;
 use App\Http\Controllers\Admin\PhoneCountryController;
-use App\Http\Controllers\Admin\SipDomainController;
+use App\Http\Controllers\Admin\SpaceController;
 use App\Http\Controllers\Admin\StatisticsController;
 use Illuminate\Support\Facades\Route;
 
@@ -81,7 +81,7 @@ Route::name('provisioning.')->prefix('provisioning')->controller(ProvisioningCon
     Route::get('/', 'show')->name('show');
 });
 
-Route::group(['middleware' => 'web_panel_enabled'], function () {
+Route::middleware(['web_panel_enabled', 'space.expired'])->group(function () {
     if (config('app.public_registration')) {
         Route::redirect('register', 'register/email')->name('account.register');
 
@@ -154,10 +154,14 @@ Route::group(['middleware' => 'web_panel_enabled'], function () {
     Route::get('auth_tokens/auth/{token}', 'Account\AuthTokenController@auth')->name('auth_tokens.auth');
 
     Route::name('admin.')->prefix('admin')->middleware(['auth.admin', 'auth.check_blocked'])->group(function () {
+        Route::get('space', 'Admin\SpaceController@me')->name('spaces.me');
 
         Route::middleware(['auth.super_admin'])->group(function () {
-            Route::resource('sip_domains', SipDomainController::class);
-            Route::get('sip_domains/delete/{id}', 'Admin\SipDomainController@delete')->name('sip_domains.delete');
+            Route::resource('spaces', SpaceController::class);
+            Route::get('spaces/delete/{id}', 'Admin\SpaceController@delete')->name('spaces.delete');
+
+            Route::get('spaces/{space}/parameters', 'Admin\SpaceController@parameters')->name('spaces.parameters');
+            Route::put('spaces/{space}/parameters', 'Admin\SpaceController@parametersUpdate')->name('spaces.parameters.update');
 
             Route::name('phone_countries.')->controller(PhoneCountryController::class)->prefix('phone_countries')->group(function () {
                 Route::get('/', 'index')->name('index');

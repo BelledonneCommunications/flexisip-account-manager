@@ -17,33 +17,34 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Console\Commands\SipDomains;
+namespace App\Console\Commands\Spaces;
 
-use App\SipDomain;
+use App\Space;
 use Illuminate\Console\Command;
 
 class CreateUpdate extends Command
 {
-    protected $signature = 'sip_domains:create-update {domain} {--super}';
-    protected $description = 'Create a SIP Domain';
+    protected $signature = 'spaces:create-update {sip_domain} {host} {--super}';
+    protected $description = 'Create a Space';
 
     public function handle()
     {
-        $this->info('Your will create or update a SIP Domain in the database');
+        $this->info('Your will create or update a Space in the database');
 
-        $sipDomain = SipDomain::where('domain', $this->argument('domain'))->firstOrNew();
-        $sipDomain->domain = $this->argument('domain');
+        $space = Space::where('domain', $this->argument('sip_domain'))->firstOrNew();
+        $space->host = $this->argument('host');
+        $space->domain = $this->argument('sip_domain');
 
-        $sipDomain->exists
+        $space->exists
             ? $this->info('The domain already exists, updating it')
             : $this->info('A new domain will be created');
 
-        $sipDomain->super = (bool)$this->option('super');
-        $sipDomain->super
+        $space->super = (bool)$this->option('super');
+        $space->super
             ? $this->info('Set as a super domain')
             : $this->info('Set as a normal domain');
 
-        $sipDomain->save();
+        $space->save();
 
         return Command::SUCCESS;
     }

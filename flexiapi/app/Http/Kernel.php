@@ -36,6 +36,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\Space::class
     ];
 
     /**
@@ -59,6 +60,7 @@ class Kernel extends HttpKernel
             'bindings',
             'validate_json',
             'localization',
+            'space'
         ],
     ];
 
@@ -87,6 +89,8 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
+        'space' => \App\Http\Middleware\Space::class,
+        'space.expired' => \App\Http\Middleware\IsSpaceExpired::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'localization' => \App\Http\Middleware\Localization::class,

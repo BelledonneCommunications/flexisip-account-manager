@@ -2,7 +2,8 @@
 
 v1.7
 ----
-- Fix FLEXIAPI-206 Upgrade to Laravel 10, PHP 8.1 minimum and bump all the related dependencies
+- Fix FLEXIAPI-206 Upgrade to Laravel 10, PHP 8.1 minimum and bump all the related dependencies, drop Debian 11 Bullseye
+- Fix FLEXIAPI-220 Migrate SIP Domains to Spaces
 
 v1.6
 ----
@@ -29,7 +30,7 @@ v1.5
 - Fix FLEXIAPI-185 Return null if the account dictionary is empty in the API
 - Fix FLEXIAPI-184 Append phone_change_code and email_change_code to the admin /accounts/<id> endpoint if they are available
 - Fix FLEXIAPI-183 Complete the account hooks on the dictionnary actions
-- Fix FLEXIAPI-182 Replace APP_SUPER_ADMINS_SIP_DOMAINS with a proper sip_domains table, API endpoints, UI panels, console command, tests and documentation
+- Fix FLEXIAPI-182 Replace APP_SUPER_ADMINS_SIP_DOMAINS with a proper spaces table, API endpoints, UI panels, console command, tests and documentation
 - Fix FLEXIAPI-181 Replace APP_ADMINS_MANAGE_MULTI_DOMAINS with APP_SUPER_ADMINS_SIP_DOMAINS
 - Fix FLEXIAPI-180 Fix the token and activation flow for the provisioning with token endpoint when the header is missing
 - Fix FLEXIAPI-179 Add Localization support as a Middleware that handles Accept-Language HTTP header

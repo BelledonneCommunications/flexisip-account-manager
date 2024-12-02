@@ -115,3 +115,15 @@ function digitFilled(element) {
         element.nextElementSibling.focus();
     }
 }
+
+function copyValueTo(from, to, append) {
+    if (to.value == '') {
+        let value = from.value;
+
+        if (append) {
+            value += append;
+        }
+
+        to.value = value;
+    }
+}

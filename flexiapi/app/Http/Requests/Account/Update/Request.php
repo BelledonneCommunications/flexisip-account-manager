@@ -50,7 +50,7 @@ class Request extends FormRequest
                 })->ignore($this->route('account_id'), 'id'),
                 'filled',
             ],
-            'domain' => 'exists:sip_domains,domain',
+            'domain' => 'exists:spaces,domain',
             'email' => [
                 'nullable',
                 'email',

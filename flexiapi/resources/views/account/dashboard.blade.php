@@ -2,7 +2,7 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">gauge</i> Dashboard</h1>
+        <h1><i class="ph">gauge</i> My Account</h1>
     </header>
 
     <div class="card">
@@ -64,7 +64,7 @@
 
         <p><i class="ph">envelope</i> SIP address: sip:{{ $account->identifier }}</p>
         <p><i class="ph">user</i> Username: {{ $account->username }}</p>
-        <p><i class="ph">hard-drives</i> Domain: {{ $account->domain }}</p>
+        <p><i class="ph">globe-hemisphere-west</i> Domain: {{ $account->domain }}</p>
 
         @if (!empty(config('app.proxy_registrar_address')))
             <p><i class="ph">lan</i> Proxy/registrar address: sip:{{ config('app.proxy_registrar_address') }}

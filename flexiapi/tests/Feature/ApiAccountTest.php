@@ -24,7 +24,7 @@ use App\AccountCreationToken;
 use App\AccountTombstone;
 use App\ActivationExpiration;
 use App\Password;
-use App\SipDomain;
+use App\Space;
 use Carbon\Carbon;
 use Tests\TestCase;
 
@@ -91,7 +91,7 @@ class ApiAccountTest extends TestCase
         $account->generateApiKey();
 
         $username = '+33612121212';
-        $domain = SipDomain::first()->domain;
+        $domain = Space::first()->domain;
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
@@ -120,7 +120,7 @@ class ApiAccountTest extends TestCase
         $password->account->generateApiKey();
 
         $username = 'blabla🔥';
-        $domain = SipDomain::first()->domain;
+        $domain = Space::first()->domain;
 
         $this->keyAuthenticated($password->account)
             ->json($this->method, $this->route, [
@@ -160,7 +160,7 @@ class ApiAccountTest extends TestCase
 
         $password = Password::factory()->admin()->create();
         $username = 'foobar';
-        $domain = SipDomain::first()->domain;
+        $domain = Space::first()->domain;
 
         config()->set('app.admins_manage_multi_domains', false);
 
@@ -196,8 +196,8 @@ class ApiAccountTest extends TestCase
         $account->save();
 
         $username = 'foobar';
-        $domain1 = SipDomain::first()->domain;
-        $domain2 = SipDomain::factory()->secondDomain()->create()->domain;
+        $domain1 = Space::first()->domain;
+        $domain2 = Space::factory()->secondDomain()->create()->domain;
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
@@ -273,7 +273,7 @@ class ApiAccountTest extends TestCase
             ->assertStatus(200);
     }
 
-    public function testCreateDomainAsSuperAdmin()
+    /*public function testCreateDomainAsSuperAdmin()
     {
         $superAdmin = Account::factory()->superAdmin()->create();
         $superAdmin->generateApiKey();
@@ -296,11 +296,10 @@ class ApiAccountTest extends TestCase
                 'domain' => $newDomain
             ]);
 
-        $this->assertDatabaseHas('sip_domains', [
+        $this->assertDatabaseHas('spaces', [
             'domain' => $newDomain
         ]);
-    }
-
+    }*/
 
     public function testDomainInTestDeployment()
     {
@@ -408,7 +407,7 @@ class ApiAccountTest extends TestCase
         $entryValue = 'bar';
         $entryNewKey = 'new_key';
         $entryNewValue = 'new_value';
-        $domain = SipDomain::first()->domain;
+        $domain = Space::first()->domain;
 
         $result = $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
@@ -722,7 +721,7 @@ class ApiAccountTest extends TestCase
         $password->account->generateApiKey();
 
         $username = 'username';
-        $domain = SipDomain::first()->domain;
+        $domain = Space::first()->domain;
 
         $response = $this->generateFirstResponse($password, $this->method, $this->route);
         $this->generateSecondResponse($password, $response)

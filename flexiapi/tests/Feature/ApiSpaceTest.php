@@ -20,24 +20,27 @@
 namespace Tests\Feature;
 
 use App\Account;
-use App\SipDomain;
+use App\Space;
+use Carbon\Carbon;
 use Tests\TestCase;
 
-class ApiSipDomainTest extends TestCase
+class ApiSpaceTest extends TestCase
 {
-    protected $route = '/api/sip_domains';
+    protected $method = 'POST';
+    protected $route = '/api/spaces';
+    protected $accountRoute = '/api/accounts';
 
     public function testBaseAdmin()
     {
         $admin = Account::factory()->admin()->create();
         $admin->generateApiKey();
 
-        $secondDomain = SipDomain::factory()->secondDomain()->create();
+        $secondDomain = Space::factory()->secondDomain()->create();
         $username = 'foo';
 
         // Admin domain
         $this->keyAuthenticated($admin)
-            ->json('POST', '/api/accounts', [
+            ->json($this->method, $this->accountRoute, [
                 'username' => $username,
                 'domain' => $admin->domain,
                 'algorithm' => 'SHA-256',
@@ -47,7 +50,7 @@ class ApiSipDomainTest extends TestCase
 
         // Second domain
         $this->keyAuthenticated($admin)
-            ->json('POST', '/api/accounts', [
+            ->json($this->method, $this->accountRoute, [
                 'username' => $username,
                 // The domain is ignored there, to fallback on the admin one
                 'domain' => $secondDomain->domain,
@@ -57,10 +60,10 @@ class ApiSipDomainTest extends TestCase
             ->assertJsonValidationErrors(['username']);
 
         // Admin domain is now a super domain
-        SipDomain::where('domain', $admin->domain)->update(['super' => true]);
+        Space::where('domain', $admin->domain)->update(['super' => true]);
 
         $this->keyAuthenticated($admin)
-            ->json('POST', '/api/accounts', [
+            ->json($this->method, $this->accountRoute, [
                 'username' => $username,
                 'domain' => $secondDomain->domain,
                 'algorithm' => 'SHA-256',
@@ -77,8 +80,9 @@ class ApiSipDomainTest extends TestCase
         $thirdDomain = 'third.domain';
 
         $response = $this->keyAuthenticated($admin)
-            -> json('POST', $this->route, [
+            -> json($this->method, $this->route, [
                 'domain' => $thirdDomain,
+                'host' => $thirdDomain,
                 'super' => false
             ])
             ->assertStatus(201);
@@ -87,6 +91,7 @@ class ApiSipDomainTest extends TestCase
             ->json('GET', $this->route)
             ->assertJsonFragment([
                 'domain' => $thirdDomain,
+                'host' => $thirdDomain,
                 'super' => false
             ])
             ->assertStatus(200);
@@ -105,6 +110,7 @@ class ApiSipDomainTest extends TestCase
             ->json('PUT', $this->route . '/' . $thirdDomain, $json)
             ->assertJsonFragment([
                 'domain' => $thirdDomain,
+                'host' => $thirdDomain,
                 'super' => true,
                 'hide_settings' => true
             ])
@@ -119,8 +125,51 @@ class ApiSipDomainTest extends TestCase
             ->json('GET', $this->route)
             ->assertJsonFragment([
                 'domain' => $admin->domain,
-                'super' => true
+                'host' => $admin->domain,
+                'super' => true,
+                'max_accounts' => 0,
+                'expire_at' => null
             ])
             ->assertStatus(200);
+    }
+
+    public function testUserCreation()
+    {
+        $admin = Account::factory()->superAdmin()->create();
+        $admin->generateApiKey();
+
+        $domain = 'domain.com';
+
+        $this->keyAuthenticated($admin)
+            ->json($this->method, $this->accountRoute, [
+                'username' => 'first',
+                'domain' => $domain,
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+            ])->assertStatus(403);
+
+        $this->keyAuthenticated($admin)
+            -> json($this->method, $this->route, [
+                'domain' => $domain,
+                'host' => $domain,
+                'super' => false,
+                'max_accounts' => 1
+            ])->assertStatus(201);
+
+        $this->keyAuthenticated($admin)
+            ->json($this->method, $this->accountRoute, [
+                'username' => 'first',
+                'domain' => $domain,
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+            ])->assertStatus(200);
+
+        $this->keyAuthenticated($admin)
+            ->json($this->method, $this->accountRoute, [
+                'username' => 'second',
+                'domain' => $domain,
+                'algorithm' => 'SHA-256',
+                'password' => '123456',
+            ])->assertStatus(403);
     }
 }

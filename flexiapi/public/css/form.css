@@ -7,10 +7,16 @@
     border: 1px solid var(--main-5);
     border-radius: 3rem;
     font-size: 1.5rem;
-    line-height: 2rem;
-    padding: 1rem 2rem;
+    line-height: 4rem;
+    padding: 0 2rem;
     color: white;
     white-space: nowrap;
+}
+
+.btn.small {
+    line-height: 3rem;
+    padding: 0rem 2rem;
+    font-size: 1.25rem;
 }
 
 p .btn {
@@ -94,7 +100,6 @@ form.inline {
 
 form div {
     position: relative;
-    min-height: 4rem;
 }
 
 form div .btn,
@@ -202,10 +207,6 @@ form div select {
     -webkit-appearance: none;
 }
 
-form div.checkbox {
-    min-height: 2rem;
-}
-
 form div.search:after,
 form div.select:after {
     font-family: 'Phosphor';
@@ -226,6 +227,15 @@ form div.search input {
 
 form div.search:after {
     content: "\e30c";
+}
+
+form div span.supporting {
+    line-height: 2rem;
+    font-size: 1.25rem;
+    color: var(--grey-4);
+    display: block;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 form div input[disabled],
@@ -323,4 +333,67 @@ form div textarea:invalid:not(:placeholder-shown) {
 form div input:invalid:not(:placeholder-shown)+label,
 form div textarea:invalid:not(:placeholder-shown)+label {
     color: var(--danger-5);
+}
+
+/* Checkbox element */
+
+form div.checkbox {
+    padding: 0.5rem 0;
+    display: flex;
+    align-items: center;
+}
+
+form div.checkbox > div {
+        margin-right: 5rem;
+}
+
+div.checkbox > input[type="checkbox"] {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+div.checkbox p {
+    margin-bottom: 0;
+}
+
+div.checkbox::before {
+    content: '';
+    display: block;
+    position: absolute;
+    height: 3rem;
+    width: 5rem;
+    background-color: var(--grey-3);
+    box-sizing: border-box;
+    transition: background-color 0.3s ease;
+    top: calc(50% - 1.5rem);
+    right: 0;
+    border-radius: 4rem;
+}
+
+div.checkbox:has(> input[type="checkbox"]:checked)::before {
+    background-color: var(--color-green);
+}
+
+div.checkbox > input[type="checkbox"] + label {
+    display: block;
+    background-color: white;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 2rem;
+    top: calc(50% - 1rem);
+    right: 2.5rem;
+    position: absolute;
+    font-size: 2rem;
+    text-align: center;
+    line-height: normal;
+    transition: right 0.3s ease;
+}
+
+div.checkbox:hover > input[type="checkbox"] + label {
+    cursor: pointer;
+}
+
+div.checkbox > input[type="checkbox"]:checked + label {
+    right: 0.5rem;
 }

@@ -178,9 +178,9 @@ class Account extends Authenticatable
         return $this->belongsToMany(AccountType::class);
     }
 
-    public function sipDomain()
+    public function space()
     {
-        return $this->hasOne(SipDomain::class, 'domain', 'domain');
+        return $this->hasOne(Space::class, 'domain', 'domain');
     }
 
     public function statisticsFromCalls()
@@ -336,7 +336,7 @@ class Account extends Authenticatable
 
     public function getSuperAdminAttribute(): bool
     {
-        return SipDomain::where('domain', $this->domain)->where('super', true)->exists() && $this->admin;
+        return Space::where('domain', $this->domain)->where('super', true)->exists() && $this->admin;
     }
 
     /**

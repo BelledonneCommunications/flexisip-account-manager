@@ -42,7 +42,7 @@ function generateNonce(): string
 
 function getRequestBoolean(Request $request, string $key): bool
 {
-    return $request->has($key) ? $request->get($key) == "true" : false;
+    return $request->has($key) ? $request->get($key) == "on" : false;
 }
 
 function generateValidNonce(Account $account): string

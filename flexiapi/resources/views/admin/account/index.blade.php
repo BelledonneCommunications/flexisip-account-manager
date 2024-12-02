@@ -9,6 +9,9 @@
 @section('content')
     <header>
         <h1><i class="ph">users</i> Accounts</h1>
+        @if ($space)
+            <p>{{ $accounts->count()}} / @if ($space->max_accounts > 0){{ $space->max_accounts }} @else <i class="ph">infinity</i>@endif</p>
+        @endif
         <a class="btn btn-secondary oppose" href="{{ route('admin.account.import.create') }}">
             <i class="ph">download-simple</i>
             Import Accounts

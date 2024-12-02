@@ -340,21 +340,34 @@ content section {
     box-sizing: border-box;
 }
 
-content section.grid {
+.grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
 }
 
+.grid.third {
+    grid-template-columns: repeat(3, 1fr);
+}
+
 @media screen and (max-width: 800px) {
-    content section.grid {
+    .grid {
         display: block;
+    }
+
+    .grid.third {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
-content section.grid header,
-content section.grid .large {
+.grid header,
+.grid .large {
     grid-column: span 2;
+}
+
+.grid.third header,
+.grid.third .large {
+    grid-column: span 3;
 }
 
 content section header {
@@ -362,6 +375,7 @@ content section header {
     gap: 1rem;
     align-items: center;
     margin-bottom: 3rem;
+    flex-flow: wrap;
 }
 
 content section header p {
@@ -379,6 +393,12 @@ content section header>*.oppose {
 content nav+section {
     min-width: calc(80% - 20rem);
     margin-bottom: 4rem;
+}
+
+@media screen and (max-width: 800px) {
+    content nav+section {
+        min-width: 100%;
+    }
 }
 
 /** Sidenav **/
@@ -417,7 +437,7 @@ content>nav a.current {
     background-color: white;
     border-radius: 4rem;
     color: var(--main-5);
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
 }
 
 content>nav a i {
@@ -758,9 +778,14 @@ select.list_toggle {
 .card {
     background-color: var(--grey-1);
     border-radius: 1rem;
-    padding: 1rem;
+    padding: 1.5rem;
     margin-bottom: 1rem;
     overflow: hidden;
+}
+
+.card .icon {
+    font-size: 3rem;
+    color: var(--second-6);
 }
 
 .disabled {
@@ -803,6 +828,28 @@ select.list_toggle {
     font-size: 1rem;
     line-height: 2rem;
     display: inline-block;
+}
+
+/* Progress */
+
+progress {
+    width: 100%;
+    border-radius: 2rem;
+}
+
+progress::-webkit-progress-bar,
+progress::-moz-progress-bar {
+    background-color: var(--color-green);
+}
+
+progress.yellow::-webkit-progress-bar,
+progress.yellow::-moz-progress-bar {
+    background-color: var(--color-yellow);
+}
+
+progress.orange::-webkit-progress-bar,
+progress.orange::-moz-progress-bar {
+    background-color: var(--color-orange);
 }
 
 /* Steps */

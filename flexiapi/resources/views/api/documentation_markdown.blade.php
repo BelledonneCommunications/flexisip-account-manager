@@ -26,6 +26,10 @@ The endpoints are accessible using three different models:
 - <span class="badge badge-warning">Admin</span> the endpoint can be only be accessed by an authenticated admin user
 - <span class="badge badge-error">Super Admin</span> the endpoint can be only be accessed by an authenticated super admin user
 
+### Space expiration
+
+<span class="badge badge-error">Super Admin</span> can configure and expiration date on Spaces (`expire_at`). If the Space is expired all the authenticated endpoint of the API will return `403`.
+
 ### Localization
 
 You can add an [`Accept-Language`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language) header to your request to translate the responses, and especially errors messages, in a specific language.
@@ -128,28 +132,28 @@ An `account_creation_request_token` is a unique token that can be validated and 
 
 Create and return an `account_creation_request_token` that should then be validated to be used.
 
-## SIP Domains
+## Spaces
 
-Manage the list of allowed `sip_domains`. The admin accounts declared with a `domain` that is a `super` `sip_domain` will become <span class="badge badge-error">Super Admin</span>.
+Manage the list of allowed `spaces`. The admin accounts declared with a `domain` that is a `super` `sip_domain` will become <span class="badge badge-error">Super Admin</span>.
 
-### `GET /sip_domains`
+### `GET /spaces`
 <span class="badge badge-error">Super Admin</span>
 
-Get the list of declared SIP Domains.
+Get the list of declared Spaces.
 
-### `GET /sip_domains/{domain}`
+### `GET /spaces/{domain}`
 <span class="badge badge-error">Super Admin</span>
 
-Get a SIP Domain.
+Get a Space.
 
-### `POST /sip_domains`
+### `POST /spaces`
 <span class="badge badge-error">Super Admin</span>
 
 Create a new `sip_domain`.
 
 JSON parameters:
 
-* `domain` **required**, the domain to use, must be unique
+* `domain` **required**, the SIP domain to use, must be unique
 * `super` **required**, boolean, set the domain as a Super Domain
 * `disable_chat_feature` boolean, disable the chat feature, default to `false`
 * `disable_meetings_feature` boolean, disable the meeting feature, default to `false`
@@ -162,8 +166,10 @@ JSON parameters:
 * `assistant_disable_qr_code` boolean, disable the QR code feature in the assistant, default to `false`
 * `assistant_hide_third_party_account` boolean, disable the call recording feature, default to `false`
 * `max_account` integer, the maximum number of accounts configurable in the app, default to `0` (infinite)
+* `max_accounts` integer, the maximum number of accounts that can be created in the space, default to `0` (infinite), cannot be less than the actual amount of accounts
+* `expire_at` date, the moment the space is expiring, default to `null` (never expire)
 
-### `PUT /sip_domains/{domain}`
+### `PUT /spaces/{domain}`
 <span class="badge badge-error">Super Admin</span>
 
 Update an existing `sip_domain`.
@@ -182,8 +188,10 @@ JSON parameters:
 * `assistant_disable_qr_code` **required**, boolean
 * `assistant_hide_third_party_account` **required**, boolean
 * `max_account` **required**, integer
+* `max_accounts` **required**,integer, the maximum number of accounts that can be created in the space, default to `0` (infinite), cannot be less than the actual amount of accounts
+* `expire_at` **required**, date, the moment the space is expiring, set to `null` to never expire
 
-### `DELETE /sip_domains/{domain}`
+### `DELETE /spaces/{domain}`
 <span class="badge badge-error">Super Admin</span>
 
 Delete a domain, **be careful, all the related accounts will also be destroyed**.
@@ -272,7 +280,10 @@ JSON parameters:
 <span class="badge badge-success">Public</span>
 
 Create an account using an `account_creation_token`.
+
 Return `422` if the parameters are invalid or if the token is expired.
+
+Return `403` if the `max_accounts` limit of the corresponding Space is reached.
 
 JSON parameters:
 
@@ -397,12 +408,14 @@ JSON parameters:
 
 To create an account directly from the API. <span class="badge badge-message">Deprecated</span> If `activated` is set to `false` a random generated `confirmation_key` and `provisioning_token` will be returned to allow further activation using the public endpoints and provision the account. Check `confirmation_key_expires` to also set an expiration date on that `confirmation_key`.
 
+Return `403` if the `max_accounts` limit of the corresponding Space is reached.
+
 JSON parameters:
 
 * `username` unique username, minimum 6 characters
 * `password` **required** minimum 6 characters
 * `algorithm` **required**, values can be `SHA-256` or `MD5`
-* `domain` **not configurable by default**. Only configurable if the admin is a super admin. Otherwise `APP_SIP_DOMAIN` is used. If the domain is not available in the `sip_domains` list, it will be created automatically.
+* `domain` **not configurable by default**, must exist in one of the configured Spaces. Only configurable if the admin is a super admin. Otherwise the SIP domain of the corresponding space is used.
 * `activated` optional, a boolean, set to `false` by default
 * `display_name` optional, string
 * `email` optional, must be an email, must be unique if `ACCOUNT_EMAIL_UNIQUE` is set to `true`
@@ -420,7 +433,7 @@ Update an existing account. Ensure to resend all the parameters to not reset the
 JSON parameters:
 
 * `username` unique username, minimum 6 characters
-* `domain` **not configurable by default**. Only configurable if the admin is a super admin. Otherwise `APP_SIP_DOMAIN` is used.
+* `domain` **not configurable by default**, must exist in one of the configured Spaces. Only configurable if the admin is a super admin. Otherwise the SIP domain of the corresponding space is used.
 * `password` **required** minimum 6 characters
 * `algorithm` **required**, values can be `SHA-256` or `MD5`
 * `display_name` optional, string

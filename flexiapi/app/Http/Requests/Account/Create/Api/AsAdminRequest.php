@@ -29,11 +29,6 @@ class AsAdminRequest extends Request
 {
     use RequestsApi, AsAdmin;
 
-    public function authorize()
-    {
-        return true;
-    }
-
     public function rules()
     {
         $rules = parent::rules();
@@ -45,10 +40,6 @@ class AsAdminRequest extends Request
             'date_format:Y-m-d H:i:s',
             'nullable',
         ];
-
-        if ($this->user()->superAdmin) {
-            $rules['domain'] = '';
-        }
 
         if (config('app.allow_phone_number_username_admin_api') == true) {
             array_splice(

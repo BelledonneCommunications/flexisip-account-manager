@@ -29,11 +29,6 @@ class AsAdminRequest extends UpdateRequest
 {
     use RequestsApi, AsAdmin;
 
-    public function authorize()
-    {
-        return true;
-    }
-
     public function rules()
     {
         $rules = parent::rules();

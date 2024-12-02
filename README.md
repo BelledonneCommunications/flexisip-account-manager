@@ -148,11 +148,11 @@ FlexiAPI is also providing endpoints to provision Liblinphone powered devices. Y
 
 FlexiAPI is shipped with several console commands that you can launch using the `artisan` executable available at the root of this project.
 
-### Create or update a SIP Domain
+### Create or update a Space
 
-Create or update a SIP Domain, required to then create accounts afterward. The `super` option enable/disable the domain as a super domain.
+Create or update a Space, required to then create accounts afterward. The `super` option enable/disable the domain as a super domain.
 
-    php artisan sip_domains:create-update {domain} {--super}
+    php artisan spaces:create-update {domain} {--super}
 
 ### Create an admin account
 

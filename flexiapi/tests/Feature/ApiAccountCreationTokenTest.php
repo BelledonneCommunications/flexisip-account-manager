@@ -20,6 +20,7 @@
 namespace Tests\Feature;
 
 use App\Account;
+use App\Space;
 use App\AccountCreationRequestToken;
 use App\AccountCreationToken;
 use App\Http\Middleware\ValidateJSON;
@@ -131,6 +132,7 @@ class ApiAccountCreationTokenTest extends TestCase
     public function testInvalidToken()
     {
         $token = AccountCreationToken::factory()->create();
+        Space::factory()->create();
 
         // Invalid token
         $this->json($this->method, $this->accountRoute, [
@@ -165,6 +167,7 @@ class ApiAccountCreationTokenTest extends TestCase
     public function testTokenExpiration()
     {
         $token = AccountCreationToken::factory()->expired()->create();
+        Space::factory()->create();
 
         config()->set('app.account_creation_token_expiration_minutes', 10);
 
@@ -180,6 +183,7 @@ class ApiAccountCreationTokenTest extends TestCase
     public function testBlacklistedUsername()
     {
         $token = AccountCreationToken::factory()->create();
+        Space::factory()->create();
 
         config()->set('app.account_blacklisted_usernames', 'foobar,blacklisted,username-.*');
 

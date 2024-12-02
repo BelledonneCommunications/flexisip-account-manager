@@ -40,7 +40,7 @@ class CreateAdminTest extends Command
         $username = 'admin_test';
         $domain = 'sip.example.org';
 
-        $this->call('sip_domains:create-update', [
+        $this->call('spaces:create-update', [
             'domain' => $domain,
             '--super' => 'true'
         ]);

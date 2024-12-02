@@ -19,17 +19,19 @@
 
 namespace Database\Factories;
 
-use App\SipDomain;
+use App\Space;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class SipDomainFactory extends Factory
+class SpaceFactory extends Factory
 {
-    protected $model = SipDomain::class;
+    protected $model = Space::class;
 
     public function definition()
     {
         return [
             'domain' => config('app.sip_domain'),
+            'host' => config('app.sip_domain'),
         ];
     }
 
@@ -37,6 +39,14 @@ class SipDomainFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'domain' => 'second_' . config('app.sip_domain'),
+            'host' => 'second_' . config('app.sip_domain'),
+        ]);
+    }
+
+    public function expired()
+    {
+        return $this->state(fn (array $attributes) => [
+            'expire_at' => Carbon::today()->toDateTimeString()
         ]);
     }
 }

@@ -23,7 +23,7 @@ use Illuminate\Console\Command;
 use Carbon\Carbon;
 
 use App\Account;
-use App\SipDomain;
+use App\Space;
 
 class CreateAdminAccount extends Command
 {
@@ -37,7 +37,7 @@ class CreateAdminAccount extends Command
 
     public function handle()
     {
-        $sipDomains = SipDomain::all('domain')->pluck('domain');
+        $spaces = Space::all('domain')->pluck('domain');
 
         $this->info('Your will create a new admin account in the database, existing accounts with the same credentials will be overwritten');
 
@@ -50,7 +50,7 @@ class CreateAdminAccount extends Command
         }
 
         if (!$this->option('domain')) {
-            $domain = $this->ask('What will be the admin domain? Default: ' . $sipDomains->first());
+            $domain = $this->ask('What will be the admin domain? Default: ' . $spaces->first());
         }
 
         if (!$this->option('password')) {
@@ -58,11 +58,11 @@ class CreateAdminAccount extends Command
         }
 
         $username = $username ?? 'admin';
-        $domain = $domain ?? $sipDomains->first();
+        $domain = $domain ?? $spaces->first();
         $password = $password ?? 'change_me';
 
-        if (!$sipDomains->contains($domain)) {
-            $this->error('The domain must be one of the following ones: ' . $sipDomains->implode(', '));
+        if (!$spaces->contains($domain)) {
+            $this->error('The domain must be one of the following ones: ' . $spaces->implode(', '));
             $this->comment('You can create an extra domain using the dedicated console command');
             return Command::FAILURE;
         }

@@ -28,11 +28,6 @@ class Request extends CreateRequest
 {
     use RequestsApi;
 
-    public function authorize()
-    {
-        return true;
-    }
-
     public function rules()
     {
         $rules = parent::rules();

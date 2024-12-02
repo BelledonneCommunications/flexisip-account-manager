@@ -26,7 +26,7 @@ use Awobaz\Compoships\Database\Eloquent\Factories\ComposhipsFactory;
 use App\Account;
 use App\AccountCreationToken;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
-use App\SipDomain;
+use App\Space;
 
 class AccountFactory extends Factory
 {
@@ -35,9 +35,9 @@ class AccountFactory extends Factory
 
     public function definition()
     {
-        $domain = SipDomain::count() == 0
-            ? SipDomain::factory()->create()
-            : SipDomain::first();
+        $domain = Space::count() == 0
+            ? Space::factory()->create()
+            : Space::first();
 
         return [
             'username' => $this->faker->username,
@@ -53,6 +53,13 @@ class AccountFactory extends Factory
         ];
     }
 
+    public function fromSpace(Space $space)
+    {
+        return $this->state(fn (array $attributes) => [
+            'domain' => $space->domain
+        ]);
+    }
+
     public function admin()
     {
         return $this->state(fn (array $attributes) => [
@@ -63,9 +70,9 @@ class AccountFactory extends Factory
     public function superAdmin()
     {
         return $this->state(function (array $attributes) {
-            $sipDomain = SipDomain::where('domain', $attributes['domain'])->first();
-            $sipDomain->super = true;
-            $sipDomain->save();
+            $space = Space::where('domain', $attributes['domain'])->first();
+            $space->super = true;
+            $space->save();
 
             return [
                 'admin' => true,

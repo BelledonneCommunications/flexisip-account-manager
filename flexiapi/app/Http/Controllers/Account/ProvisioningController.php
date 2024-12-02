@@ -206,7 +206,7 @@ class ProvisioningController extends Controller
         if ($account) {
             $ui = $xpath->query("//section[@name='ui']")->item(0);
 
-            if ($ui == null && $account->sipDomain) {
+            if ($ui == null && $account->space) {
                 $section = $dom->createElement('section');
                 $section->setAttribute('name', 'ui');
 
@@ -225,7 +225,7 @@ class ProvisioningController extends Controller
                     'max_account',
                 ] as $key) {
                     // Cast the booleans into integers
-                    $entry = $dom->createElement('entry', (int)$account->sipDomain->$key);
+                    $entry = $dom->createElement('entry', (int)$account->space->$key);
                     $entry->setAttribute('name', $key);
                     $section->appendChild($entry);
                 }

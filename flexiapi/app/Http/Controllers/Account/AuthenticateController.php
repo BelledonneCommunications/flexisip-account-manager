@@ -33,7 +33,13 @@ class AuthenticateController extends Controller
 
     public function login(Request $request)
     {
-        if (Auth::user()) {
+        if ($request->user()) {
+            if ($request->user()->superAdmin) {
+                return redirect()->route('admin.spaces.index');
+            } elseif ($request->user()->admin) {
+                return redirect()->route('admin.spaces.me');
+            }
+
             return redirect()->route('account.dashboard');
         }
 
@@ -67,7 +73,7 @@ class AuthenticateController extends Controller
                 bchash($account->username, $account->resolvedRealm, $request->get('password'), $password->algorithm)
             )) {
                 Auth::login($account);
-                return redirect()->route('account.dashboard');
+                return redirect()->route('account.home');
             }
         }
 
@@ -94,7 +100,7 @@ class AuthenticateController extends Controller
 
         Auth::login($account);
 
-        return redirect()->route('account.dashboard');
+        return redirect()->route('account.home');
     }
 
     public function loginAuthToken(Request $request, ?string $token = null)
@@ -120,7 +126,7 @@ class AuthenticateController extends Controller
 
             $authToken->delete();
 
-            return redirect()->route('account.dashboard');
+            return redirect()->route('account.home');
         }
 
         return view('account.authenticate.auth_token', [

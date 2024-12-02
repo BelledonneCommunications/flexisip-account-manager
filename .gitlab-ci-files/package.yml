@@ -22,10 +22,6 @@ rocky9-package:
     - dnf -y install php-sodium
     - make rpm-el9
 
-debian11-package:
-  extends: .debian_package
-  image: gitlab.linphone.org:4567/bc/public/docker/debian11-php:$DEBIAN_11_IMAGE_VERSION
-
 debian12-package:
   extends: .debian_package
   image: gitlab.linphone.org:4567/bc/public/docker/debian12-php:$DEBIAN_12_IMAGE_VERSION

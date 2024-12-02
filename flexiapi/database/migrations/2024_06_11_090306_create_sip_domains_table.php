@@ -1,6 +1,6 @@
 <?php
 
-use App\SipDomain;
+use App\Space;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -18,10 +18,10 @@ return new class extends Migration
         });
 
         foreach (DB::table('accounts')->select('domain')->distinct()->get()->pluck('domain') as $domain) {
-            $sipDomain = new SipDomain;
-            $sipDomain->domain = $domain;
-            $sipDomain->super = env('APP_ADMINS_MANAGE_MULTI_DOMAINS', false); // historical environnement boolean
-            $sipDomain->save();
+            $space = new Space;
+            $space->domain = $domain;
+            $space->super = env('APP_ADMINS_MANAGE_MULTI_DOMAINS', false); // historical environnement boolean
+            $space->save();
         }
 
         Schema::table('accounts', function (Blueprint $table) {

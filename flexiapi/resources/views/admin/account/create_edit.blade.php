@@ -48,9 +48,9 @@
         </div>
         <div class="select">
             <select name="domain" @if (auth()->user()?->superAdmin) required @else disabled @endif>
-                @foreach ($domains as $sipDomain)
-                    <option value="{{ $sipDomain->domain }}" @if ($account->domain == $sipDomain->domain) selected="selected" @endif>
-                        {{ $sipDomain->domain }}</option>
+                @foreach ($domains as $space)
+                    <option value="{{ $space->domain }}" @if ($account->domain == $space->domain) selected="selected" @endif>
+                        {{ $space->domain }}</option>
                 @endforeach
             </select>
             <label for="domain">Domain</label>
