@@ -83,6 +83,14 @@
                 value="@if($account->id){{ $account->email }}@else{{ old('email') }}@endif">
             <label for="email">Email</label>
             @include('parts.errors', ['name' => 'email'])
+
+            @if (!empty($account->email))
+                <p class="oppose">
+                    <a href="{{ route('admin.account.reset_password_email.create', $account) }}">
+                        Send an email to the user to reset the password
+                    </a>
+                </p>
+            @endif
         </div>
 
         <div>

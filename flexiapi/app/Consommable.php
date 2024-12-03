@@ -27,6 +27,11 @@ abstract class Consommable extends Model
         $this->user_agent = $request->userAgent();
     }
 
+    public function offed(): bool
+    {
+        return $this->consumed() || $this->expired();
+    }
+
     public function consumed(): bool
     {
         return $this->{$this->consommableAttribute} == null;

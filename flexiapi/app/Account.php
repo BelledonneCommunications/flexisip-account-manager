@@ -256,6 +256,11 @@ class Account extends Authenticatable
         return $this->hasMany(AuthToken::class);
     }
 
+    public function resetPasswordEmailTokens()
+    {
+        return $this->hasMany(ResetPasswordEmailToken::class)->latest();
+    }
+
     /**
      * Attributes
      */

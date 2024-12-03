@@ -39,6 +39,7 @@ use App\Http\Controllers\Admin\AccountStatisticsController;
 use App\Http\Controllers\Admin\ContactsListController;
 use App\Http\Controllers\Admin\ContactsListContactController;
 use App\Http\Controllers\Admin\PhoneCountryController;
+use App\Http\Controllers\Admin\ResetPasswordEmailController;
 use App\Http\Controllers\Admin\SpaceController;
 use App\Http\Controllers\Admin\StatisticsController;
 use Illuminate\Support\Facades\Route;
@@ -47,10 +48,14 @@ Route::redirect('/', 'login')->name('account.home');
 Route::get('documentation', 'Account\AccountController@documentation')->name('account.documentation');
 Route::get('about', 'AboutController@about')->name('about');
 
-Route::group(['middleware' => 'web_panel_enabled'], function () {
+Route::middleware(['web_panel_enabled', 'space.expired'])->group(function () {
     Route::get('login', 'Account\AuthenticateController@login')->name('account.login');
     Route::post('authenticate', 'Account\AuthenticateController@authenticate')->name('account.authenticate');
     Route::get('authenticate/qrcode/{token?}', 'Account\AuthenticateController@loginAuthToken')->name('account.authenticate.auth_token');
+    Route::get('logout', 'Account\AuthenticateController@logout')->name('account.logout');
+
+    Route::get('reset_password/{token}', 'Account\ResetPasswordEmailController@change')->name('account.reset_password_email.change');
+    Route::post('reset_password', 'Account\ResetPasswordEmailController@reset')->name('account.reset_password_email.reset');
 
     // Deprecated
     Route::get('authenticate/email/{code}', 'Account\AuthenticateController@validateEmail')->name('account.authenticate.email_confirm');
@@ -98,10 +103,6 @@ Route::middleware(['web_panel_enabled', 'space.expired'])->group(function () {
         Route::get('email', 'showEmail')->name('account.recovery.show.email');
         Route::post('/', 'send')->name('account.recovery.send');
         Route::post('confirm', 'confirm')->name('account.recovery.confirm');
-    });
-
-    Route::middleware(['auth'])->group(function () {
-        Route::get('logout', 'Account\AuthenticateController@logout')->name('account.logout');
     });
 
     Route::name('account.')->middleware(['auth', 'auth.check_blocked'])->group(function () {
@@ -199,6 +200,11 @@ Route::middleware(['web_panel_enabled', 'space.expired'])->group(function () {
 
                 Route::get('{account_id}/contacts_lists/detach', 'contactsListRemove')->name('contacts_lists.detach');
                 Route::post('{account_id}/contacts_lists', 'contactsListAdd')->name('contacts_lists.attach');
+            });
+
+            Route::name('reset_password_email.')->controller(ResetPasswordEmailController::class)->prefix('{account_id}/reset_password_emails')->group(function () {
+                Route::get('create', 'create')->name('create');
+                Route::get('send', 'send')->name('send');
             });
 
             Route::name('import.')->prefix('import')->controller(AccountImportController::class)->group(function () {

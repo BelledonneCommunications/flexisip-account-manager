@@ -60,7 +60,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr @if ($account->accountCreationToken->consumed()) class="disabled crossed" @endif>
+            <tr @if ($account->accountCreationToken->offed()) class="disabled crossed" @endif>
                 <td>****</td>
                 <td>
                     {{ $account->accountCreationToken->created_at }}
@@ -88,8 +88,8 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($account->recoveryCodes as $recoveryCode)
-                <tr @if ($recoveryCode->consumed()) class="disabled crossed" @endif>
+            @foreach ($account->recoveryCodes as $key => $recoveryCode)
+                <tr @if ($recoveryCode->offed() || $key > 0) class="disabled crossed" @endif>
                     <td>****</td>
                     <td>
                         {{ $recoveryCode->created_at }}
@@ -119,8 +119,8 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($account->phoneChangeCodes as $phoneChangeCode)
-                <tr @if ($phoneChangeCode->consumed()) class="disabled crossed" @endif>
+            @foreach ($account->phoneChangeCodes as $key => $phoneChangeCode)
+                <tr @if ($phoneChangeCode->offed() || $key > 0) class="disabled crossed" @endif>
                     <td>{{ $phoneChangeCode->phone }}</td>
                     <td>{{ $phoneChangeCode->code ?? '-' }}</td>
                     <td>
@@ -151,8 +151,8 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($account->emailChangeCodes as $emailChangeCode)
-                <tr @if ($emailChangeCode->consumed()) class="disabled crossed" @endif>
+            @foreach ($account->emailChangeCodes as $key => $emailChangeCode)
+                <tr @if ($emailChangeCode->offed() || $key > 0) class="disabled crossed" @endif>
                     <td>{{ $emailChangeCode->email }}</td>
                     <td>{{ $emailChangeCode->code ?? '-' }}</td>
                     <td>
@@ -182,8 +182,8 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($account->provisioningTokens as $provisioningToken)
-                <tr @if ($provisioningToken->consumed()) class="disabled crossed" @endif>
+            @foreach ($account->provisioningTokens as $key => $provisioningToken)
+                <tr @if ($provisioningToken->offed() || $key > 0) class="disabled crossed" @endif>
                     <td>{{ $provisioningToken->token }}</td>
                     <td>
                         {{ $provisioningToken->created_at }}
@@ -193,6 +193,36 @@
                     </td>
                     <td title="{{ $provisioningToken->user_agent }}">
                         {{ $provisioningToken->ip ? $provisioningToken->ip : '-' }}
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+@endif
+
+@if ($account->resetPasswordEmailTokens->isNotEmpty())
+    <h3>Set Password Emails</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Token</th>
+                <th>Created</th>
+                <th>Used</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($account->resetPasswordEmailTokens as $key => $resetPasswordEmailToken)
+                <tr @if ($resetPasswordEmailToken->offed() || $key > 0) class="disabled crossed" @endif>
+                    <td>{{ $resetPasswordEmailToken->token }}</td>
+                    <td>
+                        {{ $resetPasswordEmailToken->created_at }}
+                    </td>
+                    <td>
+                        {{ $resetPasswordEmailToken->consumed() ? $resetPasswordEmailToken->updated_at : '-' }}
+                    </td>
+                    <td>
+                        {{ $resetPasswordEmailToken->email }}
                     </td>
                 </tr>
             @endforeach

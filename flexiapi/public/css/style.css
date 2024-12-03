@@ -619,6 +619,7 @@ table tr td a {
 
 table tr td,
 table tr th {
+    width: 20rem;
     padding: 1rem;
     font-size: 1.5rem;
 }

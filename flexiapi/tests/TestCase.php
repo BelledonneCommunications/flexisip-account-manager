@@ -20,7 +20,7 @@
 namespace Tests;
 
 use App\PhoneCountry;
-use App\Http\Middleware\Space;
+use App\Http\Middleware\IsSpaceExpired;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -37,7 +37,7 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        $this->withoutMiddleware([Space::class]);
+        $this->withoutMiddleware([IsSpaceExpired::class]);
 
         PhoneCountry::truncate();
         PhoneCountry::factory()->france()->activated()->create();
