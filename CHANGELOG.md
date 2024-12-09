@@ -14,6 +14,7 @@ v1.6
 - Fix FLEXIAPI-238 Replace Material Icons with Phosphor
 - Fix FLEXIAPI-240 Update the Docker images
 - Fix GH-15 Add password import from CSV
+- Fix FLEXIAPI-242 Add stricter validation for the AccountCreationToken Push Notification endpoint
 
 v1.5
 ---

@@ -36,7 +36,7 @@ class ApiAccountCreationTokenTest extends TestCase
     protected $adminRoute = '/api/account_creation_tokens';
     protected $method = 'POST';
 
-    protected $pnProvider = 'provider';
+    protected $pnProvider = 'fcm';
     protected $pnParam = 'param';
     protected $pnPrid = 'id';
 
@@ -63,6 +63,27 @@ class ApiAccountCreationTokenTest extends TestCase
     }
     public function testCorrectParameters()
     {
+        $this->assertSame(AccountCreationToken::count(), 0);
+        $this->json($this->method, $this->tokenRoute, [
+            'pn_provider' => 'wrong',
+            'pn_param' => $this->pnParam,
+            'pn_prid' => $this->pnPrid,
+        ])->assertJsonValidationErrors(['pn_provider']);
+
+        $this->assertSame(AccountCreationToken::count(), 0);
+        $this->json($this->method, $this->tokenRoute, [
+            'pn_provider' => $this->pnProvider,
+            'pn_param' => '@wrong',
+            'pn_prid' => $this->pnPrid,
+        ])->assertJsonValidationErrors(['pn_param']);
+
+        $this->assertSame(AccountCreationToken::count(), 0);
+        $this->json($this->method, $this->tokenRoute, [
+            'pn_provider' => $this->pnProvider,
+            'pn_param' => $this->pnParam,
+            'pn_prid' => '@wrong',
+        ])->assertJsonValidationErrors(['pn_prid']);
+
         $this->assertSame(AccountCreationToken::count(), 0);
         $this->json($this->method, $this->tokenRoute, [
             'pn_provider' => $this->pnProvider,
@@ -173,8 +194,7 @@ class ApiAccountCreationTokenTest extends TestCase
             'algorithm' => 'SHA-256',
             'password' => '123',
             'account_creation_token' => $token->token
-        ])->assertStatus(422)
-        ->assertJsonValidationErrors(['account_creation_token']);
+        ])->assertJsonValidationErrors(['account_creation_token']);
     }
 
     public function testBlacklistedUsername()

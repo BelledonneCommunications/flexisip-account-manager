@@ -19,6 +19,7 @@
 
 namespace App;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class AccountCreationToken extends Consommable
