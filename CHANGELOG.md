@@ -1,8 +1,5 @@
 # Flexisip Account Manager Changelog
 
-v1.6 (master)
--------------
-
 v1.5
 ---
 - Fix FLEXIAPI-202 Add account parameter to the redirection in the destroy admin route
@@ -66,6 +63,7 @@ v1.5
 - Fix #133 Make the MySQL connection unstrict
 - Fix #132 Move the provisioning_tokens and recovery_codes to dedicated table
 - Fix #130 Drop the group column in the Accounts table
+- Fix FLEXIAPI-242 Add stricter validation for the AccountCreationToken Push Notification endpoint
 
 v1.4.9
 ------

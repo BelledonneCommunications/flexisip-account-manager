@@ -14,13 +14,13 @@ rocky9-deploy:
     - rocky9-package
     - rocky9-test
 
-debian11-deploy:
-  extends: .deploy
-  script:
-    - ./deploy_packages.sh debian bullseye
-  needs:
-    - debian11-package
-    - debian11-test
+#debian11-deploy:
+#  extends: .deploy
+#  script:
+#    - ./deploy_packages.sh debian bullseye
+#  needs:
+#    - debian11-package
+#    - debian11-test
 
 debian12-deploy:
   extends: .deploy

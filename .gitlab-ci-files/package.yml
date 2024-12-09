@@ -16,9 +16,9 @@ rocky9-package:
   script:
     - make rpm-el9
 
-debian11-package:
-  extends: .debian_package
-  image: gitlab.linphone.org:4567/bc/public/docker/debian11-php:$DEBIAN_11_IMAGE_VERSION
+#debian11-package:
+#  extends: .debian_package
+#  image: gitlab.linphone.org:4567/bc/public/docker/debian11-php:$DEBIAN_11_IMAGE_VERSION
 
 debian12-package:
   extends: .debian_package
