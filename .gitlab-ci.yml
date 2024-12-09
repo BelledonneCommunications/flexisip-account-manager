@@ -1,8 +1,8 @@
 variables:
   ROCKY_8_IMAGE_VERSION: 20241112_111033_update_package_and_dependencies
   ROCKY_9_IMAGE_VERSION: 20241112_115442_add_php_sodium
-  DEBIAN_11_IMAGE_VERSION: 20241112_113527_update_package_and_dependencies
-  DEBIAN_12_IMAGE_VERSION:  20241112_113948_update_package_and_dependencies
+#  DEBIAN_11_IMAGE_VERSION: 20241204_161845_update_download_linphone_org
+  DEBIAN_12_IMAGE_VERSION: 20241204_162237_update_download_linphone_org
   PHP_REDIS_REMI_VERSION: php-pecl-redis5-5.3.6-1
   PHP_IGBINARY_REMI_VERSION: php-pecl-igbinary-3.2.14-1
   PHP_MSGPACK_REMI_VERSION: php-pecl-msgpack-2.2.0-1

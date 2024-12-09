@@ -13,6 +13,7 @@ v1.6
 - Fix FLEXIAPI-239 Ensure to return the correct error codes as stated in the RFC6750 section 3.1
 - Fix FLEXIAPI-238 Replace Material Icons with Phosphor
 - Fix FLEXIAPI-240 Update the Docker images
+- Fix GH-15 Add password import from CSV
 
 v1.5
 ---
