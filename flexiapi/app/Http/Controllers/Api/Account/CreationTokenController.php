@@ -26,6 +26,9 @@ use Carbon\Carbon;
 
 use App\AccountCreationToken;
 use App\AccountCreationRequestToken;
+use App\Rules\PnParam;
+use App\Rules\PnPrid;
+use App\Rules\PnProvider;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use App\Libraries\FlexisipPusherConnector;
@@ -36,9 +39,9 @@ class CreationTokenController extends Controller
     public function sendByPush(Request $request)
     {
         $request->validate([
-            'pn_provider' => 'required',
-            'pn_param' => 'required',
-            'pn_prid' => 'required',
+            'pn_provider' => ['required', new PnProvider],
+            'pn_param' => [new PnParam],
+            'pn_prid' => [new PnPrid],
         ]);
 
         $last = AccountCreationToken::where('pn_provider', $request->get('pn_provider'))

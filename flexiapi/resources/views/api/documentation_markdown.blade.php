@@ -209,9 +209,9 @@ Return `503` if the token was not successfully sent.
 
 JSON parameters:
 
-* `pn_provider` the push notification provider
-* `pn_param` the push notification parameter
-* `pn_prid` the push notification unique id
+* `pn_provider` **required**, the push notification provider, must be in apns.dev, apns or fcm
+* `pn_param` the push notification parameter, can be null or contain only alphanumeric and underscore characters
+* `pn_prid` the push notification unique id, can be null or contain only alphanumeric, dashes and colon characters
 
 ### `POST /account_creation_tokens/using-account-creation-request-token`
 <span class="badge badge-success">Public</span>

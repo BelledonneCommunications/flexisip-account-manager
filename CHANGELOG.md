@@ -5,6 +5,7 @@ v1.7
 - Fix FLEXIAPI-206 Upgrade to Laravel 10, PHP 8.1 minimum and bump all the related dependencies, drop Debian 11 Bullseye
 - Fix FLEXIAPI-220 Migrate SIP Domains to Spaces
 - Fix GH-15 Add password import from CSV
+- Fix FLEXIAPI-242 Add stricter validation for the AccountCreationToken Push Notification endpoint
 
 v1.6
 ----
