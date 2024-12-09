@@ -20,6 +20,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Account;
+use App\Password;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
@@ -166,7 +167,7 @@ class AccountImportController extends Controller
         $accounts = [];
         $now = \Carbon\Carbon::now();
 
-        $admins = $phones = [];
+        $admins = $phones = $passwords = [];
 
         foreach ($lines as $line) {
             if ($line->role == 'admin') {
@@ -175,6 +176,10 @@ class AccountImportController extends Controller
 
             if (!empty($line->phone)) {
                 $phones[$line->username] = $line->phone;
+            }
+
+            if (!empty($line->password)) {
+                $passwords[$line->username] = $line->password;
             }
 
             array_push($accounts, [
@@ -198,6 +203,31 @@ class AccountImportController extends Controller
                 ->first();
             $account->admin = true;
         }
+
+        // Set passwords
+
+        $passwordsToInsert = [];
+
+        $passwordAccounts = Account::whereIn('username', array_keys($passwords))
+            ->where('domain', $request->get('domain'))
+            ->get();
+
+        $algorithm = config('app.account_default_password_algorithm');
+
+        foreach ($passwordAccounts as $passwordAccount) {
+            array_push($passwordsToInsert, [
+                'account_id' => $passwordAccount->id,
+                'password' => bchash(
+                    $passwordAccount->username,
+                    config('app.account_realm') ?? $request->get('domain'),
+                    $passwords[$passwordAccount->username],
+                    $algorithm
+                ),
+                'algorithm' => $algorithm
+            ]);
+        }
+
+        Password::insert($passwordsToInsert);
 
         // Set admins accounts
         foreach ($phones as $username => $phone) {
