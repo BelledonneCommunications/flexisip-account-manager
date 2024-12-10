@@ -64,7 +64,6 @@ class CreationTokenController extends Controller
         $token->pn_prid = $request->get('pn_prid');
         $token->fillRequestInfo($request);
 
-        // Send the token to the device via Push Notification
         $fp = new FlexisipPusherConnector($token->pn_provider, $token->pn_param, $token->pn_prid);
         if ($fp->sendToken($token->token)) {
             Log::channel('events')->info('API: Token sent', ['token' => $token->token]);

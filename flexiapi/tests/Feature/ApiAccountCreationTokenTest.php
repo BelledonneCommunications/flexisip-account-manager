@@ -62,6 +62,7 @@ class ApiAccountCreationTokenTest extends TestCase
             fn ($error) => substr($error, 0, strlen(ValidateJSON::$message)) == ValidateJSON::$message
         );
     }
+
     public function testCorrectParameters()
     {
         $this->assertSame(AccountCreationToken::count(), 0);

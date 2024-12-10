@@ -805,6 +805,21 @@ JSON parameters:
 * `to` **required**, SIP address of the receiver
 * `body` **required**, content of the message
 
+## Push Notifications
+
+### `POST /push_notification`
+<span class="badge badge-warning">User</span>
+
+Send a push notification using the Flexisip Pusher.
+
+JSON parameters:
+
+* `pn_provider` **required**, the push notification provider, must be in `apns.dev`, `apns` or `fcm`
+* `pn_param` the push notification parameter, can be null or contain only alphanumeric and underscore characters
+* `pn_prid` the push notification unique id, can be null or contain only alphanumeric, dashes and colon characters
+* `type` **required**, must be in `background`, `message` or `call`
+* `call_id` a Call ID, must have only alphanumeric and dashes characters
+
 ## Phone Countries
 
 The phone numbers managed by FlexiAPI are validated against a list of countries that can be managed in the admin web panels.

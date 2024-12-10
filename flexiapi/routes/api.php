@@ -65,6 +65,8 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
     Route::get('accounts/auth_token/{auth_token}/attach', 'Api\Account\AuthTokenController@attach');
     Route::post('account_creation_tokens/consume', 'Api\Account\CreationTokenController@consume');
 
+    Route::post('push_notification', 'Api\Account\PushNotificationController@push');
+
     Route::prefix('accounts/me')->group(function () {
         Route::get('api_key', 'Api\Account\ApiKeyController@generate')->middleware('cookie', 'cookie.encrypt');
 

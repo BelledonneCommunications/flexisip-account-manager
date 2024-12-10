@@ -28,6 +28,11 @@ class FlexisipPusherConnector
     private ?string $pnParam = null;
     private ?string $pnPrid = null;
     private ?string $pusherFirebaseKey = null;
+    public static array $apnsTypes = [
+        'background' => 'Background',
+        'message' => 'RemoteWithMutableContent',
+        'call' => 'PushKit'
+    ];
 
     public function __construct(string $pnProvider, string $pnParam, string $pnPrid)
     {
@@ -63,15 +68,27 @@ class FlexisipPusherConnector
     {
         $payload = json_encode(['token' => $token]);
 
+        $this->send(payload: $payload);
+    }
+
+    public function send(?string $payload = null, ?string $callId = null, ?string $type = 'background')
+    {
         if (!empty($this->pusherPath)) {
             $command = $this->pusherPath
                 . " --pn-provider '" . $this->pnProvider . "'"
                 . " --pn-param '" . $this->pnParam . "'"
-                . " --pn-prid '" . $this->pnPrid . "'"
-                . " --customPayload '" . $payload . "'";
+                . " --pn-prid '" . $this->pnPrid . "'";
 
-            if (in_array($this->pnProvider, ['apns', 'apns.dev'])) {
-                $command .= " --apple-push-type Background";
+            if ($payload != null) {
+                $command .= " --customPayload '" . $payload . "'";
+            }
+
+            if ($callId != null) {
+                $command .= " --call-id '" . $callId . "'";
+            }
+
+            if (in_array($this->pnProvider, ['apns', 'apns.dev']) && in_array($type, $this->apnsTypes)) {
+                $command .= " --apple-push-type " . $this->apnsTypes[$type];
             }
 
             if ($this->pusherFirebaseKey) {

@@ -6,6 +6,7 @@ v1.7
 - Fix FLEXIAPI-220 Migrate SIP Domains to Spaces
 - Fix GH-15 Add password import from CSV
 - Fix FLEXIAPI-242 Add stricter validation for the AccountCreationToken Push Notification endpoint
+- Fix FLEXIAPI-241 Add a /push-notification endpoint to send custom push notifications to the Flexisip Pusher
 
 v1.6
 ----
