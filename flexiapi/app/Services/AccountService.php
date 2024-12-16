@@ -73,6 +73,10 @@ class AccountService
             $account->domain = resolveDomain($request);
             $account->user_agent = $request->header('User-Agent') ?? config('app.name');
             $account->admin = $request->has('admin') && (bool)$request->get('admin');
+
+            if (!$request->api && $request->has('role')) {
+                $account->setRole($request->get('role'));
+            }
         }
 
         if ($account->activated == false) {

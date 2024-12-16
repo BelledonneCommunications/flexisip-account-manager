@@ -27,4 +27,11 @@ abstract class TestCaseWithSpaceMiddleware extends BaseTestCase
     use CreatesApplication;
     use RefreshDatabase;
     use TestUtilsTrait;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        config()->set('app.sip_domain', 'sip.example.com');
+    }
 }

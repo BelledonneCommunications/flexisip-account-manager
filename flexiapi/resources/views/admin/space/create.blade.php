@@ -20,13 +20,13 @@
         @method('post')
 
         <div class="large">
-            <input placeholder="subdomain" required="required" name="host" type="text" pattern="{{ $space::HOST_REGEX}}" style="width: 60%"
-                value="{{ $space->host ?? old('host') }}" onchange="copyValueTo(this, this.form.querySelector('input[name=domain]'), '.{{ config('app.root_domain') }}')">
-            <input placeholder=".{{ config('app.root_domain') }}" style="position: absolute; width: calc(40% - 1rem); margin-left: 1rem;" disabled>
+            <input placeholder="subdomain" name="host" type="text" pattern="{{ $space::HOST_REGEX}}" style="width: 60%"
+                value="{{ $space->host ?? old('host') }}" onchange="copyValueTo(this, this.form.querySelector('input[name=domain]'), '.{{ config('app.root_host') }}')">
+            <input placeholder=".{{ config('app.root_host') }}" style="position: absolute; width: calc(40% - 1rem); margin-left: 1rem;" disabled>
             <label for="username">Subdomain</label>
             @include('parts.errors', ['name' => 'host'])
             @include('parts.errors', ['name' => 'full_host'])
-            <span class="supporting">Cannot be changed once created</span>
+            <span class="supporting">Cannot be changed once created, leave empty to create a root Space</span>
         </div>
 
         <div class="large">

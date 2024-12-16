@@ -42,7 +42,7 @@ class ApiSpaceWithMiddlewareTest extends TestCaseWithSpaceMiddleware
 
         // Try to create a new user as an admin
         $admin->generateApiKey();
-        config()->set('app.root_domain', $admin->domain);
+        config()->set('app.root_host', $admin->domain);
 
         $this->keyAuthenticated($admin)
             ->json($this->method, 'http://' . $admin->domain .  $this->accountRoute, [

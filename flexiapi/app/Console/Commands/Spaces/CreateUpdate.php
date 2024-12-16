@@ -31,6 +31,10 @@ class CreateUpdate extends Command
     {
         $this->info('Your will create or update a Space in the database');
 
+        if (empty(config('app.root_host'))) {
+            $this->error('The environnement variable APP_ROOT_HOST doesn\'t seems to be set');
+        }
+
         $space = Space::where('domain', $this->argument('sip_domain'))->firstOrNew();
         $space->host = $this->argument('host');
         $space->domain = $this->argument('sip_domain');

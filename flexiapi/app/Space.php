@@ -65,6 +65,11 @@ class Space extends Model
         return $this->expire_at && $this->expire_at->isPast();
     }
 
+    public function isRoot(): bool
+    {
+        return $this->host == config('app.root_host');
+    }
+
     public function getAccountsPercentageClassAttribute(): string
     {
         if ($this->getAccountsPercentageAttribute() >= 80) {

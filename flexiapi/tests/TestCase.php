@@ -39,6 +39,8 @@ abstract class TestCase extends BaseTestCase
 
         $this->withoutMiddleware([IsSpaceExpired::class]);
 
+        config()->set('app.sip_domain', 'sip.example.com');
+
         PhoneCountry::truncate();
         PhoneCountry::factory()->france()->activated()->create();
         PhoneCountry::factory()->netherlands()->create();

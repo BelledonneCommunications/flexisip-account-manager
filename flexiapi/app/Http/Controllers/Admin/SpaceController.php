@@ -29,7 +29,7 @@ class SpaceController extends Controller
 {
     public function index()
     {
-        return view('admin.space.index', ['spaces' => Space::withCount('accounts')->get()]);
+        return view('admin.space.index', ['spaces' => Space::withCount('accounts')->orderBy('host')->get()]);
     }
 
     public function me(Request $request)
@@ -55,10 +55,14 @@ class SpaceController extends Controller
 
     public function store(Request $request)
     {
-        $request->merge(['full_host' => $request->get('host') . '.' . config('app.root_domain')]);
+        $fullHost = empty($request->get('host'))
+            ? config('app.root_host')
+            : $request->get('host') . '.' . config('app.root_host');
+
+        $request->merge(['full_host' => $fullHost]);
         $request->validate([
             'domain' => 'required|unique:spaces|regex:/'. Space::DOMAIN_REGEX . '/',
-            'host' => 'required|regex:/'. Space::HOST_REGEX . '/',
+            'host' => 'nullable|regex:/'. Space::HOST_REGEX . '/',
             'full_host' => 'required|unique:spaces,host',
         ]);
 
