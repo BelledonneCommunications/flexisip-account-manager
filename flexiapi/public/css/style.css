@@ -508,11 +508,13 @@ header>h1 {
 
 h1 i {
     font-size: 3rem;
+    min-width: 3rem;
     margin-right: 1rem;
 }
 
 h2 {
     font-size: 2.25rem;
+    min-width: 2.25rem;
     font-weight: 800;
     padding: 1rem 0;
     color: var(--second-7);

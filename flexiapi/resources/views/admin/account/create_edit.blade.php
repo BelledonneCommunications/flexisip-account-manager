@@ -102,8 +102,6 @@
 
         <h2>Other information</h2>
 
-        @include('parts.form.toggle', ['object' => $account, 'key' => 'activated', 'label' => 'Status'])
-
         <div>
             <input name="blocked" value="false" type="radio" @if (!$account->blocked) checked @endif>
             <p>Unblocked</p>
@@ -119,6 +117,8 @@
             <p>End user</p>
             <label>Role</label>
         </div>
+
+        @include('parts.form.toggle', ['object' => $account, 'key' => 'activated', 'label' => 'Status', 'supporting' => 'Is the account enabled?'])
 
         @if (config('app.intercom_features'))
             <div class="select">
