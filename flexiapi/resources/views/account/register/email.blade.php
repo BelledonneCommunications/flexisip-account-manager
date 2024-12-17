@@ -15,6 +15,7 @@
         <div>
             <input placeholder="username" name="username" type="text" value="{{ old('username') }}" required>
             <label for="username">Username</label>
+            <small>In lowercase letters</small>
             @include('parts.errors', ['name' => 'username'])
         </div>
 
