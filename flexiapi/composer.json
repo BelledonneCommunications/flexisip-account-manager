@@ -24,7 +24,7 @@
         "react/socket": "^1.14",
         "respect/validation": "^2.2",
         "sabre/vobject": "^4.5",
-        "scyllaly/hcaptcha": "^4.4"
+        "rvxlab/hcaptcha": "^4.4"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",
