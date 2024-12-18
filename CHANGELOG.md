@@ -9,6 +9,7 @@ v1.7
 - Fix FLEXIAPI-241 Add a /push-notification endpoint to send custom push notifications to the Flexisip Pusher
 - Fix FLEXIAPI-244 Remove faulty middleware
 - Fix FLEXIAPI-250 Allow Spaces to be declared without a subdomain
+- Fix FLEXIAPI-252 Update the hCaptcha Laravel library, use file instead of cookies to store the session to prevent empty errors bags
 
 v1.6
 ----

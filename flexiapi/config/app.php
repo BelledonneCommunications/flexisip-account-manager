@@ -237,7 +237,6 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Scyllaly\HCaptcha\HCaptchaServiceProvider::class,
 
         /*
          * Package Service Providers...
