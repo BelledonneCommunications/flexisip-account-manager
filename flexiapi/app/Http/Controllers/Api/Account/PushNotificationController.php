@@ -10,6 +10,7 @@ use App\Rules\PnProvider;
 use App\Rules\CallId;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 
 class PushNotificationController extends Controller
 {
