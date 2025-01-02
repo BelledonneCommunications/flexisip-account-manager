@@ -64,14 +64,14 @@ class FlexisipPusherConnector
         }
     }
 
-    public function sendToken(string $token)
+    public function sendToken(string $token): bool
     {
         $payload = json_encode(['token' => $token]);
 
-        $this->send(payload: $payload);
+        return $this->send(payload: $payload);
     }
 
-    public function send(?string $payload = null, ?string $callId = null, ?string $type = 'background')
+    public function send(?string $payload = null, ?string $callId = null, ?string $type = 'background'): bool
     {
         if (!empty($this->pusherPath)) {
             $command = $this->pusherPath
@@ -96,11 +96,24 @@ class FlexisipPusherConnector
             }
 
             $output = null;
-            $retval = null;
+            $result = null;
 
-            return exec($command, $output, $retval);
+            exec($command . ' 2>&1', $output, $result);
+
+            if ($result > 0) {
+                Log::error('Flexisip Pusher error', [
+                    'command' => $command,
+                    'output' => $output
+                ]);
+
+                return false;
+            }
+
+            return true;
         }
 
-        Log::error('Pusher path not configured');
+        Log::error('Flexisip Pusher path not configured');
+
+        return false;
     }
 }

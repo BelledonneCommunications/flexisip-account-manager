@@ -20,7 +20,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Libraries\FlexisipConnector;
+use App\Libraries\FlexisipRedisConnector;
 use App\Account;
 use stdClass;
 
@@ -28,14 +28,14 @@ class DeviceController extends Controller
 {
     public function index(int $accountId)
     {
-        $devices = (new FlexisipConnector)->getDevices(Account::findOrFail($accountId)->identifier);
+        $devices = (new FlexisipRedisConnector)->getDevices(Account::findOrFail($accountId)->identifier);
 
         return ($devices->isEmpty()) ? new stdClass : $devices;
     }
 
     public function destroy(int $accountId, string $uuid)
     {
-        $connector = new FlexisipConnector;
+        $connector = new FlexisipRedisConnector;
 
         return $connector->deleteDevice(Account::findOrFail($accountId)->identifier, $uuid);
     }

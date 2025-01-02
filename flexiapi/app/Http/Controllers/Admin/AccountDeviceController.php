@@ -22,13 +22,13 @@ namespace App\Http\Controllers\Admin;
 use App\Account;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Libraries\FlexisipConnector;
+use App\Libraries\FlexisipRedisConnector;
 
 class AccountDeviceController extends Controller
 {
     public function index(int $accountId)
     {
-        $connector = new FlexisipConnector;
+        $connector = new FlexisipRedisConnector;
         $account = Account::findOrFail($accountId);
 
         return view(
@@ -42,7 +42,7 @@ class AccountDeviceController extends Controller
 
     public function delete(int $accountId, string $uuid)
     {
-        $connector = new FlexisipConnector;
+        $connector = new FlexisipRedisConnector;
         $account = Account::findOrFail($accountId);
 
         return view(
@@ -57,7 +57,7 @@ class AccountDeviceController extends Controller
 
     public function destroy(Request $request, int $accountId)
     {
-        $connector = new FlexisipConnector;
+        $connector = new FlexisipRedisConnector;
         $account = Account::findOrFail($accountId);
 
         $connector->deleteDevice($account->identifier, $request->get('uuid'));

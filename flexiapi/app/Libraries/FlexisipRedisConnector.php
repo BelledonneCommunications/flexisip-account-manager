@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Log;
 use stdClass;
 
-class FlexisipConnector
+class FlexisipRedisConnector
 {
     public function getDevices(string $from)
     {

@@ -49,6 +49,7 @@ cp -R flexiapi "$RPM_BUILD_ROOT%{opt_dir}"
 cp flexiapi/composer.json "$RPM_BUILD_ROOT%{opt_dir}/flexiapi"
 
 cp README* "$RPM_BUILD_ROOT%{opt_dir}/"
+cp INSTALL* "$RPM_BUILD_ROOT%{opt_dir}/"
 mkdir -p $RPM_BUILD_ROOT/etc/cron.daily
 
 mkdir -p $RPM_BUILD_ROOT%{apache_conf_path}
@@ -129,6 +130,7 @@ fi
 %files
 %{opt_dir}/flexiapi/
 %{opt_dir}/README*
+%{opt_dir}/INSTALL*
 
 %exclude %{opt_dir}/flexiapi/storage/
 
