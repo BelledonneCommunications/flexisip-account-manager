@@ -11,7 +11,7 @@ class ValidateJSON
 
     public function handle(Request $request, Closure $next)
     {
-        if ($request->expectsJson()) {
+        if ($request->expectsJson() && !empty($request->getContent())) {
             json_decode($request->getContent());
             if (json_last_error() !== JSON_ERROR_NONE) {
                 abort(400, self::$message . ': ' . json_last_error_msg());

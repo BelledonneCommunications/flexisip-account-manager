@@ -16,6 +16,7 @@ v1.6
 - Fix GH-15 Add password import from CSV
 - Fix FLEXIAPI-242 Add stricter validation for the AccountCreationToken Push Notification endpoint
 - Fix FLEXIAPI-252 Update the hCaptcha Laravel library, use file instead of cookies to store the session to prevent empty errors bags
+- Fix FLEXIAPI-254 Allow no data on POST requests to not trigger the ValidateJSON middleware
 
 v1.5
 ---
