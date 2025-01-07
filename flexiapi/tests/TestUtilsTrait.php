@@ -33,6 +33,8 @@ trait TestUtilsTrait
     {
         return $this->withHeaders([
             'x-api-key' => $account->apiKey->key,
+            'content-type' => 'application/json',
+            'accept' => 'application/json',
         ]);
     }
 

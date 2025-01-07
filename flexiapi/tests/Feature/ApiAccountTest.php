@@ -1232,6 +1232,10 @@ class ApiAccountTest extends TestCase
             ]);
 
         $this->keyAuthenticated($admin)
+            ->get($this->route . '/wrong/search')
+            ->assertStatus(404);
+
+        $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->email . '/search-by-email')
             ->assertStatus(200)
             ->assertJson([

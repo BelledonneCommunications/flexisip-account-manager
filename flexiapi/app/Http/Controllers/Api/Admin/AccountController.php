@@ -58,12 +58,20 @@ class AccountController extends Controller
 
     public function search(string $sip)
     {
-        return Account::sip($sip)->firstOrFail();
+        $account = Account::sip($sip)->first();
+
+        if (!$account) abort(404, 'SIP address not found');
+
+        return $account;
     }
 
     public function searchByEmail(string $email)
     {
-        return Account::where('email', $email)->firstOrFail();
+        $account = Account::where('email', $email)->first();
+
+        if (!$account) abort(404, 'Email address not found');
+
+        return $account;
     }
 
     public function destroy(Request $request, int $accountId)

@@ -12,6 +12,7 @@ v1.7
 - Fix FLEXIAPI-252 Update the hCaptcha Laravel library, use file instead of cookies to store the session to prevent empty errors bags
 - Fix FLEXIAPI-254 Allow no data on POST requests to not trigger the ValidateJSON middleware
 - Fix FLEXIAPI-255 Create a INSTALL.md tutorial and log FlexisipPusherConnector errors
+* Fix FLEXIAPI-257 Return a more coherent message when search API endpoints returns a 404
 
 v1.6
 ----
