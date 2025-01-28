@@ -74,21 +74,22 @@ class ContactsListController extends Controller
 
     public function contactAdd(int $id, int $contactId)
     {
-        if (ContactsList::findOrFail($id)->contacts()->pluck('id')->contains($contactId)) {
-            abort(403);
-        }
+        $contactsList = ContactsList::findOrFail($id);
+        $contactsList->contacts()->detach($contactId);
 
         if (Account::findOrFail($contactId)) {
-            return ContactsList::findOrFail($id)->contacts()->attach($contactId);
+            return $contactsList->contacts()->attach($contactId);
         }
     }
 
     public function contactRemove(int $id, int $contactId)
     {
-        if (!ContactsList::findOrFail($id)->contacts()->pluck('id')->contains($contactId)) {
-            abort(403);
+        $contactsList = ContactsList::findOrFail($id);
+
+        if (!$contactsList->contacts()->pluck('id')->contains($contactId)) {
+            abort(404);
         }
 
-        return ContactsList::findOrFail($id)->contacts()->detach($contactId);
+        return $contactsList->contacts()->detach($contactId);
     }
 }

@@ -46,7 +46,8 @@ remi-rocky9-package:
   variables:
     ROCKY_RELEASE: 9
   before_script:
-    - dnf -y install redis
+    - dnf -y module reset redis
+    - dnf -y install @redis:7
 
 .remi-rocky-package:
   extends: .package

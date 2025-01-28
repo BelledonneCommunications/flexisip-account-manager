@@ -48,13 +48,11 @@ class ApiAccountContactsTest extends TestCase
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $password1->account->id . '/contacts/' . $password2->account->id)
             ->assertStatus(200);
-
         $this->assertEquals(1, DB::table('contacts')->count());
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $password1->account->id . '/contacts/' . $password3->account->id)
             ->assertStatus(200);
-
         $this->assertEquals(2, DB::table('contacts')->count());
 
         // Type
@@ -80,7 +78,7 @@ class ApiAccountContactsTest extends TestCase
         // Retry
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $password1->account->id . '/contacts/' . $password2->account->id)
-            ->assertStatus(403);
+            ->assertStatus(200);
         $this->assertEquals(2, DB::table('contacts')->count());
 
         $this->keyAuthenticated($admin)
@@ -145,7 +143,7 @@ class ApiAccountContactsTest extends TestCase
         // Retry
         $this->keyAuthenticated($admin)
             ->delete($this->route . '/' . $password1->account->id . '/contacts/' . $password2->account->id)
-            ->assertStatus(403);
+            ->assertStatus(404);
         $this->assertEquals(1, DB::table('contacts')->count());
 
         /**
@@ -175,6 +173,11 @@ class ApiAccountContactsTest extends TestCase
             ->post($this->contactsListsRoute . '/' . $contactsList->id . '/contacts/' . $password1->account->id)
             ->assertStatus(200);
 
+        $this->keyAuthenticated($admin)
+            ->post($this->contactsListsRoute . '/' . $contactsList->id . '/contacts/' . $password2->account->id)
+            ->assertStatus(200);
+
+        // Again...
         $this->keyAuthenticated($admin)
             ->post($this->contactsListsRoute . '/' . $contactsList->id . '/contacts/' . $password2->account->id)
             ->assertStatus(200);

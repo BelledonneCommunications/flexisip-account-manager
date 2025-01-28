@@ -40,21 +40,22 @@ class AccountContactController extends Controller
 
     public function add(int $id, int $contactId)
     {
-        if (Account::findOrFail($id)->contacts()->pluck('id')->contains($contactId)) {
-            abort(403);
-        }
+        $account = Account::findOrFail($id);
+        $account->contacts()->detach($contactId);
 
         if (Account::findOrFail($contactId)) {
-            return Account::findOrFail($id)->contacts()->attach($contactId);
+            return $account->contacts()->attach($contactId);
         }
     }
 
     public function remove(int $id, int $contactId)
     {
-        if (!Account::findOrFail($id)->contacts()->pluck('id')->contains($contactId)) {
-            abort(403);
+        $account = Account::findOrFail($id);
+
+        if (!$account->contacts()->pluck('id')->contains($contactId)) {
+            abort(404);
         }
 
-        return Account::findOrFail($id)->contacts()->detach($contactId);
+        return $account->contacts()->detach($contactId);
     }
 }
