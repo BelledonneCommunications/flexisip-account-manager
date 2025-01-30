@@ -68,9 +68,16 @@ class ApiAccountApiKeyTest extends TestCase
             ->json($this->method, '/api/accounts/me')
             ->assertStatus(200);
 
+        // Bypass the JWT middleware
+        config()->set('app.account_authentication_bearer', 'fake-bearer');
+
+        $this->keyAuthenticated($account)
+            ->json($this->method, '/api/accounts/me')
+            ->assertStatus(200);
+
         $this->assertDatabaseHas('api_keys', [
             'account_id' => $account->id,
-            'requests' => 2
+            'requests' => 3
         ]);
 
         DB::table('api_keys')->update(['ip' => 'no_localhost']);

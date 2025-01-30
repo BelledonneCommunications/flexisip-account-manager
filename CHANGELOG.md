@@ -14,6 +14,7 @@ v1.7
 - Fix FLEXIAPI-255 Create a INSTALL.md tutorial and log FlexisipPusherConnector errors
 - Fix FLEXIAPI-257 Return a more coherent message when search API endpoints returns a 404
 - Fix FLEXIAPI-260 Return 404 and not 403 if the contact is already in the list or missing when removing it
+- Fix FLEXIAPI-262 Bypass the JWT auth if we have an API Key
 
 v1.6
 ----
