@@ -17,6 +17,7 @@ v1.6
 - Fix FLEXIAPI-242 Add stricter validation for the AccountCreationToken Push Notification endpoint
 - Fix FLEXIAPI-252 Update the hCaptcha Laravel library, use file instead of cookies to store the session to prevent empty errors bags
 - Fix FLEXIAPI-254 Allow no data on POST requests to not trigger the ValidateJSON middleware
+- Fix FLEXIAPI-262 Bypass the JWT auth if we have an API Key
 
 v1.5
 ---

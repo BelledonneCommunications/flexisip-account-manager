@@ -99,7 +99,12 @@ class AuthenticateJWT
             return $next($request);
         }
 
-        if (!empty(config('app.account_authentication_bearer'))) {
+        if (
+            !empty(config('app.account_authentication_bearer'))
+            // Bypass the JWT auth if we have an API Key
+            && !$request->header('x-api-key')
+            && !$request->cookie('x-api-key')
+        ) {
             $response = new Response();
 
             $response->header(
