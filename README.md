@@ -156,11 +156,11 @@ Create or update a SIP Domain, required to then create accounts afterward. The `
 
 ### Create an admin account
 
-Create an admin account, an API Key will also be generated along the way, it might expire after a while.
+Create an admin account, an API Key will also be generated along the way, it might expire after a while (regarding the API Key expiration policy). An empty `api_key_ip` will remove the IP restriction on the key.
 
 If no parameters are put, a default admin account will be created.
 
-    php artisan accounts:create-admin-account {-u|username=} {-p|password=} {-d|domain=}
+    php artisan accounts:create-admin-account {-u|username=} {-p|password=} {-d|domain=} {-k|api_key_ip=}
 
 ### Clear the expired API Keys
 

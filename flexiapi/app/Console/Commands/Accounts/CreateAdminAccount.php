@@ -27,8 +27,8 @@ use App\SipDomain;
 
 class CreateAdminAccount extends Command
 {
-    protected $signature = 'accounts:create-admin-account {--u|username=} {--p|password=} {--d|domain=}';
-    protected $description = 'Create an admin account';
+    protected $signature = 'accounts:create-admin-account {--u|username=} {--p|password=} {--d|domain=} {--k|api_key_ip=}';
+    protected $description = 'Create an admin account and generate an API Key';
 
     public function __construct()
     {
@@ -90,10 +90,10 @@ class CreateAdminAccount extends Command
         $account->created_at = Carbon::now()->subYears(3);
         $account->save();
 
-        $account->generateApiKey();
+        $account->generateApiKey(ip: $this->option('api_key_ip') ?? null);
         $account->updatePassword($password);
 
-        $this->info('Admin test account created: "' . $username . '@' . $domain . '" | Password: "' . $password . '" | API Key: "' . $account->apiKey->key . '"');
+        $this->info('Admin test account created: "' . $username . '@' . $domain . '" | Password: "' . $password . '" | API Key: "' . $account->apiKey->key . '" (valid on ' . ($account->apiKey->ip ?? 'any') . ' ip)');
 
         return 0;
     }
