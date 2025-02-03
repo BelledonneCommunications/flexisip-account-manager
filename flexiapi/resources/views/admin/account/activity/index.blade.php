@@ -38,7 +38,7 @@
                     {{ $account->apiKey->last_used_at }}
                 </td>
                 <td>
-                    {{ $account->apiKey->ip ?? '-' }}
+                    {{ $account->apiKey->ip ?? '*' }}
                 </td>
                 <td>
                     {{ $account->apiKey->requests }}
