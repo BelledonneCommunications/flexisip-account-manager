@@ -49,6 +49,7 @@ class FlexisipRedisConnector
     {
         try {
             Redis::hdel('fs:' . $from, '"<' . $uuid . '>"');
+            Redis::publish($from, '');
         } catch (\Throwable $th) {
             Log::error('Redis server issue: ' . $th->getMessage());
         }

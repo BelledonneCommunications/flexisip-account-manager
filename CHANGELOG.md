@@ -16,6 +16,7 @@ v1.7
 - Fix FLEXIAPI-260 Return 404 and not 403 if the contact is already in the list or missing when removing it
 - Fix FLEXIAPI-262 Bypass the JWT auth if we have an API Key
 - Fix FLEXIAPI-264 Add -k|api_key_ip parameter to accounts:create-admin-account to set/clear the related API Key restriction
+- Fix FLEXIAPI-256 Publish an empty string while deleting a device on Redis to force the refresh on the other clients
 
 v1.6
 ----
