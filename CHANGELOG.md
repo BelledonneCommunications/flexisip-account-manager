@@ -18,6 +18,7 @@ v1.7
 - Fix FLEXIAPI-264 Add -k|api_key_ip parameter to accounts:create-admin-account to set/clear the related API Key restriction
 - Fix FLEXIAPI-256 Publish an empty string while deleting a device on Redis to force the refresh on the other clients
 - Fix FLEXIAPI-268 Allow pn-param in Apple format for the push notifications endpoints
+- Fix FLEXIAPI-269 Update the IsNotPhoneNumber rule to use a better phone number validator
 
 v1.6
 ----
