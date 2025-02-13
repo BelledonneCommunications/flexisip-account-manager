@@ -19,6 +19,7 @@ v1.6
 - Fix FLEXIAPI-254 Allow no data on POST requests to not trigger the ValidateJSON middleware
 - Fix FLEXIAPI-262 Bypass the JWT auth if we have an API Key
 - Fix FLEXIAPI-264 Add -k|api_key_ip parameter to accounts:create-admin-account to set/clear the related API Key restriction
+- Fix FLEXIAPI-268 Allow pn-param in Apple format for the push notifications endpoints
 
 v1.5
 ---
