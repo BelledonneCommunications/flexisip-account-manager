@@ -20,6 +20,7 @@ v1.6
 - Fix FLEXIAPI-262 Bypass the JWT auth if we have an API Key
 - Fix FLEXIAPI-264 Add -k|api_key_ip parameter to accounts:create-admin-account to set/clear the related API Key restriction
 - Fix FLEXIAPI-268 Allow pn-param in Apple format for the push notifications endpoints
+- Fix FLEXIAPI-269 Update the IsNotPhoneNumber rule to use a better phone number validator
 
 v1.5
 ---

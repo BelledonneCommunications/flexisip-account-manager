@@ -4,12 +4,13 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 use Respect\Validation\Validator;
+use Propaganistas\LaravelPhone\PhoneNumber;
 
 class IsNotPhoneNumber implements Rule
 {
     public function passes($attribute, $value): bool
     {
-        return (Validator::not(Validator::phone())->not(Validator::startsWith('+'))->validate($value));
+        return (new PhoneNumber($value))->getCountry() == null;
     }
 
     public function message()
