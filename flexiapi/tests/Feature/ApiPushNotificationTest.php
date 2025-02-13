@@ -67,5 +67,23 @@ class ApiPushNotificationTest extends TestCase
                 'type' => $this->type,
                 'call_id' => 'call_id-123'
             ])->assertStatus(503);
+
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->tokenRoute, [
+                'pn_provider' => $this->pnProvider,
+                'pn_param' => 'ABCD1234.org.linphone.phone.voip',
+                'pn_prid' => $this->pnPrid,
+                'type' => $this->type,
+                'call_id' => 'call_id-123'
+            ])->assertStatus(503);
+
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->tokenRoute, [
+                'pn_provider' => $this->pnProvider,
+                'pn_param' => '@blabla@',
+                'pn_prid' => $this->pnPrid,
+                'type' => $this->type,
+                'call_id' => 'call_id-123'
+            ])->assertJsonValidationErrors(['pn_param']);
     }
 }
