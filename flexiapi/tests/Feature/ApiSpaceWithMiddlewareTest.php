@@ -44,6 +44,8 @@ class ApiSpaceWithMiddlewareTest extends TestCaseWithSpaceMiddleware
         $admin->generateApiKey();
         config()->set('app.root_host', $admin->domain);
 
+        space(reload: true);
+
         $this->keyAuthenticated($admin)
             ->json($this->method, 'http://' . $admin->domain .  $this->accountRoute, [
                 'username' => 'new',
@@ -61,6 +63,8 @@ class ApiSpaceWithMiddlewareTest extends TestCaseWithSpaceMiddleware
         $this->keyAuthenticated($superAdmin)
             ->json('PUT', $this->route . '/' . $admin->domain, $space)
             ->assertStatus(200);
+
+        space(reload: true);
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->accountRoute, [

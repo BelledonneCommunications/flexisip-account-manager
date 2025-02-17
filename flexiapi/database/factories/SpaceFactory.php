@@ -35,11 +35,32 @@ class SpaceFactory extends Factory
         ];
     }
 
+    public function local()
+    {
+        return $this->state(fn (array $attributes) => [
+            'host' => 'localhost',
+        ]);
+    }
+
+    public function withoutProvisioningHeader()
+    {
+        return $this->state(fn (array $attributes) => [
+            'provisioning_use_linphone_provisioning_header' => false,
+        ]);
+    }
+
     public function secondDomain()
     {
         return $this->state(fn (array $attributes) => [
             'domain' => 'second_' . config('app.sip_domain'),
             'host' => 'second_' . config('app.sip_domain'),
+        ]);
+    }
+
+    public function withRealm(string $realm)
+    {
+        return $this->state(fn (array $attributes) => [
+            'account_realm' => $realm,
         ]);
     }
 

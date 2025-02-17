@@ -87,16 +87,16 @@ Route::name('provisioning.')->prefix('provisioning')->controller(ProvisioningCon
 });
 
 Route::middleware(['web_panel_enabled', 'space.expired'])->group(function () {
-    if (config('app.public_registration')) {
+    Route::middleware(['public_registration'])->group(function () {
         Route::redirect('register', 'register/email')->name('account.register');
 
-        if (config('app.phone_authentication')) {
+        Route::middleware(['phone_registration'])->group(function () {
             Route::get('register/phone', 'Account\RegisterController@registerPhone')->name('account.register.phone');
-        }
+        });
 
         Route::get('register/email', 'Account\RegisterController@registerEmail')->name('account.register.email');
         Route::post('accounts', 'Account\AccountController@store')->name('account.store');
-    }
+    });
 
     Route::prefix('recovery')->controller(RecoveryController::class)->group(function () {
         Route::get('phone', 'showPhone')->name('account.recovery.show.phone');
@@ -115,14 +115,14 @@ Route::middleware(['web_panel_enabled', 'space.expired'])->group(function () {
             Route::post('/', 'store')->name('email.update');
         });
 
-        if (config('app.phone_authentication')) {
+        Route::middleware(['phone_registration'])->group(function () {
             Route::prefix('phone')->controller(PhoneController::class)->group(function () {
                 Route::get('change', 'change')->name('phone.change');
                 Route::post('change', 'requestChange')->name('phone.request_change');
                 Route::get('validate', 'validateChange')->name('phone.validate');
                 Route::post('/', 'store')->name('phone.update');
             });
-        }
+        });
 
         Route::name('device.')->prefix('devices')->controller(DeviceController::class)->group(function () {
             Route::get('/', 'index')->name('index');
@@ -156,13 +156,15 @@ Route::middleware(['web_panel_enabled', 'space.expired'])->group(function () {
 
     Route::name('admin.')->prefix('admin')->middleware(['auth.admin', 'auth.check_blocked'])->group(function () {
         Route::get('space', 'Admin\SpaceController@me')->name('spaces.me');
+        Route::get('spaces/{space}/configuration', 'Admin\SpaceController@configuration')->name('spaces.configuration');
+        Route::put('spaces/{space}/configuration', 'Admin\SpaceController@configurationUpdate')->name('spaces.configuration.update');
 
         Route::middleware(['auth.super_admin'])->group(function () {
             Route::resource('spaces', SpaceController::class);
             Route::get('spaces/delete/{id}', 'Admin\SpaceController@delete')->name('spaces.delete');
 
-            Route::get('spaces/{space}/parameters', 'Admin\SpaceController@parameters')->name('spaces.parameters');
-            Route::put('spaces/{space}/parameters', 'Admin\SpaceController@parametersUpdate')->name('spaces.parameters.update');
+            Route::get('spaces/{space}/administration', 'Admin\SpaceController@administration')->name('spaces.administration');
+            Route::put('spaces/{space}/administration', 'Admin\SpaceController@administrationUpdate')->name('spaces.administration.update');
 
             Route::name('phone_countries.')->controller(PhoneCountryController::class)->prefix('phone_countries')->group(function () {
                 Route::get('/', 'index')->name('index');
@@ -213,7 +215,7 @@ Route::middleware(['web_panel_enabled', 'space.expired'])->group(function () {
                 Route::post('handle', 'handle')->name('handle');
             });
 
-            if (config('app.intercom_features')) {
+            Route::middleware(['intercom_features'])->group(function () {
                 Route::name('type.')->prefix('types')->controller(AccountTypeController::class)->group(function () {
                     Route::get('/', 'index')->name('index');
                     Route::get('create', 'create')->name('create');
@@ -238,7 +240,7 @@ Route::middleware(['web_panel_enabled', 'space.expired'])->group(function () {
                     Route::get('{action_id}/delete', 'delete')->name('delete');
                     Route::delete('{action_id}', 'destroy')->name('destroy');
                 });
-            }
+            });
 
             Route::name('contact.')->prefix('{account}/contacts')->controller(AccountContactController::class)->group(function () {
                 Route::get('create', 'create')->name('create');

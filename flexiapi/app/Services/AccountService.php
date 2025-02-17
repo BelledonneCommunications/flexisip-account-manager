@@ -123,8 +123,8 @@ class AccountService
         );
 
         if (!$request->api) {
-            if (!empty(config('app.newsletter_registration_address')) && $request->has('newsletter')) {
-                Mail::to(config('app.newsletter_registration_address'))->send(new NewsletterRegistration($account));
+            if (!empty(space()?->newsletter_registration_address) && $request->has('newsletter')) {
+                Mail::to(space()->newsletter_registration_address)->send(new NewsletterRegistration($account));
             }
         }
 

@@ -4,14 +4,14 @@
     <section>
         <h1 style="margin-bottom: 3rem;"><i class="ph">hand-waving</i> Welcome on {{ config('app.name') }}</h1>
 
-        @if (config('instance.intro_registration'))
-            @parsedown(config('instance.intro_registration'))
+        @if (space()->intro_registration_text)
+            @parsedown(space()->intro_registration_text)
         @endif
 
         <form style="margin-top: 3rem; margin-bottom: 3rem;" method="POST" action="{{ route('account.authenticate') }}" accept-charset="UTF-8">
             @csrf
             <div>
-                @if (config('app.phone_authentication'))
+                @if (space()->phone_registration)
                     <input placeholder="username or phone number" required="" name="username" type="text"
                         value="{{ old('username') }}">
                     <label for="username">Username or phone number</label>
@@ -37,7 +37,7 @@
 
         @include('parts.recovery')
 
-        @if (config('app.public_registration'))
+        @if (space()->public_registration)
             <br />
             <br />
 

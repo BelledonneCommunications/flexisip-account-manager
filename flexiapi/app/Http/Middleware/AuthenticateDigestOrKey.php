@@ -70,7 +70,7 @@ class AuthenticateDigestOrKey
                           ->where('domain', $domain)
                           ->firstOrFail();
 
-        $resolvedRealm = config('app.account_realm') ?? $domain;
+        $resolvedRealm = space()?->account_realm ?? $domain;
 
         // DIGEST authentication
 
@@ -199,7 +199,7 @@ class AuthenticateDigestOrKey
     private function generateAuthHeaders(Account $account, string $nonce): array
     {
         $headers = [];
-        $resolvedRealm = config('app.account_realm') ?? $account->domain;
+        $resolvedRealm = space()?->account_realm ?? $account->domain;
 
         foreach ($account->passwords as $password) {
             if ($password->algorithm == 'CLRTXT') {

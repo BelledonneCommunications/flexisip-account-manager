@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
 use App\Space;
+use App\Rules\Ini;
 use Illuminate\Validation\Rule;
 
 class SpaceController extends Controller
@@ -87,20 +88,35 @@ class SpaceController extends Controller
             'max_account' => 'required|integer',
         ]);
 
-        $space = $this->setConfig($request, $space);
+        $space = $this->setAppConfiguration($request, $space);
         $space->save();
 
         return redirect()->back();
     }
 
-    public function parameters(Space $space)
+    public function configuration(Space $space)
     {
-        return view('admin.space.parameters', [
+        return view('admin.space.configuration', [
             'space' => $space
         ]);
     }
 
-    public function parametersUpdate(Request $request, Space $space)
+    public function configurationUpdate(Request $request, Space $space)
+    {
+        $space = $this->setConfiguration($request, $space);
+        $space->save();
+
+        return redirect()->route('admin.spaces.configuration', $space);
+    }
+
+    public function administration(Space $space)
+    {
+        return view('admin.space.administration', [
+            'space' => $space
+        ]);
+    }
+
+    public function administrationUpdate(Request $request, Space $space)
     {
         $request->validate([
             'max_accounts' => 'required|integer|min:0',
@@ -116,12 +132,38 @@ class SpaceController extends Controller
         $space->super = getRequestBoolean($request, 'super');
         $space->max_accounts = $request->get('max_accounts');
         $space->expire_at = $request->get('expire_at');
+        $space->custom_theme = getRequestBoolean($request, 'custom_theme');
+        $space->web_panel = getRequestBoolean($request, 'web_panel');
         $space->save();
 
         return redirect()->route('admin.spaces.show', $space);
     }
 
-    private function setConfig(Request $request, Space $space)
+    private function setConfiguration(Request $request, Space $space)
+    {
+        $request->validate([
+            'newsletter_registration_address' => 'nullable|email',
+            'custom_provisioning_entries' => ['nullable', new Ini]
+        ]);
+
+        $space->copyright_text = $request->get('copyright_text');
+        $space->intro_registration_text = $request->get('intro_registration_text');
+        $space->confirmed_registration_text = $request->get('confirmed_registration_text');
+        $space->newsletter_registration_address = $request->get('newsletter_registration_address');
+        $space->account_proxy_registrar_address = $request->get('account_proxy_registrar_address');
+        $space->account_realm = $request->get('account_realm');
+        $space->custom_provisioning_entries = $request->get('custom_provisioning_entries');
+        $space->custom_provisioning_overwrite_all = getRequestBoolean($request, 'custom_provisioning_overwrite_all');
+        $space->provisioning_use_linphone_provisioning_header = getRequestBoolean($request, 'provisioning_use_linphone_provisioning_header');
+
+        $space->public_registration = getRequestBoolean($request, 'public_registration');
+        $space->phone_registration = getRequestBoolean($request, 'phone_registration');
+        $space->intercom_features = getRequestBoolean($request, 'intercom_features');
+
+        return $space;
+    }
+
+    private function setAppConfiguration(Request $request, Space $space)
     {
         $request->validate([
             'max_account' => 'required|integer',

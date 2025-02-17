@@ -15,7 +15,7 @@ class IsSpaceExpired
             return abort(503, 'APP_ROOT_HOST is not configured');
         }
 
-        $space = \App\Space::where('host', $request->header('host'))->first();
+        $space = space();
 
         if ($space) {
             if (!str_ends_with($space->host, config('app.root_host'))) {

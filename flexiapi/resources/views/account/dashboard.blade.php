@@ -17,7 +17,7 @@
             <a href="{{ route('account.email.change') }}">Change my current account email</a>
         </p>
 
-        @if (config('app.phone_authentication'))
+        @if (space()->phone_registration)
             <p>
                 <i class="ph">phone</i>
                 @if (!empty($account->phone))
@@ -66,8 +66,8 @@
         <p><i class="ph">user</i> Username: {{ $account->username }}</p>
         <p><i class="ph">globe-hemisphere-west</i> Domain: {{ $account->domain }}</p>
 
-        @if (!empty(config('app.proxy_registrar_address')))
-            <p><i class="ph">lan</i> Proxy/registrar address: sip:{{ config('app.proxy_registrar_address') }}
+        @if (!empty(space()?->account_proxy_registrar_address))
+            <p><i class="ph">lan</i> Proxy/registrar address: sip:{{ space()?->account_proxy_registrar_address }}
             </p>
         @endif
         @if (!empty(config('app.transport_protocol_text')))

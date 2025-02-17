@@ -9,8 +9,13 @@
     <title>{{ config('app.name') }}</title>
 
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
-    @if (config('instance.custom_theme') & file_exists(public_path('css/' . config('app.env') . '.style.css')))
-        <link rel="stylesheet" type="text/css" href="{{ asset('css/' . config('app.env') . '.style.css') }}">
+
+    @php
+        $space = space();
+    @endphp
+
+    @if (space()?->custom_theme && file_exists(public_path('css/' . space()?->host . '.style.css')))
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/' . space()?->host . '.style.css') }}">
     @endif
 
     <script src="{{ asset('scripts/utils.js') }}"></script>

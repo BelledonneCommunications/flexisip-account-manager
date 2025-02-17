@@ -39,6 +39,10 @@ class AccountProvisioningTest extends TestCase
 
     public function testBaseProvisioning()
     {
+        Space::truncate();
+        Space::factory()->local()->create();
+        space(reload: true);
+
         $this->get($this->route)->assertStatus(400);
 
         $this->withHeaders([
@@ -51,7 +55,9 @@ class AccountProvisioningTest extends TestCase
 
     public function testDisabledProvisioningHeader()
     {
-        config()->set('app.provisioning_use_x_linphone_provisioning_header', false);
+        Space::truncate();
+        Space::factory()->local()->withoutProvisioningHeader()->create();
+        space(reload: true);
 
         $this->get($this->route)
             ->assertStatus(200)
@@ -61,6 +67,10 @@ class AccountProvisioningTest extends TestCase
 
     public function testDontProvisionHeaderDisabled()
     {
+        Space::truncate();
+        Space::factory()->local()->create();
+        space(reload: true);
+
         $account = Account::factory()->deactivated()->create();
         $account->generateApiKey();
 

@@ -20,6 +20,7 @@
 namespace Tests\Feature;
 
 use App\Password;
+use App\Space;
 
 use Tests\TestCase;
 
@@ -176,6 +177,10 @@ class ApiAuthenticationTest extends TestCase
 
     public function testAuthenticationSHA265FromCLRTXT()
     {
+        Space::truncate();
+        Space::factory()->local()->create();
+        space(reload: true);
+
         $password = Password::factory()->clrtxt()->create();
         $response = $this->generateFirstResponse($password);
 
@@ -204,7 +209,10 @@ class ApiAuthenticationTest extends TestCase
     public function testAuthenticationSHA265FromCLRTXTWithRealm()
     {
         $realm = 'realm.com';
-        config()->set('app.account_realm', $realm);
+
+        Space::truncate();
+        Space::factory()->local()->withRealm($realm)->create();
+        space(reload: true);
 
         $password = Password::factory()->clrtxt()->create();
         $response = $this->generateFirstResponse($password);
@@ -218,7 +226,7 @@ class ApiAuthenticationTest extends TestCase
 
         $response = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier,
-            'Authorization' => $this->generateDigest($password, $response, $hash),
+            'Authorization' => $this->generateDigest($password, $response, $hash)
         ])->json($this->method, $this->route);
 
         $this->assertStringContainsString('algorithm=MD5', $response->headers->all()['www-authenticate'][0]);

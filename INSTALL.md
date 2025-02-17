@@ -4,7 +4,9 @@ FlexiAPI relies on [DotEnv](https://github.com/vlucas/phpdotenv) to be configure
 
 Thoses variables can then be set using Docker-Compose, a bash script or a web-server.
 
-If you're installing FlexiAPI from the RPM package you can find the configuration file at `/etc/flexisip-account-manager/flexiapi.env`.
+If you're installing FlexiAPI from the RedHat or Debian package you can find the configuration file at `/etc/flexisip-account-manager/flexiapi.env`.
+
+Check also the [RELEASE.md](RELEASE.md) to check if you don't have specific migrations to do between releases.
 
 # 1.a Manual setup
 
@@ -13,14 +15,6 @@ Clone the repository, install the dependencies and generate a key.
     composer install --no-dev
     php artisan key:generate
 
-Then configure the database connection in the `.env` file (from the `.env.example` one). And migrate the tables. The first migration *MUST* be run on an empty database.
-
-    php artisan migrate
-
-You can also run the test suit using `phpunit`.
-
-To know more about the web server configuration part, you can directly [visit the official Laravel installation documentation](https://laravel.com/docs/).
-
 # 1.b Packages setup
 
 FlexiAPI is packaged for Debian and RedHat, you can setup those repositories using the Flexisip documentation https://wiki.linphone.org/xwiki/wiki/public/view/Flexisip/1.%20Installation/#HInstallationfromourrepositories
@@ -28,14 +22,18 @@ FlexiAPI is packaged for Debian and RedHat, you can setup those repositories usi
     yum install bc-flexisip-account-manager # For RedHat distributions
     apt install bc-flexisip-account-manager # For Debian distributions
 
+The `artisan` script is in the root directory of where the application is setup, with packages its often `/opt/belledonne-communications/share/flexisip-account-manager/flexiapi/`.
+
 # 2. Web server configuration
 
 The package will deploy a `flexisip-account-manager.conf` file in the apache2 configuration directory.
 This file can be loaded and configured in your specific VirtualHost configuration.
 
+To know more about the web server configuration part, you can directly [visit the official Laravel installation documentation](https://laravel.com/docs/).
+
 # 3. .env file configuration
 
-Complete all the other variables in the `.env` file or by overwritting them in your Docker or web-server configuration.
+Complete all the variables in the `.env` file (from the `.env.example` one if you setup the instance manually) or by overwritting them in your Docker or web-server configuration.
 
 ## 3.1. Mandatory `APP_ROOT_HOST` variable
 
@@ -48,9 +46,11 @@ This is the host that you'll define in the Apache or webserver VirtualHost:
 
 If you are planning to manage several SIP domains (see Spaces bellow) a wildcard `ServerAlias` as above is required.
 
-## 3.2. For manual setups
+## 3.2. Database migration
 
-`APP_KEY` Can be set using the `php artisan key:generate` command.
+Then configure the database connection parameters and migrate the tables. The first migration *MUST* be run on an empty database.
+
+    php artisan migrate
 
 # 4. Spaces
 
@@ -106,24 +106,9 @@ On nginx use `fastcgi_param` to pass the parameter directly to PHP.
 > **Warning** Do not create a cache of your configuration (using `artisan config:cache`) if you have a multi-environnement setup.
 > The cache is always having the priority on the variables set in the configuration files.
 
-## Multiple .env option
-
-To do so, configure several web servers virtualhosts and set a specific `APP_ENV` environnement variable in each of them.
-
-Note that if `APP_ENV` is not set FlexiAPI will directly use the default `.env` file.
-
-FlexiAPI will then try to load a custom configuration file with the following name `.env.$APP_ENV`. So for the previous example `.env.foobar`.
-
-You can then configure your instances with specific values.
-
-    INSTANCE_COPYRIGHT="FooBar - Since 1997"
-    INSTANCE_INTRO_REGISTRATION="Welcome on the FooBar Server"
-    INSTANCE_CUSTOM_THEME=true
-    …
-
 ## Custom theme
 
-If you set `INSTANCE_CUSTOM_THEME` to true, FlexiAPI will try to load a CSS file located in `public/css/$APP_ENV.style.css`. If the file doesn't exists it will fallback to `public/css/style.css`.
+If you enable the Custom CSS Theme option to true in the Space administration panel, FlexiAPI will try to load a CSS file located in `public/css/$space_host.style.css`. If the file doesn't exists it will fallback to `public/css/style.css`.
 
 You can find an example CSS file at `public/css/custom.style.css`.
 
@@ -140,7 +125,7 @@ This binary will be executed under "web user" privileges. Ensure that all the re
 
 ## SELinux restrictions
 
-If you are running on a CentOS/RedHat machine, please ensure that SELinux is correctly configured.
+If you are running on a RedHat machine, please ensure that SELinux is correctly configured.
 
 Allow the webserver user to write in the `storage/` directory:
 

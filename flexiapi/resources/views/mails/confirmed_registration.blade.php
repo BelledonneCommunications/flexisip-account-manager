@@ -5,8 +5,8 @@
     <body>
         <p>Hello,</p>
         <p>
-            @if (config('instance.confirmed_registration_text'))
-                @parsedown(config('instance.confirmed_registration_text'))
+            @if (space()->confirmed_registration_text)
+                {{ strip_tags(parsedown(space()->confirmed_registration_text)) }}
             @else
                 Your SIP account has been successfully created.<br />
                 You can now configure this account on any SIP-compatible application using the following parameters:<br />
@@ -17,8 +17,8 @@
             <b>Username:</b> {{ $account->username }}<br />
             <b>Domain:</b> {{ $account->domain }}<br />
             <br />
-            @if (!empty(config('app.proxy_registrar_address')))
-                <b>Proxy/registrar address: </b> sip:{{ config('app.proxy_registrar_address') }}<br />
+            @if (!empty(space()?->account_proxy_registrar_address))
+                <b>Proxy/registrar address: </b> sip:{{ space()?->account_proxy_registrar_address }}<br />
             @endif
             @if (!empty(config('app.transport_protocol_text')))
                 <b>Transport: </b> {{ config('app.transport_protocol_text') }} <br />

@@ -13,32 +13,66 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
     - **New mandatory DotEnv variable** `APP_ROOT_HOST`, replaces `APP_URL` and `APP_SIP_DOMAIN` that are now configured using the new dedicated Artisan script. It defines the root hostname where all the Spaces will be configured. All the Spaces will be as subdomains of `APP_ROOT_HOST` except one that can be equal to `APP_ROOT_HOST`. Example: if `APP_ROOT_HOST=myhost.com` the Spaces hosts will be `myhost.com`, `alpha.myhost.com` , `beta.myhost.com`...
     - **New Artisan script** `php artisan spaces:create-update {sip_domain} {host} {--super}`, replaces `php artisan sip_domains:create-update {sip_domain} {--super}`. Can create a Space or update a Space Host base on its Space SIP Domain.
 
+### Changed
+
+- **Removing and moving DotEnv instance environnement variables to the Spaces** The following DotEnv variables were removed. You can now configure them directly in the designated spaces.
+    - INSTANCE_COPYRIGHT
+    - INSTANCE_INTRO_REGISTRATION
+    - INSTANCE_CUSTOM_THEME
+    - INSTANCE_CONFIRMED_REGISTRATION_TEXT
+    - WEB_PANEL
+    - PUBLIC_REGISTRATION
+    - PHONE_AUTHENTICATION
+    - DEVICES_MANAGEMENT
+    - INTERCOM_FEATURES
+    - NEWSLETTER_REGISTRATION_ADDRESS
+    - ACCOUNT_PROXY_REGISTRAR_ADDRESS
+    - ACCOUNT_TRANSPORT_PROTOCOL_TEXT
+    - ACCOUNT_REALM
+    - ACCOUNT_PROVISIONING_RC_FILE
+    - ACCOUNT_PROVISIONING_OVERWRITE_ALL
+    - ACCOUNT_PROVISIONING_USE_X_LINPHONE_PROVISIONING_HEADER
+
 #### Migrate from [1.6]
 
 1. Deploy the new version and migrate the database.
 
 ```
-    php artisan migrate
+php artisan migrate
 ```
 
 2. Set `APP_ROOT_HOST` in `.env` or as an environnement variable. And remove `APP_URL` and `APP_SIP_DOMAIN`
 
 ```
-    APP_ROOT_HOST=myhost.com
+APP_ROOT_HOST=myhost.com
 ```
 
 3. The migration script will automatically copy the `sip_domain` into `host` in the `spaces` table. You then have to "fix" the hosts and set them to equal or be subdomains of `APP_ROOT_HOST`.
 
 ```
-    php artisan spaces:create-update my.sip myhost.com --super # You can set some Spaces as SuperSpaces, the admin will be able to manage the other spaces
-    php artisan spaces:create-update alpha.sip alpha.myhost.com
-    php artisan spaces:create-update beta.sip beta.myhost.com
-    ...
+php artisan spaces:create-update my.sip myhost.com --super # You can set some Spaces as SuperSpaces, the admin will be able to manage the other spaces
+php artisan spaces:create-update alpha.sip alpha.myhost.com
+php artisan spaces:create-update beta.sip beta.myhost.com
+...
 ```
 
 4. Configure your web server to point the `APP_ROOT_HOST` and subdomains to the app.
 
-5. Configure the upcoming Spaces
+5. Configure the upcoming Spaces.
+
+6. Remove the instance based environnement variables and configure them directly in the spaces.
+
+7. (Optional) Import the old instance DotEnv environnement variables into a space.
+
+```
+php artisan spaces:import-configuration-from-dot-env {sip_domain}
+```
+
+You can find more details regarding those steps in the [`INSTALL.md`](INSTALL.md) file.
+
+### Deprecated
+
+- **Last major version supporting the deprecated endpoints of the API**
 
 ## [1.5] - 2024-08-29
 
@@ -63,8 +97,3 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
     - **New DotEnv variable:** HCAPTCHA_SECRET=secret-key
     - **New DotEnv variable:** HCAPTCHA_SITEKEY=site-key
 - **Localization support:** The API is now accepting the `Accept-Language` header and adapt its internal localization to the client/browser one. For the moment only French and English are supported but more languages could be added in the future.
-
-### Deprecated
-
-- **Last major version supporting the deprecated endpoints of the API**
-

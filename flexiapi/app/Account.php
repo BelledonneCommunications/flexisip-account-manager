@@ -307,12 +307,12 @@ class Account extends Authenticatable
 
     public function getRealmAttribute()
     {
-        return config('app.account_realm');
+        return space()?->account_realm;
     }
 
     public function getResolvedRealmAttribute()
     {
-        return config('app.account_realm') ?? $this->domain;
+        return space()?->account_realm ?? $this->domain;
     }
 
     public function getConfirmationKeyExpiresAttribute()

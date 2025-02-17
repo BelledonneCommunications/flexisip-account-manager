@@ -21,7 +21,7 @@ Once deployed you can have access to the global and API documentation on the `/a
 
 # Setup
 
-Check the `INSTALL.md` file.
+Check the [INSTALL.md](INSTALL.md) and [CHANGELOG.md](CHANGELOG.md) files.
 
 ## Usage
 
@@ -38,6 +38,12 @@ FlexiAPI is shipped with several console commands that you can launch using the 
 Create or update a Space, required to then create accounts afterward. The `super` option enable/disable the domain as a super domain.
 
     php artisan spaces:create-update {sip_domain} {host} {--super}
+
+### Import the old DotEnv instance configuration into a Space
+
+Since 1.7 some environnement instance configuration variables were moved into the Space configuration, you can import them using this command.
+
+    php artisan spaces:import-configuration-from-dot-env {sip_domain}
 
 ### Create an admin account
 

@@ -1,7 +1,7 @@
 <?php
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
-    Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
+    Copyright (C) 2022 Belledonne Communications SARL, All rights reserved.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -17,20 +17,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Http\Middleware;
+namespace App\Rules;
 
-use Closure;
-use Illuminate\Http\Request;
-use App\Space;
+use Illuminate\Contracts\Validation\Rule;
 
-class IsWebPanelEnabled
+class Ini implements Rule
 {
-    public function handle(Request $request, Closure $next)
+    public function passes($attribute, $value)
     {
-        if (!$request->expectsJson() && space()?->web_panel) {
-            return $next($request);
-        }
+        return parse_ini_string($value) != false;
+    }
 
-        return redirect()->route('about');
+    public function message()
+    {
+        return 'Invalid ini format';
     }
 }

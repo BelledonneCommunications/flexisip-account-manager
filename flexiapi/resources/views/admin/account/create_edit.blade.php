@@ -120,7 +120,7 @@
 
         @include('parts.form.toggle', ['object' => $account, 'key' => 'activated', 'label' => 'Status', 'supporting' => 'Is the account enabled?'])
 
-        @if (config('app.intercom_features'))
+        @if (space()?->intercom_features)
             <div class="select">
                 <select name="dtmf_protocol">
                     @foreach ($protocols as $value => $name)
@@ -212,7 +212,7 @@
             <a class="btn btn-light" href="{{ route('admin.account.provision', $account->id) }}">Generate a provision link</a>
         @endif
 
-        @if (config('app.intercom_features'))
+        @if (space()?->intercom_features))
             <h2>Actions</h2>
 
             @if ($account->dtmf_protocol)

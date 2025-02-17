@@ -39,7 +39,7 @@ class CreateAdminAccount extends Command
     {
         $spaces = Space::all('domain')->pluck('domain');
 
-        $this->info('Your will create a new admin account in the database, existing accounts with the same credentials will be overwritten');
+        $this->info('Your creating a new admin account in the database, existing accounts with the same credentials will be overwritten');
 
         $username = $this->option('username');
         $domain = $this->option('domain');

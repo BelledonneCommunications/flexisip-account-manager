@@ -4,8 +4,12 @@
     <li class="breadcrumb-item">
         <a href="{{ route('admin.spaces.index') }}">Spaces</a>
     </li>
-    <li class="breadcrumb-item">{{ $space->host }}</li>
-    <li class="breadcrumb-item active" aria-current="page">Configuration</li>
+    <li class="breadcrumb-item">
+        <a href="{{ route('admin.spaces.show', $space->id) }}">
+            {{ $space->host }}
+        </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">App Configuration</li>
 @endsection
 
 @section('content')

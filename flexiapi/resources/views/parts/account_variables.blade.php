@@ -3,8 +3,8 @@
         var account_infos = {
             sip: '{{ $account->identifier }}',
             username: '{{ $account->username }}',
-            @if (!empty(config('app.proxy_registrar_address')))
-                registrar_address: '{{ config('app.proxy_registrar_address') }}',
+            @if (!empty(space()?->account_proxy_registrar_address))
+                registrar_address: '{{ space()?->account_proxy_registrar_address }}',
             @endif
             domain: '{{ $account->domain }}'
         }

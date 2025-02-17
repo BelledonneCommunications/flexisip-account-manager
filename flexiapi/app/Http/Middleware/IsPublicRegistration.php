@@ -21,16 +21,16 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use App\Space;
+use Symfony\Component\HttpFoundation\Response;
 
-class IsWebPanelEnabled
+class IsPublicRegistration
 {
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->expectsJson() && space()?->web_panel) {
+        if (space()?->public_registration) {
             return $next($request);
         }
 
-        return redirect()->route('about');
+        return abort(404, 'Public registration disabled');
     }
 }

@@ -17,6 +17,6 @@
 
         <p>GNU General Public Licence v3.0 (Licence)</p>
 
-        <p>{{ config('instance.copyright') }}</p>
+        <p>{{ space()->instance_copyright }}</p>
     </div>
 @endsection

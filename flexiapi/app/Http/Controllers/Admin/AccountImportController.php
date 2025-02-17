@@ -219,7 +219,7 @@ class AccountImportController extends Controller
                 'account_id' => $passwordAccount->id,
                 'password' => bchash(
                     $passwordAccount->username,
-                    config('app.account_realm') ?? $request->get('domain'),
+                    space()?->account_realm ?? $request->get('domain'),
                     $passwords[$passwordAccount->username],
                     $algorithm
                 ),

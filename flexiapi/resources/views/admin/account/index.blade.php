@@ -16,7 +16,7 @@
             <i class="ph">download-simple</i>
             Import Accounts
         </a>
-        @if(config('app.intercom_features'))
+        @if (space()?->intercom_features)
         <a class="btn btn-secondary" href="{{ route('admin.account.type.index') }}">
             <i class="ph">shapes</i>
             Types

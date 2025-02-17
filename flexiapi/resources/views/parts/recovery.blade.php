@@ -5,7 +5,7 @@
         Set or recover your password
     @endif
         using your <a href="{{ route('account.recovery.show.email') }}">Email address</a>
-    @if (config('app.phone_authentication'))
+    @if (space()->phone_registration)
         or your <a href="{{ route('account.recovery.show.phone') }}">Phone number</a>
     @endif
 </p>

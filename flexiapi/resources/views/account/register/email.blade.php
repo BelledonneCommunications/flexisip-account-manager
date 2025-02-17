@@ -45,7 +45,7 @@
             @include('parts.errors', ['name' => 'password_confirmation'])
         </div>
 
-        @if (!empty(config('app.newsletter_registration_address')))
+        @if (!empty(config(space()?->newsletter_registration_address))
             <div class="large checkbox">
                 <input id="newsletter" name="newsletter" type="checkbox" value="true">
                 <label for="newsletter">I would like to subscribe to the newsletter</a></label>

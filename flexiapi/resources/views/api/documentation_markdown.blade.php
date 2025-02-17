@@ -57,7 +57,7 @@ Currently supported languages: @php
 
 ### Using the API Key
 
-You can retrieve an API Key from @if (config('app.web_panel')) [your account panel]({{ route('account.login') }}) @else your account panel @endif or using <a href="#get-accountsmeapikey">the dedicated API endpoint</a>.
+You can retrieve an API Key from your account panel or using <a href="#get-accountsmeapikey">the dedicated API endpoint</a>.
 
 **The generated API Key will be restricted to the IP that generates it and will be destroyed if not used after some times.**
 
@@ -168,6 +168,20 @@ JSON parameters:
 * `max_account` integer, the maximum number of accounts configurable in the app, default to `0` (infinite)
 * `max_accounts` integer, the maximum number of accounts that can be created in the space, default to `0` (infinite), cannot be less than the actual amount of accounts
 * `expire_at` date, the moment the space is expiring, default to `null` (never expire)
+* `copyright_text` text, the copyright text
+* `intro_registration_text` Markdown text, the main registration page text
+* `confirmed_registration_text` Markdown text, the text displayed in the registration email
+* `newsletter_registration_address`, the newsletter registration email address
+* `account_proxy_registrar_address`, the account proxy registrar address
+* `account_realm`, the default realm for the accounts, fallback to the domain if not set
+* `custom_provisioning_entries` text, the custom configuration used for the provisioning
+* `custom_provisioning_overwrite_all` boolean, allow the custom configuration to overwrite the default one
+* `provisioning_use_linphone_provisioning_header` boolean
+* `custom_theme` boolean, allow a custom CSS file to be loaded
+* `web_panel` boolean, the web panel switch
+* `public_registration` boolean, the public registration switch
+* `phone_registration` boolean, the phone registration switch
+* `intercom_features` boolean, the intercom features switch
 
 ### `PUT /spaces/{domain}`
 <span class="badge badge-error">Super Admin</span>
@@ -190,6 +204,20 @@ JSON parameters:
 * `max_account` **required**, integer
 * `max_accounts` **required**,integer, the maximum number of accounts that can be created in the space, default to `0` (infinite), cannot be less than the actual amount of accounts
 * `expire_at` **required**, date, the moment the space is expiring, set to `null` to never expire
+* `copyright_text` **required**, text, the copyright text
+* `intro_registration_text` **required**, Markdown text, the main registration page text
+* `confirmed_registration_text` **required**, Markdown text, the text displayed in the registration email
+* `newsletter_registration_address`, **required**, the newsletter registration email address
+* `account_proxy_registrar_address`, **required**, the account proxy registrar address
+* `account_realm`, **required**, the default realm for the accounts, fallback to the domain if not set
+* `custom_provisioning_entries` **required**, text, the custom configuration used for the provisioning
+* `custom_provisioning_overwrite_all` **required**, boolean, allow the custom configuration to overwrite the default one
+* `provisioning_use_linphone_provisioning_header` **required**, boolean
+* `custom_theme` **required**, boolean, allow a custom CSS file to be loaded
+* `web_panel` **required**, boolean, the web panel switch
+* `public_registration` **required**, boolean, the public registration switch
+* `phone_registration` **required**, boolean, the phone registration switch
+* `intercom_features` **required**, boolean, the intercom features switch
 
 ### `DELETE /spaces/{domain}`
 <span class="badge badge-error">Super Admin</span>

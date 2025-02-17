@@ -59,6 +59,21 @@ class SpaceController extends Controller
         $space->max_accounts = $request->get('max_accounts', 0);
         $space->expire_at = $request->get('expire_at');
 
+        $space->copyright_text = $request->get('copyright_text');
+        $space->intro_registration_text = $request->get('intro_registration_text');
+        $space->confirmed_registration_text = $request->get('confirmed_registration_text');
+        $space->newsletter_registration_address = $request->get('newsletter_registration_address');
+        $space->account_proxy_registrar_address = $request->get('account_proxy_registrar_address');
+        $space->account_realm = $request->get('account_realm');
+        $space->custom_provisioning_entries = $request->get('custom_provisioning_entries');
+        $this->setRequestBoolean($request, $space, 'custom_provisioning_overwrite_all');
+        $this->setRequestBoolean($request, $space, 'provisioning_use_linphone_provisioning_header');
+        $this->setRequestBoolean($request, $space, 'custom_theme');
+        $this->setRequestBoolean($request, $space, 'web_panel');
+        $this->setRequestBoolean($request, $space, 'public_registration');
+        $this->setRequestBoolean($request, $space, 'phone_registration');
+        $this->setRequestBoolean($request, $space, 'intercom_features');
+
         $space->save();
 
         return $space->refresh();
@@ -86,6 +101,14 @@ class SpaceController extends Controller
             'max_account' => 'required|integer',
             'max_accounts' => 'required|integer',
             'expire_at' => 'nullable|date|after_or_equal:today',
+
+            'custom_provisioning_overwrite_all' => 'required|boolean',
+            'provisioning_use_linphone_provisioning_header' => 'required|boolean',
+            'custom_theme' => 'required|boolean',
+            'web_panel' => 'required|boolean',
+            'public_registration' => 'required|boolean',
+            'phone_registration' => 'required|boolean',
+            'intercom_features' => 'required|boolean',
         ]);
 
         $space = Space::where('domain', $domain)->firstOrFail();
@@ -115,6 +138,22 @@ class SpaceController extends Controller
         $space->max_account = $request->get('max_account', 0);
         $space->max_accounts = $request->get('max_accounts', 0);
         $space->expire_at = $request->get('expire_at');
+
+        $space->copyright_text = $request->get('copyright_text');
+        $space->intro_registration_text = $request->get('intro_registration_text');
+        $space->confirmed_registration_text = $request->get('confirmed_registration_text');
+        $space->newsletter_registration_address = $request->get('newsletter_registration_address');
+        $space->account_proxy_registrar_address = $request->get('account_proxy_registrar_address');
+        $space->account_realm = $request->get('account_realm');
+        $space->custom_provisioning_entries = $request->get('custom_provisioning_entries');
+        $space->custom_provisioning_overwrite_all = $request->get('custom_provisioning_overwrite_all');
+        $space->provisioning_use_linphone_provisioning_header = $request->get('provisioning_use_linphone_provisioning_header');
+        $space->custom_theme = $request->get('custom_theme');
+        $space->web_panel = $request->get('web_panel');
+        $space->public_registration = $request->get('public_registration');
+        $space->phone_registration = $request->get('phone_registration');
+        $space->intercom_features = $request->get('intercom_features');
+
         $space->save();
 
         return $space;

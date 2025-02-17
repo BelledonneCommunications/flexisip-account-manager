@@ -581,13 +581,15 @@ class ApiAccountTest extends TestCase
 
     public function testSimpleAccount()
     {
+        $realm = 'realm.com';
+
+        Space::factory()->local()->withRealm($realm)->create();
+        space(reload: true);
+
         $password = Password::factory()->create();
         $password->account->activated = false;
         $password->account->generateApiKey();
         $password->account->save();
-
-        $realm = 'realm.com';
-        config()->set('app.account_realm', $realm);
 
         /**
          * Public information

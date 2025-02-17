@@ -29,10 +29,14 @@ class CreateUpdate extends Command
 
     public function handle()
     {
-        $this->info('Your will create or update a Space in the database');
+        $this->info('Your are creating or updating a Space in the database');
 
         if (empty(config('app.root_host'))) {
             $this->error('The environnement variable APP_ROOT_HOST doesn\'t seems to be set');
+        }
+
+        if (!str_ends_with($this->argument('host'), config('app.root_host'))) {
+            $this->error('The provided host doesn\'t seems to ends with ' . config('app.root_host'));
         }
 
         $space = Space::where('domain', $this->argument('sip_domain'))->firstOrNew();

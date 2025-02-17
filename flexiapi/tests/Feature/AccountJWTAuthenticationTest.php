@@ -57,6 +57,8 @@ class AccountJWTAuthenticationTest extends TestCase
 
         $password = Password::factory()->create();
 
+        \App\Space::where('domain', $password->account->domain)->update(['host' => 'localhost']);
+
         $bearer = 'authz_server="https://sso.test/", realm="sip.test.org"';
 
         config()->set('services.jwt.rsa_public_key_pem', $this->serverPublicKeyPem);

@@ -10,11 +10,7 @@ Registration can be achieve using several methods if they are correctly configur
 
 ## Email Registration
 
-@if (!config('app.web_panel') || !config('app.public_registration'))
-*The feature is not enabled on this instance.*
-@endif
-
-You can @if (config('app.web_panel') && config('app.public_registration')) [create an account using an email address]({{ route('account.register.email') }}) @else create an account using an email address @endif. The form requires you to provide an username and your email address.
+You can create an account using an email address. The form requires you to provide an username and your email address.
 
 Once completed a confirmation email containing a unique link will be sent to the address. This link is used to activate your account, allowing you to finish the setup.
 
@@ -24,11 +20,7 @@ Allow the creation of an account using a previously generated Account Creation T
 
 ## Phone Registration
 
-@if (!config('app.phone_authentication'))
-*The feature is not enabled on this instance.*
-@endif
-
-If enabled you can also @if (config('app.web_panel') && config('app.phone_authentication')) [create an account using a phone number]({{ route('account.register.phone') }}) @else create an account using a phone number @endif. You can also add an optional nickname to personnalize your SIP address. If not, your phone number will be used as a username.
+If enabled you can also create an account using a phone number. You can also add an optional nickname to personnalize your SIP address. If not, your phone number will be used as a username.
 
 Once submitted, you will be asked to provide a unique pin code received by SMS to the phone number used during the registration.
 
@@ -40,7 +32,7 @@ Once activated {{ $app_name }} will ask your to provide a password to finish you
 
 To authenticate please fill in the username or phone number and password you provided during the registration phase.
 
-If you forgot your password or didn't configured it, you can always recover your account using the recover password forms, using your @if (config('app.web_panel')) [email address]({{ route('account.recovery.show.email') }}) @else email address @endif or @if (config('app.web_panel') && config('app.phone_authentication')) [phone number]({{ route('account.recovery.show.phone') }}) @else phone number (not enabled) @endif. Once authenticated you will then be able to change your password.
+If you forgot your password or didn't configured it, you can always recover your account using the recover password forms, using your email address or phone number. Once authenticated you will then be able to change your password.
 
 ## Code based authentication
 
@@ -48,7 +40,7 @@ If you forgot your password or didn't configured it, you can always recover your
 
 # Account panel
 
-Once authenticated you will get access to @if (config('app.web_panel')) [your account panel]({{ route('account.dashboard') }}) @else your account panel @endif.
+Once authenticated you will get access to your account panel.
 
 ## Generate an API Key
 
@@ -56,21 +48,17 @@ You will be able to generate an API Key allowing you to use the {{ $app_name }} 
 
 ## Change your email address
 
-You can @if (config('app.web_panel')) [change your email address]({{ route('account.email.change') }}) @else change your email address @endif from the panel. A confirmation email containing a unique link will be sent to validate the new one.
+You can change your email address from the panel. A confirmation email containing a unique link will be sent to validate the new one.
 
 ## Change your password
 
-Your password can also be changed from the @if (config('app.web_panel')) [password change form]({{ route('account.password.show') }}) @else password change form @endif. You can enable SHA-256 encrypted password when changing it (required for some clients).
+Your password can also be changed from the password change form. You can enable SHA-256 encrypted password when changing it (required for some clients).
 
 ## Delete your account
 
-Your account can be deleted from the panel using the @if (config('app.web_panel')) [account deletion form]({{ route('account.delete') }}) @else account deletion form @endif. You must re-enter your full SIP address to confirm the deletion.
+Your account can be deleted from the panel using the account deletion form. You must re-enter your full SIP address to confirm the deletion.
 
 ## Devices management
-
-@if (config('app.devices_management') == false)
-*The feature is not enabled on this instance.*
-@endif
 
 From the devices management panel an admin will be able to list and delete the devices attached to a SIP account.
 
@@ -101,10 +89,6 @@ Administrators can create and edit accounts directly from the admin panel. Durin
 The deletion of an account is definitive, all the database related data (password…) will be destroyed after the deletion.
 
 ### Create, edit and delete account types
-
-@if (config('app.intercom_features') == false)
-*The feature is not enabled on this instance.*
-@endif
 
 An adminisator can create, edit and delete account types. Those can be used to categorize accounts in clients, they are often used for Internet of Things related devices.
 

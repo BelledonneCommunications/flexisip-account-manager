@@ -20,12 +20,27 @@
 use Illuminate\Support\Str;
 
 use App\Account;
+use App\Space;
 use App\DigestNonce;
 use Illuminate\Http\Request;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 use League\CommonMark\Extension\TableOfContents\TableOfContentsExtension;
 use Illuminate\Support\Facades\DB;
+
+$hostSpace = null;
+
+function space($reload = false): ?Space
+{
+    global $hostSpace;
+
+    if ($hostSpace != null && $reload == false) {
+        return $hostSpace;
+    }
+
+    $hostSpace = Space::where('host', request()->host())->first();
+    return $hostSpace;
+}
 
 function passwordAlgorithms(): array
 {
