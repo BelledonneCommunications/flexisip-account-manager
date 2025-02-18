@@ -87,8 +87,8 @@ class FlexisipPusherConnector
                 $command .= " --call-id '" . $callId . "'";
             }
 
-            if (in_array($this->pnProvider, ['apns', 'apns.dev']) && in_array($type, $this->apnsTypes)) {
-                $command .= " --apple-push-type " . $this->apnsTypes[$type];
+            if (in_array($this->pnProvider, ['apns', 'apns.dev']) && in_array($type, array_keys(self::$apnsTypes))) {
+                $command .= " --apple-push-type " . self::$apnsTypes[$type];
             }
 
             if ($this->pusherFirebaseKey) {

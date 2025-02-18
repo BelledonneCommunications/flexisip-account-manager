@@ -20,6 +20,7 @@ v1.7
 - Fix FLEXIAPI-268 Allow pn-param in Apple format for the push notifications endpoints
 - Fix FLEXIAPI-269 Update the IsNotPhoneNumber rule to use a better phone number validator
 - Fix FLEXIAPI-258 Move DotEnv instance configurations in the Spaces table
+- Fix FLEXIAPI-270 Call the static $apnsTypes attribute in FlexisipPusherConnector
 
 v1.6
 ----
