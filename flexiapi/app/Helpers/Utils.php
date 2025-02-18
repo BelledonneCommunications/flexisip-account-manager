@@ -55,9 +55,11 @@ function generateNonce(): string
     return Str::random(32);
 }
 
-function getRequestBoolean(Request $request, string $key): bool
+function getRequestBoolean(Request $request, string $key, bool $reversed = false): bool
 {
-    return $request->has($key) ? $request->get($key) == "on" : false;
+    $bool = $request->has($key) ? $request->get($key) == "on" : false;
+
+    return $reversed ? !$bool : $bool;
 }
 
 function generateValidNonce(Account $account): string

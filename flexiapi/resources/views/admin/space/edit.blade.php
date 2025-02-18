@@ -27,12 +27,12 @@
 
         <h3 class="large">Features</h3>
 
-        @include('parts.form.toggle', ['object' => $space, 'key' => 'disable_chat_feature', 'label' => 'Chat feature', 'reverse' => true])
-        @include('parts.form.toggle', ['object' => $space, 'key' => 'disable_meetings_feature', 'label' => 'Meeting feature', 'reverse' => true])
-        @include('parts.form.toggle', ['object' => $space, 'key' => 'disable_broadcast_feature', 'label' => 'Conference feature', 'reverse' => true])
-        @include('parts.form.toggle', ['object' => $space, 'key' => 'hide_settings', 'label' => 'General settings', 'reverse' => true])
-        @include('parts.form.toggle', ['object' => $space, 'key' => 'hide_account_settings', 'label' => 'Account settings', 'reverse' => true])
-        @include('parts.form.toggle', ['object' => $space, 'key' => 'disable_call_recordings_feature', 'label' => 'Record audio/video calls', 'reverse' => true])
+        @include('parts.form.toggle', ['object' => $space, 'key' => 'disable_chat_feature', 'label' => 'Chat feature', 'reversed' => true])
+        @include('parts.form.toggle', ['object' => $space, 'key' => 'disable_meetings_feature', 'label' => 'Meeting feature', 'reversed' => true])
+        @include('parts.form.toggle', ['object' => $space, 'key' => 'disable_broadcast_feature', 'label' => 'Conference feature', 'reversed' => true])
+        @include('parts.form.toggle', ['object' => $space, 'key' => 'hide_settings', 'label' => 'General settings', 'reversed' => true])
+        @include('parts.form.toggle', ['object' => $space, 'key' => 'hide_account_settings', 'label' => 'Account settings', 'reversed' => true])
+        @include('parts.form.toggle', ['object' => $space, 'key' => 'disable_call_recordings_feature', 'label' => 'Record audio/video calls', 'reversed' => true])
 
         <h3 class="large">General toggles</h3>
 
@@ -50,9 +50,9 @@
 
         <h3 class="large">Assistant</h3>
 
-        @include('parts.form.toggle', ['object' => $space, 'key' => 'assistant_hide_create_account', 'label' => 'Account creation panel', 'reverse' => true])
-        @include('parts.form.toggle', ['object' => $space, 'key' => 'assistant_disable_qr_code', 'label' => 'QR Code scanning panel', 'reverse' => true])
-        @include('parts.form.toggle', ['object' => $space, 'key' => 'assistant_hide_third_party_account', 'label' => 'Third party SIP panel', 'reverse' => true])
+        @include('parts.form.toggle', ['object' => $space, 'key' => 'assistant_hide_create_account', 'label' => 'Account creation panel', 'reversed' => true])
+        @include('parts.form.toggle', ['object' => $space, 'key' => 'assistant_disable_qr_code', 'label' => 'QR Code scanning panel', 'reversed' => true])
+        @include('parts.form.toggle', ['object' => $space, 'key' => 'assistant_hide_third_party_account', 'label' => 'Third party SIP panel', 'reversed' => true])
 
         <div class="large">
             <input class="btn" type="submit" value="Update">

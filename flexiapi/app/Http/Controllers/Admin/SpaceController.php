@@ -169,17 +169,17 @@ class SpaceController extends Controller
             'max_account' => 'required|integer',
         ]);
 
-        $space->disable_chat_feature = getRequestBoolean($request, 'disable_chat_feature');
-        $space->disable_meetings_feature = getRequestBoolean($request, 'disable_meetings_feature');
-        $space->disable_broadcast_feature = getRequestBoolean($request, 'disable_broadcast_feature');
-        $space->hide_settings = getRequestBoolean($request, 'hide_settings');
+        $space->disable_chat_feature = getRequestBoolean($request, 'disable_chat_feature', reversed: true);
+        $space->disable_meetings_feature = getRequestBoolean($request, 'disable_meetings_feature', reversed: true);
+        $space->disable_broadcast_feature = getRequestBoolean($request, 'disable_broadcast_feature', reversed: true);
+        $space->hide_settings = getRequestBoolean($request, 'hide_settings', reversed: true);
         $space->max_account = $request->get('max_account', 0);
-        $space->hide_account_settings = getRequestBoolean($request, 'hide_account_settings');
-        $space->disable_call_recordings_feature = getRequestBoolean($request, 'disable_call_recordings_feature');
+        $space->hide_account_settings = getRequestBoolean($request, 'hide_account_settings', reversed: true);
+        $space->disable_call_recordings_feature = getRequestBoolean($request, 'disable_call_recordings_feature', reversed: true);
         $space->only_display_sip_uri_username = getRequestBoolean($request, 'only_display_sip_uri_username');
-        $space->assistant_hide_create_account = getRequestBoolean($request, 'assistant_hide_create_account');
-        $space->assistant_disable_qr_code = getRequestBoolean($request, 'assistant_disable_qr_code');
-        $space->assistant_hide_third_party_account = getRequestBoolean($request, 'assistant_hide_third_party_account');
+        $space->assistant_hide_create_account = getRequestBoolean($request, 'assistant_hide_create_account', reversed: true);
+        $space->assistant_disable_qr_code = getRequestBoolean($request, 'assistant_disable_qr_code', reversed: true);
+        $space->assistant_hide_third_party_account = getRequestBoolean($request, 'assistant_hide_third_party_account', reversed: true);
 
         return $space;
     }
