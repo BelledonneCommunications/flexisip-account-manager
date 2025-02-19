@@ -6,14 +6,14 @@
     <li class="breadcrumb-item">
         <a href="{{ route('admin.account.dictionary.index', $account) }}">Dictionary</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">Delete</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ __('Delete') }}</li>
 @endsection
 
 @section('content')
-    <h2>Dictionary entry deletion</h2>
+    <h2>{{ __('Delete') }}</h2>
 
     <div>
-        <p>Are you sure you want to delete the following dictionary entry?</p>
+        <p>{{ __('You are going to permanently delete the following element. Please confirm your action.') }}</p>
         <p>
             <b>{{ $entry->key }}:</b> {{ $entry->value }}
         </p>
@@ -24,7 +24,7 @@
         @csrf
         <input name="key" type="hidden" value="{{ $entry->key }}">
         <div>
-            <input class="btn" type="submit" value="Delete">
+            <input class="btn" type="submit" value="{{ __('Delete') }}">
         </div>
 
     </form>

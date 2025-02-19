@@ -2,33 +2,33 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item" aria-current="page">
-        Contacts Lists
+        {{ __('Contacts Lists') }}
     </li>
 @endsection
 
 @section('content')
 
 <header>
-    <h1><i class="ph">user-rectangle</i> Contacts Lists</h1>
+    <h1><i class="ph">user-rectangle</i> {{ __('Contacts Lists') }}</h1>
     <a class="btn oppose" href="{{ route('admin.contacts_lists.create') }}">
         <i class="ph">plus</i>
-        New Contacts List
+        {{ __('Create') }}
     </a>
 </header>
 
 <table>
     <thead>
         <tr>
-            @include('parts.column_sort', ['key' => 'title', 'title' => 'Name'])
-            <th>Description</th>
-            @include('parts.column_sort', ['key' => 'contacts_count', 'title' => 'Contacts'])
-            @include('parts.column_sort', ['key' => 'updated_at', 'title' => 'Updated'])
+            @include('parts.column_sort', ['key' => 'title', 'title' => __('Name')])
+            <th>{{ __('Description') }}</th>
+            @include('parts.column_sort', ['key' => 'contacts_count', 'title' => __('Contacts')])
+            @include('parts.column_sort', ['key' => 'updated_at', 'title' => __('Updated')])
         </tr>
     </thead>
     <tbody>
         @if ($contacts_lists->isEmpty())
             <tr class="empty">
-                <td colspan="4">No Contacts Lists</td>
+                <td colspan="4">{{ __('Empty') }}</td>
             </tr>
         @endif
         @foreach ($contacts_lists as $contacts_list)

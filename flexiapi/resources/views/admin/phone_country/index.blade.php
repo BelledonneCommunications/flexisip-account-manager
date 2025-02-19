@@ -2,31 +2,31 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item" aria-current="page">
-        Phone Countries
+        {{ __('Phone Countries') }}
     </li>
 @endsection
 
 @section('content')
 
 <header>
-    <h1><i class="ph">flag</i> Phone Countries</h1>
+    <h1><i class="ph">flag</i> {{ __('Phone Countries') }}</h1>
     <a class="btn btn-secondary oppose" href="{{ route('admin.phone_countries.activate_all') }}">
         <i class="ph">plus</i>
-        Activate All
+        {{ __('Activate All') }}
     </a>
     <a class="btn btn-secondary" href="{{ route('admin.phone_countries.deactivate_all') }}">
         <i class="ph">trash</i>
-        Deactivate All
+        {{ __('Deactivate All') }}
     </a>
 </header>
 
 <table>
     <thead>
         <tr>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Country code</th>
-            <th>Actions</th>
+            <th>{{ __('Code') }}</th>
+            <th>{{ __('Name') }}</th>
+            <th>{{ __('Contry code') }}</th>
+            <th>{{ __('Actions') }}</th>
         </tr>
     </thead>
     <tbody>
@@ -37,11 +37,11 @@
                 <td>{{ $phone_country->country_code }}</td>
                 <td>
                     @if ($phone_country->activated)
-                        <span class="badge badge-success" title="Activated">Activated</span>
-                        <a href="{{ route('admin.phone_countries.deactivate', $phone_country->code) }}">Desactivate</a>
+                        <span class="badge badge-success" title="Activated">{{ __('Activated') }}</span>
+                        <a href="{{ route('admin.phone_countries.deactivate', $phone_country->code) }}">{{ __('Deactivate') }}</a>
                     @else
-                        <span class="badge badge-error" title="Deactivated">Deactivated</span>
-                        <a href="{{ route('admin.phone_countries.activate', $phone_country->code) }}">Activate</a>
+                        <span class="badge badge-error" title="Deactivated">{{ __('Deactivated') }}</span>
+                        <a href="{{ route('admin.phone_countries.activate', $phone_country->code) }}">{{ __('Activate') }}</a>
                     @endif
                 </td>
             </tr>

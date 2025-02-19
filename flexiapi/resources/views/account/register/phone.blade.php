@@ -2,10 +2,10 @@
 
 @section('content')
     <section>
-        <h1><i class="ph">user-circle</i> Register</h1>
+        <h1><i class="ph">user-circle</i> {{ __('Register') }}</h1>
         <p style="margin-bottom: 2rem;">
-            You already have an account?
-            <a class="btn btn-secondary" href="{{ route('account.login') }}">Login</a>
+            {{ __('You already have an account?') }}
+            <a class="btn btn-secondary" href="{{ route('account.login') }}">{{ __('Login') }}</a>
         </p>
         @include('parts.tabs.register')
 
@@ -14,7 +14,7 @@
 
         <div>
             <input placeholder="username" name="username" type="text" value="{{ old('username') }}">
-            <label for="username">Username</label>
+            <label for="username">{{ __('Username') }}</label>
             <small>In lowercase letters</small>
             @include('parts.errors', ['name' => 'username'])
         </div>
@@ -24,27 +24,27 @@
 
         <div>
             <input placeholder="+123456789" name="phone" type="text" value="{{ old('phone') }}">
-            <label for="phone">Phone number</label>
+            <label for="phone">{{ __('Phone number') }}</label>
             @include('parts.errors', ['name' => 'phone'])
         </div>
         <div></div>
 
         <div>
-            <input required="" name="password" type="password" value="" placeholder="Password">
-            <label for="password">Password</label>
+            <input required="" name="password" type="password" value="" placeholder="{{ __('Password') }}">
+            <label for="password">{{ __('Password') }}</label>
             @include('parts.errors', ['name' => 'password'])
         </div>
         <div>
             <input required="" name="password_confirmation" type="password" value=""
                 placeholder="Password confirmation">
-            <label for="password_confirmation">Confirm password</label>
+            <label for="password_confirmation">{{ __('Confirm password') }}</label>
             @include('parts.errors', ['name' => 'password_confirmation'])
         </div>
 
         @include('parts.terms')
 
         <div class="large">
-            <input class="btn oppose" type="submit" value="Register">
+            <input class="btn oppose" type="submit" value="{{ __('Register') }}">
         </div>
 
         </form>

@@ -2,30 +2,30 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item">
-        <a href="{{ route('admin.contacts_lists.index') }}">Contacts Lists</a>
+        <a href="{{ route('admin.contacts_lists.index') }}">{{ __('Contacts Lists') }}</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">Edit</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ __('Edit') }}</li>
 @endsection
 
 @section('content')
     <header>
         @if ($contacts_list->id)
             <h1><i class="ph">user-rectangle</i> {{ $contacts_list->title }}</h1>
-            <a href="{{ route('admin.contacts_lists.index') }}" class="btn btn-secondary oppose">Cancel</a>
+            <a href="{{ route('admin.contacts_lists.index') }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
             <a class="btn btn-secondary" href="{{ route('admin.contacts_lists.delete', $contacts_list->id) }}">
                 <i class="ph">trash</i>
-                Delete
+                {{ __('Delete') }}
             </a>
-            <input form="create_edit_contacts_list" class="btn" type="submit" value="Update">
+            <input form="create_edit_contacts_list" class="btn" type="submit" value="{{ __('Update') }}">
         @else
-            <h1><i class="ph">user-rectangle</i> Create a Contacts List</h1>
-            <a href="{{ route('admin.contacts_lists.index') }}" class="btn btn-secondary oppose">Cancel</a>
-            <input form="create_edit_contacts_list" class="btn" type="submit" value="Create">
+            <h1><i class="ph">user-rectangle</i> {{ __('Create') }}</h1>
+            <a href="{{ route('admin.contacts_lists.index') }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
+            <input form="create_edit_contacts_list" class="btn" type="submit" value="{{ __('Create') }}">
         @endif
     </header>
 
     @if ($contacts_list->id)
-        <p title="{{ $contacts_list->updated_at }}">Updated on {{ $contacts_list->updated_at->format('d/m/Y') }}
+        <p title="{{ $contacts_list->updated_at }}">{{ __('Updated on') }} {{ $contacts_list->updated_at->format('d/m/Y') }}
     @endif
 
     <form method="POST" id="create_edit_contacts_list"
@@ -34,15 +34,15 @@
         @csrf
         @method($contacts_list->id ? 'put' : 'post')
         <div>
-            <input placeholder="Name" required="required" name="title" type="text"
+            <input placeholder="{{ __('Name') }}    " required="required" name="title" type="text"
                 value="{{ $contacts_list->title ?? old('title') }}">
-            <label for="username">Name</label>
+            <label for="username">{{ __('Name') }}</label>
             @include('parts.errors', ['name' => 'title'])
         </div>
 
         <div>
-            <textarea placeholder="Description" name="description">{{ $contacts_list->description ?? old('description') }}</textarea>
-            <label for="description">Description</label>
+            <textarea placeholder="{{ __('Description') }}" name="description">{{ $contacts_list->description ?? old('description') }}</textarea>
+            <label for="description">{{ __('Description') }}</label>
             @include('parts.errors', ['name' => 'description'])
         </div>
     </form>
@@ -51,7 +51,7 @@
         <hr>
 
         <a class="btn btn-secondary oppose" href="{{ route('admin.contacts_lists.contacts.add', $contacts_list->id) }}">
-            <i class="ph">plus</i> Add contacts
+            <i class="ph">plus</i> {{ __('Add contacts') }}
         </a>
 
         <form  method="POST"
@@ -71,20 +71,20 @@
             <div class="search">
                 <input placeholder="Search by username: +1234, foo_bar…" name="search" type="text"
                     value="{{ request()->get('search', '') }}">
-                <label for="search">Search</label>
+                <label for="search">{{ __('Search') }}</label>
             </div>
             @include('admin.account.parts.forms.select_domain')
             <div>
                 <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}" type="reset"
-                    class="btn btn-secondary">Reset</a>
-                <button type="submit" class="btn">Search</button>
+                    class="btn btn-secondary">{{ __('Reset') }}</a>
+                <button type="submit" class="btn">{{ __('Search') }}</button>
             </div>
 
             <div>
                 <a class="btn btn-tertiary oppose"
                     onclick="Utils.clearStorageList('d{{ $contacts_list->id }}');  document.querySelector('form[name=contacts_lists_contacts_destroy]').submit()">
                     <i class="ph">trash</i>
-                    Remove <span class="list_toggle" data-list-id="d{{ $contacts_list->id }}"></span> contacts
+                    {{ __('Remove') }} <span class="list_toggle" data-list-id="d{{ $contacts_list->id }}"></span>
                 </a>
             </div>
         </form>
@@ -95,13 +95,13 @@
                     <th width="1%">
                         <input type="checkbox" onchange="Utils.toggleAll(this)">
                     </th>
-                    <th>Username</th>
+                    <th>{{ __('Username') }}</th>
                 </tr>
             </thead>
             <tbody>
                 @if ($contacts->isEmpty())
                     <tr class="empty">
-                        <td colspan="2">No Contact</td>
+                        <td colspan="2">{{ __('Empty') }}</td>
                     </tr>
                 @endif
                 @foreach ($contacts as $contact)

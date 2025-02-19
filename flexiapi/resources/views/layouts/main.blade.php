@@ -34,9 +34,6 @@
                     onclick="document.body.classList.toggle('show_menu')"></a>
             @endif
 
-            <a class="oppose" href="{{ route('about') }}">
-                <i class="ph">info</i><span class="on_desktop">About</span>
-            </a>
             @if (auth()->user())
                 <a class="oppose" href="{{ route('account.dashboard') }}">
                     <i class="ph">user</i>
@@ -48,6 +45,13 @@
                         <span class="badge badge-primary" title="Admin">Adm.</span>
                     @endif
                 </a>
+            @endif
+
+            <a class="oppose" href="{{ route('about') }}">
+                <i class="ph">info</i><span class="on_desktop">{{ __('About') }}</span>
+            </a>
+
+            @if (auth()->user())
                 <a class="oppose" href="{{ route('account.logout') }}">
                     <i class="ph">sign-out</i>
                 </a>
@@ -68,7 +72,7 @@
             @hasSection('breadcrumb')
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('account.dashboard') }}">My Account</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('account.dashboard') }}">{{ __('My Account') }}</a></li>
                         @yield('breadcrumb')
                     </ol>
                 </nav>

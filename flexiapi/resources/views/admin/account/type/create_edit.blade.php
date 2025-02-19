@@ -3,18 +3,18 @@
 @section('breadcrumb')
     @include('admin.account.parts.breadcrumb_accounts_index')
     <li class="breadcrumb-item">
-        <a href="{{ route('admin.account.type.index') }}">Types</a>
+        <a href="{{ route('admin.account.type.index') }}">{{ __('Types') }}</a>
     </li>
     <li class="breadcrumb-item active" aria-current="page">
-        @if ($type->id)Edit @else Create @endif
+        @if ($type->id){{ __('Edit') }} @else {{ __('Create') }} @endif
     </li>
 @endsection
 
 @section('content')
     @if ($type->id)
-        <h2>Edit an account type</h2>
+        <h2>{{ __('Edit') }}</h2>
     @else
-        <h2>Create an account type</h2>
+        <h2>{{ __('Create') }}</h2>
     @endif
 
     <form method="POST"
@@ -24,11 +24,11 @@
         @csrf
         <div>
             <input type="text" name="key" value="{{ $type->key }}" placeholder="type_key">
-            <label for="key">Key</label>
+            <label for="key">{{ __('Key') }}</label>
         </div>
 
         <div>
-            <input class="btn btn-success" type="submit" value="{{ $type->id ? 'Update' : 'Create' }}">
+            <input class="btn btn-success" type="submit" value="{{ $type->id ? __('Update') : __('Create') }}">
         </div>
     </form>
 @endsection

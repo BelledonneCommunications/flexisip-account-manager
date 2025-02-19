@@ -1,15 +1,15 @@
 <table>
     <thead>
         <tr>
-            <th>From</th>
-            <th>To</th>
-            <th>Time</th>
+            <th>{{ __('From') }}</th>
+            <th>{{ __('To') }}</th>
+            <th><i class="ph">clock</i></th>
         </tr>
     </thead>
     <tbody>
         @if ($calls->isEmpty())
             <tr class="empty">
-                <td colspan="3">No Calls</td>
+                <td colspan="3">{{ __('Empty') }}</td>
             </tr>
         @endif
         @foreach ($calls as $call)

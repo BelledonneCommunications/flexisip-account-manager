@@ -3,7 +3,7 @@
 @section('content')
     <section>
         <header>
-            <h1><i class="ph">lock</i> Reset password</h1>
+            <h1><i class="ph">lock</i> {{ __('Reset') }}</h1>
         </header>
 
         @if ($token->offed())
@@ -15,19 +15,19 @@
                 <input type="hidden" name="token" value="{{ $token->token }}">
                 <div class="large">
                     <input type="password" name="password" required>
-                    <label for="password">Password</label>
+                    <label for="password">{{ __('Password') }}</label>
                     @include('parts.errors', ['name' => 'password'])
                 </div>
                 <div class="large">
                     <input type="password" name="password_confirmation" required>
-                    <label for="password_confirmation">Password confirmation</label>
+                    <label for="password_confirmation">{{ __('Confirm password') }}</label>
                     @include('parts.errors', ['name' => 'password_confirmation'])
                 </div>
 
                 @include('parts.captcha')
 
                 <div class="large">
-                    <input class="btn" type="submit" value="Reset">
+                    <input class="btn" type="submit" value="{{ __('Reset') }}">
                 </div>
             </form>
         @endif

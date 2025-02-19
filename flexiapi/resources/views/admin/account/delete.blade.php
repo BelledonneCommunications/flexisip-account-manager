@@ -3,22 +3,22 @@
 @section('breadcrumb')
     @include('admin.account.parts.breadcrumb_accounts_index')
     @include('admin.account.parts.breadcrumb_accounts_edit', ['account' => $account])
-    <li class="breadcrumb-item active" aria-current="page">Delete</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ __('Delete') }}</li>
 @endsection
 
 @section('content')
     <header>
-        <h1><i class="ph">trash</i> Delete an account</h1>
+        <h1><i class="ph">trash</i> {{ __('Delete') }}</h1>
 
-        <a href="{{ route('admin.account.edit', $account->id) }}" class="btn btn-secondary oppose">Cancel</a>
-        <input form="delete" class="btn" type="submit" value="Delete">
+        <a href="{{ route('admin.account.edit', $account->id) }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
+        <input form="delete" class="btn" type="submit" value="{{ __('Delete') }}">
     </header>
     <form id="delete" method="POST" action="{{ route('admin.account.destroy') }}" accept-charset="UTF-8">
         @csrf
         @method('delete')
 
         <div class="large">
-            <p>You are going to permanently delete the following account. Please confirm your action.<br />
+            <p>{{ __('You are going to permanently delete the following element. Please confirm your action.') }}<br />
                 <b>{{ $account->identifier }}</b>
             </p>
             <input name="account_id" type="hidden" value="{{ $account->id }}">

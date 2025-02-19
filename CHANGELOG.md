@@ -22,6 +22,7 @@ v1.7
 - Fix FLEXIAPI-258 Move DotEnv instance configurations in the Spaces table
 - Fix FLEXIAPI-270 Call the static $apnsTypes attribute in FlexisipPusherConnector
 - Fix FLEXIAPI-271 Handle properly reversed attributes in objects
+- Fix FLEXIAPI-237 Add internationalisation support in the app
 
 v1.6
 ----

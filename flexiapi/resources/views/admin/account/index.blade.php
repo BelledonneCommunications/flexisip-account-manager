@@ -1,30 +1,28 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item" aria-current="page">
-        Accounts
-    </li>
+    <li class="breadcrumb-item" aria-current="page">{{ __('Accounts') }}</li>
 @endsection
 
 @section('content')
     <header>
-        <h1><i class="ph">users</i> Accounts</h1>
+        <h1><i class="ph">users</i> {{ __('Accounts') }}</h1>
         @if ($space)
             <p>{{ $accounts->count()}} / @if ($space->max_accounts > 0){{ $space->max_accounts }} @else <i class="ph">infinity</i>@endif</p>
         @endif
         <a class="btn btn-secondary oppose" href="{{ route('admin.account.import.create') }}">
             <i class="ph">download-simple</i>
-            Import Accounts
+            {{ __('Import') }}
         </a>
         @if (space()?->intercom_features)
         <a class="btn btn-secondary" href="{{ route('admin.account.type.index') }}">
             <i class="ph">shapes</i>
-            Types
+            {{ __('Types') }}
         </a>
         @endif
         <a class="btn" href="{{ route('admin.account.create') }}">
             <i class="ph">plus</i>
-            New Account
+            {{ __('Create') }}
         </a>
     </header>
     <div>
@@ -35,14 +33,14 @@
             <div class="search large">
                 <input placeholder="Search by username: +1234, foo_bar…" name="search" type="text"
                     value="{{ request()->get('search', '') }}">
-                <label for="search">Search</label>
+                <label for="search">{{ __('Search') }}</label>
             </div>
             <div class="large on_desktop"></div>
             @include('admin.account.parts.forms.select_domain')
             <div class="select">
                 <select name="contacts_list" onchange="this.form.submit()">
                     <option value="">
-                        Select a contacts list
+                        {{ __('Select a contacts list') }}
                     </option>
                     @foreach ($contacts_lists as $key => $name)
                         <option value="{{ $key }}" @if (request()->get('contacts_list', '') == $key) selected="selected" @endif>
@@ -50,16 +48,16 @@
                         </option>
                     @endforeach
                 </select>
-                <label for="domain">Contacts list</label>
+                <label for="domain">{{ __('Contacts List') }}</label>
             </div>
             <div>
                 <input name="updated_date" type="date" value="{{ request()->get('updated_date', '') }}"
                     onchange="this.form.submit()">
-                <label for="updated_date">Updated Date</label>
+                <label for="updated_date">{{ __('Updated on') }}</label>
             </div>
             <div class="oppose">
-                <a href="{{ route('admin.account.index') }}" type="reset" class="btn btn-tertiary">Reset</a>
-                <button type="submit" class="btn">Search</button>
+                <a href="{{ route('admin.account.index') }}" type="reset" class="btn btn-tertiary">{{ __('Reset') }}</a>
+                <button type="submit" class="btn">{{ __('Search') }}</button>
             </div>
         </form>
     </div>
@@ -67,16 +65,16 @@
     <table>
         <thead>
             <tr>
-                @include('parts.column_sort', ['key' => 'username', 'title' => 'Identifier'])
-                <th>Contact lists</th>
+                @include('parts.column_sort', ['key' => 'username', 'title' => __('Identifier')])
+                <th>{{ __('Contacts Lists') }}</th>
                 <th>Badges</th>
-                @include('parts.column_sort', ['key' => 'updated_at', 'title' => 'Updated'])
+                @include('parts.column_sort', ['key' => 'updated_at', 'title' => __('Updated')])
             </tr>
         </thead>
         <tbody>
             @if ($accounts->isEmpty())
                 <tr class="empty">
-                    <td colspan="4">No Accounts</td>
+                    <td colspan="4">{{ __('Empty') }}</td>
                 </tr>
             @endif
             @foreach ($accounts as $account)
@@ -107,7 +105,7 @@
                             <span class="badge badge-info">SHA256</span>
                         @endif
                         @if ($account->blocked)
-                            <span class="badge badge-error">Blocked</span>
+                            <span class="badge badge-error">{{ __('Blocked') }}</span>
                         @endif
                     </td>
                     <td>{{ $account->updated_at }}</td>

@@ -2,7 +2,7 @@
 
 @section('content')
     <section>
-        <h1 style="margin-bottom: 3rem;"><i class="ph">hand-waving</i> Welcome on {{ config('app.name') }}</h1>
+        <h1 style="margin-bottom: 3rem;"><i class="ph">hand-waving</i> {{ __('Welcome on :app_name' , ['app_name' => config('app.name')]) }}</h1>
 
         @if (space()->intro_registration_text)
             @parsedown(space()->intro_registration_text)
@@ -12,23 +12,23 @@
             @csrf
             <div>
                 @if (space()->phone_registration)
-                    <input placeholder="username or phone number" required="" name="username" type="text"
+                    <input placeholder="john, +163423..." required="" name="username" type="text"
                         value="{{ old('username') }}">
-                    <label for="username">Username or phone number</label>
+                    <label for="username">{{ __('Username or phone number') }}</label>
                 @else
                     <input placeholder="username" required="" name="username" type="text"
                         value="{{ old('username') }}">
-                    <label for="username">Username</label>
+                    <label for="username">{{ __('Username') }}</label>
                 @endif
                 @include('parts.errors', ['name' => 'authentication'])
             </div>
             <div class="on_desktop"></div>
             <div>
                 <input placeholder="myPassword" required="" name="password" type="password" value="">
-                <label for="password">Password</label>
+                <label for="password">{{ __('Password') }}</label>
             </div>
             <div>
-                <input class="btn" type="submit" value="Login">
+                <input class="btn" type="submit" value="{{ __('Login') }}">
             </div>
 
         </form>
@@ -42,8 +42,8 @@
             <br />
 
             <p>
-                No account yet?
-                <a class="btn btn-secondary" href="{{ route('account.register') }}">Register</a>
+                {{ __('No account yet?') }}
+                <a class="btn btn-secondary" href="{{ route('account.register') }}">{{ __('Register') }}</a>
             </p>
         @endif
     </section>

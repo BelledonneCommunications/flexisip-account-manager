@@ -2,7 +2,7 @@
 <div class="select">
     <select name="domain" onchange="this.form.submit()">
         <option value="">
-            Select a domain
+            {{ __('Select a domain') }}
         </option>
         @foreach ($domains as $d)
             <option value="{{ $d }}"
@@ -11,6 +11,6 @@
             </option>
         @endforeach
     </select>
-    <label for="domain">Domain</label>
+    <label for="domain">{{ __('Domain') }}</label>
 </div>
 @endif

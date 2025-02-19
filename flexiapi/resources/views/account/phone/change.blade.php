@@ -27,14 +27,14 @@
 
             <div class="large">
                 <input placeholder="+12345678" name="phone" type="text" value="">
-                <label for="phone">Phone</label>
+                <label for="phone">{{ __('Phone number') }}</label>
                 @include('parts.errors', ['name' => 'phone'])
             </div>
 
             @include('parts.captcha')
 
             <div class="large">
-                <input class="btn oppose" type="submit" value="Verify">
+                <input class="btn oppose" type="submit" value="{{ __('Verify') }}">
             </div>
 
         </form>
@@ -43,8 +43,4 @@
     <section class="on_desktop">
         <img src="{{ asset('img/lock.svg') }}">
     </section>
-@endsection
-
-@section('footer')
-    Hop
 @endsection

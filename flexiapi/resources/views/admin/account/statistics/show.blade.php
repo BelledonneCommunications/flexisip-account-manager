@@ -3,7 +3,7 @@
 @section('breadcrumb')
     @include('admin.account.parts.breadcrumb_accounts_index')
     @include('admin.account.parts.breadcrumb_accounts_edit', ['account' => $account])
-    <li class="breadcrumb-item active" aria-current="page">Statistics</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ __('Statistics') }}</li>
 @endsection
 
 @section('content')
@@ -23,22 +23,22 @@
 
         <div>
             <input type="date" name="from" value="{{ request()->get('from') }}" onchange="this.form.submit()">
-            <label for="from">From</label>
+            <label for="from">{{ __('From') }}</label>
         </div>
         <div>
             <input type="date" name="to" value="{{ request()->get('to') }}" onchange="this.form.submit()">
-            <label for="to">To</label>
+            <label for="to">{{ __('To') }}</label>
         </div>
 
         <div>
             <a href="{{ route('admin.account.statistics.show', ['account' => $account, 'by' => 'day'] + request()->only(['from', 'to', 'domain'])) }}"
-                class="chip @if (request()->get('by', 'day') == 'day') selected @endif">Day</a>
+                class="chip @if (request()->get('by', 'day') == 'day') selected @endif">{{ __('Day') }}</a>
             <a href="{{ route('admin.account.statistics.show', ['account' => $account, 'by' => 'week'] + request()->only(['from', 'to', 'domain'])) }}"
-                class="chip @if (request()->get('by', 'day') == 'week') selected @endif">Week</a>
+                class="chip @if (request()->get('by', 'day') == 'week') selected @endif">{{ __('Week') }}</a>
             <a href="{{ route('admin.account.statistics.show', ['account' => $account, 'by' => 'month'] + request()->only(['from', 'to', 'domain'])) }}"
-                class="chip @if (request()->get('by', 'day') == 'month') selected @endif">Month</a>
+                class="chip @if (request()->get('by', 'day') == 'month') selected @endif">{{ __('Month') }}</a>
             <a href="{{ route('admin.account.statistics.show', ['account' => $account, 'by' => 'year'] + request()->only(['from', 'to', 'domain'])) }}"
-                class="chip @if (request()->get('by', 'day') == 'year') selected @endif">Year</a>
+                class="chip @if (request()->get('by', 'day') == 'year') selected @endif">{{ __('Year') }}</a>
         </div>
     </form>
 </div>

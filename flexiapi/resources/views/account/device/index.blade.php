@@ -1,13 +1,13 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item active" aria-current="page">Devices</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ __('Devices') }}</li>
 @endsection
 
 @section('content')
 
     <header>
-        <h1><i class="ph">devices</i> Devices management</h1>
+        <h1><i class="ph">devices</i> {{ __('Devices') }}</h1>
     </header>
 
     <table>
@@ -20,7 +20,7 @@
         <tbody>
             @if ($devices->isEmpty())
                 <tr class="empty">
-                    <td colspan="3">No Devices</td>
+                    <td colspan="3">{{ __('Empty') }}</td>
                 </tr>
             @else
                 @foreach ($devices as $device)
@@ -28,7 +28,7 @@
                         <td>{{ $device->user_agent }}</td>
                         <td>
                             <a type="button" class="btn" href="{{ route('account.device.delete', [$device->uuid]) }}">
-                                Delete
+                                {{ __('Delete') }}
                             </a>
                         </td>
                     </tr>

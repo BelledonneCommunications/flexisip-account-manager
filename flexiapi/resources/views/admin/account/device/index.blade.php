@@ -3,14 +3,14 @@
 @section('breadcrumb')
     @include('admin.account.parts.breadcrumb_accounts_index')
     @include('admin.account.parts.breadcrumb_accounts_edit', ['account' => $account])
-    <li class="breadcrumb-item active" aria-current="page">Devices</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ __('Devices') }}</li>
 @endsection
 
 @section('content')
 
 <header>
     <h1><i class="ph">users</i> {{ $account->identifier }}</h1>
-    <a href="{{ route('admin.account.edit', $account->id) }}" class="btn btn-secondary oppose">Cancel</a>
+    <a href="{{ route('admin.account.edit', $account->id) }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
 </header>
 
 @include('admin.account.parts.tabs')
@@ -25,7 +25,7 @@
     <tbody>
         @if ($devices->isEmpty())
             <tr class="empty">
-                <td colspan="3">No Devices</td>
+                <td colspan="3">{{ __('Empty') }}</td>
             </tr>
         @else
             @foreach ($devices as $device)
@@ -35,7 +35,7 @@
                         <a type="button"
                         class="btn"
                         href="{{ route('admin.account.device.delete', [$account, $device->uuid]) }}">
-                            Delete
+                            {{ __('Delete') }}
                         </a>
                     </td>
                 </tr>

@@ -15,11 +15,11 @@
 
 <div>
    <input type="email" name="email" value="{{ old('email') }}" placeholder="bob@example.net" required>
-    <label for="email">New email</label>
+    <label for="email">{{ __('Email') }}</label>
 </div>
 <div>
    <input type="email" name="email_confirmation" value="{{ old('email_confirm') }}" placeholder="bob@example.net" required>
-    <label for="email_confirmation">Email confirmation</label>
+    <label for="email_confirmation">{{ __('Confirm email') }}</label>
 </div>
 
 <input name="email_current" type="hidden" value="{{ $account->email }}">

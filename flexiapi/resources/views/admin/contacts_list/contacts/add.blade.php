@@ -2,19 +2,19 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item">
-        <a href="{{ route('admin.contacts_lists.index') }}">Contacts Lists</a>
+        <a href="{{ route('admin.contacts_lists.index') }}">{{ __('Contacts Lists') }}</a>
     </li>
     <li class="breadcrumb-item">
         <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}">{{ $contacts_list->title }}</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">Add contacts</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ __('Add') }}</li>
 @endsection
 
 @section('content')
     <header>
         <h1><i class="ph">user-rectangle</i> {{ $contacts_list->title }}</h1>
 
-        <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}" class="btn btn-secondary oppose">Cancel</a>
+        <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
 
         <form method="POST" action="{{ route('admin.contacts_lists.contacts.store', $contacts_list->id) }}"
             name="contacts_lists_contacts_store" accept-charset="UTF-8">
@@ -33,13 +33,13 @@
             <div class="search">
                 <input placeholder="Search by username: +1234, foo_bar…" name="search" type="text"
                     value="{{ request()->get('search', '') }}">
-                <label for="search">Search</label>
+                <label for="search">{{ __('Search') }}</label>
             </div>
             @include('admin.account.parts.forms.select_domain')
             <div>
                 <a href="{{ route('admin.contacts_lists.contacts.add', $contacts_list->id) }}" type="reset"
-                    class="btn btn-secondary">Reset</a>
-                <button type="submit" class="btn">Search</button>
+                    class="btn btn-secondary">{{ __('Reset') }}</a>
+                <button type="submit" class="btn">{{ __('Search') }}</button>
             </div>
             <div class="oppose">
                 <a class="btn"
@@ -57,10 +57,10 @@
                 <th width="1%">
                     <input type="checkbox" onchange="Utils.toggleAll(this)">
                 </th>
-                <th>Username</th>
+                <th>{{ __('Username') }}</th>
                 @include('parts.column_sort', [
                     'key' => 'updated_at',
-                    'title' => 'Updated',
+                    'title' => __('Updated'),
                     'uriParams' => ['contacts_list_id' => $contacts_list->id],
                 ])
             </tr>

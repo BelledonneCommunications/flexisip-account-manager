@@ -19,11 +19,11 @@
     <table>
         <thead>
             <tr>
-                <th>Code</th>
-                <th>Created</th>
-                <th>Last usage</th>
+                <th>{{ __('Code') }}</th>
+                <th>{{ __('Created on') }}</th>
+                <th>{{ __('Used on') }}</th>
                 <th>IP</th>
-                <th>Requests</th>
+                <th>{{ __('Requests') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -53,9 +53,9 @@
     <table>
         <thead>
             <tr>
-                <th>Code</th>
-                <th>Created</th>
-                <th>Used</th>
+                <th>{{ __('Code') }}</th>
+                <th>{{ __('Created on') }}</th>
+                <th>{{ __('Used on') }}</th>
                 <th>IP</th>
             </tr>
         </thead>
@@ -81,9 +81,9 @@
     <table>
         <thead>
             <tr>
-                <th>Code</th>
-                <th>Created</th>
-                <th>Used</th>
+                <th>{{ __('Code') }}</th>
+                <th>{{ __('Created on') }}</th>
+                <th>{{ __('Used on') }}</th>
                 <th>IP</th>
             </tr>
         </thead>
@@ -111,10 +111,10 @@
     <table>
         <thead>
             <tr>
-                <th>Phone</th>
-                <th>Code</th>
-                <th>Created</th>
-                <th>Used</th>
+                <th>{{ __('Phone number') }}</th>
+                <th>{{ __('Code') }}</th>
+                <th>{{ __('Created on') }}</th>
+                <th>{{ __('Used on') }}</th>
                 <th>IP</th>
             </tr>
         </thead>
@@ -143,10 +143,10 @@
     <table>
         <thead>
             <tr>
-                <th>Email</th>
-                <th>Code</th>
-                <th>Created</th>
-                <th>Used</th>
+                <th>{{ __('Email') }}</th>
+                <th>{{ __('Code') }}</th>
+                <th>{{ __('Created on') }}</th>
+                <th>{{ __('Used on') }}</th>
                 <th>IP</th>
             </tr>
         </thead>
@@ -171,13 +171,13 @@
 @endif
 
 @if ($account->provisioningTokens->isNotEmpty())
-    <h3>Provisioning tokens</h3>
+    <h3>{{ __('Provisioning tokens') }}</h3>
     <table>
         <thead>
             <tr>
                 <th>Token</th>
-                <th>Created</th>
-                <th>Used</th>
+                <th>{{ __('Created on') }}</th>
+                <th>{{ __('Used on') }}</th>
                 <th>IP</th>
             </tr>
         </thead>
@@ -206,9 +206,9 @@
         <thead>
             <tr>
                 <th>Token</th>
-                <th>Created</th>
-                <th>Used</th>
-                <th>Email</th>
+                <th>{{ __('Created on') }}</th>
+                <th>{{ __('Used on') }}</th>
+                <th>{{ __('Email') }}</th>
             </tr>
         </thead>
         <tbody>

@@ -39,6 +39,3 @@
     </section>
 @endsection
 
-@section('footer')
-    Hop
-@endsection

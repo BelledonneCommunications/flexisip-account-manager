@@ -3,23 +3,23 @@
 @section('breadcrumb')
     @include('admin.account.parts.breadcrumb_accounts_index')
     <li class="breadcrumb-item" aria-current="page">
-        <a href="{{ route('admin.account.type.index') }}">Types</a>
+        <a href="{{ route('admin.account.type.index') }}">{{ __('Types') }}</a>
     </li>
 @endsection
 
 @section('content')
     <header>
-        <h1><i class="ph">shapes</i> Types</h1>
+        <h1><i class="ph">shapes</i> {{ __('Types') }}</h1>
         <a class="btn oppose" href="{{ route('admin.account.type.create') }}">
             <i class="ph">plus</i>
-            New Type
+            {{ __('Create') }}
         </a>
     </header>
 
     <table>
         <thead>
             <tr>
-                <th>Key</th>
+                <th>{{ __('Key') }}</th>
                 <th></th>
             </tr>
         </thead>
@@ -30,8 +30,12 @@
                         {{ $type->key }}
                     </td>
                     <td>
-                        <a class="btn" href="{{ route('admin.account.type.edit', [$type->id]) }}">Edit</a>
-                        <a class="btn btn-secondary" href="{{ route('admin.account.type.delete', [$type->id]) }}">Delete</a>
+                        <a class="btn" href="{{ route('admin.account.type.edit', [$type->id]) }}">
+                            {{ __('Edit') }}
+                        </a>
+                        <a class="btn btn-secondary" href="{{ route('admin.account.type.delete', [$type->id]) }}">
+                            {{ __('Delete') }}
+                        </a>
                     </td>
                 </tr>
             @endforeach

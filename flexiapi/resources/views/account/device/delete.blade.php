@@ -2,13 +2,13 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item">
-        <a href="{{ route('account.device.index') }}">Devices</a>
+        <a href="{{ route('account.device.index') }}">{{ __('Devices') }}</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">Delete</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ __('Delete') }}</li>
 @endsection
 
 @section('content')
-    <h2>Device deletion</h2>
+    <h2>{{ __('Delete') }}</h2>
 
     <div>
         <p>Are you sure you want to delete the following device?</p>
@@ -22,7 +22,7 @@
         @csrf
         <input name="uuid" type="hidden" value="{{ $device->uuid }}">
         <div>
-            <input class="btn" type="submit" value="Delete">
+            <input class="btn" type="submit" value="{{ __('Delete') }}">
         </div>
     </form>
 @endsection

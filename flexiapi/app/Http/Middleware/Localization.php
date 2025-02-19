@@ -10,12 +10,7 @@ class Localization
 {
     public function handle(Request $request, Closure $next)
     {
-        $localization = $request->header('Accept-Language');
-        $localization = in_array($localization, config('app.authorized_locales'), true)
-            ? $localization
-            : config('app.locale');
-
-        App::setLocale($localization);
+        App::setLocale($request->getPreferredLanguage(config('app.authorized_locales')));
 
         return $next($request);
     }

@@ -3,7 +3,7 @@
 @section('content')
     <div style="max-width: 40rem; width: 100%; padding: 1rem;">
         <img style="float: right; margin-top: 1rem;" src="{{ asset('img/logo_linphone.png') }}">
-        <h2>About</h2>
+        <h2>{{ __('About') }}</h2>
         <hr />
 
         @if (!empty(config('app.project_url')))

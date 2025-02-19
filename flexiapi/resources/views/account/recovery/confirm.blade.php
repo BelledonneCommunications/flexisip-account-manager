@@ -3,7 +3,7 @@
 @section('content')
 
 <section>
-    <h1><i class="ph">user-circle</i> Account recovery</h1>
+    <h1><i class="ph">user-circle</i> {{ __('Account recovery') }}</h1>
     <form method="POST" action="{{ route('account.recovery.confirm') }}" accept-charset="UTF-8">
 @csrf
 
@@ -18,7 +18,7 @@
             <input name="account_id" type="hidden" value="{{ $account_id }}">
         </div>
         <div class="large">
-            <input class="btn oppose" type="submit" value="Login">
+            <input class="btn oppose" type="submit" value="{{ __('Login') }}">
         </div>
     </form>
 </section>

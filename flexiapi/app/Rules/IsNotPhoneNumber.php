@@ -15,6 +15,6 @@ class IsNotPhoneNumber implements Rule
 
     public function message()
     {
-        return 'The :attribute should not be a phone number';
+        return __('The :attribute should not be a phone number');
     }
 }

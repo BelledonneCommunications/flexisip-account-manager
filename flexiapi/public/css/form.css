@@ -207,6 +207,11 @@ form div select {
     -webkit-appearance: none;
 }
 
+form div select:has(option:only-child) {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 form div.search:after,
 form div.select:after {
     font-family: 'Phosphor';

@@ -165,7 +165,7 @@ class AccountService
             }
 
             if (!$request->api && $request->has('blocked')) {
-                $account->blocked = $request->get('blocked') == 'true';
+                $account->blocked = in_array($request->get('blocked'), ['true', 'on']);
             }
 
             if ($request->get('password')) {

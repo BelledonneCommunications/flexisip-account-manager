@@ -2,24 +2,23 @@
 
 @section('content')
     <section>
-        <h1><i class="ph">user-circle</i> Account recovery</h1>
+        <h1><i class="ph">user-circle</i> {{ __('Account recovery') }}</h1>
         <div>
             <form method="POST" action="{{ route('account.recovery.send') }}" accept-charset="UTF-8">
                 @csrf
 
                 @if ($method == 'email')
                     <div class="large">
-                        <p class="large">
-                            Enter your email account to recover it.
-                            @if (config('app.recovery_code_expiration_minutes') > 0)
-                                <br /> The code will be available {{ config('app.recovery_code_expiration_minutes') }} minutes.
-                            @endif
-                        </p>
+                        @if (config('app.recovery_code_expiration_minutes') > 0)
+                            <p class="large">
+                                {{ __('The code will be available :minutes minutes.', ['minutes' => config('app.recovery_code_expiration_minutes')]) }}
+                            </p>
+                        @endif
                         @include('parts.errors', ['name' => 'code'])
                     </div>
                     <div class="large">
                         <input type="email" name="email" value="{{ old('email') }}" placeholder="bob@example.com" required>
-                        <label for="email">Email</label>
+                        <label for="email">{{ __('Email') }}</label>
                         @include('parts.errors', ['name' => 'email'])
                         @include('parts.errors', ['name' => 'identifier'])
                     </div>
@@ -27,22 +26,21 @@
                     @if (config('app.account_email_unique') == false)
                         <div>
                             <input placeholder="username" name="username" type="text" value="{{ old('username') }}">
-                            <label for="username">Username</label>
+                            <label for="username">{{ __('Username') }}</label>
                         </div>
                         <div>
                             <input type="text" name="username" value="{{ $domain }}" disabled>
                         </div>
                     @endif
                 @elseif($method == 'phone')
-                    <p class="large">
-                        Enter your phone number to recover your account.
-                        @if (config('app.recovery_code_expiration_minutes') > 0)
-                            <br />The code will be available {{ config('app.recovery_code_expiration_minutes') }} minutes.
-                        @endif
-                    </p>
+                    @if (config('app.recovery_code_expiration_minutes') > 0)
+                        <p class="large">
+                            {{ __('The code will be available :minutes minutes.', ['minutes' => config('app.recovery_code_expiration_minutes')]) }}
+                        </p>
+                    @endif
                     <div>
                         <input placeholder="+123456789" name="phone" type="text" value="{{ old('phone') }}">
-                        <label for="phone">Phone</label>
+                        <label for="phone">{{ __('Phone number') }}</label>
                         @include('parts.errors', ['name' => 'phone'])
                         @include('parts.errors', ['name' => 'identifier'])
                     </div>
@@ -51,7 +49,7 @@
                 @include('parts.captcha')
 
                 <div class="large">
-                    <input class="btn oppose" type="submit" value="Send the code">
+                    <input class="btn oppose" type="submit" value="{{ __('Send')}}">
                 </div>
             </form>
         </div>

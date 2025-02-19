@@ -2,19 +2,19 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">gauge</i> My Account</h1>
+        <h1><i class="ph">gauge</i> {{ __('My Account') }}</h1>
     </header>
 
     <div class="card">
-        <h3><i class="ph">hand-waving</i> Welcome back</h3>
+        <h3><i class="ph">hand-waving</i> {{ __('Welcome on :app_name' , ['app_name' => config('app.name')]) }} </h3>
         <p>
             <i class="ph">envelope</i>
             @if (!empty($account->email))
                 {{ $account->email }}
             @else
-                No email yet
+                {{ __('No email yet') }}
             @endif
-            <a href="{{ route('account.email.change') }}">Change my current account email</a>
+            <a href="{{ route('account.email.change') }}">{{ __('Edit') }}</a>
         </p>
 
         @if (space()->phone_registration)
@@ -23,55 +23,61 @@
                 @if (!empty($account->phone))
                     {{ $account->phone }}
                 @else
-                    No phone yet
+                    {{ __('No phone yet') }}
                 @endif
-                <a href="{{ route('account.phone.change') }}">Change my current account phone</a>
+                <a href="{{ route('account.phone.change') }}">{{ __('Edit') }}</a>
             </p>
         @endif
 
         <p>
             <i class="ph">devices</i>
+            {{ __('Devices') }}
             <a href="{{ route('account.device.index') }}">
-                Edit my devices
+                {{ __('Manage') }}
             </a>
         </p>
         <p>
             <i class="ph">lock</i>
+            {{ __('Password') }}
             <a href="{{ route('account.password.show') }}">
                 @if ($account->passwords()->count() > 0)
-                    Change my password
+                    {{ __('Edit') }}
                 @else
-                    Set my password
+                    {{ __('Create') }}
                 @endif
             </a>
         </p>
 
         <p>
             <i class="ph">key</i>
+            {{ __('API Key') }}
             <a href="{{ route('account.api_key.show') }}">
-                API Key Management
+                {{ __('Manage') }}
             </a>
         </p>
 
         <p>
             <i class="ph">trash</i>
-            <a href="{{ route('account.delete') }}">Delete my account</a>
+            {{ __('My Account') }}
+            <a href="{{ route('account.delete') }}">
+                {{ __('Delete') }}
+            </a>
         </p>
     </div>
 
     <div class="card">
-        <h3><i class="ph">person</i> Account information</h3>
+        <h3><i class="ph">person</i> {{ __('Information') }}</h3>
 
-        <p><i class="ph">envelope</i> SIP address: sip:{{ $account->identifier }}</p>
-        <p><i class="ph">user</i> Username: {{ $account->username }}</p>
-        <p><i class="ph">globe-hemisphere-west</i> Domain: {{ $account->domain }}</p>
+        <p><i class="ph">envelope</i> {{ __('SIP Adress') }}: sip:{{ $account->identifier }}</p>
+        <p><i class="ph">user</i> {{ __('Username') }}: {{ $account->username }}</p>
+        <p><i class="ph">globe-hemisphere-west</i> {{ __('Domain') }}: {{ $account->domain }}</p>
 
         @if (!empty(space()?->account_proxy_registrar_address))
             <p><i class="ph">lan</i> Proxy/registrar address: sip:{{ space()?->account_proxy_registrar_address }}
             </p>
         @endif
         @if (!empty(config('app.transport_protocol_text')))
-            <p><i class="ph">sliders</i> Transport: {{ config('app.transport_protocol_text') }} </p>
+            <p><i class="ph">sliders</i> {{ __('Transport') }}: {{ config('app.transport_protocol_text') }} </p>
         @endif
 
         <!--<h3 class="mt-3">Automatic authentication</h3>

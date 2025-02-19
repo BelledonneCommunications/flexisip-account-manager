@@ -34,7 +34,7 @@
             @include('parts.captcha')
 
             <div class="large">
-                <input class="btn oppose" type="submit" value="Verify">
+                <input class="btn oppose" type="submit" value="{{ __('Verify') }}">
             </div>
         </form>
 
@@ -44,6 +44,3 @@
     </section>
 @endsection
 
-@section('footer')
-    Hop
-@endsection

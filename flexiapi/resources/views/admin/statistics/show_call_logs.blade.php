@@ -1,12 +1,12 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item active" aria-current="page">Statistics</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ __('Statistics') }}</li>
 @endsection
 
 @section('content')
     <header>
-        <h1><i class="ph">chart-donut</i> Statistics</h1>
+        <h1><i class="ph">chart-donut</i> {{ __('Statistics') }}</h1>
     </header>
 
     @include('admin.statistics.parts.tabs')
@@ -18,11 +18,11 @@
 
             <div>
                 <input type="date" name="from" value="{{ $request->get('from') }}" onchange="this.form.submit()">
-                <label for="from">From</label>
+                <label for="from">{{ __('From') }}</label>
             </div>
             <div>
                 <input type="date" name="to" value="{{ $request->get('to') }}" onchange="this.form.submit()">
-                <label for="to">To</label>
+                <label for="to">{{ __('To') }}</label>
             </div>
 
             <div class="large on_desktop"></div>
@@ -32,7 +32,7 @@
             <div class="select">
                 <select name="contacts_list" onchange="this.form.submit()">
                     <option value="">
-                        Select a contacts list
+                        {{ __('Select a contacts list') }}
                     </option>
                     @foreach ($contacts_lists as $key => $name)
                         <option value="{{ $key }}"
@@ -41,13 +41,13 @@
                         </option>
                     @endforeach
                 </select>
-                <label for="contacts_list">Contacts list</label>
+                <label for="contacts_list">{{ __('Contacts Lists') }}</label>
             </div>
 
             <div class="on_desktop"></div>
 
             <div class="oppose">
-                <a class="btn btn-secondary" href="{{ route('admin.statistics.show_call_logs') }}">Reset</a>
+                <a class="btn btn-secondary" href="{{ route('admin.statistics.show_call_logs') }}">{{ __('Reset') }}</a>
             </div>
         </form>
     </div>

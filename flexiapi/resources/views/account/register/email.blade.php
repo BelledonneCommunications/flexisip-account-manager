@@ -2,10 +2,10 @@
 
 @section('content')
     <section>
-        <h1><i class="ph">user-circle</i> Register</h1>
+        <h1><i class="ph">user-circle</i> {{ __('Register') }}</h1>
         <p style="margin-bottom: 2rem;">
-            You already have an account?
-            <a class="btn btn-secondary" href="{{ route('account.login') }}">Login</a>
+            {{ __('You already have an account?') }}
+            <a class="btn btn-secondary" href="{{ route('account.login') }}">{{ __('Login') }}</a>
         </p>
         @include('parts.tabs.register')
 
@@ -14,7 +14,7 @@
 
         <div>
             <input placeholder="username" name="username" type="text" value="{{ old('username') }}" required>
-            <label for="username">Username</label>
+            <label for="username">{{ __('Username') }}</label>
             <small>In lowercase letters</small>
             @include('parts.errors', ['name' => 'username'])
         </div>
@@ -25,37 +25,40 @@
 
         <div>
            <input type="email" name="email" value="{{ old('email') }}" placeholder="bob@example.net" required>
-            <label for="email">Email</label>
+            <label for="email">{{ __('Email') }}</label>
             @include('parts.errors', ['name' => 'email'])
         </div>
         <div>
            <input type="email" name="email_confirmation" value="{{ old('email_confirm') }}" placeholder="bob@example.net" required>
-            <label for="email_confirmation">Confirm email</label>
+            <label for="email_confirmation">{{ __('Confirm email') }}</label>
             @include('parts.errors', ['name' => 'email_confirmation'])
         </div>
 
         <div>
-            <input required="" name="password" type="password" value="{{ old('password') }}" placeholder="Password">
-            <label for="password">Password</label>
+            <input required="" name="password" type="password" value="{{ old('password') }}" placeholder="{{ __('Password') }}">
+            <label for="password">{{ __('Password') }}</label>
             @include('parts.errors', ['name' => 'password'])
         </div>
         <div>
-            <input required="" name="password_confirmation" type="password" value="{{ old('password_confirmation') }}" placeholder="Password confirmation">
-            <label for="password_confirmation">Confirm password</label>
+            <input required="" name="password_confirmation" type="password" value="{{ old('password_confirmation') }}" placeholder="{{ __('Confirm password') }}">
+            <label for="password_confirmation">{{ __('Confirm password') }}</label>
             @include('parts.errors', ['name' => 'password_confirmation'])
         </div>
 
-        @if (!empty(config(space()?->newsletter_registration_address))
+        @if (!empty(config(space()?->newsletter_registration_address)))
             <div class="large checkbox">
                 <input id="newsletter" name="newsletter" type="checkbox" value="true">
-                <label for="newsletter">I would like to subscribe to the newsletter</a></label>
+                <label for="newsletter"></label>
+                <div>
+                    <p>{{ __('I would like to subscribe to the newsletter') }}</p>
+                </div>
             </div>
         @endif
 
         @include('parts.terms')
 
         <div class="large">
-            <input class="btn oppose" type="submit" value="Register">
+            <input class="btn oppose" type="submit" value="{{ __('Register') }}">
         </div>
 
         </form>
@@ -64,8 +67,4 @@
     <section class="on_desktop">
         <img src="{{ asset('img/login.svg') }}">
     </section>
-@endsection
-
-@section('footer')
-    Hop
 @endsection

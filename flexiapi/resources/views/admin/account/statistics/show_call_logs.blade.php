@@ -3,7 +3,7 @@
 @section('breadcrumb')
     @include('admin.account.parts.breadcrumb_accounts_index')
     @include('admin.account.parts.breadcrumb_accounts_edit', ['account' => $account])
-    <li class="breadcrumb-item active" aria-current="page">Call Logs</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ __('Calls logs') }}</li>
 @endsection
 
 @section('content')
@@ -20,15 +20,15 @@
 
             <div>
                 <input type="date" name="from" value="{{ $request->get('from') }}" onchange="this.form.submit()">
-                <label for="from">From</label>
+                <label for="from">{{ __('From') }}</label>
             </div>
             <div>
                 <input type="date" name="to" value="{{ $request->get('to') }}" onchange="this.form.submit()">
-                <label for="to">To</label>
+                <label for="to">{{ __('To') }}</label>
             </div>
 
             <div class="oppose">
-                <a class="btn btn-secondary" href="{{ route('admin.account.statistics.show_call_logs', $account->id) }}">Reset</a>
+                <a class="btn btn-secondary" href="{{ route('admin.account.statistics.show_call_logs', $account->id) }}">{{ __('Reset') }}</a>
             </div>
         </form>
     </div>
