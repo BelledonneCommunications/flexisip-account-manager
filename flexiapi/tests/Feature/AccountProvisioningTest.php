@@ -368,18 +368,6 @@ class AccountProvisioningTest extends TestCase
         config()->set('app.coturn_server_host', $host);
         config()->set('app.coturn_static_auth_secret', 'secret');
 
-        $response = $this->withHeaders([
-                'x-linphone-provisioning' => true,
-            ])
-            ->keyAuthenticated($account)
-            ->get($this->accountRoute)
-            ->assertStatus(200)
-            ->assertHeader('Content-Type', 'application/xml')
-            ->assertSee($host)
-            ->assertSee('nat_policy_ref')
-            ->assertSee('stun_server_username')
-            ->assertSee('nat_policy_0');
-
         $this->keyAuthenticated($account)
             ->get('/api/accounts/me/services/turn')
             ->assertStatus(200)

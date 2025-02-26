@@ -23,6 +23,7 @@ v1.7
 - Fix FLEXIAPI-270 Call the static $apnsTypes attribute in FlexisipPusherConnector
 - Fix FLEXIAPI-271 Handle properly reversed attributes in objects
 - Fix FLEXIAPI-237 Add internationalisation support in the app
+- Fix FLEXIAPI-261 Remove the TURN part in the XML provisioning (and only keep the API endpoint)
 
 v1.6
 ----

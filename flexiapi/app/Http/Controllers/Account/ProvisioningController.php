@@ -250,65 +250,6 @@ class ProvisioningController extends Controller
             $passwords = $account->passwords()->get();
             $authInfoIndex = 0;
 
-            // CoTURN
-            if (hasCoTURNConfigured()) {
-                list($username, $password) = array_values(getCoTURNCredentials());
-
-                // net
-                $section = $xpath->query("//section[@name='net']")->item(0);
-
-                if ($section == null) {
-                    $section = $dom->createElement('section');
-                    $section->setAttribute('name', 'net');
-                    $config->appendChild($section);
-                }
-
-                $ref = Str::random(8);
-
-                $entry = $dom->createElement('entry', $ref);
-                $entry->setAttribute('name', 'nat_policy_ref');
-                $section->appendChild($entry);
-
-                // nat_policy_0
-                $section = $dom->createElement('section');
-                $section->setAttribute('name', 'nat_policy_0');
-                $config->appendChild($section);
-
-                $entry = $dom->createElement('entry', $ref);
-                $entry->setAttribute('name', 'ref');
-                $section->appendChild($entry);
-
-                $entry = $dom->createElement('entry', config('app.coturn_server_host'));
-                $entry->setAttribute('name', 'stun_server');
-                $section->appendChild($entry);
-
-                $entry = $dom->createElement('entry', $username);
-                $entry->setAttribute('name', 'stun_server_username');
-                $section->appendChild($entry);
-
-                $entry = $dom->createElement('entry', 'turn,ice');
-                $entry->setAttribute('name', 'protocols');
-                $section->appendChild($entry);
-
-                // auth_info_x
-                $section = $xpath->query("//section[@name='auth_info_" . $authInfoIndex . "']")->item(0);
-
-                if ($section == null) {
-                    $section = $dom->createElement('section');
-                    $section->setAttribute('name', 'auth_info_' . $authInfoIndex);
-                    $config->appendChild($section);
-                    $authInfoIndex++;
-                }
-
-                $entry = $dom->createElement('entry', $username);
-                $entry->setAttribute('name', 'username');
-                $section->appendChild($entry);
-
-                $entry = $dom->createElement('entry', $password);
-                $entry->setAttribute('name', 'passwd');
-                $section->appendChild($entry);
-            }
-
             foreach ($passwords as $password) {
                 $section = $xpath->query("//section[@name='auth_info_" . $authInfoIndex . "']")->item(0);
 
