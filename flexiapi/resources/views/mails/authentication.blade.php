@@ -1,11 +1,11 @@
 <html>
     <head>
-        <title>Authenticate on {{ config('app.name') }}</title>
+        <title>Authenticate on {{ space()->name }}</title>
     </head>
     <body>
         <p>Hello,</p>
         <p>
-            You are trying to authenticate to {{ config('app.name') }} using your email account.<br />
+            You are trying to authenticate to {{ space()->name }} using your email account.<br />
             Please enter the code bellow to finish the authentication process.
         </p>
         <p>

@@ -37,7 +37,7 @@ FlexiAPI is shipped with several console commands that you can launch using the 
 
 Create or update a Space, required to then create accounts afterward. The `super` option enable/disable the domain as a super domain.
 
-    php artisan spaces:create-update {sip_domain} {host} {--super}
+    php artisan spaces:create-update {sip_domain} {host} {name} {--super}
 
 ### Import the old DotEnv instance configuration into a Space
 

@@ -30,6 +30,7 @@ class SpaceFactory extends Factory
     public function definition()
     {
         return [
+            'name' => $this->faker->name,
             'domain' => config('app.sip_domain'),
             'host' => config('app.sip_domain'),
         ];

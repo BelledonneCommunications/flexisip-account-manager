@@ -18,6 +18,7 @@
     <thead>
         <tr>
             <th>{{ __('Space') }}</th>
+            <th>{{ __('Host') }}</th>
             <th>{{ __('SIP Domain') }}</th>
             <th>{{ __('Accounts') }}</th>
             <th>{{ __('Expiration') }}</th>
@@ -28,10 +29,11 @@
             <tr>
                 <td>
                     <a href="{{ route('admin.spaces.show', $space->id) }}">
-                        {{ $space->host }}
+                        {{ $space->name }}
                         @if ($space->super) <span class="badge badge-error" title="Super domain">Super</span> @endif
                     </a>
                 </td>
+                <td>{{ $space->host }}</td>
                 <td>{{ $space->domain }}</td>
                 <td>
                     {{ $space->accounts_count }} / @if ($space->max_accounts > 0){{ $space->max_accounts }} @else <i class="ph">infinity</i>@endif

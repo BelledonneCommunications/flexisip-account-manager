@@ -80,7 +80,7 @@ Create a first administator account:
 
 For example:
 
-    php artisan accounts:create-admin-account admin strong_password my-company-sip-domain.tld
+    php artisan accounts:create-admin-account -u admin -p strong_password -d my-company-sip-domain.tld
 
 You can now try to authenticate on the web panel and continue the setup using your admin account.
 

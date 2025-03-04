@@ -1,11 +1,11 @@
 <html>
     <head>
-        <title>Register on {{ config('app.name') }}</title>
+        <title>Register on {{ space()->name }}</title>
     </head>
     <body>
         <p>Hello,</p>
         <p>
-            You just created an account on {{ config('app.name') }} using your email account.<br />
+            You just created an account on {{ space()->name }} using your email account.<br />
             Please follow the unique link bellow to set up your password and finish the registration process.
         </p>
         <p>

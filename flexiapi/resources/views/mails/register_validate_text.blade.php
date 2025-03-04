@@ -1,6 +1,6 @@
 Hello,
 
-You just created an account on {{ config('app.name') }} using your email account.
+You just created an account on {{ space()->name }} using your email account.
 
 Please enter the following code on the confirmation page:
 

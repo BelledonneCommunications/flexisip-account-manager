@@ -24,7 +24,7 @@ use Illuminate\Console\Command;
 
 class CreateUpdate extends Command
 {
-    protected $signature = 'spaces:create-update {sip_domain} {host} {--super}';
+    protected $signature = 'spaces:create-update {sip_domain} {host} {name} {--super}';
     protected $description = 'Create a Space';
 
     public function handle()
@@ -42,6 +42,7 @@ class CreateUpdate extends Command
         $space = Space::where('domain', $this->argument('sip_domain'))->firstOrNew();
         $space->host = $this->argument('host');
         $space->domain = $this->argument('sip_domain');
+        $space->name = $this->argument('name');
 
         $space->exists
             ? $this->info('The domain already exists, updating it')

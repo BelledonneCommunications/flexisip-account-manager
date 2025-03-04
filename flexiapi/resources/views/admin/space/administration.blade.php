@@ -6,7 +6,7 @@
     </li>
     <li class="breadcrumb-item">
         <a href="{{ route('admin.spaces.show', $space->id) }}">
-            {{ $space->host }}
+            {{ $space->name }}
         </a>
     </li>
     <li class="breadcrumb-item active" aria-current="page">{{ __('Administration') }}</li>
@@ -14,7 +14,7 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">globe-hemisphere-west</i> {{ $space->host }}</h1>
+        <h1><i class="ph">globe-hemisphere-west</i> {{ $space->name }}</h1>
     </header>
 
     @include('admin.space.tabs')
@@ -24,6 +24,12 @@
         accept-charset="UTF-8">
         @csrf
         @method('put')
+
+        <div>
+            <input name="name" id="name" placeholder="My Space Name" type="text" value="{{ $space->name }}">
+            <label for="name">{{ __('Name') }}</label>
+            @include('parts.errors', ['name' => 'name'])
+        </div>
 
         <div>
             <input name="max_accounts" id="max_accounts" type="number" min="0" value="{{ $space->max_accounts }}">

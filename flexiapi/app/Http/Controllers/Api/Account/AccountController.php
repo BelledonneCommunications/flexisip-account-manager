@@ -160,7 +160,7 @@ class AccountController extends Controller
             : config('app.sip_domain');
         $account->ip_address = $request->ip();
         $account->created_at = Carbon::now();
-        $account->user_agent = $request->header('User-Agent') ?? config('app.name');
+        $account->user_agent = $request->header('User-Agent') ?? space()->name;
         $account->save();
 
         $account->updatePassword($request->get('password'), $request->get('algorithm'));
@@ -182,7 +182,7 @@ class AccountController extends Controller
             Log::channel('events')->info('API deprecated: Account created using the public endpoint by phone', ['id' => $account->identifier]);
 
             $ovhSMS = new OvhSMS;
-            $ovhSMS->send($request->get('phone'), 'Your ' . config('app.name') . ' creation code is ' . $account->confirmation_key);
+            $ovhSMS->send($request->get('phone'), 'Your ' . space()->name . ' creation code is ' . $account->confirmation_key);
         } elseif ($request->has('email')) {
             // Send validation by email
             $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
@@ -233,7 +233,7 @@ class AccountController extends Controller
         Log::channel('events')->info('API deprecated - Account recovery: Account recovery by phone', ['id' => $account->identifier]);
 
         $ovhSMS = new OvhSMS;
-        $ovhSMS->send($request->get('phone'), 'Your ' . config('app.name') . ' recovery code is ' . $account->confirmation_key);
+        $ovhSMS->send($request->get('phone'), 'Your ' . space()->name . ' recovery code is ' . $account->confirmation_key);
     }
 
     /**

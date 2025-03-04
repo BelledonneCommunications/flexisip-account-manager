@@ -19,7 +19,13 @@
         @csrf
         @method('post')
 
-        <div class="large">
+        <div>
+            <input name="name" id="name" placeholder="My Space Name" required="required" type="text" value="{{ $space->name ?? old('name') }}">
+            <label for="name">{{ __('Name') }}</label>
+            @include('parts.errors', ['name' => 'name'])
+        </div>
+
+        <div>
             <input placeholder="subdomain" name="host" type="text" pattern="{{ $space::HOST_REGEX}}" style="width: 60%"
                 value="{{ $space->host ?? old('host') }}" onchange="copyValueTo(this, this.form.querySelector('input[name=domain]'), '.{{ config('app.root_host') }}')">
             <input placeholder=".{{ config('app.root_host') }}" style="position: absolute; width: calc(40% - 1rem); margin-left: 1rem;" disabled>

@@ -81,6 +81,7 @@ class ApiSpaceTest extends TestCase
 
         $response = $this->keyAuthenticated($admin)
             -> json($this->method, $this->route, [
+                'name' => $thirdDomain,
                 'domain' => $thirdDomain,
                 'host' => $thirdDomain,
                 'super' => false
@@ -90,6 +91,7 @@ class ApiSpaceTest extends TestCase
         $this->keyAuthenticated($admin)
             ->json('GET', $this->route)
             ->assertJsonFragment([
+                'name' => $thirdDomain,
                 'domain' => $thirdDomain,
                 'host' => $thirdDomain,
                 'super' => false
@@ -109,6 +111,7 @@ class ApiSpaceTest extends TestCase
         $this->keyAuthenticated($admin)
             ->json('PUT', $this->route . '/' . $thirdDomain, $json)
             ->assertJsonFragment([
+                'name' => $thirdDomain,
                 'domain' => $thirdDomain,
                 'host' => $thirdDomain,
                 'super' => true,
@@ -150,6 +153,7 @@ class ApiSpaceTest extends TestCase
 
         $this->keyAuthenticated($admin)
             -> json($this->method, $this->route, [
+                'name' => $domain,
                 'domain' => $domain,
                 'host' => $domain,
                 'super' => false,

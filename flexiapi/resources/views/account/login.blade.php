@@ -2,7 +2,7 @@
 
 @section('content')
     <section>
-        <h1 style="margin-bottom: 3rem;"><i class="ph">hand-waving</i> {{ __('Welcome on :app_name' , ['app_name' => config('app.name')]) }}</h1>
+        <h1 style="margin-bottom: 3rem;"><i class="ph">hand-waving</i> {{ __('Welcome on :app_name' , ['app_name' => space()->name]) }}</h1>
 
         @if (space()->intro_registration_text)
             @parsedown(space()->intro_registration_text)

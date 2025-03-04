@@ -6,13 +6,13 @@
             <a href="{{ route('admin.spaces.index') }}">{{ __('Spaces') }}</a>
         </li>
     @endif
-    <li class="breadcrumb-item">{{ $space->host }}</li>
+    <li class="breadcrumb-item">{{ $space->name }}</li>
     <li class="breadcrumb-item active" aria-current="page">Information</li>
 @endsection
 
 @section('content')
     <header>
-        <h1><i class="ph">globe-hemisphere-west</i> {{ $space->host }}</h1>
+        <h1><i class="ph">globe-hemisphere-west</i> {{ $space->name }}</h1>
 
         <a class="btn btn-secondary oppose" @if ($space->isFull())disabled @endif href="{{ route('admin.account.create', ['domain' => $space->domain]) }}">
             <i class="ph">user-plus</i> {{ __('Create') }}

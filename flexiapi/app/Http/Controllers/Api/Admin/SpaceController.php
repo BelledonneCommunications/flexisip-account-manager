@@ -35,6 +35,7 @@ class SpaceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'name' => 'required|unique:spaces',
             'domain' => 'required|unique:spaces',
             'host' => 'required|unique:spaces',
             'max_accounts' => 'nullable|integer',
@@ -42,6 +43,7 @@ class SpaceController extends Controller
         ]);
 
         $space = new Space;
+        $space->name = $request->get('name');
         $space->domain = $request->get('domain');
         $space->host = $request->get('host');
         $this->setRequestBoolean($request, $space, 'super');
@@ -120,9 +122,11 @@ class SpaceController extends Controller
         }
 
         $request->validate([
+            'name' => ['required', Rule::unique('spaces')->ignore($space->id)],
             'host' => ['required', Rule::unique('spaces')->ignore($space->id)]
         ]);
 
+        $space->name = $request->get('name');
         $space->host = $request->get('host');
         $space->super = $request->get('super');
         $space->disable_chat_feature = $request->get('disable_chat_feature');

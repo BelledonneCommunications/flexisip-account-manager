@@ -6,7 +6,7 @@
     </li>
     <li class="breadcrumb-item">
         <a href="{{ route('admin.spaces.show', $space->id) }}">
-            {{ $space->host }}
+            {{ $space->name }}
         </a>
     </li>
     <li class="breadcrumb-item active" aria-current="page">{{ __('App Configuration') }}</li>
@@ -14,7 +14,7 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">globe-hemisphere-west</i> {{ $space->host }}</h1>
+        <h1><i class="ph">globe-hemisphere-west</i> {{ $space->name }}</h1>
     </header>
 
     @include('admin.space.tabs')

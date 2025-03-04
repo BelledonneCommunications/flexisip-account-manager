@@ -1,6 +1,6 @@
 Hello,
 
-You are trying to authenticate to {{ config('app.name') }} using your email account.
+You are trying to authenticate to {{ space()->name }} using your email account.
 Please enter the code bellow to finish the authentication process.
 
 {{ $recovery_code }}

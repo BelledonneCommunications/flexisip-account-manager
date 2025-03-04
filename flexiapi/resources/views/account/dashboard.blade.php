@@ -6,7 +6,7 @@
     </header>
 
     <div class="card">
-        <h3><i class="ph">hand-waving</i> {{ __('Welcome on :app_name' , ['app_name' => config('app.name')]) }} </h3>
+        <h3><i class="ph">hand-waving</i> {{ __('Welcome on :app_name' , ['app_name' => space()->name]) }} </h3>
         <p>
             <i class="ph">envelope</i>
             @if (!empty($account->email))

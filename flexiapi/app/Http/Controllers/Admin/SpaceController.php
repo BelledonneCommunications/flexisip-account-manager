@@ -62,12 +62,14 @@ class SpaceController extends Controller
 
         $request->merge(['full_host' => $fullHost]);
         $request->validate([
+            'name' => 'required|unique:spaces',
             'domain' => 'required|unique:spaces|regex:/'. Space::DOMAIN_REGEX . '/',
             'host' => 'nullable|regex:/'. Space::HOST_REGEX . '/',
             'full_host' => 'required|unique:spaces,host',
         ]);
 
         $space = new Space();
+        $space->name = $request->get('name');
         $space->domain = $request->get('domain');
         $space->host = $request->get('full_host');
         $space->save();
@@ -119,6 +121,7 @@ class SpaceController extends Controller
     public function administrationUpdate(Request $request, Space $space)
     {
         $request->validate([
+            'name' => ['required', Rule::unique('spaces')->ignore($space->id)],
             'max_accounts' => 'required|integer|min:0',
             'expire_at' => 'nullable|date|after_or_equal:today'
         ]);
@@ -129,6 +132,7 @@ class SpaceController extends Controller
             ]);
         }
 
+        $space->name = $request->get('name');
         $space->super = getRequestBoolean($request, 'super');
         $space->max_accounts = $request->get('max_accounts');
         $space->expire_at = $request->get('expire_at');

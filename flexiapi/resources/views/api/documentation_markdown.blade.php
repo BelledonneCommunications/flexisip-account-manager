@@ -153,6 +153,7 @@ Create a new `sip_domain`.
 
 JSON parameters:
 
+* `name` **required**, the space name
 * `domain` **required**, the SIP domain to use, must be unique
 * `super` **required**, boolean, set the domain as a Super Domain
 * `disable_chat_feature` boolean, disable the chat feature, default to `false`
@@ -190,6 +191,7 @@ Update an existing `sip_domain`.
 
 JSON parameters:
 
+* `name` **required**, the space name
 * `super` **required**, boolean, set the domain as a Super Domain
 * `disable_chat_feature` **required**, boolean
 * `disable_meetings_feature` **required**, boolean

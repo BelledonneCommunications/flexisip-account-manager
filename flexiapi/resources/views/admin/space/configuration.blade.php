@@ -7,13 +7,13 @@
         </li>
         <li class="breadcrumb-item">
             <a href="{{ route('admin.spaces.show', $space->id) }}">
-                {{ $space->host }}
+                {{ $space->name }}
             </a>
         </li>
     @else
         <li class="breadcrumb-item">
             <a href="{{ route('admin.spaces.me') }}">
-                {{ $space->host }}
+                {{ $space->name }}
             </a>
         </li>
     @endif
@@ -22,7 +22,7 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">globe-hemisphere-west</i> {{ $space->host }}</h1>
+        <h1><i class="ph">globe-hemisphere-west</i> {{ $space->name }}</h1>
     </header>
 
     @include('admin.space.tabs')

@@ -63,7 +63,7 @@ class AccountService
         $account->domain = config('app.sip_domain');
         $account->ip_address = $request->ip();
         $account->created_at = Carbon::now();
-        $account->user_agent = config('app.name');
+        $account->user_agent = space()->name;
         $account->dtmf_protocol = $request->get('dtmf_protocol');
 
         if ($request->asAdmin) {
@@ -71,7 +71,7 @@ class AccountService
             $account->display_name = $request->get('display_name');
             $account->activated = $request->has('activated') ? (bool)$request->get('activated') : false;
             $account->domain = resolveDomain($request);
-            $account->user_agent = $request->header('User-Agent') ?? config('app.name');
+            $account->user_agent = $request->header('User-Agent') ?? space()->name;
             $account->admin = $request->has('admin') && (bool)$request->get('admin');
 
             if (!$request->api && $request->has('role')) {
@@ -149,7 +149,7 @@ class AccountService
             $account->email = $request->get('email');
             $account->display_name = $request->get('display_name');
             $account->dtmf_protocol = $request->get('dtmf_protocol');
-            $account->user_agent = $request->header('User-Agent') ?? config('app.name');
+            $account->user_agent = $request->header('User-Agent') ?? $account->space->name;
             $account->admin = $request->has('admin') && (bool)$request->get('admin');
 
             if ($request->api && $request->has('admin')) {
@@ -245,7 +245,7 @@ class AccountService
 
         Log::channel('events')->info('Account Service: Account phone change requested by SMS', ['id' => $account->identifier]);
 
-        $message = 'Your ' . config('app.name') . ' validation code is ' . $phoneChangeCode->code . '.';
+        $message = 'Your ' . $account->space->name . ' validation code is ' . $phoneChangeCode->code . '.';
 
         if (config('app.recovery_code_expiration_minutes') > 0) {
             $message .= ' The code is available for ' . config('app.recovery_code_expiration_minutes') . ' minutes';
@@ -391,7 +391,7 @@ class AccountService
     {
         $account = $this->recoverAccount($account);
 
-        $message = 'Your ' . config('app.name') . ' validation code is ' . $account->recovery_code . '.';
+        $message = 'Your ' . $account->space->name . ' validation code is ' . $account->recovery_code . '.';
 
         if (config('app.recovery_code_expiration_minutes') > 0) {
             $message .= ' The code is available for ' . config('app.recovery_code_expiration_minutes') . ' minutes';

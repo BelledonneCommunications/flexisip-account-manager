@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ config('app.name') }}</title>
+    <title>{{ space()->name }}</title>
 
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
 
@@ -27,7 +27,7 @@
     <header>
         <nav>
             <a id="logo" href="{{ route('account.home') }}"><span
-                    class="on_desktop">{{ config('app.name') }}</span></a>
+                    class="on_desktop">{{ space()->name }}</span></a>
 
             @if (!isset($welcome) || $welcome == false)
                 <a id="menu" class="on_mobile" href="#"

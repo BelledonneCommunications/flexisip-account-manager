@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Registration confirmed {{ config('app.name') }}</title>
+        <title>Registration confirmed {{ space()->name }}</title>
     </head>
     <body>
         <p>Hello,</p>

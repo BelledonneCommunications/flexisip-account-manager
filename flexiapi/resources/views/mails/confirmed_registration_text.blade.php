@@ -1,4 +1,4 @@
-Registration confirmed {{ config('app.name') }}
+Registration confirmed {{ space()->name }}
 
 Hello,
 

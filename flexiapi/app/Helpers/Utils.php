@@ -110,7 +110,7 @@ function markdownDocumentationView(string $view): string
 
     return (string) $converter->convert(
         (string)view($view, [
-            'app_name' => config('app.name')
+            'app_name' => space()->name
         ])->render()
     );
 }

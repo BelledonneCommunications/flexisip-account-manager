@@ -23,6 +23,8 @@ class ImportConfigurationFromDotEnv extends Command
         $this->info('The following configuration will be imported in the space ' . $space->domain);
         $this->info('The existing settings will be overwritten:');
 
+        $space->name = env('APP_NAME', null);
+
         $space->custom_theme = env('INSTANCE_CUSTOM_THEME', false);
         $space->web_panel = env('WEB_PANEL', true);
 
