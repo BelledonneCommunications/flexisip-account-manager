@@ -17,8 +17,8 @@
         @method('delete')
 
         <div class="large">
-            <p>You are going to permanently delete your account.</p>
-            <p>Please enter your complete SIP address to confirm: <b>{{ $account->identifier }}</b>.</p>
+            <p>{{ __('You are going to permanently delete your account. Please enter your complete SIP address to confirm.') }}</p>
+            <p><b>{{ $account->identifier }}</b></p>
         </div>
 
         <div>

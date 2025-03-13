@@ -7,7 +7,7 @@
         </li>
     @endif
     <li class="breadcrumb-item">{{ $space->name }}</li>
-    <li class="breadcrumb-item active" aria-current="page">Information</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ __('Information') }}</li>
 @endsection
 
 @section('content')
@@ -32,19 +32,19 @@
         <div class="card">
             <span class="icon"><i class="ph">users</i></span>
             <h3>{{ __('Accounts') }}</h3>
-            @if ($space->max_accounts > 0)
-                <progress max="100" value="{{ $space->accountsPercentage }}"
-                    class="{{ $space->accountsPercentageClass }}"></progress>
-            @endif
             <p>
                 {{ $space->accounts()->count() }}
                 /
                 @if ($space->max_accounts > 0){{ $space->max_accounts }} @else <i class="ph">infinity</i>@endif
             </p>
+            @if ($space->max_accounts > 0)
+                <progress max="100" value="{{ $space->accountsPercentage }}"
+                    class="{{ $space->accountsPercentageClass }}"></progress>
+            @endif
         </div>
         <div class="card">
             <span class="icon"><i class="ph">clock</i></span>
-            <h3>Expiration</h3>
+            <h3>{{ __('Expiration') }}</h3>
             @if ($space->isExpired())
                 <p>Expired</p>
             @elseif ($space->expire_at)
@@ -62,7 +62,7 @@
     <table>
         <thead>
             <tr>
-                @include('parts.column_sort', ['uriParams' => ['space' => $space], 'key' => 'username', 'title' => 'Identifier'])
+                @include('parts.column_sort', ['uriParams' => ['space' => $space], 'key' => 'username', 'title' => __('Identifier')])
                 @include('parts.column_sort', ['uriParams' => ['space' => $space], 'key' => 'updated_at', 'title' => __('Updated')])
             </tr>
         </thead>

@@ -47,7 +47,7 @@ class AccountContactController extends Controller
 
         if (!$contact) {
             return redirect()->back()->withErrors([
-                'sip' => 'The contact SIP address doesn\'t exists'
+                'sip' => __("The contact doesn't exists")
             ]);
         }
 

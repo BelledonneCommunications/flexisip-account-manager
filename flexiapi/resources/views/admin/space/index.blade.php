@@ -1,9 +1,5 @@
 @extends('layouts.main')
 
-@section('breadcrumb')
-    <li class="breadcrumb-item" aria-current="page">{{ __('Spaces') }}</li>
-@endsection
-
 @section('content')
 
 <header>
@@ -40,9 +36,9 @@
                 </td>
                 <td>
                     @if ($space->isExpired())
-                        Expired
+                        {{ __('Expired') }}
                     @elseif ($space->expire_at)
-                        In {{ $space->daysLeft }} days
+                        {{ __('In :days days', ['days' => $space->daysLeft]) }}
                     @else
                         <i class="ph">infinity</i>
                     @endif

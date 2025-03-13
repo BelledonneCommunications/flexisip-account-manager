@@ -13,10 +13,8 @@
     <h2>{{ __('Delete') }}</h2>
 
     <div>
-        <p>Are you sure you want to delete the following device?</p>
-        <p>
-            <b>User Agent:</b> {{ $device->user_agent }}
-        </p>
+        <p>{{ __('You are going to permanently delete the following element. Please confirm your action.') }}</p>
+        <p><b>{{ $device->user_agent }}</b></p>
     </div>
 
     <form method="POST" action="{{ route('admin.account.device.destroy', $account) }}" accept-charset="UTF-8">
@@ -26,6 +24,5 @@
         <div>
             <input class="btn" type="submit" value="{{ __('Delete') }}">
         </div>
-
     </form>
 @endsection

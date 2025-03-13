@@ -2,14 +2,14 @@
 
 @section('content')
     <section>
-        <h1 style="margin-bottom: 4rem;"><i class="ph">user-circle</i> Validate your email</h1>
+        <h1 style="margin-bottom: 4rem;"><i class="ph">user-circle</i> {{ __('Change your phone email') }}</h1>
 
         <form method="POST" action="{{ route('account.email.update') }}" accept-charset="UTF-8">
 @csrf
 
         <div class="large">
-            <p>A verification code was sent by email on <b>{{ $emailChangeCode->email }}</b>.</p>
-            <p>Please enter the verification code below:</p>
+            <p>{{ __('A verification code was sent by email to :email.', ['email' => $emailChangeCode->email]) }}</p>
+            <p>{{ __('Enter the pin code bellow:') }}</p>
         </div>
 
         <div class="large">

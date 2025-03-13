@@ -1,9 +1,5 @@
 @extends('layouts.main')
 
-@section('breadcrumb')
-    <li class="breadcrumb-item" aria-current="page">{{ __('Accounts') }}</li>
-@endsection
-
 @section('content')
     <header>
         <h1><i class="ph">users</i> {{ __('Accounts') }}</h1>

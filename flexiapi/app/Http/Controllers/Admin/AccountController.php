@@ -111,7 +111,7 @@ class AccountController extends Controller
 
         return view('admin.account.create_edit', [
             'account' => $account,
-            'protocols' => [null => 'None'] + Account::$dtmfProtocols,
+            'protocols' => [null => __('Empty')] + Account::$dtmfProtocols,
             'domains' => $request->user()?->superAdmin
                 ? Space::all()
                 : Space::where('domain', $account->domain)->get(),

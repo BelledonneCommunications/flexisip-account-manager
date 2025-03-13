@@ -4,23 +4,14 @@
     <section>
         <h1>
             <i class="ph">phone</i>
-            @if ($account->phone)
-                Change your phone number
-            @else
-                Set your phone number
-            @endif
+            {{ __('Change your phone number') }}
         </h1>
 
         <form method="POST" action="{{ route('account.phone.request_change') }}" accept-charset="UTF-8">
             @csrf
 
             <div class="large">
-                @if ($account->phone)
-                    <p>Please enter the new phone number that you would like to link to your account.</p>
-                @else
-                    <p>The verification code is invalid or you didn't receive it.</p>
-                    <p>Please enter your phone number again to receive a new code.</p>
-                @endif
+                <p>{{ __('Please enter the new phone number that you would like to link to your account.') }}</p>
 
                 @include('parts.errors', ['name' => 'code'])
             </div>

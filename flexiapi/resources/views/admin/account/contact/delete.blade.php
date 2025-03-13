@@ -17,7 +17,7 @@
         @method('delete')
 
         <div>
-            <p>You are going to remove the following contact from the contact list. Please confirm your action.</p>
+            <p>{{ $device->user_agent }}</p>
             <p><b>{{ $contact->identifier }}</b></p>
         </div>
 

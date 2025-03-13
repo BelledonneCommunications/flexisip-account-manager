@@ -532,7 +532,9 @@ h3 {
     font-size: 1.75rem;
     color: var(--second-6);
     padding: 0.5rem 0;
+    padding-bottom: 1rem;
     font-weight: bold;
+    border-bottom: 1px solid var(--grey-2);
 }
 
 h3 i {
@@ -619,7 +621,7 @@ table {
 }
 
 table tr td a {
-    display: block;
+    display: inline-block;
 }
 
 table tr td,
@@ -653,7 +655,7 @@ table tr th a i {
 }
 
 table thead {
-    border-bottom: 1px solid var(--second-4);
+    border-bottom: 1px solid var(--grey-2);
 }
 
 table tr:nth-child(2n) {

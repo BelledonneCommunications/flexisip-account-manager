@@ -60,7 +60,7 @@ class PhoneController extends Controller
         }
 
         return redirect()->route('account.phone.change')->withErrors([
-            'code' => 'The code entered was not valid'
+            'code' => __('The code is not valid')
         ]);
     }
 }

@@ -1,14 +1,7 @@
 <p class="text-center pt-3">
-    @if (config('app.account_email_unique'))
-        Set or recover your account
-    @else
-        Set or recover your password
-    @endif
-        using your <a href="{{ route('account.recovery.show.email') }}">{{ __('Email') }}</a>
+    <i class="ph">envelope</i><a href="{{ route('account.recovery.show.email') }}">{{ __('Recover your account using your email') }}</a><br />
     @if (space()->phone_registration)
-        or your <a href="{{ route('account.recovery.show.phone') }}">{{ __('Phone number') }}</a>
+    <i class="ph">phone</i><a href="{{ route('account.recovery.show.phone') }}">{{ __('Recover your account using your phone number') }}</a><br />
     @endif
-</p>
-<p class="text-center">
-    …or login using an already authenticated device <a href="{{ route('account.authenticate.auth_token') }}">by flashing a QRcode</a>.
+    <i class="ph">qr-code</i><a href="{{ route('account.authenticate.auth_token') }}">{{ __('Login using a QRCode') }}</a>
 </p>

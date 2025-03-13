@@ -38,7 +38,7 @@
         id="create_edit" accept-charset="UTF-8">
         @csrf
         @method($account->id ? 'put' : 'post')
-        <h2>Connexion</h2>
+        <h2>{{ __('Connection') }}</h2>
         <div>
             <input placeholder="Username" required="required" name="username" type="text"
                 value="@if($account->id){{ $account->username }}@else{{ old('username') }}@endif"
@@ -88,7 +88,7 @@
             @if (!empty($account->email))
                 <p class="oppose">
                     <a href="{{ route('admin.account.reset_password_email.create', $account) }}">
-                        Send an email to the user to reset the password
+                        {{ __('Send an email to the user to reset the password') }}
                     </a>
                 </p>
             @endif
@@ -189,8 +189,6 @@
         <h2 id="provisioning">{{ __('Provisioning') }}</h2>
 
         @if ($account->provisioning_token)
-            <p>Share the following picture with the user or the one-time-use link bellow.</p>
-
             <img style="max-width: 15rem;" src="{{ route('provisioning.qrcode', $account->provisioning_token) }}">
 
             <form class="inline">

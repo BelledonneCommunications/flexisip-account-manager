@@ -42,7 +42,7 @@
             <span class="supporting">{{ __('Cannot be changed once created.') }}</span>
         </div>
 
-        @include('parts.form.toggle', ['object' => $space, 'key' => 'super', 'label' => __('Super space'), 'supporting' => 'All the admins in will be super admins'])
+        @include('parts.form.toggle', ['object' => $space, 'key' => 'super', 'label' => __('Super space'), 'supporting' => __('All the admins will be super admins')])
 
         <div class="large">
             <input class="btn" type="submit" value="{{ __('Create') }}">

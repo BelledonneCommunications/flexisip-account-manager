@@ -72,7 +72,6 @@
             @hasSection('breadcrumb')
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('account.dashboard') }}">{{ __('My Account') }}</a></li>
                         @yield('breadcrumb')
                     </ol>
                 </nav>

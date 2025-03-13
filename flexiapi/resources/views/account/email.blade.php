@@ -2,7 +2,7 @@
 
 @section('content')
 
-<h2>Change my account email address</h2>
+<h2>{{ __('Change your email') }}</h2>
 
 @if (!empty($account->email))
     <p>Currently: {{ $account->email }}</p>

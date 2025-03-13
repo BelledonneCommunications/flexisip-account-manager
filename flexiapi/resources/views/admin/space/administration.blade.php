@@ -45,7 +45,7 @@
         </div>
 
         <div class="large">
-            @include('parts.form.toggle', ['object' => $space, 'key' => 'super', 'label' => __('Super Space'), 'supporting' => __('All the admins in will be super admins')])
+            @include('parts.form.toggle', ['object' => $space, 'key' => 'super', 'label' => __('Super Space'), 'supporting' => __('All the admins will be super admins')])
         </div>
 
         <h3 class="large">Interface</h3>

@@ -86,11 +86,11 @@ class RecoveryController extends Controller
         }
 
         if (!$account) {
-            return redirect()->back()->withErrors(['identifier' => 'The account doesn\'t exists']);
+            return redirect()->back()->withErrors(['identifier' => __("The account doesn't exists")]);
         }
 
         if ($account->failedRecentRecovery()) {
-            return redirect()->back()->withErrors(['code' => 'Account recovered recently, try again later']);
+            return redirect()->back()->withErrors(['code' => __('Account recovered recently, try again later')]);
         }
 
         if ($request->get('email')) {
@@ -124,7 +124,7 @@ class RecoveryController extends Controller
             return redirect()->route($request->get('method') == 'phone'
                 ? 'account.recovery.show.phone'
                 : 'account.recovery.show.email')->withErrors([
-                'code' => 'The code is expired'
+                'code' => __('The code has expired')
             ]);
         }
 
@@ -132,7 +132,7 @@ class RecoveryController extends Controller
             return redirect()->route($request->get('method') == 'phone'
                 ? 'account.recovery.show.phone'
                 : 'account.recovery.show.email')->withErrors([
-                'code' => 'The code entered was not valid, try again later'
+                'code' => 'The code is not valid'
             ]);
         }
 

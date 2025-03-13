@@ -55,8 +55,8 @@
 
         <div>
             <input name="newsletter_registration_address" id="newsletter_registration_address" placeholder="email@server.tld" type="email" value="{{ $space->newsletter_registration_address }}">
-            <label for="newsletter_registration_address">Newsletter registration email address</label>
-            <span class="supporting">An email will be sent to this address when someone register and join the newsletter</span>
+            <label for="newsletter_registration_address">{{ __('Newsletter registration email address') }}</label>
+            <span class="supporting">{{ __('An email will be sent to this email when someone join the newsletter') }}</span>
             @include('parts.errors', ['name' => 'newsletter_registration_address'])
         </div>
 

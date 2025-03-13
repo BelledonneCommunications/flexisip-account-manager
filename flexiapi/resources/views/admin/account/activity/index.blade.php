@@ -201,7 +201,7 @@
 @endif
 
 @if ($account->resetPasswordEmailTokens->isNotEmpty())
-    <h3>Set Password Emails</h3>
+    <h3>{{ __('Reset password emails') }}</h3>
     <table>
         <thead>
             <tr>

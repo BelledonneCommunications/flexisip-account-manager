@@ -7,7 +7,7 @@
         </header>
 
         @if ($token->offed())
-            <p>This link is not available anymore.</p>
+            <p>{{ __('This link is not available anymore.') }}</p>
         @else
             <form id="password_update" method="POST" action="{{ route('account.reset_password_email.reset') }}" accept-charset="UTF-8">
                 @csrf

@@ -73,7 +73,7 @@
         <p><i class="ph">globe-hemisphere-west</i> {{ __('Domain') }}: {{ $account->domain }}</p>
 
         @if (!empty(space()?->account_proxy_registrar_address))
-            <p><i class="ph">lan</i> Proxy/registrar address: sip:{{ space()?->account_proxy_registrar_address }}
+            <p><i class="ph">hard-drive</i> Proxy/registrar address: sip:{{ space()?->account_proxy_registrar_address }}
             </p>
         @endif
         @if (!empty(config('app.transport_protocol_text')))

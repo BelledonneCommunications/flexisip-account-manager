@@ -1,11 +1,5 @@
 @extends('layouts.main')
 
-@section('breadcrumb')
-    <li class="breadcrumb-item" aria-current="page">
-        {{ __('Phone Countries') }}
-    </li>
-@endsection
-
 @section('content')
 
 <header>
@@ -25,7 +19,7 @@
         <tr>
             <th>{{ __('Code') }}</th>
             <th>{{ __('Name') }}</th>
-            <th>{{ __('Contry code') }}</th>
+            <th>{{ __('Country code') }}</th>
             <th>{{ __('Actions') }}</th>
         </tr>
     </thead>
