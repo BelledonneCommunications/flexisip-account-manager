@@ -11,7 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 - **Spaces:** A new way to manage your SIP domains and hosts. A Space is defined by a unique SIP Domain and Host pair.
     - **New mandatory DotEnv variable** `APP_ROOT_HOST`, replaces `APP_URL` and `APP_SIP_DOMAIN` that are now configured using the new dedicated Artisan script. It defines the root hostname where all the Spaces will be configured. All the Spaces will be as subdomains of `APP_ROOT_HOST` except one that can be equal to `APP_ROOT_HOST`. Example: if `APP_ROOT_HOST=myhost.com` the Spaces hosts will be `myhost.com`, `alpha.myhost.com` , `beta.myhost.com`...
-    - **New Artisan script** `php artisan spaces:create-update {sip_domain} {host} {--super}`, replaces `php artisan sip_domains:create-update {sip_domain} {--super}`. Can create a Space or update a Space Host base on its Space SIP Domain.
+    - **New Artisan script** `php artisan spaces:create-update {sip_domain} {host} {name} {--super}`, replaces `php artisan sip_domains:create-update {sip_domain} {--super}`. Can create a Space or update a Space Host base on its Space SIP Domain.
 
 ### Changed
 
@@ -33,7 +33,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
     - ACCOUNT_PROVISIONING_OVERWRITE_ALL
     - ACCOUNT_PROVISIONING_USE_X_LINPHONE_PROVISIONING_HEADER
 
-#### Migrate from [1.6]
+### Migrate from [1.6]
 
 1. Deploy the new version and migrate the database.
 
@@ -50,9 +50,9 @@ APP_ROOT_HOST=myhost.com
 3. The migration script will automatically copy the `sip_domain` into `host` in the `spaces` table. You then have to "fix" the hosts and set them to equal or be subdomains of `APP_ROOT_HOST`.
 
 ```
-php artisan spaces:create-update my.sip myhost.com --super # You can set some Spaces as SuperSpaces, the admin will be able to manage the other spaces
-php artisan spaces:create-update alpha.sip alpha.myhost.com
-php artisan spaces:create-update beta.sip beta.myhost.com
+php artisan spaces:create-update my.sip myhost.com "My Super Space" --super # You can set some Spaces as SuperSpaces, the admin will be able to manage the other spaces
+php artisan spaces:create-update alpha.sip alpha.myhost.com "Alpha Space"
+php artisan spaces:create-update beta.sip beta.myhost.com "Beta Space"
 ...
 ```
 
@@ -64,15 +64,32 @@ php artisan spaces:create-update beta.sip beta.myhost.com
 
 7. (Optional) Import the old instance DotEnv environnement variables into a space.
 
+⚠️ Be careful, during this import only the project DotEnv file variables will be imported, other environnement (eg. set in Apache, nginx or Docker) will be ignored.
+
+⚠️ The content of the `ACCOUNT_PROVISIONING_RC_FILE` will not be imported. You will have to extract the sections and lines that you want to use manually using the dedicated form or the API.
+
 ```
 php artisan spaces:import-configuration-from-dot-env {sip_domain}
 ```
 
-You can find more details regarding those steps in the [`INSTALL.md`](INSTALL.md) file.
+You can find more details regarding those steps in the [`README.md`](README.md) file.
 
 ### Deprecated
 
 - **Last major version supporting the deprecated endpoints of the API**
+
+## [1.6] - 2024-12-30
+
+### Added
+
+- **Phone validation** Phone numbers are now strictly validated and countries can be enabled disabled to prevent spam
+- **SIP Domains** Account SIP domains can now be managed from the UI and API
+- **CoTURN Credential** Get CoTURN credentials from the API
+- **RFC 8898 Support**
+
+### Migrate from [1.5]
+
+Nothing specific to do
 
 ## [1.5] - 2024-08-29
 

@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Account Manager'),
+    'name' => env('APP_NAME', 'Flexisip Account Manager'),
 
     'project_url' => env('APP_PROJECT_URL', ''),
     'terms_of_use_url' => env('TERMS_OF_USE_URL', ''),

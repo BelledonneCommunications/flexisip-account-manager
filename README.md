@@ -45,6 +45,10 @@ Since 1.7 some environnement instance configuration variables were moved into th
 
     php artisan spaces:import-configuration-from-dot-env {sip_domain}
 
+⚠️ Be careful, during this import only the project DotEnv file variables will be imported, other environnement (eg. set in Apache, nginx or Docker) will be ignored.
+
+⚠️ The content of the `ACCOUNT_PROVISIONING_RC_FILE` will not be imported. You will have to extract the sections and lines that you want to use manually using the dedicated form or the API.
+
 ### Create an admin account
 
 Create an admin account, an API Key will also be generated along the way, it might expire after a while (regarding the API Key expiration policy). An empty `api_key_ip` will remove the IP restriction on the key.

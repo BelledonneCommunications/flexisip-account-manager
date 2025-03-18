@@ -25,6 +25,7 @@ v1.7
 - Fix FLEXIAPI-237 Add internationalisation support in the app
 - Fix FLEXIAPI-261 Remove the TURN part in the XML provisioning (and only keep the API endpoint)
 - Fix FLEXIAPI-275 Add names in Spaces
+- Fix FLEXIAPI-278 Complete and reorganize the Markdown documentation
 
 v1.6
 ----

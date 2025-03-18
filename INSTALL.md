@@ -65,12 +65,12 @@ However it is possible to define a Space as a "SuperSpace" allowing the admins t
 
 You will need to create the first Space manually, generally as a SuperSpace, after that the other Spaces can directly be created in your browser through the web panel.
 
-    php artisan spaces:create-update {sip_domain} {host} {--super}
+    php artisan spaces:create-update {sip_domain} {host} {name} {--super}
 
 For example:
 
-    php artisan spaces:create-update company-sip-domain.tld flexiapi-domain.tld --super
-    php artisan spaces:create-update other-sip-domain.tld other.flexiapi-domain.tld
+    php artisan spaces:create-update company-sip-domain.tld flexiapi-domain.tld "My Super Space" --super
+    php artisan spaces:create-update other-sip-domain.tld other.flexiapi-domain.tld "My Other Space"
 
 ## 5. Create a first administrator and finish the setup
 
@@ -93,20 +93,20 @@ Using the environnement variables you can then configure FlexiAPI per instance.
 
 With Apache, use the [mod_env](https://httpd.apache.org/docs/2.4/mod/mod_env.html) module.
 
-    SetEnv APP_NAME "VirtualHost One"
+    SetEnv APP_ENV "production"
 
 On nginx use `fastcgi_param` to pass the parameter directly to PHP.
 
     location ~ [^/]\.php(/|$) {
         …
         include /etc/nginx/fastcgi_params;
-        fastcgi_param  APP_NAME     "VirtualHost Two";
+        fastcgi_param  APP_ENV     "staging";
     }
 
 > **Warning** Do not create a cache of your configuration (using `artisan config:cache`) if you have a multi-environnement setup.
 > The cache is always having the priority on the variables set in the configuration files.
 
-## Custom theme
+## Custom Theme
 
 If you enable the Custom CSS Theme option to true in the Space administration panel, FlexiAPI will try to load a CSS file located in `public/css/$space_host.style.css`. If the file doesn't exists it will fallback to `public/css/style.css`.
 
