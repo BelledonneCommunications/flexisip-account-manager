@@ -60,7 +60,7 @@ class AccountService
         $account = new Account();
         $account->username = $request->get('username');
         $account->activated = false;
-        $account->domain = config('app.sip_domain');
+        $account->domain = space()->domain;
         $account->ip_address = $request->ip();
         $account->created_at = Carbon::now();
         $account->user_agent = space()->name;

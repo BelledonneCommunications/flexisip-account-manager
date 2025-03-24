@@ -44,7 +44,7 @@ This is the host that you'll define in the Apache or webserver VirtualHost:
     ServerName flexiapi-domain.tld
     ServerAlias *.flexiapi-domain.tld
 
-If you are planning to manage several SIP domains (see Spaces bellow) a wildcard `ServerAlias` as above is required.
+If you are planning to manage several Spaces (see Spaces bellow) a wildcard `ServerAlias` as above is required.
 
 ## 3.2. Database migration
 
@@ -56,14 +56,14 @@ Then configure the database connection parameters and migrate the tables. The fi
 
 Since the 1.6 FlexiAPI can manage different SIP Domains on separate HTTP subdomains.
 
-A Space is defined as a specific HTTP subdomain of `APP_ROOT_HOST` and is linked to a specific SIP Domain. It is also possible to host one specific Space directly under `APP_ROOT_HOST`.
+A Space is defined as a specific HTTP subdomain of `APP_ROOT_HOST` and is linked to a specific SIP Domain. It is also possible to host one (and only one) specific Space directly under `APP_ROOT_HOST`.
 
 By default administrator accounts in Spaces will only see the accounts of their own Space (that have the same SIP Domain).
 However it is possible to define a Space as a "SuperSpace" allowing the admins to see all the other Spaces and accounts and create/edit/delete the other Spaces.
 
 ## 4.1. Setup the first Space
 
-You will need to create the first Space manually, generally as a SuperSpace, after that the other Spaces can directly be created in your browser through the web panel.
+You will need to create the first Space manually, generally as a SuperSpace, after that the other Spaces can directly be created in your browser through the Web Panels.
 
     php artisan spaces:create-update {sip_domain} {host} {name} {--super}
 
@@ -80,7 +80,7 @@ Create a first administator account:
 
 For example:
 
-    php artisan accounts:create-admin-account -u admin -p strong_password -d my-company-sip-domain.tld
+    php artisan accounts:create-admin-account -u admin -p strong_password -d company-sip-domain.tld
 
 You can now try to authenticate on the web panel and continue the setup using your admin account.
 

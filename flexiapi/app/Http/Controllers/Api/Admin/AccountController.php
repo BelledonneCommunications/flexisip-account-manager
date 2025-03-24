@@ -147,16 +147,6 @@ class AccountController extends Controller
 
     public function store(AsAdminRequest $request)
     {
-        // Create the missing Space
-        /*if ($request->user()->superAdmin
-            && $request->has('domain')
-            && !Space::pluck('domain')->contains($request->get('domain'))) {
-            $space = new Space();
-            $space->domain = $request->get('domain');
-            $space->host = $request->get('host');
-            $space->save();
-        }*/
-
         return (new AccountService())->store($request)->makeVisible(['confirmation_key', 'provisioning_token']);
     }
 

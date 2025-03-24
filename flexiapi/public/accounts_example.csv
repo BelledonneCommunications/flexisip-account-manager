@@ -1,4 +1,4 @@
-Username,Password,Role,Status,Phone,Email
-john,number9,user,active,+12341234,john@lennon.com
-paul,a_day_in_the_life,admin,active,,paul@apple.com
-ringo,allUneedIsL3ve,user,unactive,+123456,ringo@star.co.uk
+Username,Password,Role,Status,Phone,Email,External Username,External Domain,External Password,External Realm, External Registrar,External Outbound Proxy,External Encrypted,External Protocol
+john,number9,user,active,+12341234,john@lennon.com,extjohn,ext.lennon.com,123ext,,,,UDP
+paul,a_day_in_the_life,admin,active,,paul@apple.com,,,,,,,
+ringo,allUneedIsL3ve,user,inactive,+123456,ringo@star.co.uk,extringo,ext.star.co.uk,123456,another.realm,,,UDP

@@ -85,7 +85,8 @@ p .btn {
     border-color: var(--main-3);
 }
 
-form {
+form,
+form section {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem 2.5rem;

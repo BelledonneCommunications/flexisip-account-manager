@@ -38,6 +38,7 @@ use App\Http\Controllers\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Admin\AccountStatisticsController;
 use App\Http\Controllers\Admin\ContactsListController;
 use App\Http\Controllers\Admin\ContactsListContactController;
+use App\Http\Controllers\Admin\ExternalAccountController;
 use App\Http\Controllers\Admin\PhoneCountryController;
 use App\Http\Controllers\Admin\ResetPasswordEmailController;
 use App\Http\Controllers\Admin\SpaceController;
@@ -262,6 +263,13 @@ Route::middleware(['web_panel_enabled', 'space.expired'])->group(function () {
                 Route::get('{entry}/edit', 'edit')->name('edit');
                 Route::put('{entry}', 'update')->name('update');
                 Route::get('{key}/delete', 'delete')->name('delete');
+                Route::delete('/', 'destroy')->name('destroy');
+            });
+
+            Route::name('external.')->prefix('{account}/external')->controller(ExternalAccountController::class)->group(function () {
+                Route::get('/', 'show')->name('show');
+                Route::post('/', 'store')->name('store');
+                Route::get('delete', 'delete')->name('delete');
                 Route::delete('/', 'destroy')->name('destroy');
             });
 

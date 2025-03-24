@@ -10,8 +10,7 @@
 
 <header>
     <h1><i class="ph">users</i> {{ $account->identifier }}</h1>
-    <a href="{{ route('admin.account.edit', $account->id) }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
-    <a class="btn" href="{{ route('admin.account.dictionary.create', $account) }}">
+    <a class="btn oppose" href="{{ route('admin.account.dictionary.create', $account) }}">
         <i class="ph">plus</i>
         {{ __('Add') }}
     </a>

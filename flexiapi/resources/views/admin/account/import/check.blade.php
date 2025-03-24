@@ -30,16 +30,14 @@
             <li class="active">{{ __('Import') }}</li>
         </ol>
 
-        <h3>{{ $linesCount }} accounts will be imported for the {{ $domain }} domain</h3>
-
         @if ($errors->isNotEmpty())
-            <hr />
-
             <h3>{{ __('Errors') }}</h3>
 
             @foreach ($errors as $title => $body)
                 <p><b>{{ $title }}</b> {{ $body }}</p>
             @endforeach
+        @else
+            <h3>{{ $linesCount }} accounts will be imported for the {{ $domain }} domain</h3>
         @endif
     </div>
 @endsection

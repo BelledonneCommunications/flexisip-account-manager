@@ -19,14 +19,30 @@
         </ol>
 
         <p>{{ __('The file must be in CSV following this template') }}: <a href="{{ route('account.home') }}/accounts_example.csv">example_template.csv</a></p>
+
+        <h4>{{ __('Account') }}</h4>
+        <p>{{ __('The first line contains the labels') }}</p>
         <ol>
-            <li>{{ __('The first line contains the labels') }}</li>
             <li>{{ __('Username') }}* </li>
             <li>{{ __('Password') }}* (6 characters minimum)</li>
             <li>{{ __('Role') }}* (admin or user)</li>
             <li>{{ __('Status') }}* (active, inactive)</li>
             <li>{{ __('Phone number') }}</li>
             <li>{{ __('Email') }}</li>
+        </ol>
+
+        <h4>{{ __('External Account') }}</h4>
+
+        <p>{{ __('Fill the related columns if you want to add an external account as well') }}</p>
+        <ol>
+            <li>{{ __('Username') }}* </li>
+            <li>{{ __('Domain') }}* </li>
+            <li>{{ __('Password') }}*</li>
+            <li>{{ __('Realm') }} (different than domain)</li>
+            <li>{{ __('Registrar') }} (different than domain)</li>
+            <li>{{ __('Outbound Proxy') }} (different than domain)</li>
+            <li>{{ __('Encrypted') }} (yes or no)</li>
+            <li>{{ __('Protocol') }} (UDP, TCP or TLS)</li>
         </ol>
 
         <hr />

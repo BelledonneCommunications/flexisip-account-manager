@@ -9,7 +9,7 @@
         {{ __('Activate All') }}
     </a>
     <a class="btn btn-secondary" href="{{ route('admin.phone_countries.deactivate_all') }}">
-        <i class="ph">trash</i>
+        <i class="ph">minus</i>
         {{ __('Deactivate All') }}
     </a>
 </header>

@@ -20,12 +20,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Account;
+use App\ExternalAccount;
 use App\Password;
+use App\PhoneCountry;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\File;
+use Propaganistas\LaravelPhone\PhoneNumber;
 
 class AccountImportController extends Controller
 {
@@ -52,6 +56,7 @@ class AccountImportController extends Controller
         ]);
 
         $lines = $this->csvToCollection($request->file('csv'));
+        $domain = $request->get('domain');
 
         /**
          * Error checking
@@ -59,7 +64,7 @@ class AccountImportController extends Controller
 
         // Usernames
 
-        $existingUsernames = Account::where('domain', $request->get('domain'))
+        $existingUsernames = Account::where('domain', $domain)
             ->whereIn('username', $lines->pluck('username')->all())
             ->pluck('username');
 
@@ -100,13 +105,17 @@ class AccountImportController extends Controller
         if ($lines->pluck('status')->contains(function ($value) {
             return !in_array($value, ['active', 'inactive']);
         })) {
-            $this->errors['Some status are not correct'] = '';
+            $this->errors['Some statuses are not correct'] = '';
         }
 
         // Phones
 
+        $phoneCountries = PhoneCountry::where('activated', true)->get();
+
         if ($phones = $lines->pluck('phone')->filter(function ($value) {
-            return strlen($value) > 2 && substr($value, 0, 1) != '+';
+            return !empty($value);
+        })->filter(function ($value) use ($phoneCountries) {
+            return !$phoneCountries->firstWhere('code', (new PhoneNumber($value))->getCountry());
         })) {
             if ($phones->isNotEmpty()) {
                 $this->errors['Some phone numbers are not correct'] = $phones->join(', ', ' and ');
@@ -143,6 +152,26 @@ class AccountImportController extends Controller
             }
         }
 
+        // External account
+
+        foreach ($lines as $line) {
+            if ($line->external_username != null && ($line->external_password == null || $line->external_domain == null)) {
+                $this->errors['Line ' . $line->line . ': The mandatory external account columns must be filled'] = '';
+            }
+
+            if ($line->external_username != null && $line->external_password != null && $line->external_domain != null) {
+                if ($line->external_domain == $line->external_realm
+                 || $line->external_domain == $line->external_registrar
+                 || $line->external_domain == $line->external_outbound_proxy) {
+                    $this->errors['Line ' . $line->line . ': External realm, registrar or outbound proxy must be different than domain'] = '';
+                }
+
+                if (!in_array($line->external_protocol, ExternalAccount::PROTOCOLS)) {
+                    $this->errors['Line ' . $line->line . ': External protocol must be UDP, TCP or TLS'] = '';
+                }
+            }
+        }
+
         $filePath = $this->errors->isEmpty()
             ? Storage::putFile($this->importDirectory, $request->file('csv'))
             : null;
@@ -167,7 +196,9 @@ class AccountImportController extends Controller
         $accounts = [];
         $now = \Carbon\Carbon::now();
 
-        $admins = $phones = $passwords = [];
+        $admins = $phones = $passwords = $externals = [];
+
+        $externalAlgorithm = 'MD5';
 
         foreach ($lines as $line) {
             if ($line->role == 'admin') {
@@ -180,6 +211,25 @@ class AccountImportController extends Controller
 
             if (!empty($line->password)) {
                 $passwords[$line->username] = $line->password;
+            }
+
+            if (!empty($line->external_username)) {
+                $externals[$line->username] = [
+                    'username' => $line->external_username,
+                    'domain' => $line->external_domain,
+                    'realm' => $line->external_realm,
+                    'registrar' => $line->external_registrar,
+                    'outbound_proxy' => $line->external_outbound_proxy,
+                    'protocol' => $line->external_protocol,
+                    'password' => bchash(
+                        $line->external_username,
+                        $line->external_realm ?? $line->external_domain,
+                        $line->external_password,
+                        $externalAlgorithm
+                    ),
+                    'algorithm' => $externalAlgorithm,
+                    'created_at' => Carbon::now(),
+                ];
             }
 
             array_push($accounts, [
@@ -229,7 +279,23 @@ class AccountImportController extends Controller
 
         Password::insert($passwordsToInsert);
 
-        // Set admins accounts
+        // Set external account
+
+        $externalAccountsToInsert = [];
+
+        $externalAccounts = Account::whereIn('username', array_keys($externals))
+            ->where('domain', $request->get('domain'))
+            ->get();
+
+        foreach ($externalAccounts as $externalAccount) {
+            array_push($externalAccountsToInsert, [
+                'account_id' => $externalAccount->id
+            ] + $externals[$externalAccount->username]);
+        }
+
+        ExternalAccount::insert($externalAccountsToInsert);
+
+        // Set phone accounts
         foreach ($phones as $username => $phone) {
             $account = Account::where('username', $username)
                 ->where('domain', $request->get('domain'))
@@ -250,12 +316,20 @@ class AccountImportController extends Controller
             if ($line = fgetcsv($csv, 1000, ',')) {
                 $lines->push((object)[
                     'line' => $i,
-                    'username' => $line[0],
-                    'password' => $line[1],
+                    'username' => !empty($line[0]) ? $line[0] : null,
+                    'password' => !empty($line[1]) ? $line[1] : null,
                     'role' => $line[2],
                     'status' => $line[3],
-                    'phone' => $line[4],
+                    'phone' => !empty($line[4]) ? $line[4] : null,
                     'email' => $line[5],
+                    'external_username' => !empty($line[6]) ? $line[6] : null,
+                    'external_domain' => !empty($line[7]) ? $line[7] : null,
+                    'external_password' => !empty($line[8]) ? $line[8] : null,
+                    'external_realm' => !empty($line[9]) ? $line[9] : null,
+                    'external_registrar' => !empty($line[10]) ? $line[10] : null,
+                    'external_outbound_proxy' => !empty($line[11]) ? $line[11] : null,
+                    'external_protocol' => $line[12],
+
                 ]);
 
                 $i++;

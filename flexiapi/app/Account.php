@@ -121,6 +121,11 @@ class Account extends Authenticatable
         return $this->hasOne(ApiKey::class);
     }
 
+    public function external()
+    {
+        return $this->hasOne(ExternalAccount::class);
+    }
+
     public function contacts()
     {
         return $this->belongsToMany(Account::class, 'contacts', 'account_id', 'contact_id');
@@ -322,11 +327,6 @@ class Account extends Authenticatable
         }
 
         return null;
-    }
-
-    public function getSha256PasswordAttribute()
-    {
-        return $this->passwords()->where('algorithm', 'SHA-256')->exists();
     }
 
     public static function dtmfProtocolsRule()

@@ -4,7 +4,6 @@
     @include('admin.account.parts.breadcrumb_accounts_index')
     @if ($account->id)
         @include('admin.account.parts.breadcrumb_accounts_edit', ['account' => $account])
-        <li class="breadcrumb-item active" aria-current="page">{{ __('Edit') }}</li>
     @else
         <li class="breadcrumb-item active" aria-current="page">{{ __('Create') }}</li>
     @endif
@@ -14,12 +13,10 @@
     @if ($account->id)
         <header>
             <h1><i class="ph">users</i> {{ $account->identifier }}</h1>
-            <a href="{{ route('admin.account.index') }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
-            <a class="btn btn-secondary" href="{{ route('admin.account.delete', $account->id) }}">
+            <a class="btn btn-secondary oppose" href="{{ route('admin.account.delete', $account->id) }}">
                 <i class="ph">trash</i>
                 {{ __('Delete') }}
             </a>
-            <input form="create_edit" class="btn" type="submit" value="{{ __('Update') }}">
         </header>
         @if ($account->updated_at)
             <p title="{{ $account->updated_at }}">{{ __('Updated on') }} {{ $account->updated_at->format('d/m/Y') }}
@@ -38,7 +35,7 @@
         id="create_edit" accept-charset="UTF-8">
         @csrf
         @method($account->id ? 'put' : 'post')
-        <h2>{{ __('Connection') }}</h2>
+
         <div>
             <input placeholder="Username" required="required" name="username" type="text"
                 value="@if($account->id){{ $account->username }}@else{{ old('username') }}@endif"
@@ -67,8 +64,8 @@
         <div>
             <input placeholder="Password" name="password" type="password" value="" autocomplete="new-password"
                 @if (!$account->id) required @endif>
-            <label for="password">{{ __('Password') }}</label>
-            <small>Fill to change</small>
+            <label for="password">{{ __('Password') }} @if ($account->passwords()->count() > 0) ({{ __('Currently set') }}) @endif</label>
+            <small>{{ __('Fill to change') }}</small>
             @include('parts.errors', ['name' => 'password'])
         </div>
 
@@ -101,11 +98,10 @@
             @include('parts.errors', ['name' => 'phone'])
         </div>
 
-        <h2>Other information</h2>
+        <h3 class="large">{{ __('Other information') }}</h3>
 
-        <div>
-            @include('parts.form.toggle', ['object' => $account, 'key' => 'blocked', 'label' => __('Blocked')])
-        </div>
+        @include('parts.form.toggle', ['object' => $account, 'key' => 'blocked', 'label' => __('Blocked')])
+        @include('parts.form.toggle', ['object' => $account, 'key' => 'activated', 'label' => __('Enabled')])
 
         <div>
             <input name="role" value="admin" type="radio" @if ($account->admin) checked @endif>
@@ -114,8 +110,6 @@
             <p>{{ __('User') }}</p>
             <label>{{ __('Role') }}</label>
         </div>
-
-        @include('parts.form.toggle', ['object' => $account, 'key' => 'activated', 'label' => __('Enabled')])
 
         @if (space()?->intercom_features)
             <div class="select">
@@ -129,12 +123,28 @@
             </div>
         @endif
 
+        <div class="large">
+            <input class="btn" type="submit" value="{{ __('Update') }}">
+        </div>
     </form>
 
     <hr class="large">
 
     @if ($account->id)
-        <h2 id="contacts_lists">{{ __('Contacts Lists') }}</h2>
+        <h2 class="large">{{ __('Contacts') }}</h2>
+
+        @foreach ($account->contacts as $contact)
+            <p class="chip">
+                <a href="{{ route('admin.account.edit', $account) }}">{{ $contact->identifier }}</a>
+                <a href="{{ route('admin.account.contact.delete', [$account, $contact->id]) }}">
+                    <i class="ph">x</i>
+                </a>
+            </p>
+        @endforeach
+
+        <a class="btn btn-tertiary" href="{{ route('admin.account.contact.create', $account) }}">{{ __('Add') }}</a>
+
+        <h3 id="contacts_lists">{{ __('Contacts Lists') }}</h3>
 
         @if ($contacts_lists->isNotEmpty())
             <form method="POST" action="{{ route('admin.account.contacts_lists.attach', $account->id) }}"
@@ -170,26 +180,14 @@
             </p>
         @endforeach
 
-        <h2>{{ __('Contacts') }}</h2>
-
-        @foreach ($account->contacts as $contact)
-            <p class="chip">
-                <a href="{{ route('admin.account.edit', $account) }}">{{ $contact->identifier }}</a>
-                <a href="{{ route('admin.account.contact.delete', [$account, $contact->id]) }}">
-                    <i class="ph">x</i>
-                </a>
-            </p>
-        @endforeach
-
         <br />
-        <a class="btn btn-tertiary" href="{{ route('admin.account.contact.create', $account) }}">{{ __('Add') }}</a>
 
-        <hr class="large">
-
-        <h2 id="provisioning">{{ __('Provisioning') }}</h2>
+        <h2 class="large" id="provisioning">{{ __('Provisioning') }}</h2>
 
         @if ($account->provisioning_token)
-            <img style="max-width: 15rem;" src="{{ route('provisioning.qrcode', $account->provisioning_token) }}">
+            <div>
+                <img style="max-width: 15rem;" src="{{ route('provisioning.qrcode', $account->provisioning_token) }}">
+            </div>
 
             <form class="inline">
                 <div>

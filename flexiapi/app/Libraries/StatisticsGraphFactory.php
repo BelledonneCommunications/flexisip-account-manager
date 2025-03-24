@@ -58,7 +58,7 @@ class StatisticsGraphFactory
                 $toQuery = StatisticsMessage::query();
 
                 if (!Auth::user()?->isAdmin) {
-                    $fromQuery->where('from_domain', config('app.sip_domain'));
+                    $fromQuery->where('from_domain', space()->domain);
                     $toQuery->toDomain($this->domain);
                 } elseif ($this->domain) {
                     $fromQuery->where('from_domain', $this->domain);
@@ -90,8 +90,8 @@ class StatisticsGraphFactory
                 $toQuery = StatisticsCall::query();
 
                 if (!Auth::user()?->superAdmin) {
-                    $fromQuery->where('from_domain', config('app.sip_domain'));
-                    $toQuery->where('to_domain', config('app.sip_domain'));
+                    $fromQuery->where('from_domain', space()->domain);
+                    $toQuery->where('to_domain', space()->domain);
                 } elseif ($this->domain) {
                     $fromQuery = $fromQuery->where('to_domain', $this->domain);
                     $toQuery = $toQuery->where('from_domain', $this->domain);
@@ -127,7 +127,7 @@ class StatisticsGraphFactory
                 $this->domain = $this->domain ?? $this->fromDomain;
 
                 if (!Auth::user()?->isAdmin) {
-                    $this->data->where('domain', config('app.sip_domain'));
+                    $this->data->where('domain', space()->domain);
                 } elseif ($this->domain) {
                     $this->data->where('domain', $this->domain);
 

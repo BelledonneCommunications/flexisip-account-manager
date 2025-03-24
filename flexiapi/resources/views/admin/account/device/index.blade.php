@@ -10,7 +10,6 @@
 
 <header>
     <h1><i class="ph">users</i> {{ $account->identifier }}</h1>
-    <a href="{{ route('admin.account.edit', $account->id) }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
 </header>
 
 @include('admin.account.parts.tabs')

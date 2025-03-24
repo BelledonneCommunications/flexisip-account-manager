@@ -56,11 +56,11 @@ php artisan spaces:create-update beta.sip beta.myhost.com "Beta Space"
 ...
 ```
 
-4. Configure your web server to point the `APP_ROOT_HOST` and subdomains to the app.
+4. Configure your web server to point the `APP_ROOT_HOST` and subdomains to the app. See the related documentation in [`INSTALL.md` file](INSTALL.md#31-mandatory-app_root_host-variable).
 
-5. Configure the upcoming Spaces.
+5. Configure your Spaces.
 
-6. Remove the instance based environnement variables and configure them directly in the spaces.
+6. Remove the instance based environnement variables (see **Changed** above) and configure them directly in the spaces using the API or Web Panel.
 
 7. (Optional) Import the old instance DotEnv environnement variables into a space.
 
@@ -72,7 +72,7 @@ php artisan spaces:create-update beta.sip beta.myhost.com "Beta Space"
 php artisan spaces:import-configuration-from-dot-env {sip_domain}
 ```
 
-You can find more details regarding those steps in the [`README.md`](README.md) file.
+You can find more details regarding those steps in the [`INSTALL.md`](INSTALL.md) and [`README.md`](README.md) files.
 
 ### Deprecated
 

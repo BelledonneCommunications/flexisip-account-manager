@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Api\Admin\AccountDictionaryController;
 use App\Http\Controllers\Api\Admin\AccountTypeController;
 use App\Http\Controllers\Api\Admin\ContactsListController;
+use App\Http\Controllers\Api\Admin\ExternalAccountController;
 use App\Http\Controllers\Api\Admin\SpaceController;
 use App\Http\Controllers\Api\Admin\VcardsStorageController as AdminVcardsStorageController;
 use App\Http\Controllers\Api\StatisticsMessageController;
@@ -161,6 +162,12 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
             Route::get('{key}', 'show');
             Route::post('{key}', 'set');
             Route::delete('{key}', 'destroy');
+        });
+
+        Route::prefix('accounts/{id}/external')->controller(ExternalAccountController::class)->group(function () {
+            Route::get('/', 'show');
+            Route::post('/', 'store');
+            Route::delete('/', 'destroy');
         });
 
         Route::prefix('statistics/messages')->controller(StatisticsMessageController::class)->group(function () {
