@@ -160,13 +160,12 @@ class AccountService
                 $account->setRole($request->get('role'));
             }
 
-            if (!$request->api && $request->has('activated')) {
-                $account->activated = $request->get('activated') == 'true';
-            }
-
-            if (!$request->api && $request->has('blocked')) {
-                $account->blocked = in_array($request->get('blocked'), ['true', 'on']);
-            }
+            $account->activated = !$request->api
+                && $request->has('activated')
+                && in_array($request->get('activated'), ['true', 'on']);
+            $account->blocked = !$request->api
+                && $request->has('blocked')
+                && in_array($request->get('blocked'), ['true', 'on']);
 
             if ($request->get('password')) {
                 $account->updatePassword(

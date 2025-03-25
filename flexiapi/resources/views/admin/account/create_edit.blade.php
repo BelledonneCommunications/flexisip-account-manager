@@ -26,7 +26,6 @@
         <header>
             <h1><i class="ph">users</i> {{ __('Create') }}</h1>
             <a href="{{ route('admin.account.index') }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
-            <input form="create_edit" class="btn" type="submit" value="{{ __('Create') }}">
         </header>
     @endif
 
@@ -124,7 +123,11 @@
         @endif
 
         <div class="large">
-            <input class="btn" type="submit" value="{{ __('Update') }}">
+            @if ($account->id)
+                <input class="btn" type="submit" value="{{ __('Update') }}">
+            @else
+                <input form="create_edit" class="btn" type="submit" value="{{ __('Create') }}">
+            @endif
         </div>
     </form>
 

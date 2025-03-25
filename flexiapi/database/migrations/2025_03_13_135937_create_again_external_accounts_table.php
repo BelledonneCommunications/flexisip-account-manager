@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('outbound_proxy', 64)->nullable();
             $table->string('protocol', 4)->default('UDP');
 
-            $table->integer('account_id')->unsigned()->nullable();
+            $table->integer('account_id')->unsigned();
             $table->foreign('account_id')->references('id')
-                    ->on('accounts')->onDelete('set null');
+                    ->on('accounts')->onDelete('cascade');
 
             $table->timestamps();
         });
