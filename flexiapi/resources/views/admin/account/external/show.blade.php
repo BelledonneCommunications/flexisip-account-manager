@@ -34,6 +34,7 @@
             <input placeholder="domain.tld" required="required" name="domain" type="text"
                 value="@if($externalAccount->id){{ $externalAccount->domain }}@else{{ old('domain') }}@endif">
             <label for="domain">{{ __('Domain') }}</label>
+            @include('parts.errors', ['name' => 'domain'])
         </div>
 
         <div>

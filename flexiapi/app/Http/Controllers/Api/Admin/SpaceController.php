@@ -20,6 +20,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Space;
+use App\Rules\Domain;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
@@ -36,8 +37,8 @@ class SpaceController extends Controller
     {
         $request->validate([
             'name' => 'required|unique:spaces',
-            'domain' => 'required|unique:spaces',
-            'host' => 'required|unique:spaces',
+            'domain' => ['required', 'unique:spaces', new Domain()],
+            'host' => ['required', 'unique:spaces', new Domain()],
             'max_accounts' => 'nullable|integer',
             'expire_at' => 'nullable|date|after_or_equal:today'
         ]);

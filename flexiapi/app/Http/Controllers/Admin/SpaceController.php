@@ -19,11 +19,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
-
 use App\Http\Controllers\Controller;
 use App\Space;
 use App\Rules\Ini;
+use App\Rules\Domain;
+
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class SpaceController extends Controller
@@ -63,9 +64,9 @@ class SpaceController extends Controller
         $request->merge(['full_host' => $fullHost]);
         $request->validate([
             'name' => 'required|unique:spaces',
-            'domain' => 'required|unique:spaces|regex:/'. Space::DOMAIN_REGEX . '/',
+            'domain' => ['required', 'unique:spaces', new Domain()],
             'host' => 'nullable|regex:/'. Space::HOST_REGEX . '/',
-            'full_host' => 'required|unique:spaces,host',
+            'full_host' => ['required', 'unique:spaces,host', new Domain()],
         ]);
 
         $space = new Space();

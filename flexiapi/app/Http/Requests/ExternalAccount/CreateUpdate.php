@@ -23,14 +23,24 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 use App\ExternalAccount;
+use App\Rules\SIPUsername;
+use App\Rules\Domain;
 
 class CreateUpdate extends FormRequest
 {
     public function rules()
     {
+        $usernameValidation = Rule::unique('external_accounts')->where(function ($query) {
+            return $query->where('username', $this->username)->where('domain', $this->domain);
+        });
+
+        if ($this->method() == 'POST') {
+            $usernameValidation = $usernameValidation->ignore($this->route('account'), 'account_id');
+        }
+
         return [
-            'username' => 'required',
-            'domain' => 'required',
+            'username' => ['required', $usernameValidation, new SIPUsername()],
+            'domain' => ['required', new Domain()],
             'realm' => 'different:domain',
             'registrar' => 'different:domain',
             'outbound_proxy' => 'different:domain',

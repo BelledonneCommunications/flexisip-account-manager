@@ -42,16 +42,16 @@ class ApiAccountExternalAccountTest extends TestCase
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . '/external/', [
                 'username' => $username,
-                'domain' => 'bar',
+                'domain' => 'bar.dev',
                 'password' => 'password',
                 'protocol' => 'UDP'
             ])->assertStatus(201);
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . '/external/', [
-                'username' => $username,
-                'domain' => 'bar',
-                'registrar' => 'bar',
+                'username' => $username . '_two',
+                'domain' => 'bar.dev',
+                'registrar' => 'bar.dev',
                 'password' => 'password',
                 'protocol' => 'UDP'
             ])->assertJsonValidationErrors(['registrar']);
@@ -70,14 +70,14 @@ class ApiAccountExternalAccountTest extends TestCase
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . '/external/', [
                 'username' => $username . '2',
-                'domain' => 'bar',
+                'domain' => 'bar.dev',
                 'protocol' => 'UDP'
             ])->assertStatus(200);
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . '/external/', [
-                'username' => $username . '2',
-                'domain' => 'bar',
+                'username' => $username . '3',
+                'domain' => 'bar.dev',
                 'realm' => 'newrealm',
                 'protocol' => 'UDP'
             ])->assertJsonValidationErrors(['password']);

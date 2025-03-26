@@ -28,7 +28,7 @@ class Space extends Model
     ];
 
     public const HOST_REGEX = '[\w\-]+';
-    public const DOMAIN_REGEX = '[\w\-\.]+';
+    public const DOMAIN_REGEX = '(?=^.{4,253}$)(^((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+[a-zA-Z]{2,63}$)';
 
     public function accounts()
     {

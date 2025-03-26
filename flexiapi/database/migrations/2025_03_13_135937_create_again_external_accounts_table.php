@@ -23,6 +23,8 @@ return new class extends Migration
             $table->foreign('account_id')->references('id')
                     ->on('accounts')->onDelete('cascade');
 
+            $table->unique(['username', 'domain']);
+
             $table->timestamps();
         });
     }

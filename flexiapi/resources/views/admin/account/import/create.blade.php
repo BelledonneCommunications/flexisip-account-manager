@@ -41,7 +41,6 @@
             <li>{{ __('Realm') }} (different than domain)</li>
             <li>{{ __('Registrar') }} (different than domain)</li>
             <li>{{ __('Outbound Proxy') }} (different than domain)</li>
-            <li>{{ __('Encrypted') }} (yes or no)</li>
             <li>{{ __('Protocol') }} (UDP, TCP or TLS)</li>
         </ol>
 

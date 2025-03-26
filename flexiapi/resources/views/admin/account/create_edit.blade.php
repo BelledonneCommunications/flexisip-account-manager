@@ -82,7 +82,7 @@
             @include('parts.errors', ['name' => __('email')])
 
             @if (!empty($account->email))
-                <p class="oppose">
+                <p>
                     <a href="{{ route('admin.account.reset_password_email.create', $account) }}">
                         {{ __('Send an email to the user to reset the password') }}
                     </a>
