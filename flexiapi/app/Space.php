@@ -11,6 +11,26 @@ class Space extends Model
 {
     use HasFactory;
 
+    public const FORBIDDEN_KEYS = [
+        'disable_chat_feature',
+        'disable_meetings_feature',
+        'disable_broadcast_feature',
+        'max_account',
+        'hide_settings',
+        'hide_account_settings',
+        'disable_call_recordings_feature',
+        'only_display_sip_uri_username',
+        'assistant_hide_create_account',
+        'assistant_disable_qr_code',
+        'assistant_hide_third_party_account',
+        'copyright_text',
+        'intro_registration_text',
+        'confirmed_registration_text',
+        'newsletter_registration_address',
+        'account_proxy_registrar_address',
+        'account_realm'
+    ];
+
     protected $hidden = ['id'];
     protected $casts = [
         'super' => 'boolean',

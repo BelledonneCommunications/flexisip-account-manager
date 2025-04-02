@@ -148,7 +148,7 @@ class SpaceController extends Controller
     {
         $request->validate([
             'newsletter_registration_address' => 'nullable|email',
-            'custom_provisioning_entries' => ['nullable', new Ini]
+            'custom_provisioning_entries' => ['nullable', new Ini(Space::FORBIDDEN_KEYS)]
         ]);
 
         $space->copyright_text = $request->get('copyright_text');

@@ -23,13 +23,39 @@ use Illuminate\Contracts\Validation\Rule;
 
 class Ini implements Rule
 {
-    public function passes($attribute, $value)
+    private $forbiddenKeys = [];
+    private $forbiddenKeysFound = [];
+
+    public function __construct($forbiddenKeys)
     {
-        return parse_ini_string($value) != false;
+        $this->forbiddenKeys = $forbiddenKeys;
+    }
+
+    public function passes($attribute, $value): bool
+    {
+        $parsed = parse_ini_string($value);
+
+        if ($parsed == false) {
+            return false;
+        }
+
+        foreach (array_keys($parsed) as $key) {
+            if (in_array($key, $this->forbiddenKeys)) {
+                array_push($this->forbiddenKeysFound, $key);
+            }
+        }
+
+        return empty($this->forbiddenKeysFound);
     }
 
     public function message()
     {
-        return 'Invalid ini format';
+        $message = 'Invalid ini format.';
+
+        if (!empty($this->forbiddenKeysFound)) {
+            $message .= ' The following settings cannot be set, they are already handled by the platform: ' . implode(', ', $this->forbiddenKeysFound);
+        }
+
+        return $message;
     }
 }
