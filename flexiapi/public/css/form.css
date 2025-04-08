@@ -35,6 +35,10 @@ p .btn {
     text-align: right;
 }
 
+p .btn.oppose {
+    margin-right: 0;
+}
+
 .btn[disabled] {
     color: var(--main-5);
     border-color: var(--main-5);

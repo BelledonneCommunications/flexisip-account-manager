@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Symfony\Component\HttpFoundation\Response;
 
-class IsSpaceExpired
+class SpaceCheck
 {
     public function handle(Request $request, Closure $next): Response
     {
@@ -27,6 +27,25 @@ class IsSpaceExpired
 
             if ($request->user() && !$request->user()->superAdmin && $space?->isExpired()) {
                 abort(403, 'The related Space has expired');
+            }
+
+            // Custom email integration
+            if ($space->emailServer) {
+                $config = [
+                    'driver'     => config('mail.driver'),
+                    'encryption' => config('mail.encryption'),
+                    'host'       => $space->emailServer->host,
+                    'port'       => $space->emailServer->port,
+                    'from'       => [
+                        'address' => $space->emailServer->from_address,
+                        'name' => $space->emailServer->from_name
+                    ],
+                    'username'   => $space->emailServer->username,
+                    'password'   => $space->emailServer->password,
+                    'signature'  => $space->emailServer->signature ?? config('mail.signature')
+                ];
+
+                Config::set('mail', $config);
             }
 
             return $next($request);

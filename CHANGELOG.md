@@ -28,6 +28,7 @@ v1.7
 - Fix FLEXIAPI-278 Complete and reorganize the Markdown documentation
 - Fix FLEXIAPI-233 Add External Accounts (new version)
 - Fix FLEXIAPI-277 Restrict authorized ini keys that can be set to prevent conflict with the existing ones set in the UI
+- Fix FLEXIAPI-272 Add Space based email server integration
 
 v1.6
 ----

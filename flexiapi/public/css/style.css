@@ -342,6 +342,23 @@ content section {
     box-sizing: border-box;
 }
 
+content:has(section.documentation) {
+    margin: 0;
+}
+
+content section.documentation {
+    max-width: calc(100% - 35rem);
+    margin: 0;
+    margin-left: 35rem;
+}
+
+@media screen and (max-width: 800px) {
+    content section.documentation {
+        max-width: 100%;
+        margin-left: 0;
+    }
+}
+
 form section {
     margin: initial;
     max-width: initial;
@@ -787,14 +804,29 @@ select.list_toggle {
 /** Specific elements */
 
 .table-of-contents {
-    max-width: 40%;
-    float: right;
+    max-width: 33rem;
+    max-height: calc(100vh - 19rem);
+    overflow-y: scroll;
+    position: fixed;
+    top: 11rem;
+    left: 0;
+    padding: 2rem;
+    box-sizing: border-box;
+    background-color: var(--grey-1);
+    border-radius: 0 1rem 1rem 0;
+}
+
+@media screen and (max-width: 800px) {
+    .table-of-contents {
+        display: none;
+    }
 }
 
 .card {
     background-color: var(--grey-1);
     border-radius: 1rem;
     padding: 1.5rem;
+    box-sizing: border-box;
     margin-bottom: 1rem;
     overflow: hidden;
 }

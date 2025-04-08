@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\Admin\AccountTypeController;
 use App\Http\Controllers\Api\Admin\ContactsListController;
 use App\Http\Controllers\Api\Admin\ExternalAccountController;
 use App\Http\Controllers\Api\Admin\SpaceController;
+use App\Http\Controllers\Api\Admin\EmailServerController;
 use App\Http\Controllers\Api\Admin\VcardsStorageController as AdminVcardsStorageController;
 use App\Http\Controllers\Api\StatisticsMessageController;
 use App\Http\Controllers\Api\StatisticsCallController;
@@ -62,7 +63,7 @@ Route::get('accounts/me/api_key/{auth_token}', 'Api\Account\ApiKeyController@gen
 
 Route::get('phone_countries', 'Api\PhoneCountryController@index');
 
-Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blocked', 'space.expired']], function () {
+Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blocked', 'space.check']], function () {
     Route::get('accounts/auth_token/{auth_token}/attach', 'Api\Account\AuthTokenController@attach');
     Route::post('account_creation_tokens/consume', 'Api\Account\CreationTokenController@consume');
 
@@ -107,6 +108,12 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
                 Route::post('/', 'store');
                 Route::put('{domain}', 'update');
                 Route::delete('{domain}', 'destroy');
+            });
+
+            Route::prefix('spaces/{domain}/email')->controller(EmailServerController::class)->group(function () {
+                Route::get('/', 'show');
+                Route::post('/', 'store');
+                Route::delete('/', 'destroy');
             });
         });
 

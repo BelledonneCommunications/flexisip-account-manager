@@ -12,8 +12,7 @@ A `content-type` and `accept` HTTP headers are REQUIRED to use the API properly
 > accept: application/json
 ```
 
-<div class="card bg-light mb-3">
-  <div class="card-body">
+<div class="card">
 
 Restricted endpoints are protected using a DIGEST authentication or an API Key mechanisms.
 
@@ -111,7 +110,6 @@ A `from` (consisting of the user SIP address, prefixed with `sip:`) header is re
 
 You can find more documentation on the related [IETF RFC-7616](https://tools.ietf.org/html/rfc7616).
 
-  </div>
 </div>
 
 # Endpoints
@@ -225,6 +223,31 @@ JSON parameters:
 <span class="badge badge-error">Super Admin</span>
 
 Delete a domain, **be careful, all the related accounts will also be destroyed**.
+
+### `GET /spaces/{domain}/email`
+<span class="badge badge-error">Super Admin</span>
+
+Get a space email server configuration
+
+### `POST /spaces/{domain}/email`
+<span class="badge badge-error">Super Admin</span>
+
+Update an existing a space email server configuration.
+
+JSON parameters:
+
+* `host` **required**, the email server hostname
+* `port` **required**, integer, the port
+* `username`, the username
+* `password`, the password
+* `from_address`, email address, the sender email address
+* `from_name`, the sender name
+* `signature`, a text that will end every emails sent
+
+### `DELETE /spaces/{domain}/email`
+<span class="badge badge-error">Super Admin</span>
+
+Delete the a space email server configuration.
 
 ## Account Creation Tokens
 
@@ -860,7 +883,7 @@ JSON parameters:
 ## Push Notifications
 
 ### `POST /push_notification`
-<span class="badge badge-warning">User</span>
+<span class="badge badge-info">User</span>
 
 Send a push notification using the Flexisip Pusher.
 

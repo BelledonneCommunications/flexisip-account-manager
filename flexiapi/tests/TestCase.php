@@ -20,7 +20,7 @@
 namespace Tests;
 
 use App\PhoneCountry;
-use App\Http\Middleware\IsSpaceExpired;
+use App\Http\Middleware\SpaceCheck;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -37,7 +37,7 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        $this->withoutMiddleware([IsSpaceExpired::class]);
+        $this->withoutMiddleware([SpaceCheck::class]);
 
         config()->set('app.sip_domain', 'sip.example.com');
 

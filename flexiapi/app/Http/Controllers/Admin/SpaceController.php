@@ -104,6 +104,13 @@ class SpaceController extends Controller
         ]);
     }
 
+    public function integration(Space $space)
+    {
+        return view('admin.space.integration', [
+            'space' => $space
+        ]);
+    }
+
     public function configurationUpdate(Request $request, Space $space)
     {
         $space = $this->setConfiguration($request, $space);

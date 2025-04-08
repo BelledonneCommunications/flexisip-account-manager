@@ -41,15 +41,16 @@ use App\Http\Controllers\Admin\ContactsListContactController;
 use App\Http\Controllers\Admin\ExternalAccountController;
 use App\Http\Controllers\Admin\PhoneCountryController;
 use App\Http\Controllers\Admin\ResetPasswordEmailController;
-use App\Http\Controllers\Admin\SpaceController;
 use App\Http\Controllers\Admin\StatisticsController;
+use App\Http\Controllers\Admin\SpaceController;
+use App\Http\Controllers\Admin\Space\EmailServerController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', 'login')->name('account.home');
 Route::get('documentation', 'Account\AccountController@documentation')->name('account.documentation');
 Route::get('about', 'AboutController@about')->name('about');
 
-Route::middleware(['web_panel_enabled', 'space.expired'])->group(function () {
+Route::middleware(['web_panel_enabled', 'space.check'])->group(function () {
     Route::get('login', 'Account\AuthenticateController@login')->name('account.login');
     Route::post('authenticate', 'Account\AuthenticateController@authenticate')->name('account.authenticate');
     Route::get('authenticate/qrcode/{token?}', 'Account\AuthenticateController@loginAuthToken')->name('account.authenticate.auth_token');
@@ -87,7 +88,7 @@ Route::name('provisioning.')->prefix('provisioning')->controller(ProvisioningCon
     Route::get('/', 'show')->name('show');
 });
 
-Route::middleware(['web_panel_enabled', 'space.expired'])->group(function () {
+Route::middleware(['web_panel_enabled', 'space.check'])->group(function () {
     Route::middleware(['public_registration'])->group(function () {
         Route::redirect('register', 'register/email')->name('account.register');
 
@@ -156,9 +157,19 @@ Route::middleware(['web_panel_enabled', 'space.expired'])->group(function () {
     Route::get('auth_tokens/auth/{token}', 'Account\AuthTokenController@auth')->name('auth_tokens.auth');
 
     Route::name('admin.')->prefix('admin')->middleware(['auth.admin', 'auth.check_blocked'])->group(function () {
-        Route::get('space', 'Admin\SpaceController@me')->name('spaces.me');
-        Route::get('spaces/{space}/configuration', 'Admin\SpaceController@configuration')->name('spaces.configuration');
-        Route::put('spaces/{space}/configuration', 'Admin\SpaceController@configurationUpdate')->name('spaces.configuration.update');
+        Route::name('spaces.')->prefix('spaces')->group(function () {
+            Route::get('me', 'Admin\SpaceController@me')->name('me');
+            Route::get('{space}/configuration', 'Admin\SpaceController@configuration')->name('configuration');
+            Route::put('{space}/configuration', 'Admin\SpaceController@configurationUpdate')->name('configuration.update');
+            Route::get('{space}/integration', 'Admin\SpaceController@integration')->name('integration');
+
+            Route::name('email.')->prefix('{space}/email')->controller(EmailServerController::class)->group(function () {
+                Route::get('/', 'show')->name('show');
+                Route::post('/', 'store')->name('store');
+                Route::get('delete', 'delete')->name('delete');
+                Route::delete('/', 'destroy')->name('destroy');
+            });
+        });
 
         Route::middleware(['auth.super_admin'])->group(function () {
             Route::resource('spaces', SpaceController::class);

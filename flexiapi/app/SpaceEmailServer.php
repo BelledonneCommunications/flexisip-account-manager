@@ -21,19 +21,14 @@ namespace App;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ExternalAccount extends Model
+class SpaceEmailServer extends Model
 {
     use HasFactory;
 
-    public const PROTOCOLS = ['UDP', 'TCP','TLS'];
+    protected $hidden = ['space_id'];
 
-    public function account()
+    public function space()
     {
-        return $this->belongsTo(Account::class);
-    }
-
-    public function getIdentifierAttribute(): string
-    {
-        return $this->attributes['username'] . '@' . $this->attributes['domain'];
+        return $this->belongsTo(Space::class);
     }
 }
