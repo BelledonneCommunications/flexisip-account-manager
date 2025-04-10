@@ -34,7 +34,7 @@ class ApiAccountActionTest extends TestCase
         $password = Password::factory()->create();
 
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
@@ -95,7 +95,7 @@ class ApiAccountActionTest extends TestCase
         $password = Password::factory()->create();
 
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
@@ -119,7 +119,7 @@ class ApiAccountActionTest extends TestCase
         $password = Password::factory()->create();
 
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [

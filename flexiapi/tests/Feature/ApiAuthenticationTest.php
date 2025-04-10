@@ -58,7 +58,7 @@ class ApiAuthenticationTest extends TestCase
     public function testAuthenticateWithKey()
     {
         $password = Password::factory()->create();
-        $password->account->generateApiKey();
+        $password->account->generateUserApiKey();
 
         $response = $this->withHeaders([
             'From' => 'sip:'.$password->account->identifier,

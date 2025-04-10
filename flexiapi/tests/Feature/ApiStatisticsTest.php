@@ -35,7 +35,7 @@ class ApiStatisticsTest extends TestCase
     public function testMessages()
     {
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $id = '1234';
         $fromUsername = 'username';
@@ -128,7 +128,7 @@ class ApiStatisticsTest extends TestCase
     public function testCalls()
     {
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $id = '1234';
         $fromUsername = 'username';

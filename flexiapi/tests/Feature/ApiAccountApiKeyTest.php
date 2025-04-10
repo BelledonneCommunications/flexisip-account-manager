@@ -58,7 +58,7 @@ class ApiAccountApiKeyTest extends TestCase
     public function testRequest()
     {
         $account = Account::factory()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
 
         $this->keyAuthenticated($account)
             ->json($this->method, '/api/accounts/me')
@@ -104,7 +104,7 @@ class ApiAccountApiKeyTest extends TestCase
 
         // Attach the auth_token to the account
         $password = Password::factory()->create();
-        $password->account->generateApiKey();
+        $password->account->generateUserApiKey();
 
         $this->keyAuthenticated($password->account)
             ->json($this->method, '/api/accounts/auth_token/' . $authToken . '/attach')

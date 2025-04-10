@@ -77,7 +77,7 @@ class ApiAccountTest extends TestCase
     public function testEmptyDevices()
     {
         $account = Account::factory()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
 
         $this->keyAuthenticated($account)
             ->get($this->route . '/me/devices')
@@ -88,7 +88,7 @@ class ApiAccountTest extends TestCase
     public function testUsernameNotPhone()
     {
         $account = Account::factory()->admin()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
 
         $username = '+33612121212';
         $domain = Space::first()->domain;
@@ -117,7 +117,7 @@ class ApiAccountTest extends TestCase
     public function testUsernameNotSIP()
     {
         $password = Password::factory()->admin()->create();
-        $password->account->generateApiKey();
+        $password->account->generateUserApiKey();
 
         $username = 'blabla🔥';
         $domain = Space::first()->domain;
@@ -192,7 +192,7 @@ class ApiAccountTest extends TestCase
         config()->set('app.sip_domain', $configDomain);
 
         $account = Account::factory()->superAdmin()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
         $account->save();
 
         $username = 'foobar';
@@ -247,7 +247,7 @@ class ApiAccountTest extends TestCase
     public function testCreateDomainAsAdmin()
     {
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
         $admin->save();
 
         $username = 'foo';
@@ -276,7 +276,7 @@ class ApiAccountTest extends TestCase
     /*public function testCreateDomainAsSuperAdmin()
     {
         $superAdmin = Account::factory()->superAdmin()->create();
-        $superAdmin->generateApiKey();
+        $superAdmin->generateUserApiKey();
         $superAdmin->save();
 
         $username = 'foo';
@@ -401,7 +401,7 @@ class ApiAccountTest extends TestCase
     public function testAdminWithDictionary()
     {
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $entryKey = 'foo';
         $entryValue = 'bar';
@@ -588,7 +588,7 @@ class ApiAccountTest extends TestCase
 
         $password = Password::factory()->create();
         $password->account->activated = false;
-        $password->account->generateApiKey();
+        $password->account->generateUserApiKey();
         $password->account->save();
 
         /**
@@ -634,7 +634,7 @@ class ApiAccountTest extends TestCase
     {
         $confirmationKey = '0123456789abc';
         $password = Password::factory()->create();
-        $password->account->generateApiKey();
+        $password->account->generateUserApiKey();
         $password->account->confirmation_key = $confirmationKey;
         $password->account->activated = false;
         $password->account->save();
@@ -704,7 +704,7 @@ class ApiAccountTest extends TestCase
         config()->set('app.account_email_unique', true);
 
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
         $admin->save();
 
         $this->keyAuthenticated($admin)
@@ -720,7 +720,7 @@ class ApiAccountTest extends TestCase
     public function testNonAsciiPasswordAdmin()
     {
         $password = Password::factory()->admin()->create();
-        $password->account->generateApiKey();
+        $password->account->generateUserApiKey();
 
         $username = 'username';
         $domain = Space::first()->domain;
@@ -747,7 +747,7 @@ class ApiAccountTest extends TestCase
         $account = $password->account;
 
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
         $admin->save();
 
         $username = 'changed';
@@ -801,7 +801,7 @@ class ApiAccountTest extends TestCase
     {
         $confirmationKey = '0123';
         $password = Password::factory()->create();
-        $password->account->generateApiKey();
+        $password->account->generateUserApiKey();
         $password->account->confirmation_key = $confirmationKey;
         $password->account->activated = false;
         $password->account->save();
@@ -853,7 +853,7 @@ class ApiAccountTest extends TestCase
         $confirmationKey = '1234';
 
         $password = Password::factory()->create();
-        $password->account->generateApiKey();
+        $password->account->generateUserApiKey();
         $password->account->confirmation_key = $confirmationKey;
         $password->account->activated = false;
         $password->account->save();
@@ -873,7 +873,7 @@ class ApiAccountTest extends TestCase
         $phone = '+33612312312';
 
         $password = Password::factory()->create();
-        $password->account->generateApiKey();
+        $password->account->generateUserApiKey();
         $password->account->activated = false;
         $password->account->phone = $phone;
         $password->account->save();
@@ -1079,7 +1079,7 @@ class ApiAccountTest extends TestCase
     {
         $confirmationKey = '0123';
         $password = Password::factory()->create();
-        $password->account->generateApiKey();
+        $password->account->generateUserApiKey();
         $password->account->confirmation_key = $confirmationKey;
         $password->account->activated = false;
         $password->account->save();
@@ -1120,7 +1120,7 @@ class ApiAccountTest extends TestCase
     public function testChangePassword()
     {
         $account = Account::factory()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
         $password = 'password';
         $algorithm = 'MD5';
         $newPassword = 'new_password';
@@ -1193,7 +1193,7 @@ class ApiAccountTest extends TestCase
         $account = Account::factory()->withEmail()->create();
 
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         // deactivate
         $this->keyAuthenticated($admin)
@@ -1255,7 +1255,7 @@ class ApiAccountTest extends TestCase
         Password::factory()->create();
 
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         // /accounts
         $this->keyAuthenticated($admin)
@@ -1278,7 +1278,7 @@ class ApiAccountTest extends TestCase
     public function testCodeExpires()
     {
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         // Activated, no no confirmation_key
         $this->keyAuthenticated($admin)
@@ -1326,7 +1326,7 @@ class ApiAccountTest extends TestCase
         $password = Password::factory()->create();
 
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $this->keyAuthenticated($admin)
             ->delete($this->route . '/' . $password->account->id)

@@ -32,7 +32,7 @@ class ApiSpaceEmailServerTest extends TestCase
     public function testEmailServer()
     {
         $admin = Account::factory()->superAdmin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
         $emailHost = 'email.domain';
 
         $route = $this->route . '/' . $admin->space->host . '/email';

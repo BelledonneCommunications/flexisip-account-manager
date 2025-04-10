@@ -51,7 +51,7 @@
         <p>
             <i class="ph">key</i>
             {{ __('API Key') }}
-            <a href="{{ route('account.api_key.show') }}">
+            <a href="{{ route('account.api_keys.show') }}">
                 {{ __('Manage') }}
             </a>
         </p>

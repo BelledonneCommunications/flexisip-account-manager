@@ -40,7 +40,7 @@ class ApiPushNotificationTest extends TestCase
     public function testCorrectParameters()
     {
         $account = Account::factory()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->tokenRoute, [

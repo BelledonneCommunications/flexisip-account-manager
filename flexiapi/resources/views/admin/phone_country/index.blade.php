@@ -5,37 +5,45 @@
 <header>
     <h1><i class="ph">flag</i> {{ __('Phone Countries') }}</h1>
     <a class="btn btn-secondary oppose" href="{{ route('admin.phone_countries.activate_all') }}">
-        <i class="ph">plus</i>
-        {{ __('Activate All') }}
+        <i class="ph">eye</i> {{ __('Activate All') }}
     </a>
     <a class="btn btn-secondary" href="{{ route('admin.phone_countries.deactivate_all') }}">
-        <i class="ph">minus</i>
-        {{ __('Deactivate All') }}
+        <i class="ph">eye-closed</i> {{ __('Deactivate All') }}
     </a>
 </header>
+
+@include('admin.parts.settings_tabs')
 
 <table>
     <thead>
         <tr>
-            <th>{{ __('Code') }}</th>
-            <th>{{ __('Name') }}</th>
-            <th>{{ __('Country code') }}</th>
+            <th style="width: 100%;">{{ __('Name') }}</th>
             <th>{{ __('Actions') }}</th>
         </tr>
     </thead>
     <tbody>
         @foreach ($phone_countries as $phone_country)
             <tr>
-                <td>{{ $phone_country->code }}</td>
-                <td>{{ $phone_country->name }}</td>
-                <td>{{ $phone_country->country_code }}</td>
                 <td>
                     @if ($phone_country->activated)
-                        <span class="badge badge-success" title="Activated">{{ __('Activated') }}</span>
-                        <a href="{{ route('admin.phone_countries.deactivate', $phone_country->code) }}">{{ __('Deactivate') }}</a>
+                        <span class="badge badge-success oppose" title="Activated">{{ __('Activated') }}</span>
                     @else
-                        <span class="badge badge-error" title="Deactivated">{{ __('Deactivated') }}</span>
-                        <a href="{{ route('admin.phone_countries.activate', $phone_country->code) }}">{{ __('Activate') }}</a>
+                        <span class="badge badge-error oppose" title="Deactivated">{{ __('Deactivated') }}</span>
+                    @endif
+                    {{ $phone_country->name }}
+                    <small>
+                        {{ $phone_country->code }} - {{ $phone_country->country_code }}
+                    </small>
+                </td>
+                <td>
+                    @if ($phone_country->activated)
+                        <a class="btn btn-secondary small" href="{{ route('admin.phone_countries.deactivate', $phone_country->code) }}">
+                            <i class="ph">eye-closed</i>
+                        </a>
+                    @else
+                        <a class="btn btn-secondary small" href="{{ route('admin.phone_countries.activate', $phone_country->code) }}">
+                            <i class="ph">eye</i>
+                        </a>
                     @endif
                 </td>
             </tr>

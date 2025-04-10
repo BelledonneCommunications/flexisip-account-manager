@@ -24,8 +24,6 @@ p .btn {
 }
 
 .btn i {
-    margin-right: 0.5rem;
-    margin-left: -0.5rem;
     font-size: 2rem;
     vertical-align: middle;
 }
@@ -152,18 +150,6 @@ form .disabled:not(a) {
     form div {
         grid-column: 1/-1;
     }
-}
-
-form small {
-    display: block;
-    font-weight: 300;
-    color: var(--second-6);
-    font-size: 1.25rem;
-    margin-top: 0.25rem;
-}
-
-form small.error {
-    color: var(--danger-6);
 }
 
 form label {

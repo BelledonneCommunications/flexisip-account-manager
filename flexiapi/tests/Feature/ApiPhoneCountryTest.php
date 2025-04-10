@@ -33,7 +33,7 @@ class ApiPhoneCountryTest extends TestCase
     public function testCreatePhoneByCountry()
     {
         $account = Account::factory()->withConsumedAccountCreationToken()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
 
         $frenchPhoneNumber = '+33612121212';
         $dutchPhoneNumber = '+31612121212';

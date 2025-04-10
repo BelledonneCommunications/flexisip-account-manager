@@ -33,7 +33,7 @@ class ApiAccountTypeTest extends TestCase
     public function testCreate()
     {
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
@@ -75,7 +75,7 @@ class ApiAccountTypeTest extends TestCase
     public function testDelete()
     {
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
@@ -96,7 +96,7 @@ class ApiAccountTypeTest extends TestCase
     public function testUpdate()
     {
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
@@ -125,7 +125,7 @@ class ApiAccountTypeTest extends TestCase
     public function testAccountAddType()
     {
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [

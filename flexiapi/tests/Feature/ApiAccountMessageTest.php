@@ -31,7 +31,7 @@ class ApiAccountMessageTest extends TestCase
     public function testRequest()
     {
         $password = Password::factory()->admin()->create();
-        $password->account->generateApiKey();
+        $password->account->generateUserApiKey();
 
         $this->keyAuthenticated($password->account)
             ->json($this->method, $this->route, [

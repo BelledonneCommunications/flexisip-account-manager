@@ -21,12 +21,12 @@
                 <div>
                     <input type="text" readonly value="{{ $account->apiKey->key }}">
                     <label>Key</label>
-                    <small>Can only be used from the following ip: {{ $account->apiKey->ip }} | {{ $account->apiKey->requests }} requests</small>
+                    <small>Can only be used from the following ip: {{ $account->apiKey->ip }} | {{ __('Requests ')}} {{ $account->apiKey->requests }}</small>
                 </div>
             </form>
         @endif
 
-        <form method="POST" action="{{ route('account.api_key.update') }}" accept-charset="UTF-8">
+        <form method="POST" action="{{ route('account.api_keys.update') }}" accept-charset="UTF-8">
             @csrf
             <div>
                 <button type="submit" class="btn btn-primary">@if ($account->apiKey)Refresh the current key @else Generate a new key @endif</button>

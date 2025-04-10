@@ -30,10 +30,10 @@ class ApiAccountVcardsStorageTest extends TestCase
     public function testAccountCrud()
     {
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $account = Account::factory()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
 
         $adminRoute = '/api/accounts/' . $account->id . '/vcards-storage';
 

@@ -31,7 +31,7 @@ class ApiAccountExternalAccountTest extends TestCase
     {
         $account = Account::factory()->create();
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $username = 'foo';
 

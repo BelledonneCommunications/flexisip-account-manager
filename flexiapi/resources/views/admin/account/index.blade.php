@@ -63,7 +63,6 @@
             <tr>
                 @include('parts.column_sort', ['key' => 'username', 'title' => __('Identifier')])
                 <th>{{ __('Contacts Lists') }}</th>
-                <th>Badges</th>
                 @include('parts.column_sort', ['key' => 'updated_at', 'title' => __('Updated')])
             </tr>
         </thead>
@@ -79,6 +78,17 @@
                         <a href="{{ route('admin.account.edit', $account->id) }}">
                             {{ $account->identifier }}
                         </a>
+                        @if ($account->activated)
+                            <span class="badge badge-success oppose" title="{{ __('Activated') }}"><i class="ph">check</i></span>
+                        @endif
+                        @if ($account->superAdmin)
+                            <span class="badge badge-error oppose" title="{{ __('Super Admin') }}">Super Adm.</span>
+                        @elseif ($account->admin)
+                            <span class="badge badge-primary oppose" title="{{ __('Admin') }}">Adm.</span>
+                        @endif
+                        @if ($account->blocked)
+                            <span class="badge badge-error oppose" title="{{ __('Blocked') }}"><i class="ph">prohibit</i></span>
+                        @endif
                     </td>
                     <td>
                         @if ($account->contactsLists->isNotEmpty())
@@ -86,19 +96,6 @@
                             @if ($account->contactsLists->count() > 1)
                                 <span class="badge">+{{ $account->contactsLists->count() - 1 }}</span>
                             @endif
-                        @endif
-                    </td>
-                    <td>
-                        @if ($account->activated)
-                            <span class="badge badge-success" title="{{ __('Activated') }}"><i class="ph">check</i></span>
-                        @endif
-                        @if ($account->superAdmin)
-                            <span class="badge badge-error" title="{{ __('Super Admin') }}">Super Adm.</span>
-                        @elseif ($account->admin)
-                            <span class="badge badge-primary" title="{{ __('Admin') }}">Adm.</span>
-                        @endif
-                        @if ($account->blocked)
-                            <span class="badge badge-error" title="{{ __('Blocked') }}"><i class="ph">prohibit</i></span>
                         @endif
                     </td>
                     <td>{{ $account->updated_at }}</td>

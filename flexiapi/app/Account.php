@@ -118,7 +118,12 @@ class Account extends Authenticatable
 
     public function apiKey()
     {
-        return $this->hasOne(ApiKey::class);
+        return $this->hasOne(ApiKey::class)->whereNull('expires_after_last_used_minutes');
+    }
+
+    public function adminApiKeys()
+    {
+        return $this->hasMany(ApiKey::class)->whereNotNull('expires_after_last_used_minutes');
     }
 
     public function external()
@@ -352,7 +357,7 @@ class Account extends Authenticatable
         return ($this->activationExpiration && $this->activationExpiration->isExpired());
     }
 
-    public function generateApiKey(?string $ip = null): ApiKey
+    public function generateUserApiKey(?string $ip = null): ApiKey
     {
         $this->apiKey()->delete();
 

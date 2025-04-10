@@ -27,15 +27,11 @@ use App\ApiKey;
 class ClearApiKeys extends Command
 {
     protected $signature = 'accounts:clear-api-keys {minutes?}';
-    protected $description = 'Clear the expired API Keys after n minutes';
-
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected $description = 'Clear the expired user API Keys after n minutes and clear the other expired admin keys';
 
     public function handle()
     {
+        // User API Keys
         $minutes = $this->argument('minutes') ?? config('app.api_key_expiration_minutes');
 
         if ($minutes == 0) {
@@ -43,14 +39,30 @@ class ClearApiKeys extends Command
             return 0;
         }
 
-        $this->info('Deleting api keys unused after ' . $minutes . ' minutes');
+        $this->info('Deleting user API Keys unused after ' . $minutes . ' minutes');
 
-        $count = ApiKey::where(
-            'last_used_at',
-            '<',
-            Carbon::now()->subMinutes($minutes)->toDateTimeString()
-        )->delete();
+        $count = ApiKey::whereNull('expires_after_last_used_minutes')
+            ->where('last_used_at', '<', Carbon::now()->subMinutes($minutes)->toDateTimeString())
+            ->delete();
 
-        $this->info($count . ' api keys deleted');
+        $this->info($count . ' user API Keys deleted');
+
+        // Admin API Keys
+        $keys = ApiKey::whereNotNull('expires_after_last_used_minutes')
+            ->where('expires_after_last_used_minutes', '>', 0)
+            ->with('account')
+            ->get();
+
+        $count = 0;
+
+        foreach ($keys as $key) {
+            if ($key->last_used_at->addMinutes($key->expires_after_last_used_minutes)->isPast()) {
+                $this->info('Deleting ' . $key->account->identifier . ' admin API Key expired after ' . $key->expires_after_last_used_minutes .'min');
+                $key->delete();
+                $count++;
+            }
+        }
+
+        $this->info($count . ' admin API Keys deleted');
     }
 }

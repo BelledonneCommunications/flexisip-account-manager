@@ -30,20 +30,21 @@ use App\Http\Controllers\Admin\AccountAccountTypeController;
 use App\Http\Controllers\Admin\AccountActionController;
 use App\Http\Controllers\Admin\AccountActivityController;
 use App\Http\Controllers\Admin\AccountContactController;
+use App\Http\Controllers\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Admin\AccountDeviceController;
 use App\Http\Controllers\Admin\AccountDictionaryController;
 use App\Http\Controllers\Admin\AccountImportController;
-use App\Http\Controllers\Admin\AccountTypeController;
-use App\Http\Controllers\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Admin\AccountStatisticsController;
-use App\Http\Controllers\Admin\ContactsListController;
+use App\Http\Controllers\Admin\AccountTypeController;
+use App\Http\Controllers\Admin\ApiKeyController as AdminApiKeyController;
 use App\Http\Controllers\Admin\ContactsListContactController;
+use App\Http\Controllers\Admin\ContactsListController;
 use App\Http\Controllers\Admin\ExternalAccountController;
 use App\Http\Controllers\Admin\PhoneCountryController;
 use App\Http\Controllers\Admin\ResetPasswordEmailController;
-use App\Http\Controllers\Admin\StatisticsController;
-use App\Http\Controllers\Admin\SpaceController;
 use App\Http\Controllers\Admin\Space\EmailServerController;
+use App\Http\Controllers\Admin\SpaceController;
+use App\Http\Controllers\Admin\StatisticsController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', 'login')->name('account.home');
@@ -139,14 +140,14 @@ Route::middleware(['web_panel_enabled', 'space.check'])->group(function () {
             Route::delete('delete', 'destroy')->name('destroy');
         });
 
-        Route::prefix('password')->controller(PasswordController::class)->group(function () {
-            Route::get('/', 'show')->name('password.show');
-            Route::post('/', 'update')->name('password.update');
+        Route::name('password.')->prefix('password')->controller(PasswordController::class)->group(function () {
+            Route::get('/', 'show')->name('show');
+            Route::post('/', 'update')->name('update');
         });
 
-        Route::prefix('api_key')->controller(ApiKeyController::class)->group(function () {
-            Route::get('/', 'show')->name('api_key.show');
-            Route::post('/', 'update')->name('api_key.update');
+        Route::name('api_keys.')->prefix('api_key')->controller(ApiKeyController::class)->group(function () {
+            Route::get('/', 'show')->name('show');
+            Route::post('/', 'update')->name('update');
         });
 
         Route::post('auth_tokens', 'Account\AuthTokenController@create')->name('auth_tokens.create');
@@ -169,6 +170,14 @@ Route::middleware(['web_panel_enabled', 'space.check'])->group(function () {
                 Route::get('delete', 'delete')->name('delete');
                 Route::delete('/', 'destroy')->name('destroy');
             });
+        });
+
+        Route::name('api_keys.')->prefix('api_keys')->controller(AdminApiKeyController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('create', 'create')->name('create');
+            Route::post('/', 'store')->name('store');
+            Route::get('{key}/delete', 'delete')->name('delete');
+            Route::delete('/', 'destroy')->name('destroy');
         });
 
         Route::middleware(['auth.super_admin'])->group(function () {

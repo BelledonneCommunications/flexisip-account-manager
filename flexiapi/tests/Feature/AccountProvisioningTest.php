@@ -72,7 +72,7 @@ class AccountProvisioningTest extends TestCase
         space(reload: true);
 
         $account = Account::factory()->deactivated()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
 
         $this->assertEquals(false, $account->activated);
         $this->assertFalse($account->currentProvisioningToken->used);
@@ -108,7 +108,7 @@ class AccountProvisioningTest extends TestCase
     public function testAuthenticatedWithPasswordProvisioning()
     {
         $password = Password::factory()->create();
-        $password->account->generateApiKey();
+        $password->account->generateUserApiKey();
 
         $this->keyAuthenticated($password->account)
             ->get($this->accountRoute)
@@ -141,7 +141,7 @@ class AccountProvisioningTest extends TestCase
         $secondDomain = Space::factory()->create();
 
         $password = Password::factory()->create();
-        $password->account->generateApiKey();
+        $password->account->generateUserApiKey();
         $password->account->domain = $secondDomain->domain;
         $password->account->save();
 
@@ -162,7 +162,7 @@ class AccountProvisioningTest extends TestCase
         $password = Password::factory()->create();
         $password->account->display_name = "Anna O'Reily";
         $password->account->save();
-        $password->account->generateApiKey();
+        $password->account->generateUserApiKey();
 
         $provisioningToken = $password->account->provisioning_token;
 
@@ -190,7 +190,7 @@ class AccountProvisioningTest extends TestCase
     public function testPasswordResetProvisioning()
     {
         $password = Password::factory()->create();
-        $password->account->generateApiKey();
+        $password->account->generateUserApiKey();
 
         $currentPassword = $password->password;
 
@@ -232,7 +232,7 @@ class AccountProvisioningTest extends TestCase
         $response->assertStatus(404);
 
         $password = Password::factory()->create();
-        $password->account->generateApiKey();
+        $password->account->generateUserApiKey();
         $password->account->activated = false;
         $password->account->save();
 
@@ -258,7 +258,7 @@ class AccountProvisioningTest extends TestCase
 
         // Refresh the provisioning_token
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, '/api/accounts/' . $password->account->id . '/provision')
@@ -292,7 +292,7 @@ class AccountProvisioningTest extends TestCase
         $authToken = $response->json('token');
 
         $password = Password::factory()->create();
-        $password->account->generateApiKey();
+        $password->account->generateUserApiKey();
 
         $this->keyAuthenticated($password->account)
             ->json($this->method, '/api/accounts/auth_token/' . $authToken . '/attach')
@@ -322,7 +322,7 @@ class AccountProvisioningTest extends TestCase
     public function testTokenExpiration()
     {
         $account = Account::factory()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
         $expirationMinutes = 10;
 
         $this->keyAuthenticated($account)
@@ -356,7 +356,7 @@ class AccountProvisioningTest extends TestCase
     public function testCoTURN()
     {
         $account = Account::factory()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
 
         $host = 'coturn.tld';
         $realm = 'realm.tld';

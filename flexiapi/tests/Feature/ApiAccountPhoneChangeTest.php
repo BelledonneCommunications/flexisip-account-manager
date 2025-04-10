@@ -32,7 +32,7 @@ class ApiAccountPhoneChangeTest extends TestCase
     public function testRequest()
     {
         $account = Account::factory()->withConsumedAccountCreationToken()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route.'/request', [
@@ -51,7 +51,7 @@ class ApiAccountPhoneChangeTest extends TestCase
     public function testCodeExpiration()
     {
         $account = Account::factory()->withConsumedAccountCreationToken()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route.'/request', [
@@ -74,7 +74,7 @@ class ApiAccountPhoneChangeTest extends TestCase
     public function testCreatePhoneByCountry()
     {
         $account = Account::factory()->withConsumedAccountCreationToken()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
 
         $frenchPhoneNumber = '+33612121212';
         $dutchPhoneNumber = '+31612121212';
@@ -103,7 +103,7 @@ class ApiAccountPhoneChangeTest extends TestCase
     public function testUnvalidatedAccount()
     {
         $account = Account::factory()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route.'/request', [
@@ -129,7 +129,7 @@ class ApiAccountPhoneChangeTest extends TestCase
         $phone = $phoneChange->phone;
 
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $this->keyAuthenticated($phoneChange->account)
             ->get('/api/accounts/me')

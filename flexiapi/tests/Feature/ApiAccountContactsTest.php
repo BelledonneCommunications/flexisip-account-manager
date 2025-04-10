@@ -43,7 +43,7 @@ class ApiAccountContactsTest extends TestCase
         $actionCode = '123';
 
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $password1->account->id . '/contacts/' . $password2->account->id)
@@ -90,7 +90,7 @@ class ApiAccountContactsTest extends TestCase
             ]);
 
         // /me
-        $password1->account->generateApiKey();
+        $password1->account->generateUserApiKey();
         $password1->account->save();
 
         $this->keyAuthenticated($password1->account)

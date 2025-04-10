@@ -29,6 +29,7 @@ v1.7
 - Fix FLEXIAPI-233 Add External Accounts (new version)
 - Fix FLEXIAPI-277 Restrict authorized ini keys that can be set to prevent conflict with the existing ones set in the UI
 - Fix FLEXIAPI-272 Add Space based email server integration
+- Fix FLEXIAPI-284 Add configurable admin API Keys
 
 v1.6
 ----

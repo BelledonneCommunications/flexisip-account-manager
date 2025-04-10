@@ -28,8 +28,12 @@ class ApiKey extends Model
 
     protected $table = 'api_keys';
 
+    protected $casts = [
+        'last_used_at' => 'datetime',
+    ];
+
     public function account()
     {
-        return $this->belongsTo(Account::class);
+        return $this->belongsTo(Account::class)->withoutGlobalScopes();
     }
 }

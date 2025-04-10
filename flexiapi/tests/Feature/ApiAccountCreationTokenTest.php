@@ -132,7 +132,7 @@ class ApiAccountCreationTokenTest extends TestCase
     public function testAdminEndpoint()
     {
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $response = $this->keyAuthenticated($admin)
             ->json($this->method, $this->adminRoute)
@@ -268,7 +268,7 @@ class ApiAccountCreationTokenTest extends TestCase
     public function testConsume()
     {
         $account = Account::factory()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
 
         $accountCreationToken = AccountCreationToken::factory()->create();
         $token = $accountCreationToken->token;

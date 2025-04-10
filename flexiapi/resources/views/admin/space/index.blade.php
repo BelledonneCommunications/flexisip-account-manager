@@ -14,9 +14,7 @@
     <thead>
         <tr>
             <th>{{ __('Space') }}</th>
-            <th>{{ __('Host') }}</th>
             <th>{{ __('SIP Domain') }}</th>
-            <th>{{ __('Accounts') }}</th>
             <th>{{ __('Expiration') }}</th>
         </tr>
     </thead>
@@ -24,15 +22,15 @@
         @foreach ($spaces as $space)
             <tr>
                 <td>
-                    <a href="{{ route('admin.spaces.show', $space->id) }}">
-                        {{ $space->name }}
-                        @if ($space->super) <span class="badge badge-error" title="Super domain">Super</span> @endif
-                    </a>
+                    <a href="{{ route('admin.spaces.show', $space->id) }}">{{ $space->name }}</a>
+                    @if ($space->super) <span class="badge badge-error oppose" title="Super domain">Super</span> @endif
+                    <br />
+                    <small>{{ $space->host }}</small>
                 </td>
-                <td>{{ $space->host }}</td>
-                <td>{{ $space->domain }}</td>
-                <td>
-                    {{ $space->accounts_count }} / @if ($space->max_accounts > 0){{ $space->max_accounts }} @else <i class="ph">infinity</i>@endif
+                <td>{{ $space->domain }}
+                    <small>
+                        {{ $space->accounts_count }} / @if ($space->max_accounts > 0){{ $space->max_accounts }} @else <i class="ph">infinity</i>@endif<i class="ph">user</i>
+                    </small>
                 </td>
                 <td>
                     @if ($space->isExpired())

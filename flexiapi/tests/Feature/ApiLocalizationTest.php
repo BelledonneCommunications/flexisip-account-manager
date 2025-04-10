@@ -30,7 +30,7 @@ class ApiLocalizationTest extends TestCase
     public function testUsernameNotPhone()
     {
         $password = Password::factory()->admin()->create();
-        $password->account->generateApiKey();
+        $password->account->generateUserApiKey();
 
         $this->keyAuthenticated($password->account)
             ->withHeaders([

@@ -9,7 +9,7 @@
 
 @section('content')
     <header>
-        <h2><i class="ph">trash</i> {{ __('Delete') }}</h2>
+        <h1><i class="ph">trash</i> {{ __('Delete') }}</h1>
         <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
         <input form="delete" class="btn" type="submit" value="{{ __('Delete') }}">
     </header>

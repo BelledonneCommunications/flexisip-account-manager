@@ -90,7 +90,7 @@ class CreateAdminAccount extends Command
         $account->created_at = Carbon::now()->subYears(3);
         $account->save();
 
-        $account->generateApiKey(ip: $this->option('api_key_ip') ?? null);
+        $account->generateUserApiKey(ip: $this->option('api_key_ip') ?? null);
         $account->updatePassword($password);
 
         $this->info('Admin test account created: "' . $username . '@' . $domain . '" | Password: "' . $password . '" | API Key: "' . $account->apiKey->key . '" (valid on ' . ($account->apiKey->ip ?? 'any') . ' ip)');

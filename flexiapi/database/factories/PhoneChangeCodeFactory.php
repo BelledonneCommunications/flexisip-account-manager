@@ -30,7 +30,7 @@ class PhoneChangeCodeFactory extends Factory
     public function definition()
     {
         $account = Account::factory()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
 
         return [
             'account_id' => $account->id,

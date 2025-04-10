@@ -30,7 +30,7 @@ class AccountBlockingTest extends TestCase
     public function testBlocking()
     {
         $account = Account::factory()->withConsumedAccountCreationToken()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
 
         config()->set('app.blocking_amount_events_authorized_during_period', 2);
 
@@ -48,10 +48,10 @@ class AccountBlockingTest extends TestCase
     public function testAdminBlocking()
     {
         $account = Account::factory()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
 
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $this->keyAuthenticated($account)
             ->get($this->route . '/me')->assertStatus(200);

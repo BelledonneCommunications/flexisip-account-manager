@@ -33,7 +33,7 @@ class ApiSpaceTest extends TestCase
     public function testBaseAdmin()
     {
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $secondDomain = Space::factory()->secondDomain()->create();
         $username = 'foo';
@@ -75,7 +75,7 @@ class ApiSpaceTest extends TestCase
     public function testSuperAdmin()
     {
         $admin = Account::factory()->superAdmin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $thirdDomain = 'third.domain';
 
@@ -139,7 +139,7 @@ class ApiSpaceTest extends TestCase
     public function testUserCreation()
     {
         $admin = Account::factory()->superAdmin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $domain = 'domain.com';
 

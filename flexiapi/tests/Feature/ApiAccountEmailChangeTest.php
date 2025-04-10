@@ -31,9 +31,9 @@ class ApiAccountEmailChangeTest extends TestCase
     public function testRequest()
     {
         $account = Account::factory()->withConsumedAccountCreationToken()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
         $otherAccount = Account::factory()->withEmail()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
         $newEmail = 'test@test.com';
 
         $this->keyAuthenticated($account)
@@ -77,7 +77,7 @@ class ApiAccountEmailChangeTest extends TestCase
     public function testCodeExpiration()
     {
         $account = Account::factory()->withConsumedAccountCreationToken()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route.'/request', [
@@ -100,7 +100,7 @@ class ApiAccountEmailChangeTest extends TestCase
     public function testUnvalidatedAccount()
     {
         $account = Account::factory()->create();
-        $account->generateApiKey();
+        $account->generateUserApiKey();
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route.'/request', [
@@ -126,7 +126,7 @@ class ApiAccountEmailChangeTest extends TestCase
         $email = $emailChange->email;
 
         $admin = Account::factory()->admin()->create();
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
 
         $this->keyAuthenticated($emailChange->account)
             ->get('/api/accounts/me')

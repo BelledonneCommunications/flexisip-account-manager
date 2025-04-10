@@ -33,7 +33,7 @@ class ApiSpaceWithMiddlewareTest extends TestCaseWithSpaceMiddleware
     public function testExpiredSpace()
     {
         $superAdmin = Account::factory()->superAdmin()->create();
-        $superAdmin->generateApiKey();
+        $superAdmin->generateUserApiKey();
 
         $username = 'username';
 
@@ -41,7 +41,7 @@ class ApiSpaceWithMiddlewareTest extends TestCaseWithSpaceMiddleware
         $admin = Account::factory()->fromSpace($space)->admin()->create();
 
         // Try to create a new user as an admin
-        $admin->generateApiKey();
+        $admin->generateUserApiKey();
         config()->set('app.root_host', $admin->domain);
 
         space(reload: true);

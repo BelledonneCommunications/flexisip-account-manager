@@ -20,7 +20,7 @@
         <thead>
             <tr>
                 <th>{{ __('Code') }}</th>
-                <th>{{ __('Created on') }}</th>
+                <th>{{ __('Created') }}</th>
                 <th>{{ __('Used on') }}</th>
                 <th>IP</th>
                 <th>{{ __('Requests') }}</th>
@@ -54,7 +54,7 @@
         <thead>
             <tr>
                 <th>{{ __('Code') }}</th>
-                <th>{{ __('Created on') }}</th>
+                <th>{{ __('Created') }}</th>
                 <th>{{ __('Used on') }}</th>
                 <th>IP</th>
             </tr>
@@ -82,7 +82,7 @@
         <thead>
             <tr>
                 <th>{{ __('Code') }}</th>
-                <th>{{ __('Created on') }}</th>
+                <th>{{ __('Created') }}</th>
                 <th>{{ __('Used on') }}</th>
                 <th>IP</th>
             </tr>
@@ -113,7 +113,7 @@
             <tr>
                 <th>{{ __('Phone number') }}</th>
                 <th>{{ __('Code') }}</th>
-                <th>{{ __('Created on') }}</th>
+                <th>{{ __('Created') }}</th>
                 <th>{{ __('Used on') }}</th>
                 <th>IP</th>
             </tr>
@@ -145,7 +145,7 @@
             <tr>
                 <th>{{ __('Email') }}</th>
                 <th>{{ __('Code') }}</th>
-                <th>{{ __('Created on') }}</th>
+                <th>{{ __('Created') }}</th>
                 <th>{{ __('Used on') }}</th>
                 <th>IP</th>
             </tr>
@@ -176,7 +176,7 @@
         <thead>
             <tr>
                 <th>Token</th>
-                <th>{{ __('Created on') }}</th>
+                <th>{{ __('Created') }}</th>
                 <th>{{ __('Used on') }}</th>
                 <th>IP</th>
             </tr>
@@ -206,7 +206,7 @@
         <thead>
             <tr>
                 <th>Token</th>
-                <th>{{ __('Created on') }}</th>
+                <th>{{ __('Created') }}</th>
                 <th>{{ __('Used on') }}</th>
                 <th>{{ __('Email') }}</th>
             </tr>
