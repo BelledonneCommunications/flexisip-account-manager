@@ -156,7 +156,7 @@ class AccountController extends Controller
 
         Log::channel('events')->info('API Admin: Account updated', ['id' => $account->identifier]);
 
-        return $account->makeVisible(['confirmation_key', 'provisioning_token']);
+        return $account->makeVisible(['provisioning_token']);
     }
 
     public function typeAdd(int $accountId, int $typeId)

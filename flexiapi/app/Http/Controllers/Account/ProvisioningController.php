@@ -51,10 +51,6 @@ class ProvisioningController extends Controller
             })
             ->firstOrFail();
 
-        if ($account->activationExpired()) {
-            abort(404);
-        }
-
         $params = ['provisioning_token' => $provisioningToken];
 
         if ($request->has('reset_password')) {
@@ -130,7 +126,7 @@ class ProvisioningController extends Controller
             })
             ->firstOrFail();
 
-        if ($account->activationExpired() || ($provisioningToken != $account->provisioning_token)) {
+        if ($provisioningToken != $account->provisioning_token) {
             return abort(404);
         }
 

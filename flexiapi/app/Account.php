@@ -36,9 +36,9 @@ class Account extends Authenticatable
     use HasFactory;
     use Compoships;
 
-    protected $with = ['passwords', 'activationExpiration', 'emailChangeCode', 'types', 'actions', 'dictionaryEntries'];
-    protected $hidden = ['expire_time', 'confirmation_key', 'pivot', 'currentProvisioningToken', 'currentRecoveryCode', 'dictionaryEntries'];
-    protected $appends = ['realm', 'confirmation_key_expires', 'provisioning_token', 'provisioning_token_expire_at', 'dictionary'];
+    protected $with = ['passwords', 'emailChangeCode', 'types', 'actions', 'dictionaryEntries'];
+    protected $hidden = ['expire_time', 'pivot', 'currentProvisioningToken', 'currentRecoveryCode', 'dictionaryEntries'];
+    protected $appends = ['realm', 'provisioning_token', 'provisioning_token_expire_at', 'dictionary'];
     protected $casts = [
         'activated' => 'boolean',
     ];
@@ -109,11 +109,6 @@ class Account extends Authenticatable
                 ->from('accounts')
                 ->whereNotNull('dtmf_protocol');
         });
-    }
-
-    public function activationExpiration()
-    {
-        return $this->hasOne(ActivationExpiration::class);
     }
 
     public function apiKey()
@@ -352,10 +347,6 @@ class Account extends Authenticatable
     /**
      * Utils
      */
-    public function activationExpired(): bool
-    {
-        return ($this->activationExpiration && $this->activationExpiration->isExpired());
-    }
 
     public function generateUserApiKey(?string $ip = null): ApiKey
     {

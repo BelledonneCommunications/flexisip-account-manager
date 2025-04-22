@@ -41,7 +41,6 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
                         $element->domain,
                         $element->phone ?? null,
                         $element->activated ?? true,
-                        $element->confirmation_key ?? null
                     )
                 );
 
@@ -71,7 +70,6 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
                             $element->domain,
                             $element->phone ?? null,
                             $element->activated ?? true,
-                            $element->confirmation_key ?? null
                         )
                     );
 
@@ -104,7 +102,7 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
 
     private function generateAccountArray(
         int $id, string $username, string $domain, string $phone = null,
-        bool $activated = true, string $confirmationKey = null
+        bool $activated = true
     ): array {
         return [
             'id' => $id,
@@ -114,7 +112,6 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
             'email' => rawurlencode($username) . '@' . $domain,
             'activated' => $activated,
             'ip_address' => '',
-            'confirmation_key' => $confirmationKey,
             'user_agent' => 'FlexiAPI Seeder',
             'created_at' => '2010-01-03 04:30:43'
         ];

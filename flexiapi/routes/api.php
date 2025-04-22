@@ -47,16 +47,6 @@ Route::post('accounts/with-account-creation-token', 'Api\Account\AccountControll
 
 Route::get('accounts/{sip}/info', 'Api\Account\AccountController@info');
 
-// Deprecated endpoints
-Route::post('accounts/{sip}/activate/email', 'Api\Account\AccountController@activateEmail');
-Route::post('accounts/{sip}/activate/phone', 'Api\Account\AccountController@activatePhone');
-
-// Deprecated endpoints /!\ Dangerous endpoints
-Route::post('accounts/public', 'Api\Account\AccountController@storePublic');
-Route::get('accounts/{sip}/recover/{recovery_key}', 'Api\Account\AccountController@recoverUsingKey');
-Route::post('accounts/recover-by-phone', 'Api\Account\AccountController@recoverByPhone');
-Route::get('accounts/{phone}/info-by-phone', 'Api\Account\AccountController@phoneInfo');
-
 Route::post('accounts/auth_token', 'Api\Account\AuthTokenController@store');
 
 Route::get('accounts/me/api_key/{auth_token}', 'Api\Account\ApiKeyController@generateFromToken')->middleware('cookie', 'cookie.encrypt');

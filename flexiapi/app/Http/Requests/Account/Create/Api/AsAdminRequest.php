@@ -36,10 +36,6 @@ class AsAdminRequest extends Request
         $rules['algorithm'] = ['required', new PasswordAlgorithm()];
         $rules['admin'] = 'boolean|nullable';
         $rules['activated'] = 'boolean|nullable';
-        $rules['confirmation_key_expires'] = [
-            'date_format:Y-m-d H:i:s',
-            'nullable',
-        ];
 
         if (config('app.allow_phone_number_username_admin_api') == true) {
             array_splice(

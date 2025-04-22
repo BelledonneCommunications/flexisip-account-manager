@@ -76,11 +76,6 @@ class BlockingService
             Carbon::now()->subMinutes(config('app.blocking_time_period_check'))->toDateTimeString()
         )->count();
 
-        // Deprecated, also detect if the account itself was updated recently, might be because of the confirmation_key change
-        if (Carbon::now()->subMinutes(config('app.blocking_time_period_check'))->isBefore($this->account->updated_at)) {
-            $events++;
-        }
-
         return $events;
     }
 }

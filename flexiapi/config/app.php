@@ -61,11 +61,6 @@ return [
     'blocking_time_period_check' => env('BLOCKING_TIME_PERIOD_CHECK', 30),
     'blocking_amount_events_authorized_during_period' => env('BLOCKING_AMOUNT_EVENTS_AUTHORIZED_DURING_PERIOD', 5),
 
-    /**
-     * /!\ Enable dangerous endpoints required for fallback
-     */
-    'dangerous_endpoints' => env('APP_DANGEROUS_ENDPOINTS', false),
-
     /*
     |--------------------------------------------------------------------------
     | Application Environment

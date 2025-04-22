@@ -21,9 +21,7 @@ namespace App\Services;
 
 use App\Account;
 use App\AccountCreationToken;
-use App\ActivationExpiration;
 use App\EmailChangeCode;
-use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use App\Http\Requests\Account\Create\Request as CreateRequest;
 use App\Http\Requests\Account\Update\Request as UpdateRequest;
 use App\Libraries\OvhSMS;
@@ -38,7 +36,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Str;
 
 class AccountService
 {
@@ -79,21 +76,9 @@ class AccountService
             }
         }
 
-        if ($account->activated == false) {
-            $account->confirmation_key = Str::random(WebAuthenticateController::$emailCodeSize);
-        }
-
         $account->save();
 
         if ($request->asAdmin) {
-            if ((!$request->has('activated') || !(bool)$request->get('activated'))
-            && $request->has('confirmation_key_expires')) {
-                $actionvationExpiration = new ActivationExpiration();
-                $actionvationExpiration->account_id = $account->id;
-                $actionvationExpiration->expires = $request->get('confirmation_key_expires');
-                $actionvationExpiration->save();
-            }
-
             if ($request->has('dictionary')) {
                 foreach ($request->get('dictionary') as $key => $value) {
                     $account->setDictionaryEntry($key, $value);

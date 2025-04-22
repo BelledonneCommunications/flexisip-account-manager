@@ -32,7 +32,7 @@ class AccountBlockingTest extends TestCase
         $account = Account::factory()->withConsumedAccountCreationToken()->create();
         $account->generateUserApiKey();
 
-        config()->set('app.blocking_amount_events_authorized_during_period', 2);
+        config()->set('app.blocking_amount_events_authorized_during_period', 1);
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route . '/me/phone/request', [

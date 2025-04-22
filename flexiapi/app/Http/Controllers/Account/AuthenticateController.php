@@ -80,29 +80,6 @@ class AuthenticateController extends Controller
         return redirect()->back()->withErrors(['authentication' => __('Wrong username or password')]);
     }
 
-    /**
-     * Deprecated
-     */
-    public function validateEmail(Request $request, string $code)
-    {
-        $request->merge(['code' => $code]);
-        $request->validate(['code' => 'required|size:' . self::$emailCodeSize]);
-
-        $account = Account::where('confirmation_key', $code)->first();
-
-        if (!$account) {
-            return redirect()->route('account.login');
-        }
-
-        $account->confirmation_key = null;
-        $account->activated = true;
-        $account->save();
-
-        Auth::login($account);
-
-        return redirect()->route('account.home');
-    }
-
     public function loginAuthToken(Request $request, ?string $token = null)
     {
         $authToken = null;

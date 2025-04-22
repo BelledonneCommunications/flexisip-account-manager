@@ -20,9 +20,7 @@
 namespace Tests\Feature;
 
 use App\Account;
-use App\AccountCreationToken;
 use App\AccountTombstone;
-use App\ActivationExpiration;
 use App\Password;
 use App\Space;
 use Carbon\Carbon;
@@ -182,7 +180,6 @@ class ApiAccountTest extends TestCase
                 'activated' => false
             ]);
 
-        $this->assertFalse(empty($response1['confirmation_key']));
         $this->assertFalse(empty($response1['provisioning_token']));
     }
 
@@ -327,7 +324,6 @@ class ApiAccountTest extends TestCase
                 'activated' => false
             ]);
 
-        $this->assertFalse(empty($response1['confirmation_key']));
         $this->assertFalse(empty($response1['provisioning_token']));
     }
 
@@ -394,7 +390,6 @@ class ApiAccountTest extends TestCase
                 'admin' => true,
             ]);
 
-        $this->assertTrue(!empty($response1['confirmation_key']));
         $this->assertFalse(empty($response1['provisioning_token']));
     }
 
@@ -532,15 +527,13 @@ class ApiAccountTest extends TestCase
         $username = 'username';
 
         $response0 = $this->generateFirstResponse($password);
-        $response1 = $this->generateSecondResponse($password, $response0)
+        $this->generateSecondResponse($password, $response0)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'algorithm' => 'SHA-256',
                 'password' => 'blabla',
                 'activated' => true,
-            ]);
-
-        $response1
+            ])
             ->assertStatus(200)
             ->assertJson([
                 'id' => 2,
@@ -548,8 +541,6 @@ class ApiAccountTest extends TestCase
                 'domain' => config('app.sip_domain'),
                 'activated' => true,
             ]);
-
-        $this->assertTrue(empty($response1['confirmation_key']));
     }
 
     public function testNotActivated()
@@ -575,7 +566,6 @@ class ApiAccountTest extends TestCase
                 'activated' => false,
             ]);
 
-        $this->assertFalse(empty($response1['confirmation_key']));
         $this->assertFalse(empty($response1['provisioning_token']));
     }
 
@@ -628,68 +618,6 @@ class ApiAccountTest extends TestCase
          */
         $this->get($this->route . '/' . $password->account->identifier . '/info')
             ->assertStatus(404);
-    }
-
-    public function testActivateEmail()
-    {
-        $confirmationKey = '0123456789abc';
-        $password = Password::factory()->create();
-        $password->account->generateUserApiKey();
-        $password->account->confirmation_key = $confirmationKey;
-        $password->account->activated = false;
-        $password->account->save();
-
-        $expiration = new ActivationExpiration();
-        $expiration->account_id = $password->account->id;
-        $expiration->expires = Carbon::now()->subYear();
-        $expiration->save();
-
-        $this->get($this->route . '/' . $password->account->identifier . '/info')
-            ->assertStatus(200)
-            ->assertJson([
-                'activated' => false
-            ]);
-
-        $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route . '/blabla/activate/email', [
-                'confirmation_key' => $confirmationKey
-            ])
-            ->assertStatus(404);
-
-        $activateEmailRoute = $this->route . '/' . $password->account->identifier . '/activate/email';
-
-        $this->keyAuthenticated($password->account)
-            ->json($this->method, $activateEmailRoute, [
-                'confirmation_key' => $confirmationKey . 'longer'
-            ])
-            ->assertStatus(422);
-
-        $this->keyAuthenticated($password->account)
-            ->json($this->method, $activateEmailRoute, [
-                'confirmation_key' => 'X123456789abc'
-            ])
-            ->assertStatus(404);
-
-        // Expired
-        $this->keyAuthenticated($password->account)
-            ->json($this->method, $activateEmailRoute, [
-                'confirmation_key' => $confirmationKey
-            ])
-            ->assertStatus(403);
-
-        $expiration->delete();
-
-        $this->keyAuthenticated($password->account)
-            ->json($this->method, $activateEmailRoute, [
-                'confirmation_key' => $confirmationKey
-            ])
-            ->assertStatus(200);
-
-        $this->get($this->route . '/' . $password->account->identifier . '/info')
-            ->assertStatus(200)
-            ->assertJson([
-                'activated' => true
-            ]);
     }
 
     public function testUniqueEmailAdmin()
@@ -791,329 +719,6 @@ class ApiAccountTest extends TestCase
         $this->assertDatabaseHas('passwords', [
             'account_id' => $account->id,
             'algorithm' => $algorithm
-        ]);
-    }
-
-    /**
-     * /!\ Dangerous endpoints
-     */
-    public function testRecover()
-    {
-        $confirmationKey = '0123';
-        $password = Password::factory()->create();
-        $password->account->generateUserApiKey();
-        $password->account->confirmation_key = $confirmationKey;
-        $password->account->activated = false;
-        $password->account->save();
-
-        config()->set('app.dangerous_endpoints', true);
-
-        $this->assertDatabaseHas('accounts', [
-            'username' => $password->account->username,
-            'domain' => $password->account->domain,
-            'activated' => false
-        ]);
-
-        $this->get($this->route . '/' . $password->account->identifier . '/recover/' . $confirmationKey)
-            ->assertJson(['passwords' => [[
-                'password' => $password->password,
-                'algorithm' => $password->algorithm
-            ]]])
-            ->assertStatus(200);
-
-        $this->json('GET', $this->route . '/' . $password->account->identifier . '/recover/' . $confirmationKey)
-            ->assertStatus(404);
-
-        $this->assertDatabaseHas('accounts', [
-            'username' => $password->account->username,
-            'domain' => $password->account->domain,
-            'confirmation_key' => null,
-            'activated' => true
-        ]);
-
-        // Recover by phone
-
-        $newConfirmationKey = '1345';
-        $phone = '+1234';
-
-        $password->account->confirmation_key = $newConfirmationKey;
-        $password->account->phone = $phone;
-        $password->account->save();
-
-        $this->get($this->route . '/' . $phone . '@' . $password->account->domain . '/recover/' . $newConfirmationKey)
-            ->assertJson(['passwords' => [[
-                'password' => $password->password,
-                'algorithm' => $password->algorithm
-            ]]])
-            ->assertStatus(200);
-    }
-
-    public function testRecoverTwice()
-    {
-        $confirmationKey = '1234';
-
-        $password = Password::factory()->create();
-        $password->account->generateUserApiKey();
-        $password->account->confirmation_key = $confirmationKey;
-        $password->account->activated = false;
-        $password->account->save();
-
-        $this->get($this->route . '/' . $password->account->identifier . '/recover/wrongkey')
-            ->assertStatus(404);
-
-        $this->get($this->route . '/' . $password->account->identifier . '/recover/' . $confirmationKey)
-            ->assertStatus(404);
-    }
-
-    /**
-     * /!\ Dangerous endpoints
-     */
-    public function testRecoverPhone()
-    {
-        $phone = '+33612312312';
-
-        $password = Password::factory()->create();
-        $password->account->generateUserApiKey();
-        $password->account->activated = false;
-        $password->account->phone = $phone;
-        $password->account->save();
-
-        config()->set('app.dangerous_endpoints', true);
-
-        $this->json($this->method, $this->route . '/recover-by-phone', [
-            'phone' => $phone
-        ])->assertJsonValidationErrors(['account_creation_token']);
-
-        $this->json($this->method, $this->route . '/recover-by-phone', [
-            'phone' => $phone,
-            'account_creation_token' => 'wrong'
-        ])->assertJsonValidationErrors(['account_creation_token']);
-
-        $token = AccountCreationToken::factory()->create();
-
-        // Wrong phone
-        $this->json($this->method, $this->route . '/recover-by-phone', [
-            'phone' => '+33612312313', // wrong phone number
-            'account_creation_token' => $token->token
-        ])->assertJsonValidationErrors(['phone']);
-
-        $this->json($this->method, $this->route . '/recover-by-phone', [
-            'phone' => $phone,
-            'account_creation_token' => $token->token
-        ])->assertStatus(200);
-
-        $password->account->refresh();
-
-        // Use the token a second time
-        $this->json($this->method, $this->route . '/recover-by-phone', [
-            'phone' => $phone,
-            'account_creation_token' => $token->token
-        ])->assertStatus(422);
-
-        $this->get($this->route . '/' . $password->account->identifier . '/recover/' . $password->account->confirmation_key)
-            ->assertStatus(200)
-            ->assertJson([
-                'activated' => true
-            ]);
-
-        $this->get($this->route . '/' . $phone . '/info-by-phone')
-            ->assertStatus(200)
-            ->assertJson([
-                'activated' => true,
-                'phone' => true
-            ]);
-
-        $this->get($this->route . '/+1234/info-by-phone')
-            ->assertStatus(302);
-
-        $this->get($this->route . '/+33612312312/info-by-phone')
-            ->assertStatus(200);
-
-        $this->json('GET', $this->route . '/' . $password->account->identifier . '/info-by-phone')
-            ->assertJsonValidationErrors(['phone']);
-
-        // Check the mixed username/phone resolution...
-        $password->account->username = $phone;
-        $password->account->phone = null;
-        $password->account->save();
-
-        $this->get($this->route . '/' . $phone . '/info-by-phone')
-            ->assertStatus(200)
-            ->assertJson([
-                'activated' => true,
-                'phone' => false
-            ]);
-
-        $this->assertDatabaseHas('account_creation_tokens', [
-            'used' => true,
-            'account_id' => $password->account->id,
-        ]);
-    }
-
-    /**
-     * /!\ Dangerous endpoints
-     */
-
-    public function testCreatePublic()
-    {
-        $username = 'publicuser';
-
-        config()->set('app.dangerous_endpoints', true);
-
-        // Missing email
-        $this->json($this->method, $this->route . '/public', [
-            'username' => $username,
-            'algorithm' => 'SHA-256',
-            'password' => '2',
-        ])->assertJsonValidationErrors(['email']);
-
-        $this->json($this->method, $this->route . '/public', [
-            'username' => $username,
-            'algorithm' => 'SHA-256',
-            'password' => '2',
-            'email' => 'john@doe.tld',
-        ])->assertJsonValidationErrors(['account_creation_token']);
-
-        $token = AccountCreationToken::factory()->create();
-        $userAgent = 'User Agent Test';
-
-        $this->withHeaders([
-            'User-Agent' => $userAgent,
-        ])->json($this->method, $this->route . '/public', [
-            'username' => $username,
-            'algorithm' => 'SHA-256',
-            'password' => '2',
-            'email' => 'john@doe.tld',
-            'account_creation_token' => $token->token
-        ])
-            ->assertStatus(200)
-            ->assertJson([
-                'activated' => false
-            ]);
-
-        // Re-use the token
-        $this->withHeaders([
-            'User-Agent' => $userAgent,
-        ])->json($this->method, $this->route . '/public', [
-            'username' => $username . 'foo',
-            'algorithm' => 'SHA-256',
-            'password' => '2',
-            'email' => 'john@doe.tld',
-            'account_creation_token' => $token->token
-        ])->assertStatus(422);
-
-        // Already created
-        $this->json($this->method, $this->route . '/public', [
-            'username' => $username,
-            'algorithm' => 'SHA-256',
-            'password' => '2',
-            'email' => 'john@doe.tld',
-        ])->assertJsonValidationErrors(['username']);
-
-        // Email is now unique
-        config()->set('app.account_email_unique', true);
-
-        $this->json($this->method, $this->route . '/public', [
-            'username' => 'johndoe',
-            'algorithm' => 'SHA-256',
-            'password' => '2',
-            'email' => 'john@doe.tld',
-        ])->assertJsonValidationErrors(['email']);
-
-        $this->assertDatabaseHas('accounts', [
-            'username' => $username,
-            'domain' => config('app.sip_domain'),
-            'user_agent' => $userAgent
-        ]);
-
-        $this->assertDatabaseHas('account_creation_tokens', [
-            'used' => true,
-            'account_id' => Account::where('username', $username)->first()->id,
-        ]);
-    }
-
-    public function testCreatePublicPhone()
-    {
-        $phone = '+33612312312';
-
-        config()->set('app.dangerous_endpoints', true);
-
-        // Bad phone format
-        $this->json($this->method, $this->route . '/public', [
-            'phone' => 'username',
-            'algorithm' => 'SHA-256',
-            'password' => '2',
-            'email' => 'john@doe.tld',
-        ])->assertJsonValidationErrors(['phone']);
-
-        $token = AccountCreationToken::factory()->create();
-
-        $this->json($this->method, $this->route . '/public', [
-            'phone' => $phone,
-            'algorithm' => 'SHA-256',
-            'password' => '2',
-            'email' => 'john@doe.tld',
-            'account_creation_token' => $token->token
-        ])
-            ->assertStatus(200)
-            ->assertJson([
-                'activated' => false
-            ]);
-
-        // Already exists
-        $this->json($this->method, $this->route . '/public', [
-            'phone' => $phone,
-            'algorithm' => 'SHA-256',
-            'password' => '2',
-            'email' => 'john@doe.tld',
-        ])->assertJsonValidationErrors(['phone']);
-
-        $this->assertDatabaseHas('accounts', [
-            'username' => $phone,
-            'phone' => $phone,
-            'domain' => config('app.sip_domain')
-        ]);
-    }
-
-    public function testActivatePhone()
-    {
-        $confirmationKey = '0123';
-        $password = Password::factory()->create();
-        $password->account->generateUserApiKey();
-        $password->account->confirmation_key = $confirmationKey;
-        $password->account->activated = false;
-        $password->account->save();
-
-        $expiration = new ActivationExpiration();
-        $expiration->account_id = $password->account->id;
-        $expiration->expires = Carbon::now()->subYear();
-        $expiration->save();
-
-        $this->get($this->route . '/' . $password->account->identifier . '/info')
-            ->assertStatus(200)
-            ->assertJson([
-                'activated' => false
-            ]);
-
-        // Expired
-        $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route . '/' . $password->account->identifier . '/activate/phone', [
-                'confirmation_key' => $confirmationKey
-            ])
-            ->assertStatus(403);
-
-        $expiration->delete();
-
-        $this->keyAuthenticated($password->account)
-            ->json($this->method, $this->route . '/' . $password->account->identifier . '/activate/phone', [
-                'confirmation_key' => $confirmationKey
-            ])
-            ->assertStatus(200);
-
-        $this->assertDatabaseHas('accounts', [
-            'username' => $password->account->username,
-            'domain' => $password->account->domain,
-            'activated' => true
         ]);
     }
 
@@ -1273,52 +878,6 @@ class ApiAccountTest extends TestCase
                 'id' => 2,
                 'phone' => null
             ]);
-    }
-
-    public function testCodeExpires()
-    {
-        $admin = Account::factory()->admin()->create();
-        $admin->generateUserApiKey();
-
-        // Activated, no no confirmation_key
-        $this->keyAuthenticated($admin)
-            ->json($this->method, $this->route, [
-                'username' => 'foobar',
-                'algorithm' => 'SHA-256',
-                'password' => '123456',
-                'activated' => true,
-                'confirmation_key_expires' => '2040-12-12 12:12:12'
-            ])
-            ->assertStatus(200)
-            ->assertJson([
-                'confirmation_key_expires' => null
-            ]);
-
-        // Bad datetime format
-        $this->keyAuthenticated($admin)
-            ->json($this->method, $this->route, [
-                'username' => 'foobar2',
-                'algorithm' => 'SHA-256',
-                'password' => '123456',
-                'activated' => false,
-                'confirmation_key_expires' => 'abc'
-            ])
-            ->assertStatus(422);
-
-        // Bad datetime format
-        $this->keyAuthenticated($admin)
-            ->json($this->method, $this->route, [
-                'username' => 'foobar2',
-                'algorithm' => 'SHA-256',
-                'password' => '123456',
-                'activated' => false,
-                'confirmation_key_expires' => '2040-12-12 12:12:12'
-            ])
-            ->assertStatus(200)
-            ->assertJson([
-                'confirmation_key_expires' => '2040-12-12 12:12:12'
-            ]);
-        ;
     }
 
     public function testDelete()

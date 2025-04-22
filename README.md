@@ -104,9 +104,6 @@ You can also seed the tables with test accounts for the liblinphone test suite w
 To send SMS to the USA some providers need to validate their templates before transfering them, see [Sending SMS messages to the USA - OVH](https://help.ovhcloud.com/csm/en-ie-sms-sending-sms-to-usa?id=kb_article_view&sysparm_article=KB0051359).
 
 Here are the currently used SMS templates in the app to declare in your provider panel:
-
-- Creation code: `Your #APP_NAME# creation code is #CODE#`. Sent to confirm the creation of the account by SMS.
-- Recovery code: `Your #APP_NAME# recovery code is #CODE#`. Sent to recover the account by SMS.
 - Validation code: `Your #APP_NAME# validation code is #CODE#`. Sent to validate the phone change by SMS.
 - Validation code with expiration: `Your #APP_NAME# validation code is #CODE#. The code is available for #CODE_MINUTES# minutes`. Sent to validate the phone change by SMS, include an expiration time.
 

@@ -60,9 +60,6 @@ Route::middleware(['web_panel_enabled', 'space.check'])->group(function () {
     Route::get('reset_password/{token}', 'Account\ResetPasswordEmailController@change')->name('account.reset_password_email.change');
     Route::post('reset_password', 'Account\ResetPasswordEmailController@reset')->name('account.reset_password_email.reset');
 
-    // Deprecated
-    Route::get('authenticate/email/{code}', 'Account\AuthenticateController@validateEmail')->name('account.authenticate.email_confirm');
-
     Route::prefix('creation_token')->controller(CreationRequestTokenController::class)->group(function () {
         Route::get('check/{token}', 'check')->name('account.creation_request_token.check');
         Route::post('validate', 'validateToken')->name('account.creation_request_token.validate');
