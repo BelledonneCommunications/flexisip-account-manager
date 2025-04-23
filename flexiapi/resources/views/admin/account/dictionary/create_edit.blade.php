@@ -2,11 +2,8 @@
 
 @section('breadcrumb')
     @include('admin.account.parts.breadcrumb_accounts_index')
-    @include('admin.account.parts.breadcrumb_accounts_edit', ['account' => $account])
-    <li class="breadcrumb-item">
-        <a href="{{ route('admin.account.dictionary.index', $account) }}">Dictionary</a>
-    </li>
-    <li class="breadcrumb-item active" aria-current="page">@if ($entry->id){{ __('Edit') }}@else{{ __('Create') }}@endif</li>
+    @include('admin.account.parts.breadcrumb_accounts_show', ['account' => $account])
+    <li class="breadcrumb-item active" aria-current="page">{{ __('Dictionary') }}</li>
 @endsection
 
 @section('content')

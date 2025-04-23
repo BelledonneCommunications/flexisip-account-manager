@@ -29,9 +29,9 @@
                 @endif
                 @if ($space->emailServer)
                     <a class="btn oppose" href="{{ route('admin.spaces.email.show', $space) }}">{{ __('Edit') }}</a>
-                    <a class="btn oppose btn-tertiary" href="{{ route('admin.spaces.email.delete', $space) }}">{{ __('Delete') }}</a>
+                    <a class="btn oppose tertiary" href="{{ route('admin.spaces.email.delete', $space) }}">{{ __('Delete') }}</a>
                 @else
-                    <a class="btn oppose btn-secondary" href="{{ route('admin.spaces.email.show', $space) }}">{{ __('Configure') }}</a>
+                    <a class="btn oppose secondary" href="{{ route('admin.spaces.email.show', $space) }}">{{ __('Configure') }}</a>
                 @endif
             </p>
         </div>

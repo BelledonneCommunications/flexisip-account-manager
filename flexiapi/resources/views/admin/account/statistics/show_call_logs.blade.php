@@ -2,7 +2,7 @@
 
 @section('breadcrumb')
     @include('admin.account.parts.breadcrumb_accounts_index')
-    @include('admin.account.parts.breadcrumb_accounts_edit', ['account' => $account])
+    @include('admin.account.parts.breadcrumb_accounts_show', ['account' => $account])
     <li class="breadcrumb-item active" aria-current="page">{{ __('Calls logs') }}</li>
 @endsection
 
@@ -28,7 +28,7 @@
             </div>
 
             <div class="oppose">
-                <a class="btn btn-secondary" href="{{ route('admin.account.statistics.show_call_logs', $account->id) }}">{{ __('Reset') }}</a>
+                <a class="btn secondary" href="{{ route('admin.account.statistics.show_call_logs', $account->id) }}">{{ __('Reset') }}</a>
             </div>
         </form>
     </div>

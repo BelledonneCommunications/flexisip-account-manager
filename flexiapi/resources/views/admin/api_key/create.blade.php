@@ -12,7 +12,7 @@
 @section('content')
     <header>
         <h1><i class="ph">key</i> {{ __('Create') }}</h1>
-        <a href="{{ route('admin.api_keys.index') }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
+        <a href="{{ route('admin.api_keys.index') }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
     </header>
 
     <form method="POST"

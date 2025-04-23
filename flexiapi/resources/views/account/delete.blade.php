@@ -8,7 +8,7 @@
     <header>
         <h1><i class="ph">trash</i> Delete my account</h1>
 
-        <a href="{{ route('account.dashboard') }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
+        <a href="{{ route('account.dashboard') }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
         <input form="delete" class="btn" type="submit" value="{{ __('Delete') }}">
     </header>
 

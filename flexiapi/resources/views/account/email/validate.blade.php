@@ -29,7 +29,7 @@
         <div class="large" style="margin-top: 2rem;">
             <p>
                 You didn't receive the code?
-                <a class="btn btn-secondary" href="{{ route('account.email.change') }}">Resend a code</a>
+                <a class="btn secondary" href="{{ route('account.email.change') }}">Resend a code</a>
             </p>
         </div>
 

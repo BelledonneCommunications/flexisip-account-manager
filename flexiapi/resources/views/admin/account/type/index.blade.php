@@ -29,12 +29,12 @@
                     <td>
                         {{ $type->key }}
                     </td>
-                    <td>
-                        <a class="btn" href="{{ route('admin.account.type.edit', [$type->id]) }}">
-                            {{ __('Edit') }}
+                    <td class="actions">
+                        <a class="btn small secondary" href="{{ route('admin.account.type.edit', [$type->id]) }}">
+                            <i class="ph">pencil</i>
                         </a>
-                        <a class="btn btn-secondary" href="{{ route('admin.account.type.delete', [$type->id]) }}">
-                            {{ __('Delete') }}
+                        <a class="btn tertiary small" href="{{ route('admin.account.type.delete', [$type->id]) }}">
+                            <i class="ph">trash</i>
                         </a>
                     </td>
                 </tr>

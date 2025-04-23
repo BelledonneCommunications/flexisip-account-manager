@@ -8,9 +8,9 @@
 @section('content')
     <header>
         <h1><i class="ph">users</i> {{ __('Import') }}</h1>
-        <a href="{{ route('admin.account.index') }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
+        <a href="{{ route('admin.account.index') }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
 
-        <a href="#" onclick="history.back()" class="btn btn-secondary">Previous</a>
+        <a href="#" onclick="history.back()" class="btn secondary">Previous</a>
         <form name="handle" method="POST" action="{{ route('admin.account.import.handle') }}" accept-charset="UTF-8"
             enctype="multipart/form-data">
             @csrf

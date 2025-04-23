@@ -43,7 +43,7 @@
 
             <p>
                 {{ __('No account yet?') }}
-                <a class="btn btn-secondary" href="{{ route('account.register') }}">{{ __('Register') }}</a>
+                <a class="btn secondary" href="{{ route('account.register') }}">{{ __('Register') }}</a>
             </p>
         @endif
     </section>

@@ -43,7 +43,7 @@
             <div class="on_desktop"></div>
 
             <div class="oppose">
-                <a class="btn btn-secondary" href="{{ route('admin.statistics.show_call_logs') }}">{{ __('Reset') }}</a>
+                <a class="btn secondary" href="{{ route('admin.statistics.show_call_logs') }}">{{ __('Reset') }}</a>
             </div>
         </form>
     </div>

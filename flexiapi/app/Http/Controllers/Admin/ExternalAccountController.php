@@ -76,7 +76,7 @@ class ExternalAccountController extends Controller
 
         $externalAccount->save();
 
-        return redirect()->route('admin.account.external.show', $account->id);
+        return redirect()->route('admin.account.show', $account->id);
     }
 
     public function delete(int $accountId)
@@ -93,6 +93,6 @@ class ExternalAccountController extends Controller
         $account = Account::findOrFail($accountId);
         $account->external->delete();
 
-        return redirect()->route('admin.account.external.show', $account->id);
+        return redirect()->route('admin.account.show', $account->id);
     }
 }

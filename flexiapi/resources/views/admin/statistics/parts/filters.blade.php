@@ -44,8 +44,8 @@
         </div>
 
         <div class="oppose large">
-            <a class="btn btn-secondary" href="{{ route('admin.statistics.show') }}">{{ __('Reset') }}</a>
-            <a class="btn btn-tertiary"
+            <a class="btn secondary" href="{{ route('admin.statistics.show') }}">{{ __('Reset') }}</a>
+            <a class="btn tertiary"
                 href="{{ route('admin.statistics.show', ['by' => $request->get('by', 'day'), 'type' => $type, 'export' => true] + $request->only(['from', 'to', 'domain'])) }}">
                 <i class="ph">download-simple</i> {{ __('Export') }}
             </a>

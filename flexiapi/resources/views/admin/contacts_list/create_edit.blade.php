@@ -11,16 +11,14 @@
     <header>
         @if ($contacts_list->id)
             <h1><i class="ph">user-rectangle</i> {{ $contacts_list->title }}</h1>
-            <a href="{{ route('admin.contacts_lists.index') }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
-            <a class="btn btn-secondary" href="{{ route('admin.contacts_lists.delete', $contacts_list->id) }}">
+            <a class="btn secondary oppose" href="{{ route('admin.contacts_lists.delete', $contacts_list->id) }}">
                 <i class="ph">trash</i>
                 {{ __('Delete') }}
             </a>
             <input form="create_edit_contacts_list" class="btn" type="submit" value="{{ __('Update') }}">
         @else
             <h1><i class="ph">user-rectangle</i> {{ __('Create') }}</h1>
-            <a href="{{ route('admin.contacts_lists.index') }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
-            <input form="create_edit_contacts_list" class="btn" type="submit" value="{{ __('Create') }}">
+            <input form="create_edit_contacts_list" class="btn oppose" type="submit" value="{{ __('Create') }}">
         @endif
     </header>
 
@@ -50,7 +48,7 @@
     @if ($contacts_list->id)
         <hr>
 
-        <a class="btn btn-secondary oppose" href="{{ route('admin.contacts_lists.contacts.add', $contacts_list->id) }}">
+        <a class="btn secondary oppose" href="{{ route('admin.contacts_lists.contacts.add', $contacts_list->id) }}">
             <i class="ph">plus</i> {{ __('Add contacts') }}
         </a>
 
@@ -76,12 +74,12 @@
             @include('admin.account.parts.forms.select_domain')
             <div>
                 <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}" type="reset"
-                    class="btn btn-secondary">{{ __('Reset') }}</a>
+                    class="btn secondary">{{ __('Reset') }}</a>
                 <button type="submit" class="btn">{{ __('Search') }}</button>
             </div>
 
             <div>
-                <a class="btn btn-tertiary oppose"
+                <a class="btn tertiary oppose"
                     onclick="Utils.clearStorageList('d{{ $contacts_list->id }}');  document.querySelector('form[name=contacts_lists_contacts_destroy]').submit()">
                     <i class="ph">trash</i>
                     {{ __('Remove') }} <span class="list_toggle" data-list-id="d{{ $contacts_list->id }}"></span>

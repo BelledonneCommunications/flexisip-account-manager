@@ -43,10 +43,6 @@ class ContactsListController extends Controller
         ]);
     }
 
-    public function show(int $id)
-    {
-    }
-
     public function create(Request $request)
     {
         return view('admin.contacts_list.create_edit', [

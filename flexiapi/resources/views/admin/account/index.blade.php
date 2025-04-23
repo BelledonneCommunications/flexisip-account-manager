@@ -6,12 +6,12 @@
         @if ($space)
             <p>{{ $accounts->count()}} / @if ($space->max_accounts > 0){{ $space->max_accounts }} @else <i class="ph">infinity</i>@endif</p>
         @endif
-        <a class="btn btn-secondary oppose" href="{{ route('admin.account.import.create') }}">
+        <a class="btn secondary oppose" href="{{ route('admin.account.import.create') }}">
             <i class="ph">download-simple</i>
             {{ __('Import') }}
         </a>
         @if (space()?->intercom_features)
-        <a class="btn btn-secondary" href="{{ route('admin.account.type.index') }}">
+        <a class="btn secondary" href="{{ route('admin.account.type.index') }}">
             <i class="ph">shapes</i>
             {{ __('Types') }}
         </a>
@@ -52,7 +52,7 @@
                 <label for="updated_date">{{ __('Updated on') }}</label>
             </div>
             <div class="oppose">
-                <a href="{{ route('admin.account.index') }}" type="reset" class="btn btn-tertiary">{{ __('Reset') }}</a>
+                <a href="{{ route('admin.account.index') }}" type="reset" class="btn tertiary">{{ __('Reset') }}</a>
                 <button type="submit" class="btn">{{ __('Search') }}</button>
             </div>
         </form>
@@ -62,7 +62,7 @@
         <thead>
             <tr>
                 @include('parts.column_sort', ['key' => 'username', 'title' => __('Identifier')])
-                <th>{{ __('Contacts Lists') }}</th>
+                <th></th>
                 @include('parts.column_sort', ['key' => 'updated_at', 'title' => __('Updated')])
             </tr>
         </thead>
@@ -74,29 +74,13 @@
             @endif
             @foreach ($accounts as $account)
                 <tr>
-                    <td>
-                        <a href="{{ route('admin.account.edit', $account->id) }}">
+                    <td style="width: 50%">
+                        <a href="{{ route('admin.account.show', $account->id) }}">
                             {{ $account->identifier }}
                         </a>
-                        @if ($account->activated)
-                            <span class="badge badge-success oppose" title="{{ __('Activated') }}"><i class="ph">check</i></span>
-                        @endif
-                        @if ($account->superAdmin)
-                            <span class="badge badge-error oppose" title="{{ __('Super Admin') }}">Super Adm.</span>
-                        @elseif ($account->admin)
-                            <span class="badge badge-primary oppose" title="{{ __('Admin') }}">Adm.</span>
-                        @endif
-                        @if ($account->blocked)
-                            <span class="badge badge-error oppose" title="{{ __('Blocked') }}"><i class="ph">prohibit</i></span>
-                        @endif
                     </td>
                     <td>
-                        @if ($account->contactsLists->isNotEmpty())
-                            {{ $account->contactsLists->first()->title }}
-                            @if ($account->contactsLists->count() > 1)
-                                <span class="badge">+{{ $account->contactsLists->count() - 1 }}</span>
-                            @endif
-                        @endif
+                        @include('admin.account.parts.badges', ['account' => $account])
                     </td>
                     <td>{{ $account->updated_at }}</td>
                 </tr>

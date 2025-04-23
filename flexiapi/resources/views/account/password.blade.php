@@ -12,7 +12,7 @@
             <h1><i class="ph">lock</i> {{ __('Create') }}</h1>
         @endif
 
-        <a href="{{ route('account.dashboard') }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
+        <a href="{{ route('account.dashboard') }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
         <input form="password_update" class="btn" type="submit" value="{{ __('Edit') }}">
     </header>
 

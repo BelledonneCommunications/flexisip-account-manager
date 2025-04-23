@@ -31,6 +31,7 @@ p .btn {
 .oppose {
     float: right;
     text-align: right;
+    margin-left: 1rem;
 }
 
 p .btn.oppose {
@@ -56,33 +57,33 @@ p .btn.oppose {
     border-color: var(--main-7);
 }
 
-.btn.btn-secondary {
+.btn.secondary {
     background-color: transparent;
     color: var(--main-5);
 }
 
-.btn.btn-secondary:hover {
+.btn.secondary:hover {
     background-color: var(--main-1);
 }
 
-.btn.btn-secondary:active {
+.btn.secondary:active {
     background-color: var(--main-5);
     border-color: var(--main-5);
     color: white;
 }
 
-.btn.btn-tertiary {
+.btn.tertiary {
     background-color: var(--main-1);
     border-color: var(--main-1);
     color: var(--main-5);
 }
 
-.btn.btn-tertiary:hover {
+.btn.tertiary:hover {
     background-color: var(--main-2);
     border-color: var(--main-2);
 }
 
-.btn.btn-tertiary:active {
+.btn.tertiary:active {
     background-color: var(--main-3);
     border-color: var(--main-3);
 }

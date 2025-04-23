@@ -6,6 +6,7 @@ use App\Account;
 use App\ResetPasswordEmailToken;
 use App\Http\Controllers\Controller;
 use App\Mail\ResetPassword;
+
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;

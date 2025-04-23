@@ -2,7 +2,7 @@
 
 @section('breadcrumb')
     @include('admin.account.parts.breadcrumb_accounts_index')
-    @include('admin.account.parts.breadcrumb_accounts_edit', ['account' => $account])
+    @include('admin.account.parts.breadcrumb_accounts_show', ['account' => $account])
     <li class="breadcrumb-item active">{{ __('External Account') }}</li>
 @endsection
 
@@ -10,7 +10,7 @@
     <header>
         <h1><i class="ph">user-circle-dashed</i> {{ __('External Account') }}</h1>
         @if($externalAccount->id)
-            <a class="btn btn-secondary oppose" href="{{ route('admin.account.external.delete', $account->id) }}">
+            <a class="btn secondary oppose" href="{{ route('admin.account.external.delete', $account->id) }}">
                 <i class="ph">trash</i>
                 {{ __('Delete') }}
             </a>

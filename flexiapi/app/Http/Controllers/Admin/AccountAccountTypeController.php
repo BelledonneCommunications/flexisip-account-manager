@@ -55,7 +55,7 @@ class AccountAccountTypeController extends Controller
 
         Log::channel('events')->info('Web Admin: Account type attached', ['id' => $account->identifier, 'type_id' => $request->get('account_type_id')]);
 
-        return redirect()->route('admin.account.edit', $account);
+        return redirect()->route('admin.account.show', $account)->withFragment('#types');
     }
 
     public function destroy(Request $request, int $id, int $typeId)
@@ -66,6 +66,6 @@ class AccountAccountTypeController extends Controller
 
         Log::channel('events')->info('Web Admin: Account type detached', ['id' => $account->identifier, 'type_id' => $request->get('account_type_id')]);
 
-        return redirect()->route('admin.account.edit', $account);
+        return redirect()->route('admin.account.show', $account)->withFragment('#types');
     }
 }

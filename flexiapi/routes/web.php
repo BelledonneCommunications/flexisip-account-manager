@@ -41,6 +41,7 @@ use App\Http\Controllers\Admin\ContactsListContactController;
 use App\Http\Controllers\Admin\ContactsListController;
 use App\Http\Controllers\Admin\ExternalAccountController;
 use App\Http\Controllers\Admin\PhoneCountryController;
+use App\Http\Controllers\Admin\ProvisioningEmailController;
 use App\Http\Controllers\Admin\ResetPasswordEmailController;
 use App\Http\Controllers\Admin\Space\EmailServerController;
 use App\Http\Controllers\Admin\SpaceController;
@@ -203,36 +204,6 @@ Route::middleware(['web_panel_enabled', 'space.check'])->group(function () {
         });
 
         Route::name('account.')->prefix('accounts')->group(function () {
-            Route::controller(AdminAccountController::class)->group(function () {
-                Route::get('{account_id}/provision', 'provision')->name('provision');
-
-                Route::get('create', 'create')->name('create');
-                Route::post('accounts', 'store')->name('store');
-
-                Route::get('{account_id}/edit', 'edit')->name('edit');
-                Route::put('{account_id}', 'update')->name('update');
-
-                Route::get('{account_id}/delete', 'delete')->name('delete');
-                Route::delete('/', 'destroy')->name('destroy');
-
-                Route::get('/', 'index')->name('index');
-                Route::post('search', 'search')->name('search');
-
-                Route::get('{account_id}/contacts_lists/detach', 'contactsListRemove')->name('contacts_lists.detach');
-                Route::post('{account_id}/contacts_lists', 'contactsListAdd')->name('contacts_lists.attach');
-            });
-
-            Route::name('reset_password_email.')->controller(ResetPasswordEmailController::class)->prefix('{account_id}/reset_password_emails')->group(function () {
-                Route::get('create', 'create')->name('create');
-                Route::get('send', 'send')->name('send');
-            });
-
-            Route::name('import.')->prefix('import')->controller(AccountImportController::class)->group(function () {
-                Route::get('/', 'create')->name('create');
-                Route::post('/', 'store')->name('store');
-                Route::post('handle', 'handle')->name('handle');
-            });
-
             Route::middleware(['intercom_features'])->group(function () {
                 Route::name('type.')->prefix('types')->controller(AccountTypeController::class)->group(function () {
                     Route::get('/', 'index')->name('index');
@@ -260,7 +231,44 @@ Route::middleware(['web_panel_enabled', 'space.check'])->group(function () {
                 });
             });
 
+            Route::controller(AdminAccountController::class)->group(function () {
+                Route::get('{account_id}/provision', 'provision')->name('provision');
+
+                Route::get('create', 'create')->name('create');
+                Route::get('{account_id}', 'show')->name('show');
+                Route::post('accounts', 'store')->name('store');
+
+                Route::get('{account_id}/edit', 'edit')->name('edit');
+                Route::put('{account_id}', 'update')->name('update');
+
+                Route::get('{account_id}/delete', 'delete')->name('delete');
+                Route::delete('/', 'destroy')->name('destroy');
+
+                Route::get('/', 'index')->name('index');
+                Route::post('search', 'search')->name('search');
+
+                Route::get('{account_id}/contacts_lists/detach', 'contactsListRemove')->name('contacts_lists.detach');
+                Route::post('{account_id}/contacts_lists', 'contactsListAdd')->name('contacts_lists.attach');
+            });
+
+            Route::name('reset_password_email.')->controller(ResetPasswordEmailController::class)->prefix('{account_id}/reset_password_email')->group(function () {
+                Route::get('create', 'create')->name('create');
+                Route::get('send', 'send')->name('send');
+            });
+
+            Route::name('provisioning_email.')->controller(ProvisioningEmailController::class)->prefix('{account_id}/provisioning_email')->group(function () {
+                Route::get('create', 'create')->name('create');
+                Route::get('send', 'send')->name('send');
+            });
+
+            Route::name('import.')->prefix('import')->controller(AccountImportController::class)->group(function () {
+                Route::get('/', 'create')->name('create');
+                Route::post('/', 'store')->name('store');
+                Route::post('handle', 'handle')->name('handle');
+            });
+
             Route::name('contact.')->prefix('{account}/contacts')->controller(AccountContactController::class)->group(function () {
+                Route::get('/', 'index')->name('index');
                 Route::get('create', 'create')->name('create');
                 Route::post('/', 'store')->name('store');
                 Route::get('{contact_id}/delete', 'delete')->name('delete');
@@ -268,13 +276,11 @@ Route::middleware(['web_panel_enabled', 'space.check'])->group(function () {
             });
 
             Route::name('device.')->prefix('{account}/devices')->controller(AccountDeviceController::class)->group(function () {
-                Route::get('/', 'index')->name('index');
                 Route::get('{device_id}/delete', 'delete')->name('delete');
                 Route::delete('/', 'destroy')->name('destroy');
             });
 
             Route::name('dictionary.')->prefix('{account}/dictionary')->controller(AccountDictionaryController::class)->group(function () {
-                Route::get('/', 'index')->name('index');
                 Route::get('create', 'create')->name('create');
                 Route::post('/', 'store')->name('store');
                 Route::get('{entry}/edit', 'edit')->name('edit');

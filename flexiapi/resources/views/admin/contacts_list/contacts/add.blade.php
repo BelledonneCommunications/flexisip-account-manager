@@ -14,7 +14,7 @@
     <header>
         <h1><i class="ph">user-rectangle</i> {{ $contacts_list->title }}</h1>
 
-        <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
+        <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
 
         <form method="POST" action="{{ route('admin.contacts_lists.contacts.store', $contacts_list->id) }}"
             name="contacts_lists_contacts_store" accept-charset="UTF-8">
@@ -38,7 +38,7 @@
             @include('admin.account.parts.forms.select_domain')
             <div>
                 <a href="{{ route('admin.contacts_lists.contacts.add', $contacts_list->id) }}" type="reset"
-                    class="btn btn-secondary">{{ __('Reset') }}</a>
+                    class="btn secondary">{{ __('Reset') }}</a>
                 <button type="submit" class="btn">{{ __('Search') }}</button>
             </div>
             <div class="oppose">

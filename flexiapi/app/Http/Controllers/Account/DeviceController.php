@@ -25,19 +25,6 @@ use App\Libraries\FlexisipRedisConnector;
 
 class DeviceController extends Controller
 {
-    public function index(Request $request)
-    {
-        $connector = new FlexisipRedisConnector;
-
-        return view(
-            'account.device.index',
-            [
-                'account' => $request->user(),
-                'devices' => $connector->getDevices($request->user()->identifier)
-            ]
-        );
-    }
-
     public function delete(Request $request, string $uuid)
     {
         $connector = new FlexisipRedisConnector;

@@ -10,7 +10,7 @@
 @section('content')
     <header>
         <h1><i class="ph">trash</i> {{ __('Delete') }}</h1>
-        <a href="{{ route('admin.spaces.edit', $space->id) }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
+        <a href="{{ route('admin.spaces.edit', $space->id) }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
     </header>
     <form id="delete" method="POST" action="{{ route('admin.spaces.destroy', $space) }}" accept-charset="UTF-8">
         @csrf

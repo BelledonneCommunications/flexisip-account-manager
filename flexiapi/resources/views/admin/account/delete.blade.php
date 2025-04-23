@@ -2,7 +2,7 @@
 
 @section('breadcrumb')
     @include('admin.account.parts.breadcrumb_accounts_index')
-    @include('admin.account.parts.breadcrumb_accounts_edit', ['account' => $account])
+    @include('admin.account.parts.breadcrumb_accounts_show', ['account' => $account])
     <li class="breadcrumb-item active" aria-current="page">{{ __('Delete') }}</li>
 @endsection
 
@@ -10,7 +10,7 @@
     <header>
         <h1><i class="ph">trash</i> {{ __('Delete') }}</h1>
 
-        <a href="{{ route('admin.account.edit', $account->id) }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
+        <a href="{{ route('admin.account.show', $account->id) }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
         <input form="delete" class="btn" type="submit" value="{{ __('Delete') }}">
     </header>
     <form id="delete" method="POST" action="{{ route('admin.account.destroy') }}" accept-charset="UTF-8">

@@ -27,6 +27,7 @@ use App\Account;
 use App\ContactsList;
 use App\Http\Requests\Account\Create\Web\AsAdminRequest;
 use App\Http\Requests\Account\Update\Web\AsAdminRequest as WebAsAdminRequest;
+use App\Libraries\FlexisipRedisConnector;
 use App\Services\AccountService;
 use App\Space;
 
@@ -39,8 +40,7 @@ class AccountController extends Controller
             'order_sort' => 'in:asc,desc',
         ]);
 
-        $accounts = Account::with('contactsLists')
-            ->orderBy($request->get('order_by', 'updated_at'), $request->get('order_sort', 'desc'));
+        $accounts = Account::orderBy($request->get('order_by', 'updated_at'), $request->get('order_sort', 'desc'));
 
         if ($request->has('search')) {
             $accounts = $accounts->where('username', 'like', '%' . $request->get('search') . '%');
@@ -75,6 +75,16 @@ class AccountController extends Controller
         return redirect()->route('admin.account.index', $request->except('_token', 'query'));
     }
 
+    public function show(Request $request, int $accountId)
+    {
+        $account = Account::findOrFail($accountId);
+
+        return view('admin.account.show', [
+            'account' => $account,
+            'devices' => (new FlexisipRedisConnector)->getDevices($account->identifier)
+        ]);
+    }
+
     public function create(Request $request)
     {
         $account = new Account;
@@ -102,7 +112,7 @@ class AccountController extends Controller
 
         Log::channel('events')->info('Web Admin: Account created', ['id' => $account->identifier]);
 
-        return redirect()->route('admin.account.edit', $account->id);
+        return redirect()->route('admin.account.show', $account);
     }
 
     public function edit(Request $request, int $accountId)
@@ -115,11 +125,6 @@ class AccountController extends Controller
             'domains' => $request->user()?->superAdmin
                 ? Space::all()
                 : Space::where('domain', $account->domain)->get(),
-            'contacts_lists' => ContactsList::whereNotIn('id', function ($query) use ($accountId) {
-                $query->select('contacts_list_id')
-                    ->from('account_contacts_list')
-                    ->where('account_id', $accountId);
-            })->get()
         ]);
     }
 
@@ -129,7 +134,7 @@ class AccountController extends Controller
 
         Log::channel('events')->info('Web Admin: Account updated', ['id' => $account->identifier]);
 
-        return redirect()->route('admin.account.edit', $accountId);
+        return redirect()->route('admin.account.show', $accountId);
     }
 
     public function provision(int $accountId)
@@ -173,7 +178,7 @@ class AccountController extends Controller
         $account->contactsLists()->detach([$request->get('contacts_list_id')]);
         $account->contactsLists()->attach([$request->get('contacts_list_id')]);
 
-        return redirect()->route('admin.account.edit', $accountId)->withFragment('#contacts_lists');
+        return redirect()->route('admin.account.contact.index', $accountId)->withFragment('#contacts_lists');
     }
 
     public function contactsListRemove(Request $request, int $accountId)
@@ -181,6 +186,6 @@ class AccountController extends Controller
         $account = Account::findOrFail($accountId);
         $account->contactsLists()->detach([$request->get('contacts_list_id')]);
 
-        return redirect()->route('admin.account.edit', $accountId)->withFragment('#contacts_lists');
+        return redirect()->route('admin.account.contact.index', $accountId)->withFragment('#contacts_lists');
     }
 }

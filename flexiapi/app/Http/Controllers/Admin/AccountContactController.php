@@ -24,9 +24,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 use App\Account;
+use App\ContactsList;
 
 class AccountContactController extends Controller
 {
+    public function index(int $accountId)
+    {
+        $account = Account::findOrFail($accountId);
+
+        return view('admin.account.contact.index', [
+            'account' => $account,
+            'contacts_lists' => ContactsList::whereNotIn('id', function ($query) use ($accountId) {
+                $query->select('contacts_list_id')
+                    ->from('account_contacts_list')
+                    ->where('account_id', $accountId);
+            })->withCount('contacts')->get()
+        ]);
+    }
+
     public function create(int $accountId)
     {
         $account = Account::findOrFail($accountId);
@@ -56,7 +71,7 @@ class AccountContactController extends Controller
 
         Log::channel('events')->info('Web Admin: Account contact added', ['id' => $account->identifier, 'contact' => $contact->identifier]);
 
-        return redirect()->route('admin.account.edit', $account);
+        return redirect()->route('admin.account.contact.index', $account);
     }
 
     public function delete(int $accountId, int $contactId)
@@ -79,6 +94,6 @@ class AccountContactController extends Controller
 
         Log::channel('events')->info('Web Admin: Account contact removed', ['id' => $account->identifier, 'contact' => $contact->identifier]);
 
-        return redirect()->route('admin.account.edit', $account);
+        return redirect()->route('admin.account.contact.index', $account);
     }
 }

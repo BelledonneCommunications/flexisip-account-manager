@@ -1,11 +1,9 @@
 @include('parts.tabs', [
     'items' => [
-        route('admin.account.edit', $account->id) => __('Information'),
-        route('admin.account.external.show', $account->id) => __('External Account'),
-        route('admin.account.statistics.show_call_logs', $account->id) => __('Calls logs'),
-        route('admin.account.device.index', $account->id) => __('Devices'),
-        route('admin.account.statistics.show', $account->id) => __('Statistics'),
-        route('admin.account.activity.index', $account->id) => __('Activity'),
-        route('admin.account.dictionary.index', $account->id) => __('Dictionary'),
+        route('admin.account.show', $account) => __('Information'),
+        route('admin.account.contact.index', $account) => __('Contacts'),
+        route('admin.account.statistics.show_call_logs', $account) => __('Calls logs'),
+        route('admin.account.statistics.show', $account) => __('Statistics'),
+        route('admin.account.activity.index', $account) => __('Activity'),
     ],
 ])

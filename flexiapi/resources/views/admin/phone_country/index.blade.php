@@ -4,10 +4,10 @@
 
 <header>
     <h1><i class="ph">flag</i> {{ __('Phone Countries') }}</h1>
-    <a class="btn btn-secondary oppose" href="{{ route('admin.phone_countries.activate_all') }}">
+    <a class="btn secondary oppose" href="{{ route('admin.phone_countries.activate_all') }}">
         <i class="ph">eye</i> {{ __('Activate All') }}
     </a>
-    <a class="btn btn-secondary" href="{{ route('admin.phone_countries.deactivate_all') }}">
+    <a class="btn secondary" href="{{ route('admin.phone_countries.deactivate_all') }}">
         <i class="ph">eye-closed</i> {{ __('Deactivate All') }}
     </a>
 </header>
@@ -18,7 +18,7 @@
     <thead>
         <tr>
             <th style="width: 100%;">{{ __('Name') }}</th>
-            <th>{{ __('Actions') }}</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -37,11 +37,11 @@
                 </td>
                 <td>
                     @if ($phone_country->activated)
-                        <a class="btn btn-secondary small" href="{{ route('admin.phone_countries.deactivate', $phone_country->code) }}">
+                        <a class="btn secondary small" href="{{ route('admin.phone_countries.deactivate', $phone_country->code) }}">
                             <i class="ph">eye-closed</i>
                         </a>
                     @else
-                        <a class="btn btn-secondary small" href="{{ route('admin.phone_countries.activate', $phone_country->code) }}">
+                        <a class="btn secondary small" href="{{ route('admin.phone_countries.activate', $phone_country->code) }}">
                             <i class="ph">eye</i>
                         </a>
                     @endif

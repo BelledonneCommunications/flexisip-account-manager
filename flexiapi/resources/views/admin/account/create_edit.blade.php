@@ -3,7 +3,8 @@
 @section('breadcrumb')
     @include('admin.account.parts.breadcrumb_accounts_index')
     @if ($account->id)
-        @include('admin.account.parts.breadcrumb_accounts_edit', ['account' => $account])
+        @include('admin.account.parts.breadcrumb_accounts_show', ['account' => $account])
+        <li class="breadcrumb-item active" aria-current="page">{{ __('Edit') }}</li>
     @else
         <li class="breadcrumb-item active" aria-current="page">{{ __('Create') }}</li>
     @endif
@@ -13,10 +14,6 @@
     @if ($account->id)
         <header>
             <h1><i class="ph">users</i> {{ $account->identifier }}</h1>
-            <a class="btn btn-secondary oppose" href="{{ route('admin.account.delete', $account->id) }}">
-                <i class="ph">trash</i>
-                {{ __('Delete') }}
-            </a>
         </header>
         @if ($account->updated_at)
             <p title="{{ $account->updated_at }}">{{ __('Updated on') }} {{ $account->updated_at->format('d/m/Y') }}
@@ -25,7 +22,7 @@
     @else
         <header>
             <h1><i class="ph">users</i> {{ __('Create') }}</h1>
-            <a href="{{ route('admin.account.index') }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
+            <a href="{{ route('admin.account.index') }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
         </header>
     @endif
 
@@ -80,14 +77,6 @@
                 value="@if($account->id){{ $account->email }}@else{{ old('email') }}@endif">
             <label for="email">{{ __('Email') }}</label>
             @include('parts.errors', ['name' => __('email')])
-
-            @if (!empty($account->email))
-                <p>
-                    <a href="{{ route('admin.account.reset_password_email.create', $account) }}">
-                        {{ __('Send an email to the user to reset the password') }}
-                    </a>
-                </p>
-            @endif
         </div>
 
         <div>
@@ -130,130 +119,4 @@
             @endif
         </div>
     </form>
-
-    <hr class="large">
-
-    @if ($account->id)
-        <h2 class="large">{{ __('Contacts') }}</h2>
-
-        @foreach ($account->contacts as $contact)
-            <p class="chip">
-                <a href="{{ route('admin.account.edit', $account) }}">{{ $contact->identifier }}</a>
-                <a href="{{ route('admin.account.contact.delete', [$account, $contact->id]) }}">
-                    <i class="ph">x</i>
-                </a>
-            </p>
-        @endforeach
-
-        <a class="btn btn-tertiary" href="{{ route('admin.account.contact.create', $account) }}">{{ __('Add') }}</a>
-
-        <h3 id="contacts_lists">{{ __('Contacts Lists') }}</h3>
-
-        @if ($contacts_lists->isNotEmpty())
-            <form method="POST" action="{{ route('admin.account.contacts_lists.attach', $account->id) }}"
-                accept-charset="UTF-8">
-                @csrf
-                @method('post')
-
-                <div class="select">
-                    <select name="contacts_list_id" onchange="this.form.submit()">
-                        <option>
-                            {{ __('Contacts Lists') }}
-                        </option>
-                        @foreach ($contacts_lists as $contacts_list)
-                            <option value="{{ $contacts_list->id }}">
-                                {{ $contacts_list->title }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <label for="contacts_list_id">{{ __('Add') }}</label>
-                </div>
-            </form>
-            <br />
-        @endif
-
-        @foreach ($account->contactsLists as $contactsList)
-            <p class="chip">
-                <a
-                    href="{{ route('admin.contacts_lists.edit', ['contacts_list_id' => $contactsList->id]) }}">{{ $contactsList->title }}</a>
-                <a
-                    href="{{ route('admin.account.contacts_lists.detach', ['account_id' => $account->id, 'contacts_list_id' => $contactsList->id]) }}">
-                    <i class="ph">x</i>
-                </a>
-            </p>
-        @endforeach
-
-        <br />
-
-        <h2 class="large" id="provisioning">{{ __('Provisioning') }}</h2>
-
-        @if ($account->provisioning_token)
-            <div>
-                <img style="max-width: 15rem;" src="{{ route('provisioning.qrcode', $account->provisioning_token) }}">
-            </div>
-
-            <form class="inline">
-                <div>
-                    <input type="text" style="min-width: 40rem;" readonly
-                        value="{{ route('provisioning.provision', $account->provisioning_token) }}">
-                    <small>{{ __('The link can only be visited once') }}</small>
-                </div>
-                <div>
-                    <a class="btn" href="{{ route('admin.account.provision', $account->id) }}">{{ __('Renew') }}</a>
-                </div>
-            </form>
-        @else
-            <a class="btn btn-light" href="{{ route('admin.account.provision', $account->id) }}">{{ __('Create') }}</a>
-        @endif
-
-        @if (space()?->intercom_features))
-            <h2>{{ __('Actions') }}</h2>
-
-            @if ($account->dtmf_protocol)
-                <table>
-                    <tbody>
-                        @foreach ($account->actions as $action)
-                            <tr>
-                                <th scope="row">{{ $action->key }}</th>
-                                <td>{{ $action->code }}</td>
-                                <td>
-                                    <a class="btn"
-                                        href="{{ route('admin.account.action.edit', [$account, $action->id]) }}">{{ __('Edit') }}</a>
-                                    <a class="btn"
-                                        href="{{ route('admin.account.action.delete', [$account, $action->id]) }}">{{ __('Delete') }}</a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-
-                <a class="btn" href="{{ route('admin.account.action.create', $account) }}">{{ __('Add') }}</a>
-            @else
-                <p>To manage actions, you must configure the DTMF protocol in the account settings.</p>
-            @endif
-
-            <h2>{{ __('Types') }}</h2>
-
-            <table>
-                <tbody>
-                    @foreach ($account->types as $type)
-                        <tr>
-                            <th scope="row">{{ $type->key }}</th>
-                            <td>
-                                <form method="POST"
-                                    action="{{ route('admin.account.account_type.destroy', [$account, $type->id]) }}"
-                                    accept-charset="UTF-8">
-                                    @csrf
-                                    @method('delete')
-                                    <input class="btn" type="submit" value="{{ __('Delete') }}">
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-
-            <a class="btn" href="{{ route('admin.account.account_type.create', $account) }}">{{ __('Add') }}</a>
-        @endif
-    @endif
 @endsection

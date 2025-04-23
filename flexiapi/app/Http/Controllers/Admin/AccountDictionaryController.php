@@ -27,16 +27,6 @@ use App\AccountDictionaryEntry;
 
 class AccountDictionaryController extends Controller
 {
-    public function index(int $accountId)
-    {
-        return view(
-            'admin.account.dictionary.index',
-            [
-                'account' => Account::findOrFail($accountId)
-            ]
-        );
-    }
-
     public function create(int $accountId)
     {
         return view('admin.account.dictionary.create_edit', [
@@ -61,7 +51,7 @@ class AccountDictionaryController extends Controller
             accountServiceAccountEditedHook($request, $account);
         }
 
-        return redirect()->route('admin.account.dictionary.index', $account->id);
+        return redirect()->route('admin.account.show', $account);
     }
 
     public function edit(int $accountId, string $key)
@@ -91,7 +81,7 @@ class AccountDictionaryController extends Controller
             accountServiceAccountEditedHook($request, $account);
         }
 
-        return redirect()->route('admin.account.dictionary.index', $account->id);
+        return redirect()->route('admin.account.show', $account);
     }
 
     public function delete(int $accountId, string $key)
@@ -112,6 +102,6 @@ class AccountDictionaryController extends Controller
         $account = Account::findOrFail($accountId);
         $account->dictionaryEntries()->where('key', $request->get('key'))->delete();
 
-        return redirect()->route('admin.account.dictionary.index', $account);
+        return redirect()->route('admin.account.show', $account);
     }
 }

@@ -12,7 +12,7 @@
 @section('content')
     <header>
         <h1><i class="ph">trash</i> {{ __('Delete') }}</h1>
-        <a href="{{ route('admin.api_keys.index') }}" class="btn btn-secondary oppose">{{ __('Cancel') }}</a>
+        <a href="{{ route('admin.api_keys.index') }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
         <input form="delete" class="btn" type="submit" value="{{ __('Delete') }}">
     </header>
 

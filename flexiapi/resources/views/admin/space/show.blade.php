@@ -14,12 +14,12 @@
     <header>
         <h1><i class="ph">globe-hemisphere-west</i> {{ $space->name }}</h1>
 
-        <a class="btn btn-secondary oppose" @if ($space->isFull())disabled @endif href="{{ route('admin.account.create', ['domain' => $space->domain]) }}">
+        <a class="btn secondary oppose" @if ($space->isFull())disabled @endif href="{{ route('admin.account.create', ['domain' => $space->domain]) }}">
             <i class="ph">user-plus</i> {{ __('Create') }}
         </a>
 
         @if (auth()->user()->superAdmin)
-            <a class="btn btn-tertiary" href="{{ route('admin.spaces.delete', $space->id) }}">
+            <a class="btn tertiary" href="{{ route('admin.spaces.delete', $space->id) }}">
                 <i class="ph">trash</i>
                 {{ __('Delete') }}
             </a>
@@ -55,7 +55,7 @@
         </div>
     </div>
 
-    <a class="btn btn-secondary oppose small" @if ($space->isFull())disabled @endif href="{{ route('admin.account.create', ['admin' => true, 'domain' => $space->domain]) }}"><i class="ph">user-plus</i> {{ __('New Admin') }}</a>
+    <a class="btn secondary oppose small" @if ($space->isFull())disabled @endif href="{{ route('admin.account.create', ['admin' => true, 'domain' => $space->domain]) }}"><i class="ph">user-plus</i> {{ __('New Admin') }}</a>
 
     <h2>Admins</h2>
 
@@ -75,7 +75,7 @@
             @foreach ($space->admins as $admin)
                 <tr>
                     <td>
-                        <a href="{{ route('admin.account.edit', $admin->id) }}">
+                        <a href="{{ route('admin.account.show', $admin->id) }}">
                             {{ $admin->identifier }}
                         </a>
                     </td>

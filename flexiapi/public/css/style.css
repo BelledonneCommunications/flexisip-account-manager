@@ -137,11 +137,11 @@ p {
     margin-bottom: 1rem;
 }
 
-p b {
+p > b {
     font-weight: bold;
 }
 
-p i {
+p > i {
     vertical-align: middle;
     margin-right: 1rem;
 }
@@ -369,7 +369,11 @@ form section {
 .grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    gap: 1.5rem;
+}
+
+.grid .card {
+    margin: 0;
 }
 
 .grid.third {
@@ -394,6 +398,10 @@ form section {
 .grid.third header,
 .grid.third .large {
     grid-column: span 3;
+}
+
+.grid.third .mid {
+    grid-column: span 2;
 }
 
 content section header {
@@ -433,8 +441,7 @@ content>nav {
     background-color: var(--main-5);
     width: 20rem;
     margin-left: 0;
-    padding: 1.5rem;
-    padding-left: 1rem;
+    padding: 5rem 1.5rem;
     padding-bottom: 10rem;
     border-radius: 0 3rem 0 0;
     background-size: auto 10rem;
@@ -564,7 +571,7 @@ h3 {
     border-bottom: 1px solid var(--grey-2);
 }
 
-h3 i {
+h3 > i {
     line-height: 2rem;
     margin-right: 1rem;
     vertical-align: middle;
@@ -651,6 +658,10 @@ table {
     width: 100%;
 }
 
+h3 + table {
+    margin-top: -0.5rem;
+}
+
 table tr td a {
     display: inline-block;
 }
@@ -660,7 +671,28 @@ table tr th {
     width: 20rem;
     padding: 1rem;
     font-size: 1.5rem;
+    vertical-align: middle;
 }
+
+table tr td form {
+    display: block;
+}
+
+.card table tr td:first-child,
+.card table tr th:first-child {
+    padding-left: 0;
+}
+
+table tr:not(.empty) th.actions,
+table tr:not(.empty) td.actions {
+    text-align: right;
+}
+
+.card table tr:not(.empty) th.actions,
+.card table tr:not(.empty) td.actions {
+    padding-right: 0;
+}
+
 
 table tr th {
     padding: 0 1rem;
@@ -672,7 +704,10 @@ table tr th {
 
 table tr td.line,
 table tr th.line {
-    max-width: 100%;
+    max-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 table tr th,
@@ -846,7 +881,7 @@ select.list_toggle {
 }
 
 .disabled {
-    opacity: 0.5;
+    opacity: 0.3;
     pointer-events: none;
 }
 
