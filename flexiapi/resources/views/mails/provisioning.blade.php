@@ -1,20 +1,9 @@
-<html>
-    <head>
-        <title>Authenticate on {{ space()->name }}</title>
-    </head>
-    <body>
-        <p>Hello,</p>
-        <p>
-            You are trying to authenticate to {{ space()->name }} using your device.<br />
-            You can configure your new device by directly flashing the QRCode or using the provisioning link:<br />
+@extends('mails.layout')
 
-            <img src="{{ $provisioning_qrcode}}"><br />
+@section('content')
+# Welcome to {{ space()->name }}
 
-            Provisioning link: {{ $provisioning_link }}
-        </p>
-        <p>
-            Regards,<br />
-            {{ config('mail.signature') }}
-        </p>
-    </body>
-</html>
+Hello {{ $account->identifier }},
+
+@include('mails.parts.provisioning')
+@endsection

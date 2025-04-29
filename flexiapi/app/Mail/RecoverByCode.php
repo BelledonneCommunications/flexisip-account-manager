@@ -1,7 +1,7 @@
 <?php
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
-    Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
+    Copyright (C) 2025 Belledonne Communications SARL, All rights reserved.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -19,42 +19,37 @@
 
 namespace App\Mail;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
-
 use App\Account;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
 
 class RecoverByCode extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private $account;
-
-    public function __construct(Account $account)
-    {
-        $this->account = $account;
+    public function __construct(
+        public Account $account
+    ) {
     }
 
-    public function build()
+    public function envelope(): Envelope
     {
-        return $this->view(view()->exists('mails.authentication_custom')
-                ? 'mails.authentication_custom'
-                : 'mails.authentication')
-            ->text(view()->exists('mails.authentication_text_custom')
-                ? 'mails.authentication_text_custom'
-                : 'mails.authentication_text')
-            ->with([
-                'expiration_minutes' => config('app.recovery_code_expiration_minutes'),
-                'recovery_code' => $this->account->recovery_code,
-                'provisioning_link' => route('provisioning.provision', [
-                    'provisioning_token' => $this->account->provisioning_token,
-                    'reset_password' => true
-                ]),
-                'provisioning_qrcode' => route('provisioning.qrcode', [
-                    'provisioning_token' => $this->account->provisioning_token,
-                    'reset_password' => true
-                ])
-            ]);
+        return new Envelope(
+            subject: $this->account->space->name . ': '. __('Account recovery'),
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: view()->exists('mails.recover_by_code_custom')
+                ? 'mails.recover_by_code_custom'
+                : 'mails.recover_by_code',
+        );
     }
 }

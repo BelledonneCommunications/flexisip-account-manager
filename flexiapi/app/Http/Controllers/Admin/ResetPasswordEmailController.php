@@ -32,7 +32,7 @@ class ResetPasswordEmailController extends Controller
         $resetPasswordEmail->email = $account->email;
         $resetPasswordEmail->save();
 
-        Mail::to($account)->send(new ResetPassword($resetPasswordEmail));
+        Mail::to($account)->send(new ResetPassword($account));
 
         return redirect()->route('admin.account.activity.index', $account);
     }

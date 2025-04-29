@@ -1,41 +1,55 @@
 <?php
+/*
+    Flexisip Account Manager is a set of tools to manage SIP accounts.
+    Copyright (C) 2025 Belledonne Communications SARL, All rights reserved.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 namespace App\Mail;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
-
 use App\Account;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
 
 class Provisioning extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private $account;
-
-    public function __construct(Account $account)
-    {
-        $this->account = $account;
+    public function __construct(
+        public Account $account
+    ) {
     }
 
-    public function build()
+    public function envelope(): Envelope
     {
-        return $this->view(view()->exists('mails.provisioning_custom')
+        return new Envelope(
+            subject: $this->account->space->name . ': '. __('Provisioning of your device'),
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: view()->exists('mails.provisioning_custom')
                 ? 'mails.provisioning_custom'
-                : 'mails.provisioning')
-            ->text(view()->exists('mails.provisioning_text_custom')
-                ? 'mails.provisioning_text_custom'
-                : 'mails.provisioning_text')
-            ->with([
-                'provisioning_link' => route('provisioning.provision', [
-                    'provisioning_token' => $this->account->provisioning_token,
-                    'reset_password' => true
-                ]),
-                'provisioning_qrcode' => route('provisioning.qrcode', [
-                    'provisioning_token' => $this->account->provisioning_token,
-                    'reset_password' => true
-                ])
-            ]);
+                : 'mails.provisioning',
+        );
     }
 }

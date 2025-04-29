@@ -1,7 +1,7 @@
 <?php
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
-    Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
+    Copyright (C) 2025 Belledonne Communications SARL, All rights reserved.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -19,27 +19,35 @@
 
 namespace App\Mail;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
-
 use App\Account;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
 
 class NewsletterRegistration extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private $account;
-
-    public function __construct(Account $account)
-    {
-        $this->account = $account;
+    public function __construct(
+        public Account $account
+    ) {
     }
 
-    public function build()
+    public function envelope(): Envelope
     {
-        return $this->view('mails.newsletter_registration')
-                    ->text('mails.newsletter_registration_text')
-                    ->with(['account' => $this->account]);
+        return new Envelope(
+            subject: $this->account->space->name . ': '. __('Newsletter registration confirmed'),
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'mails.newsletter_registration',
+        );
     }
 }

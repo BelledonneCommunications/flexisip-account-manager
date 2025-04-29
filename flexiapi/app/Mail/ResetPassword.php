@@ -1,7 +1,7 @@
 <?php
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
-    Copyright (C) 2024 Belledonne Communications SARL, All rights reserved.
+    Copyright (C) 2025 Belledonne Communications SARL, All rights reserved.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -19,30 +19,36 @@
 
 namespace App\Mail;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
-
 use App\Account;
 use App\ResetPasswordEmailToken;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
 
 class ResetPassword extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private $token;
-
-    public function __construct(ResetPasswordEmailToken $token)
-    {
-        $this->token = $token;
+    public function __construct(
+        public Account $account
+    ) {
     }
 
-    public function build()
+    public function envelope(): Envelope
     {
-        return $this->view('mails.reset_password')
-                    ->text('mails.reset_password')
-                    ->with([
-                        'token' => $this->token
-                    ]);
+        return new Envelope(
+            subject: $this->account->space->name . ': '. __('Reset your password'),
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'mails.reset_password',
+        );
     }
 }

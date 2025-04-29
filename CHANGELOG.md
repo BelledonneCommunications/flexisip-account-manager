@@ -32,6 +32,7 @@ v1.7
 - Fix FLEXIAPI-272 Add Space based email server integration
 - Fix FLEXIAPI-284 Add configurable admin API Keys
 - Fix FLEXIAPI-232 Add provisioning email + important redesign of the contacts page
+- Fix FLEXIAPI-287 Refactor the emails templates
 
 v1.6
 ----

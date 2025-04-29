@@ -261,6 +261,11 @@ class Account extends Authenticatable
         return $this->hasMany(AuthToken::class);
     }
 
+    public function currentResetPasswordEmailToken()
+    {
+        return $this->hasOne(ResetPasswordEmailToken::class)->where('used', false)->latestOfMany();
+    }
+
     public function resetPasswordEmailTokens()
     {
         return $this->hasMany(ResetPasswordEmailToken::class)->latest();

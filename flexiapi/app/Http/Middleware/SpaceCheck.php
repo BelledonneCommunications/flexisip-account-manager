@@ -43,7 +43,7 @@ class SpaceCheck
                     'username'   => $space->emailServer->username,
                     'password'   => $space->emailServer->password,
                     'signature'  => $space->emailServer->signature ?? config('mail.signature')
-                ];
+                ] + Config::get('mail');
 
                 Config::set('mail', $config);
             }

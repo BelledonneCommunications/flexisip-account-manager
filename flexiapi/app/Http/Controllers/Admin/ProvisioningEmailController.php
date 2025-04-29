@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Account;
-use App\ResetPasswordEmailToken;
 use App\Http\Controllers\Controller;
 use App\Mail\Provisioning;
 
@@ -23,7 +22,7 @@ class ProvisioningEmailController extends Controller
         ]);
     }
 
-    public function send(int $accountId)
+    public function send(Request $request, int $accountId)
     {
         $account = Account::findOrFail($accountId);
         $account->provision();

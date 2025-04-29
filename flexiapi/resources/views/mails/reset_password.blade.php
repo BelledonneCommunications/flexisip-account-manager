@@ -1,21 +1,15 @@
-<html>
-    <head>
-        <title>Reset your password on {{ space()->name }}</title>
-    </head>
-    <body>
-        <p>Hello,</p>
-        <p>
-            You are invited to reset your {{ $token->account->identifier }} account password on  {{ space()->name }} via your email account.
-        </p>
-        <p>The following link will be valid for {{ config('app.reset_password_email_token_expiration_minutes')/60 }} hours.</p>
-        <p>
-            <a href="{{ route('account.reset_password_email.change', $token->token) }}">
-                {{ route('account.reset_password_email.change', $token->token) }}
-            </a>
-        </p>
-        <p>
-            Regards,<br />
-            {{ config('mail.signature') }}
-        </p>
-    </body>
-</html>
+@extends('mails.layout')
+
+@section('content')
+# Reset your password on {{ $account->space->name }}
+
+Hello {{ $account->identifier }},
+
+You are invited to reset your {{ $account->identifier }} account password on {{ $account->space->name }} via your email account.
+
+The following link will be valid for {{ config('app.reset_password_email_token_expiration_minutes')/60 }} hours.
+
+<x-mail::button :url="route('account.reset_password_email.change', $account->currentResetPasswordEmailToken->token)" color="primary">
+    Reset by email
+</x-mail::button>
+@endsection

@@ -34,6 +34,11 @@
             @if ($account->passwords()->count() > 0)
                 <p><i class="ph">password</i> {{ __('Password') }}: **********</p>
             @endif
+
+            <p>
+                <i class="ph">globe-hemisphere-west</i>
+                {{ __('Space') }}: <a href="{{ route('admin.spaces.show', $account->space->id) }}">{{ $account->domain }}</a>
+            </p>
             <p>
                 @include('admin.account.parts.badges', ['account' => $account])
             </p>
