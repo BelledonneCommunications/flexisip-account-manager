@@ -49,7 +49,6 @@ use App\Http\Controllers\Admin\StatisticsController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', 'login')->name('account.home');
-Route::get('documentation', 'Account\AccountController@documentation')->name('account.documentation');
 Route::get('about', 'AboutController@about')->name('about');
 
 Route::middleware(['web_panel_enabled', 'space.check'])->group(function () {

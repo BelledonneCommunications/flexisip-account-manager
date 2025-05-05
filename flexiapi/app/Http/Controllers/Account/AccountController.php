@@ -28,13 +28,6 @@ use App\Services\AccountService;
 
 class AccountController extends Controller
 {
-    public function documentation(Request $request)
-    {
-        return view('account.documentation', [
-            'documentation' => markdownDocumentationView('account.documentation_markdown')
-        ]);
-    }
-
     public function blocked(Request $request)
     {
         return view('account.blocked');
