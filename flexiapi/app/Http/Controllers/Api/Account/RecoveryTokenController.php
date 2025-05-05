@@ -24,17 +24,15 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
-use App\AccountCreationToken;
-use App\AccountCreationRequestToken;
+use App\AccountRecoveryToken;
 use App\Rules\PnParam;
 use App\Rules\PnPrid;
 use App\Rules\PnProvider;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use App\Libraries\FlexisipPusherConnector;
-use App\Rules\AccountCreationRequestToken as RulesAccountCreationRequestToken;
 
-class CreationTokenController extends Controller
+class RecoveryTokenController extends Controller
 {
     public function sendByPush(Request $request)
     {
@@ -44,10 +42,10 @@ class CreationTokenController extends Controller
             'pn_prid' => [new PnPrid],
         ]);
 
-        $last = AccountCreationToken::where('pn_provider', $request->get('pn_provider'))
+        $last = AccountRecoveryToken::where('pn_provider', $request->get('pn_provider'))
             ->where('pn_param', $request->get('pn_param'))
             ->where('pn_prid', $request->get('pn_prid'))
-            ->where('created_at', '>=', Carbon::now()->subMinutes(config('app.account_creation_token_retry_minutes'))->toDateTimeString())
+            ->where('created_at', '>=', Carbon::now()->subMinutes(config('app.account_recovery_token_retry_minutes'))->toDateTimeString())
             ->where('used', true)
             ->latest()
             ->first();
@@ -57,7 +55,7 @@ class CreationTokenController extends Controller
             abort(429, 'Last token requested too recently');
         }
 
-        $token = new AccountCreationToken;
+        $token = new AccountRecoveryToken;
         $token->token = Str::random(WebAuthenticateController::$emailCodeSize);
         $token->pn_provider = $request->get('pn_provider');
         $token->pn_param = $request->get('pn_param');
@@ -66,59 +64,12 @@ class CreationTokenController extends Controller
 
         $fp = new FlexisipPusherConnector($token->pn_provider, $token->pn_param, $token->pn_prid);
         if ($fp->sendToken($token->token)) {
-            Log::channel('events')->info('API: Account Creation Token sent', ['token' => $token->token]);
+            Log::channel('events')->info('API: AccountRecoveryToken sent', ['token' => $token->token]);
 
             $token->save();
             return;
         }
 
         abort(503, "Token not sent");
-    }
-
-    public function usingAccountRequestToken(Request $request)
-    {
-        $request->validate([
-            'account_creation_request_token' => [
-                'required',
-                new RulesAccountCreationRequestToken
-            ]
-        ]);
-
-        $creationRequestToken = AccountCreationRequestToken::where('token', $request->get('account_creation_request_token'))
-            ->where('used', false)
-            ->first();
-
-        if ($creationRequestToken && $creationRequestToken->validated_at != null) {
-            $accountCreationToken = new AccountCreationToken;
-            $accountCreationToken->token = Str::random(WebAuthenticateController::$emailCodeSize);
-            $accountCreationToken->fillRequestInfo($request);
-            $accountCreationToken->save();
-
-            $creationRequestToken->consume();
-            $creationRequestToken->acc_creation_token_id = $accountCreationToken->id;
-            $creationRequestToken->save();
-
-            return $accountCreationToken;
-        }
-
-        return abort(404);
-    }
-
-    public function consume(Request $request)
-    {
-        $accountCreationToken = AccountCreationToken::where('token', $request->get('account_creation_token'))
-            ->where('used', false)
-            ->where('account_id', null)
-            ->first();
-
-        if ($accountCreationToken) {
-            $accountCreationToken->account_id = $request->user()->id;
-            $accountCreationToken->fillRequestInfo($request);
-            $accountCreationToken->consume();
-
-            return $accountCreationToken;
-        }
-
-        return abort(404);
     }
 }

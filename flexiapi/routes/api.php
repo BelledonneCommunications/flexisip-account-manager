@@ -44,6 +44,7 @@ Route::post('account_creation_request_tokens', 'Api\Account\CreationRequestToken
 Route::post('account_creation_tokens/send-by-push', 'Api\Account\CreationTokenController@sendByPush');
 Route::post('account_creation_tokens/using-account-creation-request-token', 'Api\Account\CreationTokenController@usingAccountRequestToken');
 Route::post('accounts/with-account-creation-token', 'Api\Account\AccountController@store');
+Route::post('account_recovery_tokens/send-by-push', 'Api\Account\RecoveryTokenController@sendByPush');
 
 Route::get('accounts/{sip}/info', 'Api\Account\AccountController@info');
 

@@ -20,11 +20,15 @@
 namespace App\Http\Controllers\Account;
 
 use App\Account;
+use App\AccountRecoveryToken;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\AccountService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+
+use Illuminate\Support\Str;
+use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 
 class RecoveryController extends Controller
 {
@@ -36,10 +40,16 @@ class RecoveryController extends Controller
         ]);
     }
 
-    public function showPhone(Request $request)
+    public function showPhone(Request $request, string $accountRecoveryToken)
     {
+        $accountRecoveryToken = AccountRecoveryToken::where('token', $accountRecoveryToken)
+            ->where('used', false)
+            ->firstOrFail();
+
         return view('account.recovery.show', [
             'method' => 'phone',
+            'account_recovery_token' => $accountRecoveryToken->token,
+            'phone' => $request->get('phone'),
             'domain' => resolveDomain($request)
         ]);
     }
@@ -49,7 +59,8 @@ class RecoveryController extends Controller
         $rules = [
             'email' => 'required_without:phone|email|exists:accounts,email',
             'phone' => 'required_without:email|starts_with:+',
-            'h-captcha-response'  => captchaConfigured() ? 'required|HCaptcha' : '',
+            'h-captcha-response'  => captchaConfigured() ? 'required_if:email|HCaptcha' : '',
+            'account_recovery_token' => 'required_if:phone',
         ];
 
         $account = null;
@@ -94,9 +105,17 @@ class RecoveryController extends Controller
         }
 
         if ($request->get('email')) {
-            $account = (new AccountService)->recoverByEmail($account);
+            $account = (new AccountService)->recoverByEmail($account, $request->get('email'));
         } elseif ($request->get('phone')) {
-            $account = (new AccountService)->recoverByPhone($account);
+            $accountRecoveryToken = AccountRecoveryToken::where('token', $request->get('account_recovery_token'))
+                ->where('used', false)
+                ->first();
+
+            if (!$accountRecoveryToken) {
+                abort(403, 'Wrong Account Recovery Token');
+            }
+
+            $account = (new AccountService)->recoverByPhone($account, $request->get('phone'), $accountRecoveryToken);
         }
 
         return view('account.recovery.confirm', [

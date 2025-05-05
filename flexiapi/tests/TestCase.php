@@ -20,6 +20,7 @@
 namespace Tests;
 
 use App\PhoneCountry;
+use App\Space;
 use App\Http\Middleware\SpaceCheck;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -44,5 +45,10 @@ abstract class TestCase extends BaseTestCase
         PhoneCountry::truncate();
         PhoneCountry::factory()->france()->activated()->create();
         PhoneCountry::factory()->netherlands()->create();
+    }
+
+    protected function setSpaceOnRoute(Space $space, string $route)
+    {
+        return str_replace('localhost', $space->domain, $route);
     }
 }

@@ -33,6 +33,7 @@ v1.7
 - Fix FLEXIAPI-284 Add configurable admin API Keys
 - Fix FLEXIAPI-232 Add provisioning email + important redesign of the contacts page
 - Fix FLEXIAPI-287 Refactor the emails templates
+- Fix FLEXIAPI-286 Send an account_recovery_token using a push notification and protect the account recovery using phone page with the account_recovery_token
 
 v1.6
 ----

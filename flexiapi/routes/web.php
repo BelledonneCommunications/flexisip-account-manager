@@ -100,7 +100,7 @@ Route::middleware(['web_panel_enabled', 'space.check'])->group(function () {
     });
 
     Route::prefix('recovery')->controller(RecoveryController::class)->group(function () {
-        Route::get('phone', 'showPhone')->name('account.recovery.show.phone');
+        Route::get('phone/{account_recovery_token}', 'showPhone')->name('account.recovery.show.phone');
         Route::get('email', 'showEmail')->name('account.recovery.show.email');
         Route::post('/', 'send')->name('account.recovery.send');
         Route::post('confirm', 'confirm')->name('account.recovery.confirm');

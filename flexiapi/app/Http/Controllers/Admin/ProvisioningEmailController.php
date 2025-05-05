@@ -22,7 +22,7 @@ class ProvisioningEmailController extends Controller
         ]);
     }
 
-    public function send(Request $request, int $accountId)
+    public function send(int $accountId)
     {
         $account = Account::findOrFail($accountId);
         $account->provision();

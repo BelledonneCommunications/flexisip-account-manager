@@ -21,6 +21,7 @@ namespace App\Services;
 
 use App\Account;
 use App\AccountCreationToken;
+use App\AccountRecoveryToken;
 use App\EmailChangeCode;
 use App\Http\Requests\Account\Create\Request as CreateRequest;
 use App\Http\Requests\Account\Update\Request as UpdateRequest;
@@ -220,7 +221,7 @@ class AccountService
 
         $account = $request->user();
 
-        $phoneChangeCode = $account->phoneChangeCode ?? new PhoneChangeCode();
+        $phoneChangeCode = new PhoneChangeCode();
         $phoneChangeCode->account_id = $account->id;
         $phoneChangeCode->phone = $request->get('phone');
         $phoneChangeCode->code = generatePin();
@@ -255,7 +256,7 @@ class AccountService
 
         $account = $request->user();
 
-        $phoneChangeCode = $account->phoneChangeCode()->firstOrFail();
+        $phoneChangeCode = $account->phoneChangeCodes()->firstOrFail();
 
         if ($phoneChangeCode->expired()) {
             return abort(410, 'Expired code');
@@ -299,7 +300,7 @@ class AccountService
 
         $account = $request->user();
 
-        $emailChangeCode = $account->emailChangeCode ?? new EmailChangeCode();
+        $emailChangeCode = new EmailChangeCode();
         $emailChangeCode->account_id = $account->id;
         $emailChangeCode->email = $request->get('email');
         $emailChangeCode->code = generatePin();
@@ -327,7 +328,7 @@ class AccountService
 
         $account = $request->user();
 
-        $emailChangeCode = $account->emailChangeCode()->firstOrFail();
+        $emailChangeCode = $account->emailChangeCodes()->firstOrFail();
 
         if ($emailChangeCode->expired()) {
             return abort(410, 'Expired code');
@@ -360,9 +361,11 @@ class AccountService
      * Account recovery
      */
 
-    public function recoverByEmail(Account $account): Account
+    public function recoverByEmail(Account $account, string $email): Account
     {
-        $account = $this->recoverAccount($account);
+        $account->recover(email: $email);
+        $account->provision();
+        $account->refresh();
 
         Mail::to($account)->send(new RecoverByCode($account));
 
@@ -371,9 +374,11 @@ class AccountService
         return $account;
     }
 
-    public function recoverByPhone(Account $account): Account
+    public function recoverByPhone(Account $account, string $phone, AccountRecoveryToken $accountRecoveryToken): Account
     {
-        $account = $this->recoverAccount($account);
+        $account->recover(phone: $phone);
+        $account->provision();
+        $account->refresh();
 
         $message = 'Your ' . $account->space->name . ' validation code is ' . $account->recovery_code . '.';
 
@@ -386,14 +391,11 @@ class AccountService
 
         Log::channel('events')->info('Account Service: Sending recovery SMS', ['id' => $account->identifier]);
 
-        return $account;
-    }
+        $accountRecoveryToken->consume();
+        $accountRecoveryToken->account_id = $account->id;
+        $accountRecoveryToken->save();
 
-    private function recoverAccount(Account $account): Account
-    {
-        $account->recover();
-        $account->provision();
-        $account->refresh();
+        Log::channel('events')->info('API: AccountRecoveryToken redeemed', ['account_recovery_token' => $accountRecoveryToken->toLog()]);
 
         return $account;
     }

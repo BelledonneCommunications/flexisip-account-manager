@@ -121,15 +121,6 @@ You can find more documentation on the related [IETF RFC-7616](https://tools.iet
 
 Returns `pong`
 
-## Account Creation Request Tokens
-
-An `account_creation_request_token` is a unique token that can be validated and then used to generate a valid `account_creation_token`.
-
-### `POST /account_creation_request_tokens`
-<span class="badge badge-success">Public</span>
-
-Create and return an `account_creation_request_token` that should then be validated to be used.
-
 ## Spaces
 
 Manage the list of allowed `spaces`. The admin accounts declared with a `domain` that is a `super` `sip_domain` will become <span class="badge badge-error">Super Admin</span>.
@@ -249,6 +240,15 @@ JSON parameters:
 
 Delete the a space email server configuration.
 
+## Account Creation Request Tokens
+
+An `account_creation_request_token` is a unique token that can be validated and then used to generate a valid `account_creation_token`.
+
+### `POST /account_creation_request_tokens`
+<span class="badge badge-success">Public</span>
+
+Create and return an `account_creation_request_token` that should then be validated to be used.
+
 ## Account Creation Tokens
 
 An `account_creation_token` is a unique token that allow the creation or the validation of a unique account.
@@ -293,6 +293,28 @@ JSON parameters:
 <span class="badge badge-warning">Admin</span>
 
 Create and return an `account_creation_token`.
+
+## Account Recovery Tokens
+
+An `account_recovery_token` is a unique token that allow the recovery of an account.
+
+It can be used on the following page that also accepts a `phone` optional parameter to prefil the recovery form:
+
+    {{ route('account.recovery.show.phone', ['account_recovery_token' => '_the_token_']) }}
+    {{ route('account.recovery.show.phone', ['account_recovery_token' => '_the_token_', 'phone' => '+3312341234']) }}
+
+### `POST /account_recovery_tokens/send-by-push`
+<span class="badge badge-success">Public</span>
+
+Create and send an `account_recovery_token` using a push notification to the device.
+Return `403` if a token was already sent, or if the tokens limit is reached for this device.
+Return `503` if the token was not successfully sent.
+
+JSON parameters:
+
+* `pn_provider` **required**, the push notification provider, must be in apns.dev, apns or fcm
+* `pn_param` the push notification parameter, can be null or contain only alphanumeric and underscore characters
+* `pn_prid` the push notification unique id, can be null or contain only alphanumeric, dashes and colon characters
 
 ## Auth Tokens
 

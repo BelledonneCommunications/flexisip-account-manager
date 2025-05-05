@@ -256,6 +256,11 @@ class Account extends Authenticatable
         return $this->hasOne(AccountCreationToken::class);
     }
 
+    public function accountRecoveryTokens()
+    {
+        return $this->hasMany(AccountRecoveryToken::class);
+    }
+
     public function authTokens()
     {
         return $this->hasMany(AuthToken::class);
@@ -385,10 +390,12 @@ class Account extends Authenticatable
         return $authToken;
     }
 
-    public function recover(?string $code = null): string
+    public function recover(?string $code = null, ?string $phone = null, ?string $email = null): string
     {
         $recoveryCode = new RecoveryCode;
         $recoveryCode->code = $code ?? generatePin();
+        $recoveryCode->phone = $phone;
+        $recoveryCode->email = $email;
         $recoveryCode->account_id = $this->id;
 
         if (request()) {

@@ -11,11 +11,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 - **Spaces:** A new way to manage your SIP domains and hosts. A Space is defined by a unique SIP Domain and Host pair.
     - **New mandatory DotEnv variable** `APP_ROOT_HOST`, replaces `APP_URL` and `APP_SIP_DOMAIN` that are now configured using the new dedicated Artisan script. It defines the root hostname where all the Spaces will be configured. All the Spaces will be as subdomains of `APP_ROOT_HOST` except one that can be equal to `APP_ROOT_HOST`. Example: if `APP_ROOT_HOST=myhost.com` the Spaces hosts will be `myhost.com`, `alpha.myhost.com` , `beta.myhost.com`...
+    - **New DotEnv variable:** `APP_ACCOUNT_RECOVERY_TOKEN_EXPIRATION_MINUTES=0` Number of minutes before expiring the recovery tokens
     - **New Artisan script** `php artisan spaces:create-update {sip_domain} {host} {name} {--super}`, replaces `php artisan sip_domains:create-update {sip_domain} {--super}`. Can create a Space or update a Space Host base on its Space SIP Domain.
 
 ### Changed
 
-- **Removing and moving DotEnv instance environnement variables to the Spaces** The following DotEnv variables were removed. You can now configure them directly in the designated spaces.
+- **Removing and moving DotEnv instance environnement variables to the Spaces** The following DotEnv variables were removed. You can now configure them directly in the designated spaces after the migration.
     - INSTANCE_COPYRIGHT
     - INSTANCE_INTRO_REGISTRATION
     - INSTANCE_CUSTOM_THEME

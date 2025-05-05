@@ -74,9 +74,9 @@
         </div>
     @endif
 
-    @if ($account->recoveryCodes->isNotEmpty())
-        <div class="card">
-            <h3>Recovery Codes</h3>
+    @if ($account->accountRecoveryTokens)
+        <div class="card large">
+            <h3>Account Recovery Tokens</h3>
             <table>
                 <thead>
                     <tr>
@@ -85,10 +85,54 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($account->accountRecoveryTokens as $key => $accountRecoveryToken)
+                        <tr>
+                            <td>
+                                {{ $accountRecoveryToken->created_at }}
+                                <small @if ($accountRecoveryToken->consumed())class="crossed"@endif>
+                                    {{ __('Token') }}: {{ $accountRecoveryToken->token }}
+                                </small>
+                            </td>
+                            <td>
+                                {{ $accountRecoveryToken->created_at != $accountRecoveryToken->updated_at ? $accountRecoveryToken->updated_at : '-' }}
+                                <small title="{{ $accountRecoveryToken->user_agent }}">
+                                    IP: {{ $accountRecoveryToken->ip ?? '-' }} |
+                                    {{ \Illuminate\Support\Str::limit($accountRecoveryToken->user_agent, 20, $end='...') }}
+                                </small>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @endif
+
+    @if ($account->recoveryCodes->isNotEmpty())
+        <div class="card large">
+            <h3>Recovery Codes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>{{ __('Created') }}</th>
+                        <th>{{ __('Via') }} <i class="ph">phone</i>/<i class="ph">envelope</i></th>
+                        <th>{{ __('Used on') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
                     @foreach ($account->recoveryCodes as $key => $recoveryCode)
                         <tr>
                             <td>
                                 {{ $recoveryCode->created_at }}
+                                <small @if ($recoveryCode->consumed())class="crossed"@endif>
+                                    {{ __('Code') }}: {{ $recoveryCode->code ?? '-' }}
+                                </small>
+                            </td>
+                            <td>
+                                @if ($recoveryCode->phone)
+                                    <i class="ph">phone</i> {{ $recoveryCode->phone }}
+                                @elseif($recoveryCode->email)
+                                    <i class="ph">envelope</i> {{ $recoveryCode->email }}
+                                @endif
                             </td>
                             <td>
                                 {{ $recoveryCode->created_at != $recoveryCode->updated_at ? $recoveryCode->updated_at : '-' }}
@@ -120,10 +164,12 @@
                     <tr>
                         <td>
                             {{ $phoneChangeCode->created_at }}
+                            <small @if ($phoneChangeCode->consumed())class="crossed"@endif>
+                                {{ __('Code') }}: {{ $phoneChangeCode->code ?? '-' }}
+                            </small>
                         </td>
                         <td>
                             {{ $phoneChangeCode->phone }}
-                            <small>{{ __('Code') }}: {{ $phoneChangeCode->code ?? '-' }}</small>
                         </td>
                         <td title="{{ $phoneChangeCode->user_agent }}">
                             {{ $phoneChangeCode->created_at != $phoneChangeCode->updated_at ? $phoneChangeCode->updated_at : '-' }}
@@ -155,10 +201,12 @@
                         <tr>
                             <td>
                                 {{ $emailChangeCode->created_at }}
+                                <small @if ($emailChangeCode->consumed())class="crossed"@endif>
+                                    {{ __('Code') }}: {{ $emailChangeCode->code ?? '-' }}
+                                </small>
                             </td>
                             <td>
                                 {{ $emailChangeCode->email }}
-                                <small>{{ __('Code') }}: {{ $emailChangeCode->code ?? '-' }}</small>
                             </td>
                             <td title="{{ $emailChangeCode->user_agent }}">
                                 {{ $emailChangeCode->created_at != $emailChangeCode->updated_at ? $emailChangeCode->updated_at : '-' }}
@@ -189,6 +237,9 @@
                         <tr>
                             <td>
                                 {{ $provisioningToken->created_at }}
+                                <small @if ($provisioningToken->offed())class="crossed"@endif>
+                                    {{ $provisioningToken->token }}
+                                </small>
                             </td>
                             <td>
                                 {{ $provisioningToken->consumed() ? $provisioningToken->updated_at : '-' }}
@@ -205,7 +256,7 @@
     @endif
 
     @if ($account->resetPasswordEmailTokens->isNotEmpty())
-        <div class="card">
+        <div class="card large">
             <h3>{{ __('Reset password emails') }}</h3>
             <table>
                 <thead>
@@ -220,12 +271,12 @@
                         <tr>
                             <td>
                                 {{ $resetPasswordEmailToken->created_at }}
+                                <small @if ($resetPasswordEmailToken->offed())class="crossed"@endif>
+                                    {{ $resetPasswordEmailToken->token }}
+                                </small>
                             </td>
                             <td>
                                 {{ $resetPasswordEmailToken->email }}
-                                <small>
-                                    {{ $resetPasswordEmailToken->token }}
-                                </small>
                             </td>
                             <td>
                                 {{ $resetPasswordEmailToken->consumed() ? $resetPasswordEmailToken->updated_at : '-' }}
