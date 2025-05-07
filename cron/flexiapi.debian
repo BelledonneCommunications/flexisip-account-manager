@@ -5,3 +5,4 @@ sudo -su www-data && php artisan digest:clear-nonces 60
 sudo -su www-data && php artisan accounts:clear-api-keys 60
 sudo -su www-data && php artisan accounts:clear-accounts-tombstones 7 --apply
 sudo -su www-data && php artisan accounts:clear-unconfirmed 30 --apply
+sudo -su www-data && php artisan spaces:expiration-emails

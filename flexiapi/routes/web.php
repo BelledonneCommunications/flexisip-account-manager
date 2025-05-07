@@ -203,6 +203,12 @@ Route::middleware(['web_panel_enabled', 'space.check'])->group(function () {
         });
 
         Route::name('account.')->prefix('accounts')->group(function () {
+            Route::name('import.')->prefix('import')->controller(AccountImportController::class)->group(function () {
+                Route::get('/', 'create')->name('create');
+                Route::post('/', 'store')->name('store');
+                Route::post('handle', 'handle')->name('handle');
+            });
+
             Route::middleware(['intercom_features'])->group(function () {
                 Route::name('type.')->prefix('types')->controller(AccountTypeController::class)->group(function () {
                     Route::get('/', 'index')->name('index');
@@ -258,12 +264,6 @@ Route::middleware(['web_panel_enabled', 'space.check'])->group(function () {
             Route::name('provisioning_email.')->controller(ProvisioningEmailController::class)->prefix('{account_id}/provisioning_email')->group(function () {
                 Route::get('create', 'create')->name('create');
                 Route::get('send', 'send')->name('send');
-            });
-
-            Route::name('import.')->prefix('import')->controller(AccountImportController::class)->group(function () {
-                Route::get('/', 'create')->name('create');
-                Route::post('/', 'store')->name('store');
-                Route::post('handle', 'handle')->name('handle');
             });
 
             Route::name('contact.')->prefix('{account}/contacts')->controller(AccountContactController::class)->group(function () {

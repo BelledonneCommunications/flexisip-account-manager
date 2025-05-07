@@ -66,7 +66,7 @@ class Space extends Model
     ];
 
     public const HOST_REGEX = '[\w\-]+';
-    public const DOMAIN_REGEX = '(?=^.{4,253}$)(^((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+[a-zA-Z]{2,63}$)';
+    public const DOMAIN_REGEX = '(?=^.{4,253}$)(^((?!-)[a-z0-9-]{1,63}(?<!-)\.)+[a-z]{2,63}$)';
 
     public function accounts()
     {
@@ -129,7 +129,7 @@ class Space extends Model
     public function getDaysLeftAttribute(): ?int
     {
         if ($this->expire_at != null) {
-            return (int)$this->expire_at->diffInDays(Carbon::now());
+            return (int)$this->expire_at->diffInDays(Carbon::now()) + 1;
         }
 
         return null;

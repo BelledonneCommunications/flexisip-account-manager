@@ -35,6 +35,7 @@ v1.7
 - Fix FLEXIAPI-287 Refactor the emails templates
 - Fix FLEXIAPI-286 Send an account_recovery_token using a push notification and protect the account recovery using phone page with the account_recovery_token
 - Fix FLEXIAPI-293 Remove the (long) outdated general documentation
+- Fix FLEXIAPI-224 Add a console script to send Space Expiration emails
 
 v1.6
 ----

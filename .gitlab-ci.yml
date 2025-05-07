@@ -1,6 +1,6 @@
 variables:
   ROCKY_8_IMAGE_VERSION: 20241113_143521_update_php_82
-  ROCKY_9_IMAGE_VERSION: 20241114_161138_remove_redis
+  ROCKY_9_IMAGE_VERSION: 20250513_111901_upgrade_packages
   DEBIAN_12_IMAGE_VERSION: 20241204_162237_update_download_linphone_org
   PHP_REDIS_REMI_VERSION: php-pecl-redis6-6.1.0-1
   PHP_IGBINARY_REMI_VERSION: php-pecl-igbinary-3.2.16-2
