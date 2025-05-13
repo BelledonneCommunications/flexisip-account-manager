@@ -74,7 +74,7 @@
         </div>
     @endif
 
-    @if ($account->accountRecoveryTokens)
+    @if ($account->accountRecoveryTokens->isNotEmpty())
         <div class="card large">
             <h3>Account Recovery Tokens</h3>
             <table>

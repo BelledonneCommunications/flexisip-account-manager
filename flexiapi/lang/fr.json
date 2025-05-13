@@ -167,6 +167,7 @@
     "Sip Adress": "Adresse SIP",
     "SIP Domain": "Domaine SIP",
     "Space": "Espace",
+    "Space is expiring in :days days": "Votre Espace expire dans %d jours",
     "Spaces": "Espaces",
     "Statistics": "Statistiques",
     "Subdomain": "Sous-domaine",

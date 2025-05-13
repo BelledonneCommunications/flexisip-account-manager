@@ -61,9 +61,9 @@ php artisan spaces:create-update beta.sip beta.myhost.com "Beta Space"
 
 5. Configure your Spaces.
 
-6. Remove the instance based environnement variables (see **Changed** above) and configure them directly in the spaces using the API or Web Panel.
+6. (Optional) Import the old instance DotEnv environnement variables into a space.
 
-7. (Optional) Import the old instance DotEnv environnement variables into a space.
+7. Remove the instance based environnement variables (see **Changed** above) and configure them directly in the spaces using the API or Web Panel.
 
 ⚠️ Be careful, during this import only the project DotEnv file variables will be imported, other environnement (eg. set in Apache, nginx or Docker) will be ignored.
 

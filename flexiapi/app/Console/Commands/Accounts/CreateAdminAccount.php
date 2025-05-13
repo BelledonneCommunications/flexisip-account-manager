@@ -80,7 +80,6 @@ class CreateAdminAccount extends Command
         $account = new Account;
         $account->username = $username;
         $account->domain = $domain;
-        $account->email = 'admin_test@sip.example.org';
         $account->activated = true;
         $account->user_agent = 'Test';
         $account->ip_address = '0.0.0.0';

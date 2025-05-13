@@ -40,6 +40,11 @@
                     @else
                         <i class="ph">infinity</i>
                     @endif
+
+                    @if ($space->expire_at)
+                        <br />
+                        <small>{{ $space->expire_at->format('d-m-Y') }}</small>
+                    @endif
                 </td>
             </tr>
         @endforeach
