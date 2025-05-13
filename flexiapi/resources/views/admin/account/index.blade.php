@@ -2,12 +2,12 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">users</i> {{ __('Accounts') }}</h1>
+        <h1><i class="ph">users</i> {{ __('Users') }}</h1>
         @if ($space)
             <p>{{ $accounts->count()}} / @if ($space->max_accounts > 0){{ $space->max_accounts }} @else <i class="ph">infinity</i>@endif</p>
         @endif
         <a class="btn secondary oppose" href="{{ route('admin.account.import.create') }}">
-            <i class="ph">download-simple</i>
+            <i class="ph">upload-simple</i>
             {{ __('Import') }}
         </a>
         @if (space()?->intercom_features)
@@ -17,8 +17,8 @@
         </a>
         @endif
         <a class="btn" href="{{ route('admin.account.create') }}">
-            <i class="ph">plus</i>
-            {{ __('Create') }}
+            <i class="ph">user-plus</i>
+            {{ __('New user') }}
         </a>
     </header>
     <div>
@@ -27,7 +27,7 @@
             <input type="hidden" name="order_by" value="{{ request()->get('order_by', '') }}">
             <input type="hidden" name="order_sort" value="{{ request()->get('order_sort', '') }}">
             <div class="search large">
-                <input placeholder="Search by username: +1234, foo_bar…" name="search" type="text"
+                <input placeholder="{{ __('Search by username') }}" name="search" type="text"
                     value="{{ request()->get('search', '') }}">
                 <label for="search">{{ __('Search') }}</label>
             </div>

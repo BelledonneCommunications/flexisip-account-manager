@@ -7,7 +7,7 @@
     <form method="POST" action="{{ route('account.recovery.confirm') }}" accept-charset="UTF-8">
 @csrf
 
-        <p class="large">{{ __('Enter the pin code bellow:') }}</p>
+        <p class="large">{{ __('Enter the code you received below') }}</p>
         <div class="large">
             <input oninput="digitFilled(this)" onfocus="this.value = ''" autofocus class="digit" name="number_1" type="number" min="0" max="9">
             <input oninput="digitFilled(this)" onfocus="this.value = ''" class="digit" name="number_2" type="number" min="0" max="9">

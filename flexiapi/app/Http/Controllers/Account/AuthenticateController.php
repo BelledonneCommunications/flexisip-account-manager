@@ -63,7 +63,7 @@ class AuthenticateController extends Controller
         }
 
         if (!$account) {
-            return redirect()->back()->withErrors(['authentication' => __('Wrong username or password')]);
+            return redirect()->back()->withErrors(['authentication' => __('Incorrect username or password')]);
         }
 
         // Try out the passwords
@@ -77,7 +77,7 @@ class AuthenticateController extends Controller
             }
         }
 
-        return redirect()->back()->withErrors(['authentication' => __('Wrong username or password')]);
+        return redirect()->back()->withErrors(['authentication' => __('Incorrect username or password')]);
     }
 
     public function loginAuthToken(Request $request, ?string $token = null)

@@ -12,9 +12,9 @@
             @csrf
             <div>
                 @if (space()->phone_registration)
-                    <input placeholder="john, +163423..." required="" name="username" type="text"
+                    <input placeholder="{{ __('Username or Phone') }}" required="" name="username" type="text"
                         value="{{ old('username') }}">
-                    <label for="username">{{ __('Username or phone number') }}</label>
+                    <label for="username">{{ __('Username') }}</label>
                 @else
                     <input placeholder="username" required="" name="username" type="text"
                         value="{{ old('username') }}">
@@ -24,7 +24,7 @@
             </div>
             <div class="on_desktop"></div>
             <div>
-                <input placeholder="myPassword" required="" name="password" type="password" value="">
+                <input placeholder="{{ __('Your password') }}" required="" name="password" type="password" value="">
                 <label for="password">{{ __('Password') }}</label>
             </div>
             <div>

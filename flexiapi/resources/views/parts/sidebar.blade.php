@@ -9,7 +9,7 @@
             $items['admin.spaces.me'] = ['title' => __('My Space'), 'icon' => 'globe-hemisphere-west'];
         }
 
-        $items['admin.account.index'] = ['title' => __('Accounts'), 'icon' => 'users'];
+        $items['admin.account.index'] = ['title' => __('Users'), 'icon' => 'users'];
         $items['admin.contacts_lists.index'] = ['title' => __('Contacts Lists'), 'icon' => 'user-rectangle'];
         $items['admin.statistics.show'] = ['title' => __('Statistics'), 'icon' => 'chart-donut'];
         $items['admin.api_keys.index'] = ['title' => __('Settings'), 'icon' => 'gear'];

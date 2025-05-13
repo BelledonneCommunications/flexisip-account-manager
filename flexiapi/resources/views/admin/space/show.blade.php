@@ -31,7 +31,7 @@
     <div class="grid third  ">
         <div class="card">
             <span class="icon"><i class="ph">users</i></span>
-            <h3>{{ __('Accounts') }}</h3>
+            <h3>{{ __('Users') }}</h3>
             <p>
                 {{ $space->accounts()->count() }}
                 /
@@ -57,7 +57,7 @@
 
     <a class="btn secondary oppose small" @if ($space->isFull())disabled @endif href="{{ route('admin.account.create', ['admin' => true, 'domain' => $space->domain]) }}"><i class="ph">user-plus</i> {{ __('New Admin') }}</a>
 
-    <h2>Admins</h2>
+    <h2>{{ __('Admins') }}</h2>
 
     <table>
         <thead>

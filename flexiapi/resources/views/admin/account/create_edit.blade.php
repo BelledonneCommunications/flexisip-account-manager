@@ -21,7 +21,7 @@
         @include('admin.account.parts.tabs')
     @else
         <header>
-            <h1><i class="ph">users</i> {{ __('Create') }}</h1>
+            <h1><i class="ph">users</i> {{ __('New user') }}</h1>
             <a href="{{ route('admin.account.index') }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
         </header>
     @endif

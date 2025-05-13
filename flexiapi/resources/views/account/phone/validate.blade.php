@@ -9,7 +9,7 @@
 
         <div class="large">
             <p>{{ __('A verification code was sent by SMS to :phone.', ['phone' => $phoneChangeCode->phone]) }}</p>
-            <p>{{ __('Enter the pin code bellow:') }}</p>
+            <p>{{ __('Enter the code you received below') }}</p>
         </div>
 
         <div class="large">

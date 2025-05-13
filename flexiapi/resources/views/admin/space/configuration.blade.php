@@ -67,7 +67,7 @@
             @include('parts.errors', ['name' => 'account_proxy_registrar_address'])
         </div>
 
-        <h3 class="large">{{ __('Provisioning') }}</h3>
+        <h3 class="large">{{ __('Remote provisioning') }}</h3>
 
         <div class="large">
             <textarea style="min-height: 200px;" name="custom_provisioning_entries" id="custom_provisioning_entries">{{ $space->custom_provisioning_entries }}</textarea>

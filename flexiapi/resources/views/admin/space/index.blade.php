@@ -6,7 +6,7 @@
     <h1><i class="ph">globe-hemisphere-west</i> {{ __('Spaces') }}</h1>
     <a class="btn oppose" href="{{ route('admin.spaces.create') }}">
         <i class="ph">plus</i>
-        {{ __('Create') }}
+        {{ __('New Space') }}
     </a>
 </header>
 

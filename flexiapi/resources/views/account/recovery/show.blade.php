@@ -11,7 +11,7 @@
                     <div class="large">
                         @if (config('app.recovery_code_expiration_minutes') > 0)
                             <p class="large">
-                                {{ __('The code will be available :minutes minutes.', ['minutes' => config('app.recovery_code_expiration_minutes')]) }}
+                                {{ __('We will send you a verification code to recover your account.') }}
                             </p>
                         @endif
                         @include('parts.errors', ['name' => 'code'])
@@ -35,7 +35,7 @@
                 @elseif($method == 'phone')
                     @if (config('app.recovery_code_expiration_minutes') > 0)
                         <p class="large">
-                            {{ __('The code will be available :minutes minutes.', ['minutes' => config('app.recovery_code_expiration_minutes')]) }}
+                            {{ __('We will send you a verification code to recover your account.') }}
                         </p>
                     @endif
                     <div>

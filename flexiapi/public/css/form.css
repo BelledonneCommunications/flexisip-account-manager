@@ -165,7 +165,8 @@ form label {
 
 form input[type="radio"]~label:after,
 form input[required]+label:after {
-    content: '*';
+    content: '' '*';
+    color: var(--danger-5);
 }
 
 form input:not([type=checkbox])~label,

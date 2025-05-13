@@ -27,14 +27,14 @@
 
         <h3 class="large">{{ __('Features') }}</h3>
 
-        @include('parts.form.toggle', ['object' => $space, 'key' => 'disable_chat_feature', 'label' => __('Chat'), 'reversed' => true])
+        @include('parts.form.toggle', ['object' => $space, 'key' => 'disable_chat_feature', 'label' => __('instant messaging'), 'reversed' => true])
         @include('parts.form.toggle', ['object' => $space, 'key' => 'disable_meetings_feature', 'label' => __('Meeting'), 'reversed' => true])
-        @include('parts.form.toggle', ['object' => $space, 'key' => 'disable_broadcast_feature', 'label' => __('Conference'), 'reversed' => true])
-        @include('parts.form.toggle', ['object' => $space, 'key' => 'hide_settings', 'label' => __('General settings'), 'reversed' => true])
+        @include('parts.form.toggle', ['object' => $space, 'key' => 'disable_broadcast_feature', 'label' => __('Broadcast'), 'reversed' => true])
+        @include('parts.form.toggle', ['object' => $space, 'key' => 'hide_settings', 'label' => __('App settings'), 'reversed' => true])
         @include('parts.form.toggle', ['object' => $space, 'key' => 'hide_account_settings', 'label' => __('Account settings'), 'reversed' => true])
-        @include('parts.form.toggle', ['object' => $space, 'key' => 'disable_call_recordings_feature', 'label' => __('Record calls'), 'reversed' => true])
+        @include('parts.form.toggle', ['object' => $space, 'key' => 'disable_call_recordings_feature', 'label' => __('Call Recording'), 'reversed' => true])
 
-        @include('parts.form.toggle', ['object' => $space, 'key' => 'only_display_sip_uri_username', 'label' => __('Only display usernames (hide SIP addresses)')])
+        @include('parts.form.toggle', ['object' => $space, 'key' => 'only_display_sip_uri_username', 'label' => __('Show usernames only')])
 
         <div class="select">
             <select name="max_account">
@@ -50,7 +50,7 @@
 
         @include('parts.form.toggle', ['object' => $space, 'key' => 'assistant_hide_create_account', 'label' => __('Account creation'), 'reversed' => true])
         @include('parts.form.toggle', ['object' => $space, 'key' => 'assistant_disable_qr_code', 'label' => __('QR Code scanning'), 'reversed' => true])
-        @include('parts.form.toggle', ['object' => $space, 'key' => 'assistant_hide_third_party_account', 'label' => __('Third party SIP'), 'reversed' => true])
+        @include('parts.form.toggle', ['object' => $space, 'key' => 'assistant_hide_third_party_account', 'label' => __('Third-party SIP account'), 'reversed' => true])
 
         <div class="large">
             <input class="btn" type="submit" value="{{ __('Update') }}">

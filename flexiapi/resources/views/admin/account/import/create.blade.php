@@ -20,7 +20,7 @@
 
         <p>{{ __('The file must be in CSV following this template') }}: <a href="{{ route('account.home') }}/accounts_example.csv">example_template.csv</a></p>
 
-        <h4>{{ __('Account') }}</h4>
+        <h4>{{ __('User') }}</h4>
         <p>{{ __('The first line contains the labels') }}</p>
         <ol>
             <li>{{ __('Username') }}* </li>
