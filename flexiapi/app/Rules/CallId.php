@@ -9,7 +9,7 @@ class CallId implements Rule
 {
     public function passes($attribute, $value)
     {
-        return Validator::regex('/^[\w\-]+$/')->validate($value);
+        return Validator::regex('/^[\w\-~]+$/')->validate($value);
     }
 
     public function message()

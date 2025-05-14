@@ -9,7 +9,7 @@ class PnPrid implements Rule
 {
     public function passes($attribute, $value)
     {
-        return $value == null || Validator::regex('/^[\w\-\:]+$/')->validate($value);
+        return $value == null || Validator::regex('/^[\w\_\-\:]+$/')->validate($value);
     }
 
     public function message()
