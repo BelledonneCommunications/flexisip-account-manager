@@ -1,6 +1,6 @@
 # Flexisip Account Manager Changelog
 
-v1.7
+v2.0
 ----
 - Fix FLEXIAPI-205 Remove the deprecated endpoints, compatibility code documentation and tests. Drop the confirmation_key accounts column and activation_expirations table
 - Fix FLEXIAPI-206 Upgrade to Laravel 10, PHP 8.1 minimum and bump all the related dependencies, drop Debian 11 Bullseye

@@ -14,6 +14,6 @@ class PnPrid implements Rule
 
     public function message()
     {
-        return 'The :attribute should be null or contain only alphanumeric, dashes and colon characters';
+        return 'The :attribute should be null or contain only alphanumeric, dashes, underscore and colon characters';
     }
 }

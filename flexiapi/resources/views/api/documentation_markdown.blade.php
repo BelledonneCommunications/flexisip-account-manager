@@ -264,7 +264,7 @@ JSON parameters:
 
 * `pn_provider` **required**, the push notification provider, must be in apns.dev, apns or fcm
 * `pn_param` the push notification parameter, can be null or contain only alphanumeric and underscore characters
-* `pn_prid` the push notification unique id, can be null or contain only alphanumeric, dashes and colon characters
+* `pn_prid` the push notification unique id, can be null or contain only alphanumeric, dashes, underscore and colon characters
 
 ### `POST /account_creation_tokens/using-account-creation-request-token`
 <span class="badge badge-success">Public</span>
@@ -314,7 +314,7 @@ JSON parameters:
 
 * `pn_provider` **required**, the push notification provider, must be in apns.dev, apns or fcm
 * `pn_param` the push notification parameter, can be null or contain only alphanumeric and underscore characters
-* `pn_prid` the push notification unique id, can be null or contain only alphanumeric, dashes and colon characters
+* `pn_prid` the push notification unique id, can be null or contain only alphanumeric, dashes, underscore and colon characters
 
 ## Auth Tokens
 
@@ -839,9 +839,9 @@ JSON parameters:
 
 * `pn_provider` **required**, the push notification provider, must be in `apns.dev`, `apns` or `fcm`
 * `pn_param` the push notification parameter, can be null or contain only alphanumeric and underscore characters
-* `pn_prid` the push notification unique id, can be null or contain only alphanumeric, dashes and colon characters
+* `pn_prid` the push notification unique id, can be null or contain only alphanumeric, dashes, underscore and colon characters
 * `type` **required**, must be in `background`, `message` or `call`
-* `call_id` a Call ID, must have only alphanumeric and dashes characters
+* `call_id` a Call ID, must have only alphanumeric, tilde and dashes characters
 
 ## Phone Countries
 

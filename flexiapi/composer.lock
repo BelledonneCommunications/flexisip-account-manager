@@ -1324,16 +1324,16 @@
         },
         {
             "name": "giggsey/libphonenumber-for-php-lite",
-            "version": "9.0.4",
+            "version": "9.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giggsey/libphonenumber-for-php-lite.git",
-                "reference": "6b36e32fddce37738c4f6df66e49dd9a2475841c"
+                "reference": "342981f32855240387c44790a4d92ec8ae3153ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php-lite/zipball/6b36e32fddce37738c4f6df66e49dd9a2475841c",
-                "reference": "6b36e32fddce37738c4f6df66e49dd9a2475841c",
+                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php-lite/zipball/342981f32855240387c44790a4d92ec8ae3153ca",
+                "reference": "342981f32855240387c44790a4d92ec8ae3153ca",
                 "shasum": ""
             },
             "require": {
@@ -1398,7 +1398,7 @@
                 "issues": "https://github.com/giggsey/libphonenumber-for-php-lite/issues",
                 "source": "https://github.com/giggsey/libphonenumber-for-php-lite"
             },
-            "time": "2025-04-28T07:26:55+00:00"
+            "time": "2025-05-08T07:10:02+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -5533,16 +5533,16 @@
         },
         {
             "name": "respect/validation",
-            "version": "2.4.1",
+            "version": "2.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Respect/Validation.git",
-                "reference": "d1575eb4dde7b06f8dbc5e8d84dffb87931a40bd"
+                "reference": "7f4b3b3ec3ccdf330dfc4567bb43698018f3562a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Respect/Validation/zipball/d1575eb4dde7b06f8dbc5e8d84dffb87931a40bd",
-                "reference": "d1575eb4dde7b06f8dbc5e8d84dffb87931a40bd",
+                "url": "https://api.github.com/repos/Respect/Validation/zipball/7f4b3b3ec3ccdf330dfc4567bb43698018f3562a",
+                "reference": "7f4b3b3ec3ccdf330dfc4567bb43698018f3562a",
                 "shasum": ""
             },
             "require": {
@@ -5552,7 +5552,7 @@
             },
             "require-dev": {
                 "egulias/email-validator": "^3.0",
-                "giggsey/libphonenumber-for-php-lite": "^8.13",
+                "giggsey/libphonenumber-for-php-lite": "^8.13 || ^9.0",
                 "malukenho/docheader": "^1.0",
                 "mikey179/vfsstream": "^1.6",
                 "phpstan/phpstan": "^1.9",
@@ -5595,9 +5595,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Respect/Validation/issues",
-                "source": "https://github.com/Respect/Validation/tree/2.4.1"
+                "source": "https://github.com/Respect/Validation/tree/2.4.3"
             },
-            "time": "2025-01-11T00:06:34+00:00"
+            "time": "2025-05-14T12:14:59+00:00"
         },
         {
             "name": "rvxlab/hcaptcha",
@@ -9900,16 +9900,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.12.2",
+            "version": "3.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "6d4cf6032d4b718f168c90a96e36c7d0eaacb2aa"
+                "reference": "65ff2489553b83b4597e89c3b8b721487011d186"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/6d4cf6032d4b718f168c90a96e36c7d0eaacb2aa",
-                "reference": "6d4cf6032d4b718f168c90a96e36c7d0eaacb2aa",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/65ff2489553b83b4597e89c3b8b721487011d186",
+                "reference": "65ff2489553b83b4597e89c3b8b721487011d186",
                 "shasum": ""
             },
             "require": {
@@ -9980,7 +9980,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-04-13T04:10:18+00:00"
+            "time": "2025-05-11T03:36:00+00:00"
         },
         {
             "name": "symfony/config",

@@ -14,6 +14,6 @@ class CallId implements Rule
 
     public function message()
     {
-        return 'The :attribute should only contain only alphanumeric and dashes characters';
+        return 'The :attribute should only contain only alphanumeric, tilde and dashes characters';
     }
 }
