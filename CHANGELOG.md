@@ -37,6 +37,7 @@ v2.0
 - Fix FLEXIAPI-293 Remove the (long) outdated general documentation
 - Fix FLEXIAPI-224 Add a console script to send Space Expiration emails
 - Fix FLEXIAPI-297 Fix PrId and CallId validations
+- Fix FLEXIAPI-305 Add specific error page for Space Expiration
 
 v1.6
 ----

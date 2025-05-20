@@ -83,6 +83,7 @@
     "Expired": "Expiré",
     "Export": "Exporter",
     "External Account": "Compte Externe",
+    "Expired Space": "Espace expiré",
     "Features": "Fonctionnalités",
     "Fill to change": "Remplir pour changer",
     "Fill the related columns if you want to add an external account as well": "Remplissez également les colonnes suivantes si vous souhaitez ajouter un compte externe",
@@ -217,5 +218,6 @@
     "You are going to permanently delete your account. Please enter your complete SIP address to confirm.": "Vous allez détruire défitivement votre compte. Veuillez entrer votre addresse SIP complète pour confirmer.",
     "You can now continue your registration process in the application": "Vous pouvez maintenant continuer le processus d'inscription dans l'application",
     "You didn't receive the code?": "Vous n'avez pas reçu le code ?",
-    "Your password was updated properly.": "Votre mot de passe a été mis à jour."
+    "Your password was updated properly.": "Votre mot de passe a été mis à jour.",
+    "Your space has expired. Access to your interface is now disabled, and your users can no longer benefit from the service. To reactivate your space, please contact your account manager.": "Votre espace est arrivé à expiration. L’accès à votre interface est désormais désactivé, et vos utilisateurs ne peuvent plus bénéficier du service. Pour réactiver votre espace, veuillez contacter votre responsable de compte."
 }

@@ -26,7 +26,7 @@ class SpaceCheck
             Config::set('app.sip_domain', $space->domain);
 
             if ($request->user() && !$request->user()->superAdmin && $space?->isExpired()) {
-                abort(403, 'The related Space has expired');
+                abort($request->expectsJson() ? 403 : 490, 'The related Space has expired');
             }
 
             // Custom email integration

@@ -138,7 +138,7 @@ The `POST /api/messages` endpoint allows you to send messages on the SIP network
 
     APP_LINPHONE_DAEMON_UNIX_PATH=/tmp/ld
 
-If you have issues connecting to that socket check the [`systemd restrictions`](#systemd-restrictions) part of this document.
+If you have issues connecting to that socket check the [`systemd restrictions`](INSTALL.md#systemd-restrictions) part of this document.
 
 The socket is located in the `/tmp` directory.
 
