@@ -2,7 +2,7 @@
 
 FlexiAPI relies on [DotEnv](https://github.com/vlucas/phpdotenv) to be configured. This configuration can be accessed using the existing `.env` file that can be itself overwritten by an environnement variables.
 
-Thoses variables can then be set using Docker-Compose, a bash script or a web-server.
+Those variables can then be set using Docker-Compose, a bash script or a web-server.
 
 If you're installing FlexiAPI from the RedHat or Debian package you can find the configuration file at `/etc/flexisip-account-manager/flexiapi.env`.
 
@@ -33,7 +33,7 @@ To know more about the web server configuration part, you can directly [visit th
 
 # 3. .env file configuration
 
-Complete all the variables in the `.env` file (from the `.env.example` one if you setup the instance manually) or by overwritting them in your Docker or web-server configuration.
+Complete all the variables in the `.env` file (from the `.env.example` one if you setup the instance manually) or by overwriting them in your Docker or web-server configuration.
 
 ## 3.1. Mandatory `APP_ROOT_HOST` variable
 
@@ -74,7 +74,7 @@ For example:
 
 ## 5. Create a first administrator and finish the setup
 
-Create a first administator account:
+Create a first administrator account:
 
     php artisan accounts:create-admin-account {-u|username=} {-p|password=} {-d|domain=}
 
