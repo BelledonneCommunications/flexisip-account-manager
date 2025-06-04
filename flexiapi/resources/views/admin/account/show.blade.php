@@ -89,7 +89,7 @@
             </h3>
             @if ($account->external)
                 @if ($account->external->username)
-                    <p><i class="ph">user</i> {{ __('Usernale') }}: {{ $account->external->username }}</p>
+                    <p><i class="ph">user</i> {{ __('Username') }}: {{ $account->external->username }}</p>
                 @endif
                 @if ($account->external->domain)
                     <p><i class="ph">hard-drive</i> {{ __('Domain') }}: {{ $account->external->domain }}</p>

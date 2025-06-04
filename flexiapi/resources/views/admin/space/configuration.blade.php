@@ -67,6 +67,13 @@
             @include('parts.errors', ['name' => 'account_proxy_registrar_address'])
         </div>
 
+        <div>
+            <input name="account_realm" id="account_realm" placeholder="server.tld" value="{{ $space->account_realm }}">
+            <label for="account_realm">Account realm</label>
+            <span class="supporting">A custom realm for the Space accounts</span>
+            @include('parts.errors', ['name' => 'account_realm'])
+        </div>
+
         <h3 class="large">{{ __('Remote provisioning') }}</h3>
 
         <div class="large">

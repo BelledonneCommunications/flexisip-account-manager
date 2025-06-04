@@ -95,19 +95,19 @@ Once one account is declared as administrator, you can directly configure the ot
 
 ### Seed liblinphone test accounts
 
-You can also seed the tables with test accounts for the liblinphone test suite with the following command (check LiblinphoneTesterAccoutSeeder for the JSON syntax):
+You can also seed the tables with test accounts for the liblinphone test suite with the following command (check LiblinphoneTesterAccountSeeder for the JSON syntax):
 
     php artisan accounts:seed /path/to/accounts.json
 
 ## SMS templates
 
-To send SMS to the USA some providers need to validate their templates before transfering them, see [Sending SMS messages to the USA - OVH](https://help.ovhcloud.com/csm/en-ie-sms-sending-sms-to-usa?id=kb_article_view&sysparm_article=KB0051359).
+To send SMS to the USA some providers need to validate their templates before transferring them, see [Sending SMS messages to the USA - OVH](https://help.ovhcloud.com/csm/en-ie-sms-sending-sms-to-usa?id=kb_article_view&sysparm_article=KB0051359).
 
 Here are the currently used SMS templates in the app to declare in your provider panel:
 - Validation code: `Your #APP_NAME# validation code is #CODE#`. Sent to validate the phone change by SMS.
 - Validation code with expiration: `Your #APP_NAME# validation code is #CODE#. The code is available for #CODE_MINUTES# minutes`. Sent to validate the phone change by SMS, include an expiration time.
 
-## Custom email templaces
+## Custom email templates
 
 Some email templates can be customized.
 
