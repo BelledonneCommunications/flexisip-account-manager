@@ -28,7 +28,7 @@
 
         <div class="large" style="margin-top: 2rem;">
             <p>
-                {{ __("You didn't receive the code?"") }}
+                {{ __("You didn't receive the code?") }}
                 <a class="btn secondary" href="{{ route('account.phone.change') }}">{{ __('Resend') }}</a>
             </p>
         </div>
