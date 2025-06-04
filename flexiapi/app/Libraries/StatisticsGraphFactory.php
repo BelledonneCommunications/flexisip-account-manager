@@ -57,7 +57,7 @@ class StatisticsGraphFactory
                 $fromQuery = StatisticsMessage::query();
                 $toQuery = StatisticsMessage::query();
 
-                if (!Auth::user()?->isAdmin) {
+                if (!Auth::user()?->admin) {
                     $fromQuery->where('from_domain', space()->domain);
                     $toQuery->toDomain($this->domain);
                 } elseif ($this->domain) {
@@ -126,7 +126,7 @@ class StatisticsGraphFactory
                 // Accounts doesn't have a from and to
                 $this->domain = $this->domain ?? $this->fromDomain;
 
-                if (!Auth::user()?->isAdmin) {
+                if (!Auth::user()?->admin) {
                     $this->data->where('domain', space()->domain);
                 } elseif ($this->domain) {
                     $this->data->where('domain', $this->domain);
