@@ -59,8 +59,8 @@ class RecoveryController extends Controller
         $rules = [
             'email' => 'required_without:phone|email|exists:accounts,email',
             'phone' => 'required_without:email|starts_with:+',
-            'h-captcha-response'  => captchaConfigured() ? 'required_if:email|HCaptcha' : '',
-            'account_recovery_token' => 'required_if:phone',
+            'h-captcha-response'  => captchaConfigured() ? 'required_with:email|HCaptcha' : '',
+            'account_recovery_token' => 'required_with:phone',
         ];
 
         $account = null;
