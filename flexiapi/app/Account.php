@@ -339,6 +339,11 @@ class Account extends Authenticatable
         return null;
     }
 
+    public function getProvisioningLinphoneUriAttribute(): string
+    {
+        return str_replace('https://', 'linphone-config:', route('provisioning.provision', ['provisioning_token' => $this->provisioning_token]));
+    }
+
     public static function dtmfProtocolsRule()
     {
         return implode(',', array_keys(self::$dtmfProtocols));
