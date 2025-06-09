@@ -16,7 +16,7 @@
             {{ __('Types') }}
         </a>
         @endif
-        <a class="btn" href="{{ route('admin.account.create') }}">
+        <a class="btn" @if ($space && $space->isFull())disabled @endif href="{{ route('admin.account.create') }}">
             <i class="ph">user-plus</i>
             {{ __('New user') }}
         </a>
