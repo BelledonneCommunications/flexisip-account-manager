@@ -68,7 +68,7 @@
         </div>
 
         <div>
-            <input name="account_realm" id="account_realm" placeholder="server.tld" value="{{ $space->account_realm }}">
+            <input name="account_realm" @if ($space->accounts()->count() > 0)disabled @endif id="account_realm" placeholder="server.tld" value="{{ $space->account_realm }}">
             <label for="account_realm">Account realm</label>
             <span class="supporting">A custom realm for the Space accounts</span>
             @include('parts.errors', ['name' => 'account_realm'])

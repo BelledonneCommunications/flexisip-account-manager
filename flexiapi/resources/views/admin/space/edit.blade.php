@@ -27,7 +27,7 @@
 
         <h3 class="large">{{ __('Features') }}</h3>
 
-        @include('parts.form.toggle', ['object' => $space, 'key' => 'disable_chat_feature', 'label' => __('instant messaging'), 'reversed' => true])
+        @include('parts.form.toggle', ['object' => $space, 'key' => 'disable_chat_feature', 'label' => __('Instant Messaging'), 'reversed' => true])
         @include('parts.form.toggle', ['object' => $space, 'key' => 'disable_meetings_feature', 'label' => __('Meeting'), 'reversed' => true])
         @include('parts.form.toggle', ['object' => $space, 'key' => 'disable_broadcast_feature', 'label' => __('Broadcast'), 'reversed' => true])
         @include('parts.form.toggle', ['object' => $space, 'key' => 'hide_settings', 'label' => __('App settings'), 'reversed' => true])

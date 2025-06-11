@@ -70,8 +70,6 @@ class AuthenticateDigestOrKey
                           ->where('domain', $domain)
                           ->firstOrFail();
 
-        $resolvedRealm = space()?->account_realm ?? $domain;
-
         // DIGEST authentication
 
         if ($request->header('Authorization')) {
@@ -95,7 +93,7 @@ class AuthenticateDigestOrKey
                 'opaque'    => 'required|in:'.$this->getOpaque(),
                 //'uri'       => 'in:/'.$request->path(),
                 'qop'       => 'required|in:auth',
-                'realm'     => 'required|in:'.$resolvedRealm,
+                'realm'     => 'required|in:'.$account->resolvedRealm,
                 'nc'        => 'required',
                 'cnonce'    => 'required',
                 'algorithm' => [
@@ -128,7 +126,7 @@ class AuthenticateDigestOrKey
 
             // Hashing and checking
             $a1 = $password->algorithm == 'CLRTXT'
-                ? hash($hash, $account->username.':'.$resolvedRealm.':'.$password->password)
+                ? hash($hash, $account->username.':'.$account->resolvedRealm.':'.$password->password)
                 : $password->password; // username:realm/domain:password
             $a2 = hash($hash, $request->method().':'.$auth['uri']);
 
@@ -199,21 +197,20 @@ class AuthenticateDigestOrKey
     private function generateAuthHeaders(Account $account, string $nonce): array
     {
         $headers = [];
-        $resolvedRealm = space()?->account_realm ?? $account->domain;
 
         foreach ($account->passwords as $password) {
             if ($password->algorithm == 'CLRTXT') {
                 foreach (array_keys(passwordAlgorithms()) as $algorithm) {
                     array_push(
                         $headers,
-                        $this->generateAuthHeader($resolvedRealm, $algorithm, $nonce)
+                        $this->generateAuthHeader($account->resolvedRealm, $algorithm, $nonce)
                     );
                 }
                 break;
             } elseif (\in_array($password->algorithm, array_keys(passwordAlgorithms()))) {
                 array_push(
                     $headers,
-                    $this->generateAuthHeader($resolvedRealm, $password->algorithm, $nonce)
+                    $this->generateAuthHeader($account->resolvedRealm, $password->algorithm, $nonce)
                 );
             }
         }
