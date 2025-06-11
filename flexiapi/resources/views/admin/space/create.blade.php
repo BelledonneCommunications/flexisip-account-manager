@@ -44,6 +44,14 @@
 
         @include('parts.form.toggle', ['object' => $space, 'key' => 'super', 'label' => __('Super space'), 'supporting' => __('All the admins will be super admins')])
 
+        <div>
+            <input placeholder="realp.sip" name="account_realm" type="text" pattern="{{ $space::DOMAIN_REGEX}}" value="{{ $space->account_realm ?? old('account_realm') }}">
+            <label for="username">{{ __('Account realm') }}</label>
+            @include('parts.errors', ['name' => 'account_realm'])
+            <span class="supporting">{{ __('Leave empty if similar to the domain') }}</span>
+        </div>
+
+
         <div class="large">
             <input class="btn" type="submit" value="{{ __('Create') }}">
         </div>

@@ -501,6 +501,16 @@ Unblock an account.
 
 Provision an account by generating a fresh `provisioning_token`.
 
+### `POST /accounts/{id}/send_provisioning_email`
+<span class="badge badge-warning">Admin</span>
+
+Send a provisioning email to the account.
+
+### `POST /accounts/{id}/send_reset_password_email`
+<span class="badge badge-warning">Admin</span>
+
+Send a password reset email to the account.
+
 ## Accounts email
 
 ### `POST /accounts/me/email/request`

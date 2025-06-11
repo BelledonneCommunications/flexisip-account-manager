@@ -21,14 +21,19 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 use App\Account;
 use App\AccountTombstone;
 use App\AccountType;
 use App\ContactsList;
+use App\ResetPasswordEmailToken;
 use App\Http\Requests\Account\Create\Api\AsAdminRequest;
 use App\Http\Requests\Account\Update\Api\AsAdminRequest as ApiAsAdminRequest;
+use App\Mail\Provisioning;
+use App\Mail\ResetPassword;
 use App\Services\AccountService;
 use App\Space;
 
@@ -197,5 +202,37 @@ class AccountController extends Controller
         }
 
         return Account::findOrFail($accountId)->contactsLists()->detach($contactsListId);
+    }
+
+    /**
+     * Emails
+     */
+
+    public function sendProvisioningEmail(int $accountId)
+    {
+        $account = Account::findOrFail($accountId);
+
+        if (!$account->email) abort(403, 'No email configured');
+
+        $account->provision();
+
+        Mail::to($account)->send(new Provisioning($account));
+
+        Log::channel('events')->info('API: Sending provisioning email', ['id' => $account->identifier]);
+    }
+
+    public function sendResetPasswordEmail(int $accountId)
+    {
+        $account = Account::findOrFail($accountId);
+
+        if (!$account->email) abort(403, 'No email configured');
+
+        $resetPasswordEmail = new ResetPasswordEmailToken;
+        $resetPasswordEmail->account_id = $account->id;
+        $resetPasswordEmail->token = Str::random(16);
+        $resetPasswordEmail->email = $account->email;
+        $resetPasswordEmail->save();
+
+        Mail::to($account)->send(new ResetPassword($account));
     }
 }

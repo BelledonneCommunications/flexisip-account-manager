@@ -67,12 +67,14 @@ class SpaceController extends Controller
             'domain' => ['required', 'unique:spaces', new Domain()],
             'host' => 'nullable|regex:/'. Space::HOST_REGEX . '/',
             'full_host' => ['required', 'unique:spaces,host', new Domain()],
+            'account_realm' => [new Domain()],
         ]);
 
         $space = new Space();
         $space->name = $request->get('name');
         $space->domain = $request->get('domain');
         $space->host = $request->get('full_host');
+        $space->account_realm = $request->get('account_realm');
         $space->save();
 
         return redirect()->route('admin.spaces.index');
@@ -163,7 +165,11 @@ class SpaceController extends Controller
         $space->confirmed_registration_text = $request->get('confirmed_registration_text');
         $space->newsletter_registration_address = $request->get('newsletter_registration_address');
         $space->account_proxy_registrar_address = $request->get('account_proxy_registrar_address');
-        $space->account_realm = $request->get('account_realm');
+
+        if ($space->accounts()->count() == 0) {
+            $space->account_realm = $request->get('account_realm');
+        }
+
         $space->custom_provisioning_entries = $request->get('custom_provisioning_entries');
         $space->custom_provisioning_overwrite_all = getRequestBoolean($request, 'custom_provisioning_overwrite_all');
         $space->provisioning_use_linphone_provisioning_header = getRequestBoolean($request, 'provisioning_use_linphone_provisioning_header');

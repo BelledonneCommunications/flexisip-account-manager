@@ -38,6 +38,14 @@ v2.0
 - Fix FLEXIAPI-224 Add a console script to send Space Expiration emails
 - Fix FLEXIAPI-297 Fix PrId and CallId validations
 - Fix FLEXIAPI-305 Add specific error page for Space Expiration
+- Fix FLEXIAPI-169 Added missing selinux label to log files and storage directory
+- Fix FLEXIAPI-313 Fix the admin device deletion link, recover the missing...
+- Fix FLEXIAPI-318 Fix email recovery validation
+- Fix FLEXIAPI-319 Fix the admin device deletion link, recover the missing method
+- Fix FLEXIAPI-321 Disable the account creation button when the Space is full for admins
+- Fix FLEXIAPI-322 Api Keys documentation
+- Fix FLEXIAPI-328 Set realm on Space creation, limit the update if some accounts are present
+- Fix FLEXIAPI-325 Add endpoints to send the password reset and provisioning emails
 
 v1.6
 ----
