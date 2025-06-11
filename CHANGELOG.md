@@ -45,6 +45,7 @@ v2.0
 - Fix FLEXIAPI-321 Disable the account creation button when the Space is full for admins
 - Fix FLEXIAPI-322 Api Keys documentation
 - Fix FLEXIAPI-328 Set realm on Space creation, limit the update if some accounts are present
+- Fix FLEXIAPI-325 Add endpoints to send the password reset and provisioning emails
 
 v1.6
 ----

@@ -669,6 +669,49 @@ class ApiAccountTest extends TestCase
             ->json('GET', '/api/accounts/me');
     }
 
+    public function testSendProvisioningEmail()
+    {
+        $password = Password::factory()->create();
+        $account = $password->account;
+
+        $admin = Account::factory()->admin()->create();
+        $admin->generateUserApiKey();
+        $admin->save();
+
+        $this->keyAuthenticated($admin)
+            ->json('POST', $this->route . '/' . $account->id . '/send_provisioning_email')
+            ->assertStatus(403);
+
+        $account->email = 'test@email.com';
+        $account->save();
+
+        $this->keyAuthenticated($admin)
+            ->json('POST', $this->route . '/' . $account->id . '/send_provisioning_email')
+            ->assertStatus(200);
+    }
+
+    public function testSendResetPasswordEmail()
+    {
+        $password = Password::factory()->create();
+        $account = $password->account;
+
+        $admin = Account::factory()->admin()->create();
+        $admin->generateUserApiKey();
+        $admin->save();
+
+        $this->keyAuthenticated($admin)
+            ->json('POST', $this->route . '/' . $account->id . '/send_reset_password_email')
+            ->assertStatus(403);
+
+        $account->email = 'test@email.com';
+        $account->save();
+
+        $this->keyAuthenticated($admin)
+            ->json('POST', $this->route . '/' . $account->id . '/send_reset_password_email')
+            ->assertStatus(200);
+    }
+
+
     public function testEditAdmin()
     {
         $password = Password::factory()->create();

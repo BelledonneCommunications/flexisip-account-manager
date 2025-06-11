@@ -118,6 +118,8 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
             Route::post('{account_id}/block', 'block');
             Route::post('{account_id}/unblock', 'unblock');
             Route::get('{account_id}/provision', 'provision');
+            Route::post('{account_id}/send_provisioning_email', 'sendProvisioningEmail');
+            Route::post('{account_id}/send_reset_password_email', 'sendResetPasswordEmail');
 
             Route::post('/', 'store');
             Route::put('{account_id}', 'update');
