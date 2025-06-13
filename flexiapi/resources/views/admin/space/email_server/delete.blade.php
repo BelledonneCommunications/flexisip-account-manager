@@ -12,7 +12,7 @@
     <li class="breadcrumb-item">
         <a href="{{ route('admin.spaces.integration', $space) }}">{{ __('Integration') }}</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">{{ __('Email Server') }} - {{ __('Delete' )}}</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ __('Email Server') }} - {{ __('Delete' ) }}</li>
 @endsection
 
 @section('content')

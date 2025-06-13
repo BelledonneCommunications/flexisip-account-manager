@@ -1,13 +1,13 @@
 @extends('mails.layout')
 
 @section('content')
-# Reset your password on {{ $account->space->name }}
+# {{ __('Reset your password') }}
 
-Hello {{ $account->identifier }},
+{{ __('Hello') }} {{ $account->identifier }},
 
-You are invited to reset your {{ $account->identifier }} account password on {{ $account->space->name }} via your email account.
+{{ __('We received a request to reset your password for your account on :space.', ['space' => $account->space->name]) }}
 
-The following link will be valid for {{ config('app.reset_password_email_token_expiration_minutes')/60 }} hours.
+{{ __('Click the button below to choose a new password:') }}
 
 [{{ __('Reset my password') }}]({{ route('account.reset_password_email.change', $account->currentResetPasswordEmailToken->token) }})
 

@@ -40,7 +40,7 @@ class Provisioning extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->account->space->name . ': '. __('Provisioning of your device'),
+            subject: __('Welcome to :space: Start using your account today', ['space' => $this->account->space->name,]),
         );
     }
 

@@ -1,20 +1,16 @@
 @extends('mails.layout')
 
 @section('content')
-# Authenticate on {{ $account->space->name }}
+# {{ __('Account Recovery Request') }}
 
-Hello {{ $account->identifier }},
+{{ __('We received a request to recover your account on :space', ['Space' =>  $space->name]) }}
 
-You are trying to authenticate to {{ $account->space->name }} using your email account.
-
-Please enter the code bellow to finish the authentication process.
+{{ __('To proceed, please enter the verification code below:') }}
 
 ## {{ $account->recovery_code }}
 
 @if (config('app.recovery_code_expiration_minutes') > 0)
-The code is only available {{ config('app.recovery_code_expiration_minutes') }} minutes.
+{{ __('This code is valid for :minutes minutes.', ['minutes' => config('app.recovery_code_expiration_minutes')]) }}
 @endif
-
-@include('mails.parts.provisioning')
 
 @endsection

@@ -1,13 +1,16 @@
 @extends('mails.layout')
 
 @section('content')
-# Account registration on  {{ $account->space->name }}
+# {{ __('Welcome to :space', ['space' => $account->space->name]) }}
 
-Hello {{ $account->identifier }},
+{{ __('Thank you for registering on :space.', ['space' => $account->space->name]) }}
 
-You just created an account on {{ $account->space->name }} using your email account.
-
-Please enter the following code on the confirmation page:
+{{ __('To complete your registration, please enter the verification code below in the registration form:') }}
 
 ## {{ $account->emailChangeCode()->first()->code }}
+
+@if (config('app.recovery_code_expiration_minutes') > 0)
+{{ __('This code is valid for :minutes minutes.', ['minutes' => config('app.recovery_code_expiration_minutes')]) }}
+@endif
+
 @endsection

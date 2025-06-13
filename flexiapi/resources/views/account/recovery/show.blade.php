@@ -53,7 +53,7 @@
                 @endif
 
                 <div class="large">
-                    <input class="btn oppose" type="submit" value="{{ __('Send')}}">
+                    <input class="btn oppose" type="submit" value="{{ __('Send') }}">
                 </div>
             </form>
         </div>

@@ -23,7 +23,10 @@ class ExpiringSpace extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->space->name . ': '. __('Space is expiring in :days days', ['days' => $this->space->daysLeft]),
+            subject: __('Your space :space is expiring in :count days', [
+                'space' => $this->space->name,
+                'count' => $this->space->daysLeft,
+            ]),
         );
     }
 

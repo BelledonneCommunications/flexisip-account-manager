@@ -40,7 +40,7 @@ class RegisterValidation extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->account->space->name . ': '. __('Account registered'),
+            subject: $this->account->space->name . ': '. __('Confirm your registration'),
         );
     }
 
