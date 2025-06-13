@@ -8,7 +8,7 @@
 
         <p>{{ __('Your password was updated properly.') }}</p>
         <p>
-            <a class="btn" href="{{ route('account.login')}}">{{ __('Authenticate') }}</a>
+            <a class="btn" href="{{ route('account.login') }}">{{ __('Authenticate') }}</a>
         </p>
     </section>
 

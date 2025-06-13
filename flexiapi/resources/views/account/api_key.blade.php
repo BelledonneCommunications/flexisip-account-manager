@@ -21,7 +21,7 @@
                 <div>
                     <input type="text" readonly value="{{ $account->apiKey->key }}">
                     <label>Key</label>
-                    <small>Can only be used from the following ip: {{ $account->apiKey->ip }} | {{ __('Requests ')}} {{ $account->apiKey->requests }}</small>
+                    <small>Can only be used from the following ip: {{ $account->apiKey->ip }} | {{ __('Requests ') }} {{ $account->apiKey->requests }}</small>
                 </div>
             </form>
         @endif

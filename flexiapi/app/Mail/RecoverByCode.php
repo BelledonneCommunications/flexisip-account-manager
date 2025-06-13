@@ -40,7 +40,7 @@ class RecoverByCode extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->account->space->name . ': '. __('Account recovery'),
+            subject: $this->account->space->name . ': '. __('Your account recovery code'),
         );
     }
 

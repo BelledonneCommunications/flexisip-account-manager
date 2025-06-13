@@ -40,7 +40,7 @@ class NewsletterRegistration extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->account->space->name . ': '. __('Newsletter registration confirmed'),
+            subject: $this->account->space->name . ': '. __('New newsletter subscription'),
         );
     }
 

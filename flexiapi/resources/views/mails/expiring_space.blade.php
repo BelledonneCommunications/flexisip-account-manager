@@ -1,14 +1,16 @@
 @extends('mails.layout')
 
 @section('content')
-# {{ $space->name }} is expiring in {{ $space->daysLeft }} days
+# {{ __('Your space :space is expiring in :count days', [ 'space' => $space->name, 'count' => $space->daysLeft]) }}
 
-You are one of the administrator of the {{ $space->name }} space configured on our service.
+{{ __('Hello') }},
 
-We inform you that this Space is officialy expiring on **{{ $space->expire_at->format('d-m-Y') }}**.
+{{ __('You are one of the administrators of the :space space configured on our service.', ['space' => $space->name]) }}
 
-After that day you and your registered users will not be able to use the features provided by your subscription anymore.
+{{ __('We inform you that this space will expire on :date, in accordance with the expiration date defined in your subscription.',  [ 'date' => $space->expire_at->format('d-m-Y')]) }}.
 
-Be sure to renew your subscription if you would like to continue to use our services.
+{{ __('To ensure the continuity of your services (SIP calls, user accounts, configurations, etc.), we recommend renewing or updating your subscription before the expiration date.') }}
+
+{{ __('If you have any questions or need assistance, feel free to contact our support team.') }}
 
 @endsection

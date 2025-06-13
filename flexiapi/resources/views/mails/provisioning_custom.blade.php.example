@@ -1,9 +1,9 @@
 @extends('mails.layout')
 
 @section('content')
-# Welcome to {{ space()->name }}
+# {{ __('Welcome to :space', ['space' => space()->name]) }}
 
-Hello {{ $account->identifier }},
+{{ __('Hello') }} {{ $account->identifier }},
 
 @include('mails.parts.provisioning')
 @endsection
