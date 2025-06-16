@@ -55,8 +55,22 @@ class AccountImportController extends Controller
             'domain' => 'required|exists:accounts'
         ]);
 
-        $lines = $this->csvToCollection($request->file('csv'));
         $domain = $request->get('domain');
+
+        /**
+         * General formating checking
+         */
+        $csv = fopen($request->file('csv'), 'r');
+        $line = fgets($csv);
+        fclose($csv);
+
+        $lines = collect();
+        $this->errors['Wrong file format'] = "The number of columns doesn't matches the reference file. The first MUST be the same as the reference file";
+
+        if ($line == "Username,Password,Role,Status,Phone,Email,External Username,External Domain,External Password,External Realm, External Registrar,External Outbound Proxy,External Protocol\n") {
+            $lines = $this->csvToCollection($request->file('csv'));
+            unset($this->errors['Wrong file format']);
+        }
 
         /**
          * Error checking
@@ -314,6 +328,12 @@ class AccountImportController extends Controller
         $i = 1;
         while (!feof($csv)) {
             if ($line = fgetcsv($csv, 1000, ',')) {
+                if (count($line) != 13) {
+                    $this->errors['Parsing error at line ' . $i] = 'The number of columns is incorrect';
+                    $i++;
+                    continue;
+                }
+
                 $lines->push((object)[
                     'line' => $i,
                     'username' => !empty($line[0]) ? $line[0] : null,
@@ -329,7 +349,6 @@ class AccountImportController extends Controller
                     'external_registrar' => !empty($line[10]) ? $line[10] : null,
                     'external_outbound_proxy' => !empty($line[11]) ? $line[11] : null,
                     'external_protocol' => $line[12],
-
                 ]);
 
                 $i++;
