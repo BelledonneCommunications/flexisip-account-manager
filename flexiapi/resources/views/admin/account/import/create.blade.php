@@ -18,7 +18,7 @@
             <li>{{ __('Import') }}</li>
         </ol>
 
-        <p>{{ __('The file must be in CSV following this template') }}: <a href="{{ route('account.home') }}/accounts_example.csv">example_template.csv</a></p>
+        <p>{{ __('The file MUST be in CSV following this template') }}: <a href="{{ route('account.home') }}/accounts_example.csv">example_template.csv</a></p>
 
         <h4>{{ __('User') }}</h4>
         <p>{{ __('The first line contains the labels') }}</p>
