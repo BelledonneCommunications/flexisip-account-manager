@@ -3,9 +3,6 @@
 @section('breadcrumb')
     @include('admin.account.parts.breadcrumb_accounts_index')
     @include('admin.account.parts.breadcrumb_accounts_show', ['account' => $account])
-    <li class="breadcrumb-item">
-        <a href="{{ route('admin.account.device.index', $account) }}">Devices</a>
-    </li>
     <li class="breadcrumb-item active" aria-current="page">{{ __('Delete') }}</li>
 @endsection
 
