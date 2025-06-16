@@ -46,6 +46,8 @@ v2.0
 - Fix FLEXIAPI-322 Api Keys documentation
 - Fix FLEXIAPI-328 Set realm on Space creation, limit the update if some accounts are present
 - Fix FLEXIAPI-325 Add endpoints to send the password reset and provisioning emails
+- Fix FLEXIAPI-332 Check if the first line was untouched and that the number of columns is exact on each lines
+- Fix FLEXIAPI-329 Use correct routes for accounts devices
 
 v1.6
 ----

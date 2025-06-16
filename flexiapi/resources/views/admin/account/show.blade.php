@@ -147,7 +147,7 @@
                             <tr>
                                 <td class="line">{{ $device->user_agent }}</td>
                                 <td class="actions">
-                                    <a type="button" class="btn small tertiary" href="{{ route('admin.account.device.delete', [$device->uuid]) }}">
+                                    <a type="button" class="btn small tertiary" href="{{ route('admin.account.device.delete', [$account->id, $device->uuid]) }}">
                                         <i class="ph">trash</i>
                                     </a>
                                 </td>

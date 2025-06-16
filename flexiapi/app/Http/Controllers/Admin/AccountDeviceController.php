@@ -62,6 +62,6 @@ class AccountDeviceController extends Controller
 
         $connector->deleteDevice($account->identifier, $request->get('uuid'));
 
-        return redirect()->route('admin.account.device.index', $account);
+        return redirect()->route('admin.account.show', $account);
     }
 }
