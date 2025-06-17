@@ -52,6 +52,8 @@ Route::redirect('/', 'login')->name('account.home');
 Route::get('about', 'AboutController@about')->name('about');
 
 Route::middleware(['web_panel_enabled', 'space.check'])->group(function () {
+    Route::get('wizard/{provisioning_token}', 'Account\ProvisioningController@wizard')->name('provisioning.wizard');
+
     Route::get('login', 'Account\AuthenticateController@login')->name('account.login');
     Route::post('authenticate', 'Account\AuthenticateController@authenticate')->name('account.authenticate');
     Route::get('authenticate/qrcode/{token?}', 'Account\AuthenticateController@loginAuthToken')->name('account.authenticate.auth_token');

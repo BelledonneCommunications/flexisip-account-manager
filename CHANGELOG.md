@@ -49,6 +49,7 @@ v2.0
 - Fix FLEXIAPI-332 Check if the first line was untouched and that the number of columns is exact on each lines
 - Fix FLEXIAPI-329 Use correct routes for accounts devices
 - Fix FLEXIAPI-330 Remove the ConfirmedRegistration email and related code
+- Fix FLEXIAPI-324 Add an app setup wizard page
 
 v1.6
 ----
