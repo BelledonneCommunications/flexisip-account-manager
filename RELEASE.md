@@ -20,7 +20,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
     - INSTANCE_COPYRIGHT
     - INSTANCE_INTRO_REGISTRATION
     - INSTANCE_CUSTOM_THEME
-    - INSTANCE_CONFIRMED_REGISTRATION_TEXT
     - WEB_PANEL
     - PUBLIC_REGISTRATION
     - PHONE_AUTHENTICATION

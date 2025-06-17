@@ -21,10 +21,7 @@ namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
-
-use App\Mail\ConfirmedRegistration;
 
 class PasswordController extends Controller
 {
@@ -54,10 +51,6 @@ class PasswordController extends Controller
         }
 
         Log::channel('events')->info('Web: Password set for the first time', ['id' => $account->identifier]);
-
-        if (!empty($account->email)) {
-            Mail::to($account)->send(new ConfirmedRegistration($account));
-        }
 
         return redirect()->route('account.dashboard');
     }

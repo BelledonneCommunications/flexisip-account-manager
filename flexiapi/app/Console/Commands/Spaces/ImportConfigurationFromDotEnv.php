@@ -30,7 +30,6 @@ class ImportConfigurationFromDotEnv extends Command
 
         $space->copyright_text = env('INSTANCE_COPYRIGHT', null);
         $space->intro_registration_text = env('INSTANCE_INTRO_REGISTRATION', null);
-        $space->confirmed_registration_text = env('INSTANCE_CONFIRMED_REGISTRATION_TEXT', null);
         $space->newsletter_registration_address = env('NEWSLETTER_REGISTRATION_ADDRESS', null);
         $space->account_proxy_registrar_address = env('ACCOUNT_PROXY_REGISTRAR_ADDRESS', 'sip.domain.com');
         $space->account_realm = env('ACCOUNT_REALM', null);

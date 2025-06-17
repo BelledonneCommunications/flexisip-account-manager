@@ -162,7 +162,6 @@ class SpaceController extends Controller
 
         $space->copyright_text = $request->get('copyright_text');
         $space->intro_registration_text = $request->get('intro_registration_text');
-        $space->confirmed_registration_text = $request->get('confirmed_registration_text');
         $space->newsletter_registration_address = $request->get('newsletter_registration_address');
         $space->account_proxy_registrar_address = $request->get('account_proxy_registrar_address');
 

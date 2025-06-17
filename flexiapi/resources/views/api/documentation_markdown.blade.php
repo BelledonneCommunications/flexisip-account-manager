@@ -162,7 +162,6 @@ JSON parameters:
 * `expire_at` date, the moment the space is expiring, default to `null` (never expire)
 * `copyright_text` text, the copyright text
 * `intro_registration_text` Markdown text, the main registration page text
-* `confirmed_registration_text` Markdown text, the text displayed in the registration email
 * `newsletter_registration_address`, the newsletter registration email address
 * `account_proxy_registrar_address`, the account proxy registrar address
 * `account_realm`, the default realm for the accounts, fallback to the domain if not set
@@ -199,7 +198,6 @@ JSON parameters:
 * `expire_at` **required**, date, the moment the space is expiring, set to `null` to never expire
 * `copyright_text` **required**, text, the copyright text
 * `intro_registration_text` **required**, Markdown text, the main registration page text
-* `confirmed_registration_text` **required**, Markdown text, the text displayed in the registration email
 * `newsletter_registration_address`, **required**, the newsletter registration email address
 * `account_proxy_registrar_address`, **required**, the account proxy registrar address
 * `account_realm`, **required**, the default realm for the accounts, fallback to the domain if not set

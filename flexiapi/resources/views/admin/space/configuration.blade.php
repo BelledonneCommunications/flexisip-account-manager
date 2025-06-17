@@ -46,13 +46,6 @@
             @include('parts.errors', ['name' => 'intro_registration_text'])
         </div>
 
-        <div class="large">
-            <textarea name="confirmed_registration_text" id="confirmed_registration_text">{{ $space->confirmed_registration_text }}</textarea>
-            <label for="confirmed_registration_text">{{ __('Confirmed registration text') }}</label>
-            <span class="supporting">{{ __('Markdown text') }}</span>
-            @include('parts.errors', ['name' => 'confirmed_registration_text'])
-        </div>
-
         <div>
             <input name="newsletter_registration_address" id="newsletter_registration_address" placeholder="email@server.tld" type="email" value="{{ $space->newsletter_registration_address }}">
             <label for="newsletter_registration_address">{{ __('Newsletter registration email address') }}</label>
