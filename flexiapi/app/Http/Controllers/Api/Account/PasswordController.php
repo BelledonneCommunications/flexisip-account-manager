@@ -20,13 +20,10 @@
 namespace App\Http\Controllers\Api\Account;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
 use App\Http\Controllers\Controller;
 use App\Rules\PasswordAlgorithm;
-
-use App\Mail\ConfirmedRegistration;
 
 class PasswordController extends Controller
 {
@@ -63,9 +60,5 @@ class PasswordController extends Controller
         }
 
         $account->updatePassword($request->get('password'), $algorithm);
-
-        if (!empty($account->email)) {
-            Mail::to($account)->send(new ConfirmedRegistration($account));
-        }
     }
 }

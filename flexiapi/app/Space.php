@@ -43,7 +43,6 @@ class Space extends Model
         'assistant_hide_third_party_account',
         'copyright_text',
         'intro_registration_text',
-        'confirmed_registration_text',
         'newsletter_registration_address',
         'account_proxy_registrar_address',
         'account_realm'
