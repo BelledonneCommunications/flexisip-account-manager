@@ -76,6 +76,16 @@ body {
     --color-purple: rgba(151, 71, 255, 1);
 }
 
+#wizard h3 {
+    margin-bottom: 3rem;
+}
+
+#wizard .btn {
+    display: block;
+    text-align: center;
+    margin: 1rem 0;
+}
+
 body.show_menu {
     max-height: 100vh;
     overflow: hidden;

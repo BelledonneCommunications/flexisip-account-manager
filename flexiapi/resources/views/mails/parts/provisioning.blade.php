@@ -1,6 +1,6 @@
 To connect your account to the application, click on the following button:
 
-<x-mail::button :url="$account->provisioning_linphone_uri" color="primary">
+<x-mail::button :url="route('provisioning.wizard', ['provisioning_token' => $account->provisioning_token])" color="primary">
     Connect my account
 </x-mail::button>
 
