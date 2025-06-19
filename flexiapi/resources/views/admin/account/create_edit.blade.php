@@ -13,7 +13,7 @@
 @section('content')
     @if ($account->id)
         <header>
-            <h1><i class="ph">users</i> {{ $account->identifier }}</h1>
+            <h1><i class="ph ph-users"></i> {{ $account->identifier }}</h1>
         </header>
         @if ($account->updated_at)
             <p title="{{ $account->updated_at }}">{{ __('Updated on') }} {{ $account->updated_at->format('d/m/Y') }}
@@ -21,7 +21,7 @@
         @include('admin.account.parts.tabs')
     @else
         <header>
-            <h1><i class="ph">users</i> {{ __('New user') }}</h1>
+            <h1><i class="ph ph-users"></i> {{ __('New user') }}</h1>
             <a href="{{ route('admin.account.index') }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
         </header>
     @endif

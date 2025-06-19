@@ -2,22 +2,22 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">users</i> {{ __('Users') }}</h1>
+        <h1><i class="ph ph-users"></i> {{ __('Users') }}</h1>
         @if ($space)
-            <p>{{ $accounts->count()}} / @if ($space->max_accounts > 0){{ $space->max_accounts }} @else <i class="ph">infinity</i>@endif</p>
+            <p>{{ $accounts->count()}} / @if ($space->max_accounts > 0){{ $space->max_accounts }} @else <i class="ph ph-infinity</i>@endif"></p>
         @endif
         <a class="btn secondary oppose" href="{{ route('admin.account.import.create') }}">
-            <i class="ph">upload-simple</i>
+            <i class="ph ph-upload-simple"></i>
             {{ __('Import') }}
         </a>
         @if (space()?->intercom_features)
         <a class="btn secondary" href="{{ route('admin.account.type.index') }}">
-            <i class="ph">shapes</i>
+            <i class="ph ph-shapes"></i>
             {{ __('Types') }}
         </a>
         @endif
         <a class="btn" @if ($space && $space->isFull())disabled @endif href="{{ route('admin.account.create') }}">
-            <i class="ph">user-plus</i>
+            <i class="ph ph-user-plus"></i>
             {{ __('New user') }}
         </a>
     </header>

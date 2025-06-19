@@ -8,7 +8,7 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">trash</i> {{ __('Delete') }}</h1>
+        <h1><i class="ph ph-trash"></i> {{ __('Delete') }}</h1>
 
         <a href="{{ route('admin.account.show', $account->id) }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
         <input form="delete" class="btn" type="submit" value="{{ __('Delete') }}">

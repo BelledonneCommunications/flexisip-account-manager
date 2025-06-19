@@ -3,7 +3,7 @@
 @section('content')
     <section>
         <header>
-            <h1><i class="ph">lock</i> {{ __('Reset password') }}</h1>
+            <h1><i class="ph ph-lock"></i> {{ __('Reset password') }}</h1>
         </header>
 
         <p>{{ __('Your password was updated properly.') }}</p>

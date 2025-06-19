@@ -3,7 +3,7 @@
 @section('content')
     <section>
         <h1>
-            <i class="ph">envelope</i>
+            <i class="ph ph-envelope"></i>
             {{ __('Change your email') }}
         </h1>
 

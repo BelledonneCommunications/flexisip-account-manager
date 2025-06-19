@@ -3,9 +3,9 @@
 @section('content')
 
 <header>
-    <h1><i class="ph">user-rectangle</i> {{ __('Contacts Lists') }}</h1>
+    <h1><i class="ph ph-user-rectangle"></i> {{ __('Contacts Lists') }}</h1>
     <a class="btn oppose" href="{{ route('admin.contacts_lists.create') }}">
-        <i class="ph">plus</i>
+        <i class="ph ph-plus"></i>
         {{ __('Create') }}
     </a>
 </header>

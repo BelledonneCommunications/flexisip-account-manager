@@ -9,7 +9,7 @@
 @section('content')
 
 <header>
-    <h1><i class="ph">envelope</i> {{ __('Reset password') }}</h1>
+    <h1><i class="ph ph-envelope"></i> {{ __('Reset password') }}</h1>
 </header>
 
 <p>{{ __('An email will be sent to :email with a QR Code and provisioning link.', ['email' => $account->email]) }}</p>
@@ -20,7 +20,7 @@
 
 <p>
     <a class="btn oppose" href="{{ route('admin.account.provisioning_email.send', $account) }}">
-        <i class="ph">paper-plane-right</i> {{ __('Send') }}
+        <i class="ph ph-paper-plane-right"></i> {{ __('Send') }}
     </a>
 </p>
 

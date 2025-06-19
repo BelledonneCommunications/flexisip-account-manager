@@ -9,7 +9,7 @@
 @section('content')
 
 <header>
-    <h1><i class="ph">users</i> {{ $account->identifier }}</h1>
+    <h1><i class="ph ph-users"></i> {{ $account->identifier }}</h1>
 </header>
 
 @include('admin.account.parts.tabs')
@@ -43,19 +43,19 @@
     </form>
 </div>
 
-<h2><i class="ph">envelope</i> Messages from the account</h2>
+<h2><i class="ph ph-envelope"></i> Messages from the account</h2>
 
 {!! $messagesFromGraph !!}
 
-<h2><i class="ph">envelope</i> Messages to the account</h2>
+<h2><i class="ph ph-envelope"></i> Messages to the account</h2>
 
 {!! $messagesToGraph !!}
 
-<h2><i class="ph">phone</i> Calls from the account</h2>
+<h2><i class="ph ph-phone"></i> Calls from the account</h2>
 
 {!! $callsFromGraph !!}
 
-<h2><i class="ph">phone</i> Calls to the account</h2>
+<h2><i class="ph ph-phone"></i> Calls to the account</h2>
 
 {!! $callsToGraph !!}
 

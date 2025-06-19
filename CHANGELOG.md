@@ -50,6 +50,7 @@ v2.0
 - Fix FLEXIAPI-329 Use correct routes for accounts devices
 - Fix FLEXIAPI-330 Remove the ConfirmedRegistration email and related code
 - Fix FLEXIAPI-324 Add an app setup wizard page
+- Fix FLEXIAPI-335 Safari rendering issues with font icons
 
 v1.6
 ----

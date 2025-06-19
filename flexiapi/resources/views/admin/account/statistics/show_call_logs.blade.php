@@ -8,7 +8,7 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">users</i> {{ $account->identifier }}</h1>
+        <h1><i class="ph ph-users"></i> {{ $account->identifier }}</h1>
     </header>
 
     @include('admin.account.parts.tabs')

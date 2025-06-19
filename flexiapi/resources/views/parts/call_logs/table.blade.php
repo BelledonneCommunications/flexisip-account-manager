@@ -3,7 +3,7 @@
         <tr>
             <th>{{ __('From') }}</th>
             <th>{{ __('To') }}</th>
-            <th><i class="ph">clock</i></th>
+            <th><i class="ph ph-clock</i>"></th>
         </tr>
     </thead>
     <tbody>

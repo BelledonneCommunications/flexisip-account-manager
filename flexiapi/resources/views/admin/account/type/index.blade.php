@@ -9,9 +9,9 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">shapes</i> {{ __('Types') }}</h1>
+        <h1><i class="ph ph-shapes"></i> {{ __('Types') }}</h1>
         <a class="btn oppose" href="{{ route('admin.account.type.create') }}">
-            <i class="ph">plus</i>
+            <i class="ph ph-plus"></i>
             {{ __('Create') }}
         </a>
     </header>
@@ -31,10 +31,10 @@
                     </td>
                     <td class="actions">
                         <a class="btn small secondary" href="{{ route('admin.account.type.edit', [$type->id]) }}">
-                            <i class="ph">pencil</i>
+                            <i class="ph ph-pencil"></i>
                         </a>
                         <a class="btn tertiary small" href="{{ route('admin.account.type.delete', [$type->id]) }}">
-                            <i class="ph">trash</i>
+                            <i class="ph ph-trash"></i>
                         </a>
                     </td>
                 </tr>

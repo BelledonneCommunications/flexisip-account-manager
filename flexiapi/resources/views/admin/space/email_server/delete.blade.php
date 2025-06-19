@@ -17,7 +17,7 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">trash</i> {{ __('Delete') }}</h1>
+        <h1><i class="ph ph-trash"></i> {{ __('Delete') }}</h1>
 
         <a href="{{ route('admin.spaces.integration', ['space' => $space]) }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
         <input form="delete" class="btn" type="submit" value="{{ __('Delete') }}">
@@ -28,7 +28,7 @@
 
         <div class="large">
             <p>{{ __('You are going to permanently delete the following element. Please confirm your action.') }}<br />
-                <b><i class="ph">envelope</i> {{ $space->emailServer->host }}</b>
+                <b><i class="ph ph-envelope"></i> {{ $space->emailServer->host }}</b>
             </p>
             <input name="account_id" type="hidden" value="{{ $space->id }}">
         </div>

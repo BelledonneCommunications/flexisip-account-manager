@@ -8,12 +8,12 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">users</i> {{ $account->identifier }}</h1>
+        <h1><i class="ph ph-users"></i> {{ $account->identifier }}</h1>
     </header>
     @include('admin.account.parts.tabs')
 
     <a class="btn small oppose" href="{{ route('admin.account.contact.create', $account) }}">
-        <i class="ph">plus</i> {{ __('Add') }}
+        <i class="ph ph-plus"></i> {{ __('Add') }}
     </a>
     <h3>
         {{ __('Contacts') }}
@@ -32,7 +32,7 @@
                         </td>
                         <td class="actions">
                             <a type="button" class="btn small tertiary" href="{{ route('admin.account.contact.delete', [$account, $contact->id]) }}">
-                                <i class="ph">trash</i>
+                                <i class="ph ph-trash"></i>
                             </a>
                         </td>
                     </tr>
@@ -55,7 +55,7 @@
                 </td>
                 <td class="actions">
                     <a type="button" class="btn small tertiary"  href="{{ route('admin.account.contacts_lists.detach', ['account_id' => $account->id, 'contacts_list_id' => $contactsList->id]) }}">
-                        <i class="ph">trash</i>
+                        <i class="ph ph-trash"></i>
                     </a>
                 </td>
             </tr>
@@ -67,7 +67,7 @@
         <div class="card">
             <div class="grid">
                 <div>
-                    <h4><i class="ph">plus</i> {{ __('Add') }}</h4>
+                    <h4><i class="ph ph-plus"></i> {{ __('Add') }}</h4>
                     <p>{{ __('Add existing contacts lists to display them in the user applications.') }}</p>
                 </div>
                 <div>

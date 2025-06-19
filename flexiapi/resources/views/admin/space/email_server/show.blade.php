@@ -17,7 +17,7 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">envelope</i> {{ $space->name }}</h1>
+        <h1><i class="ph ph-envelope"></i> {{ $space->name }}</h1>
     </header>
 
 

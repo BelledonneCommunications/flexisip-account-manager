@@ -36,7 +36,7 @@
 
             @if (auth()->user())
                 <a class="oppose" href="{{ route('account.dashboard') }}">
-                    <i class="ph">user</i>
+                    <i class="ph ph-user"></i>
                     <span class="on_desktop">{{ auth()->user()->identifier }}</span>
 
                     @if (auth()->user()->superAdmin)
@@ -48,12 +48,12 @@
             @endif
 
             <a class="oppose" href="{{ route('about') }}">
-                <i class="ph">info</i><span class="on_desktop">{{ __('About') }}</span>
+                <i class="ph ph-info</i>"><span class="on_desktop">{{ __('About') }}</span>
             </a>
 
             @if (auth()->user())
                 <a class="oppose" href="{{ route('account.logout') }}">
-                    <i class="ph">sign-out</i>
+                    <i class="ph ph-sign-out"></i>
                 </a>
             @endif
         </nav>

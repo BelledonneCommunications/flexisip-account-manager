@@ -7,9 +7,9 @@
 @section('content')
     <header>
         @if ($account->passwords()->count() > 0)
-            <h1><i class="ph">lock</i> {{ __('Edit') }}</h1>
+            <h1><i class="ph ph-lock"></i> {{ __('Edit') }}</h1>
         @else
-            <h1><i class="ph">lock</i> {{ __('Create') }}</h1>
+            <h1><i class="ph ph-lock"></i> {{ __('Create') }}</h1>
         @endif
 
         <a href="{{ route('account.dashboard') }}" class="btn secondary oppose">{{ __('Cancel') }}</a>

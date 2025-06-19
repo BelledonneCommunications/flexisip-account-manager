@@ -9,7 +9,7 @@
 @section('content')
 
 <header>
-    <h1><i class="ph">list</i> {{ $account->identifier }}</h1>
+    <h1><i class="ph ph-list"></i> {{ $account->identifier }}</h1>
 </header>
 
 @include('admin.account.parts.tabs')
@@ -114,7 +114,7 @@
                 <thead>
                     <tr>
                         <th>{{ __('Created') }}</th>
-                        <th>{{ __('Via') }} <i class="ph">phone</i>/<i class="ph">envelope</i></th>
+                        <th>{{ __('Via') }} <i class="ph ph-phone</i>/"><i class="ph ph-envelope</i>"></th>
                         <th>{{ __('Used on') }}</th>
                     </tr>
                 </thead>
@@ -129,9 +129,9 @@
                             </td>
                             <td>
                                 @if ($recoveryCode->phone)
-                                    <i class="ph">phone</i> {{ $recoveryCode->phone }}
+                                    <i class="ph ph-phone"></i> {{ $recoveryCode->phone }}
                                 @elseif($recoveryCode->email)
-                                    <i class="ph">envelope</i> {{ $recoveryCode->email }}
+                                    <i class="ph ph-envelope"></i> {{ $recoveryCode->email }}
                                 @endif
                             </td>
                             <td>
