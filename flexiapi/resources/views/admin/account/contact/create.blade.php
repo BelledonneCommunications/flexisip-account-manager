@@ -8,7 +8,7 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">user-plus</i> {{ __('Add contact') }}</h1>
+        <h1><i class="ph ph-user-plus"></i> {{ __('Add contact') }}</h1>
         <a href="{{ route('admin.account.edit', $account->id) }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
         <input form="add_contact" class="btn" type="submit" value="Add">
     </header>

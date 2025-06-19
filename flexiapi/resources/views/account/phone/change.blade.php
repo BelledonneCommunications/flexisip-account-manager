@@ -3,7 +3,7 @@
 @section('content')
     <section>
         <h1>
-            <i class="ph">phone</i>
+            <i class="ph ph-phone"></i>
             {{ __('Change your phone number') }}
         </h1>
 

@@ -3,12 +3,12 @@
 @section('content')
 
 <header>
-    <h1><i class="ph">flag</i> {{ __('Phone Countries') }}</h1>
+    <h1><i class="ph ph-flag"></i> {{ __('Phone Countries') }}</h1>
     <a class="btn secondary oppose" href="{{ route('admin.phone_countries.activate_all') }}">
-        <i class="ph">eye</i> {{ __('Activate All') }}
+        <i class="ph ph-eye"></i> {{ __('Activate All') }}
     </a>
     <a class="btn secondary" href="{{ route('admin.phone_countries.deactivate_all') }}">
-        <i class="ph">eye-closed</i> {{ __('Deactivate All') }}
+        <i class="ph ph-eye-closed"></i> {{ __('Deactivate All') }}
     </a>
 </header>
 
@@ -38,11 +38,11 @@
                 <td>
                     @if ($phone_country->activated)
                         <a class="btn secondary small" href="{{ route('admin.phone_countries.deactivate', $phone_country->code) }}">
-                            <i class="ph">eye-closed</i>
+                            <i class="ph ph-eye-closed"></i>
                         </a>
                     @else
                         <a class="btn secondary small" href="{{ route('admin.phone_countries.activate', $phone_country->code) }}">
-                            <i class="ph">eye</i>
+                            <i class="ph ph-eye"></i>
                         </a>
                     @endif
                 </td>

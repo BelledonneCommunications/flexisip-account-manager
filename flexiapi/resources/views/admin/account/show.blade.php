@@ -7,14 +7,14 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">users</i> {{ $account->identifier }}</h1>
+        <h1><i class="ph ph-users"></i> {{ $account->identifier }}</h1>
     </header>
     @include('admin.account.parts.tabs')
 
     <div class="grid">
         <div class="card">
             <a class="btn small oppose" href="{{ route('admin.account.edit', $account) }}">
-                <i class="ph">pencil</i>
+                <i class="ph ph-pencil"></i>
                 {{ __('Edit') }}
             </a>
             <h3>
@@ -24,19 +24,19 @@
                 {{ __('Information') }}
             </h3>
 
-            <p><i class="ph">user</i> {{ __('SIP Adress') }}: sip:{{ $account->identifier }}</p>
+            <p><i class="ph ph-user"></i> {{ __('SIP Adress') }}: sip:{{ $account->identifier }}</p>
             @if ($account->email)
-                <p><i class="ph">envelope</i> {{ __('Email') }}: {{ $account->email }}</p>
+                <p><i class="ph ph-envelope"></i> {{ __('Email') }}: {{ $account->email }}</p>
             @endif
             @if ($account->phone)
-                <p><i class="ph">phone</i> {{ __('Phone') }}: {{ $account->phone }}</p>
+                <p><i class="ph ph-phone"></i> {{ __('Phone') }}: {{ $account->phone }}</p>
             @endif
             @if ($account->passwords()->count() > 0)
-                <p><i class="ph">password</i> {{ __('Password') }}: **********</p>
+                <p><i class="ph ph-password"></i> {{ __('Password') }}: **********</p>
             @endif
 
             <p>
-                <i class="ph">globe-hemisphere-west</i>
+                <i class="ph ph-globe-hemisphere-west"></i>
                 {{ __('Space') }}: <a href="{{ route('admin.spaces.show', $account->space->id) }}">{{ $account->domain }}</a>
             </p>
             <p>
@@ -53,7 +53,7 @@
                         <td>{{ __('Send an email to the user to reset the password') }}</td>
                         <td class="actions">
                             <a class="btn secondary small" href="{{ route('admin.account.reset_password_email.create', $account) }}">
-                                <i class="ph">paper-plane-right</i>
+                                <i class="ph ph-paper-plane-right"></i>
                             </a>
                         </td>
                     </tr>
@@ -61,7 +61,7 @@
                         <td>{{ __('Send an email to the user with provisioning information') }}</td>
                         <td class="actions">
                             <a class="btn secondary small" href="{{ route('admin.account.provisioning_email.create', $account) }}">
-                                <i class="ph">paper-plane-right</i>
+                                <i class="ph ph-paper-plane-right"></i>
                             </a>
                         </td>
                     </tr>
@@ -71,7 +71,7 @@
                         </td>
                         <td class="actions">
                             <a class="btn tertiary small" href="{{ route('admin.account.delete', $account->id) }}">
-                                <i class="ph">trash</i>
+                                <i class="ph ph-trash"></i>
                             </a>
                         </td>
                     </tr>
@@ -81,7 +81,7 @@
 
         <div class="card">
             <a class="btn small oppose" href="{{ route('admin.account.external.show', $account) }}">
-                <i class="ph">pencil</i>
+                <i class="ph ph-pencil"></i>
                 @if ($account->external){{ __('Edit') }}@else{{ __('Create') }}@endif
             </a>
             <h3>
@@ -89,13 +89,13 @@
             </h3>
             @if ($account->external)
                 @if ($account->external->username)
-                    <p><i class="ph">user</i> {{ __('Username') }}: {{ $account->external->username }}</p>
+                    <p><i class="ph ph-user"></i> {{ __('Username') }}: {{ $account->external->username }}</p>
                 @endif
                 @if ($account->external->domain)
-                    <p><i class="ph">hard-drive</i> {{ __('Domain') }}: {{ $account->external->domain }}</p>
+                    <p><i class="ph ph-hard-drive"></i> {{ __('Domain') }}: {{ $account->external->domain }}</p>
                 @endif
                 @if ($account->external->password)
-                    <p><i class="ph">password</i> {{ __('Password') }}: **********</p>
+                    <p><i class="ph ph-password"></i> {{ __('Password') }}: **********</p>
                 @endif
             @else
                 <p>{{ __('Empty') }}</p>
@@ -104,7 +104,7 @@
 
         <div class="card">
             <a class="btn small oppose" href="{{ route('admin.account.provision', $account->id) }}">
-                <i class="ph">repeat</i>
+                <i class="ph ph-repeat"></i>
                 {{ __('Renew') }}
             </a>
             <h3 class="large" id="provisioning">{{ __('Provisioning') }}</h3>
@@ -148,7 +148,7 @@
                                 <td class="line">{{ $device->user_agent }}</td>
                                 <td class="actions">
                                     <a type="button" class="btn small tertiary" href="{{ route('admin.account.device.delete', [$account->id, $device->uuid]) }}">
-                                        <i class="ph">trash</i>
+                                        <i class="ph ph-trash"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -160,7 +160,7 @@
 
         <div class="card large">
             <a class="btn small oppose" href="{{ route('admin.account.dictionary.create', $account) }}">
-                <i class="ph">plus</i>
+                <i class="ph ph-plus"></i>
                 {{ __('Add') }}
             </a>
             <h3>
@@ -188,12 +188,12 @@
                                 <a type="button"
                                    class="btn secondary small"
                                    href="{{ route('admin.account.dictionary.edit', [$account, $dictionaryEntry->key]) }}">
-                                    <i class="ph">pencil</i>
+                                    <i class="ph ph-pencil"></i>
                                 </a>
                                 <a type="button"
                                    class="btn small tertiary"
                                    href="{{ route('admin.account.dictionary.delete', [$account, $dictionaryEntry->key]) }}">
-                                   <i class="ph">trash</i>
+                                   <i class="ph ph-trash"></i>
                                 </a>
                             </td>
                         </tr>
@@ -206,11 +206,11 @@
         <div class="card" id="actions">
             @if ($account->dtmf_protocol)
                 <a class="btn small oppose" href="{{ route('admin.account.action.create', $account) }}">
-                    <i class="ph">plus</i>{{ __('Add') }}
+                    <i class="ph ph-plus"></i>{{ __('Add') }}
                 </a>
             @else
                 <a class="btn small oppose" href="{{ route('admin.account.edit', $account) }}">
-                    <i class="ph">pencil</i>
+                    <i class="ph ph-pencil"></i>
                     {{ __('Edit') }}
                 </a>
             @endif
@@ -236,11 +236,11 @@
                                 <td class="actions">
                                     <a class="btn small secondary"
                                         href="{{ route('admin.account.action.edit', [$account, $action->id]) }}">
-                                        <i class="ph">pencil</i>
+                                        <i class="ph ph-pencil"></i>
                                     </a>
                                     <a class="btn small tertiary"
                                         href="{{ route('admin.account.action.delete', [$account, $action->id]) }}">
-                                        <i class="ph">trash</i>
+                                        <i class="ph ph-trash"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -254,7 +254,7 @@
 
         <div class="card" id="types">
             <a class="btn small oppose" href="{{ route('admin.account.account_type.create', $account) }}">
-                <i class="ph">plus</i>{{ __('Add') }}
+                <i class="ph ph-plus"></i>{{ __('Add') }}
             </a>
 
             <h3>{{ __('Types') }}</h3>
@@ -276,7 +276,7 @@
                                     @csrf
                                     @method('delete')
                                     <button class="btn small tertiary" type="submit" title="{{ __('Delete') }}">
-                                        <i class="ph">trash</i>
+                                        <i class="ph ph-trash"></i>
                                     </button>
                                 </form>
                             </td>

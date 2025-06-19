@@ -11,7 +11,7 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">trash</i> {{ __('Delete') }}</h1>
+        <h1><i class="ph ph-trash"></i> {{ __('Delete') }}</h1>
         <a href="{{ route('admin.api_keys.index') }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
         <input form="delete" class="btn" type="submit" value="{{ __('Delete') }}">
     </header>
@@ -23,7 +23,7 @@
         <div class="large">
             <p>{{ __('You are going to permanently delete the following element. Please confirm your action.') }}</p>
             <p>
-                <i class="ph">key</i> <code>{{ $api_key->key }}</code>
+                <i class="ph ph-key"></i> <code>{{ $api_key->key }}</code>
             </p>
         </div>
 

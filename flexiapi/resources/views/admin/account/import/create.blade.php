@@ -7,7 +7,7 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">users</i> {{ __('Import') }}</h1>
+        <h1><i class="ph ph-users"></i> {{ __('Import') }}</h1>
         <a href="{{ route('admin.account.index') }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
         <input form="import" class="btn" type="submit" value="{{ __('Next') }}">
     </header>

@@ -10,14 +10,14 @@
 @section('content')
     <header>
         @if ($contacts_list->id)
-            <h1><i class="ph">user-rectangle</i> {{ $contacts_list->title }}</h1>
+            <h1><i class="ph ph-user-rectangle"></i> {{ $contacts_list->title }}</h1>
             <a class="btn secondary oppose" href="{{ route('admin.contacts_lists.delete', $contacts_list->id) }}">
-                <i class="ph">trash</i>
+                <i class="ph ph-trash"></i>
                 {{ __('Delete') }}
             </a>
             <input form="create_edit_contacts_list" class="btn" type="submit" value="{{ __('Update') }}">
         @else
-            <h1><i class="ph">user-rectangle</i> {{ __('Create') }}</h1>
+            <h1><i class="ph ph-user-rectangle"></i> {{ __('Create') }}</h1>
             <input form="create_edit_contacts_list" class="btn oppose" type="submit" value="{{ __('Create') }}">
         @endif
     </header>
@@ -49,7 +49,7 @@
         <hr>
 
         <a class="btn secondary oppose" href="{{ route('admin.contacts_lists.contacts.add', $contacts_list->id) }}">
-            <i class="ph">plus</i> {{ __('Add contacts') }}
+            <i class="ph ph-plus"></i> {{ __('Add contacts') }}
         </a>
 
         <form  method="POST"
@@ -81,7 +81,7 @@
             <div>
                 <a class="btn tertiary oppose"
                     onclick="Utils.clearStorageList('d{{ $contacts_list->id }}');  document.querySelector('form[name=contacts_lists_contacts_destroy]').submit()">
-                    <i class="ph">trash</i>
+                    <i class="ph ph-trash"></i>
                     {{ __('Remove') }} <span class="list_toggle" data-list-id="d{{ $contacts_list->id }}"></span>
                 </a>
             </div>

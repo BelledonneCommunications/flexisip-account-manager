@@ -8,10 +8,10 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">user-circle-dashed</i> {{ __('External Account') }}</h1>
+        <h1><i class="ph ph-user-circle-dashed"></i> {{ __('External Account') }}</h1>
         @if($externalAccount->id)
             <a class="btn secondary oppose" href="{{ route('admin.account.external.delete', $account->id) }}">
-                <i class="ph">trash</i>
+                <i class="ph ph-trash"></i>
                 {{ __('Delete') }}
             </a>
         @endif

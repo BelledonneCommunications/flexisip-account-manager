@@ -12,15 +12,15 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">globe-hemisphere-west</i> {{ $space->name }}</h1>
+        <h1><i class="ph ph-globe-hemisphere-west"></i> {{ $space->name }}</h1>
 
         <a class="btn secondary oppose" @if ($space->isFull())disabled @endif href="{{ route('admin.account.create', ['domain' => $space->domain]) }}">
-            <i class="ph">user-plus</i> {{ __('Create') }}
+            <i class="ph ph-user-plus"></i> {{ __('Create') }}
         </a>
 
         @if (auth()->user()->superAdmin)
             <a class="btn tertiary" href="{{ route('admin.spaces.delete', $space->id) }}">
-                <i class="ph">trash</i>
+                <i class="ph ph-trash"></i>
                 {{ __('Delete') }}
             </a>
         @endif
@@ -30,12 +30,12 @@
 
     <div class="grid third  ">
         <div class="card">
-            <span class="icon"><i class="ph">users</i></span>
+            <span class="icon"><i class="ph ph-users</i>"></span>
             <h3>{{ __('Users') }}</h3>
             <p>
                 {{ $space->accounts()->count() }}
                 /
-                @if ($space->max_accounts > 0){{ $space->max_accounts }} @else <i class="ph">infinity</i>@endif
+                @if ($space->max_accounts > 0){{ $space->max_accounts }} @else <i class="ph ph-infinity"></i>@endif
             </p>
             @if ($space->max_accounts > 0)
                 <progress max="100" value="{{ $space->accountsPercentage }}"
@@ -43,7 +43,7 @@
             @endif
         </div>
         <div class="card">
-            <span class="icon"><i class="ph">clock</i></span>
+            <span class="icon"><i class="ph ph-clock</i>"></span>
             <h3>{{ __('Expiration') }}</h3>
             @if ($space->isExpired())
                 <p>Expired</p>
@@ -55,7 +55,7 @@
         </div>
     </div>
 
-    <a class="btn secondary oppose small" @if ($space->isFull())disabled @endif href="{{ route('admin.account.create', ['admin' => true, 'domain' => $space->domain]) }}"><i class="ph">user-plus</i> {{ __('New Admin') }}</a>
+    <a class="btn secondary oppose small" @if ($space->isFull())disabled @endif href="{{ route('admin.account.create', ['admin' => true, 'domain' => $space->domain]) }}"><i class="ph ph-user-plus"></i> {{ __('New Admin') }}</a>
 
     <h2>{{ __('Admins') }}</h2>
 

@@ -2,7 +2,7 @@
 
 @section('content')
     <section>
-        <h1><i class="ph">user-circle</i> {{ __('Register') }}</h1>
+        <h1><i class="ph ph-user-circle"></i> {{ __('Register') }}</h1>
         <p style="margin-bottom: 2rem;">
             {{ __('You already have an account?') }}
             <a class="btn secondary" href="{{ route('account.login') }}">{{ __('Login') }}</a>

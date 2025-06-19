@@ -3,7 +3,7 @@
 @section('content')
     <section>
         <header>
-            <h1><i class="ph">lock</i> {{ __('Reset') }}</h1>
+            <h1><i class="ph ph-lock"></i> {{ __('Reset') }}</h1>
         </header>
 
         @if ($token->offed())

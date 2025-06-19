@@ -3,9 +3,9 @@
 @section('content')
 
 <header>
-    <h1><i class="ph">globe-hemisphere-west</i> {{ __('Spaces') }}</h1>
+    <h1><i class="ph ph-globe-hemisphere-west"></i> {{ __('Spaces') }}</h1>
     <a class="btn oppose" href="{{ route('admin.spaces.create') }}">
-        <i class="ph">plus</i>
+        <i class="ph ph-plus"></i>
         {{ __('New Space') }}
     </a>
 </header>
@@ -29,7 +29,7 @@
                 </td>
                 <td>{{ $space->domain }}
                     <small>
-                        {{ $space->accounts_count }} / @if ($space->max_accounts > 0){{ $space->max_accounts }} @else <i class="ph">infinity</i>@endif<i class="ph">user</i>
+                        {{ $space->accounts_count }} / @if ($space->max_accounts > 0){{ $space->max_accounts }} @else <i class="ph ph-infinity</i>@endif"><i class="ph ph-user"></i>
                     </small>
                 </td>
                 <td>
@@ -38,7 +38,7 @@
                     @elseif ($space->expire_at)
                         {{ __('In :days days', ['days' => $space->daysLeft]) }}
                     @else
-                        <i class="ph">infinity</i>
+                        <i class="ph ph-infinity"></i>
                     @endif
 
                     @if ($space->expire_at)

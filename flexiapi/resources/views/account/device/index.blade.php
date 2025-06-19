@@ -7,7 +7,7 @@
 @section('content')
 
     <header>
-        <h1><i class="ph">devices</i> {{ __('Devices') }}</h1>
+        <h1><i class="ph ph-devices"></i> {{ __('Devices') }}</h1>
     </header>
 
     <table>

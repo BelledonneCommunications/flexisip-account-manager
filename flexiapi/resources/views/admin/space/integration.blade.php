@@ -14,14 +14,14 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">globe-hemisphere-west</i> {{ $space->name }}</h1>
+        <h1><i class="ph ph-globe-hemisphere-west"></i> {{ $space->name }}</h1>
     </header>
 
     @include('admin.space.tabs')
 
     <div class="grid third">
         <div class="card">
-            <span class="icon"><i class="ph">envelope</i></span>
+            <span class="icon"><i class="ph ph-envelope</i>"></span>
             <h3>{{ __('Email Server') }}</h3>
             <p>
                 @if ($space->emailServer)

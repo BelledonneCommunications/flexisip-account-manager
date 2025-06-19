@@ -2,13 +2,13 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">gauge</i> {{ __('My Account') }}</h1>
+        <h1><i class="ph ph-gauge"></i> {{ __('My Account') }}</h1>
     </header>
 
     <div class="card">
-        <h3><i class="ph">hand-waving</i> {{ __('Welcome on :app_name' , ['app_name' => space()->name]) }} </h3>
+        <h3><i class="ph ph-hand-waving"></i> {{ __('Welcome on :app_name' , ['app_name' => space()->name]) }} </h3>
         <p>
-            <i class="ph">envelope</i>
+            <i class="ph ph-envelope"></i>
             @if (!empty($account->email))
                 {{ $account->email }}
             @else
@@ -19,7 +19,7 @@
 
         @if (space()->phone_registration)
             <p>
-                <i class="ph">phone</i>
+                <i class="ph ph-phone"></i>
                 @if (!empty($account->phone))
                     {{ $account->phone }}
                 @else
@@ -30,14 +30,14 @@
         @endif
 
         <p>
-            <i class="ph">devices</i>
+            <i class="ph ph-devices"></i>
             {{ __('Devices') }}
             <a href="{{ route('account.device.index') }}">
                 {{ __('Manage') }}
             </a>
         </p>
         <p>
-            <i class="ph">lock</i>
+            <i class="ph ph-lock"></i>
             {{ __('Password') }}
             <a href="{{ route('account.password.show') }}">
                 @if ($account->passwords()->count() > 0)
@@ -49,7 +49,7 @@
         </p>
 
         <p>
-            <i class="ph">key</i>
+            <i class="ph ph-key"></i>
             {{ __('API Key') }}
             <a href="{{ route('account.api_keys.show') }}">
                 {{ __('Manage') }}
@@ -57,7 +57,7 @@
         </p>
 
         <p>
-            <i class="ph">trash</i>
+            <i class="ph ph-trash"></i>
             {{ __('My Account') }}
             <a href="{{ route('account.delete') }}">
                 {{ __('Delete') }}
@@ -66,18 +66,18 @@
     </div>
 
     <div class="card">
-        <h3><i class="ph">person</i> {{ __('Information') }}</h3>
+        <h3><i class="ph ph-person"></i> {{ __('Information') }}</h3>
 
-        <p><i class="ph">envelope</i> {{ __('SIP Adress') }}: sip:{{ $account->identifier }}</p>
-        <p><i class="ph">user</i> {{ __('Username') }}: {{ $account->username }}</p>
-        <p><i class="ph">globe-hemisphere-west</i> {{ __('Domain') }}: {{ $account->domain }}</p>
+        <p><i class="ph ph-envelope"></i> {{ __('SIP Adress') }}: sip:{{ $account->identifier }}</p>
+        <p><i class="ph ph-user"></i> {{ __('Username') }}: {{ $account->username }}</p>
+        <p><i class="ph ph-globe-hemisphere-west"></i> {{ __('Domain') }}: {{ $account->domain }}</p>
 
         @if (!empty(space()?->account_proxy_registrar_address))
-            <p><i class="ph">hard-drive</i> Proxy/registrar address: sip:{{ space()?->account_proxy_registrar_address }}
+            <p><i class="ph ph-hard-drive"></i> Proxy/registrar address: sip:{{ space()?->account_proxy_registrar_address }}
             </p>
         @endif
         @if (!empty(config('app.transport_protocol_text')))
-            <p><i class="ph">sliders</i> {{ __('Transport') }}: {{ config('app.transport_protocol_text') }} </p>
+            <p><i class="ph ph-sliders"></i> {{ __('Transport') }}: {{ config('app.transport_protocol_text') }} </p>
         @endif
 
         <!--<h3 class="mt-3">Automatic authentication</h3>

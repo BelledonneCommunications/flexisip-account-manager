@@ -9,7 +9,7 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">user-rectangle</i> {{ __('Create') }}</h1>
+        <h1><i class="ph ph-user-rectangle"></i> {{ __('Create') }}</h1>
         <a href="{{ route('admin.spaces.index') }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
     </header>
 

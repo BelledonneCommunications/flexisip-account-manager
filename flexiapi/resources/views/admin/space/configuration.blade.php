@@ -22,7 +22,7 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">globe-hemisphere-west</i> {{ $space->name }}</h1>
+        <h1><i class="ph ph-globe-hemisphere-west"></i> {{ $space->name }}</h1>
     </header>
 
     @include('admin.space.tabs')

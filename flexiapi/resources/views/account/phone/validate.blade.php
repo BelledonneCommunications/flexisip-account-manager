@@ -2,7 +2,7 @@
 
 @section('content')
     <section>
-        <h1><i class="ph">user-circle</i> {{ __('Change your phone number') }}</h1>
+        <h1><i class="ph ph-user-circle"></i> {{ __('Change your phone number') }}</h1>
 
         <form method="POST" action="{{ route('account.phone.update') }}" accept-charset="UTF-8">
         @csrf

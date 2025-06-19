@@ -2,7 +2,7 @@
 
 @section('content')
     <section>
-        <h1><i class="ph">user-circle</i> {{ __('Account recovery') }}</h1>
+        <h1><i class="ph ph-user-circle"></i> {{ __('Account recovery') }}</h1>
         <div>
             <form method="POST" action="{{ route('account.recovery.send') }}" accept-charset="UTF-8">
                 @csrf

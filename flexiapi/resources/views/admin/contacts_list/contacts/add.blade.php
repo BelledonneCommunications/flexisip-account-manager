@@ -12,7 +12,7 @@
 
 @section('content')
     <header>
-        <h1><i class="ph">user-rectangle</i> {{ $contacts_list->title }}</h1>
+        <h1><i class="ph ph-user-rectangle"></i> {{ $contacts_list->title }}</h1>
 
         <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
 
@@ -44,7 +44,7 @@
             <div class="oppose">
                 <a class="btn"
                     onclick="Utils.clearStorageList('a{{ $contacts_list->id }}'); document.querySelector('form[name=contacts_lists_contacts_store]').submit()">
-                    <i class="ph">plus</i>
+                    <i class="ph ph-plus"></i>
                     Add <span class="list_toggle" data-list-id="a{{ $contacts_list->id }}"></span> contacts
                 </a>
             </div>
