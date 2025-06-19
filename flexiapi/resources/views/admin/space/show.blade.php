@@ -30,7 +30,7 @@
 
     <div class="grid third  ">
         <div class="card">
-            <span class="icon"><i class="ph ph-users</i>"></span>
+            <span class="icon"><i class="ph ph-users"></i></span>
             <h3>{{ __('Users') }}</h3>
             <p>
                 {{ $space->accounts()->count() }}
@@ -43,7 +43,7 @@
             @endif
         </div>
         <div class="card">
-            <span class="icon"><i class="ph ph-clock</i>"></span>
+            <span class="icon"><i class="ph ph-clock"></i></span>
             <h3>{{ __('Expiration') }}</h3>
             @if ($space->isExpired())
                 <p>Expired</p>
