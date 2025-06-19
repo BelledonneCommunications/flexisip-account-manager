@@ -39,7 +39,7 @@
                         <small>{{ __('Activity expiration delay') }}: {{ $api_key->expires_after_last_used_minutes ? $api_key->expires_after_last_used_minutes . ' min' : __('Never')}} | {{ __('Last used') }}: {{ $api_key->last_used_at ?? __('Never') }}</small>
                     </td>
                     <td>{{ $api_key->created_at }}
-                        <a class="btn secondary small oppose" href="{{ route('admin.api_keys.delete', $api_key->key) }}"><i class="ph ph-trash</i>"></a>
+                        <a class="btn secondary small oppose" href="{{ route('admin.api_keys.delete', $api_key->key) }}"><i class="ph ph-trash"></i></a>
                         <small>
                             <a href="{{ route('admin.account.show', $api_key->account->id) }}">
                                 {{ __('By') }}: {{ $api_key->account->identifier }}

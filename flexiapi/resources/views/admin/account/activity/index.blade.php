@@ -114,7 +114,7 @@
                 <thead>
                     <tr>
                         <th>{{ __('Created') }}</th>
-                        <th>{{ __('Via') }} <i class="ph ph-phone</i>/"><i class="ph ph-envelope</i>"></th>
+                        <th>{{ __('Via') }} <i class="ph ph-phone"></i><i class="ph ph-envelope"></i></th>
                         <th>{{ __('Used on') }}</th>
                     </tr>
                 </thead>

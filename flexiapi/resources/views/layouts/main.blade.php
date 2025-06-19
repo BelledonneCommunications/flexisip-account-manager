@@ -48,7 +48,7 @@
             @endif
 
             <a class="oppose" href="{{ route('about') }}">
-                <i class="ph ph-info</i>"><span class="on_desktop">{{ __('About') }}</span>
+                <i class="ph ph-info"></i><span class="on_desktop">{{ __('About') }}</span>
             </a>
 
             @if (auth()->user())

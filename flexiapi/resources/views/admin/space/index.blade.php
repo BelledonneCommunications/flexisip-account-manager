@@ -29,7 +29,7 @@
                 </td>
                 <td>{{ $space->domain }}
                     <small>
-                        {{ $space->accounts_count }} / @if ($space->max_accounts > 0){{ $space->max_accounts }} @else <i class="ph ph-infinity</i>@endif"><i class="ph ph-user"></i>
+                        {{ $space->accounts_count }} / @if ($space->max_accounts > 0){{ $space->max_accounts }} @else <i class="ph ph-infinity"></i>@endif<i class="ph ph-user"></i>
                     </small>
                 </td>
                 <td>
