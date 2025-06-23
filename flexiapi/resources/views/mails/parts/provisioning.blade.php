@@ -1,8 +1,6 @@
-To connect your account to the application, click on the following button:
+To connect your account to the application, click on the following link:
 
-<x-mail::button :url="route('provisioning.wizard', ['provisioning_token' => $account->provisioning_token])" color="primary">
-    Connect my account
-</x-mail::button>
+[{{__('Login to my account')}}]({{ route('provisioning.wizard', ['provisioning_token' => $account->provisioning_token]) }})
 
 You can also configure your device by scanning the QR code with the mobile app, or by pasting the link below into the desktop application.
 
