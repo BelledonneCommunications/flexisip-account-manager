@@ -9,7 +9,8 @@ You are invited to reset your {{ $account->identifier }} account password on {{ 
 
 The following link will be valid for {{ config('app.reset_password_email_token_expiration_minutes')/60 }} hours.
 
-<x-mail::button :url="route('account.reset_password_email.change', $account->currentResetPasswordEmailToken->token)" color="primary">
-    Reset by email
-</x-mail::button>
+[{{ __('Reset my password') }}]({{ route('account.reset_password_email.change', $account->currentResetPasswordEmailToken->token) }})
+
+{{ __('This link will expire in :hour hours.', ['hour' => config('app.reset_password_email_token_expiration_minutes')/60 ]) }}
+
 @endsection
