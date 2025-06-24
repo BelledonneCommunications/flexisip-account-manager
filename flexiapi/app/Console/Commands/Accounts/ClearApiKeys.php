@@ -36,7 +36,7 @@ class ClearApiKeys extends Command
 
         if ($minutes == 0) {
             $this->info('Expiration time is set to 0, nothing to clear');
-            return 0;
+            return Command::SUCCESS;
         }
 
         $this->info('Deleting user API Keys unused after ' . $minutes . ' minutes');

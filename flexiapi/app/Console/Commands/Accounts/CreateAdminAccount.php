@@ -94,6 +94,6 @@ class CreateAdminAccount extends Command
 
         $this->info('Admin test account created: "' . $username . '@' . $domain . '" | Password: "' . $password . '" | API Key: "' . $account->apiKey->key . '" (valid on ' . ($account->apiKey->ip ?? 'any') . ' ip)');
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

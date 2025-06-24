@@ -94,7 +94,7 @@ class Space extends Model
             return (int)($this->accounts()->count() / $this->max_accounts * 100);
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     public function isFull(): bool

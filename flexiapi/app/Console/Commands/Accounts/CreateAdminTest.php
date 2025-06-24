@@ -68,6 +68,6 @@ class CreateAdminTest extends Command
 
         $this->info('API Key updated to: ' . $secret);
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

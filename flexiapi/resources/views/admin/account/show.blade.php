@@ -111,16 +111,20 @@
 
             @if ($account->provisioning_token)
                 <div>
-                    <img style="max-width: 15rem;" src="{{ route('provisioning.qrcode', $account->provisioning_token) }}">
+                    <img style="max-width: 15rem;" src="{{ $account->provisioning_qrcode_url }}">
                 </div>
 
                 <form class="inline">
                     <div>
                         <input type="text" style="min-width: 40rem;" readonly
-                            value="{{ route('provisioning.provision', $account->provisioning_token) }}">
+                            value="{{ $account->provisioning_url }}">
                         <small>{{ __('The link can only be visited once') }}</small>
                     </div>
                 </form>
+                <p>
+                    <i class="ph ph-app-window"></i>
+                    <a target="_blank" href="{{ $account->provisioning_wizard_url }}">{{ __('Provisioning wizard URL') }}</a>
+                </p>
             @else
                 <a class="btn btn-light" href="{{ route('admin.account.provision', $account->id) }}">{{ __('Create') }}</a>
             @endif

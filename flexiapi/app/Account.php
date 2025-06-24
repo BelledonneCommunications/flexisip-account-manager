@@ -355,6 +355,34 @@ class Account extends Authenticatable
     }
 
     /**
+     * Provisioning
+     */
+
+    public function getProvisioningUrlAttribute(): string
+    {
+        return replaceHost(
+            route('provisioning.provision', $this->getProvisioningTokenAttribute()),
+            $this->space->host
+        );
+    }
+
+    public function getProvisioningQrcodeUrlAttribute(): string
+    {
+        return replaceHost(
+            route('provisioning.qrcode', $this->getProvisioningTokenAttribute()),
+            $this->space->host
+        );
+    }
+
+    public function getProvisioningWizardUrlAttribute(): string
+    {
+        return replaceHost(
+            route('provisioning.wizard', $this->getProvisioningTokenAttribute()),
+            $this->space->host
+        );
+    }
+
+    /**
      * Utils
      */
 
