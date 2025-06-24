@@ -4,7 +4,7 @@
     <header>
         <h1><i class="ph ph-users"></i> {{ __('Users') }}</h1>
         @if ($space)
-            <p>{{ $accounts->count()}} / @if ($space->max_accounts > 0){{ $space->max_accounts }} @else <i class="ph ph-infinity</i>@endif"></p>
+            <p>{{ $accounts->count()}} / @if ($space->max_accounts > 0){{ $space->max_accounts }} @else <i class="ph ph-infinity"></i>@endif</p>
         @endif
         <a class="btn secondary oppose" href="{{ route('admin.account.import.create') }}">
             <i class="ph ph-upload-simple"></i>

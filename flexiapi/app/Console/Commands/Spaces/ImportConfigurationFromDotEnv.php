@@ -16,8 +16,7 @@ class ImportConfigurationFromDotEnv extends Command
 
         if (!$space) {
             $this->error('The space cannot be found');
-
-            return 0;
+            return Command::SUCCESS;
         }
 
         $this->info('The following configuration will be imported in the space ' . $space->domain);

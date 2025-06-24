@@ -44,14 +44,21 @@ class CreateUpdate extends Command
         $space->domain = $this->argument('sip_domain');
         $space->name = $this->argument('name');
 
+        if ($hostSpace = Space::where('host', $this->argument('host'))->first()) {
+            if (!$space->exists && $hostSpace->domain != $space->domain) {
+                $this->error('A Space with this host and a different sip_domain already exists in the database');
+                return Command::FAILURE;
+            }
+        }
+
         $space->exists
-            ? $this->info('The domain already exists, updating it')
-            : $this->info('A new domain will be created');
+            ? $this->info('The space already exists, updating it')
+            : $this->info('A new Space will be created');
 
         $space->super = (bool)$this->option('super');
         $space->super
-            ? $this->info('Set as a super domain')
-            : $this->info('Set as a normal domain');
+            ? $this->info('Set as a super Space')
+            : $this->info('Set as a normal Space');
 
         $space->save();
 

@@ -155,6 +155,12 @@ function isRegularExpression(string $string): bool
     return $isRegularExpression;
 }
 
+function replaceHost(string $url, string $host): string
+{
+    $components = parse_url($url);
+    return str_replace($components['host'], $host, $url);
+}
+
 function resolveDomain(Request $request): string
 {
     return $request->has('domain')

@@ -46,10 +46,10 @@ class ClearAccountsTombstones extends Command
             $this->info($tombstones->count() . ' tombstones deleted');
             $tombstones->delete();
 
-            return 0;
+            return Command::SUCCESS;
         }
 
         $this->info($tombstones->count() . ' tombstones to delete');
-        return 0;
+        return Command::SUCCESS;
     }
 }

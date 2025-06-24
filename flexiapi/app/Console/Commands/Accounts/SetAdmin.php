@@ -39,12 +39,12 @@ class SetAdmin extends Command
 
         if (!$account) {
             $this->error('Account not found, please use an existing account id');
-            return 1;
+            return Command::FAILURE;
         }
 
         if ($account->admin) {
             $this->error('The account is already having the admin role');
-            return 1;
+            return Command::FAILURE;
         }
 
         $account->admin = true;
@@ -52,6 +52,6 @@ class SetAdmin extends Command
 
         $this->info('Account '.$account->identifier.' is now admin');
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

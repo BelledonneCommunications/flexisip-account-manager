@@ -52,6 +52,8 @@ v2.0
 - Fix FLEXIAPI-324 Add an app setup wizard page
 - Fix FLEXIAPI-335 Safari rendering issues with font icons
 - Fix FLEXIAPI-336 Fix broken ph icons
+- Fix FLEXIAPI-333 Remove HTML buttons because they cannot be rendered in "old" Outlook versions
+- Fix FLEXIAPI-337 Generate the provisioning URLs based on the user space
 
 v1.6
 ----

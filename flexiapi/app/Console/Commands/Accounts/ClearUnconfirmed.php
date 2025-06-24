@@ -53,10 +53,10 @@ class ClearUnconfirmed extends Command
             $accounts->delete();
             $this->info($count . ' accounts deleted');
 
-            return 0;
+            return Command::SUCCESS;
         }
 
         $this->info($count . ' accounts to delete');
-        return 0;
+        return Command::SUCCESS;
     }
 }
