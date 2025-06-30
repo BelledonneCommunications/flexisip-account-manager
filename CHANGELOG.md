@@ -54,6 +54,8 @@ v2.0
 - Fix FLEXIAPI-336 Fix broken ph icons
 - Fix FLEXIAPI-333 Remove HTML buttons because they cannot be rendered in "old" Outlook versions
 - Fix FLEXIAPI-337 Generate the provisioning URLs based on the user space
+- Fix FLEXIAPI-326 Rework email templates and translations
+- Fix FLEXIAPI-340 Fix the space resolution when getting the realm on Accounts
 
 v1.6
 ----
