@@ -42,7 +42,8 @@ class SpaceController extends Controller
             'host' => ['required', 'unique:spaces', new Domain()],
             'max_accounts' => 'nullable|integer',
             'expire_at' => 'nullable|date|after_or_equal:today',
-            'custom_provisioning_entries' => ['nullable', new Ini(Space::FORBIDDEN_KEYS)]
+            'custom_provisioning_entries' => ['nullable', new Ini(Space::FORBIDDEN_KEYS)],
+            'account_realm' => ['nullable', new Domain()],
         ]);
 
         $space = new Space;
@@ -105,6 +106,7 @@ class SpaceController extends Controller
             'max_account' => 'required|integer',
             'max_accounts' => 'required|integer',
             'expire_at' => 'nullable|date|after_or_equal:today',
+            'account_realm' => ['nullable', new Domain()],
 
             'custom_provisioning_entries' => ['nullable', new Ini(Space::FORBIDDEN_KEYS)],
             'custom_provisioning_overwrite_all' => 'required|boolean',

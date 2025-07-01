@@ -67,7 +67,7 @@ class SpaceController extends Controller
             'domain' => ['required', 'unique:spaces', new Domain()],
             'host' => 'nullable|regex:/'. Space::HOST_REGEX . '/',
             'full_host' => ['required', 'unique:spaces,host', new Domain()],
-            'account_realm' => [new Domain()],
+            'account_realm' => ['nullable', new Domain()],
         ]);
 
         $space = new Space();
