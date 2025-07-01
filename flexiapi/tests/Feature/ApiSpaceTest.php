@@ -78,15 +78,38 @@ class ApiSpaceTest extends TestCase
         $admin->generateUserApiKey();
 
         $thirdDomain = 'third.domain';
+        $accountRealm = 'account.realm';
 
         $response = $this->keyAuthenticated($admin)
             -> json($this->method, $this->route, [
                 'name' => $thirdDomain,
                 'domain' => $thirdDomain,
                 'host' => $thirdDomain,
-                'super' => false
             ])
-            ->assertStatus(201);
+            ->assertStatus(201)
+            ->assertJsonFragment([
+                'super' => false,
+                'account_realm' => null
+            ]);
+
+        $this->keyAuthenticated($admin)
+            -> json($this->method, $this->route, [
+                'name' => 'Another Domain',
+                'domain' => 'baddomain',
+                'host' => $thirdDomain,
+            ])
+            ->assertJsonValidationErrors(['domain']);
+
+        $this->keyAuthenticated($admin)
+            -> json($this->method, $this->route, [
+                'name' => 'Another Domain',
+                'domain' => 'another.domain',
+                'host' => 'another.host',
+                'account_realm' => $accountRealm
+            ])
+            ->assertJsonFragment([
+                'account_realm' => $accountRealm
+            ]);
 
         $this->keyAuthenticated($admin)
             ->json('GET', $this->route)
@@ -94,7 +117,6 @@ class ApiSpaceTest extends TestCase
                 'name' => $thirdDomain,
                 'domain' => $thirdDomain,
                 'host' => $thirdDomain,
-                'super' => false
             ])
             ->assertStatus(200);
 

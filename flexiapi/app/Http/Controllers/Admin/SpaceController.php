@@ -20,6 +20,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Space\Create;
 use App\Space;
 use App\Rules\Ini;
 use App\Rules\Domain;
@@ -55,7 +56,7 @@ class SpaceController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Create $request)
     {
         $fullHost = empty($request->get('host'))
             ? config('app.root_host')
@@ -63,11 +64,8 @@ class SpaceController extends Controller
 
         $request->merge(['full_host' => $fullHost]);
         $request->validate([
-            'name' => 'required|unique:spaces',
-            'domain' => ['required', 'unique:spaces', new Domain()],
             'host' => 'nullable|regex:/'. Space::HOST_REGEX . '/',
             'full_host' => ['required', 'unique:spaces,host', new Domain()],
-            'account_realm' => ['nullable', new Domain()],
         ]);
 
         $space = new Space();
