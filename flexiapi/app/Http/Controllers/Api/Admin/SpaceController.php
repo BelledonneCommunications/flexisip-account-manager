@@ -20,9 +20,10 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Space;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Space\Create;
 use App\Rules\Domain;
 use App\Rules\Ini;
-use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -34,15 +35,13 @@ class SpaceController extends Controller
         return Space::all();
     }
 
-    public function store(Request $request)
+    public function store(Create $request)
     {
         $request->validate([
-            'name' => 'required|unique:spaces',
-            'domain' => ['required', 'unique:spaces', new Domain()],
             'host' => ['required', 'unique:spaces', new Domain()],
             'max_accounts' => 'nullable|integer',
             'expire_at' => 'nullable|date|after_or_equal:today',
-            'custom_provisioning_entries' => ['nullable', new Ini(Space::FORBIDDEN_KEYS)]
+            'custom_provisioning_entries' => ['nullable', new Ini(Space::FORBIDDEN_KEYS)],
         ]);
 
         $space = new Space;
@@ -105,6 +104,7 @@ class SpaceController extends Controller
             'max_account' => 'required|integer',
             'max_accounts' => 'required|integer',
             'expire_at' => 'nullable|date|after_or_equal:today',
+            'account_realm' => ['nullable', new Domain()],
 
             'custom_provisioning_entries' => ['nullable', new Ini(Space::FORBIDDEN_KEYS)],
             'custom_provisioning_overwrite_all' => 'required|boolean',

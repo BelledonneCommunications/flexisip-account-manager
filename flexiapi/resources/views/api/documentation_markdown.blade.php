@@ -140,13 +140,14 @@ Get a Space.
 ### `POST /spaces`
 <span class="badge badge-error">Super Admin</span>
 
-Create a new `sip_domain`.
+Create a new `space`.
 
 JSON parameters:
 
 * `name` **required**, the space name
 * `domain` **required**, the SIP domain to use, must be unique
-* `super` **required**, boolean, set the domain as a Super Domain
+* `host` **required**, the space host
+* `super` boolean, set the domain as a Super Domain
 * `disable_chat_feature` boolean, disable the chat feature, default to `false`
 * `disable_meetings_feature` boolean, disable the meeting feature, default to `false`
 * `disable_broadcast_feature` boolean, disable the broadcast feature, default to `true`
