@@ -21,6 +21,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ExternalAccount\CreateUpdate;
+use App\Services\AccountService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -42,41 +43,9 @@ class ExternalAccountController extends Controller
 
     public function store(CreateUpdate $request, int $accountId)
     {
-        $account = Account::findOrFail($accountId);
-        $externalAccount = $account->external ?? new ExternalAccount;
+        $externalAccount = (new AccountService)->storeExternalAccount($request, $accountId);
 
-        $password = '';
-        if ($account->external?->realm != $request->get('realm')) {
-            $password = 'required_with:realm';
-        } elseif ($externalAccount->password == null) {
-            $password = 'required';
-        }
-
-        $request->validate(['password' => $password]);
-
-        $algorithm = 'MD5';
-
-        $externalAccount->account_id = $account->id;
-        $externalAccount->username = $request->get('username');
-        $externalAccount->domain = $request->get('domain');
-        $externalAccount->realm = $request->get('realm');
-        $externalAccount->registrar = $request->get('registrar');
-        $externalAccount->outbound_proxy = $request->get('outbound_proxy');
-        $externalAccount->protocol = $request->get('protocol');
-
-        if (!empty($request->get('password'))) {
-            $externalAccount->password = bchash(
-                $externalAccount->username,
-                $externalAccount->realm ?? $externalAccount->domain,
-                $request->get('password'),
-                $algorithm
-            );
-            $externalAccount->algorithm = $algorithm;
-        }
-
-        $externalAccount->save();
-
-        return redirect()->route('admin.account.show', $account->id);
+        return redirect()->route('admin.account.show', $externalAccount->account->id);
     }
 
     public function delete(int $accountId)

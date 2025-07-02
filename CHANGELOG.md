@@ -57,6 +57,7 @@ v2.0
 - Fix FLEXIAPI-326 Rework email templates and translations
 - Fix FLEXIAPI-340 Fix the space resolution when getting the realm on Accounts
 - Fix FLEXIAPI-341 Allow realm to be empty when creating a Space
+- Fix FLEXIAPI-342 Enforce password change when the External Account domain is changed
 
 v1.6
 ----
