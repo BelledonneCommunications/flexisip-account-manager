@@ -23,6 +23,7 @@ use App\Account;
 use App\AccountCreationToken;
 use App\AccountRecoveryToken;
 use App\EmailChangeCode;
+use App\ExternalAccount;
 use App\Http\Requests\Account\Create\Request as CreateRequest;
 use App\Http\Requests\Account\Update\Request as UpdateRequest;
 use App\Libraries\OvhSMS;
@@ -398,5 +399,50 @@ class AccountService
         Log::channel('events')->info('API: AccountRecoveryToken redeemed', ['account_recovery_token' => $accountRecoveryToken->toLog()]);
 
         return $account;
+    }
+
+    /**
+     * External account
+     */
+
+    public function storeExternalAccount(Request $request, int $accountId)
+    {
+        $account = Account::findOrFail($accountId);
+        $externalAccount = $account->external ?? new ExternalAccount;
+
+        $password = '';
+        if ($account->external?->realm != $request->get('realm')) {
+            $password = 'required_with:realm';
+        } elseif ($account->external?->domain != $request->get('domain')) {
+            $password = 'required_with:domain';
+        } elseif ($externalAccount->password == null) {
+            $password = 'required';
+        }
+
+        $request->validate(['password' => $password]);
+
+        $algorithm = 'MD5';
+
+        $externalAccount->account_id = $account->id;
+        $externalAccount->username = $request->get('username');
+        $externalAccount->domain = $request->get('domain');
+        $externalAccount->realm = $request->get('realm');
+        $externalAccount->registrar = $request->get('registrar');
+        $externalAccount->outbound_proxy = $request->get('outbound_proxy');
+        $externalAccount->protocol = $request->get('protocol');
+        $externalAccount->algorithm = $algorithm;
+
+        if (!empty($request->get('password'))) {
+            $externalAccount->password = bchash(
+                $externalAccount->username,
+                $externalAccount->realm ?? $externalAccount->domain,
+                $request->get('password'),
+                $algorithm
+            );
+        }
+
+        $externalAccount->save();
+
+        return $externalAccount;
     }
 }
