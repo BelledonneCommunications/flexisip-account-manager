@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends(space() != null ? 'layouts.main' : 'layouts.main_minimal')
 
 @section('content')
 

@@ -48,8 +48,10 @@ use App\Http\Controllers\Admin\SpaceController;
 use App\Http\Controllers\Admin\StatisticsController;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', 'login')->name('account.home');
-Route::get('about', 'AboutController@about')->name('about');
+Route::middleware(['space.check'])->group(function () {
+    Route::redirect('/', 'login')->name('account.home');
+    Route::get('about', 'AboutController@about')->name('about');
+});
 
 Route::middleware(['web_panel_enabled', 'space.check'])->group(function () {
     Route::get('wizard/{provisioning_token}', 'Account\ProvisioningController@wizard')->name('provisioning.wizard');

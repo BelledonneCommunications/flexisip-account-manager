@@ -17,7 +17,7 @@ class SpaceCheck
 
         $space = space();
 
-        if ($space) {
+        if ($space != null) {
             if (!str_ends_with($space->host, config('app.root_host'))) {
                 return abort(503, 'The APP_ROOT_HOST configured does not match with the current root domain');
             }
