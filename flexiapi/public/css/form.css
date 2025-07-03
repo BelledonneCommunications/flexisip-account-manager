@@ -228,12 +228,16 @@ form div.search:after {
 }
 
 form div span.supporting {
-    line-height: 2rem;
-    font-size: 1.25rem;
     color: var(--grey-4);
     display: block;
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
+}
+
+form div span.supporting,
+form div span.supporting a {
+    line-height: 2rem;
+    font-size: 1.25rem;
 }
 
 form div input[disabled],

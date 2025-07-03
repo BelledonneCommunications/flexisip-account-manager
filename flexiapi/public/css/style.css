@@ -164,6 +164,7 @@ code {
 p>a:not(.btn),
 ul:not(.tabs)>li>a,
 table tr td a:not(.btn):hover,
+form div span.supporting a,
 label>a {
     text-decoration: underline;
     color: var(--main-5);
