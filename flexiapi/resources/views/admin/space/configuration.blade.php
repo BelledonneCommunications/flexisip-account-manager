@@ -72,7 +72,8 @@
         <div class="large">
             <textarea style="min-height: 200px;" name="custom_provisioning_entries" id="custom_provisioning_entries">{{ $space->custom_provisioning_entries }}</textarea>
             <label for="custom_provisioning_entries">{{ __('Custom entries') }}</label>
-            <span class="supporting">{{ __('In ini format, will complete the other settings') }}</span>
+            <span class="supporting">{{ __('In ini format, will complete the other settings.') }}</span>
+            <span class="supporting">{{ __('Use ; to comment, key="value" to declare a complex string.') }} <a target="_blank" href="https://cheatsheets.zip/ini.html">{{ __('Checkout the cheatsheets to know how to format things correctly.') }}</a></span>
             @include('parts.errors', ['name' => 'custom_provisioning_entries'])
         </div>
 
