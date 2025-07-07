@@ -59,6 +59,7 @@ v2.0
 - Fix FLEXIAPI-341 Allow realm to be empty when creating a Space
 - Fix FLEXIAPI-342 Enforce password change when the External Account domain is changed
 - Fix FLEXIAPI-346 Complete the supporting text for the provisioning ini field
+- Fix FLEXIAPI-350 Fix wrongly assigned variables in some views
 
 v1.6
 ----

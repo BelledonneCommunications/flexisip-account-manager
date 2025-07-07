@@ -92,7 +92,7 @@ class AccountDictionaryController extends Controller
             'admin.account.dictionary.delete',
             [
                 'account' => $account,
-                'entry' =>  $account->dictionaryEntries()->where('key', $key)->firstOrFail()
+                'entry' => $account->dictionaryEntries()->where('key', $key)->firstOrFail()
             ]
         );
     }

@@ -49,7 +49,7 @@ class AccountDeviceController extends Controller
             'admin.account.device.delete',
             [
                 'account' => $account,
-                'device' =>  $connector->getDevices($account->identifier)
+                'device' => $connector->getDevices($account->identifier)
                     ->where('uuid', $uuid)->first()
             ]
         );
