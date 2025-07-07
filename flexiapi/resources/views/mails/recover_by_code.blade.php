@@ -3,7 +3,7 @@
 @section('content')
 # {{ __('Account Recovery Request') }}
 
-{{ __('We received a request to recover your account on :space', ['Space' =>  $space->name]) }}
+{{ __('We received a request to recover your account on :space', ['space' => $space->name]) }}
 
 {{ __('To proceed, please enter the verification code below:') }}
 
