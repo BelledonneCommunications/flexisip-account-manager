@@ -60,6 +60,7 @@ v2.0
 - Fix FLEXIAPI-342 Enforce password change when the External Account domain is changed
 - Fix FLEXIAPI-346 Complete the supporting text for the provisioning ini field
 - Fix FLEXIAPI-350 Fix wrongly assigned variables in some views
+- Fix FLEXIAPI-351 Fix import of CSV generated on Windows
 
 v1.6
 ----

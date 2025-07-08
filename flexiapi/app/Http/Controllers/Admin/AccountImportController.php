@@ -67,7 +67,9 @@ class AccountImportController extends Controller
         $lines = collect();
         $this->errors['Wrong file format'] = "The number of columns doesn't matches the reference file. The first MUST be the same as the reference file";
 
-        if ($line == "Username,Password,Role,Status,Phone,Email,External Username,External Domain,External Password,External Realm, External Registrar,External Outbound Proxy,External Protocol\n") {
+        $firstLine = 'Username,Password,Role,Status,Phone,Email,External Username,External Domain,External Password,External Realm, External Registrar,External Outbound Proxy,External Protocol';
+
+        if (substr($line, 0, strlen($firstLine)) == $firstLine) {
             $lines = $this->csvToCollection($request->file('csv'));
             unset($this->errors['Wrong file format']);
         }
