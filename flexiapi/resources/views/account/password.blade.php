@@ -22,6 +22,7 @@
         <div>
             <input type="password" name="password" required>
             <label for="password">{{ __('Password') }}</label>
+            @include('parts.errors', ['name' => 'password'])
         </div>
         <div>
             <input type="password" name="password_confirmation" required>
