@@ -62,6 +62,7 @@ v2.0
 - Fix FLEXIAPI-350 Fix wrongly assigned variables in some views
 - Fix FLEXIAPI-351 Fix import of CSV generated on Windows
 - Fix FLEXIAPI-352 Add missing errors box in the password change form
+* Fix FLEXIAPI-353 Validate UUIDs in the vcards-storage endpoints, complete the documentation and fix the related tests
 
 v1.6
 ----

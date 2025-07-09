@@ -37,28 +37,28 @@ class ApiAccountVcardsStorageTest extends TestCase
 
         $adminRoute = '/api/accounts/' . $account->id . '/vcards-storage';
 
-        $uid = 'urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6';
+        $uid = 'f81d4fae-7dec-11d0-a765-00a0c91e6bf6';
         $lastVcard =
 'BEGIN:VCARD
 VERSION:4.0
 FN:Jhonny English
-UID:' . $uid . '
+UID:urn:uuid:' . $uid . '
 END:VCARD
 ';
-        $uid2 = 'urn:uuid:a5b33443-687c-4d19-bdd0-b30cf76bf96d';
+        $uid2 = 'a5b33443-687c-4d19-bdd0-b30cf76bf96d';
         $secondVcard =
 'BEGIN:VCARD
 VERSION:4.0
 FN:Simone Perreault
-UID:' . $uid2 . '
+UID:urn:uuid:' . $uid2 . '
 END:VCARD
 ';
-        $uid3 = 'urn:uuid:a5b33443-687c-4d19-bdd0-b30cf76bfc4d';
+        $uid3 = 'a5b33443-687c-4d19-bdd0-b30cf76bfc4d';
         $thirdVcard =
 'BEGIN:VCARD
 VERSION:4.0
 FN:Jean Jannot
-UID:' . $uid3 . '
+UID:urn:uuid:' . $uid3 . '
 END:VCARD
 ';
 
@@ -93,7 +93,7 @@ END:VCARD'
 'BEGIN:VCARD
 VERSION:4.0
 FN:Simon Perreault
-UID:' . $uid . '
+UID:urn:uuid:' . $uid . '
 END:VCARD'
             ])->assertStatus(200);
 
@@ -110,7 +110,7 @@ END:VCARD'
 'BEGIN:VCARD
 VERSION:4.0
 FN:Simon Perreault
-UID:' . $uid . '
+UID:urn:uuid:' . $uid . '
 END:VCARD'
             ])->assertStatus(409);
 
