@@ -20,7 +20,7 @@ else
 endif
 
 cleanup-package-semvers:
-	rm flexisip-account-manager.spec.run
+	rm -f flexisip-account-manager.spec.run
 
 prepare:
 	cd flexiapi && php composer.phar install --ignore-platform-req=ext-redis --no-dev
@@ -58,11 +58,13 @@ package-end-common:
 	rm -rf $(OUTPUT_DIR)/rpmbuild/SPECS $(OUTPUT_DIR)/rpmbuild/SOURCES $(OUTPUT_DIR)/rpmbuild/SRPMS $(OUTPUT_DIR)/rpmbuild/BUILD $(OUTPUT_DIR)/rpmbuild/BUILDROOT
 
 rpm-el8-only:
+	mkdir -p build
 	sed -i 's/Requires:.*/Requires: php >= 8.1, php-gd, php-pdo, php-redis, php-mysqlnd, php-mbstring/g' $(OUTPUT_DIR)/rpmbuild/SPECS/flexisip-account-manager.spec
 	rpmbuild -v -bb --define 'dist .el8' --define '_topdir $(OUTPUT_DIR)/rpmbuild' --define "_rpmdir $(OUTPUT_DIR)/rpmbuild" $(OUTPUT_DIR)/rpmbuild/SPECS/flexisip-account-manager.spec
 	@echo "📦✅ RPM el8 Package Created"
 
 rpm-el9-only:
+	mkdir -p build
 	rpmbuild -v -bb --define 'dist .el9' --define '_topdir $(OUTPUT_DIR)/rpmbuild' --define "_rpmdir $(OUTPUT_DIR)/rpmbuild" $(OUTPUT_DIR)/rpmbuild/SPECS/flexisip-account-manager.spec
 	@echo "📦✅ RPM el9 Package Created"
 
@@ -72,6 +74,7 @@ rpm-cleanup:
 	rm -r rpmbuild
 
 deb-only:
+	mkdir -p build
 	sed -i 's/posttrans/post/g' $(OUTPUT_DIR)/rpmbuild/SPECS/flexisip-account-manager.spec
 	rpmbuild -v -bb --with deb --define '_topdir $(OUTPUT_DIR)/rpmbuild' --define "_rpmfilename tmp.rpm" --define "_rpmdir $(OUTPUT_DIR)/rpmbuild" $(OUTPUT_DIR)/rpmbuild/SPECS/flexisip-account-manager.spec
 	fakeroot alien -g -k --scripts $(OUTPUT_DIR)/rpmbuild/tmp.rpm
@@ -88,11 +91,18 @@ deb-only:
 
 	mv *.deb build/.
 
-rpm-el8: prepare package-semvers package-common rpm-el8-only rpm-cleanup cleanup-package-semvers package-end-common
-rpm-el8-dev: prepare-dev package-semvers package-common rpm-el8-only rpm-cleanup cleanup-package-semvers package-end-common
-rpm-el9: prepare package-semvers package-common rpm-el9-only rpm-cleanup cleanup-package-semvers package-end-common
-rpm-el9-dev: prepare-dev package-semvers package-common rpm-el9-only rpm-cleanup cleanup-package-semvers package-end-common
-deb: prepare package-semvers package-common deb-only cleanup-package-semvers package-end-common
-deb-dev: prepare-dev package-semvers package-common deb-only cleanup-package-semvers package-end-common
+prepare-common: prepare package-semvers package-common
+
+package-el8: rpm-el8-only rpm-cleanup cleanup-package-semvers package-end-common
+rpm-el8: prepare-common package-el8
+rpm-el8-dev: prepare-dev package-semvers package-common package-el8
+
+package-el9: rpm-el9-only rpm-cleanup cleanup-package-semvers package-end-common
+rpm-el9: prepare-common package-el9
+rpm-el9-dev: prepare-dev package-semvers package-common package-el9
+
+package-deb: deb-only cleanup-package-semvers package-end-common
+deb: prepare-common package-deb
+deb-dev: prepare-dev package-semvers package-common package-deb
 
 .PHONY: rpm

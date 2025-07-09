@@ -1,4 +1,6 @@
 rocky8-package:
+  needs:
+    - prepare-package
   extends: .package
   image: gitlab.linphone.org:4567/bc/public/docker/rocky8-php:$ROCKY_8_IMAGE_VERSION
   script:
@@ -8,9 +10,11 @@ rocky8-package:
     - dnf -y module enable php:remi-8.2
     - dnf -y update php\*
     - dnf -y install php-sodium
-    - make rpm-el8
+    - make package-el8
 
 rocky9-package:
+  needs:
+    - prepare-package
   extends: .package
   image: gitlab.linphone.org:4567/bc/public/docker/rocky9-php:$ROCKY_9_IMAGE_VERSION
   script:
@@ -20,16 +24,18 @@ rocky9-package:
     - dnf -y module enable php:remi-8.2
     - dnf -y update php\*
     - dnf -y install php-sodium
-    - make rpm-el9
+    - make package-el9
 
 debian12-package:
+  needs:
+    - prepare-package
   extends: .debian_package
   image: gitlab.linphone.org:4567/bc/public/docker/debian12-php:$DEBIAN_12_IMAGE_VERSION
 
 .debian_package:
   extends: .package
   script:
-    - make deb
+    - make package-deb
 
 remi-rocky8-package:
   image: gitlab.linphone.org:4567/bc/public/docker/rocky8-php:$ROCKY_8_IMAGE_VERSION
@@ -51,6 +57,9 @@ remi-rocky9-package:
 
 .remi-rocky-package:
   extends: .package
+  rules:
+    - changes:
+      - .gitlab-ci.yml
   script:
     # Remi
     - mkdir -p $CI_PROJECT_DIR/build
@@ -88,7 +97,13 @@ remi-rocky9-package:
       - build/*
     when: always
     expire_in: 1 day
+
+  variables:
+    COMPOSER_CACHE_DIR: $CI_PROJECT_DIR/.composer/cache
+    COMPOSER_ALLOW_SUPERUSER: 1
+
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
       - flexiapi/vendor/
+      - .composer/cache
