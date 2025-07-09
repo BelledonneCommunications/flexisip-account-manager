@@ -30,6 +30,6 @@ class VcardsStorageController extends Controller
 
     public function destroy(Request $request, string $uuid)
     {
-        return (new AdminVcardsStorageController)->destroy($request->user()->id, $uuid);
+        return (new AdminVcardsStorageController)->destroy($request, $request->user()->id, $uuid);
     }
 }

@@ -46,14 +46,18 @@ class VcardsStorageController extends Controller
         ]);
 
         $vcardo = VObject\Reader::read($request->get('vcard'));
+        $vcardoUID = substr($vcardo->UID, 9);
 
-        if (Account::findOrFail($accountId)->vcardsStorage()->where('uuid', $vcardo->UID)->first()) {
+        $request->merge(['uuid' => $vcardoUID]);
+        $request->validate(['uuid' => 'uuid']);
+
+        if (Account::findOrFail($accountId)->vcardsStorage()->where('uuid', $vcardoUID)->first()) {
             abort(409, 'Vcard already exists');
         }
 
         $vcard = new VcardStorage();
         $vcard->account_id = $accountId;
-        $vcard->uuid = $vcardo->UID;
+        $vcard->uuid = $vcardoUID;
         $vcard->vcard = preg_replace('/\r\n?/', "\n", $vcardo->serialize());
         $vcard->save();
 
@@ -62,13 +66,20 @@ class VcardsStorageController extends Controller
 
     public function update(Request $request, int $accountId, string $uuid)
     {
+        $request->merge(['uuid' => $uuid]);
+
         $request->validate([
+            'uuid' => 'uuid',
             'vcard' => ['required', new Vcard()]
         ]);
 
         $vcardo = VObject\Reader::read($request->get('vcard'));
+        $vcardoUID = substr($vcardo->UID, 9);
 
-        if ($vcardo->UID != $uuid) {
+        $request->merge(['vuuid' => $vcardoUID]);
+        $request->validate(['vuuid' => 'uuid']);
+
+        if ($vcardoUID != $uuid) {
             abort(422, 'UUID should be the same');
         }
 
@@ -79,8 +90,11 @@ class VcardsStorageController extends Controller
         return $vcard->vcard;
     }
 
-    public function destroy(int $accountId, string $uuid)
+    public function destroy(Request $request, int $accountId, string $uuid)
     {
+        $request->merge(['uuid' => $uuid]);
+        $request->validate(['uuid' => 'uuid']);
+
         $vcard = Account::findOrFail($accountId)->vcardsStorage()->where('uuid', $uuid)->firstOrFail();
 
         return $vcard->delete();

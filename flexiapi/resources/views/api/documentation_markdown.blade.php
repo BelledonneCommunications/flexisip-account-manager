@@ -347,7 +347,7 @@ Return `403` if the `max_accounts` limit of the corresponding Space is reached.
 JSON parameters:
 
 * `username` unique username, minimum 6 characters
-* `password` **required** minimum 6 characters
+* `password` **required**, minimum 6 characters
 * `algorithm` **required**, values can be `SHA-256` or `MD5`
 * `account_creation_token` the unique `account_creation_token`
 * `dtmf_protocol` optional, values must be `sipinfo`, `sipmessage` or `rfc2833`
@@ -403,7 +403,7 @@ Change the account password.
 JSON parameters:
 
 * `algorithm` **required**, values can be `SHA-256` or `MD5`
-* `old_password` **required** if the password is already set, the old password
+* `old_password` **required**, if the password is already set, the old password
 * `password` **required**, the new password
 
 ### `POST /accounts`
@@ -416,7 +416,7 @@ Return `403` if the `max_accounts` limit of the corresponding Space is reached.
 JSON parameters:
 
 * `username` unique username, minimum 6 characters
-* `password` **required** minimum 6 characters
+* `password` **required**, minimum 6 characters
 * `algorithm` **required**, values can be `SHA-256` or `MD5`
 * `domain` **not configurable by default**, must exist in one of the configured Spaces. Only configurable if the admin is a super admin. Otherwise the SIP domain of the corresponding space is used.
 * `activated` optional, a boolean, set to `false` by default
@@ -436,7 +436,7 @@ JSON parameters:
 
 * `username` unique username, minimum 6 characters
 * `domain` **not configurable by default**, must exist in one of the configured Spaces. Only configurable if the admin is a super admin. Otherwise the SIP domain of the corresponding space is used.
-* `password` **required** minimum 6 characters
+* `password` **required**, minimum 6 characters
 * `algorithm` **required**, values can be `SHA-256` or `MD5`
 * `display_name` optional, string
 * `email` optional, must be an email, must be unique if `ACCOUNT_EMAIL_UNIQUE` is set to `true`
@@ -596,7 +596,7 @@ Store a vCard.
 
 JSON parameters:
 
-* `vcard`, mandatory, a valid vCard having a mandatory `UID` parameter that is uniquelly identifying it. This `UID` parameter will then be used to manipulate the vcard through the following endpoints as `uuid`.
+* `vcard`, **required**, a valid vCard having a mandatory `UID` parameter that is uniquelly identifying it. This `UID` parameter will then be used to manipulate the vcard through the following endpoints as `uuid`.
 
 ### `PUT /accounts/{id/me}/vcards-storage/{uuid}`
 <span class="badge badge-warning">Admin</span>
@@ -606,7 +606,25 @@ Update a vCard.
 
 JSON parameters:
 
-* `vcard`, mandatory, a valid vCard having a mandatory `UID` parameter that is uniquelly identifying it and is the same as the `uuid` parameter.
+* `vcard`, **required**, a valid vCard having a mandatory `UID` parameter that is uniquelly identifying it and is the same as the `uuid` parameter.
+
+URL parameter:
+
+* `uuid`, **required**, a valid UUID with the URN namespace
+
+Example:
+
+```
+> PUT /accounts/me/vcards-storage/415f8219-5742-4cc5-9572-617c7f956fc5
+> {
+>   "vcard": "BEGIN:VCARD
+> VERSION:4.0
+> FN:Simon Perreault
+> UID:urn:uuid:415f8219-5742-4cc5-9572-617c7f956fc5
+> END:VCARD"
+> }
+
+```
 
 ### `GET /accounts/{id/me}/vcards-storage`
 <span class="badge badge-warning">Admin</span>
@@ -618,11 +636,19 @@ Return the list of stored vCards
 <span class="badge badge-warning">Admin</span>
 <span class="badge badge-info">User</span>
 
+URL parameter:
+
+* `uuid`, **required**, a valid UUID with the URN namespace
+
 Return a stored vCard
 
 ### `DELETE /accounts/{id/me}/vcards-storage/{uuid}`
 <span class="badge badge-warning">Admin</span>
 <span class="badge badge-info">User</span>
+
+URL parameter:
+
+* `uuid`, **required**, a valid UUID with the URN namespace
 
 Delete a stored vCard
 
