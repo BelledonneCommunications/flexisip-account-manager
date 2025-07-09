@@ -24,26 +24,30 @@ debian12-deploy:
 
 remi-rocky8-deploy:
   extends: .deploy
+  rules:
+    - changes:
+      - .gitlab-ci.yml
   script:
-    - ./deploy_packages.sh rockylinux
+    - ./deploy_packages.sh rockylinux 8
   needs:
     - remi-rocky8-package
-    - remi-rocky8-test
 
 remi-rocky9-deploy:
   extends: .deploy
+  rules:
+    - changes:
+      - .gitlab-ci.yml
   script:
-    - ./deploy_packages.sh rockylinux
+    - ./deploy_packages.sh rockylinux 9
   needs:
     - remi-rocky9-package
-    - remi-rocky9-test
 
 .deploy:
   stage: deploy
   tags: ["docker"]
-  only:
-    - master
-    - /^release/.*$/
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "master"
+    - if: $CI_COMMIT_REF_NAME =~ /^release/
 
   before_script:
     - rm -f $CI_PROJECT_DIR/build/*devel*.rpm # Remove devel packages

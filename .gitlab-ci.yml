@@ -7,11 +7,13 @@ variables:
   PHP_MSGPACK_REMI_VERSION: php-pecl-msgpack-2.2.0-3
 
 include:
+  - '.gitlab-ci-files/prepare-package.yml'
   - '.gitlab-ci-files/package.yml'
   - '.gitlab-ci-files/test.yml'
   - '.gitlab-ci-files/deploy.yml'
 
 stages:
+  - prepare-package
   - package
   - test
   - deploy

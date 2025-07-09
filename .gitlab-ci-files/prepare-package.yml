@@ -1,0 +1,11 @@
+prepare-package:
+  tags: ["docker"]
+  stage: prepare-package
+  image: gitlab.linphone.org:4567/bc/public/docker/debian12-php:$DEBIAN_12_IMAGE_VERSION
+  script:
+    - make prepare-common
+  artifacts:
+    paths:
+      - rpmbuild/*
+    when: always
+    expire_in: 1 day
