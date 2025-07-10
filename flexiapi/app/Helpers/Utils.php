@@ -179,7 +179,7 @@ function resolveUserContacts(Request $request)
 {
     $selected = ['id', 'username', 'domain', 'activated', 'dtmf_protocol', 'display_name'];
 
-    return Account::whereIn('id', function ($query) use ($request) {
+    return Account::withoutGlobalScopes()->whereIn('id', function ($query) use ($request) {
         $query->select('contact_id')
             ->from('contacts')
             ->where('account_id', $request->user()->id)

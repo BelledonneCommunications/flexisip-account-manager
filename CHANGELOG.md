@@ -63,6 +63,7 @@ v2.0
 - Fix FLEXIAPI-351 Fix import of CSV generated on Windows
 - Fix FLEXIAPI-352 Add missing errors box in the password change form
 - Fix FLEXIAPI-356 Cleanup and reorganize the pipeline to mutualize some things and save time
+- Fix FLEXIAPI-355 Add withoutGlobalScope() to the Account ContactVcardList resolver
 
 v1.6
 ----
