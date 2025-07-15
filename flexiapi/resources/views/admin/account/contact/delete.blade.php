@@ -12,14 +12,14 @@
 @section('content')
     <h2>{{ __('Delete') }}</h2>
 
+    <div>
+        <p>{{ __('You are going to permanently delete the following element. Please confirm your action.') }}</p>
+        <p><b>{{ $contact->identifier }}</b></p>
+    </div>
+
     <form method="POST" action="{{ route('admin.account.contact.destroy', [$account]) }}" accept-charset="UTF-8">
         @csrf
         @method('delete')
-
-        <div>
-            <p>{{ $device->user_agent }}</p>
-            <p><b>{{ $contact->identifier }}</b></p>
-        </div>
 
         <input name="account_id" type="hidden" value="{{ $account->id }}">
         <input name="contact_id" type="hidden" value="{{ $contact->id }}">
