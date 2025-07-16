@@ -58,6 +58,7 @@ remi-rocky9-package:
 .remi-rocky-package:
   extends: .package
   rules:
+    - if: $CI_COMMIT_REF_NAME =~ /^release/ || $CI_COMMIT_REF_NAME == "master"
     - changes:
       - .gitlab-ci.yml
   script:
