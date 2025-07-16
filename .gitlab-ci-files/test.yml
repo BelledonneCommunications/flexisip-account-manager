@@ -53,9 +53,6 @@ mysql-latest-test:
     DB_DATABASE: flexiapi
     DB_PASSWORD: flexiapi
     DB_USERNAME: root
-  rules:
-    - changes:
-      - flexiapi/database/migrations/*
   script:
     - apt update
     - apt install -y ./build/*.deb
