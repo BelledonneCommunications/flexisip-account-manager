@@ -12,6 +12,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
     - **New mandatory DotEnv variable** `APP_ROOT_HOST`, replaces `APP_URL` and `APP_SIP_DOMAIN` that are now configured using the new dedicated Artisan script. It defines the root hostname where all the Spaces will be configured. All the Spaces will be as subdomains of `APP_ROOT_HOST` except one that can be equal to `APP_ROOT_HOST`. Example: if `APP_ROOT_HOST=myhost.com` the Spaces hosts will be `myhost.com`, `alpha.myhost.com` , `beta.myhost.com`...
     - **New DotEnv variable:** `APP_ACCOUNT_RECOVERY_TOKEN_EXPIRATION_MINUTES=0` Number of minutes before expiring the recovery tokens
     - **New Artisan script** `php artisan spaces:create-update {sip_domain} {host} {name} {--super}`, replaces `php artisan sip_domains:create-update {sip_domain} {--super}`. Can create a Space or update a Space Host base on its Space SIP Domain.
+- **Push Notification endpoint** Add a /push-notification endpoint to send custom push notifications to the Flexisip Pusher
+- **Add internationalisation support in the app** The web panels are now available in French and English
+- **Add External Accounts** In the API and web panels, allowing users to setup an external account that can be used in another service like the B2BUA
+- **Add configurable admin API Keys** Allowing admins to setup non-expiring services API Keys
+- **Add provisioning email** A user can now receive a custom generated email with all the provisioning related information
+- **Add API endpoints to send the password reset and provisioning emails**
+- **Add an app setup wizard page** Static web page inviting the users to download the app if it is not installed yet
 
 ### Changed
 
@@ -31,6 +38,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
     - ACCOUNT_PROVISIONING_RC_FILE
     - ACCOUNT_PROVISIONING_OVERWRITE_ALL
     - ACCOUNT_PROVISIONING_USE_X_LINPHONE_PROVISIONING_HEADER
+- **Complete and reorganize the Markdown documentation**
+- **Refactor the emails templates** All the emails were modernized and are now generated in HTML
+
+### Removed
+
+- **Remove the deprecated endpoints** The endpoints inherited from XMLRPC are now completely removed
 
 ### Migrate from [1.6]
 
@@ -73,18 +86,26 @@ php artisan spaces:import-configuration-from-dot-env {sip_domain}
 
 You can find more details regarding those steps in the [`INSTALL.md`](INSTALL.md) and [`README.md`](README.md) files.
 
-### Deprecated
-
-- **Last major version supporting the deprecated endpoints of the API**
 
 ## [1.6] - 2024-12-30
 
 ### Added
 
-- **Phone validation** Phone numbers are now strictly validated and countries can be enabled disabled to prevent spam
-- **SIP Domains** Account SIP domains can now be managed from the UI and API
-- **CoTURN Credential** Get CoTURN credentials from the API
+- **Allow the expiration of tokens and codes in the DotEnv configuration**
+    - **New DotEnv variables:** check all the new `*_EXPIRATION_MINUTES` for each token and code in `.env.example`
+- **Phone validation system by country code:** all the provided phone numbers are now properly validated and some countries can be forbidden
+- **SIP Domain management:** the account domains are now managed in a set of panels and API endpoints, this is the base of the upcoming space administration system
+- **JSON validation in the API:** the provised JSON is now validated and returns an error if an issue is detected
+- **CoTURN credentials support:** TURN credentials can now be generated and return through the provisioning feature
 - **RFC 8898 Support**
+
+## Changed
+
+- **Replace Material Icons with Phosphor**
+
+## Deprecated
+
+- **Last major version supporting the deprecated endpoints of the API**
 
 ### Migrate from [1.5]
 
