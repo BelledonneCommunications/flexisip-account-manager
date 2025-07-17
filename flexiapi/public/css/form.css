@@ -46,6 +46,7 @@ p .btn.oppose {
     pointer-events: none;
 }
 
+.btn:focus-visible,
 .btn:hover {
     background-color: var(--main-6);
     border-color: var(--main-6);
@@ -311,8 +312,8 @@ form div select:hover {
     border-color: var(--second-4);
 }
 
-form div input:focus-visible,
-form div input:active,
+form div input:not(.btn):focus-visible,
+form div input:not(.btn):active,
 form div textarea:focus-visible,
 form div textarea:active {
     color: var(--main-5);

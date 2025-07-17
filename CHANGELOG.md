@@ -1,5 +1,9 @@
 # Flexisip Account Manager Changelog
 
+v2.1
+----
+- Fix FLEXIAPI-282 Migrate to Laravel 11 and PHP 8.2+
+
 v2.0
 ----
 - Fix FLEXIAPI-205 Remove the deprecated endpoints, compatibility code documentation and tests. Drop the confirmation_key accounts column and activation_expirations table
@@ -70,6 +74,7 @@ v2.0
 - Fix FLEXIAPI-312 Add Redis publish event when updating the externalAccount to ping the Flexisip B2BUA
 - Fix FLEXIAPI-363 Send the Redis publish event when the externalAccount is deleted to ping the Flexisip B2BUA
 - Fix FLEXIAPI-364 Fix a faulty redirection in the ExternalAccount controller
+- Fix FLEXIAPI-361 Prepare the 2.0 release
 
 v1.6
 ----

@@ -17,7 +17,7 @@ Flexisip is dual licensed, and can be licensed and distributed:
 
 # Documentation
 
-Once deployed you can have access to the global and API documentation on the `/api` and `/documentation` pages.
+Once deployed you can have access to the global and API documentation on the `/api` and `/provisioning/documentation` pages.
 
 # Setup
 
@@ -25,7 +25,6 @@ Check the [INSTALL.md](INSTALL.md) and [CHANGELOG.md](CHANGELOG.md) files.
 
 ## Usage
 
-For the web panel, a general documentation is available under the `/documentation` page.
 For the REST API, the `/api` page contains all the required documentation to authenticate and request the API.
 FlexiAPI is also providing endpoints to provision Liblinphone powered devices. You can find more documentation about it on the `/provisioning/documentation` documentation page.
 
@@ -41,7 +40,7 @@ Create or update a Space, required to then create accounts afterward. The `super
 
 ### Import the old DotEnv instance configuration into a Space
 
-Since 1.7 some environnement instance configuration variables were moved into the Space configuration, you can import them using this command.
+Since 2.0 some environnement instance configuration variables were moved into the Space configuration, you can import them using this command.
 
     php artisan spaces:import-configuration-from-dot-env {sip_domain}
 
