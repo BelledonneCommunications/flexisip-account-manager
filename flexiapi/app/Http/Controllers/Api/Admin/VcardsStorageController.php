@@ -26,12 +26,14 @@ use App\VcardStorage;
 use Illuminate\Http\Request;
 
 use Sabre\VObject;
+use stdClass;
 
 class VcardsStorageController extends Controller
 {
     public function index(int $accountId)
     {
-        return Account::findOrFail($accountId)->vcardsStorage()->get()->keyBy('uuid');
+        $list = Account::findOrFail($accountId)->vcardsStorage()->get()->keyBy('uuid');
+        return $list->isEmpty() ? new stdClass : $list;
     }
 
     public function show(int $accountId, string $uuid)

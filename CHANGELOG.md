@@ -66,6 +66,7 @@ v2.0
 - Fix FLEXIAPI-355 Add withoutGlobalScope() to the Account ContactVcardList resolver
 - Fix FLEXIAPI-354 Fix contact deletion
 - Fix FLEXIAPI-360 Add rules on some jobs to only run them in the Gitlab pipeline when needed
+- Fix FLEXIAPI-362 Return an empty object and not an empty array in the vcards-storage index endpoint to prevent some parsing issues in the clients
 
 v1.6
 ----

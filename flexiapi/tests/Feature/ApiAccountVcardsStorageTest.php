@@ -62,6 +62,12 @@ UID:' . $uid3 . '
 END:VCARD
 ';
 
+        // Empty
+        $this->keyAuthenticated($account)
+            ->get($this->route)
+            ->assertStatus(200)
+            ->assertSee('{}');
+
         // Missing vcard
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
