@@ -26,17 +26,20 @@ use App\EmailChangeCode;
 use App\ExternalAccount;
 use App\Http\Requests\Account\Create\Request as CreateRequest;
 use App\Http\Requests\Account\Update\Request as UpdateRequest;
+use App\Libraries\FlexisipRedisConnector;
 use App\Libraries\OvhSMS;
 use App\Mail\NewsletterRegistration;
 use App\Mail\RecoverByCode;
 use App\Mail\RegisterValidation;
 use App\PhoneChangeCode;
 use App\Rules\FilteredPhone;
-use Illuminate\Support\Facades\Log;
+
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Mail;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 
 class AccountService
@@ -194,7 +197,14 @@ class AccountService
     public function destroy(Request $request, int $accountId)
     {
         $account = Account::findOrFail($accountId);
+
+        $externalAccount = $account->external;
+
         $account->delete();
+
+        if ($externalAccount) {
+            (new FlexisipRedisConnector)->pingB2BUA($externalAccount);
+        }
 
         Log::channel('events')->info(
             'Account Service: Account destroyed',
@@ -442,6 +452,8 @@ class AccountService
         }
 
         $externalAccount->save();
+
+        (new FlexisipRedisConnector)->pingB2BUA($externalAccount);
 
         return $externalAccount;
     }
