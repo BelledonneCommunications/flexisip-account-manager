@@ -457,4 +457,15 @@ class AccountService
 
         return $externalAccount;
     }
+
+    public function deleteExternalAccount(int $accountId)
+    {
+        $account = Account::findOrFail($accountId);
+        $externalAccount = $account->external;
+
+        if ($externalAccount) {
+            (new FlexisipRedisConnector)->pingB2BUA($externalAccount);
+            return $externalAccount->delete();
+        }
+    }
 }

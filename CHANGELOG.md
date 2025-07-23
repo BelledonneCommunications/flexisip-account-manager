@@ -68,6 +68,7 @@ v2.0
 - Fix FLEXIAPI-360 Add rules on some jobs to only run them in the Gitlab pipeline when needed
 - Fix FLEXIAPI-362 Return an empty object and not an empty array in the vcards-storage index endpoint to prevent some parsing issues in the clients
 - Fix FLEXIAPI-312 Add Redis publish event when updating the externalAccount to ping the Flexisip B2BUA
+- Fix FLEXIAPI-363 Send the Redis publish event when the externalAccount is deleted to ping the Flexisip B2BUA
 
 v1.6
 ----

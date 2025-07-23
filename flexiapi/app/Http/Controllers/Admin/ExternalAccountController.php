@@ -50,17 +50,14 @@ class ExternalAccountController extends Controller
 
     public function delete(int $accountId)
     {
-        $account = Account::findOrFail($accountId);
-
         return view('admin.account.external.delete', [
-            'account' => $account
+            'account' => Account::findOrFail($accountId)
         ]);
     }
 
     public function destroy(int $accountId)
     {
-        $account = Account::findOrFail($accountId);
-        $account->external->delete();
+        (new AccountService)->deleteExternalAccount($accountId);
 
         return redirect()->route('admin.account.show', $account->id);
     }
