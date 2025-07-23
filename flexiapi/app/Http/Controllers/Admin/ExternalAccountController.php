@@ -43,9 +43,9 @@ class ExternalAccountController extends Controller
 
     public function store(CreateUpdate $request, int $accountId)
     {
-        $externalAccount = (new AccountService)->storeExternalAccount($request, $accountId);
+        (new AccountService)->storeExternalAccount($request, $accountId);
 
-        return redirect()->route('admin.account.show', $externalAccount->account->id);
+        return redirect()->route('admin.account.show', $accountId);
     }
 
     public function delete(int $accountId)
@@ -59,6 +59,6 @@ class ExternalAccountController extends Controller
     {
         (new AccountService)->deleteExternalAccount($accountId);
 
-        return redirect()->route('admin.account.show', $account->id);
+        return redirect()->route('admin.account.show', $accountId);
     }
 }
