@@ -1,5 +1,29 @@
 # Flexisip Account Manager Changelog
 
+v1.6.6
+---
+- Fix FLEXIAPI-365 Use mustache syntaxe for HCaptcha, small CSS fix and update the dependencies
+
+v1.6.5
+---
+- Fix FLEXIAPI-269 Update the IsNotPhoneNumber rule to use a better phone number validator
+
+v1.6.4
+---
+- Fix FLEXIAPI-268 Allow pn-param in Apple format for the push notifications endpoints
+
+v1.6.3
+---
+- Fix FLEXIAPI-264 Add -k|api_key_ip parameter to accounts:create-admin-account...
+
+v1.6.2
+---
+- Fix FLEXIAPI-262 Bypass the JWT auth if we have an API
+
+v1.6.1
+---
+- Fix FLEXIAPI-254 Allow no data on POST requests to not trigger the ValidateJSON middleware
+
 v1.6
 ----
 - Fix FLEXIAPI-192 Add DotEnv configuration to allow the expiration of tokens and codes in the app
