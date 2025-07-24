@@ -43,25 +43,22 @@ class ExternalAccountController extends Controller
 
     public function store(CreateUpdate $request, int $accountId)
     {
-        $externalAccount = (new AccountService)->storeExternalAccount($request, $accountId);
+        (new AccountService)->storeExternalAccount($request, $accountId);
 
-        return redirect()->route('admin.account.show', $externalAccount->account->id);
+        return redirect()->route('admin.account.show', $accountId);
     }
 
     public function delete(int $accountId)
     {
-        $account = Account::findOrFail($accountId);
-
         return view('admin.account.external.delete', [
-            'account' => $account
+            'account' => Account::findOrFail($accountId)
         ]);
     }
 
     public function destroy(int $accountId)
     {
-        $account = Account::findOrFail($accountId);
-        $account->external->delete();
+        (new AccountService)->deleteExternalAccount($accountId);
 
-        return redirect()->route('admin.account.show', $account->id);
+        return redirect()->route('admin.account.show', $accountId);
     }
 }

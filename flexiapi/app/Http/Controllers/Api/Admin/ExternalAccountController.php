@@ -42,7 +42,6 @@ class ExternalAccountController extends Controller
 
     public function destroy(int $accountId)
     {
-        $account = Account::findOrFail($accountId);
-        return $account->external->delete();
+        return (new AccountService)->deleteExternalAccount($accountId);
     }
 }

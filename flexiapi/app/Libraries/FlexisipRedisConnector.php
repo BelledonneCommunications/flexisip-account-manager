@@ -20,6 +20,8 @@
 namespace App\Libraries;
 
 use App\Device;
+use App\ExternalAccount;
+
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Log;
 use stdClass;
@@ -53,5 +55,22 @@ class FlexisipRedisConnector
         } catch (\Throwable $th) {
             Log::error('Redis server issue: ' . $th->getMessage());
         }
+    }
+
+    public function pingB2BUA(ExternalAccount $externalAccount): bool
+    {
+        try {
+            Redis::publish('flexisip/B2BUA/account', json_encode([
+                'username' => $externalAccount->username,
+                'domain' => $externalAccount->domain,
+                'identifier' => "$externalAccount->id"
+            ]));
+
+            return true;
+        } catch (\Throwable $th) {
+            Log::error('Redis server issue: ' . $th->getMessage());
+        }
+
+        return false;
     }
 }
