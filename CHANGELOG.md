@@ -1,5 +1,9 @@
 # Flexisip Account Manager Changelog
 
+v1.6.7
+---
+- Fix FLEXIAPI-367 Bump laravel-redis-sentinel dependency to support Redis 6
+
 v1.6.6
 ---
 - Fix FLEXIAPI-365 Use mustache syntaxe for HCaptcha, small CSS fix and update the dependencies
