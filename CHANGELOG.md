@@ -2,6 +2,7 @@
 
 v2.0
 ----
+- Fix FLEXIAPI-371 Add documentation for the Wizard page
 - Fix FLEXIAPI-205 Remove the deprecated endpoints, compatibility code documentation and tests. Drop the confirmation_key accounts column and activation_expirations table
 - Fix FLEXIAPI-206 Upgrade to Laravel 10, PHP 8.1 minimum and bump all the related dependencies, drop Debian 11 Bullseye
 - Fix FLEXIAPI-220 Migrate SIP Domains to Spaces

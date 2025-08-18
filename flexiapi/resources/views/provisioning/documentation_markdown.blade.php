@@ -12,7 +12,7 @@ To request the following URLs client MUST add a specific `x-linphone-provisionin
 Otherwise the URLs with always return 400. This specific header is required to prevent unsolicited clients (crawlers, embedders) to consume the tokens.
 
 ```
-> GET /provisioning/###
+> GET /provisioning/{provisioning_token}
 > x-linphone-provisioning
 ```
 
@@ -31,16 +31,24 @@ A provisioning content example
 
 The general idea is to allow the clients to access a unique URL returning a custom XML file containing the following elements:
 
-* <span class="badge badge-success">Public</span> Expose the linphonerc INI file configuration
+* <span class="badge badge-success">Public</span> Expose the main Linphone RC configuration
 * <span class="badge badge-info">User</span> Inject the authentication information to allow the application to authenticate on the server directly if a valid account is detected using the `provisioning` token
 * <span class="badge badge-success">Public</span> <span class="badge badge-info">User</span> Using __Custom Hooks__ an admin is also able to have access to the authenticated User internal object and inject custom XML during the provisioning. See the specific section in the `README.md` to learn more about that feature.
 
 ### Features
 
-When scanning a provisioning URL with a valid token the server is also:
+When querying a provisioning URL with a valid token the server is also:
 
 * <span class="badge badge-info">User</span> Activating the account
 * <span class="badge badge-info">User</span> Reseting the password, generating the new authentication information and returning them (if the `reset_password` parameter is present)
+
+## Wizard
+
+### `GET /wizard/{provisioning_token}`
+
+<span class="badge badge-success">Public</span>
+
+Return a wizard page allowing a user to open Linphone with a `linphone-config` link pointing to a provisioning link having the provided `provisioning_token`.
 
 ## Endpoints
 
