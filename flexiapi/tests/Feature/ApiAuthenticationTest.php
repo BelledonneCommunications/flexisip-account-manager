@@ -177,9 +177,7 @@ class ApiAuthenticationTest extends TestCase
 
     public function testAuthenticationSHA265FromCLRTXT()
     {
-        Space::truncate();
-        Space::factory()->local()->create();
-        space(reload: true);
+        Space::factory()->create();
 
         $password = Password::factory()->clrtxt()->create();
         $response = $this->generateFirstResponse($password);
@@ -211,8 +209,7 @@ class ApiAuthenticationTest extends TestCase
         $realm = 'realm.com';
 
         Space::truncate();
-        Space::factory()->local()->withRealm($realm)->create();
-        space(reload: true);
+        Space::factory()->withRealm($realm)->create();
 
         $password = Password::factory()->clrtxt()->create();
         $response = $this->generateFirstResponse($password);

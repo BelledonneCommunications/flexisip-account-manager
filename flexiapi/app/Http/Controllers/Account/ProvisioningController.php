@@ -151,7 +151,7 @@ class ProvisioningController extends Controller
     private function checkProvisioningHeader(Request $request)
     {
         if (!$request->hasHeader('x-linphone-provisioning')
-          && space()?->provisioning_use_linphone_provisioning_header) {
+          && $request->space->provisioning_use_linphone_provisioning_header) {
             abort(400, 'x-linphone-provisioning header is missing');
         }
     }
@@ -172,8 +172,8 @@ class ProvisioningController extends Controller
 
         $dom->appendChild($config);
 
-        if (space()?->custom_provisioning_entries) {
-            $rc = parse_ini_string(space()->custom_provisioning_entries, true);
+        if ($request->space?->custom_provisioning_entries) {
+            $rc = parse_ini_string($request->space->custom_provisioning_entries, true);
 
             foreach ($rc as $sectionName => $values) {
                 $section = $dom->createElement('section');
@@ -297,7 +297,7 @@ class ProvisioningController extends Controller
         }
 
         // Overwrite all the entries
-        if (space()?->custom_provisioning_overwrite_all) {
+        if ($request->space?->custom_provisioning_overwrite_all) {
             $xpath = new \DOMXpath($dom);
             $entries = $xpath->query("//section/entry");
             if (!is_null($entries)) {

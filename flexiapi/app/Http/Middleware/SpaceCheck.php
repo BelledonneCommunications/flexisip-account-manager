@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Space;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,17 +16,18 @@ class SpaceCheck
             return abort(503, 'APP_ROOT_HOST is not configured');
         }
 
-        $space = space();
+        $space = Space::where('host', config('app.sip_domain') ?? request()->host())->first();
 
         if ($space != null) {
             if (!str_ends_with($space->host, config('app.root_host'))) {
                 return abort(503, 'The APP_ROOT_HOST configured does not match with the current root domain');
             }
 
-            Config::set('app.url', '://' . $space->host);
-            Config::set('app.sip_domain', $space->domain);
+            $request->merge(['space' => $space]);
 
-            if ($request->user() && !$request->user()->superAdmin && $space?->isExpired()) {
+            Config::set('app.url', '://' . $space->host);
+
+            if ($space->isExpired()) {
                 abort($request->expectsJson() ? 403 : 490, 'The related Space has expired');
             }
 

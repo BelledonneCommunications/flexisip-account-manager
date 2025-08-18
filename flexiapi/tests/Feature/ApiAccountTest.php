@@ -153,14 +153,14 @@ class ApiAccountTest extends TestCase
 
     public function testDomain()
     {
-        $configDomain = 'sip.domain.com';
+        $configDomain = 'sip2.example.com';
+
+        Space::factory()->domain($configDomain)->create();
         config()->set('app.sip_domain', $configDomain);
 
         $password = Password::factory()->admin()->create();
         $username = 'foobar';
         $domain = Space::first()->domain;
-
-        config()->set('app.admins_manage_multi_domains', false);
 
         $response0 = $this->generateFirstResponse($password);
         $response1 = $this->generateSecondResponse($password, $response0)
@@ -185,7 +185,7 @@ class ApiAccountTest extends TestCase
 
     public function testAdminMultiDomains()
     {
-        $configDomain = 'sip.domain.com';
+        $configDomain = 'sip2.example.com';
         config()->set('app.sip_domain', $configDomain);
 
         $account = Account::factory()->superAdmin()->create();
@@ -300,7 +300,8 @@ class ApiAccountTest extends TestCase
 
     public function testDomainInTestDeployment()
     {
-        $configDomain = 'testdomain.com';
+        $configDomain = 'sip2.example.com';
+        Space::factory()->domain($configDomain)->create();
         config()->set('app.sip_domain', $configDomain);
 
         $password = Password::factory()->admin()->create();
@@ -573,8 +574,7 @@ class ApiAccountTest extends TestCase
     {
         $realm = 'realm.com';
 
-        Space::factory()->local()->withRealm($realm)->create();
-        space(reload: true);
+        Space::factory()->withRealm($realm)->create();
 
         $password = Password::factory()->create();
         $password->account->activated = false;

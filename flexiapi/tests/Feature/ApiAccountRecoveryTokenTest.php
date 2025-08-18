@@ -28,6 +28,8 @@ use App\Http\Middleware\IsWebPanelEnabled;
 
 class ApiAccountRecoveryTokenTest extends TestCase
 {
+    private Space $space;
+
     protected $tokenRoute = '/api/account_recovery_tokens/send-by-push';
     protected $tokenRequestRoute = '/api/account_recovery_request_tokens';
     protected $method = 'POST';
@@ -35,6 +37,12 @@ class ApiAccountRecoveryTokenTest extends TestCase
     protected $pnProvider = 'fcm';
     protected $pnParam = 'param';
     protected $pnPrid = 'id';
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->space = Space::factory()->create();
+    }
 
     public function testMandatoryParameters()
     {
@@ -73,23 +81,22 @@ class ApiAccountRecoveryTokenTest extends TestCase
     public function testTokenRecoveryPage()
     {
         $token = AccountRecoveryToken::factory()->create();
-        $space = Space::factory()->create();
         $phone = '+3312345';
 
-        $this->get($this->setSpaceOnRoute($space, route('account.recovery.show.phone', ['account_recovery_token' => 'bad_token'])))
+        $this->get($this->setSpaceOnRoute($this->space, route('account.recovery.show.phone', ['account_recovery_token' => 'bad_token'])))
             ->assertStatus(404);
 
-        $this->get($this->setSpaceOnRoute($space, route('account.recovery.show.phone', ['account_recovery_token' => $token->token])))
+        $this->get($this->setSpaceOnRoute($this->space, route('account.recovery.show.phone', ['account_recovery_token' => $token->token])))
             ->assertDontSee($phone)
             ->assertStatus(200);
 
-        $this->get($this->setSpaceOnRoute($space, route('account.recovery.show.phone', ['account_recovery_token' => $token->token, 'phone' => $phone])))
+        $this->get($this->setSpaceOnRoute($this->space, route('account.recovery.show.phone', ['account_recovery_token' => $token->token, 'phone' => $phone])))
             ->assertSee($phone)
             ->assertStatus(200);
 
         $token->consume();
 
-        $this->get($this->setSpaceOnRoute($space, route('account.recovery.show.phone', ['account_recovery_token' => $token->token])))
+        $this->get($this->setSpaceOnRoute($this->space, route('account.recovery.show.phone', ['account_recovery_token' => $token->token])))
             ->assertStatus(404);
     }
 }

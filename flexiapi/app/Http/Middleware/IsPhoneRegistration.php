@@ -27,7 +27,7 @@ class IsPhoneRegistration
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (space()?->phone_registration) {
+        if ($request->space->phone_registration) {
             return $next($request);
         }
 

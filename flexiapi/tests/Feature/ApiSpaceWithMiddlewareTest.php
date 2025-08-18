@@ -22,9 +22,9 @@ namespace Tests\Feature;
 use App\Account;
 use App\Space;
 use Carbon\Carbon;
-use Tests\TestCaseWithSpaceMiddleware;
+use Tests\TestCase;
 
-class ApiSpaceWithMiddlewareTest extends TestCaseWithSpaceMiddleware
+class ApiSpaceWithMiddlewareTest extends TestCase
 {
     protected $method = 'POST';
     protected $route = '/api/spaces';
@@ -42,9 +42,7 @@ class ApiSpaceWithMiddlewareTest extends TestCaseWithSpaceMiddleware
 
         // Try to create a new user as an admin
         $admin->generateUserApiKey();
-        config()->set('app.root_host', $admin->domain);
-
-        space(reload: true);
+        config()->set('app.sip_domain', $space->domain);
 
         $this->keyAuthenticated($admin)
             ->json($this->method, 'http://' . $admin->domain .  $this->accountRoute, [
@@ -54,6 +52,8 @@ class ApiSpaceWithMiddlewareTest extends TestCaseWithSpaceMiddleware
             ])->assertStatus(403);
 
         // Unexpire the space and try again
+        config()->set('app.sip_domain', $superAdmin->domain);
+
         $space = $this->keyAuthenticated($superAdmin)
             ->get($this->route . '/' . $admin->domain)
             ->json();
@@ -63,8 +63,6 @@ class ApiSpaceWithMiddlewareTest extends TestCaseWithSpaceMiddleware
         $this->keyAuthenticated($superAdmin)
             ->json('PUT', $this->route . '/' . $admin->domain, $space)
             ->assertStatus(200);
-
-        space(reload: true);
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->accountRoute, [

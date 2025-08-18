@@ -27,7 +27,7 @@ class IsPublicRegistration
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (space()?->public_registration) {
+        if ($request->space?->public_registration) {
             return $next($request);
         }
 

@@ -30,16 +30,9 @@ use Illuminate\Support\Facades\DB;
 
 $hostSpace = null;
 
-function space($reload = false): ?Space
+function space(): ?Space
 {
-    global $hostSpace;
-
-    if ($hostSpace != null && $reload == false) {
-        return $hostSpace;
-    }
-
-    $hostSpace = Space::where('host', request()->host())->first();
-    return $hostSpace;
+    return request()->space;
 }
 
 function passwordAlgorithms(): array
@@ -167,7 +160,7 @@ function resolveDomain(Request $request): string
         && $request->user()
         && $request->user()->superAdmin
         ? $request->get('domain')
-        : config('app.sip_domain');
+        : $request->space->domain;
 }
 
 function captchaConfigured(): bool

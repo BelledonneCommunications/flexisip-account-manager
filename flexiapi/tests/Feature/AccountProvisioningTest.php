@@ -39,9 +39,7 @@ class AccountProvisioningTest extends TestCase
 
     public function testBaseProvisioning()
     {
-        Space::truncate();
-        Space::factory()->local()->create();
-        space(reload: true);
+        Space::factory()->create();
 
         $this->get($this->route)->assertStatus(400);
 
@@ -55,9 +53,7 @@ class AccountProvisioningTest extends TestCase
 
     public function testDisabledProvisioningHeader()
     {
-        Space::truncate();
-        Space::factory()->local()->withoutProvisioningHeader()->create();
-        space(reload: true);
+        Space::factory()->withoutProvisioningHeader()->create();
 
         $this->get($this->route)
             ->assertStatus(200)
@@ -67,10 +63,6 @@ class AccountProvisioningTest extends TestCase
 
     public function testDontProvisionHeaderDisabled()
     {
-        Space::truncate();
-        Space::factory()->local()->create();
-        space(reload: true);
-
         $account = Account::factory()->deactivated()->create();
         $account->generateUserApiKey();
 
@@ -100,6 +92,8 @@ class AccountProvisioningTest extends TestCase
 
     public function testXLinphoneProvisioningHeader()
     {
+        Space::factory()->create();
+
         $this->withHeaders([
             'x-linphone-provisioning' => true,
         ])->get($this->accountRoute)->assertStatus(401);
@@ -138,9 +132,9 @@ class AccountProvisioningTest extends TestCase
 
     public function testUiSectionProvisioning()
     {
-        $secondDomain = Space::factory()->create();
-
         $password = Password::factory()->create();
+        $secondDomain = Space::factory()->secondDomain()->create();
+
         $password->account->generateUserApiKey();
         $password->account->domain = $secondDomain->domain;
         $password->account->save();
@@ -282,6 +276,9 @@ class AccountProvisioningTest extends TestCase
 
     public function testAuthTokenProvisioning()
     {
+        $password = Password::factory()->create();
+        $password->account->generateUserApiKey();
+
         // Generate a public auth_token and attach it
         $response = $this->json('POST', '/api/accounts/auth_token')
             ->assertStatus(201)
@@ -290,9 +287,6 @@ class AccountProvisioningTest extends TestCase
             ]);
 
         $authToken = $response->json('token');
-
-        $password = Password::factory()->create();
-        $password->account->generateUserApiKey();
 
         $this->keyAuthenticated($password->account)
             ->json($this->method, '/api/accounts/auth_token/' . $authToken . '/attach')

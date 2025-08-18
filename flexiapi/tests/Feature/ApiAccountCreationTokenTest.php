@@ -65,6 +65,8 @@ class ApiAccountCreationTokenTest extends TestCase
 
     public function testCorrectParameters()
     {
+        Space::factory()->create();
+
         $this->assertSame(AccountCreationToken::count(), 0);
         $this->json($this->method, $this->tokenRoute, [
             'pn_provider' => 'wrong',
@@ -96,6 +98,8 @@ class ApiAccountCreationTokenTest extends TestCase
 
     public function testMandatoryParameters()
     {
+        Space::factory()->create();
+
         $this->json($this->method, $this->tokenRoute)->assertStatus(422);
 
         $this->json($this->method, $this->tokenRoute, [
@@ -107,6 +111,8 @@ class ApiAccountCreationTokenTest extends TestCase
 
     public function testThrottling()
     {
+        Space::factory()->create();
+
         AccountCreationToken::factory()->create([
             'pn_provider' => $this->pnProvider,
             'pn_param' => $this->pnParam,
@@ -235,6 +241,8 @@ class ApiAccountCreationTokenTest extends TestCase
 
     public function testAccountCreationRequestToken()
     {
+        Space::factory()->create();
+
         $response = $this->json($this->method, $this->tokenRequestRoute);
         $response->assertStatus(201);
         $creationRequestToken = $response->json()['token'];

@@ -62,10 +62,10 @@ class AccountService
         $account = new Account();
         $account->username = $request->get('username');
         $account->activated = false;
-        $account->domain = space()->domain;
+        $account->domain = $request->space->domain;
         $account->ip_address = $request->ip();
         $account->created_at = Carbon::now();
-        $account->user_agent = space()->name;
+        $account->user_agent = $request->space->name;
         $account->dtmf_protocol = $request->get('dtmf_protocol');
 
         if ($request->asAdmin) {
@@ -73,7 +73,7 @@ class AccountService
             $account->display_name = $request->get('display_name');
             $account->activated = $request->has('activated') ? (bool)$request->get('activated') : false;
             $account->domain = resolveDomain($request);
-            $account->user_agent = $request->header('User-Agent') ?? space()->name;
+            $account->user_agent = $request->header('User-Agent') ?? $request->space->name;
             $account->admin = $request->has('admin') && (bool)$request->get('admin');
 
             if (!$request->api && $request->has('role')) {
@@ -113,8 +113,8 @@ class AccountService
         );
 
         if (!$request->api) {
-            if (!empty(space()?->newsletter_registration_address) && $request->has('newsletter')) {
-                Mail::to(space()->newsletter_registration_address)->send(new NewsletterRegistration($account));
+            if (!empty($request->space?->newsletter_registration_address) && $request->has('newsletter')) {
+                Mail::to($request->space->newsletter_registration_address)->send(new NewsletterRegistration($account));
             }
         }
 

@@ -10,7 +10,7 @@ class IsIntercomFeatures
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (space()?->intercom_features) {
+        if ($request->space->intercom_features) {
             return $next($request);
         }
 

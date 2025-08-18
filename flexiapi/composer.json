@@ -8,33 +8,33 @@
     ],
     "license": "MIT",
     "require": {
-        "php": ">=8.1",
-        "awobaz/compoships": "^2.3",
-        "doctrine/dbal": "^3.0",
-        "endroid/qr-code": "^5.0",
-        "fakerphp/faker": "^1.23",
-        "laravel/framework": "^10.0",
-        "laravel/tinker": "^2.9",
+        "php": ">=8.2",
+        "laravel/framework": "^11.45.1",
+        "awobaz/compoships": "^2.4.1",
+        "doctrine/dbal": "^3.10.1",
+        "endroid/qr-code": "^5.1",
+        "fakerphp/faker": "^1.24.1",
+        "laravel/tinker": "^2.10.1",
         "lcobucci/jwt": "^4.3",
         "namoshek/laravel-redis-sentinel": "^0.5",
-        "ovh/ovh": "^3.3",
-        "parsedown/laravel": "^1.2",
-        "phpunit/phpunit": "^10.0",
-        "propaganistas/laravel-phone": "^5.3",
+        "ovh/ovh": "^3.5",
+        "parsedown/laravel": "^1.2.1",
+        "phpunit/phpunit": "^10.5.50",
+        "propaganistas/laravel-phone": "^5.3.6",
         "react/socket": "^1.16",
-        "respect/validation": "^2.3",
+        "respect/validation": "^2.4.4",
         "rvxlab/hcaptcha": "^5.2",
-        "sabre/vobject": "^4.5"
+        "sabre/vobject": "^4.5.7"
     },
     "require-dev": {
-        "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^7.0",
+        "mockery/mockery": "^1.6.12",
+        "nunomaduro/collision": "^8.5",
         "phpmd/phpmd": "^2.15",
-        "squizlabs/php_codesniffer": "^3.7"
+        "squizlabs/php_codesniffer": "^3.13.2"
     },
     "config": {
         "platform": {
-            "php": "8.1"
+            "php": "8.2"
         },
         "optimize-autoloader": true,
         "preferred-install": "dist",

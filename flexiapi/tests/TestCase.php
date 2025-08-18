@@ -38,8 +38,7 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        $this->withoutMiddleware([SpaceCheck::class]);
-
+        config()->set('app.root_host', 'example.com');
         config()->set('app.sip_domain', 'sip.example.com');
 
         PhoneCountry::truncate();

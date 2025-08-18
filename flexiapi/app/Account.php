@@ -73,7 +73,10 @@ class Account extends Authenticatable
                 return;
             }
 
-            $builder->where('domain', config('app.sip_domain'));
+            /**
+             * config('app.sip_domain') is required for the Tests suit
+             */
+            $builder->where('domain', config('app.sip_domain') ?? space()->domain);
         });
     }
 

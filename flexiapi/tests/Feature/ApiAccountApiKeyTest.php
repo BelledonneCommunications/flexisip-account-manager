@@ -21,6 +21,7 @@ namespace Tests\Feature;
 
 use App\Account;
 use App\Password;
+use App\Space;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -89,6 +90,8 @@ class ApiAccountApiKeyTest extends TestCase
 
     public function testAuthToken()
     {
+        Space::factory()->create();
+
         // Generate a public auth_token
         $response = $this->json('POST', '/api/accounts/auth_token')
             ->assertStatus(201)

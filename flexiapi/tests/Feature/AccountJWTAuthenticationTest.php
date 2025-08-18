@@ -56,11 +56,11 @@ class AccountJWTAuthenticationTest extends TestCase
         if (!extension_loaded('sodium')) return;
 
         $password = Password::factory()->create();
-
-        \App\Space::where('domain', $password->account->domain)->update(['host' => 'localhost']);
-
+        $domain = 'sip_provisioning.example.com';
         $bearer = 'authz_server="https://sso.test/", realm="sip.test.org"';
 
+        \App\Space::where('domain', $password->account->domain)->update(['host' => $domain]);
+        config()->set('app.sip_domain', $domain);
         config()->set('services.jwt.rsa_public_key_pem', $this->serverPublicKeyPem);
 
         $this->get($this->route)->assertStatus(400);

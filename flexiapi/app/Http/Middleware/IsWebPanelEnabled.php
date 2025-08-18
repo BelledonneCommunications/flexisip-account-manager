@@ -27,7 +27,7 @@ class IsWebPanelEnabled
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->expectsJson() && space()?->web_panel) {
+        if (!$request->expectsJson() && $request->space->web_panel) {
             return $next($request);
         }
 
