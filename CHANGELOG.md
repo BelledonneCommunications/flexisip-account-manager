@@ -77,6 +77,7 @@ v2.0
 - Fix FLEXIAPI-363 Send the Redis publish event when the externalAccount is deleted to ping the Flexisip B2BUA
 - Fix FLEXIAPI-364 Fix a faulty redirection in the ExternalAccount controller
 - Fix FLEXIAPI-361 Prepare the 2.0 release
+- Fix FLEXIAPI-372 Remove SESSION_DRIVER and CACHE_DRIVER and enforce them to file
 
 v1.6
 ----

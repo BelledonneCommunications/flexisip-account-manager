@@ -40,6 +40,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
     - ACCOUNT_PROVISIONING_USE_X_LINPHONE_PROVISIONING_HEADER
 - **Complete and reorganize the Markdown documentation**
 - **Refactor the emails templates** All the emails were modernized and are now generated in HTML
+- **Enforce SESSION_DRIVER and CACHE_DRIVER to file** They can be removed from your DotEnv file as well.
 
 ### Removed
 
