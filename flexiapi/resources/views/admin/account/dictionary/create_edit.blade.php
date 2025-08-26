@@ -1,17 +1,12 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    @include('admin.account.parts.breadcrumb_accounts_index')
-    @include('admin.account.parts.breadcrumb_accounts_show', ['account' => $account])
+    @include('admin.parts.breadcrumb.accounts.show', ['account' => $account])
     <li class="breadcrumb-item active" aria-current="page">{{ __('Dictionary') }}</li>
 @endsection
 
 @section('content')
-    @if ($entry->id)
-        <h2>{{ __('Edit') }}</h2>
-    @else
-        <h2>{{ __('Create') }}</h2>
-    @endif
+    <h1><i class="ph @if ($entry->id)ph-pencil @else ph-plus @endif"></i> {{ __('Dictionary') }}</h1>
 
     <form method="POST"
         action="{{ $entry->id ? route('admin.account.dictionary.update', [$entry->account, $entry]) : route('admin.account.dictionary.store', $account) }}"

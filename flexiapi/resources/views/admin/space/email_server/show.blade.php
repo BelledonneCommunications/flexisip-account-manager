@@ -1,17 +1,7 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item">
-        <a href="{{ route('admin.spaces.index') }}">{{ __('Spaces') }}</a>
-    </li>
-    <li class="breadcrumb-item">
-        <a href="{{ route('admin.spaces.show', $space) }}">
-            {{ $space->name }}
-        </a>
-    </li>
-    <li class="breadcrumb-item">
-        <a href="{{ route('admin.spaces.integration', $space) }}">{{ __('Integration') }}</a>
-    </li>
+    @include('admin.parts.breadcrumb.spaces.integration')
     <li class="breadcrumb-item active" aria-current="page">{{ __('Email Server') }}</li>
 @endsection
 
@@ -19,7 +9,6 @@
     <header>
         <h1><i class="ph ph-envelope"></i> {{ $space->name }}</h1>
     </header>
-
 
     <form method="POST"
         action="{{ route('admin.spaces.email.store', $space->id) }}"

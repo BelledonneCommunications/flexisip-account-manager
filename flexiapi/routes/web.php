@@ -26,16 +26,17 @@ use App\Http\Controllers\Account\PasswordController;
 use App\Http\Controllers\Account\PhoneController;
 use App\Http\Controllers\Account\ProvisioningController;
 use App\Http\Controllers\Account\RecoveryController;
-use App\Http\Controllers\Admin\AccountAccountTypeController;
-use App\Http\Controllers\Admin\AccountActionController;
-use App\Http\Controllers\Admin\AccountActivityController;
-use App\Http\Controllers\Admin\AccountContactController;
 use App\Http\Controllers\Admin\AccountController as AdminAccountController;
-use App\Http\Controllers\Admin\AccountDeviceController;
-use App\Http\Controllers\Admin\AccountDictionaryController;
-use App\Http\Controllers\Admin\AccountImportController;
-use App\Http\Controllers\Admin\AccountStatisticsController;
-use App\Http\Controllers\Admin\AccountTypeController;
+use App\Http\Controllers\Admin\Account\AccountTypeController;
+use App\Http\Controllers\Admin\Account\ActionController;
+use App\Http\Controllers\Admin\Account\ActivityController;
+use App\Http\Controllers\Admin\Account\CardDavCredentialsController;
+use App\Http\Controllers\Admin\Account\ContactController;
+use App\Http\Controllers\Admin\Account\DeviceController as AdminAccountDeviceController;
+use App\Http\Controllers\Admin\Account\DictionaryController;
+use App\Http\Controllers\Admin\Account\ImportController;
+use App\Http\Controllers\Admin\Account\StatisticsController as AdminAccountStatisticsController;
+use App\Http\Controllers\Admin\Account\TypeController;
 use App\Http\Controllers\Admin\ApiKeyController as AdminApiKeyController;
 use App\Http\Controllers\Admin\ContactsListContactController;
 use App\Http\Controllers\Admin\ContactsListController;
@@ -44,6 +45,7 @@ use App\Http\Controllers\Admin\PhoneCountryController;
 use App\Http\Controllers\Admin\ProvisioningEmailController;
 use App\Http\Controllers\Admin\ResetPasswordEmailController;
 use App\Http\Controllers\Admin\Space\EmailServerController;
+use App\Http\Controllers\Admin\Space\CardDavServerController;
 use App\Http\Controllers\Admin\SpaceController;
 use App\Http\Controllers\Admin\StatisticsController;
 use Illuminate\Support\Facades\Route;
@@ -51,7 +53,7 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/', 'login')->name('account.home');
 Route::get('about', 'AboutController@about')->name('about');
 
-Route::middleware(['web_panel_enabled'])->group(function () {
+Route::middleware(['feature.web_panel_enabled'])->group(function () {
     Route::get('wizard/{provisioning_token}', 'Account\ProvisioningController@wizard')->name('provisioning.wizard');
 
     Route::get('login', 'Account\AuthenticateController@login')->name('account.login');
@@ -88,11 +90,11 @@ Route::name('provisioning.')->prefix('provisioning')->controller(ProvisioningCon
     Route::get('/', 'show')->name('show');
 });
 
-Route::middleware(['web_panel_enabled'])->group(function () {
-    Route::middleware(['public_registration'])->group(function () {
+Route::middleware(['feature.web_panel_enabled'])->group(function () {
+    Route::middleware(['feature.public_registration'])->group(function () {
         Route::redirect('register', 'register/email')->name('account.register');
 
-        Route::middleware(['phone_registration'])->group(function () {
+        Route::middleware(['feature.phone_registration'])->group(function () {
             Route::get('register/phone', 'Account\RegisterController@registerPhone')->name('account.register.phone');
         });
 
@@ -117,7 +119,7 @@ Route::middleware(['web_panel_enabled'])->group(function () {
             Route::post('/', 'store')->name('email.update');
         });
 
-        Route::middleware(['phone_registration'])->group(function () {
+        Route::middleware(['feature.phone_registration'])->group(function () {
             Route::prefix('phone')->controller(PhoneController::class)->group(function () {
                 Route::get('change', 'change')->name('phone.change');
                 Route::post('change', 'requestChange')->name('phone.request_change');
@@ -169,6 +171,8 @@ Route::middleware(['web_panel_enabled'])->group(function () {
                 Route::get('delete', 'delete')->name('delete');
                 Route::delete('/', 'destroy')->name('destroy');
             });
+            Route::resource('{space}/carddavs', CardDavServerController::class, ['except' => ['index', 'show']]);
+            Route::get('{space}/carddavs/{carddav}/delete', 'Admin\Space\CardDavServerController@delete')->name('carddavs.delete');
         });
 
         Route::name('api_keys.')->prefix('api_keys')->controller(AdminApiKeyController::class)->group(function () {
@@ -205,14 +209,14 @@ Route::middleware(['web_panel_enabled'])->group(function () {
         });
 
         Route::name('account.')->prefix('accounts')->group(function () {
-            Route::name('import.')->prefix('import')->controller(AccountImportController::class)->group(function () {
+            Route::name('import.')->prefix('import')->controller(ImportController::class)->group(function () {
                 Route::get('/', 'create')->name('create');
                 Route::post('/', 'store')->name('store');
                 Route::post('handle', 'handle')->name('handle');
             });
 
-            Route::middleware(['intercom_features'])->group(function () {
-                Route::name('type.')->prefix('types')->controller(AccountTypeController::class)->group(function () {
+            Route::middleware(['feature.intercom'])->group(function () {
+                Route::name('type.')->prefix('types')->controller(TypeController::class)->group(function () {
                     Route::get('/', 'index')->name('index');
                     Route::get('create', 'create')->name('create');
                     Route::post('/', 'store')->name('store');
@@ -222,13 +226,13 @@ Route::middleware(['web_panel_enabled'])->group(function () {
                     Route::delete('{type_id}', 'destroy')->name('destroy');
                 });
 
-                Route::name('account_type.')->prefix('{account}/types')->controller(AccountAccountTypeController::class)->group(function () {
+                Route::name('account_type.')->prefix('{account}/types')->controller(AccountTypeController::class)->group(function () {
                     Route::get('create', 'create')->name('create');
                     Route::post('/', 'store')->name('store');
                     Route::delete('{type_id}', 'destroy')->name('destroy');
                 });
 
-                Route::name('action.')->prefix('{account}/actions')->controller(AccountActionController::class)->group(function () {
+                Route::name('action.')->prefix('{account}/actions')->controller(ActionController::class)->group(function () {
                     Route::get('create', 'create')->name('create');
                     Route::post('/', 'store')->name('store');
                     Route::get('{action_id}/edit', 'edit')->name('edit');
@@ -268,7 +272,7 @@ Route::middleware(['web_panel_enabled'])->group(function () {
                 Route::get('send', 'send')->name('send');
             });
 
-            Route::name('contact.')->prefix('{account}/contacts')->controller(AccountContactController::class)->group(function () {
+            Route::name('contact.')->prefix('{account}/contacts')->controller(ContactController::class)->group(function () {
                 Route::get('/', 'index')->name('index');
                 Route::get('create', 'create')->name('create');
                 Route::post('/', 'store')->name('store');
@@ -276,12 +280,15 @@ Route::middleware(['web_panel_enabled'])->group(function () {
                 Route::delete('/', 'destroy')->name('destroy');
             });
 
-            Route::name('device.')->prefix('{account}/devices')->controller(AccountDeviceController::class)->group(function () {
+            Route::name('device.')->prefix('{account}/devices')->controller(AdminAccountDeviceController::class)->group(function () {
                 Route::get('{device_id}/delete', 'delete')->name('delete');
                 Route::delete('/', 'destroy')->name('destroy');
             });
 
-            Route::name('dictionary.')->prefix('{account}/dictionary')->controller(AccountDictionaryController::class)->group(function () {
+            Route::resource('{account}/carddavs', CardDavCredentialsController::class, ['only' => ['create', 'store', 'destroy']]);
+            Route::get('{account}/carddavs/{carddav}/delete', 'Admin\Account\CardDavCredentialsController@delete')->name('carddavs.delete');
+
+            Route::name('dictionary.')->prefix('{account}/dictionary')->controller(DictionaryController::class)->group(function () {
                 Route::get('create', 'create')->name('create');
                 Route::post('/', 'store')->name('store');
                 Route::get('{entry}/edit', 'edit')->name('edit');
@@ -297,11 +304,11 @@ Route::middleware(['web_panel_enabled'])->group(function () {
                 Route::delete('/', 'destroy')->name('destroy');
             });
 
-            Route::name('activity.')->prefix('{account}/activity')->controller(AccountActivityController::class)->group(function () {
+            Route::name('activity.')->prefix('{account}/activity')->controller(ActivityController::class)->group(function () {
                 Route::get('/', 'index')->name('index');
             });
 
-            Route::name('statistics.')->prefix('{account}/statistics')->controller(AccountStatisticsController::class)->group(function () {
+            Route::name('statistics.')->prefix('{account}/statistics')->controller(AdminAccountStatisticsController::class)->group(function () {
                 Route::get('/', 'show')->name('show');
                 Route::post('call_logs', 'editCallLogs')->name('edit_call_logs');
                 Route::get('call_logs', 'showCallLogs')->name('show_call_logs');

@@ -1,8 +1,7 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    @include('admin.account.parts.breadcrumb_accounts_index')
-    @include('admin.account.parts.breadcrumb_accounts_show', ['account' => $account])
+    @include('admin.parts.breadcrumb.accounts.show', ['account' => $account])
     <li class="breadcrumb-item"><a href="{{ route('admin.account.external.show', ['account' => $account]) }}">{{ __('External Account') }}</a></li>
     <li class="breadcrumb-item active" aria-current="page">{{ __('Delete') }}</li>
 @endsection

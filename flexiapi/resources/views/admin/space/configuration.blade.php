@@ -2,14 +2,7 @@
 
 @section('breadcrumb')
     @if (auth()->user()->superAdmin)
-        <li class="breadcrumb-item">
-            <a href="{{ route('admin.spaces.index') }}">{{ __('Spaces') }}</a>
-        </li>
-        <li class="breadcrumb-item">
-            <a href="{{ route('admin.spaces.show', $space->id) }}">
-                {{ $space->name }}
-            </a>
-        </li>
+        @include('admin.parts.breadcrumb.spaces.show')
     @else
         <li class="breadcrumb-item">
             <a href="{{ route('admin.spaces.me') }}">

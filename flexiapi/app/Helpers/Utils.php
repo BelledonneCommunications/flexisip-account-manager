@@ -28,11 +28,9 @@ use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 use League\CommonMark\Extension\TableOfContents\TableOfContentsExtension;
 use Illuminate\Support\Facades\DB;
 
-$hostSpace = null;
-
 function space(): ?Space
 {
-    return request()->space;
+    return is_object(request()->space) ? request()->space :null;
 }
 
 function passwordAlgorithms(): array

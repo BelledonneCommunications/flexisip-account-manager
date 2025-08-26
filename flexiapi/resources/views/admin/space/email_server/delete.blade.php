@@ -1,23 +1,13 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item">
-        <a href="{{ route('admin.spaces.index') }}">{{ __('Spaces') }}</a>
-    </li>
-    <li class="breadcrumb-item">
-        <a href="{{ route('admin.spaces.show', $space) }}">
-            {{ $space->name }}
-        </a>
-    </li>
-    <li class="breadcrumb-item">
-        <a href="{{ route('admin.spaces.integration', $space) }}">{{ __('Integration') }}</a>
-    </li>
+    @include('admin.parts.breadcrumb.spaces.integration')
     <li class="breadcrumb-item active" aria-current="page">{{ __('Email Server') }} - {{ __('Delete' ) }}</li>
 @endsection
 
 @section('content')
     <header>
-        <h1><i class="ph ph-trash"></i> {{ __('Delete') }}</h1>
+        <h1><i class="ph ph-trash"></i> {{ __('Email Server') }} - {{ __('Delete') }}</h1>
 
         <a href="{{ route('admin.spaces.integration', ['space' => $space]) }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
         <input form="delete" class="btn" type="submit" value="{{ __('Delete') }}">

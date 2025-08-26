@@ -1,8 +1,7 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    @include('admin.account.parts.breadcrumb_accounts_index')
-    @include('admin.account.parts.breadcrumb_accounts_show', ['account' => $account])
+    @include('admin.parts.breadcrumb.accounts.show', ['account' => $account])
 @endsection
 
 @section('content')
@@ -81,7 +80,7 @@
 
         <div class="card">
             <a class="btn small oppose" href="{{ route('admin.account.external.show', $account) }}">
-                <i class="ph ph-pencil"></i>
+                <i class="ph ph-plus"></i>
                 @if ($account->external){{ __('Edit') }}@else{{ __('Create') }}@endif
             </a>
             <h3>
@@ -130,6 +129,53 @@
             @endif
         </div>
 
+        @if ($account->space->carddav_user_credentials)
+            <div class="card large" id="carddavs">
+                @if ($account->remainingCardDavCredentialsCreatable->count() > 0)
+                    <a class="btn small oppose" href="{{ route('admin.account.carddavs.create', $account) }}">
+                        <i class="ph ph-plus"></i>
+                        {{ __('Add') }}
+                    </a>
+                @endif
+                <h3>
+                    {{ __('CardDav credentials') }}
+                </h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>{{ __('CardDav Server') }}</th>
+                            <th>{{ __('Username') }}</th>
+                            <th>{{ __('Domain') }}</th>
+                            <th>{{ __('Algorithm') }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if ($account->carddavServers->isEmpty())
+                            <tr class="empty">
+                                <td colspan="5">{{ __('Empty') }}</td>
+                            </tr>
+                        @else
+                            @foreach ($account->carddavServers as $carddavServer)
+                                <tr>
+                                    <td class="line">{{ $carddavServer->name }}</td>
+                                    <td class="line">{{ $carddavServer->pivot->username }}</td>
+                                    <td class="line">{{ $carddavServer->pivot->domain }}</td>
+                                    <td class="line">{{ $carddavServer->pivot->algorithm }}</td>
+                                    <td class="actions">
+                                        <a type="button" class="btn small tertiary" href="{{ route('admin.account.carddavs.delete', [$account, $carddavServer]) }}">
+                                            <i class="ph ph-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+
+        @endif
+
         <div class="card large">
             <h3>
                 {{ __('Devices') }}
@@ -144,7 +190,7 @@
                 <tbody>
                     @if ($devices->isEmpty())
                         <tr class="empty">
-                            <td colspan="3">{{ __('Empty') }}</td>
+                            <td colspan="2">{{ __('Empty') }}</td>
                         </tr>
                     @else
                         @foreach ($devices as $device)

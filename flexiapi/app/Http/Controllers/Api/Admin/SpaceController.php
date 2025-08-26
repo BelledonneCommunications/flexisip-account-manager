@@ -45,38 +45,37 @@ class SpaceController extends Controller
         ]);
 
         $space = new Space;
-        $space->name = $request->get('name');
-        $space->domain = $request->get('domain');
-        $space->host = $request->get('host');
-        $this->setRequestBoolean($request, $space, 'super');
-        $this->setRequestBoolean($request, $space, 'disable_chat_feature');
-        $this->setRequestBoolean($request, $space, 'disable_meetings_feature');
-        $this->setRequestBoolean($request, $space, 'disable_broadcast_feature');
-        $this->setRequestBoolean($request, $space, 'hide_settings');
-        $this->setRequestBoolean($request, $space, 'hide_account_settings');
-        $this->setRequestBoolean($request, $space, 'disable_call_recordings_feature');
-        $this->setRequestBoolean($request, $space, 'only_display_sip_uri_username');
-        $this->setRequestBoolean($request, $space, 'assistant_hide_create_account');
-        $this->setRequestBoolean($request, $space, 'assistant_disable_qr_code');
-        $this->setRequestBoolean($request, $space, 'assistant_hide_third_party_account');
-        $space->max_account = $request->get('max_account', 0);
-        $space->max_accounts = $request->get('max_accounts', 0);
-        $space->expire_at = $request->get('expire_at');
-
-        $space->copyright_text = $request->get('copyright_text');
-        $space->intro_registration_text = $request->get('intro_registration_text');
-        $space->newsletter_registration_address = $request->get('newsletter_registration_address');
         $space->account_proxy_registrar_address = $request->get('account_proxy_registrar_address');
         $space->account_realm = $request->get('account_realm');
+        $space->copyright_text = $request->get('copyright_text');
         $space->custom_provisioning_entries = $request->get('custom_provisioning_entries');
+        $space->domain = $request->get('domain');
+        $space->expire_at = $request->get('expire_at');
+        $space->host = $request->get('host');
+        $space->intro_registration_text = $request->get('intro_registration_text');
+        $space->max_account = $request->get('max_account', 0);
+        $space->max_accounts = $request->get('max_accounts', 0);
+        $space->name = $request->get('name');
+        $space->newsletter_registration_address = $request->get('newsletter_registration_address');
+        $this->setRequestBoolean($request, $space, 'assistant_disable_qr_code');
+        $this->setRequestBoolean($request, $space, 'assistant_hide_create_account');
+        $this->setRequestBoolean($request, $space, 'assistant_hide_third_party_account');
+        $this->setRequestBoolean($request, $space, 'carddav_user_credentials');
         $this->setRequestBoolean($request, $space, 'custom_provisioning_overwrite_all');
-        $this->setRequestBoolean($request, $space, 'provisioning_use_linphone_provisioning_header');
         $this->setRequestBoolean($request, $space, 'custom_theme');
-        $this->setRequestBoolean($request, $space, 'web_panel');
-        $this->setRequestBoolean($request, $space, 'public_registration');
-        $this->setRequestBoolean($request, $space, 'phone_registration');
+        $this->setRequestBoolean($request, $space, 'disable_broadcast_feature');
+        $this->setRequestBoolean($request, $space, 'disable_call_recordings_feature');
+        $this->setRequestBoolean($request, $space, 'disable_chat_feature');
+        $this->setRequestBoolean($request, $space, 'disable_meetings_feature');
+        $this->setRequestBoolean($request, $space, 'hide_account_settings');
+        $this->setRequestBoolean($request, $space, 'hide_settings');
         $this->setRequestBoolean($request, $space, 'intercom_features');
-
+        $this->setRequestBoolean($request, $space, 'only_display_sip_uri_username');
+        $this->setRequestBoolean($request, $space, 'phone_registration');
+        $this->setRequestBoolean($request, $space, 'provisioning_use_linphone_provisioning_header');
+        $this->setRequestBoolean($request, $space, 'public_registration');
+        $this->setRequestBoolean($request, $space, 'super');
+        $this->setRequestBoolean($request, $space, 'web_panel');
         $space->save();
 
         return $space->refresh();
@@ -90,30 +89,30 @@ class SpaceController extends Controller
     public function update(Request $request, string $domain)
     {
         $request->validate([
-            'super' => 'required|boolean',
-            'disable_chat_feature' => 'required|boolean',
-            'disable_meetings_feature' => 'required|boolean',
-            'disable_broadcast_feature' => 'required|boolean',
-            'hide_settings' => 'required|boolean',
-            'hide_account_settings' => 'required|boolean',
-            'disable_call_recordings_feature' => 'required|boolean',
-            'only_display_sip_uri_username' => 'required|boolean',
-            'assistant_hide_create_account' => 'required|boolean',
-            'assistant_disable_qr_code' => 'required|boolean',
-            'assistant_hide_third_party_account' => 'required|boolean',
-            'max_account' => 'required|integer',
-            'max_accounts' => 'required|integer',
-            'expire_at' => 'nullable|date|after_or_equal:today',
             'account_realm' => ['nullable', new Domain()],
-
+            'assistant_disable_qr_code' => 'required|boolean',
+            'assistant_hide_create_account' => 'required|boolean',
+            'assistant_hide_third_party_account' => 'required|boolean',
+            'carddav_user_credentials' => 'required|boolean',
             'custom_provisioning_entries' => ['nullable', new Ini(Space::FORBIDDEN_KEYS)],
             'custom_provisioning_overwrite_all' => 'required|boolean',
-            'provisioning_use_linphone_provisioning_header' => 'required|boolean',
             'custom_theme' => 'required|boolean',
-            'web_panel' => 'required|boolean',
-            'public_registration' => 'required|boolean',
-            'phone_registration' => 'required|boolean',
+            'disable_broadcast_feature' => 'required|boolean',
+            'disable_call_recordings_feature' => 'required|boolean',
+            'disable_chat_feature' => 'required|boolean',
+            'disable_meetings_feature' => 'required|boolean',
+            'expire_at' => 'nullable|date|after_or_equal:today',
+            'hide_account_settings' => 'required|boolean',
+            'hide_settings' => 'required|boolean',
             'intercom_features' => 'required|boolean',
+            'max_account' => 'required|integer',
+            'max_accounts' => 'required|integer',
+            'only_display_sip_uri_username' => 'required|boolean',
+            'phone_registration' => 'required|boolean',
+            'provisioning_use_linphone_provisioning_header' => 'required|boolean',
+            'public_registration' => 'required|boolean',
+            'super' => 'required|boolean',
+            'web_panel' => 'required|boolean',
         ]);
 
         $space = Space::where('domain', $domain)->firstOrFail();

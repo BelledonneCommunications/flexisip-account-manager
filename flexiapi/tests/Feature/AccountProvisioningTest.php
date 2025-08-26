@@ -23,6 +23,7 @@ use App\Account;
 use App\AuthToken;
 use App\Password;
 use App\ProvisioningToken;
+use App\SpaceCardDavServer;
 use App\Space;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -216,6 +217,58 @@ class AccountProvisioningTest extends TestCase
             ->assertSee($password->account->passwords()->first()->password);
 
         $this->assertNotEquals($password->account->passwords()->first()->password, $currentPassword);
+    }
+
+    public function testCardDavProvisioning()
+    {
+        $account = Account::factory()->create();
+        $account->generateUserApiKey();
+
+        $admin = Account::factory()->superAdmin()->create();
+        $admin->generateUserApiKey();
+
+        $this->keyAuthenticated($admin)
+            ->json('POST', '/api/spaces/' . $admin->space->host . '/carddavs', [
+                'uri' => 'http://uri.com'
+            ])
+            ->assertStatus(200);
+
+        $this->withHeaders([
+                'x-linphone-provisioning' => true,
+            ])
+            ->keyAuthenticated($account)
+            ->get($this->route . '/me')
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/xml')
+            ->assertSee('remote_contact_directory_0')
+            ->assertSee('carddav_fields_for_user_input');
+
+        Space::where('domain', $admin->domain)->update(['carddav_user_credentials' => true]);
+        $cardDavServer = SpaceCardDavServer::first();
+
+        $credentials = [
+            'username' => 'john',
+            'domain' => 'hop.com',
+            'password' => '1234',
+            'algorithm' => 'MD5'
+        ];
+
+        $this->keyAuthenticated($admin)
+            ->json('PUT', '/api/accounts/' . $account->id . '/carddavs/' . $cardDavServer->id , $credentials)
+            ->assertStatus(200);
+
+        $this->withHeaders([
+                'x-linphone-provisioning' => true,
+            ])
+            ->keyAuthenticated($account)
+            ->get($this->route . '/me')
+            ->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/xml')
+            ->assertSee('remote_contact_directory_0')
+            ->assertSee('auth_info_0')
+            ->assertSee('ce44af78c5f81f5870818b8db523fd95')
+            ->assertSee($credentials['username'])
+            ->assertSee($credentials['algorithm']);
     }
 
     public function testConfirmationKeyProvisioning()

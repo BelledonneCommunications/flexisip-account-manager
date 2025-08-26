@@ -1,15 +1,7 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item">
-        <a href="{{ route('admin.spaces.index') }}">{{ __('Spaces') }}</a>
-    </li>
-    <li class="breadcrumb-item">
-        <a href="{{ route('admin.spaces.show', $space->id) }}">
-            {{ $space->name }}
-        </a>
-    </li>
-    <li class="breadcrumb-item active" aria-current="page">{{ __('Integration') }}</li>
+    @include('admin.parts.breadcrumb.spaces.integration')
 @endsection
 
 @section('content')
@@ -35,5 +27,30 @@
                 @endif
             </p>
         </div>
+    </div>
+
+    <br />
+
+    <a class="btn small oppose" href="{{ route('admin.spaces.carddavs.create', $space) }}">
+        <i class="ph ph-plus"></i>
+        {{ __('Create') }}
+    </a>
+
+    <h3>{{ __('CardDav Servers') }}</h3>
+
+    <div class="grid third">
+        @foreach ($space->carddavServers as $carddavServer)
+            <div class="card">
+                <small class="oppose"><i class="ph ph-users"></i> {{ $carddavServer->accounts()->count() }}</small>
+                <span class="icon"><i class="ph ph-identification-card"></i></span>
+                <h3>{{ $carddavServer->name }}</h3>
+                <p>
+                    {{ $carddavServer->uri}}<br />
+                    <br />
+                    <a class="btn oppose" href="{{ route('admin.spaces.carddavs.edit', [$space, $carddavServer]) }}">{{ __('Edit') }}</a>
+                    <a class="btn oppose tertiary" href="{{ route('admin.spaces.carddavs.delete', [$space, $carddavServer]) }}">{{ __('Delete') }}</a>
+                </p>
+            </div>
+        @endforeach
     </div>
 @endsection

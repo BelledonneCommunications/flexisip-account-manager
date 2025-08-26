@@ -21,51 +21,66 @@ namespace App;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class Space extends Model
 {
     use HasFactory;
 
-    protected $with = ['emailServer'];
+    protected $with = ['emailServer', 'carddavServers'];
 
     public const FORBIDDEN_KEYS = [
-        'disable_chat_feature',
-        'disable_meetings_feature',
-        'disable_broadcast_feature',
-        'max_account',
-        'hide_settings',
-        'hide_account_settings',
-        'disable_call_recordings_feature',
-        'only_display_sip_uri_username',
-        'assistant_hide_create_account',
+        'account_proxy_registrar_address',
+        'account_realm',
         'assistant_disable_qr_code',
+        'assistant_hide_create_account',
         'assistant_hide_third_party_account',
         'copyright_text',
+        'disable_broadcast_feature',
+        'disable_call_recordings_feature',
+        'disable_chat_feature',
+        'disable_meetings_feature',
+        'hide_account_settings',
+        'hide_settings',
         'intro_registration_text',
+        'max_account',
         'newsletter_registration_address',
-        'account_proxy_registrar_address',
-        'account_realm'
+        'only_display_sip_uri_username',
     ];
 
     protected $hidden = ['id'];
     protected $casts = [
-        'super' => 'boolean',
+        'assistant_disable_qr_code' => 'boolean',
+        'assistant_hide_create_account' => 'boolean',
+        'assistant_hide_third_party_account' => 'boolean',
+        'carddav_user_credentials' => 'boolean',
+        'disable_broadcast_feature' => 'boolean',
+        'disable_call_recordings_feature' => 'boolean',
         'disable_chat_feature' => 'boolean',
         'disable_meetings_feature' => 'boolean',
-        'disable_broadcast_feature' => 'boolean',
-        'hide_settings' => 'boolean',
-        'hide_account_settings' => 'boolean',
-        'disable_call_recordings_feature' => 'boolean',
-        'only_display_sip_uri_username' => 'boolean',
-        'assistant_hide_create_account' => 'boolean',
-        'assistant_disable_qr_code' => 'boolean',
-        'assistant_hide_third_party_account' => 'boolean',
         'expire_at' => 'date',
+        'hide_account_settings' => 'boolean',
+        'hide_settings' => 'boolean',
+        'only_display_sip_uri_username' => 'boolean',
+        'super' => 'boolean',
     ];
 
     public const HOST_REGEX = '[\w\-]+';
     public const DOMAIN_REGEX = '(?=^.{4,253}$)(^((?!-)[a-z0-9-]{1,63}(?<!-)\.)+[a-z]{2,63}$)';
+
+    protected static function booted()
+    {
+        static::addGlobalScope('domain', function (Builder $builder) {
+            if (!Auth::hasUser()) return;
+
+            if (Auth::hasUser() || Auth::user()->superAdmin) {
+                return;
+            }
+
+            $builder->where('domain', Auth::user()->domain);
+        });
+    }
 
     public function accounts()
     {
@@ -80,6 +95,11 @@ class Space extends Model
     public function emailServer()
     {
         return $this->hasOne(SpaceEmailServer::class);
+    }
+
+    public function carddavServers()
+    {
+        return $this->hasMany(SpaceCardDavServer::class);
     }
 
     public function scopeNotFull(Builder $query)

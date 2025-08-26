@@ -1,9 +1,7 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item">
-        <a href="{{ route('admin.spaces.index') }}">{{ __('Spaces') }}</a>
-    </li>
+    @include('admin.parts.breadcrumb.spaces.index')
     <li class="breadcrumb-item active" aria-current="page">{{ __('Create') }}</li>
 @endsection
 

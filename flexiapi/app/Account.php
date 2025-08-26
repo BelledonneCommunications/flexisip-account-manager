@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
 
 use Awobaz\Compoships\Compoships;
@@ -36,7 +37,7 @@ class Account extends Authenticatable
     use HasFactory;
     use Compoships;
 
-    protected $with = ['passwords', 'emailChangeCode', 'types', 'actions', 'dictionaryEntries'];
+    protected $with = ['passwords', 'emailChangeCode', 'types', 'actions', 'dictionaryEntries', 'carddavServers'];
     protected $hidden = ['expire_time', 'pivot', 'currentProvisioningToken', 'currentRecoveryCode', 'dictionaryEntries'];
     protected $appends = ['realm', 'provisioning_token', 'provisioning_token_expire_at', 'dictionary'];
     protected $casts = [
@@ -147,6 +148,12 @@ class Account extends Authenticatable
     public function dictionaryEntries()
     {
         return $this->hasMany(AccountDictionaryEntry::class);
+    }
+
+    public function carddavServers()
+    {
+        return $this->belongsToMany(SpaceCardDavServer::class, 'account_carddav_credentials', 'account_id', 'space_carddav_server_id')
+            ->withPivot('username', 'domain', 'algorithm', 'password');
     }
 
     public function getDictionaryAttribute()
@@ -307,6 +314,15 @@ class Account extends Authenticatable
         }
 
         return null;
+    }
+
+    public function getRemainingCardDavCredentialsCreatableAttribute(): Collection
+    {
+        return $this->space->carddavServers()->whereNotIn('id', function ($query) {
+            $query->select('space_carddav_server_id')
+                  ->from('account_carddav_credentials')
+                  ->where('account_id', $this->id);
+        })->get();
     }
 
     public function getIdentifierAttribute(): string

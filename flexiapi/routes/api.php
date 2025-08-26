@@ -18,18 +18,20 @@
 */
 
 use App\Http\Controllers\Api\Account\VcardsStorageController;
-use App\Http\Controllers\Api\Admin\AccountActionController;
-use App\Http\Controllers\Api\Admin\AccountContactController;
+use App\Http\Controllers\Api\Admin\Account\ActionController;
+use App\Http\Controllers\Api\Admin\Account\CardDavCredentialsController;
+use App\Http\Controllers\Api\Admin\Account\ContactController;
+use App\Http\Controllers\Api\Admin\Account\DictionaryController;
+use App\Http\Controllers\Api\Admin\Account\TypeController;
 use App\Http\Controllers\Api\Admin\AccountController as AdminAccountController;
-use App\Http\Controllers\Api\Admin\AccountDictionaryController;
-use App\Http\Controllers\Api\Admin\AccountTypeController;
 use App\Http\Controllers\Api\Admin\ContactsListController;
 use App\Http\Controllers\Api\Admin\ExternalAccountController;
+use App\Http\Controllers\Api\Admin\Space\CardDavServerController;
+use App\Http\Controllers\Api\Admin\Space\EmailServerController;
 use App\Http\Controllers\Api\Admin\SpaceController;
-use App\Http\Controllers\Api\Admin\EmailServerController;
 use App\Http\Controllers\Api\Admin\VcardsStorageController as AdminVcardsStorageController;
-use App\Http\Controllers\Api\StatisticsMessageController;
 use App\Http\Controllers\Api\StatisticsCallController;
+use App\Http\Controllers\Api\StatisticsMessageController;
 use Illuminate\Http\Request;
 
 Route::get('/', 'Api\ApiController@documentation')->name('api');
@@ -93,23 +95,19 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
 
         // Super admin
         Route::group(['middleware' => ['auth.super_admin']], function () {
-            Route::prefix('spaces')->controller(SpaceController::class)->group(function () {
-                Route::get('/', 'index');
-                Route::get('{domain}', 'show');
-                Route::post('/', 'store');
-                Route::put('{domain}', 'update');
-                Route::delete('{domain}', 'destroy');
-            });
+            Route::apiResource('spaces', SpaceController::class);
 
             Route::prefix('spaces/{domain}/email')->controller(EmailServerController::class)->group(function () {
                 Route::get('/', 'show');
                 Route::post('/', 'store');
                 Route::delete('/', 'destroy');
             });
+
+            Route::apiResource('spaces/{domain}/carddavs', CardDavServerController::class);
         });
 
         // Account creation token
-        Route::post('account_creation_tokens', 'Api\Admin\AccountCreationTokenController@create');
+        Route::post('account_creation_tokens', 'Api\Admin\Account\CreationTokenController@create');
 
         // Accounts
         Route::prefix('accounts')->controller(AdminAccountController::class)->group(function () {
@@ -140,15 +138,19 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
         });
 
         // Account contacts
-        Route::prefix('accounts/{id}/contacts')->controller(AccountContactController::class)->group(function () {
+        Route::prefix('accounts/{id}/contacts')->controller(ContactController::class)->group(function () {
             Route::get('/', 'index');
             Route::get('{contact_id}', 'show');
             Route::post('{contact_id}', 'add');
             Route::delete('{contact_id}', 'remove');
         });
 
-        Route::apiResource('accounts/{id}/actions', AccountActionController::class);
-        Route::apiResource('account_types', AccountTypeController::class);
+        Route::group(['middleware' => ['feature.carddav_user_credentials']], function () {
+            Route::apiResource('accounts/{id}/carddavs', CardDavCredentialsController::class, ['only' => ['index', 'show', 'update', 'destroy']]);
+        });
+
+        Route::apiResource('accounts/{id}/actions', ActionController::class);
+        Route::apiResource('account_types', TypeController::class);
         Route::apiResource('accounts/{account_id}/vcards-storage', AdminVcardsStorageController::class);
 
         Route::apiResource('contacts_lists', ContactsListController::class);
@@ -157,7 +159,7 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
             Route::delete('{id}/contacts/{contacts_id}', 'contactRemove');
         });
 
-        Route::prefix('accounts/{id}/dictionary')->controller(AccountDictionaryController::class)->group(function () {
+        Route::prefix('accounts/{id}/dictionary')->controller(DictionaryController::class)->group(function () {
             Route::get('/', 'index');
             Route::get('{key}', 'show');
             Route::post('{key}', 'set');

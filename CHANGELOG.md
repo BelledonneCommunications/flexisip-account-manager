@@ -4,6 +4,7 @@ v2.1
 ----
 - Fix FLEXIAPI-282 Migrate to Laravel 11 and PHP 8.2+
 - Fix FLEXIAPI-371 Add documentation for the Wizard page
+- Fix FLEXIAPI-359 Add CardDav servers support in the spaces
 
 v2.0
 ----

@@ -2,9 +2,7 @@
 
 @section('breadcrumb')
     @if (auth()->user()->superAdmin)
-        <li class="breadcrumb-item">
-            <a href="{{ route('admin.spaces.index') }}">{{ __('Spaces') }}</a>
-        </li>
+        @include('admin.parts.breadcrumb.spaces.index')
     @endif
     <li class="breadcrumb-item">{{ $space->name }}</li>
     <li class="breadcrumb-item active" aria-current="page">{{ __('Information') }}</li>

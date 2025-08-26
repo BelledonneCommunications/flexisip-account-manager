@@ -1,9 +1,11 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    @include('admin.account.parts.breadcrumb_accounts_index')
+    @include('admin.parts.breadcrumb.accounts.index')
     @if ($account->id)
-        @include('admin.account.parts.breadcrumb_accounts_show', ['account' => $account])
+        <li class="breadcrumb-item">
+            <a href="{{ route('admin.account.show', $account->id) }}">{{ $account->identifier }}</a>
+        </li>
         <li class="breadcrumb-item active" aria-current="page">{{ __('Edit') }}</li>
     @else
         <li class="breadcrumb-item active" aria-current="page">{{ __('Create') }}</li>

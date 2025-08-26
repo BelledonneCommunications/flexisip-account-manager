@@ -1,8 +1,7 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    @include('admin.account.parts.breadcrumb_accounts_index')
-    @include('admin.account.parts.breadcrumb_accounts_show', ['account' => $account])
+    @include('admin.parts.breadcrumb.accounts.show', ['account' => $account])
     <li class="breadcrumb-item active" aria-current="page">Activity</li>
 @endsection
 

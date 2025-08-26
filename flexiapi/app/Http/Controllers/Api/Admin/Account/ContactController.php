@@ -1,0 +1,61 @@
+<?php
+/*
+    Flexisip Account Manager is a set of tools to manage SIP accounts.
+    Copyright (C) 2021 Belledonne Communications SARL, All rights reserved.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+namespace App\Http\Controllers\Api\Admin\Account;
+
+use App\Http\Controllers\Controller;
+
+use App\Account;
+
+class ContactController extends Controller
+{
+    public function index(int $id)
+    {
+        return Account::findOrFail($id)->contacts;
+    }
+
+    public function show(int $id, int $contactId)
+    {
+        return Account::findOrFail($id)
+                      ->contacts()
+                      ->where('id', $contactId)
+                      ->firstOrFail();
+    }
+
+    public function add(int $id, int $contactId)
+    {
+        $account = Account::findOrFail($id);
+        $account->contacts()->detach($contactId);
+
+        if (Account::findOrFail($contactId)) {
+            return $account->contacts()->attach($contactId);
+        }
+    }
+
+    public function remove(int $id, int $contactId)
+    {
+        $account = Account::findOrFail($id);
+
+        if (!$account->contacts()->pluck('id')->contains($contactId)) {
+            abort(404);
+        }
+
+        return $account->contacts()->detach($contactId);
+    }
+}

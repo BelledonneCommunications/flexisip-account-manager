@@ -189,6 +189,44 @@ class ProvisioningController extends Controller
             }
         }
 
+        $remoteContactDirectoryCounter = 0;
+        $authInfoIndex = 0;
+
+        // CardDav servers
+
+        if ($request->space?->carddavServers) {
+            foreach ($request->space->carddavServers as $carddavServer) {
+                $carddavServer->getProvisioningSection($config, $remoteContactDirectoryCounter);
+                $remoteContactDirectoryCounter++;
+            }
+        }
+
+        if ($account) {
+            foreach ($account->carddavServers as $carddavServer) {
+                $section = $dom->createElement('section');
+                $section->setAttribute('name', 'auth_info_' . $authInfoIndex);
+                $config->appendChild($section);
+
+                $entry = $dom->createElement('entry', $carddavServer->pivot->username);
+                $entry->setAttribute('name', 'username');
+                $section->appendChild($entry);
+
+                $entry = $dom->createElement('entry', $carddavServer->pivot->domain);
+                $entry->setAttribute('name', 'domain');
+                $section->appendChild($entry);
+
+                $entry = $dom->createElement('entry', $carddavServer->pivot->password);
+                $entry->setAttribute('name', 'ha1');
+                $section->appendChild($entry);
+
+                $entry = $dom->createElement('entry', $carddavServer->pivot->algorithm);
+                $entry->setAttribute('name', 'algorithm');
+                $section->appendChild($entry);
+
+                $authInfoIndex++;
+            }
+        }
+
         // Password reset
         if ($account && $request->has('reset_password')) {
             $account->updatePassword(Str::random(10));

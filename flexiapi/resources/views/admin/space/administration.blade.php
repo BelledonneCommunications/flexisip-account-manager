@@ -1,14 +1,7 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item">
-        <a href="{{ route('admin.spaces.index') }}">{{ __('Spaces') }}</a>
-    </li>
-    <li class="breadcrumb-item">
-        <a href="{{ route('admin.spaces.show', $space->id) }}">
-            {{ $space->name }}
-        </a>
-    </li>
+    @include('admin.parts.breadcrumb.spaces.show')
     <li class="breadcrumb-item active" aria-current="page">{{ __('Administration') }}</li>
 @endsection
 
@@ -46,6 +39,12 @@
 
         <div class="large">
             @include('parts.form.toggle', ['object' => $space, 'key' => 'super', 'label' => __('Super Space'), 'supporting' => __('All the admins will be super admins')])
+        </div>
+
+        <h3 class="large">{{ __('Integration') }}</h3>
+
+        <div class="large">
+            @include('parts.form.toggle', ['object' => $space, 'key' => 'carddav_user_credentials', 'label' => __('Enable user credentials for CardDav servers')])
         </div>
 
         <h3 class="large">Interface</h3>

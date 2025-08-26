@@ -1,13 +1,12 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    @include('admin.account.parts.breadcrumb_accounts_index')
-    @include('admin.account.parts.breadcrumb_accounts_show', ['account' => $account])
+    @include('admin.parts.breadcrumb.accounts.show', ['account' => $account])
     <li class="breadcrumb-item active" aria-current="page">{{ __('Delete') }}</li>
 @endsection
 
 @section('content')
-    <h2>{{ __('Delete') }}</h2>
+    <h1><i class="ph ph-trash"></i> {{ __('Delete') }}</h1>
 
     <div>
         <p>{{ __('You are going to permanently delete the following element. Please confirm your action.') }}</p>

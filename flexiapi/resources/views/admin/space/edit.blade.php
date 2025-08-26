@@ -1,14 +1,7 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item">
-        <a href="{{ route('admin.spaces.index') }}">{{ __('Spaces') }}</a>
-    </li>
-    <li class="breadcrumb-item">
-        <a href="{{ route('admin.spaces.show', $space->id) }}">
-            {{ $space->name }}
-        </a>
-    </li>
+    @include('admin.parts.breadcrumb.spaces.show')
     <li class="breadcrumb-item active" aria-current="page">{{ __('App Configuration') }}</li>
 @endsection
 
