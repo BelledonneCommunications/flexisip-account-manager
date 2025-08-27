@@ -7,6 +7,7 @@ v2.1
 - Fix FLEXIAPI-359 Add CardDav servers support in the spaces
 - Fix FLEXIAPI-374 Improve CardDav credentials form
 - Fix FLEXIAPI-376 Rename domain to realm in CardDav credentials
+- Fix FLEXIAPI-375 Fix VcardsStorage table UUID size, recover the UUID from the stored vCard
 
 v2.0
 ----
