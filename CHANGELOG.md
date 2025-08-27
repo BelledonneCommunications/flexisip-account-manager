@@ -1,5 +1,9 @@
 # Flexisip Account Manager Changelog
 
+v1.6.8
+---
+- Fix FLEXIAPI-375 Fix VcardsStorage table UUID size, recover the UUID from the stored vCard
+
 v1.6.7
 ---
 - Fix FLEXIAPI-367 Bump laravel-redis-sentinel dependency to support Redis 6
