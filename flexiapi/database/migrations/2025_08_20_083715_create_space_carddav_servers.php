@@ -34,7 +34,7 @@ return new class extends Migration
         Schema::create('account_carddav_credentials', function (Blueprint $table) {
             $table->string('username', 64);
             $table->string('password', 255);
-            $table->string('domain', 255);
+            $table->string('realm', 255);
             $table->string('algorithm', 10)->default('MD5');
 
             $table->bigInteger('space_carddav_server_id')->unsigned();

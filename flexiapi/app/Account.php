@@ -153,7 +153,7 @@ class Account extends Authenticatable
     public function carddavServers()
     {
         return $this->belongsToMany(SpaceCardDavServer::class, 'account_carddav_credentials', 'account_id', 'space_carddav_server_id')
-            ->withPivot('username', 'domain', 'algorithm', 'password');
+            ->withPivot('username', 'realm', 'algorithm', 'password');
     }
 
     public function getDictionaryAttribute()

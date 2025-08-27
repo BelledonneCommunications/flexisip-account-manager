@@ -22,7 +22,7 @@ JSON parameters:
 * `username` **required** the username
 * `password` **required** the password in plain text
 * `algorithm` **required**, values can be `SHA-256` or `MD5`
-* `domain` **required** the domain
+* `realm` **required** the realm
 
 ### `DELETE /accounts/{id}/carddavs/{carddav_id}`
 <span class="badge badge-warning">Admin</span>

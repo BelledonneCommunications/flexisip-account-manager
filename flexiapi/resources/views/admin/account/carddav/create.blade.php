@@ -28,9 +28,9 @@
             @include('parts.errors', ['name' => 'username'])
         </div>
             <div>
-            <input placeholder="domain.com, realm.tld" name="domain" type="text" value="{{ old('domain') }}" required>
-            <label for="domain">{{ __('Domain') }}</label>
-            @include('parts.errors', ['name' => 'domain'])
+            <input placeholder="Realm, realm.tld" name="realm" type="text" value="{{ old('realm') }}" required>
+            <label for="realm">{{ __('Realm') }}</label>
+            @include('parts.errors', ['name' => 'realm'])
         </div>
         <div>
             <input placeholder="Password" name="password" type="password" required>

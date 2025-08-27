@@ -6,6 +6,7 @@ v2.1
 - Fix FLEXIAPI-371 Add documentation for the Wizard page
 - Fix FLEXIAPI-359 Add CardDav servers support in the spaces
 - Fix FLEXIAPI-374 Improve CardDav credentials form
+- Fix FLEXIAPI-376 Rename domain to realm in CardDav credentials
 
 v2.0
 ----

@@ -55,10 +55,10 @@ class CardDavCredentialsController extends Controller
         $accountCarddavCredentials->space_carddav_server_id = $request->get('carddav_id');
         $accountCarddavCredentials->account_id = $account->id;
         $accountCarddavCredentials->username = $request->get('username');
-        $accountCarddavCredentials->domain = $request->get('domain');
+        $accountCarddavCredentials->realm = $request->get('realm');
         $accountCarddavCredentials->password = bchash(
             $request->get('username'),
-            $request->get('domain'),
+            $request->get('realm'),
             $request->get('password'),
             $request->get('algorithm')
         );

@@ -128,7 +128,7 @@ class ApiSpaceCardDavServersTest extends TestCase
 
         $credentials = [
             'username' => 'john',
-            'domain' => 'hop.com',
+            'realm' => 'hop.com',
             'password' => '1234',
             'algorithm' => 'MD5'
         ];
@@ -195,7 +195,7 @@ class ApiSpaceCardDavServersTest extends TestCase
 
         $credentials = [
             'username' => 'john',
-            'domain' => 'hop.com',
+            'realm' => 'hop.com',
             'password' => '1234',
             'algorithm' => 'MD5'
         ];
@@ -208,7 +208,7 @@ class ApiSpaceCardDavServersTest extends TestCase
             ->json('PUT', $route . '/' . $cardDavServer->id , $credentials)
             ->assertStatus(200);
 
-        $credentials['domain'] = 'hop2.com';
+        $credentials['realm'] = 'hop2.com';
 
         // Again
         $this->keyAuthenticated($admin)
@@ -217,12 +217,11 @@ class ApiSpaceCardDavServersTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->json('GET', $route)
-            //->dump()
             ->assertJsonFragment([
                 'username' => $credentials['username'],
             ])
             ->assertJsonFragment([
-                'domain' => $credentials['domain'],
+                'realm' => $credentials['realm'],
             ])
             ->assertStatus(200);
 

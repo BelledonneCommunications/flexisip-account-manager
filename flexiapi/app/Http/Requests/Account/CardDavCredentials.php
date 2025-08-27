@@ -33,7 +33,7 @@ class CardDavCredentials extends FormRequest
             'username' => 'required',
             'password' => 'required',
             'algorithm' => ['required', new PasswordAlgorithm],
-            'domain' => ['required', new Domain],
+            'realm' => 'required',
         ];
     }
 }

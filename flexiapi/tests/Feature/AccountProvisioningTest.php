@@ -248,7 +248,7 @@ class AccountProvisioningTest extends TestCase
 
         $credentials = [
             'username' => 'john',
-            'domain' => 'hop.com',
+            'realm' => 'hop.com',
             'password' => '1234',
             'algorithm' => 'MD5'
         ];

@@ -145,7 +145,7 @@
                         <tr>
                             <th>{{ __('CardDav Server') }}</th>
                             <th>{{ __('Username') }}</th>
-                            <th>{{ __('Domain') }}</th>
+                            <th>{{ __('Realm') }}</th>
                             <th>{{ __('Algorithm') }}</th>
                             <th></th>
                         </tr>
@@ -160,7 +160,7 @@
                                 <tr>
                                     <td class="line">{{ $carddavServer->name }}</td>
                                     <td class="line">{{ $carddavServer->pivot->username }}</td>
-                                    <td class="line">{{ $carddavServer->pivot->domain }}</td>
+                                    <td class="line">{{ $carddavServer->pivot->realm }}</td>
                                     <td class="line">{{ $carddavServer->pivot->algorithm }}</td>
                                     <td class="actions">
                                         <a type="button" class="btn small tertiary" href="{{ route('admin.account.carddavs.delete', [$account, $carddavServer]) }}">

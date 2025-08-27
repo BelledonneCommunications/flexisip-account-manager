@@ -211,8 +211,8 @@ class ProvisioningController extends Controller
                 $entry->setAttribute('name', 'username');
                 $section->appendChild($entry);
 
-                $entry = $dom->createElement('entry', $carddavServer->pivot->domain);
-                $entry->setAttribute('name', 'domain');
+                $entry = $dom->createElement('entry', $carddavServer->pivot->realm);
+                $entry->setAttribute('name', 'realm');
                 $section->appendChild($entry);
 
                 $entry = $dom->createElement('entry', $carddavServer->pivot->password);
