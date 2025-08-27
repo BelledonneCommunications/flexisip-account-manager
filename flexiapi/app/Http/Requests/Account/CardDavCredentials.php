@@ -30,7 +30,7 @@ class CardDavCredentials extends FormRequest
     public function rules()
     {
         return [
-            'username' => 'required|min:3',
+            'username' => 'required',
             'password' => 'required',
             'algorithm' => ['required', new PasswordAlgorithm],
             'domain' => ['required', new Domain],
