@@ -59,7 +59,7 @@ class VcardsStorageController extends Controller
         $vcard->vcard = preg_replace('/\r\n?/', "\n", $vcardo->serialize());
         $vcard->save();
 
-        return $vcard->vcard;
+        return $vcard;
     }
 
     public function update(Request $request, int $accountId, string $uuid)
@@ -78,7 +78,7 @@ class VcardsStorageController extends Controller
         $vcard->vcard = preg_replace('/\r\n?/', "\n", $vcardo->serialize());
         $vcard->save();
 
-        return $vcard->vcard;
+        return $vcard;
     }
 
     public function destroy(int $accountId, string $uuid)
