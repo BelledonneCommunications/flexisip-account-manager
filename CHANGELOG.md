@@ -1,5 +1,9 @@
 # Flexisip Account Manager Changelog
 
+v1.6.9
+---
+- Fix FLEXIAPI-378 Return a valid JSON containing the vCard and not the raw vCard in VcardsStorage controller
+
 v1.6.8
 ---
 - Fix FLEXIAPI-375 Fix VcardsStorage table UUID size, recover the UUID from the stored vCard
