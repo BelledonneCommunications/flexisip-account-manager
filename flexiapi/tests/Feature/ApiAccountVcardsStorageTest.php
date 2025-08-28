@@ -101,13 +101,23 @@ VERSION:4.0
 FN:Simon Perreault
 UID:urn:uuid:' . $uid . '
 END:VCARD'
-            ])->assertStatus(200);
+            ])->assertJsonFragment([
+                'vcard' =>
+'BEGIN:VCARD
+VERSION:4.0
+FN:Simon Perreault
+UID:urn:uuid:' . $uid . '
+END:VCARD
+'
+            ])->assertStatus(201);
 
         // Admin create
         $this->keyAuthenticated($admin)
             ->json($this->method, $adminRoute, [
                 'vcard' => $thirdVcard])
-            ->assertStatus(200);
+            ->assertJson([
+                'vcard' => $thirdVcard
+            ])->assertStatus(201);
 
         // Again...
         $this->keyAuthenticated($account)
@@ -123,7 +133,7 @@ END:VCARD'
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
                 'vcard' => $secondVcard
-            ])->assertStatus(200);
+            ])->assertStatus(201);
 
         $this->assertDatabaseHas('vcards_storage', [
             'uuid' => $uid
@@ -140,6 +150,8 @@ END:VCARD'
         // Update
         $this->keyAuthenticated($account)
             ->json('PUT', $this->route . '/' . $uid, [
+                'vcard' => $lastVcard
+            ])->assertJsonFragment([
                 'vcard' => $lastVcard
             ])->assertStatus(200);
 
@@ -167,7 +179,7 @@ END:VCARD'
         $this->keyAuthenticated($account)
             ->get($this->route . '/' . $uid)
             ->assertStatus(200)
-            ->assertJson([
+            ->assertJsonFragment([
                 'vcard' => $lastVcard
             ]);
 
@@ -175,7 +187,7 @@ END:VCARD'
         $this->keyAuthenticated($admin)
             ->get($adminRoute . '/' . $uid)
             ->assertStatus(200)
-            ->assertJson([
+            ->assertJsonFragment([
                 'vcard' => $lastVcard
             ]);
 
