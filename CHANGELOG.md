@@ -9,6 +9,7 @@ v2.1
 - Fix FLEXIAPI-376 Rename domain to realm in CardDav credentials
 - Fix FLEXIAPI-375 Fix VcardsStorage table UUID size, recover the UUID from the stored vCard
 - Fix FLEXIAPI-378 Return a valid JSON containing the vCard and not the raw vCard in VcardsStorage controller
+- Fix FLEXIAPI-377 Don't reset authInfoIndex in the Provisioning
 
 v2.0
 ----

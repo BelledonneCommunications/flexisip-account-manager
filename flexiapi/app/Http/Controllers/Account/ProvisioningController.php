@@ -289,7 +289,6 @@ class ProvisioningController extends Controller
             }
 
             $passwords = $account->passwords()->get();
-            $authInfoIndex = 0;
 
             foreach ($passwords as $password) {
                 $section = $xpath->query("//section[@name='auth_info_" . $authInfoIndex . "']")->item(0);
