@@ -1,6 +1,6 @@
 ## Account CardDav credentials
 
-The following endpoints will return `403 Forbidden` if the requested account doesn't have a DTMF protocol configured.
+The following endpoints will return `403 Forbidden` if the requested account Space doesn't have `carddav_user_credentials` set to `true`.
 
 ### `GET /accounts/{id}/carddavs`
 <span class="badge badge-warning">Admin</span>

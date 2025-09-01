@@ -41,11 +41,19 @@ class ApiAccountPhoneChangeTest extends TestCase
             ->assertStatus(422);
 
         // Send a SMS
-        /*$this->keyAuthenticated($account)
+        $this->keyAuthenticated($account)
             ->json($this->method, $this->route.'/request', [
-                'phone' => '+3312345678'
+                'phone' => '+33216412664'
             ])
-            ->assertStatus(200);*/
+            ->assertStatus(200);
+
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->route.'/request', [
+                'phone' => '+33216412664'
+            ])
+            ->assertStatus(200);
+
+        $this->assertEquals(2, PhoneChangeCode::where('account_id', $account->id)->count());
     }
 
     public function testCodeExpiration()

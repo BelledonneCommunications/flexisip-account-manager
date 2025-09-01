@@ -158,7 +158,11 @@
                         @else
                             @foreach ($account->carddavServers as $carddavServer)
                                 <tr>
-                                    <td class="line">{{ $carddavServer->name }}</td>
+                                    <td class="line">
+                                        {{ $carddavServer->name }}
+                                        <br>
+                                        <small>{{ $carddavServer->uri }}</small>
+                                    </td>
                                     <td class="line">{{ $carddavServer->pivot->username }}</td>
                                     <td class="line">{{ $carddavServer->pivot->realm }}</td>
                                     <td class="line">{{ $carddavServer->pivot->algorithm }}</td>
