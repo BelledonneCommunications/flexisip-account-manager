@@ -12,6 +12,7 @@ v2.1
 - Fix FLEXIAPI-377 Don't reset authInfoIndex in the Provisioning
 - Fix FLEXIAPI-380 Fix CardDav documentation
 - Fix FLEXIAPI-381 Remove Remi in the Rocky9 pipeline
+- Fix FLEXIAPI-382 Package for Rocky 10
 
 v2.0
 ----

@@ -14,6 +14,14 @@ rocky9-deploy:
     - rocky9-package
     - rocky9-test
 
+rocky10-deploy:
+  extends: .deploy
+  script:
+    - ./deploy_packages.sh rockylinux 10
+  needs:
+    - rocky10-package
+    - rocky10-test
+
 debian12-deploy:
   extends: .deploy
   script:

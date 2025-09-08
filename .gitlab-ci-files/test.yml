@@ -10,6 +10,12 @@ rocky9-test:
   needs:
     - rocky9-package
 
+rocky10-test:
+  extends: .rocky-test
+  image: gitlab.linphone.org:4567/bc/public/docker/rocky10-php:$ROCKY_10_IMAGE_VERSION
+  needs:
+    - rocky10-package
+
 .rocky-test:
   extends: .test
   script:

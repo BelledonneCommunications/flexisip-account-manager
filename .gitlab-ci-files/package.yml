@@ -14,6 +14,14 @@ rocky9-package:
   script:
     - make package-el9
 
+rocky10-package:
+  needs:
+    - prepare-package
+  extends: .package
+  image: gitlab.linphone.org:4567/bc/public/docker/rocky10-php:$ROCKY_10_IMAGE_VERSION
+  script:
+    - make package-el10
+
 debian12-package:
   needs:
     - prepare-package

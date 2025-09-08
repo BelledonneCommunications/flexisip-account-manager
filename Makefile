@@ -68,6 +68,11 @@ rpm-el9-only:
 	rpmbuild --quiet -bb --define 'dist .el9' --define '_topdir $(OUTPUT_DIR)/rpmbuild' --define "_rpmdir $(OUTPUT_DIR)/rpmbuild" $(OUTPUT_DIR)/rpmbuild/SPECS/flexisip-account-manager.spec
 	@echo "📦✅ RPM el9 Package Created"
 
+rpm-el10-only:
+	mkdir -p build
+	rpmbuild --quiet -bb --define 'dist .el10' --define '_topdir $(OUTPUT_DIR)/rpmbuild' --define "_rpmdir $(OUTPUT_DIR)/rpmbuild" $(OUTPUT_DIR)/rpmbuild/SPECS/flexisip-account-manager.spec
+	@echo "📦✅ RPM el10 Package Created"
+
 rpm-cleanup:
 	@echo "🧹 Cleanup"
 	mv rpmbuild/*/*.rpm build/.
@@ -100,6 +105,10 @@ rpm-el8-dev: prepare-dev package-semvers package-common package-el8
 package-el9: rpm-el9-only rpm-cleanup cleanup-package-semvers package-end-common
 rpm-el9: prepare-common package-el9
 rpm-el9-dev: prepare-dev package-semvers package-common package-el9
+
+package-el10: rpm-el10-only rpm-cleanup cleanup-package-semvers package-end-common
+rpm-el10: prepare-common package-el10
+rpm-el10-dev: prepare-dev package-semvers package-common package-el10
 
 package-deb: deb-only cleanup-package-semvers package-end-common
 deb: prepare-common package-deb
