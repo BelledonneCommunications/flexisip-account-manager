@@ -15,7 +15,7 @@ rocky9-test:
   script:
     - yum -y localinstall build/*.rpm
     - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
-    - composer install --ignore-platform-req=ext-sodium # Rocky 8 use the external library
+    - composer install --ignore-platform-req=ext-sodium # Rocky 8 and 9 use the external library
     - vendor/bin/phpcs
     - vendor/bin/phpmd . ansi phpmd.xml
     - php artisan key:generate
@@ -27,10 +27,16 @@ debian12-test:
   needs:
     - debian12-package
 
+debian13-test:
+  extends: .debian-test
+  image: gitlab.linphone.org:4567/bc/public/docker/debian13-php:$DEBIAN_13_IMAGE_VERSION
+  needs:
+    - debian13-package
+
 .debian-test:
   extends: .test
   script:
-    - apt update
+    #- apt update
     - apt install -y ./build/*.deb
     - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
     - composer install

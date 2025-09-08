@@ -11,6 +11,7 @@ v2.1
 - Fix FLEXIAPI-378 Return a valid JSON containing the vCard and not the raw vCard in VcardsStorage controller
 - Fix FLEXIAPI-377 Don't reset authInfoIndex in the Provisioning
 - Fix FLEXIAPI-380 Fix CardDav documentation
+- Fix FLEXIAPI-381 Remove Remi in the Rocky9 pipeline
 
 v2.0
 ----

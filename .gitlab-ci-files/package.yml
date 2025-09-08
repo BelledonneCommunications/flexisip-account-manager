@@ -4,12 +4,6 @@ rocky8-package:
   extends: .package
   image: gitlab.linphone.org:4567/bc/public/docker/rocky8-php:$ROCKY_8_IMAGE_VERSION
   script:
-    # We install this dependency only for the pipeline
-    - dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.rpm
-    - dnf -y module reset php
-    - dnf -y module enable php:remi-8.2
-    - dnf -y update php\*
-    - dnf -y install php-sodium
     - make package-el8
 
 rocky9-package:
@@ -18,12 +12,6 @@ rocky9-package:
   extends: .package
   image: gitlab.linphone.org:4567/bc/public/docker/rocky9-php:$ROCKY_9_IMAGE_VERSION
   script:
-    # We install this dependency only for the pipeline
-    - dnf -y install https://rpms.remirepo.net/enterprise/remi-release-9.rpm
-    - dnf -y module reset php
-    - dnf -y module enable php:remi-8.2
-    - dnf -y update php\*
-    - dnf -y install php-sodium
     - make package-el9
 
 debian12-package:
@@ -31,6 +19,12 @@ debian12-package:
     - prepare-package
   extends: .debian_package
   image: gitlab.linphone.org:4567/bc/public/docker/debian12-php:$DEBIAN_12_IMAGE_VERSION
+
+debian13-package:
+  needs:
+    - prepare-package
+  extends: .debian_package
+  image: gitlab.linphone.org:4567/bc/public/docker/debian13-php:$DEBIAN_13_IMAGE_VERSION
 
 .debian_package:
   extends: .package
@@ -46,21 +40,12 @@ remi-rocky8-package:
     - dnf -y module reset redis
     - dnf -y install @redis:6
 
-remi-rocky9-package:
-  image: gitlab.linphone.org:4567/bc/public/docker/rocky9-php:$ROCKY_9_IMAGE_VERSION
-  extends: .remi-rocky-package
-  variables:
-    ROCKY_RELEASE: 9
-  before_script:
-    - dnf -y module reset redis
-    - dnf -y install @redis:7
-
 .remi-rocky-package:
   extends: .package
   rules:
     - if: $CI_COMMIT_REF_NAME =~ /^release/ || $CI_COMMIT_REF_NAME == "master"
-    - changes:
-      - .gitlab-ci.yml
+    #- changes:
+    #  - .gitlab-ci.yml
   script:
     # Remi
     - mkdir -p $CI_PROJECT_DIR/build

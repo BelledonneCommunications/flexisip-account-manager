@@ -22,25 +22,23 @@ debian12-deploy:
     - debian12-package
     - debian12-test
 
+debian13-deploy:
+  extends: .deploy
+  script:
+    - ./deploy_packages.sh debian trixie
+  needs:
+    - debian13-package
+    - debian13-test
+
 remi-rocky8-deploy:
   extends: .deploy
-  rules:
-    - changes:
-      - .gitlab-ci.yml
+  #rules:
+    #- changes:
+    #  - .gitlab-ci.yml
   script:
     - ./deploy_packages.sh rockylinux 8
   needs:
     - remi-rocky8-package
-
-remi-rocky9-deploy:
-  extends: .deploy
-  rules:
-    - changes:
-      - .gitlab-ci.yml
-  script:
-    - ./deploy_packages.sh rockylinux 9
-  needs:
-    - remi-rocky9-package
 
 .deploy:
   stage: deploy
