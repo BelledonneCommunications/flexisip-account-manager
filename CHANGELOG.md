@@ -75,6 +75,7 @@ v2.0
 - Fix FLEXIAPI-372 Remove SESSION_DRIVER and CACHE_DRIVER and enforce them to file
 - Fix FLEXIAPI-375 Fix VcardsStorage table UUID size, recover the UUID from the stored vCard
 - Fix FLEXIAPI-378 Return a valid JSON containing the vCard and not the raw vCard in VcardsStorage controller
+- Fix FLEXIAPI-385 Use domains and not hosts in the EmailServer endpoints as defined in the API documentation
 
 v1.6
 ----

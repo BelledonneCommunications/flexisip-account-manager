@@ -11,14 +11,14 @@ use Illuminate\Http\Request;
 
 class EmailServerController extends Controller
 {
-    public function show(string $host)
+    public function show(string $domain)
     {
-        return Space::where('host', $host)->firstOrFail()->emailServer()->firstOrFail();
+        return Space::where('domain', $domain)->firstOrFail()->emailServer()->firstOrFail();
     }
 
-    public function store(CreateUpdate $request, string $host)
+    public function store(CreateUpdate $request, string $domain)
     {
-        $space = Space::where('host', $host)->firstOrFail();
+        $space = Space::where('domain', $domain)->firstOrFail();
         $emailServer = $space->emailServer ?? new SpaceEmailServer;
 
         $emailServer->space_id = $space->id;
@@ -35,9 +35,9 @@ class EmailServerController extends Controller
         return $emailServer;
     }
 
-    public function destroy(string $host)
+    public function destroy(string $domain)
     {
-        $space = Space::where('host', $host)->firstOrFail();
+        $space = Space::where('host', $domain)->firstOrFail();
         return $space->emailServer->delete();
     }
 }
