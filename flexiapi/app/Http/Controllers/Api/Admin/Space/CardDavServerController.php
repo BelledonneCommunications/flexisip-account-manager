@@ -11,19 +11,19 @@ use App\SpaceCardDavServer;
 
 class CardDavServerController extends Controller
 {
-    public function index(string $host)
+    public function index(string $domain)
     {
-        return Space::where('host', $host)->firstOrFail()->carddavServers;
+        return Space::where('domain', $domain)->firstOrFail()->carddavServers;
     }
 
-    public function show(string $host, int $carddavServerId)
+    public function show(string $domain, int $carddavServerId)
     {
-        return Space::where('host', $host)->firstOrFail()->carddavServers()->findOrFail($carddavServerId);
+        return Space::where('domain', $domain)->firstOrFail()->carddavServers()->findOrFail($carddavServerId);
     }
 
-    public function store(CardDavServer $request, string $host)
+    public function store(CardDavServer $request, string $domain)
     {
-        $space = Space::where('host', $host)->firstOrFail();
+        $space = Space::where('domain', $domain)->firstOrFail();
 
         $carddavServer = new SpaceCardDavServer;
         $carddavServer->space_id = $space->id;
@@ -34,9 +34,9 @@ class CardDavServerController extends Controller
         return $carddavServer->save();
     }
 
-    public function update(CardDavServer $request, string $host, int $carddavServerId)
+    public function update(CardDavServer $request, string $domain, int $carddavServerId)
     {
-        $space = Space::where('host', $host)->firstOrFail();
+        $space = Space::where('domain', $domain)->firstOrFail();
 
         $carddavServer = $space->carddavServers()->findOrFail($carddavServerId);
         $carddavServer->fill($request->validated());
@@ -46,9 +46,9 @@ class CardDavServerController extends Controller
         return $carddavServer->save();
     }
 
-    public function destroy(string $host, int $carddavServerId)
+    public function destroy(string $domain, int $carddavServerId)
     {
-        $space = Space::where('host', $host)->firstOrFail();
+        $space = Space::where('domain', $domain)->firstOrFail();
 
         $carddavServer = $space->carddavServers()->findOrFail($carddavServerId);
         return $carddavServer->delete();

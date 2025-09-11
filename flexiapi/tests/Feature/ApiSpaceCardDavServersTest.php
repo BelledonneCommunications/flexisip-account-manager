@@ -35,7 +35,7 @@ class ApiSpaceCardDavServersTest extends TestCase
         $admin = Account::factory()->admin()->create();
         $admin->generateUserApiKey();
 
-        $route = $this->spaceRoute . '/' . $admin->space->host . '/carddavs';
+        $route = $this->spaceRoute . '/' . $admin->space->domain . '/carddavs';
         $uri = 'http://test.com';
 
         $this->keyAuthenticated($admin)
@@ -50,9 +50,29 @@ class ApiSpaceCardDavServersTest extends TestCase
         $superAdmin = Account::factory()->superAdmin()->create();
         $superAdmin->generateUserApiKey();
 
-        $route = $this->spaceRoute . '/' . $superAdmin->space->host . '/carddavs';
+        $route = $this->spaceRoute . '/' . $superAdmin->space->domain . '/carddavs';
+
         $uri = 'http://test.com';
         $uri2 = 'http://test2.com';
+
+        // Test with a standard admin first
+
+        $superAdmin->space->super = false;
+        $superAdmin->space->save();
+
+        $this->keyAuthenticated($superAdmin)
+            ->json('GET', $route)
+            ->assertStatus(403);
+
+        $superAdmin->space->super = true;
+        $superAdmin->space->save();
+
+        // Super Admin again
+
+        $this->keyAuthenticated($superAdmin)
+            ->json('GET', $route)
+            ->assertJson([])
+            ->assertStatus(200);
 
         $this->keyAuthenticated($superAdmin)
             ->json('POST', $route, [
@@ -133,7 +153,7 @@ class ApiSpaceCardDavServersTest extends TestCase
             'algorithm' => 'MD5'
         ];
 
-        $route = $this->spaceRoute . '/' . $admin->space->host . '/carddavs';
+        $route = $this->spaceRoute . '/' . $admin->space->domain . '/carddavs';
 
         // Creating the CardDav
         $this->keyAuthenticated($superAdmin)
@@ -143,7 +163,16 @@ class ApiSpaceCardDavServersTest extends TestCase
             ->assertStatus(200);
 
         // Allowing CardDav credentials for Admin 1 space
-        Space::where('domain', $admin->domain)->update(['carddav_user_credentials' => true]);
+        $server = $this->keyAuthenticated($admin)
+            ->json('GET', $this->spaceRoute . '/' . $admin->space->domain)
+            ->assertStatus(200)
+            ->json();
+
+        $server['carddav_user_credentials'] = true;
+
+        $this->keyAuthenticated($admin)
+            ->json('PUT', $this->spaceRoute . '/' . $admin->space->domain, $server)
+            ->assertStatus(200);
 
         // First Admin can get its own credentials
         $this->keyAuthenticated($admin)
@@ -182,7 +211,7 @@ class ApiSpaceCardDavServersTest extends TestCase
         Space::where('domain', $user->domain)->update(['super' => true]);
 
         $this->keyAuthenticated($admin)
-            ->json('POST', $this->spaceRoute . '/' . $admin->space->host . '/carddavs', [
+            ->json('POST', $this->spaceRoute . '/' . $admin->space->domain . '/carddavs', [
                 'uri' => 'http://uri.com'
             ])
             ->assertStatus(200);
