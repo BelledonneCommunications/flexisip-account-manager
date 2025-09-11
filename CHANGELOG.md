@@ -13,6 +13,8 @@ v2.1
 - Fix FLEXIAPI-380 Fix CardDav documentation
 - Fix FLEXIAPI-381 Remove Remi in the Rocky9 pipeline
 - Fix FLEXIAPI-382 Package for Rocky 10
+- Fix FLEXIAPI-384 Allow carddav_user_credentials to be set and use the correct host -> domain parameter in the endpoints
+- Fix FLEXIAPI-385 Use domains and not hosts in the EmailServer endpoints as defined in the API documentation
 
 v2.0
 ----
