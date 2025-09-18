@@ -90,7 +90,7 @@
         <table class="large">
             <thead>
                 <tr>
-                    <th width="1%">
+                    <th style="width:1%;">
                         <input type="checkbox" onchange="Utils.toggleAll(this)">
                     </th>
                     <th>{{ __('Username') }}</th>
