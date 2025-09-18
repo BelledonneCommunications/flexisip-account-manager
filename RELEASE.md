@@ -22,9 +22,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Changed
 
+- **Complete and reorganize the Markdown documentation**
+- **Refactor the emails templates** All the emails were modernized and are now generated in HTML
+
+### Removed
+
+- **Remove the deprecated endpoints** The endpoints inherited from XMLRPC are now completely removed, the following variable can be removed:
+    - APP_DANGEROUS_ENDPOINTS
+    - APP_PROJECT_URL
 - **Removing and moving DotEnv instance environnement variables to the Spaces** The following DotEnv variables were removed. You can now configure them directly in the designated spaces after the migration.
     - INSTANCE_COPYRIGHT
     - INSTANCE_INTRO_REGISTRATION
+    - INSTANCE_CONFIRMED_REGISTRATION_TEXT
     - INSTANCE_CUSTOM_THEME
     - WEB_PANEL
     - PUBLIC_REGISTRATION
@@ -38,13 +47,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
     - ACCOUNT_PROVISIONING_RC_FILE
     - ACCOUNT_PROVISIONING_OVERWRITE_ALL
     - ACCOUNT_PROVISIONING_USE_X_LINPHONE_PROVISIONING_HEADER
-- **Complete and reorganize the Markdown documentation**
-- **Refactor the emails templates** All the emails were modernized and are now generated in HTML
-- **Enforce SESSION_DRIVER and CACHE_DRIVER to file** They can be removed from your DotEnv file as well.
-
-### Removed
-
-- **Remove the deprecated endpoints** The endpoints inherited from XMLRPC are now completely removed
+- **Enforce the session and cache in the configuration** The following variables can be removed from your DotEnv file as well:
+    - SESSION_DRIVER
+    - CACHE_DRIVER
 
 ### Migrate from [1.6]
 
