@@ -15,6 +15,7 @@ v2.1
 - Fix FLEXIAPI-382 Package for Rocky 10
 - Fix FLEXIAPI-384 Allow carddav_user_credentials to be set and use the correct host -> domain parameter in the endpoints
 - Fix FLEXIAPI-385 Use domains and not hosts in the EmailServer endpoints as defined in the API documentation
+- Fix FLEXIAPI-391 Add missing account view attribute in the actions.delete view
 
 v2.0
 ----
@@ -88,6 +89,9 @@ v2.0
 - Fix FLEXIAPI-364 Fix a faulty redirection in the ExternalAccount controller
 - Fix FLEXIAPI-361 Prepare the 2.0 release
 - Fix FLEXIAPI-372 Remove SESSION_DRIVER and CACHE_DRIVER and enforce them to file
+- Fix FLEXIAPI-375 Fix VcardsStorage table UUID size, recover the UUID from the stored vCard
+- Fix FLEXIAPI-378 Return a valid JSON containing the vCard and not the raw vCard in VcardsStorage controller
+- Fix FLEXIAPI-385 Use domains and not hosts in the EmailServer endpoints as defined in the API documentation
 
 v1.6
 ----
