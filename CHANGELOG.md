@@ -76,6 +76,7 @@ v2.0
 - Fix FLEXIAPI-375 Fix VcardsStorage table UUID size, recover the UUID from the stored vCard
 - Fix FLEXIAPI-378 Return a valid JSON containing the vCard and not the raw vCard in VcardsStorage controller
 - Fix FLEXIAPI-385 Use domains and not hosts in the EmailServer endpoints as defined in the API documentation
+- Fix FLEXIAPI-391 Add missing account view attribute in the actions.delete view
 
 v1.6
 ----

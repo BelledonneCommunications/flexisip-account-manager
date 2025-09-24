@@ -99,6 +99,7 @@ class AccountActionController extends Controller
         $account = Account::findOrFail($accountId);
 
         return view('admin.account.action.delete', [
+            'account' => $account,
             'action' => $account->actions()
                                 ->where('id', $actionId)
                                 ->firstOrFail()
