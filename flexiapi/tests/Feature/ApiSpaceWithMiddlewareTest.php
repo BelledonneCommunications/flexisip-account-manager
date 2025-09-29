@@ -42,9 +42,7 @@ class ApiSpaceWithMiddlewareTest extends TestCaseWithSpaceMiddleware
 
         // Try to create a new user as an admin
         $admin->generateUserApiKey();
-        config()->set('app.root_host', $admin->domain);
-
-        space(reload: true);
+        config()->set('app.root_host', $superAdmin->space->host);
 
         $this->keyAuthenticated($admin)
             ->json($this->method, 'http://' . $admin->domain .  $this->accountRoute, [
@@ -55,19 +53,19 @@ class ApiSpaceWithMiddlewareTest extends TestCaseWithSpaceMiddleware
 
         // Unexpire the space and try again
         $space = $this->keyAuthenticated($superAdmin)
-            ->get($this->route . '/' . $admin->domain)
+            ->get('http://' . $superAdmin->domain .  $this->route . '/' . $admin->domain)
             ->json();
 
         $space['expire_at'] = Carbon::tomorrow()->toDateTimeString();
 
         $this->keyAuthenticated($superAdmin)
-            ->json('PUT', $this->route . '/' . $admin->domain, $space)
+            ->json('PUT', 'http://' . $superAdmin->domain .  $this->route . '/' . $admin->domain, $space)
             ->assertStatus(200);
 
         space(reload: true);
 
         $this->keyAuthenticated($admin)
-            ->json($this->method, $this->accountRoute, [
+            ->json($this->method, 'http://' . $admin->domain .  $this->accountRoute, [
                 'username' => 'new',
                 'algorithm' => 'SHA-256',
                 'password' => '123456',

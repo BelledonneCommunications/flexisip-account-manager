@@ -78,6 +78,7 @@ v2.0
 - Fix FLEXIAPI-385 Use domains and not hosts in the EmailServer endpoints as defined in the API documentation
 - Fix FLEXIAPI-391 Add missing account view attribute in the actions.delete view
 - Fix FLEXIAPI-392 Fix the recover_by_code view and use the account space object
+- Fix FLEXIAPI-394 Apply SpaceCheck on all the pages and URLs, backport from 2.1
 
 v1.6
 ----

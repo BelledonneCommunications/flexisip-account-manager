@@ -52,13 +52,15 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\Localization::class,
+            'space.check',
         ],
 
         'api' => [
             'throttle:600,1', // move to 600 instead of 60
             'bindings',
             'validate_json',
-            'localization'
+            'localization',
+            'space.check',
         ],
     ];
 

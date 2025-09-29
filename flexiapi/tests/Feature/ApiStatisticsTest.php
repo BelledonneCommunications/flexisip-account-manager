@@ -39,7 +39,7 @@ class ApiStatisticsTest extends TestCase
 
         $id = '1234';
         $fromUsername = 'username';
-        $fromDomain = 'domain.com';
+        $fromDomain = $admin->domain;
 
         $account = Account::factory()->create([
             'username' => $fromUsername,
@@ -132,9 +132,9 @@ class ApiStatisticsTest extends TestCase
 
         $id = '1234';
         $fromUsername = 'username';
-        $fromDomain = 'domain.com';
+        $fromDomain = $admin->domain;
         $toUsername = 'usernameto';
-        $toDomain = 'domainto.com';
+        $toDomain = $admin->domain;
 
         $account = Account::factory()->create([
             'username' => $fromUsername,

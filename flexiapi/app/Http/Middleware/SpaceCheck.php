@@ -15,7 +15,7 @@ class SpaceCheck
             return abort(503, 'APP_ROOT_HOST is not configured');
         }
 
-        $space = space();
+        $space = space(reload: true);
 
         if ($space != null) {
             if (!str_ends_with($space->host, config('app.root_host'))) {
@@ -25,7 +25,7 @@ class SpaceCheck
             Config::set('app.url', '://' . $space->host);
             Config::set('app.sip_domain', $space->domain);
 
-            if ($request->user() && !$request->user()->superAdmin && $space?->isExpired()) {
+            if ($space->isExpired()) {
                 abort($request->expectsJson() ? 403 : 490, 'The related Space has expired');
             }
 
