@@ -884,7 +884,7 @@ JSON parameters:
 
 The phone numbers managed by FlexiAPI are validated against a list of countries that can be managed in the admin web panels.
 
-### `GET /phones_countries`
+### `GET /phone_countries`
 <span class="badge badge-success">Public</span>
 
 Return the list of Phone Countries and their current status.
