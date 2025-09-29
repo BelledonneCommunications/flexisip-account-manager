@@ -42,7 +42,6 @@ class ApiSpaceWithMiddlewareTest extends TestCase
 
         // Try to create a new user as an admin
         $admin->generateUserApiKey();
-        config()->set('app.sip_domain', $space->domain);
 
         $this->keyAuthenticated($admin)
             ->json($this->method, 'http://' . $admin->domain .  $this->accountRoute, [
@@ -52,20 +51,19 @@ class ApiSpaceWithMiddlewareTest extends TestCase
             ])->assertStatus(403);
 
         // Unexpire the space and try again
-        config()->set('app.sip_domain', $superAdmin->domain);
 
         $space = $this->keyAuthenticated($superAdmin)
-            ->get($this->route . '/' . $admin->domain)
+            ->get('http://' . $superAdmin->domain . $this->route . '/' . $admin->domain)
             ->json();
 
         $space['expire_at'] = Carbon::tomorrow()->toDateTimeString();
 
         $this->keyAuthenticated($superAdmin)
-            ->json('PUT', $this->route . '/' . $admin->domain, $space)
+            ->json('PUT', 'http://' . $superAdmin->domain . $this->route . '/' . $admin->domain, $space)
             ->assertStatus(200);
 
         $this->keyAuthenticated($superAdmin)
-            ->json($this->method, $this->accountRoute, [
+            ->json($this->method, 'http://' . $admin->domain . $this->accountRoute, [
                 'username' => 'new',
                 'algorithm' => 'SHA-256',
                 'password' => '123456',

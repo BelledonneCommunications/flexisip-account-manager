@@ -17,6 +17,7 @@ v2.1
 - Fix FLEXIAPI-385 Use domains and not hosts in the EmailServer endpoints as defined in the API documentation
 - Fix FLEXIAPI-391 Add missing account view attribute in the actions.delete view
 - Fix FLEXIAPI-392 Fix the recover_by_code view and use the account space object
+- Fix FLEXIAPI-395 Remove config()->set('app.sip_domain') and directly use the correct domain
 
 v2.0
 ----
