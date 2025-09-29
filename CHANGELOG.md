@@ -16,6 +16,7 @@ v2.1
 - Fix FLEXIAPI-384 Allow carddav_user_credentials to be set and use the correct host -> domain parameter in the endpoints
 - Fix FLEXIAPI-385 Use domains and not hosts in the EmailServer endpoints as defined in the API documentation
 - Fix FLEXIAPI-391 Add missing account view attribute in the actions.delete view
+- Fix FLEXIAPI-392 Fix the recover_by_code view and use the account space object
 
 v2.0
 ----
