@@ -43,7 +43,7 @@ var Utils = {
         sessionStorage.setObject('list.' + key, list);
     },
 
-    removeFromStorageList: function(key, id) {
+    removeFromStorageList: function (key, id) {
         var list = Utils.getStorageList(key);
 
         list.splice(list.indexOf(id), 1);
@@ -51,7 +51,7 @@ var Utils = {
         sessionStorage.setObject('list.' + key, list);
     },
 
-    existsInStorageList: function(key, id) {
+    existsInStorageList: function (key, id) {
         var list = Utils.getStorageList(key);
         return (list && list.includes(id));
     },
@@ -64,7 +64,7 @@ var Utils = {
 }
 
 var ListToggle = {
-    init: function() {
+    init: function () {
         document.querySelectorAll('input[type=checkbox].list_toggle').forEach(checkbox => {
             checkbox.checked = Utils.existsInStorageList(checkbox.dataset.listId, checkbox.dataset.id);
 
@@ -84,7 +84,7 @@ var ListToggle = {
         ListToggle.refreshCounters();
     },
 
-    refreshFormList: function() {
+    refreshFormList: function () {
         document.querySelectorAll('select.list_toggle').forEach(select => {
             select.innerHTML = '';
             select.multiple = true;
@@ -99,20 +99,28 @@ var ListToggle = {
         });
     },
 
-    refreshCounters: function() {
+    refreshCounters: function () {
         document.querySelectorAll('span.list_toggle').forEach(counter => {
             counter.innerHTML = Utils.getStorageList(counter.dataset.listId).length;
         });
     }
 }
 
-document.addEventListener("DOMContentLoaded", function(event) {
+document.addEventListener("DOMContentLoaded", function (event) {
     ListToggle.init();
 });
 
 function digitFilled(element) {
     if (element.value.length == 1) {
         element.nextElementSibling.focus();
+    } else if (element.value.length == 4 && element.previousElementSibling == undefined) {
+        var spread = new String(element.value);
+        element.value = spread[0];
+        element.nextElementSibling.value = spread[1];
+        element.nextElementSibling.nextElementSibling.value = spread[2];
+        element.nextElementSibling.nextElementSibling.nextElementSibling.value = spread[3];
+    } else {
+        element.value = '';
     }
 }
 

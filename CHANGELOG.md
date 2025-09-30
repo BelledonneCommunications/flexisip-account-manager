@@ -18,6 +18,7 @@ v2.1
 - Fix FLEXIAPI-391 Add missing account view attribute in the actions.delete view
 - Fix FLEXIAPI-392 Fix the recover_by_code view and use the account space object
 - Fix FLEXIAPI-395 Remove config()->set('app.sip_domain') and directly use the correct domain
+- Fix FLEXIAPI-393 Autofill the digits when pasting a code
 
 v2.0
 ----
