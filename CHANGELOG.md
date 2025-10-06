@@ -19,6 +19,7 @@ v2.1
 - Fix FLEXIAPI-392 Fix the recover_by_code view and use the account space object
 - Fix FLEXIAPI-395 Remove config()->set('app.sip_domain') and directly use the correct domain
 - Fix FLEXIAPI-393 Autofill the digits when pasting a code
+- Fix FLEXIAPI-397 Fix Carddav Spaces creation and CommaList validation
 
 v2.0
 ----

@@ -19,16 +19,16 @@ class CardDavServerController extends Controller
         ]);
     }
 
-    public function store(CardDavServer $request)
+    public function store(CardDavServer $request, Space $space)
     {
         $carddavServer = new SpaceCardDavServer;
-        $carddavServer->space_id = $request->space->id;
+        $carddavServer->space_id = $space->id;
         $carddavServer->fill($request->validated());
         $carddavServer->enabled = getRequestBoolean($request, 'enabled');
         $carddavServer->use_exact_match_policy = getRequestBoolean($request, 'use_exact_match_policy');
         $carddavServer->save();
 
-        return redirect()->route('admin.spaces.integration', $request->space);
+        return redirect()->route('admin.spaces.integration', $space);
     }
 
     public function edit(Space $space, int $carddavServerId)
@@ -47,7 +47,7 @@ class CardDavServerController extends Controller
         $carddavServer->use_exact_match_policy = getRequestBoolean($request, 'use_exact_match_policy');
         $carddavServer->save();
 
-        return redirect()->route('admin.spaces.integration', $request->space);
+        return redirect()->route('admin.spaces.integration', $space);
     }
 
     public function delete(Space $space, int $carddavServerId)

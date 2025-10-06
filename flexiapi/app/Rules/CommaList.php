@@ -9,13 +9,13 @@ class CommaList implements Rule
 {
     public function passes($attribute, $value)
     {
-        preg_match('/^(\w+),(\w)*/', $value, $matches);
+        preg_match_all('/[^, ]+/', $value, $matches);
 
-        return $value == null || (!empty($matches) && $matches[0] == $value);
+        return $value == null || (!empty($matches) && (implode(',', $matches[0]) == $value));
     }
 
     public function message()
     {
-        return 'The :attribute should be null or contain a list of words separated by commas';
+        return 'The :attribute should be null or contain a list of words separated by commas without spaces';
     }
 }
