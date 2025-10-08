@@ -23,6 +23,7 @@ use App\Account;
 use App\ExternalAccount;
 use App\Password;
 use App\PhoneCountry;
+use App\Space;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -44,7 +45,9 @@ class ImportController extends Controller
     public function create(Request $request)
     {
         return view('admin.account.import.create', [
-            'domains' => Account::select('domain')->distinct()->get()->pluck('domain')
+            'domains' => $request->user()->superAdmin
+                ? Space::pluck('domain')
+                : [$request->user()->domain]
         ]);
     }
 
@@ -52,10 +55,12 @@ class ImportController extends Controller
     {
         $request->validate([
             'csv' => ['required', File::types(['csv', 'txt'])],
-            'domain' => 'required|exists:accounts'
+            'domain' => 'required|exists:spaces,domain'
         ]);
 
-        $domain = $request->get('domain');
+        $domain = $request->user()->superAdmin
+            ? $request->get('domain')
+            : $request->user()->domain;
 
         /**
          * General formating checking
@@ -192,10 +197,14 @@ class ImportController extends Controller
             ? Storage::putFile($this->importDirectory, $request->file('csv'))
             : null;
 
+        if ($filePath == false) {
+            $this->errors['The CSV file was not imported properly on the server'] = '';
+        }
+
         return view('admin.account.import.check', [
             'linesCount' => $lines->count(),
             'errors' => $this->errors,
-            'domain' => $request->get('domain'),
+            'domain' => $domain,
             'filePath' => $filePath
         ]);
     }
@@ -204,8 +213,12 @@ class ImportController extends Controller
     {
         $request->validate([
             'file_path' => 'required',
-            'domain' => 'required|exists:accounts'
+            'domain' => 'required|exists:spaces,domain'
         ]);
+
+        $domain = $request->user()->superAdmin
+            ? $request->get('domain')
+            : $request->user()->domain;
 
         $lines = $this->csvToCollection(storage_path('app/' . $request->get('file_path')));
 
@@ -250,7 +263,7 @@ class ImportController extends Controller
 
             array_push($accounts, [
                 'username' => $line->username,
-                'domain' => $request->get('domain'),
+                'domain' => $domain,
                 'email' => $line->email,
                 'activated' => $line->status == 'active',
                 'ip_address' => '127.0.0.1',
@@ -265,9 +278,10 @@ class ImportController extends Controller
         // Set admins accounts
         foreach ($admins as $username) {
             $account = Account::where('username', $username)
-                ->where('domain', $request->get('domain'))
+                ->where('domain', $domain)
                 ->first();
             $account->admin = true;
+            $account->save();
         }
 
         // Set passwords
@@ -275,7 +289,7 @@ class ImportController extends Controller
         $passwordsToInsert = [];
 
         $passwordAccounts = Account::whereIn('username', array_keys($passwords))
-            ->where('domain', $request->get('domain'))
+            ->where('domain', $domain)
             ->get();
 
         $algorithm = config('app.account_default_password_algorithm');
@@ -285,7 +299,7 @@ class ImportController extends Controller
                 'account_id' => $passwordAccount->id,
                 'password' => bchash(
                     $passwordAccount->username,
-                    $request->space?->account_realm ?? $request->get('domain'),
+                    $request->space?->account_realm ?? $domain,
                     $passwords[$passwordAccount->username],
                     $algorithm
                 ),
@@ -300,7 +314,7 @@ class ImportController extends Controller
         $externalAccountsToInsert = [];
 
         $externalAccounts = Account::whereIn('username', array_keys($externals))
-            ->where('domain', $request->get('domain'))
+            ->where('domain', $domain)
             ->get();
 
         foreach ($externalAccounts as $externalAccount) {
@@ -314,7 +328,7 @@ class ImportController extends Controller
         // Set phone accounts
         foreach ($phones as $username => $phone) {
             $account = Account::where('username', $username)
-                ->where('domain', $request->get('domain'))
+                ->where('domain', $domain)
                 ->first();
             $account->phone = $phone;
         }
