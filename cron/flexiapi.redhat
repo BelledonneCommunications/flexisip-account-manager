@@ -1,8 +1,9 @@
 #!/bin/sh
 
 cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi/
-php artisan digest:clear-nonces 60
-php artisan accounts:clear-api-keys 60
 php artisan accounts:clear-accounts-tombstones 7 --apply
+php artisan accounts:clear-api-keys 60
+php artisan accounts:clear-files 30 --apply
 php artisan accounts:clear-unconfirmed 30 --apply
+php artisan digest:clear-nonces 60
 php artisan spaces:expiration-emails

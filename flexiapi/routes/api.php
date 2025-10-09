@@ -18,11 +18,13 @@
 */
 
 use App\Http\Controllers\Api\Account\VcardsStorageController;
+use App\Http\Controllers\Api\Account\VoicemailController;
 use App\Http\Controllers\Api\Admin\Account\ActionController;
 use App\Http\Controllers\Api\Admin\Account\CardDavCredentialsController;
 use App\Http\Controllers\Api\Admin\Account\ContactController;
 use App\Http\Controllers\Api\Admin\Account\DictionaryController;
 use App\Http\Controllers\Api\Admin\Account\TypeController;
+use App\Http\Controllers\Api\Admin\Account\VoicemailController as AdminVoicemailController;
 use App\Http\Controllers\Api\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Api\Admin\ContactsListController;
 use App\Http\Controllers\Api\Admin\ExternalAccountController;
@@ -55,10 +57,12 @@ Route::post('accounts/auth_token', 'Api\Account\AuthTokenController@store');
 Route::get('accounts/me/api_key/{auth_token}', 'Api\Account\ApiKeyController@generateFromToken')->middleware('cookie', 'cookie.encrypt');
 
 Route::get('phone_countries', 'Api\PhoneCountryController@index');
+Route::get('files/{uuid}/{name}', 'Api\Account\FileController@show')->name('file.show');
 
 Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blocked']], function () {
     Route::get('accounts/auth_token/{auth_token}/attach', 'Api\Account\AuthTokenController@attach');
     Route::post('account_creation_tokens/consume', 'Api\Account\CreationTokenController@consume');
+    Route::post('files/{uuid}', 'Api\Account\FileController@upload')->name('file.upload');
 
     Route::post('push_notification', 'Api\Account\PushNotificationController@push');
 
@@ -86,6 +90,7 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
         Route::get('contacts', 'Api\Account\ContactController@index');
 
         Route::apiResource('vcards-storage', VcardsStorageController::class);
+        Route::apiResource('voicemails', VoicemailController::class, ['only' => ['index', 'show', 'store', 'destroy']]);
     });
 
     Route::group(['middleware' => ['auth.admin']], function () {
@@ -152,6 +157,7 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
         Route::apiResource('accounts/{id}/actions', ActionController::class);
         Route::apiResource('account_types', TypeController::class);
         Route::apiResource('accounts/{account_id}/vcards-storage', AdminVcardsStorageController::class);
+        Route::apiResource('accounts/{id}/voicemails', AdminVoicemailController::class, ['only' => ['index', 'show', 'store', 'destroy']]);
 
         Route::apiResource('contacts_lists', ContactsListController::class);
         Route::prefix('contacts_lists')->controller(ContactsListController::class)->group(function () {

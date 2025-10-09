@@ -30,11 +30,6 @@ class CreateAdminTest extends Command
     protected $signature = 'accounts:create-admin-test';
     protected $description = 'Create a test admin account, only for tests purpose';
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function handle()
     {
         $username = 'admin_test';

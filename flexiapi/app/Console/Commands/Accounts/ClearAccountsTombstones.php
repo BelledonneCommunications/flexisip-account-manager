@@ -29,11 +29,6 @@ class ClearAccountsTombstones extends Command
     protected $signature = 'accounts:clear-accounts-tombstones {days} {--apply}';
     protected $description = 'Clear deleted accounts tombstones after n days';
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function handle()
     {
         $tombstones = AccountTombstone::where(
