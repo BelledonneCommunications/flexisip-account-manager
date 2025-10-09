@@ -39,6 +39,23 @@ Returns `pong`
 
 @include('api.documentation.accounts.vcards_storage')
 
+@include('api.documentation.accounts.voicemail')
+
+## File Upload
+
+### `POST /files/{uuid}`
+<span class="badge badge-info">User</span>
+
+Upload a file to a previously created slot. This endpoint will directly be returned when creating the upload slot in the `upload_url` parameter.
+
+Related endpoints:
+
+* [Voicemails](#voicemails)
+
+HTTP [Form-Data](https://developer.mozilla.org/fr/docs/Web/API/FormData) parameters:
+
+* `file` **required**, the file to upload, must have the same `content_type` as requested in the slot
+
 ## Messages
 
 ### `POST /messages`

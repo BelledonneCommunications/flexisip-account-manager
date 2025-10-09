@@ -54,6 +54,7 @@ use App\Http\Controllers\Admin\Space\ContactsListController;
 use App\Http\Controllers\Admin\Space\EmailServerController;
 use App\Http\Controllers\Admin\SpaceController;
 use App\Http\Controllers\Admin\StatisticsController;
+use App\Http\Controllers\Api\Account\FileController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', 'login')->name('account.home');
@@ -77,6 +78,8 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
 });
 
 Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key']], function () {
+    Route::get('files/{uuid}/{name}', [FileController::class, 'show'])->name('file.show');
+
     Route::get('provisioning/me', [ProvisioningController::class, 'me'])->name('provisioning.me');
 
     // vCard 4.0
