@@ -49,7 +49,7 @@
         @foreach ($account->contactsLists as $contactsList)
             <tr>
                 <td>
-                    <a href="{{ route('admin.contacts_lists.edit', ['contacts_list_id' => $contactsList->id]) }}">{{ $contactsList->title }}</a>
+                    <a href="{{ route('admin.spaces.contacts_lists.edit', [$space, $contactsList->id]) }}">{{ $contactsList->title }}</a>
                     <small>{{ $contactsList->contacts_count }} {{ __('Contacts') }}</small>
                 </td>
                 <td class="actions">

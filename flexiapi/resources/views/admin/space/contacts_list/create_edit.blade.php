@@ -1,17 +1,27 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
+    @include('admin.parts.breadcrumb.spaces.show')
     <li class="breadcrumb-item">
-        <a href="{{ route('admin.contacts_lists.index') }}">{{ __('Contacts Lists') }}</a>
+        <a href="{{ route('admin.spaces.contacts_lists.index', $space) }}">{{ __('Contacts Lists') }}</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">{{ __('Edit') }}</li>
+    <li class="breadcrumb-item active" aria-current="page">
+        @if ($contacts_list->id)
+            {{ __('Edit') }}
+        @else
+            {{ __('Create') }}
+        @endif
+    </li>
 @endsection
 
 @section('content')
+    @include('admin.space.head')
+    @include('admin.space.tabs')
+
     <header>
         @if ($contacts_list->id)
             <h1><i class="ph ph-user-rectangle"></i> {{ $contacts_list->title }}</h1>
-            <a class="btn secondary oppose" href="{{ route('admin.contacts_lists.delete', $contacts_list->id) }}">
+            <a class="btn secondary oppose" href="{{ route('admin.spaces.contacts_lists.delete', [$space, $contacts_list->id]) }}">
                 <i class="ph ph-trash"></i>
                 {{ __('Delete') }}
             </a>
@@ -27,7 +37,7 @@
     @endif
 
     <form method="POST" id="create_edit_contacts_list"
-        action="{{ $contacts_list->id ? route('admin.contacts_lists.update', $contacts_list->id) : route('admin.contacts_lists.store') }}"
+        action="{{ $contacts_list->id ? route('admin.spaces.contacts_lists.update', [$space, $contacts_list->id]) : route('admin.spaces.contacts_lists.store', $space) }}"
         accept-charset="UTF-8">
         @csrf
         @method($contacts_list->id ? 'put' : 'post')
@@ -48,12 +58,12 @@
     @if ($contacts_list->id)
         <hr>
 
-        <a class="btn secondary oppose" href="{{ route('admin.contacts_lists.contacts.add', $contacts_list->id) }}">
+        <a class="btn secondary oppose" href="{{ route('admin.spaces.contacts_lists.contacts.add', [$space, $contacts_list->id]) }}">
             <i class="ph ph-plus"></i> {{ __('Add contacts') }}
         </a>
 
         <form  method="POST"
-            action="{{ route('admin.contacts_lists.contacts.destroy', $contacts_list->id) }}"
+            action="{{ route('admin.spaces.contacts_lists.contacts.destroy', [$space, $contacts_list->id]) }}"
             name="contacts_lists_contacts_destroy" accept-charset="UTF-8">
             @csrf
             @method('delete')
@@ -62,7 +72,7 @@
             <input type="hidden" name="contacts_list_id" value="{{ $contacts_list->id }}">
         </form>
 
-        <form class="inline" method="POST" action="{{ route('admin.contacts_lists.search', $contacts_list->id) }}"
+        <form class="inline" method="POST" action="{{ route('admin.spaces.contacts_lists.search', [$space, $contacts_list->id]) }}"
             name="contacts_lists_contacts_search" accept-charset="UTF-8">
             @csrf
 
@@ -73,7 +83,7 @@
             </div>
             @include('admin.account.parts.forms.select_domain')
             <div>
-                <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}" type="reset"
+                <a href="{{ route('admin.spaces.contacts_lists.edit', [$space, $contacts_list->id]) }}" type="reset"
                     class="btn secondary">{{ __('Reset') }}</a>
                 <button type="submit" class="btn">{{ __('Search') }}</button>
             </div>

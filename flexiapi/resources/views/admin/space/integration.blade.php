@@ -5,10 +5,7 @@
 @endsection
 
 @section('content')
-    <header>
-        <h1><i class="ph ph-globe-hemisphere-west"></i> {{ $space->name }}</h1>
-    </header>
-
+    @include('admin.space.head')
     @include('admin.space.tabs')
 
     <div class="grid third">
