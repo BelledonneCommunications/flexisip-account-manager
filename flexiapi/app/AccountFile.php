@@ -12,8 +12,11 @@ class AccountFile extends Model
 
     public const VOICEMAIL_CONTENTTYPES = ['audio/opus', 'audio/wav'];
     public const FILES_PATH = 'files';
-    protected $hidden = ['account_id', 'updated_at'];
+    protected $hidden = ['account_id', 'updated_at', 'sending_by_mail_at', 'sent_by_mail_at', 'sending_by_mail_tryouts'];
     protected $appends = ['download_url'];
+    protected $casts = [
+        'uploaded_at' => 'datetime',
+    ];
 
     protected static function booted()
     {
@@ -24,7 +27,7 @@ class AccountFile extends Model
 
     public function account()
     {
-        return $this->belongsTo(Account::class);
+        return $this->belongsTo(Account::class)->withoutGlobalScopes();
     }
 
     public function getMaxUploadSizeAttribute(): ?int

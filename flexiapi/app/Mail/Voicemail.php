@@ -2,37 +2,39 @@
 
 namespace App\Mail;
 
-use App\Space;
-
+use App\AccountFile;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ExpiringSpace extends Mailable
+class Voicemail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(
-        public Space $space
-    ) {
+    public function __construct(public AccountFile $accountFile)
+    {
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: __('Your space :space is expiring in :count days', [
-                'space' => $this->space->name,
-                'count' => $this->space->daysLeft,
-            ]),
+            subject: $this->accountFile->account->space->name .
+                ': ' .
+                __('New voice message from :sipfrom', ['sipfrom' => $this->accountFile->sip_from]),
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            markdown: 'mails.expiring_space',
+            markdown: 'mails.voicemail',
         );
+    }
+
+    public function attachments(): array
+    {
+        return [];
     }
 }
