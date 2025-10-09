@@ -1,0 +1,1 @@
+* * * * * cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi/ && php artisan schedule:run >> /dev/null 2>&1
