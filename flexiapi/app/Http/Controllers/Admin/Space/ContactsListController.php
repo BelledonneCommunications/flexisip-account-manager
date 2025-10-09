@@ -17,61 +17,67 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Space;
 
 use App\Account;
 use App\ContactsList;
+use App\Space;
 use App\Http\Controllers\Controller;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
 class ContactsListController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, Space $space)
     {
         $request->validate([
             'order_by' => 'in:title,updated_at,contacts_count',
             'order_sort' => 'in:asc,desc',
         ]);
 
-        $contactsLists = ContactsList::orderBy($request->get('order_by', 'updated_at'), $request->get('order_sort', 'desc'));
+        $contactsLists = $space->contactsLists()->orderBy($request->get('order_by', 'updated_at'), $request->get('order_sort', 'desc'));
 
-        return view('admin.contacts_list.index', [
+        return view('admin.space.contacts_list.index', [
+            'space' => $space,
             'contacts_lists' => $contactsLists
                 ->paginate(20)
                 ->appends($request->query()),
         ]);
     }
 
-    public function create(Request $request)
+    public function create(Request $request, Space $space)
     {
-        return view('admin.contacts_list.create_edit', [
+        return view('admin.space.contacts_list.create_edit', [
+            'space' => $space,
             'contacts_list' => new ContactsList,
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Space $space)
     {
         $request->validate([
             'title' => 'required|unique:contacts_lists'
         ]);
 
         $contactsList = new ContactsList;
+        $contactsList->space_id = $space->id;
         $contactsList->title = $request->get('title');
         $contactsList->description = $request->get('description');
         $contactsList->save();
 
-        return redirect()->route('admin.contacts_lists.edit', $contactsList->id);
+        return redirect()->route('admin.spaces.contacts_lists.edit', [$space, $contactsList->id]);
     }
 
-    public function search(Request $request, int $contactsListId)
+    public function search(Request $request, Space $space, int $contactsListId)
     {
-        return redirect()->route('admin.contacts_lists.edit', ['contacts_list_id' => $contactsListId] + $request->except('_token'));
+        return redirect()->route('admin.spaces.contacts_lists.edit', [
+            'space' => $space,
+            'contacts_list_id' => $contactsListId] + $request->except('_token'));
     }
 
-    public function edit(Request $request, int $id)
+    public function edit(Request $request, Space $space, int $id)
     {
-        $contacts = ContactsList::findOrFail($id)->contacts();
+        $contacts = $space->contactsLists()->findOrFail($id)->contacts();
 
         if ($request->has('search')) {
             $contacts = $contacts->where('username', 'like', '%' . $request->get('search') . '%');
@@ -83,14 +89,15 @@ class ContactsListController extends Controller
 
         $contacts = $contacts->get();
 
-        return view('admin.contacts_list.create_edit', [
+        return view('admin.space.contacts_list.create_edit', [
+            'space' => $space,
             'domains' => Account::groupBy('domain')->pluck('domain'),
-            'contacts_list' => ContactsList::findOrFail($id),
+            'contacts_list' => $space->contactsLists()->findOrFail($id),
             'contacts' => $contacts
         ]);
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, Space $space, int $id)
     {
         $request->validate([
             'title' => [
@@ -99,26 +106,27 @@ class ContactsListController extends Controller
             ],
         ]);
 
-        $contactsList = ContactsList::findOrFail($id);
+        $contactsList = $space->contactsLists()->findOrFail($id);
         $contactsList->title = $request->get('title');
         $contactsList->description = $request->get('description');
         $contactsList->save();
 
-        return redirect()->route('admin.contacts_lists.index');
+        return redirect()->route('admin.spaces.contacts_lists.index', $space);
     }
 
-    public function delete(int $id)
+    public function delete(Space $space, int $id)
     {
-        return view('admin.contacts_list.delete', [
-            'contacts_list' => ContactsList::findOrFail($id),
+        return view('admin.space.contacts_list.delete', [
+            'space' => $space,
+            'contacts_list' => $space->contactsLists()->findOrFail($id),
         ]);
     }
 
-    public function destroy(Request $request)
+    public function destroy(Request $request, Space $space)
     {
-        $contactsList = ContactsList::findOrFail($request->get('contacts_lists_id'));
+        $contactsList = $space->contactsLists()->findOrFail($request->get('contacts_lists_id'));
         $contactsList->delete();
 
-        return redirect()->route('admin.contacts_lists.index');
+        return redirect()->route('admin.spaces.contacts_lists.index', $space);
     }
 }

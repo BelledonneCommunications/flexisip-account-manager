@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Http\Controllers\Api\Admin;
+namespace App\Http\Controllers\Api\Admin\Space;
 
 use App\Account;
 use App\ContactsList;
@@ -28,12 +28,12 @@ class ContactsListController extends Controller
 {
     public function index(Request $request)
     {
-        return ContactsList::all();
+        return $request->space->contactsLists;
     }
 
-    public function get(int $contactsListId)
+    public function get(Request $request, int $contactsListId)
     {
-        return ContactsList::findOrFail($contactsListId);
+        return $request->space->contactsLists()->findOrFail($contactsListId);
     }
 
     public function store(Request $request)
@@ -44,6 +44,7 @@ class ContactsListController extends Controller
         ]);
 
         $contactsList = new ContactsList;
+        $contactsList->space_id = $request->space->id;
         $contactsList->title = $request->get('title');
         $contactsList->description = $request->get('description');
         $contactsList->save();
@@ -59,6 +60,7 @@ class ContactsListController extends Controller
         ]);
 
         $contactsList = ContactsList::findOrFail($contactsListId);
+        $contactsList->space_id = $request->space->id;
         $contactsList->title = $request->get('title');
         $contactsList->description = $request->get('description');
         $contactsList->save();
@@ -66,15 +68,15 @@ class ContactsListController extends Controller
         return $contactsList;
     }
 
-    public function destroy(int $contactsListId)
+    public function destroy(Request $request, int $contactsListId)
     {
-        return ContactsList::where('id', $contactsListId)
+        return $request->space->contactsLists()->where('id', $contactsListId)
             ->delete();
     }
 
-    public function contactAdd(int $id, int $contactId)
+    public function contactAdd(Request $request, int $id, int $contactId)
     {
-        $contactsList = ContactsList::findOrFail($id);
+        $contactsList = $request->space->contactsLists()->findOrFail($id);
         $contactsList->contacts()->detach($contactId);
 
         if (Account::findOrFail($contactId)) {
@@ -82,9 +84,9 @@ class ContactsListController extends Controller
         }
     }
 
-    public function contactRemove(int $id, int $contactId)
+    public function contactRemove(Request $request, int $id, int $contactId)
     {
-        $contactsList = ContactsList::findOrFail($id);
+        $contactsList = $request->space->contactsLists()->findOrFail($id);
 
         if (!$contactsList->contacts()->pluck('id')->contains($contactId)) {
             abort(404);
