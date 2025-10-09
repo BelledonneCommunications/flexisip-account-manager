@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [2.1]
+
+### Changed
+
+- **Contacts Lists** The Contacts Lists are now handled per Space. During the migration, if there is only one Space present, existing Contacts Lists are automatically attached to it, otherwise the first Super Space available is used. If they are then attached to the wrong Space you'll have to change directly their `space_id` value in the `contacts_lists` database table.
+
 ## [2.0]
 
 ### Added

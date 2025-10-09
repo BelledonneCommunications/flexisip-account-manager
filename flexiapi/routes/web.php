@@ -32,7 +32,6 @@ use App\Http\Controllers\Account\ProvisioningController;
 use App\Http\Controllers\Account\RecoveryController;
 use App\Http\Controllers\Account\RegisterController;
 use App\Http\Controllers\Account\VcardsStorageController;
-use App\Http\Controllers\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Admin\Account\AccountTypeController;
 use App\Http\Controllers\Admin\Account\ActionController;
 use App\Http\Controllers\Admin\Account\ActivityController;
@@ -43,15 +42,16 @@ use App\Http\Controllers\Admin\Account\DictionaryController;
 use App\Http\Controllers\Admin\Account\ImportController;
 use App\Http\Controllers\Admin\Account\StatisticsController as AdminAccountStatisticsController;
 use App\Http\Controllers\Admin\Account\TypeController;
+use App\Http\Controllers\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Admin\ApiKeyController as AdminApiKeyController;
-use App\Http\Controllers\Admin\ContactsListContactController;
-use App\Http\Controllers\Admin\ContactsListController;
 use App\Http\Controllers\Admin\ExternalAccountController;
 use App\Http\Controllers\Admin\PhoneCountryController;
 use App\Http\Controllers\Admin\ProvisioningEmailController;
 use App\Http\Controllers\Admin\ResetPasswordEmailController;
-use App\Http\Controllers\Admin\Space\EmailServerController;
 use App\Http\Controllers\Admin\Space\CardDavServerController;
+use App\Http\Controllers\Admin\Space\ContactsListContactController;
+use App\Http\Controllers\Admin\Space\ContactsListController;
+use App\Http\Controllers\Admin\Space\EmailServerController;
 use App\Http\Controllers\Admin\SpaceController;
 use App\Http\Controllers\Admin\StatisticsController;
 use Illuminate\Support\Facades\Route;
@@ -179,6 +179,24 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
             });
             Route::resource('{space}/carddavs', CardDavServerController::class, ['except' => ['index', 'show']]);
             Route::get('{space}/carddavs/{carddav}/delete', [CardDavServerController::class, 'delete'])->name('carddavs.delete');
+
+            Route::name('contacts_lists.')->prefix('{space}/contacts_lists')->controller(ContactsListController::class)->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('create', 'create')->name('create');
+                Route::post('/', 'store')->name('store');
+                Route::post('{contacts_list_id}/search', 'search')->name('search');
+                Route::get('{contacts_list_id}/edit', 'edit')->name('edit');
+                Route::put('{contacts_list_id}', 'update')->name('update');
+                Route::get('{contacts_list_id}/delete', 'delete')->name('delete');
+                Route::delete('{contacts_list_id}', 'destroy')->name('destroy');
+
+                Route::name('contacts.')->prefix('{contacts_list_id}/contacts')->controller(ContactsListContactController::class)->group(function () {
+                    Route::get('add', 'add')->name('add');
+                    Route::post('search', 'search')->name('search');
+                    Route::post('/', 'store')->name('store');
+                    Route::delete('/', 'destroy')->name('destroy');
+                });
+            });
         });
 
         Route::name('api_keys.')->prefix('api_keys')->controller(AdminApiKeyController::class)->group(function () {
@@ -319,24 +337,6 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
                 Route::post('call_logs', 'editCallLogs')->name('edit_call_logs');
                 Route::get('call_logs', 'showCallLogs')->name('show_call_logs');
                 Route::post('/', 'edit')->name('edit');
-            });
-        });
-
-        Route::name('contacts_lists.')->prefix('contacts_lists')->controller(ContactsListController::class)->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::get('create', 'create')->name('create');
-            Route::post('/', 'store')->name('store');
-            Route::post('{contacts_list_id}/search', 'search')->name('search');
-            Route::get('{contacts_list_id}/edit', 'edit')->name('edit');
-            Route::put('{contacts_list_id}', 'update')->name('update');
-            Route::get('{contacts_list_id}/delete', 'delete')->name('delete');
-            Route::delete('{contacts_list_id}', 'destroy')->name('destroy');
-
-            Route::name('contacts.')->prefix('{contacts_list_id}/contacts')->controller(ContactsListContactController::class)->group(function () {
-                Route::get('add', 'add')->name('add');
-                Route::post('search', 'search')->name('search');
-                Route::post('/', 'store')->name('store');
-                Route::delete('/', 'destroy')->name('destroy');
             });
         });
     });

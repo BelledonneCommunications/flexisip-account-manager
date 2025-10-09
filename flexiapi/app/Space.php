@@ -102,6 +102,11 @@ class Space extends Model
         return $this->hasMany(SpaceCardDavServer::class);
     }
 
+    public function contactsLists()
+    {
+        return $this->hasMany(ContactsList::class);
+    }
+
     public function scopeNotFull(Builder $query)
     {
         return $query->where('max_accounts', 0)

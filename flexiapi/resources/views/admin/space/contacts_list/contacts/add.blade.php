@@ -1,11 +1,12 @@
 @extends('layouts.main')
 
 @section('breadcrumb')
+    @include('admin.parts.breadcrumb.spaces.show')
     <li class="breadcrumb-item">
-        <a href="{{ route('admin.contacts_lists.index') }}">{{ __('Contacts Lists') }}</a>
+        <a href="{{ route('admin.spaces.contacts_lists.index', $space) }}">{{ __('Contacts Lists') }}</a>
     </li>
     <li class="breadcrumb-item">
-        <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}">{{ $contacts_list->title }}</a>
+        <a href="{{ route('admin.spaces.contacts_lists.edit', [$space, $contacts_list->id]) }}">{{ $contacts_list->title }}</a>
     </li>
     <li class="breadcrumb-item active" aria-current="page">{{ __('Add') }}</li>
 @endsection
@@ -14,9 +15,9 @@
     <header>
         <h1><i class="ph ph-user-rectangle"></i> {{ $contacts_list->title }}</h1>
 
-        <a href="{{ route('admin.contacts_lists.edit', $contacts_list->id) }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
+        <a href="{{ route('admin.spaces.contacts_lists.edit', [$space, $contacts_list->id]) }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
 
-        <form method="POST" action="{{ route('admin.contacts_lists.contacts.store', $contacts_list->id) }}"
+        <form method="POST" action="{{ route('admin.spaces.contacts_lists.contacts.store', [$space, $contacts_list->id]) }}"
             name="contacts_lists_contacts_store" accept-charset="UTF-8">
             @csrf
             @method('post')
@@ -27,7 +28,7 @@
     </header>
 
     <div>
-        <form class="inline" method="POST" action="{{ route('admin.contacts_lists.contacts.search', $params) }}"
+        <form class="inline" method="POST" action="{{ route('admin.spaces.contacts_lists.contacts.search', [$space] + $params) }}"
             accept-charset="UTF-8">
             @csrf
             <div class="search">
@@ -35,14 +36,15 @@
                     value="{{ request()->get('search', '') }}">
                 <label for="search">{{ __('Search') }}</label>
             </div>
-            @include('admin.account.parts.forms.select_domain')
-            <div>
-                <a href="{{ route('admin.contacts_lists.contacts.add', $contacts_list->id) }}" type="reset"
+            <div class="large">
+                <button type="submit" class="btn" title="{{ __('Search') }}">
+                    <i class="ph ph-magnifying-glass"></i>
+                </button>
+                <a href="{{ route('admin.spaces.contacts_lists.contacts.add', [$space, $contacts_list->id]) }}" type="reset"
                     class="btn secondary">{{ __('Reset') }}</a>
-                <button type="submit" class="btn">{{ __('Search') }}</button>
             </div>
             <div class="oppose">
-                <a class="btn"
+                <a class="btn "
                     onclick="Utils.clearStorageList('a{{ $contacts_list->id }}'); document.querySelector('form[name=contacts_lists_contacts_store]').submit()">
                     <i class="ph ph-plus"></i>
                     Add <span class="list_toggle" data-list-id="a{{ $contacts_list->id }}"></span> contacts
@@ -54,7 +56,7 @@
     <table>
         <thead>
             <tr>
-                <th width="1%">
+                <th style="width:1%;">
                     <input type="checkbox" onchange="Utils.toggleAll(this)">
                 </th>
                 <th>{{ __('Username') }}</th>

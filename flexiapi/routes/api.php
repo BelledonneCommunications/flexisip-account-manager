@@ -37,10 +37,10 @@ use App\Http\Controllers\Api\Admin\Account\CreationTokenController as AdminCreat
 use App\Http\Controllers\Api\Admin\Account\DictionaryController;
 use App\Http\Controllers\Api\Admin\Account\TypeController;
 use App\Http\Controllers\Api\Admin\AccountController as AdminAccountController;
-use App\Http\Controllers\Api\Admin\ContactsListController;
 use App\Http\Controllers\Api\Admin\ExternalAccountController;
 use App\Http\Controllers\Api\Admin\MessageController;
 use App\Http\Controllers\Api\Admin\Space\CardDavServerController;
+use App\Http\Controllers\Api\Admin\Space\ContactsListController;
 use App\Http\Controllers\Api\Admin\Space\EmailServerController;
 use App\Http\Controllers\Api\Admin\SpaceController;
 use App\Http\Controllers\Api\Admin\VcardsStorageController as AdminVcardsStorageController;

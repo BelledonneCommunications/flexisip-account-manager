@@ -17,18 +17,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Space;
 
 use App\Account;
 use App\ContactsList;
+use App\Space;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class ContactsListContactController extends Controller
 {
-    public function add(Request $request, int $contactsListId)
+    public function add(Request $request, Space $space, int $contactsListId)
     {
-        $accounts = Account::orderBy('updated_at', $request->get('updated_at_order', 'desc'));
+        $accounts = $space->accounts()->orderBy('updated_at', $request->get('updated_at_order', 'desc'));
 
         if ($request->has('search')) {
             $accounts = $accounts->where('username', 'like', '%' . $request->get('search') . '%');
@@ -38,9 +39,9 @@ class ContactsListContactController extends Controller
             $accounts = $accounts->where('domain', $request->get('domain'));
         }
 
-        return view('admin.contacts_list.contacts.add', [
-            'domains' => Account::groupBy('domain')->pluck('domain'),
-            'contacts_list' => ContactsList::findOrFail($contactsListId),
+        return view('admin.space.contacts_list.contacts.add', [
+            'space' => $space,
+            'contacts_list' => $space->contactsLists()->findOrFail($contactsListId),
             'params' => [
                 'contacts_list_id' => $contactsListId
             ],
@@ -52,33 +53,33 @@ class ContactsListContactController extends Controller
         ]);
     }
 
-    public function search(Request $request, int $contactsListId)
+    public function search(Request $request, Space $space, int $contactsListId)
     {
-        return redirect()->route('admin.contacts_lists.contacts.add', ['contacts_list_id' => $contactsListId] + $request->except('_token'));
+        return redirect()->route('admin.spaces.contacts_lists.contacts.add', ['contacts_list_id' => $contactsListId] + $request->except('_token'));
     }
 
-    public function store(Request $request, int $contactsListId)
+    public function store(Request $request, Space $space, int $contactsListId)
     {
         $request->validate([
             'contacts_ids' => 'required|exists:accounts,id'
         ]);
 
-        $contactsList = ContactsList::findOrFail($contactsListId);
+        $contactsList = $space->contactsLists()->findOrFail($contactsListId);
         $contactsList->contacts()->detach($request->get('contacts_ids')); // Just in case
         $contactsList->contacts()->attach($request->get('contacts_ids'));
 
-        return redirect()->route('admin.contacts_lists.edit', $contactsList->id);
+        return redirect()->route('admin.spaces.contacts_lists.edit', [$space, $contactsList->id]);
     }
 
-    public function destroy(Request $request, int $contactsListId)
+    public function destroy(Request $request, Space $space, int $contactsListId)
     {
         $request->validate([
             'contacts_ids' => 'required|exists:accounts,id'
         ]);
 
-        $contactsList = ContactsList::findOrFail($contactsListId);
+        $contactsList = $space->contactsLists()->findOrFail($contactsListId);
         $contactsList->contacts()->detach($request->get('contacts_ids'));
 
-        return redirect()->route('admin.contacts_lists.edit', $contactsList->id);
+        return redirect()->route('admin.spaces.contacts_lists.edit', [$space, $contactsList->id]);
     }
 }
