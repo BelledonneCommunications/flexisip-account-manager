@@ -79,9 +79,10 @@ Route::get('accounts/me/api_key/{auth_token}', [ApiKeyController::class, 'genera
 Route::get('phone_countries', [PhoneCountryController::class, 'index']);
 
 Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blocked']], function () {
+    Route::post('files/{uuid}', [FileController::class, 'upload'])->name('file.upload');
+
     Route::get('accounts/auth_token/{auth_token}/attach', [AuthTokenController::class, 'attach']);
     Route::post('account_creation_tokens/consume', [CreationTokenController::class, 'consume']);
-    Route::post('files/{uuid}', 'Api\Account\FileController@upload')->name('file.upload');
 
     Route::post('push_notification', [PushNotificationController::class, 'push']);
 

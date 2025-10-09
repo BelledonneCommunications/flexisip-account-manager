@@ -4,24 +4,13 @@ namespace App\Http\Controllers\Api\Account;
 
 use App\AccountFile;
 use App\Http\Controllers\Controller;
+use App\Rules\AudioMime;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class FileController extends Controller
 {
-    public function show(string $uuid, string $name)
-    {
-        $file = AccountFile::findOrFail($uuid);
-
-        if ($file->name != $name) {
-            abort(404);
-        }
-
-        return Storage::download($file->path);
-    }
-
     public function upload(Request $request, string $uuid)
     {
         $file = AccountFile::findOrFail($uuid);
@@ -30,14 +19,16 @@ class FileController extends Controller
             abort(404);
         }
 
-        $request->validate([
-            'file' => 'required|file|mimetypes:' . $file->content_type
-        ]);
+        $request->validate(['file' => 'required|file']);
+
+        if ($file->isVoicemailAudio()) {
+            $request->validate(['file' => [new AudioMime($file)]]);
+        }
 
         $uploadedFile = $request->file('file');
         $name = Str::random(8) . '_' . $uploadedFile->getClientOriginalName();
 
-        if ($uploadedFile->storeAs('files', $name)) {
+        if ($uploadedFile->storeAs(AccountFile::FILES_PATH, $name)) {
             $file->name = $name;
             $file->size = $uploadedFile->getSize();
             $file->uploaded_at = Carbon::now();

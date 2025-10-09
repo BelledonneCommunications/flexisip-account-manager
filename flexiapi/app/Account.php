@@ -146,6 +146,11 @@ class Account extends Authenticatable
             ->latest();
     }
 
+    public function uploadedVoicemails()
+    {
+        return $this->voicemails()->whereNotNull('name');
+    }
+
     public function vcardsStorage()
     {
         return $this->hasMany(VcardStorage::class);
