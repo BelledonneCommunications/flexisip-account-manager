@@ -3,7 +3,6 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use Respect\Validation\Validator;
 use Propaganistas\LaravelPhone\PhoneNumber;
 
 class IsNotPhoneNumber implements Rule

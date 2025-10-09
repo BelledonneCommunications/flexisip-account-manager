@@ -153,5 +153,23 @@ class ApiVoicemailTest extends TestCase
             ->assertOk();
 
         $this->head($file->json()['download_url'])->assertNotFound();
+
+        /* To try out with a real file
+        $accountFile = $this->keyAuthenticated($account)
+            ->json('POST', $this->route, [
+                'content_type' => 'audio/wav'
+            ])->assertCreated();
+
+        $uuid = $accountFile->json()['id'];
+
+        $this->keyAuthenticated($account)
+            ->json('POST', $this->uploadRoute . $uuid, data: [
+                'file' => new UploadedFile(
+                    storage_path("audio.wav"),
+                    'audio.wav',
+                    test: true,
+                )
+            ])->assertOk();
+        */
     }
 }

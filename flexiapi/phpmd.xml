@@ -10,7 +10,6 @@
 The Clean Code ruleset contains rules that enforce a clean code base. This includes rules from SOLID and object calisthenics.
     </description>
 
-    <rule ref="rulesets/cleancode.xml/ElseExpression" />
     <rule ref="rulesets/controversial.xml/CamelCaseClassName" />
     <rule ref="rulesets/controversial.xml/CamelCasePropertyName" />
     <rule ref="rulesets/controversial.xml/CamelCaseMethodName" />

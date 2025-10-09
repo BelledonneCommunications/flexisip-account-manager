@@ -18,7 +18,6 @@ class VoicemailController extends Controller
     public function store(Request $request, int $accountId)
     {
         $account = Account::findOrFail($accountId);
-
         $request->validate([
             'sip_from' => 'nullable|starts_with:sip',
             'content_type' => [

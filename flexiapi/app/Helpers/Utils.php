@@ -162,17 +162,12 @@ function resolveDomain(Request $request): string
         : $request->space->domain;
 }
 
-function maxUploadSize(): ?int
+function maxUploadSize(): int
 {
-    $uploadMaxSizeInBytes = ini_parse_quantity(ini_get('upload_max_filesize'));
-    if ($uploadMaxSizeInBytes > 0) {
-        return $uploadMaxSizeInBytes / 1024;
-    }
-
-    $postMaxSizeInBytes = ini_parse_quantity(ini_get('post_max_size'));
-    if ($postMaxSizeInBytes > 0) {
-        return $postMaxSizeInBytes / 1024;
-    }
+    return min(
+        ini_parse_quantity(ini_get('upload_max_filesize')),
+        ini_parse_quantity(ini_get('post_max_size'))
+    );
 }
 
 function captchaConfigured(): bool

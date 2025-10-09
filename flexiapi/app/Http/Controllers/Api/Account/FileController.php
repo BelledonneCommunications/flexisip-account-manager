@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Account;
 
 use App\AccountFile;
 use App\Http\Controllers\Controller;
+use App\Rules\AudioMime;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -30,9 +31,11 @@ class FileController extends Controller
             abort(404);
         }
 
-        $request->validate([
-            'file' => 'required|file|mimetypes:' . $file->content_type
-        ]);
+        $request->validate(['file' => 'required|file']);
+
+        if ($file->isVoicemailAudio()) {
+            $request->validate(['file' => [new AudioMime($file)]]);
+        }
 
         $uploadedFile = $request->file('file');
         $name = Str::random(8) . '_' . $uploadedFile->getClientOriginalName();

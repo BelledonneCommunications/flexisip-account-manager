@@ -18,6 +18,9 @@ return new class extends Migration
             $table->string('content_type')->index();
             $table->text('sip_from')->nullable();
             $table->dateTime('uploaded_at')->nullable();
+            $table->dateTime('sending_by_mail_at')->nullable();
+            $table->integer('sending_by_mail_tryouts')->default(0);
+            $table->dateTime('sent_by_mail_at')->nullable();
             $table->timestamps();
         });
     }

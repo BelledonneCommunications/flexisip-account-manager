@@ -54,6 +54,7 @@ cp flexiapi/composer.json "$RPM_BUILD_ROOT%{opt_dir}/flexiapi"
 cp README* "$RPM_BUILD_ROOT%{opt_dir}/"
 cp INSTALL* "$RPM_BUILD_ROOT%{opt_dir}/"
 mkdir -p $RPM_BUILD_ROOT/etc/cron.daily
+mkdir -p $RPM_BUILD_ROOT/etc/cron.d
 
 mkdir -p $RPM_BUILD_ROOT%{apache_conf_path}
 cp httpd/flexisip-account-manager.conf "$RPM_BUILD_ROOT%{apache_conf_path}/"
@@ -65,6 +66,9 @@ cp httpd/flexisip-account-manager.conf "$RPM_BUILD_ROOT%{apache_conf_path}/"
     cp cron/flexiapi.redhat "$RPM_BUILD_ROOT/etc/cron.daily/"
     chmod +x "$RPM_BUILD_ROOT/etc/cron.daily/flexiapi.redhat"
 %endif
+
+cp cron/flexiapi.cron "$RPM_BUILD_ROOT/etc/cron.d/"
+chmod +x "$RPM_BUILD_ROOT/etc/cron.d/flexiapi.cron"
 
 # POST INSTALLATION
 
@@ -161,6 +165,7 @@ fi
 
 %exclude %{opt_dir}/flexiapi/storage/
 
+%config /etc/cron.d/flexiapi.cron
 %config(noreplace) %{apache_conf_path}/flexisip-account-manager.conf
 %if %{with deb}
     %config(noreplace) /etc/cron.daily/flexiapi.debian

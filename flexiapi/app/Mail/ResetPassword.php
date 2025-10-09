@@ -20,10 +20,8 @@
 namespace App\Mail;
 
 use App\Account;
-use App\ResetPasswordEmailToken;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
