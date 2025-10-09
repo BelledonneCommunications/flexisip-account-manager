@@ -15,4 +15,9 @@ class ContactsList extends Model
     {
         return $this->belongsToMany(Account::class, 'contacts_list_contact', 'contacts_list_id', 'contact_id');
     }
+
+    public function space()
+    {
+        return $this->belongsTo(Space::class);
+    }
 }
