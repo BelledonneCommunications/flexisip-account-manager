@@ -29,11 +29,6 @@ class ClearUnconfirmed extends Command
     protected $signature = 'accounts:clear-unconfirmed {days} {--apply} {--and-confirmed}';
     protected $description = 'Clear unconfirmed accounts after n days';
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function handle()
     {
         $accounts = Account::where(
