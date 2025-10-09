@@ -39,6 +39,8 @@ Returns `pong`
 
 @include('api.documentation.accounts.vcards_storage')
 
+@include('api.documentation.accounts.voicemail')
+
 ## Messages
 
 ### `POST /messages`
