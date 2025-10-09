@@ -28,11 +28,6 @@ class Seed extends Command
     protected $signature = 'accounts:seed {json-file-path}';
     protected $description = 'Seed some accounts from a JSON file';
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function handle()
     {
         $file = $this->argument('json-file-path');

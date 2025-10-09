@@ -134,6 +134,18 @@ class Account extends Authenticatable
         return $this->belongsToMany(Account::class, 'contacts', 'account_id', 'contact_id');
     }
 
+    public function files()
+    {
+        return $this->hasMany(AccountFile::class)->latest();
+    }
+
+    public function voicemails()
+    {
+        return $this->hasMany(AccountFile::class)
+            ->whereIn('content_type', AccountFile::VOICEMAIL_CONTENTTYPES)
+            ->latest();
+    }
+
     public function vcardsStorage()
     {
         return $this->hasMany(VcardStorage::class);

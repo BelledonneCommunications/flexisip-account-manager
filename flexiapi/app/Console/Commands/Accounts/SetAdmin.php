@@ -28,11 +28,6 @@ class SetAdmin extends Command
     protected $signature = 'accounts:set-admin {id}';
     protected $description = 'Give the admin role to an account';
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function handle()
     {
         $account = Account::withoutGlobalScopes()->where('id', $this->argument('id'))->first();
