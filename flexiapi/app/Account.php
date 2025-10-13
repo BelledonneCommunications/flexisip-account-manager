@@ -276,6 +276,18 @@ class Account extends Authenticatable
         return $this->hasMany(AuthToken::class);
     }
 
+    /**
+     * Reset password
+     */
+
+    public function getCurrentResetPasswordUrlAttribute(): string
+    {
+        return replaceHost(
+            route('account.reset_password_email.change', $this->currentResetPasswordEmailToken->token),
+            $this->space->host
+        );
+    }
+
     public function currentResetPasswordEmailToken()
     {
         return $this->hasOne(ResetPasswordEmailToken::class)->where('used', false)->latestOfMany();
