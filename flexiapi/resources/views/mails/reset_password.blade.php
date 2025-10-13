@@ -9,7 +9,7 @@
 
 {{ __('Click the button below to choose a new password:') }}
 
-[{{ __('Reset my password') }}]({{ route('account.reset_password_email.change', $account->currentResetPasswordEmailToken->token) }})
+[{{ __('Reset my password') }}]({{ $account->currentResetPasswordUrl }})
 
 {{ __('This link will expire in :hour hours.', ['hour' => config('app.reset_password_email_token_expiration_minutes')/60 ]) }}
 
