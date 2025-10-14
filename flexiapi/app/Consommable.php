@@ -40,7 +40,7 @@ abstract class Consommable extends Model
     public function getExpireAtAttribute(): ?string
     {
         if ($this->isExpirable()) {
-            return $this->created_at->addMinutes(config('app.' . $this->configExpirationMinutesKey))->toJSON();
+            return $this->created_at->addMinutes((int)config('app.' . $this->configExpirationMinutesKey))->toJSON();
         }
 
         return null;
@@ -49,13 +49,13 @@ abstract class Consommable extends Model
     public function expired(): bool
     {
         return ($this->isExpirable()
-            && Carbon::now()->subMinutes(config('app.' . $this->configExpirationMinutesKey))->isAfter($this->created_at));
+            && Carbon::now()->subMinutes((int)config('app.' . $this->configExpirationMinutesKey))->isAfter($this->created_at));
     }
 
     private function isExpirable(): bool
     {
         return $this->configExpirationMinutesKey != null
             && config('app.' . $this->configExpirationMinutesKey) != null
-            && config('app.' . $this->configExpirationMinutesKey) > 0;
+            && (int)config('app.' . $this->configExpirationMinutesKey) > 0;
     }
 }

@@ -370,7 +370,7 @@ class AccountProvisioningTest extends TestCase
     {
         $account = Account::factory()->create();
         $account->generateUserApiKey();
-        $expirationMinutes = 10;
+        $expirationMinutes = '10'; // Set is as a string to mimic DotEnv parsing
 
         $this->keyAuthenticated($account)
             ->get('/api/accounts/me/provision')
@@ -385,7 +385,7 @@ class AccountProvisioningTest extends TestCase
             ->get('/api/accounts/me/provision')
             ->assertStatus(200)
             ->assertJson([
-                'provisioning_token_expire_at' => $account->currentProvisioningToken->created_at->addMinutes($expirationMinutes)->toJSON()
+                'provisioning_token_expire_at' => $account->currentProvisioningToken->created_at->addMinutes((int)$expirationMinutes)->toJSON()
             ]);
 
         $account->refresh();
