@@ -153,7 +153,7 @@ class AccountImportController extends Controller
         // Emails
 
         if ($emails = $lines->pluck('email')->filter(function ($value) {
-            return !filter_var($value, FILTER_VALIDATE_EMAIL);
+            return $value != '' && !filter_var($value, FILTER_VALIDATE_EMAIL);
         })) {
             if ($emails->isNotEmpty()) {
                 $this->errors['Some emails are not correct'] = $emails->join(', ', ' and ');
@@ -167,13 +167,15 @@ class AccountImportController extends Controller
             $this->errors['Those emails numbers already exists'] = $existingEmails->join(', ', ' and ');
         }
 
-        if ($emails = $lines->pluck('email')->duplicates()) {
+        if ($emails = $lines->pluck('email')->filter(fn (string $value) => $value != '')->duplicates()) {
             if ($emails->isNotEmpty()) {
                 $this->errors['Those emails are declared several times'] = $emails->join(', ', ' and ');
             }
         }
 
         // External account
+
+        $checkExternalUsernameDomains = collect();
 
         foreach ($lines as $line) {
             if ($line->external_username != null && ($line->external_password == null || $line->external_domain == null)) {
@@ -191,6 +193,12 @@ class AccountImportController extends Controller
                     $this->errors['Line ' . $line->line . ': External protocol must be UDP, TCP or TLS'] = '';
                 }
             }
+
+            $checkExternalUsernameDomains->push($line->external_username . ',' . $line->external_domain);
+        }
+
+        foreach ($checkExternalUsernameDomains->duplicates() as $duplicate) {
+            $this->errors['The following external account is used several times: ' . $duplicate] = '';
         }
 
         $filePath = $this->errors->isEmpty()
