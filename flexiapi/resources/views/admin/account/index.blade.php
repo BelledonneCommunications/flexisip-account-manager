@@ -53,7 +53,9 @@
             </div>
             <div class="oppose">
                 <a href="{{ route('admin.account.index') }}" type="reset" class="btn tertiary">{{ __('Reset') }}</a>
-                <button type="submit" class="btn">{{ __('Search') }}</button>
+                <button type="submit" class="btn">
+                    <i class="ph ph-magnifying-glass"></i>
+                </button>
             </div>
         </form>
     </div>
