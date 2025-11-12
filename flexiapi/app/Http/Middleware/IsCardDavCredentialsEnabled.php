@@ -14,6 +14,6 @@ class IsCardDavCredentialsEnabled
             return $next($request);
         }
 
-        return abort(403, 'CardDav Credentials features disabled');
+        abort(403, 'CardDav Credentials features disabled');
     }
 }

@@ -81,13 +81,13 @@ class AuthenticateJWT
                 list($username, $domain) = parseSIP($token->claims()->get(config('services.jwt.sip_identifier')));
 
                 $account = Account::withoutGlobalScopes()
-                                  ->where('username', $username)
-                                  ->where('domain', $domain)
-                                  ->first();
+                    ->where('username', $username)
+                    ->where('domain', $domain)
+                    ->first();
             } elseif ($token->claims()->has('email')) {
                 $account = Account::withoutGlobalScopes()
-                                  ->where('email', $token->claims()->get('email'))
-                                  ->first();
+                    ->where('email', $token->claims()->get('email'))
+                    ->first();
             }
 
             if (!$account) {
@@ -99,8 +99,7 @@ class AuthenticateJWT
             return $next($request);
         }
 
-        if (
-            !empty(config('app.account_authentication_bearer'))
+        if (!empty(config('app.account_authentication_bearer'))
             // Bypass the JWT auth if we have an API Key
             && !$request->header('x-api-key')
             && !$request->cookie('x-api-key')
@@ -130,7 +129,7 @@ class AuthenticateJWT
         $response = new Response();
         $response->header(
             'WWW-Authenticate',
-            $bearer . 'error="' . $error . '", error_description="'. $description . '"'
+            $bearer . 'error="' . $error . '", error_description="' . $description . '"'
         );
         $response->setStatusCode(401);
 

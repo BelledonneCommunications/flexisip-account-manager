@@ -17,8 +17,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Account\ApiKeyController;
+use App\Http\Controllers\Account\AuthenticateController;
+use App\Http\Controllers\Account\AuthTokenController;
+use App\Http\Controllers\Account\ContactVcardController;
 use App\Http\Controllers\Account\CreationRequestTokenController;
 use App\Http\Controllers\Account\DeviceController;
 use App\Http\Controllers\Account\EmailController;
@@ -26,6 +30,8 @@ use App\Http\Controllers\Account\PasswordController;
 use App\Http\Controllers\Account\PhoneController;
 use App\Http\Controllers\Account\ProvisioningController;
 use App\Http\Controllers\Account\RecoveryController;
+use App\Http\Controllers\Account\RegisterController;
+use App\Http\Controllers\Account\VcardsStorageController;
 use App\Http\Controllers\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Admin\Account\AccountTypeController;
 use App\Http\Controllers\Admin\Account\ActionController;
@@ -51,18 +57,18 @@ use App\Http\Controllers\Admin\StatisticsController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', 'login')->name('account.home');
-Route::get('about', 'AboutController@about')->name('about');
+Route::get('about', [AboutController::class, 'about'])->name('about');
 
 Route::middleware(['feature.web_panel_enabled'])->group(function () {
-    Route::get('wizard/{provisioning_token}', 'Account\ProvisioningController@wizard')->name('provisioning.wizard');
+    Route::get('wizard/{provisioning_token}', [ProvisioningController::class, 'wizard'])->name('provisioning.wizard');
 
-    Route::get('login', 'Account\AuthenticateController@login')->name('account.login');
-    Route::post('authenticate', 'Account\AuthenticateController@authenticate')->name('account.authenticate');
-    Route::get('authenticate/qrcode/{token?}', 'Account\AuthenticateController@loginAuthToken')->name('account.authenticate.auth_token');
-    Route::get('logout', 'Account\AuthenticateController@logout')->name('account.logout');
+    Route::get('login', [AuthenticateController::class, 'login'])->name('account.login');
+    Route::post('authenticate', [AuthenticateController::class, 'authenticate'])->name('account.authenticate');
+    Route::get('authenticate/qrcode/{token?}', [AuthenticateController::class, 'loginAuthToken'])->name('account.authenticate.auth_token');
+    Route::get('logout', [AuthenticateController::class, 'logout'])->name('account.logout');
 
-    Route::get('reset_password/{token}', 'Account\ResetPasswordEmailController@change')->name('account.reset_password_email.change');
-    Route::post('reset_password', 'Account\ResetPasswordEmailController@reset')->name('account.reset_password_email.reset');
+    Route::get('reset_password/{token}', [ResetPasswordEmailController::class, 'change'])->name('account.reset_password_email.change');
+    Route::post('reset_password', [ResetPasswordEmailController::class, 'reset'])->name('account.reset_password_email.reset');
 
     Route::prefix('creation_token')->controller(CreationRequestTokenController::class)->group(function () {
         Route::get('check/{token}', 'check')->name('account.creation_request_token.check');
@@ -71,15 +77,15 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
 });
 
 Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key']], function () {
-    Route::get('provisioning/me', 'Account\ProvisioningController@me')->name('provisioning.me');
+    Route::get('provisioning/me', [ProvisioningController::class, 'me'])->name('provisioning.me');
 
     // vCard 4.0
-    Route::get('contacts/vcard/{sip}', 'Account\ContactVcardController@show')->name('account.contacts.vcard.show');
-    Route::get('contacts/vcard', 'Account\ContactVcardController@index')->name('account.contacts.vcard.index');
+    Route::get('contacts/vcard/{sip}', [ContactVcardController::class, 'show'])->name('account.contacts.vcard.show');
+    Route::get('contacts/vcard', [ContactVcardController::class, 'index'])->name('account.contacts.vcard.index');
 
     // vCards Storage
-    Route::get('vcards-storage/{uuid}', 'Account\VcardsStorageController@show')->name('account.vcards-storage.show');
-    Route::get('vcards-storage/', 'Account\VcardsStorageController@index')->name('account.vcards-storage.index');
+    Route::get('vcards-storage/{uuid}', [VcardsStorageController::class, 'show'])->name('account.vcards-storage.show');
+    Route::get('vcards-storage/', [VcardsStorageController::class, 'index'])->name('account.vcards-storage.index');
 });
 
 Route::name('provisioning.')->prefix('provisioning')->controller(ProvisioningController::class)->group(function () {
@@ -95,11 +101,11 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
         Route::redirect('register', 'register/email')->name('account.register');
 
         Route::middleware(['feature.phone_registration'])->group(function () {
-            Route::get('register/phone', 'Account\RegisterController@registerPhone')->name('account.register.phone');
+            Route::get('register/phone', [RegisterController::class, 'registerPhone'])->name('account.register.phone');
         });
 
-        Route::get('register/email', 'Account\RegisterController@registerEmail')->name('account.register.email');
-        Route::post('accounts', 'Account\AccountController@store')->name('account.store');
+        Route::get('register/email', [RegisterController::class, 'registerEmail'])->name('account.register.email');
+        Route::post('accounts', [AccountController::class, 'store'])->name('account.store');
     });
 
     Route::prefix('recovery')->controller(RecoveryController::class)->group(function () {
@@ -110,7 +116,7 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
     });
 
     Route::name('account.')->middleware(['auth', 'auth.check_blocked'])->group(function () {
-        Route::get('blocked', 'Account\AccountController@blocked')->name('blocked');
+        Route::get('blocked', [AccountController::class, 'blocked'])->name('blocked');
 
         Route::prefix('email')->controller(EmailController::class)->group(function () {
             Route::get('change', 'change')->name('email.change');
@@ -151,19 +157,19 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
             Route::post('/', 'update')->name('update');
         });
 
-        Route::post('auth_tokens', 'Account\AuthTokenController@create')->name('auth_tokens.create');
-        Route::get('auth_tokens/auth/external/{token}', 'Account\AuthTokenController@authExternal')->name('auth_tokens.auth.external');
+        Route::post('auth_tokens', [AuthTokenController::class, 'create'])->name('auth_tokens.create');
+        Route::get('auth_tokens/auth/external/{token}', [AuthTokenController::class, 'authExternal'])->name('auth_tokens.auth.external');
     });
 
-    Route::get('auth_tokens/qrcode/{token}', 'Account\AuthTokenController@qrcode')->name('auth_tokens.qrcode');
-    Route::get('auth_tokens/auth/{token}', 'Account\AuthTokenController@auth')->name('auth_tokens.auth');
+    Route::get('auth_tokens/qrcode/{token}', [AuthTokenController::class, 'qrcode'])->name('auth_tokens.qrcode');
+    Route::get('auth_tokens/auth/{token}', [AuthTokenController::class, 'auth'])->name('auth_tokens.auth');
 
     Route::name('admin.')->prefix('admin')->middleware(['auth.admin', 'auth.check_blocked'])->group(function () {
         Route::name('spaces.')->prefix('spaces')->group(function () {
-            Route::get('me', 'Admin\SpaceController@me')->name('me');
-            Route::get('{space}/configuration', 'Admin\SpaceController@configuration')->name('configuration');
-            Route::put('{space}/configuration', 'Admin\SpaceController@configurationUpdate')->name('configuration.update');
-            Route::get('{space}/integration', 'Admin\SpaceController@integration')->name('integration');
+            Route::get('me', [SpaceController::class, 'me'])->name('me');
+            Route::get('{space}/configuration', [SpaceController::class, 'configuration'])->name('configuration');
+            Route::put('{space}/configuration', [SpaceController::class, 'configurationUpdate'])->name('configuration.update');
+            Route::get('{space}/integration', [SpaceController::class, 'integration'])->name('integration');
 
             Route::name('email.')->prefix('{space}/email')->controller(EmailServerController::class)->group(function () {
                 Route::get('/', 'show')->name('show');
@@ -172,7 +178,7 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
                 Route::delete('/', 'destroy')->name('destroy');
             });
             Route::resource('{space}/carddavs', CardDavServerController::class, ['except' => ['index', 'show']]);
-            Route::get('{space}/carddavs/{carddav}/delete', 'Admin\Space\CardDavServerController@delete')->name('carddavs.delete');
+            Route::get('{space}/carddavs/{carddav}/delete', [CardDavServerController::class, 'delete'])->name('carddavs.delete');
         });
 
         Route::name('api_keys.')->prefix('api_keys')->controller(AdminApiKeyController::class)->group(function () {
@@ -185,10 +191,10 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
 
         Route::middleware(['auth.super_admin'])->group(function () {
             Route::resource('spaces', SpaceController::class);
-            Route::get('spaces/delete/{id}', 'Admin\SpaceController@delete')->name('spaces.delete');
+            Route::get('spaces/delete/{id}', [SpaceController::class, 'delete'])->name('spaces.delete');
 
-            Route::get('spaces/{space}/administration', 'Admin\SpaceController@administration')->name('spaces.administration');
-            Route::put('spaces/{space}/administration', 'Admin\SpaceController@administrationUpdate')->name('spaces.administration.update');
+            Route::get('spaces/{space}/administration', [SpaceController::class, 'administration'])->name('spaces.administration');
+            Route::put('spaces/{space}/administration', [SpaceController::class, 'administrationUpdate'])->name('spaces.administration.update');
 
             Route::name('phone_countries.')->controller(PhoneCountryController::class)->prefix('phone_countries')->group(function () {
                 Route::get('/', 'index')->name('index');
@@ -286,7 +292,7 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
             });
 
             Route::resource('{account}/carddavs', CardDavCredentialsController::class, ['only' => ['create', 'store', 'destroy']]);
-            Route::get('{account}/carddavs/{carddav}/delete', 'Admin\Account\CardDavCredentialsController@delete')->name('carddavs.delete');
+            Route::get('{account}/carddavs/{carddav}/delete', [CardDavCredentialsController::class, 'delete'])->name('carddavs.delete');
 
             Route::name('dictionary.')->prefix('{account}/dictionary')->controller(DictionaryController::class)->group(function () {
                 Route::get('create', 'create')->name('create');
