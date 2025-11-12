@@ -31,6 +31,6 @@ class IsPublicRegistration
             return $next($request);
         }
 
-        return abort(404, 'Public registration disabled');
+        abort(404, 'Public registration disabled');
     }
 }

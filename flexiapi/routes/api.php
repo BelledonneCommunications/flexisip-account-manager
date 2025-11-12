@@ -17,80 +17,98 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use App\Http\Controllers\Api\Account\AccountController;
+use App\Http\Controllers\Api\Account\ApiKeyController;
+use App\Http\Controllers\Api\Account\AuthTokenController;
+use App\Http\Controllers\Api\Account\ContactController;
+use App\Http\Controllers\Api\Account\CreationRequestToken;
+use App\Http\Controllers\Api\Account\CreationTokenController;
+use App\Http\Controllers\Api\Account\DeviceController;
+use App\Http\Controllers\Api\Account\EmailController;
+use App\Http\Controllers\Api\Account\PasswordController;
+use App\Http\Controllers\Api\Account\PhoneController;
+use App\Http\Controllers\Api\Account\PushNotificationController;
+use App\Http\Controllers\Api\Account\RecoveryTokenController;
 use App\Http\Controllers\Api\Account\VcardsStorageController;
 use App\Http\Controllers\Api\Admin\Account\ActionController;
 use App\Http\Controllers\Api\Admin\Account\CardDavCredentialsController;
-use App\Http\Controllers\Api\Admin\Account\ContactController;
+use App\Http\Controllers\Api\Admin\Account\ContactController as AdminContactController;
+use App\Http\Controllers\Api\Admin\Account\CreationTokenController as AdminCreationTokenController;
 use App\Http\Controllers\Api\Admin\Account\DictionaryController;
 use App\Http\Controllers\Api\Admin\Account\TypeController;
 use App\Http\Controllers\Api\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Api\Admin\ContactsListController;
 use App\Http\Controllers\Api\Admin\ExternalAccountController;
+use App\Http\Controllers\Api\Admin\MessageController;
 use App\Http\Controllers\Api\Admin\Space\CardDavServerController;
 use App\Http\Controllers\Api\Admin\Space\EmailServerController;
 use App\Http\Controllers\Api\Admin\SpaceController;
 use App\Http\Controllers\Api\Admin\VcardsStorageController as AdminVcardsStorageController;
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\PhoneCountryController;
+use App\Http\Controllers\Api\PingController;
 use App\Http\Controllers\Api\StatisticsCallController;
 use App\Http\Controllers\Api\StatisticsMessageController;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Http\Request;
 
-Route::get('/', 'Api\ApiController@documentation')->name('api');
+Route::get('/', [ApiController::class, 'documentation'])->name('api');
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('ping', 'Api\PingController@ping');
+Route::get('ping', [PingController::class, 'ping']);
 
-Route::post('account_creation_request_tokens', 'Api\Account\CreationRequestToken@create');
-Route::post('account_creation_tokens/send-by-push', 'Api\Account\CreationTokenController@sendByPush');
-Route::post('account_creation_tokens/using-account-creation-request-token', 'Api\Account\CreationTokenController@usingAccountRequestToken');
-Route::post('accounts/with-account-creation-token', 'Api\Account\AccountController@store');
-Route::post('account_recovery_tokens/send-by-push', 'Api\Account\RecoveryTokenController@sendByPush');
+Route::post('account_creation_request_tokens', [CreationRequestToken::class, 'create']);
+Route::post('account_creation_tokens/send-by-push', [CreationTokenController::class, 'sendByPush']);
+Route::post('account_creation_tokens/using-account-creation-request-token', [CreationTokenController::class, 'usingAccountRequestToken']);
+Route::post('accounts/with-account-creation-token', [AccountController::class, 'store']);
+Route::post('account_recovery_tokens/send-by-push', [RecoveryTokenController::class, 'sendByPush']);
 
-Route::get('accounts/{sip}/info', 'Api\Account\AccountController@info');
+Route::get('accounts/{sip}/info', [AccountController::class, 'info']);
 
-Route::post('accounts/auth_token', 'Api\Account\AuthTokenController@store');
+Route::post('accounts/auth_token', [AuthTokenController::class, 'store']);
 
-Route::get('accounts/me/api_key/{auth_token}', 'Api\Account\ApiKeyController@generateFromToken')->middleware('cookie', 'cookie.encrypt');
+Route::get('accounts/me/api_key/{auth_token}', [ApiKeyController::class, 'generateFromToken'])->middleware(AddQueuedCookiesToResponse::class);
 
-Route::get('phone_countries', 'Api\PhoneCountryController@index');
+Route::get('phone_countries', [PhoneCountryController::class, 'index']);
 
 Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blocked']], function () {
-    Route::get('accounts/auth_token/{auth_token}/attach', 'Api\Account\AuthTokenController@attach');
-    Route::post('account_creation_tokens/consume', 'Api\Account\CreationTokenController@consume');
+    Route::get('accounts/auth_token/{auth_token}/attach', [AuthTokenController::class, 'attach']);
+    Route::post('account_creation_tokens/consume', [CreationTokenController::class, 'consume']);
 
-    Route::post('push_notification', 'Api\Account\PushNotificationController@push');
+    Route::post('push_notification', [PushNotificationController::class, 'push']);
 
     Route::prefix('accounts/me')->group(function () {
-        Route::get('api_key', 'Api\Account\ApiKeyController@generate')->middleware('cookie', 'cookie.encrypt');
+        Route::get('api_key', [ApiKeyController::class, 'generate'])->middleware(AddQueuedCookiesToResponse::class);
 
-        Route::get('services/turn', 'Api\Account\AccountController@turnService');
+        Route::get('services/turn', [AccountController::class, 'turnService']);
 
-        Route::get('/', 'Api\Account\AccountController@show');
-        Route::delete('/', 'Api\Account\AccountController@delete');
-        Route::get('provision', 'Api\Account\AccountController@provision');
+        Route::get('/', [AccountController::class, 'show']);
+        Route::delete('/', [AccountController::class, 'delete']);
+        Route::get('provision', [AccountController::class, 'provision']);
 
-        Route::post('phone/request', 'Api\Account\PhoneController@requestUpdate');
-        Route::post('phone', 'Api\Account\PhoneController@update');
+        Route::post('phone/request', [PhoneController::class, 'requestUpdate']);
+        Route::post('phone', [PhoneController::class, 'update']);
 
-        Route::get('devices', 'Api\Account\DeviceController@index');
-        Route::delete('devices/{uuid}', 'Api\Account\DeviceController@destroy');
+        Route::get('devices', [DeviceController::class, 'index']);
+        Route::delete('devices/{uuid}', [DeviceController::class, 'destroy']);
 
-        Route::post('email/request', 'Api\Account\EmailController@requestUpdate');
-        Route::post('email', 'Api\Account\EmailController@update');
+        Route::post('email/request', [EmailController::class, 'requestUpdate']);
+        Route::post('email', [EmailController::class, 'update']);
 
-        Route::post('password', 'Api\Account\PasswordController@update');
+        Route::post('password', [PasswordController::class, 'update']);
 
-        Route::get('contacts/{sip}', 'Api\Account\ContactController@show');
-        Route::get('contacts', 'Api\Account\ContactController@index');
+        Route::get('contacts/{sip}', [ContactController::class, 'show']);
+        Route::get('contacts', [ContactController::class, 'index']);
 
         Route::apiResource('vcards-storage', VcardsStorageController::class);
     });
 
     Route::group(['middleware' => ['auth.admin']], function () {
         if (!empty(config('app.linphone_daemon_unix_pipe'))) {
-            Route::post('messages', 'Api\Admin\MessageController@send');
+            Route::post('messages', [MessageController::class, 'send']);
         }
 
         // Super admin
@@ -107,7 +125,7 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
         });
 
         // Account creation token
-        Route::post('account_creation_tokens', 'Api\Admin\Account\CreationTokenController@create');
+        Route::post('account_creation_tokens', [AdminCreationTokenController::class, 'create']);
 
         // Accounts
         Route::prefix('accounts')->controller(AdminAccountController::class)->group(function () {
@@ -127,8 +145,8 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
             Route::get('{sip}/search', 'search');
             Route::get('{email}/search-by-email', 'searchByEmail');
 
-            Route::get('{account_id}/devices', 'Api\Admin\DeviceController@index');
-            Route::delete('{account_id}/devices/{uuid}', 'Api\Admin\DeviceController@destroy');
+            Route::get('{account_id}/devices', [DeviceController::class, 'index']);
+            Route::delete('{account_id}/devices/{uuid}', [DeviceController::class, 'destroy']);
 
             Route::post('{account_id}/types/{type_id}', 'typeAdd');
             Route::delete('{account_id}/types/{type_id}', 'typeRemove');
@@ -138,7 +156,7 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
         });
 
         // Account contacts
-        Route::prefix('accounts/{id}/contacts')->controller(ContactController::class)->group(function () {
+        Route::prefix('accounts/{id}/contacts')->controller(AdminContactController::class)->group(function () {
             Route::get('/', 'index');
             Route::get('{contact_id}', 'show');
             Route::post('{contact_id}', 'add');

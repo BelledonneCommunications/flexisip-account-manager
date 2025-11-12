@@ -43,6 +43,8 @@ class ApiAccountCreationTokenTest extends TestCase
 
     public function testInvalidJSON()
     {
+        Space::factory()->create();
+
         $this->call(
             $this->method,
             $this->tokenRoute,
