@@ -57,9 +57,9 @@ class StatisticsGraphFactory
                 $fromQuery = StatisticsMessage::query();
                 $toQuery = StatisticsMessage::query();
 
-                if (!Auth::user()?->admin) {
-                    $fromQuery->where('from_domain', space()->domain);
-                    $toQuery->toDomain($this->domain);
+                if (!Auth::user()?->superAdmin) {
+                    $fromQuery->where('from_domain', $this->request->space->domain);
+                    $toQuery->toDomain(space()->domain);
                 } elseif ($this->domain) {
                     $fromQuery->where('from_domain', $this->domain);
                     $toQuery->toDomain($this->domain);
