@@ -106,9 +106,13 @@ class StatisticsController extends Controller
         $fromQuery = StatisticsCall::query();
         $toQuery = StatisticsCall::query();
 
-        if ($request->get('domain')) {
-            $fromQuery->where('to_domain', $request->get('domain'));
-            $toQuery->where('from_domain', $request->get('domain'));
+        $domain = $request->user()->superAdmin
+            ? $request->get('domain')
+            : $request->user()->domain;
+
+        if ($domain) {
+            $fromQuery->where('to_domain', $domain);
+            $toQuery->where('from_domain', $domain);
         }
 
         if ($request->get('to')) {

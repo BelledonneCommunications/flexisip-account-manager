@@ -12,14 +12,14 @@ class SpaceCheck
     public function handle(Request $request, Closure $next): Response
     {
         if (empty(config('app.root_host'))) {
-            return abort(503, 'APP_ROOT_HOST is not configured');
+            abort(503, 'APP_ROOT_HOST is not configured');
         }
 
         $space = space(reload: true);
 
         if ($space != null) {
             if (!str_ends_with($space->host, config('app.root_host'))) {
-                return abort(503, 'The APP_ROOT_HOST configured does not match with the current root domain');
+                abort(503, 'The APP_ROOT_HOST configured does not match with the current root domain');
             }
 
             Config::set('app.url', '://' . $space->host);
@@ -51,6 +51,6 @@ class SpaceCheck
             return $next($request);
         }
 
-        return abort(404, 'Host not configured');
+        abort(404, 'Host not configured');
     }
 }
