@@ -42,6 +42,8 @@ class CreateAdminTest extends Command
 
         $this->call('spaces:create-update', [
             'domain' => $domain,
+            'host' => $domain,
+            'name' => $domain,
             '--super' => 'true'
         ]);
 
