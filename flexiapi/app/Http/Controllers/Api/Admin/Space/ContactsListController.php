@@ -19,7 +19,6 @@
 
 namespace App\Http\Controllers\Api\Admin\Space;
 
-use App\Account;
 use App\ContactsList;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -79,7 +78,7 @@ class ContactsListController extends Controller
         $contactsList = $request->space->contactsLists()->findOrFail($id);
         $contactsList->contacts()->detach($contactId);
 
-        if (Account::findOrFail($contactId)) {
+        if ($request->space->accounts()->findOrFail($contactId)) {
             return $contactsList->contacts()->attach($contactId);
         }
     }

@@ -21,7 +21,6 @@ namespace Tests;
 
 use App\PhoneCountry;
 use App\Space;
-use App\Http\Middleware\SpaceCheck;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 

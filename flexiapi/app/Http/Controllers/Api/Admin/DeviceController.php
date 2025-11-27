@@ -22,21 +22,27 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Libraries\FlexisipRedisConnector;
 use App\Account;
+use Illuminate\Http\Request;
 use stdClass;
 
 class DeviceController extends Controller
 {
-    public function index(int $accountId)
+    public function index(Request $request, int $accountId)
     {
-        $devices = (new FlexisipRedisConnector)->getDevices(Account::findOrFail($accountId)->identifier);
+        $devices = (new FlexisipRedisConnector)->getDevices(
+            $request->space->accounts()->findOrFail($accountId)->identifier
+        );
 
         return ($devices->isEmpty()) ? new stdClass : $devices;
     }
 
-    public function destroy(int $accountId, string $uuid)
+    public function destroy(Request $request, int $accountId, string $uuid)
     {
         $connector = new FlexisipRedisConnector;
 
-        return $connector->deleteDevice(Account::findOrFail($accountId)->identifier, $uuid);
+        return $connector->deleteDevice(
+            $request->space->accounts()->findOrFail($accountId)->identifier,
+            $uuid
+        );
     }
 }

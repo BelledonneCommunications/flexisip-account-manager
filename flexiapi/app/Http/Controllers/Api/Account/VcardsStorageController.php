@@ -10,12 +10,12 @@ class VcardsStorageController extends Controller
 {
     public function index(Request $request)
     {
-        return (new AdminVcardsStorageController)->index($request->user()->id);
+        return (new AdminVcardsStorageController)->index($request, $request->user()->id);
     }
 
     public function show(Request $request, string $uuid)
     {
-        return (new AdminVcardsStorageController)->show($request->user()->id, $uuid);
+        return (new AdminVcardsStorageController)->show($request, $request->user()->id, $uuid);
     }
 
     public function store(Request $request)
@@ -30,6 +30,6 @@ class VcardsStorageController extends Controller
 
     public function destroy(Request $request, string $uuid)
     {
-        return (new AdminVcardsStorageController)->destroy($request->user()->id, $uuid);
+        return (new AdminVcardsStorageController)->destroy($request, $request->user()->id, $uuid);
     }
 }

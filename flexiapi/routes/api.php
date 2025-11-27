@@ -139,7 +139,7 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
 
             Route::post('/', 'store');
             Route::put('{account_id}', 'update');
-            Route::get('/', 'index');
+            Route::get('/', 'index')->name('accounts.index');
             Route::get('{account_id}', 'show');
             Route::delete('{account_id}', 'destroy');
             Route::get('{sip}/search', 'search');
@@ -169,7 +169,7 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
 
         Route::apiResource('accounts/{id}/actions', ActionController::class);
         Route::apiResource('account_types', TypeController::class);
-        Route::apiResource('accounts/{account_id}/vcards-storage', AdminVcardsStorageController::class);
+        Route::apiResource('accounts/{id}/vcards-storage', AdminVcardsStorageController::class);
 
         Route::apiResource('contacts_lists', ContactsListController::class);
         Route::prefix('contacts_lists')->controller(ContactsListController::class)->group(function () {

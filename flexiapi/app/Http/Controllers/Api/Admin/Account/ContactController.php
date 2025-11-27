@@ -20,37 +20,36 @@
 namespace App\Http\Controllers\Api\Admin\Account;
 
 use App\Http\Controllers\Controller;
-
-use App\Account;
+use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
-    public function index(int $id)
+    public function index(Request $request, int $accountId)
     {
-        return Account::findOrFail($id)->contacts;
+        return $request->space->accounts()->findOrFail($accountId)->contacts;
     }
 
-    public function show(int $id, int $contactId)
+    public function show(Request $request, int $accountId, int $contactId)
     {
-        return Account::findOrFail($id)
+        return $request->space->accounts()->findOrFail($accountId)
                       ->contacts()
                       ->where('id', $contactId)
                       ->firstOrFail();
     }
 
-    public function add(int $id, int $contactId)
+    public function add(Request $request, int $accountId, int $contactId)
     {
-        $account = Account::findOrFail($id);
+        $account = $request->space->accounts()->findOrFail($accountId);
         $account->contacts()->detach($contactId);
 
-        if (Account::findOrFail($contactId)) {
+        if ($request->space->accounts()->findOrFail($contactId)) {
             return $account->contacts()->attach($contactId);
         }
     }
 
-    public function remove(int $id, int $contactId)
+    public function remove(Request $request, int $accountId, int $contactId)
     {
-        $account = Account::findOrFail($id);
+        $account = $request->space->accounts()->findOrFail($accountId);
 
         if (!$account->contacts()->pluck('id')->contains($contactId)) {
             abort(404);

@@ -29,7 +29,9 @@ class AuthenticateAdmin
             return redirect()->route('account.login');
         }
 
-        if (!$request->user()->admin || $request->user()->domain != $request->space->domain) {
+        if (!$request->user()->admin
+            || (!$request->user()->superAdmin && $request->user()->domain != $request->space->domain)
+        ) {
             return abort(403, 'Unauthorized area');
         }
 

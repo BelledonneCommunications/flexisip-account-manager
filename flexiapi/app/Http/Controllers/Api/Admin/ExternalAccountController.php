@@ -23,16 +23,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ExternalAccount\CreateUpdate;
 use App\Services\AccountService;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-
-use App\ExternalAccount;
-use App\Account;
 
 class ExternalAccountController extends Controller
 {
-    public function show(int $accountId)
+    public function show(Request $request, int $accountId)
     {
-        return Account::findOrFail($accountId)->external()->firstOrFail();
+        return $request->space->accounts()->findOrFail($accountId)->external()->firstOrFail();
     }
 
     public function store(CreateUpdate $request, int $accountId)

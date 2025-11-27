@@ -20,20 +20,20 @@
 namespace App\Http\Controllers\Api\Admin\Account;
 
 use App\Http\Controllers\Controller;
-use App\Account;
 
 use Illuminate\Http\Request;
 
 class DictionaryController extends Controller
 {
-    public function index(int $accountId)
+    public function index(Request $request, int $accountId)
     {
-        return Account::findOrFail($accountId)->dictionary;
+        return $request->space->accounts()->findOrFail($accountId)->dictionary;
     }
 
-    public function show(int $accountId, string $key)
+    public function show(Request $request, int $accountId, string $key)
     {
-        return Account::findOrFail($accountId)->dictionaryEntries()->where('key', $key)->first();
+        return $request->space->accounts()
+            ->findOrFail($accountId)->dictionaryEntries()->where('key', $key)->first();
     }
 
     public function set(Request $request, int $accountId, string $key)
@@ -42,7 +42,7 @@ class DictionaryController extends Controller
             'value' => 'required'
         ]);
 
-        $account = Account::findOrFail($accountId);
+        $account = $request->space->accounts()->findOrFail($accountId);
         $result = $account->setDictionaryEntry($key, $request->get('value'));
 
         if (function_exists('accountServiceAccountEditedHook')) {
@@ -53,8 +53,9 @@ class DictionaryController extends Controller
         return $result;
     }
 
-    public function destroy(int $accountId, string $key)
+    public function destroy(Request $request, int $accountId, string $key)
     {
-        return Account::findOrFail($accountId)->dictionaryEntries()->where('key', $key)->delete();
+        return $request->space->accounts()
+            ->findOrFail($accountId)->dictionaryEntries()->where('key', $key)->delete();
     }
 }

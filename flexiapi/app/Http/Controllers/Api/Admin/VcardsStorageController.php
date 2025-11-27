@@ -19,7 +19,6 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Account;
 use App\Http\Controllers\Controller;
 use App\Rules\Vcard;
 use App\VcardStorage;
@@ -30,15 +29,15 @@ use stdClass;
 
 class VcardsStorageController extends Controller
 {
-    public function index(int $accountId)
+    public function index(Request $request, int $accountId)
     {
-        $list = Account::findOrFail($accountId)->vcardsStorage()->get()->keyBy('uuid');
+        $list = $request->space->accounts()->findOrFail($accountId)->vcardsStorage()->get()->keyBy('uuid');
         return $list->isEmpty() ? new stdClass : $list;
     }
 
-    public function show(int $accountId, string $uuid)
+    public function show(Request $request, int $accountId, string $uuid)
     {
-        return Account::findOrFail($accountId)->vcardsStorage()->where('uuid', $uuid)->firstOrFail();
+        return $request->space->accounts()->findOrFail($accountId)->vcardsStorage()->where('uuid', $uuid)->firstOrFail();
     }
 
     public function store(Request $request, int $accountId)
@@ -49,7 +48,7 @@ class VcardsStorageController extends Controller
 
         $vcardo = VObject\Reader::read($request->get('vcard'));
 
-        if (Account::findOrFail($accountId)->vcardsStorage()->where('uuid', $vcardo->UID)->first()) {
+        if ($request->space->accounts()->findOrFail($accountId)->vcardsStorage()->where('uuid', $vcardo->UID)->first()) {
             abort(409, 'Vcard already exists');
         }
 
@@ -74,16 +73,16 @@ class VcardsStorageController extends Controller
             abort(422, 'UUID should be the same');
         }
 
-        $vcard = Account::findOrFail($accountId)->vcardsStorage()->where('uuid', $uuid)->firstOrFail();
+        $vcard = $request->space->accounts()->findOrFail($accountId)->vcardsStorage()->where('uuid', $uuid)->firstOrFail();
         $vcard->vcard = preg_replace('/\r\n?/', "\n", $vcardo->serialize());
         $vcard->save();
 
         return $vcard;
     }
 
-    public function destroy(int $accountId, string $uuid)
+    public function destroy(Request $request, int $accountId, string $uuid)
     {
-        $vcard = Account::findOrFail($accountId)->vcardsStorage()->where('uuid', $uuid)->firstOrFail();
+        $vcard = $request->space->accounts()->findOrFail($accountId)->vcardsStorage()->where('uuid', $uuid)->firstOrFail();
 
         return $vcard->delete();
     }

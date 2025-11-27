@@ -23,7 +23,6 @@ use App\Account;
 use App\AccountTombstone;
 use App\Password;
 use App\Space;
-use Carbon\Carbon;
 use Tests\TestCase;
 
 class ApiAccountTest extends TestCase
@@ -185,60 +184,122 @@ class ApiAccountTest extends TestCase
 
     public function testAdminMultiDomains()
     {
-        $configDomain = 'sip2.example.com';
-        config()->set('app.sip_domain', $configDomain);
-
-        $account = Account::factory()->superAdmin()->create();
-        $account->generateUserApiKey();
-        $account->save();
-
         $username = 'foobar';
-        $domain1 = Space::first()->domain;
-        $domain2 = Space::factory()->secondDomain()->create()->domain;
+        $space1 = Space::factory()->create();
+        $space2 = Space::factory()->secondDomain()->create();
 
-        $this->keyAuthenticated($account)
+        $superAdmin = Account::factory()->fromSpace($space1)->superAdmin()->create();
+        $superAdmin->generateUserApiKey();
+        $superAdmin->save();
+
+        $space1Accounts = $this->setSpaceOnRoute($space1, route('accounts.index'));
+        $space2Accounts = $this->setSpaceOnRoute($space2, route('accounts.index'));
+
+        $this->keyAuthenticated($superAdmin)
             ->json($this->method, $this->route, [
                 'username' => $username,
-                'domain' => $domain1,
+                'domain' => $space1->domain,
+                'admin' => true,
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])
             ->assertStatus(200)
             ->assertJson([
                 'username' => $username,
-                'domain' => $domain1
+                'domain' => $space1->domain
             ]);
 
-        $this->keyAuthenticated($account)
+        $this->keyAuthenticated($superAdmin)
             ->json($this->method, $this->route, [
                 'username' => $username,
-                'domain' => $domain2,
+                'domain' => $space2->domain,
+                'admin' => true,
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])
             ->assertStatus(200)
             ->assertJson([
                 'username' => $username,
-                'domain' => $domain2
+                'domain' => $space2->domain
             ]);
 
-        $this->keyAuthenticated($account)
-            ->get($this->route)
+        config()->set('app.sip_domain', null);
+
+        $this->keyAuthenticated($superAdmin)
+            ->get($space1Accounts)
             ->assertStatus(200)
-            ->assertJson(['data' => [
-                [
-                    'username' => $account->username,
-                    'domain' => $account->domain
-                ],
-                [
-                    'username' => $username,
-                    'domain' => $domain1
-                ],
-                [
-                    'username' => $username,
-                    'domain' => $domain2
+            ->assertJson([
+                'data' => [
+                    [
+                        'username' => $superAdmin->username,
+                        'domain' => $superAdmin->domain
+                    ],
+                    [
+                        'username' => $username,
+                        'domain' => $space1->domain
+                    ]
                 ]
-            ]]);
+            ])
+            ->assertJsonMissing([
+                'data' => [
+                    [
+                        'username' => $username,
+                        'domain' => $space1->domain
+                    ]
+                ]
+            ]);
+
+        // Super admin on space 1
+        $admin1 = Account::where('username', $username)
+            ->where('domain', $space1->domain)
+            ->first();
+        $admin1->generateUserApiKey();
+
+        $this->keyAuthenticated($admin1)
+            ->get($space1Accounts)
+            ->assertStatus(200);
+
+        $this->keyAuthenticated($admin1)
+            ->get($space2Accounts)
+            ->assertStatus(200);
+
+        $this->keyAuthenticated($superAdmin)
+            ->get($space2Accounts)
+            ->assertStatus(200)
+            ->assertJsonMissing([
+                'data' => [
+                    [
+                        'username' => $superAdmin->username,
+                        'domain' => $superAdmin->domain
+                    ],
+                    [
+                        'username' => $username,
+                        'domain' => $space1->domain
+                    ]
+                ]
+            ])
+            ->assertJson([
+                'data' => [
+                    [
+                        'username' => $username,
+                        'domain' => $space2->domain
+                    ]
+                ]
+            ]);
+
+        // Simple admin on space 2
+        $admin2 = Account::where('username', $username)
+            ->where('domain', $space2->domain)
+            ->first();
+        $admin2->generateUserApiKey();
+
+        $this->keyAuthenticated($admin2)
+            ->get($space1Accounts)
+            ->assertStatus(403);
+
+        $this->keyAuthenticated($admin2)
+            ->get($space2Accounts)
+            ->assertStatus(200);
     }
 
     public function testCreateDomainAsAdmin()
@@ -442,7 +503,7 @@ class ApiAccountTest extends TestCase
                 'password' => 'password123',
                 'algorithm' => 'SHA-256',
                 'dictionary' => 'hop'
-        ])->assertJsonValidationErrors(['dictionary']);
+            ])->assertJsonValidationErrors(['dictionary']);
 
         // Account update
 
@@ -795,9 +856,11 @@ class ApiAccountTest extends TestCase
             ->assertStatus(200)
             ->assertJson([
                 'username' => $account->username,
-                'passwords' => [[
-                    'algorithm' => $algorithm
-                ]]
+                'passwords' => [
+                    [
+                        'algorithm' => $algorithm
+                    ]
+                ]
             ]);
 
         // Set new password without old one
@@ -830,9 +893,11 @@ class ApiAccountTest extends TestCase
             ->assertStatus(200)
             ->assertJson([
                 'username' => $account->username,
-                'passwords' => [[
-                    'algorithm' => $newAlgorithm
-                ]]
+                'passwords' => [
+                    [
+                        'algorithm' => $newAlgorithm
+                    ]
+                ]
             ]);
     }
 

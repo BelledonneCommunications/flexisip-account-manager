@@ -25,7 +25,6 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-use App\Account;
 use App\AccountTombstone;
 use App\AccountType;
 use App\ContactsList;
@@ -35,18 +34,23 @@ use App\Http\Requests\Account\Update\Api\AsAdminRequest as ApiAsAdminRequest;
 use App\Mail\Provisioning;
 use App\Mail\ResetPassword;
 use App\Services\AccountService;
-use App\Space;
 
 class AccountController extends Controller
 {
     public function index(Request $request)
     {
-        return Account::without(['passwords', 'admin'])->with(['phoneChangeCode', 'emailChangeCode'])->paginate(20);
+        return $request->space->accounts()
+            ->without(['passwords', 'admin'])
+            ->with(['phoneChangeCode', 'emailChangeCode'])
+            ->paginate(20);
     }
 
     public function show(Request $request, $accountId)
     {
-        $account = Account::without(['passwords', 'admin'])->with(['phoneChangeCode', 'emailChangeCode'])->findOrFail($accountId);
+        $account = $request->space->accounts()
+            ->without(['passwords', 'admin'])
+            ->with(['phoneChangeCode', 'emailChangeCode'])
+            ->findOrFail($accountId);
 
         if ($request->user()->admin) {
             if ($account->phoneChangeCode) {
@@ -61,27 +65,29 @@ class AccountController extends Controller
         return $account;
     }
 
-    public function search(string $sip)
+    public function search(Request $request, string $sip)
     {
-        $account = Account::sip($sip)->first();
+        $account = $request->space->accounts()->sip($sip)->first();
 
-        if (!$account) abort(404, 'SIP address not found');
+        if (!$account)
+            abort(404, 'SIP address not found');
 
         return $account;
     }
 
-    public function searchByEmail(string $email)
+    public function searchByEmail(Request $request, string $email)
     {
-        $account = Account::where('email', $email)->first();
+        $account = $request->space->accounts()->where('email', $email)->first();
 
-        if (!$account) abort(404, 'Email address not found');
+        if (!$account)
+            abort(404, 'Email address not found');
 
         return $account;
     }
 
     public function destroy(Request $request, int $accountId)
     {
-        $account = Account::findOrFail($accountId);
+        $account = $request->space->accounts()->findOrFail($accountId);
 
         if (!$account->hasTombstone()) {
             $tombstone = new AccountTombstone();
@@ -95,9 +101,9 @@ class AccountController extends Controller
         Log::channel('events')->info('API Admin: Account destroyed', ['id' => $account->identifier]);
     }
 
-    public function activate(int $accountId)
+    public function activate(Request $request, int $accountId)
     {
-        $account = Account::findOrFail($accountId);
+        $account = $request->space->accounts()->findOrFail($accountId);
         $account->activated = true;
         $account->save();
 
@@ -106,9 +112,9 @@ class AccountController extends Controller
         return $account;
     }
 
-    public function deactivate(int $accountId)
+    public function deactivate(Request $request, int $accountId)
     {
-        $account = Account::findOrFail($accountId);
+        $account = $request->space->accounts()->findOrFail($accountId);
         $account->activated = false;
         $account->save();
 
@@ -117,9 +123,9 @@ class AccountController extends Controller
         return $account;
     }
 
-    public function block(int $accountId)
+    public function block(Request $request, int $accountId)
     {
-        $account = Account::findOrFail($accountId);
+        $account = $request->space->accounts()->findOrFail($accountId);
         $account->blocked = true;
         $account->save();
 
@@ -128,9 +134,9 @@ class AccountController extends Controller
         return $account;
     }
 
-    public function unblock(int $accountId)
+    public function unblock(Request $request, int $accountId)
     {
-        $account = Account::findOrFail($accountId);
+        $account = $request->space->accounts()->findOrFail($accountId);
         $account->blocked = false;
         $account->save();
 
@@ -139,9 +145,9 @@ class AccountController extends Controller
         return $account;
     }
 
-    public function provision(int $accountId)
+    public function provision(Request $request, int $accountId)
     {
-        $account = Account::findOrFail($accountId);
+        $account = $request->space->accounts()->findOrFail($accountId);
         $account->provision();
         $account->save();
 
@@ -164,55 +170,56 @@ class AccountController extends Controller
         return $account->makeVisible(['provisioning_token']);
     }
 
-    public function typeAdd(int $accountId, int $typeId)
+    public function typeAdd(Request $request, int $accountId, int $typeId)
     {
-        if (Account::findOrFail($accountId)->types()->pluck('id')->contains($typeId)) {
+        if ($request->space->accounts()->findOrFail($accountId)->types()->pluck('id')->contains($typeId)) {
             abort(403);
         }
 
         if (AccountType::findOrFail($typeId)) {
-            return Account::findOrFail($accountId)->types()->attach($typeId);
+            return $request->space->accounts()->findOrFail($accountId)->types()->attach($typeId);
         }
     }
 
-    public function typeRemove(int $accountId, int $typeId)
+    public function typeRemove(Request $request, int $accountId, int $typeId)
     {
-        if (!Account::findOrFail($accountId)->types()->pluck('id')->contains($typeId)) {
+        if (!$request->space->accounts()->findOrFail($accountId)->types()->pluck('id')->contains($typeId)) {
             abort(403);
         }
 
-        return Account::findOrFail($accountId)->types()->detach($typeId);
+        return $request->space->accounts()->findOrFail($accountId)->types()->detach($typeId);
     }
 
-    public function contactsListAdd(int $accountId, int $contactsListId)
+    public function contactsListAdd(Request $request, int $accountId, int $contactsListId)
     {
-        if (Account::findOrFail($accountId)->contactsLists()->pluck('id')->contains($contactsListId)) {
+        if ($request->space->accounts()->findOrFail($accountId)->contactsLists()->pluck('id')->contains($contactsListId)) {
             abort(403);
         }
 
         if (ContactsList::findOrFail($contactsListId)) {
-            return Account::findOrFail($accountId)->contactsLists()->attach($contactsListId);
+            return $request->space->accounts()->findOrFail($accountId)->contactsLists()->attach($contactsListId);
         }
     }
 
-    public function contactsListRemove(int $accountId, int $contactsListId)
+    public function contactsListRemove(Request $request, int $accountId, int $contactsListId)
     {
-        if (!Account::findOrFail($accountId)->contactsLists()->pluck('id')->contains($contactsListId)) {
+        if (!$request->space->accounts()->findOrFail($accountId)->contactsLists()->pluck('id')->contains($contactsListId)) {
             abort(403);
         }
 
-        return Account::findOrFail($accountId)->contactsLists()->detach($contactsListId);
+        return $request->space->accounts()->findOrFail($accountId)->contactsLists()->detach($contactsListId);
     }
 
     /**
      * Emails
      */
 
-    public function sendProvisioningEmail(int $accountId)
+    public function sendProvisioningEmail(Request $request, int $accountId)
     {
-        $account = Account::findOrFail($accountId);
+        $account = $request->space->accounts()->findOrFail($accountId);
 
-        if (!$account->email) abort(403, 'No email configured');
+        if (!$account->email)
+            abort(403, 'No email configured');
 
         $account->provision();
 
@@ -221,11 +228,12 @@ class AccountController extends Controller
         Log::channel('events')->info('API: Sending provisioning email', ['id' => $account->identifier]);
     }
 
-    public function sendResetPasswordEmail(int $accountId)
+    public function sendResetPasswordEmail(Request $request, int $accountId)
     {
-        $account = Account::findOrFail($accountId);
+        $account = $request->space->accounts()->findOrFail($accountId);
 
-        if (!$account->email) abort(403, 'No email configured');
+        if (!$account->email)
+            abort(403, 'No email configured');
 
         $resetPasswordEmail = new ResetPasswordEmailToken;
         $resetPasswordEmail->account_id = $account->id;

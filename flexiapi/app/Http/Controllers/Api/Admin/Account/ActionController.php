@@ -22,28 +22,27 @@ namespace App\Http\Controllers\Api\Admin\Account;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Account;
 use App\AccountAction;
 use App\Rules\NoUppercase;
 
 class ActionController extends Controller
 {
-    public function index(int $id)
+    public function index(Request $request, int $accountId)
     {
-        return $this->resolveAccount($id)->actions;
+        return $this->resolveAccount($request, $accountId)->actions;
     }
 
-    public function get(int $id, int $actionId)
+    public function get(Request $request, int $accountId, int $actionId)
     {
-        return $this->resolveAccount($id)
+        return $this->resolveAccount($request, $accountId)
                       ->actions()
                       ->where('id', $actionId)
                       ->firstOrFail();
     }
 
-    public function store(Request $request, int $id)
+    public function store(Request $request, int $accountId)
     {
-        $account = $this->resolveAccount($id);
+        $account = $this->resolveAccount($request, $accountId);
 
         $request->validate([
             'key' => ['required', 'alpha_dash', new NoUppercase],
@@ -59,9 +58,9 @@ class ActionController extends Controller
         return $accountAction;
     }
 
-    public function update(Request $request, int $id, int $actionId)
+    public function update(Request $request, int $accountId, int $actionId)
     {
-        $account = $this->resolveAccount($id);
+        $account = $this->resolveAccount($request, $accountId);
 
         $request->validate([
             'key' => ['alpha_dash', new NoUppercase],
@@ -79,17 +78,17 @@ class ActionController extends Controller
         return $accountAction;
     }
 
-    public function destroy(int $id, int $actionId)
+    public function destroy(Request $request, int $accountId, int $actionId)
     {
-        return $this->resolveAccount($id)
+        return $this->resolveAccount($request, $accountId)
                                  ->actions()
                                  ->where('id', $actionId)
                                  ->delete();
     }
 
-    private function resolveAccount(int $id)
+    private function resolveAccount(Request $request, int $accountId)
     {
-        $account = Account::findOrFail($id);
+        $account = $request->space->accounts()->findOrFail($accountId);
         if ($account->dtmf_protocol == null) abort(403, 'DTMF Protocol must be configured');
 
         return $account;

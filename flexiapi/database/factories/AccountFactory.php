@@ -19,13 +19,11 @@
 
 namespace Database\Factories;
 
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Awobaz\Compoships\Database\Eloquent\Factories\ComposhipsFactory;
 
 use App\Account;
 use App\AccountCreationToken;
-use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use App\Space;
 
 class AccountFactory extends Factory
