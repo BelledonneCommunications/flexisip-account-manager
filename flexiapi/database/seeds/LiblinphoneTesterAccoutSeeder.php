@@ -92,6 +92,8 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
         foreach ($domains as $domain) {
             $space = Space::where('domain', $domain)->firstOrNew();
             $space->domain = $domain;
+            $space->host = $domain;
+            $space->name = $domain;
             $space->save();
         }
 
@@ -101,7 +103,7 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
     }
 
     private function generateAccountArray(
-        int $id, string $username, string $domain, string $phone = null,
+        int $id, string $username, string $domain, ?string $phone = null,
         bool $activated = true
     ): array {
         return [
