@@ -48,8 +48,10 @@
         @endif
     </section>
     <section class="on_desktop" style="text-align: center;">
-        <span style="color: var(--main-5); font-size: 5rem; font-weight: 300;">{{ $count }}</span><br />
-        <p style="margin-bottom: 3rem;">users</p>
+        @if (isset($count))
+            <span style="color: var(--main-5); font-size: 5rem; font-weight: 300;">{{ $count }}</span><br />
+            <p style="margin-bottom: 3rem;">users</p>
+        @endif
         <img src="{{ asset('img/login.svg') }}">
     </section>
 
