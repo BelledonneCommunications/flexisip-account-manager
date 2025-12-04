@@ -37,6 +37,12 @@ return [
     'recovery_code_expiration_minutes' => env('APP_RECOVERY_CODE_EXPIRATION_MINUTES', 10),
     'provisioning_token_expiration_minutes' => env('APP_PROVISIONING_TOKEN_EXPIRATION_MINUTES', 0),
     'reset_password_email_token_expiration_minutes' => env('APP_RESET_PASSWORD_EMAIL_TOKEN_EXPIRATION_MINUTES', 1440),
+
+    /**
+     * Temporary toggles
+     */
+    'show_login_counter_temp' => env('APP_SHOW_LOGIN_COUNTER_TEMP', true),
+
     /**
      * Amount of minutes before re-authorizing the generation of a new account creation token
      */

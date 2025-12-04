@@ -43,9 +43,9 @@ class AuthenticateController extends Controller
             return redirect()->route('account.dashboard');
         }
 
-        return view('account.login', [
+        return view('account.login', config('app.show_login_counter_temp') ? [
             'count' => Account::where('activated', true)->count()
-        ]);
+        ]: []);
     }
 
     public function authenticate(Request $request)
