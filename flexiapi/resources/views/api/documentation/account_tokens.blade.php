@@ -5,7 +5,7 @@ An `account_creation_request_token` is a unique token that can be validated and 
 ### `POST /account_creation_request_tokens`
 <span class="badge badge-success">Public</span>
 
-Create and return an `account_creation_request_token` that should then be validated to be used.
+Create and return an `account_creation_request_token` that should then be validated to be used, often using a browser CAPTCHA.
 
 ## Account Creation Tokens
 

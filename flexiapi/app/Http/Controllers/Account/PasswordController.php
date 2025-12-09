@@ -21,6 +21,7 @@ namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class PasswordController extends Controller
@@ -46,12 +47,10 @@ class PasswordController extends Controller
 
         if ($account->passwords()->count() > 0) {
             Log::channel('events')->info('Web: Password changed', ['id' => $account->identifier]);
-
-            return redirect()->route('account.dashboard');
+            return redirect()->route('account.logout');
         }
 
         Log::channel('events')->info('Web: Password set for the first time', ['id' => $account->identifier]);
-
-        return redirect()->route('account.dashboard');
+        return redirect()->route('account.logout');
     }
 }
