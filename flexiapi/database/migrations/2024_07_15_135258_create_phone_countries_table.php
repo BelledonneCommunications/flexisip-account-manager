@@ -7,8 +7,7 @@ use Illuminate\Support\Facades\Schema;
 
 use libphonenumber\PhoneNumberUtil;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up()
     {
         Schema::create('phone_countries', function (Blueprint $table) {
@@ -20,10 +19,12 @@ return new class extends Migration
 
         $phoneNumberUtils = PhoneNumberUtil::getInstance();
         foreach (getCountryCodes() as $code => $name) {
-            $phoneCountry = new PhoneCountry();
-            $phoneCountry->code = $code;
-            $phoneCountry->country_code = $phoneNumberUtils->getMetadataForRegion($code)->getCountryCode();
-            $phoneCountry->save();
+            if ($resolvedMetadata = $phoneNumberUtils->getMetadataForRegion($code)) {
+                $phoneCountry = new PhoneCountry();
+                $phoneCountry->code = $code;
+                $phoneCountry->country_code = $resolvedMetadata->getCountryCode();
+                $phoneCountry->save();
+            }
         }
     }
 
