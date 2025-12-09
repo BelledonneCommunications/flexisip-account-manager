@@ -33,8 +33,8 @@ class PasswordFactory extends Factory
 
         return [
             'account_id' => $account->id,
-            'password'   => hash('md5', $account->username.':'.$account->resolvedRealm.':testtest'),
-            'algorithm'  => 'MD5',
+            'password' => hash('md5', $account->username . ':' . $account->resolvedRealm . ':testtest'),
+            'algorithm' => 'MD5',
         ];
     }
 
@@ -55,18 +55,18 @@ class PasswordFactory extends Factory
             $account = Account::find($attributes['account_id']);
 
             return [
-                'password'   => hash('sha256', $account->username.':'.$account->resolvedRealm.':testtest'),
+                'password' => hash('sha256', $account->username . ':' . $account->resolvedRealm . ':testtest'),
                 'account_id' => $account->id,
-                'algorithm'  => 'SHA-256',
+                'algorithm' => 'SHA-256',
             ];
         });
     }
 
     public function clrtxt()
     {
-        return $this->state(fn (array $attributes) => [
-            'password'   => 'testtest',
-            'algorithm'  => 'CLRTXT',
+        return $this->state(fn(array $attributes) => [
+            'password' => 'testtest',
+            'algorithm' => 'CLRTXT',
         ]);
     }
 }

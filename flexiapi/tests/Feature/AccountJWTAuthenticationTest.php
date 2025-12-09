@@ -19,7 +19,6 @@
 
 namespace Tests\Feature;
 
-use App\Account;
 use App\Password;
 use DateTimeImmutable;
 use Lcobucci\Clock\FrozenClock;
@@ -198,7 +197,7 @@ class AccountJWTAuthenticationTest extends TestCase
         $value = 'authz_server="https://auth_bearer.com/" realm="realm"';
         config()->set('app.account_authentication_bearer', $value);
 
-        $password = Password::factory()->create();
+        Password::factory()->create();
 
         $response = $this->json($this->method, $this->routeAccountMe)
             ->assertStatus(401);
@@ -209,8 +208,7 @@ class AccountJWTAuthenticationTest extends TestCase
         );
 
         // Wrong From
-        $reponse = $this
-            ->withHeaders(['From' => 'sip:missing@username'])
+        $this->withHeaders(['From' => 'sip:missing@username'])
             ->json($this->method, $this->routeAccountMe)
             ->assertStatus(401);
 
@@ -220,8 +218,7 @@ class AccountJWTAuthenticationTest extends TestCase
         );
 
         // Wrong bearer message
-        $reponse = $this
-            ->withHeaders([
+        $this->withHeaders([
                 'Authorization' => 'Bearer 1234'
             ])
             ->json($this->method, $this->routeAccountMe)
@@ -233,7 +230,7 @@ class AccountJWTAuthenticationTest extends TestCase
         );
     }
 
-    private function checkToken(UnencryptedToken $token): void
+    protected function checkToken(UnencryptedToken $token): void
     {
         $this->withHeaders([
                 'Authorization' => 'Bearer ' . $token->toString(),

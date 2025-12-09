@@ -52,14 +52,14 @@ class AccountFactory extends Factory
 
     public function fromSpace(Space $space)
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'domain' => $space->domain
         ]);
     }
 
     public function admin()
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'admin' => true,
         ]);
     }
@@ -79,21 +79,21 @@ class AccountFactory extends Factory
 
     public function deactivated()
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'activated' => false,
         ]);
     }
 
     public function withEmail()
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email' => $this->faker->email,
         ]);
     }
 
     public function withConsumedAccountCreationToken()
     {
-        return $this->state(fn (array $attributes) => [])->afterCreating(function (Account $account) {
+        return $this->state(fn(array $attributes) => [])->afterCreating(function (Account $account) {
             $accountCreationToken = new AccountCreationToken;
             $accountCreationToken->token = 'test_token';
             $accountCreationToken->account_id = $account->id;
