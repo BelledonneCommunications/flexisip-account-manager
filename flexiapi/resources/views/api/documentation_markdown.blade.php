@@ -77,6 +77,15 @@ Return the list of Phone Countries and their current status.
 
 If a country is deactivated all the new submitted phones submitted on the platform will be blocked.
 
+### `POST /phone_countries/{code}/activate`
+<span class="badge badge-error">Super Admin</span>
+
+Activate a Phone Country
+
+### `POST /phone_countries/{code}/deactivate`
+<span class="badge badge-error">Super Admin</span>
+
+Deactivate a Phone Country
 
 @include('api.documentation.statistics')
 

@@ -39,6 +39,7 @@ use App\Http\Controllers\Api\Admin\Account\TypeController;
 use App\Http\Controllers\Api\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Api\Admin\ExternalAccountController;
 use App\Http\Controllers\Api\Admin\MessageController;
+use App\Http\Controllers\Api\Admin\PhoneCountryController as AdminPhoneCountryController;
 use App\Http\Controllers\Api\Admin\Space\CardDavServerController;
 use App\Http\Controllers\Api\Admin\Space\ContactsListController;
 use App\Http\Controllers\Api\Admin\Space\EmailServerController;
@@ -122,6 +123,9 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
             });
 
             Route::apiResource('spaces/{domain}/carddavs', CardDavServerController::class);
+
+            Route::post('phone_countries/{code}/activate', [AdminPhoneCountryController::class, 'activate']);
+            Route::post('phone_countries/{code}/deactivate', [AdminPhoneCountryController::class, 'deactivate']);
         });
 
         // Account creation token

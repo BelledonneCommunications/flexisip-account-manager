@@ -34,6 +34,8 @@ class ApiPhoneCountryTest extends TestCase
     {
         $account = Account::factory()->withConsumedAccountCreationToken()->create();
         $account->generateUserApiKey();
+        $superAdmin = Account::factory()->superAdmin()->create();
+        $superAdmin->generateUserApiKey();
 
         $frenchPhoneNumber = '+33612121212';
         $dutchPhoneNumber = '+31612121212';
@@ -50,18 +52,24 @@ class ApiPhoneCountryTest extends TestCase
             ]);
 
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->routeChangePhone.'/request', [
+            ->json($this->method, $this->routeChangePhone . '/request', [
                 'phone' => $frenchPhoneNumber
             ])
             ->assertStatus(200);
 
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->routeChangePhone.'/request', [
+            ->json($this->method, $this->routeChangePhone . '/request', [
                 'phone' => $dutchPhoneNumber
             ])
             ->assertJsonValidationErrors(['phone']);
 
-        PhoneCountry::where('code', 'NL')->update(['activated' => true]);
+        $this->keyAuthenticated($account)
+            ->post($this->route . '/NL/activate')
+            ->assertStatus(403);
+
+        $this->keyAuthenticated($superAdmin)
+            ->post($this->route . '/NL/activate')
+            ->assertStatus(200);
 
         $this->get($this->route)
             ->assertStatus(200)
@@ -71,9 +79,20 @@ class ApiPhoneCountryTest extends TestCase
             ]);
 
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->routeChangePhone.'/request', [
+            ->json($this->method, $this->routeChangePhone . '/request', [
                 'phone' => $dutchPhoneNumber
             ])
             ->assertStatus(200);
+
+        $this->keyAuthenticated($superAdmin)
+            ->post($this->route . '/NL/deactivate')
+            ->assertStatus(200);
+
+        $this->get($this->route)
+            ->assertStatus(200)
+            ->assertJsonFragment([
+                'code' => 'NL',
+                'activated' => false
+            ]);
     }
 }
