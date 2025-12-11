@@ -26,6 +26,7 @@ use App\Http\Controllers\Account\ContactVcardController;
 use App\Http\Controllers\Account\CreationRequestTokenController;
 use App\Http\Controllers\Account\DeviceController;
 use App\Http\Controllers\Account\EmailController;
+use App\Http\Controllers\Account\FileController;
 use App\Http\Controllers\Account\PasswordController;
 use App\Http\Controllers\Account\PhoneController;
 use App\Http\Controllers\Account\ProvisioningController;
@@ -39,6 +40,7 @@ use App\Http\Controllers\Admin\Account\CardDavCredentialsController;
 use App\Http\Controllers\Admin\Account\ContactController;
 use App\Http\Controllers\Admin\Account\DeviceController as AdminAccountDeviceController;
 use App\Http\Controllers\Admin\Account\DictionaryController;
+use App\Http\Controllers\Admin\Account\FileController as AdminFileController;
 use App\Http\Controllers\Admin\Account\ImportController;
 use App\Http\Controllers\Admin\Account\StatisticsController as AdminAccountStatisticsController;
 use App\Http\Controllers\Admin\Account\TypeController;
@@ -76,7 +78,13 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
     });
 });
 
+Route::name('file.')->prefix('files')->controller(FileController::class)->group(function () {
+    Route::get('{uuid}/{name}', 'show')->name('show');
+    Route::get('{uuid}/{name}/download', 'download')->name('download');
+});
+
 Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key']], function () {
+
     Route::get('provisioning/me', [ProvisioningController::class, 'me'])->name('provisioning.me');
 
     // vCard 4.0
@@ -337,6 +345,11 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
                 Route::post('call_logs', 'editCallLogs')->name('edit_call_logs');
                 Route::get('call_logs', 'showCallLogs')->name('show_call_logs');
                 Route::post('/', 'edit')->name('edit');
+            });
+
+            Route::name('file.')->prefix('{account}/files')->controller(AdminFileController::class)->group(function () {
+                Route::get('{file_id}/delete', 'delete')->name('delete');
+                Route::delete('{file_id}', 'destroy')->name('destroy');
             });
         });
     });

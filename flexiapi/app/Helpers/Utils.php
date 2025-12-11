@@ -17,6 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 
 use App\Account;
@@ -30,13 +31,13 @@ use Illuminate\Support\Facades\DB;
 
 function space(): ?Space
 {
-    return is_object(request()->space) ? request()->space :null;
+    return is_object(request()->space) ? request()->space : null;
 }
 
 function passwordAlgorithms(): array
 {
     return [
-        'MD5'     => 'md5',
+        'MD5' => 'md5',
         'SHA-256' => 'sha256',
     ];
 }
@@ -100,7 +101,7 @@ function markdownDocumentationView(string $view): string
     $converter->getEnvironment()->addExtension(new TableOfContentsExtension());
 
     return (string) $converter->convert(
-        (string)view($view, [
+        (string) view($view, [
             'app_name' => space()->name
         ])->render()
     );
@@ -161,6 +162,14 @@ function resolveDomain(Request $request): string
         : $request->space->domain;
 }
 
+function maxUploadSize(): int
+{
+    return min(
+        ini_parse_quantity(ini_get('upload_max_filesize')),
+        ini_parse_quantity(ini_get('post_max_size'))
+    );
+}
+
 function captchaConfigured(): bool
 {
     return env('HCAPTCHA_SECRET', false) != false || env('HCAPTCHA_SITEKEY', false) != false;
@@ -205,7 +214,7 @@ function validateIsoDate($attribute, $value, $parameters, $validator): bool
         // Regex from https://www.myintervals.com/blog/2009/05/20/iso-8601-date-validation-that-doesnt-suck/
         : '/^([\+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))([T\s]((([01]\d|2[0-3])((:?)[0-5]\d)?|24\:?00)([\.,]\d+(?!:))?)?(\17[0-5]\d([\.,]\d+)?)?([zZ]|([\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$/';
 
-    return (bool)preg_match($regex, $value);
+    return (bool) preg_match($regex, $value);
 }
 
 /**
