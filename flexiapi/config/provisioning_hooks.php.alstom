@@ -1,0 +1,144 @@
+<?php
+
+use App\Account;
+use App\Password;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Lcobucci\JWT\Encoding\JoseEncoder;
+use Lcobucci\JWT\Token\Parser;
+
+define('ASTERISK_PATH_CERFIFICATE', false /* or '/path/to/self-signed/cert.pem' */);
+define('ASTERISK_ARI_ROOT_URL', 'http://ari.asterisk.org:8088/ari/endpoints/');
+
+/**
+ * This file contains hooks functions used by the provisioning query
+ * Check the commented code to have an overview of what can be done using the parameters
+ */
+
+/**
+ * @brief Complete the proxy section XML node
+ * @param DOMElement $proxySection
+ * @param Request $request
+ * @param Account $account
+ * @return void
+ */
+function provisioningProxyHook(\DOMElement $proxySection, Request $request, Account $account)
+{
+}
+
+/**
+ * @brief Complete a Auth section XML node
+ * @param DOMElement $proxySection
+ * @param Request $request
+ * @param Password $password
+ * @return void
+ */
+function provisioningAuthHook(\DOMElement $authSection, Request $request, Password $password)
+{
+    $token = (new Parser(new JoseEncoder()))->parse($request->bearerToken());
+
+    if ($token->claims()->has('matching_accounts')) {
+        $matchingAccounts = $token->claims()->get('matching_accounts');
+        if (
+            is_array($matchingAccounts)
+            && !empty($matchingAccounts)
+        ) {
+            $firstMatchingAccount = array_shift($matchingAccounts);
+
+            if (\str_contains($firstMatchingAccount, '@')) {
+                list($username, $domain) = explode('@', substr($firstMatchingAccount, 4));
+
+                $accounts = Account::withoutGlobalScopes()->where(['username' => $username, 'domain' => $domain]);
+
+                foreach ($matchingAccounts as $sip) {
+                    if (\str_contains($sip, '@')) {
+                        list($username, $domain) = explode('@', substr($sip, 4));
+                        $accounts = $accounts->orWhere(
+                            fn($query) => $query
+                                ->where('username', $username)
+                                ->where('domain', $domain)
+                        );
+                    }
+                }
+
+                $accounts = $accounts->get();
+
+                if ($accounts->count() == count($matchingAccounts) + 1) {
+                    // Resolving the first Asterisk offline account from the list
+                    $resolvedAccount = null;
+
+                    $resolvedAccount = $accounts->first();
+                    /* foreach ($accounts as $account) {
+                        $response = Http::withOptions([
+                            'verify' => ASTERISK_PATH_CERFIFICATE
+                        ])->get(ASTERISK_ARI_ROOT_URL . 'PJSIP/' . $account->identifier); // account SIP address
+
+                        if ($response->json('state') == 'offline') {
+                            $resolvedAccount = $account;
+                            break;
+                        }
+                    }*/
+
+                    if ($resolvedAccount) {
+                        Log::channel('events')->info(
+                            'Alstom Account: Account provisioned',
+                            ['id' => $resolvedAccount->identifier]
+                        );
+
+                        $xpath = new \DOMXpath($authSection->ownerDocument);
+
+                        $xpath->query("//entry[@name='reg_identity']")->item(0)->nodeValue = $resolvedAccount->fullIdentifier;
+
+                        $xpath->query("//entry[@name='username']")->item(0)->nodeValue = $resolvedAccount->username;
+                        $xpath->query("//entry[@name='domain']")->item(0)->nodeValue = $resolvedAccount->domain;
+
+                        $password = $resolvedAccount->passwords()->first();
+
+                        $xpath->query("//entry[@name='ha1']")->item(0)->nodeValue = $password->password;
+                        $xpath->query("//entry[@name='realm']")->item(0)->nodeValue = $resolvedAccount->resolvedRealm;
+                        $xpath->query("//entry[@name='algorithm']")->item(0)->nodeValue = $password->algorithm;
+                        return;
+                    }
+
+                    Log::channel('events')->info(
+                        'Alstom Account: No account can be provisioned',
+                        ['id' => $token->claims()->get('matching_accounts')]
+                    );
+                    abort(404, 'No account can be provisioned');
+                }
+
+                Log::channel('events')->info(
+                    'Alstom Account: No account can be provisioned',
+                    ['id' => $token->claims()->get('matching_accounts')]
+                );
+                abort(400, 'Listed matching_accounts are not present in the database');
+            }
+
+            abort(400, 'Invalid matching_accounts format');
+            return;
+        }
+
+        Log::channel('events')->info(
+            'Alstom Account: matching_accounts is empty or invalid'
+        );
+        abort(400, 'matching_accounts is empty or invalid');
+        return;
+    }
+
+    Log::channel('events')->info(
+        'Alstom Account: matching_accounts element missing'
+    );
+    abort(400, 'matching_accounts element missing');
+}
+
+/**
+ * @brief Complete the proxy section XML node, the Account might be passed as a parameter if resolved
+ * @param DOMElement $proxySection
+ * @param Request $request
+ * @param Account $account
+ * @return void
+ */
+function provisioningAdditionalSectionHook(\DOMElement $config, Request $request, ?Account $account)
+{
+}
