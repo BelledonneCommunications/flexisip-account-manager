@@ -76,9 +76,11 @@ class AuthenticateJWT
             }
 
             $account = null;
+            $identifierKey = config('services.jwt.sip_identifier');
+            if ($identifierKey == '') $identifierKey = 'sip_identity';
 
-            if ($token->claims()->has(config('services.jwt.sip_identifier'))) {
-                list($username, $domain) = parseSIP($token->claims()->get(config('services.jwt.sip_identifier')));
+            if ($token->claims()->has($identifierKey)) {
+                list($username, $domain) = parseSIP($token->claims()->get($identifierKey));
 
                 $account = Account::withoutGlobalScopes()
                     ->where('username', $username)

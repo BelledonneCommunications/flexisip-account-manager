@@ -93,6 +93,20 @@ class AccountJWTAuthenticationTest extends TestCase
 
         $this->checkToken($token);
 
+        // Handle JWT_SIP_IDENTIFIER=
+        config()->set('services.jwt.sip_identifier', '');
+
+        $token = (new JwtFacade(null, $clock))->issue(
+            new Sha256(),
+            InMemory::plainText($this->serverPrivateKeyPem),
+            static fn (
+                Builder $builder,
+                DateTimeImmutable $issuedAt
+            ): Builder => $builder->withClaim('sip_identity', 'sip:' . $password->account->username . '@' . $password->account->domain)
+        );
+
+        $this->checkToken($token);
+
         // Custom SIP identifier
         $otherIdentifier = 'sip_other_identifier';
         config()->set('services.jwt.sip_identifier', $otherIdentifier);
