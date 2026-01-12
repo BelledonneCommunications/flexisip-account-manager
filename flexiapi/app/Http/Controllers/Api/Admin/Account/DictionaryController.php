@@ -58,4 +58,10 @@ class DictionaryController extends Controller
         return $request->space->accounts()
             ->findOrFail($accountId)->dictionaryEntries()->where('key', $key)->delete();
     }
+
+    public function clear(Request $request, int $accountId)
+    {
+        return $request->space->accounts()
+            ->findOrFail($accountId)->dictionaryEntries()->delete();
+    }
 }

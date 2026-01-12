@@ -80,7 +80,7 @@ class ApiAccountDictionaryTest extends TestCase
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/dictionary/')
             ->assertStatus(200)
-            ->assertJson([
+            ->assertExactJson([
                 $key => $newValue
             ]);
 
@@ -93,7 +93,7 @@ class ApiAccountDictionaryTest extends TestCase
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/dictionary/')
             ->assertStatus(200)
-            ->assertJson([
+            ->assertExactJson([
                 $key => $newValue,
                 $secondKey => $newValue
             ]);
@@ -106,8 +106,36 @@ class ApiAccountDictionaryTest extends TestCase
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/dictionary/')
             ->assertStatus(200)
-            ->assertJson([
+            ->assertExactJson([
                 $secondKey => $newValue
             ]);
+
+        // Clear
+        $this->keyAuthenticated($admin)
+            ->json($this->method, $this->route . '/' . $account->id . '/dictionary/' . $key, [
+                'value' => $value
+            ])->assertStatus(201);
+
+        $this->keyAuthenticated($admin)
+            ->json($this->method, $this->route . '/' . $account->id . '/dictionary/' . $secondKey, [
+                'value' => $newValue
+            ])->assertStatus(201);
+
+        $this->keyAuthenticated($admin)
+            ->get($this->route . '/' . $account->id . '/dictionary/')
+            ->assertStatus(200)
+            ->assertExactJson([
+                $key => $value,
+                $secondKey => $newValue
+            ]);
+
+        $this->keyAuthenticated($admin)
+            ->delete($this->route . '/' . $account->id . '/dictionary/')
+            ->assertStatus(200);
+
+        $this->keyAuthenticated($admin)
+            ->get($this->route . '/' . $account->id . '/dictionary/')
+            ->assertStatus(200)
+            ->assertExactJson([]);
     }
 }

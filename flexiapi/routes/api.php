@@ -190,6 +190,7 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
 
         Route::prefix('accounts/{id}/dictionary')->controller(DictionaryController::class)->group(function () {
             Route::get('/', 'index');
+            Route::delete('/', 'clear');
             Route::get('{key}', 'show');
             Route::post('{key}', 'set');
             Route::delete('{key}', 'destroy');
