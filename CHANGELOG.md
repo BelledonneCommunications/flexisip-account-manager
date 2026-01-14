@@ -6,9 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [2.1]
 
+### Added
+
+- **Add CardDav servers** They can be configured in the administration panels and the API.
+- **Rockylinux 10 support** Packages are now available in the official repository
+- **Artisan cleanup script for statistics** Add an artisan console script to clear statistics after n days `app:clear-statistics {days} {--apply}`
+- **Add Voicemail features and related API endpoints** to integrate with `flexisip-voicemail`
+
 ### Changed
 
 - **Contacts Lists** The Contacts Lists are now handled per Space. During the migration, if there is only one Space present, existing Contacts Lists are automatically attached to it, otherwise the first Super Space available is used. If they are then attached to the wrong Space you'll have to change directly their `space_id` value in the `contacts_lists` database table.
+- **PHP 8.2 minimum** Laravel and its dependencies were upgraded to version 11 as well.
+- **Logout the user when the password is correctly changed**
 
 ## [2.0]
 

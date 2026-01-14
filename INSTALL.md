@@ -39,6 +39,8 @@ This file can be loaded and configured in your specific VirtualHost configuratio
 
 To know more about the web server configuration part, you can directly [visit the official Laravel installation documentation](https://laravel.com/docs/).
 
+⚠️ The Account Manager is handling files upload, please ensure that you raised `upload_max_filesize` and `post_max_size` to a reasonable number in your `php.ini` file to prevent file upload errors.
+
 # 3. .env file configuration
 
 Complete all the variables in the `.env` file (from the `.env.example` one if you setup the instance manually) or by overwriting them in your Docker or web-server configuration.
