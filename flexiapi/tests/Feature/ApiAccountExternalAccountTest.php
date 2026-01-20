@@ -77,7 +77,7 @@ class ApiAccountExternalAccountTest extends TestCase
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . '/external/', [
                 'username' => $username . '3',
-                'domain' => 'bar.dev',
+                'domain' => '127.0.0.1', // IPv4
                 'realm' => 'newrealm',
                 'protocol' => 'UDP'
             ])->assertJsonValidationErrors(['password']);
@@ -96,5 +96,13 @@ class ApiAccountExternalAccountTest extends TestCase
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/external/')
             ->assertStatus(404);
+
+        $this->keyAuthenticated($admin)
+            ->json($this->method, $this->route . '/' . $account->id . '/external/', [
+                'username' => $username,
+                'domain' => '2345:425:2CA1:0000:0000:567:5673:23b5', // IPv6
+                'password' => 'password',
+                'protocol' => 'UDP'
+            ])->assertStatus(201);
     }
 }

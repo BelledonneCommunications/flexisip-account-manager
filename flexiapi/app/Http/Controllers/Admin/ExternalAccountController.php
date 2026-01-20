@@ -22,8 +22,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ExternalAccount\CreateUpdate;
 use App\Services\AccountService;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 use App\ExternalAccount;
 use App\Account;

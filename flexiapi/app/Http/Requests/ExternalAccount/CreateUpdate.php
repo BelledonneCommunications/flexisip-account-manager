@@ -19,12 +19,12 @@
 
 namespace App\Http\Requests\ExternalAccount;
 
+use App\Rules\DomainOrIp;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 use App\ExternalAccount;
 use App\Rules\SIPUsername;
-use App\Rules\Domain;
 
 class CreateUpdate extends FormRequest
 {
@@ -40,7 +40,7 @@ class CreateUpdate extends FormRequest
 
         return [
             'username' => ['required', $usernameValidation, new SIPUsername()],
-            'domain' => ['required', new Domain()],
+            'domain' => ['required', new DomainOrIp()],
             'realm' => 'different:domain',
             'registrar' => 'different:domain',
             'outbound_proxy' => 'different:domain',
