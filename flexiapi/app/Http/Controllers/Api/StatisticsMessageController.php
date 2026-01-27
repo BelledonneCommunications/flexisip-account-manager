@@ -47,7 +47,7 @@ class StatisticsMessageController extends Controller
         try {
             return $statisticsMessage->saveOrFail();
         } catch (\Exception $e) {
-            Log::channel('database_errors')->error($e->getMessage());
+            Log::error($e->getMessage());
             abort(400, 'Database error');
         }
     }
@@ -68,7 +68,7 @@ class StatisticsMessageController extends Controller
                 ['last_status' => $request->get('last_status'), 'received_at' => $request->get('received_at')]
             );
         } catch (\Exception $e) {
-            Log::channel('database_errors')->error($e->getMessage());
+            Log::error($e->getMessage());
             abort(400, 'Database error');
         }
     }

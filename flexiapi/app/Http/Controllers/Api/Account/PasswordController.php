@@ -50,7 +50,7 @@ class PasswordController extends Controller
                 )) {
                     $account->updatePassword($request->get('password'), $algorithm);
 
-                    Log::channel('events')->info('API: Account password updated', ['id' => $account->identifier]);
+                    Log::info('API: Account password updated', ['id' => $account->identifier]);
 
                     return response()->json();
                 }

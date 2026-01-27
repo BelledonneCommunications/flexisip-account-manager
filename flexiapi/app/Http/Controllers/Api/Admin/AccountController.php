@@ -98,7 +98,7 @@ class AccountController extends Controller
 
         (new AccountService())->destroy($request, $accountId);
 
-        Log::channel('events')->info('API Admin: Account destroyed', ['id' => $account->identifier]);
+        Log::info('API Admin: Account destroyed', ['id' => $account->identifier]);
     }
 
     public function activate(Request $request, int $accountId)
@@ -107,7 +107,7 @@ class AccountController extends Controller
         $account->activated = true;
         $account->save();
 
-        Log::channel('events')->info('API Admin: Account activated', ['id' => $account->identifier]);
+        Log::info('API Admin: Account activated', ['id' => $account->identifier]);
 
         return $account;
     }
@@ -118,7 +118,7 @@ class AccountController extends Controller
         $account->activated = false;
         $account->save();
 
-        Log::channel('events')->info('API Admin: Account deactivated', ['id' => $account->identifier]);
+        Log::info('API Admin: Account deactivated', ['id' => $account->identifier]);
 
         return $account;
     }
@@ -129,7 +129,7 @@ class AccountController extends Controller
         $account->blocked = true;
         $account->save();
 
-        Log::channel('events')->info('API Admin: Account blocked', ['id' => $account->identifier]);
+        Log::info('API Admin: Account blocked', ['id' => $account->identifier]);
 
         return $account;
     }
@@ -140,7 +140,7 @@ class AccountController extends Controller
         $account->blocked = false;
         $account->save();
 
-        Log::channel('events')->info('API Admin: Account unblocked', ['id' => $account->identifier]);
+        Log::info('API Admin: Account unblocked', ['id' => $account->identifier]);
 
         return $account;
     }
@@ -151,7 +151,7 @@ class AccountController extends Controller
         $account->provision();
         $account->save();
 
-        Log::channel('events')->info('API Admin: Account provisioned', ['id' => $account->identifier]);
+        Log::info('API Admin: Account provisioned', ['id' => $account->identifier]);
 
         return $account->makeVisible(['provisioning_token']);
     }
@@ -165,7 +165,7 @@ class AccountController extends Controller
     {
         $account = (new AccountService())->update($request, $accountId);
 
-        Log::channel('events')->info('API Admin: Account updated', ['id' => $account->identifier]);
+        Log::info('API Admin: Account updated', ['id' => $account->identifier]);
 
         return $account->makeVisible(['provisioning_token']);
     }
@@ -225,7 +225,7 @@ class AccountController extends Controller
 
         Mail::to($account)->send(new Provisioning($account));
 
-        Log::channel('events')->info('API: Sending provisioning email', ['id' => $account->identifier]);
+        Log::info('API: Sending provisioning email', ['id' => $account->identifier]);
     }
 
     public function sendResetPasswordEmail(Request $request, int $accountId)

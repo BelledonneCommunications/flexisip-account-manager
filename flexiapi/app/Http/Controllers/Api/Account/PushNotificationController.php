@@ -27,7 +27,7 @@ class PushNotificationController extends Controller
         $fp = new FlexisipPusherConnector($request->get('pn_provider'), $request->get('pn_param'), $request->get('pn_prid'));
 
         if ($fp->send(callId: $request->get('call_id'), type: $request->get('type'))) {
-            Log::channel('events')->info('API: Push notification sent', [
+            Log::info('API: Push notification sent', [
                 'call_id' => $request->get('call_id'),
                 'type' => $request->get('type')
             ]);

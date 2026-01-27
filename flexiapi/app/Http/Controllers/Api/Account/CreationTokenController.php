@@ -53,7 +53,7 @@ class CreationTokenController extends Controller
             ->first();
 
         if ($last) {
-            Log::channel('events')->info('API: Token throttled', ['token' => $last->token]);
+            Log::info('API: Token throttled', ['token' => $last->token]);
             abort(429, 'Last token requested too recently');
         }
 
@@ -66,7 +66,7 @@ class CreationTokenController extends Controller
 
         $fp = new FlexisipPusherConnector($token->pn_provider, $token->pn_param, $token->pn_prid);
         if ($fp->sendToken($token->token)) {
-            Log::channel('events')->info('API: Account Creation Token sent', ['token' => $token->token]);
+            Log::info('API: Account Creation Token sent', ['token' => $token->token]);
 
             $token->save();
             return;

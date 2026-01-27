@@ -82,7 +82,7 @@ class AccountController extends Controller
         $account->provision();
         $account->save();
 
-        Log::channel('events')->info('API: Account provisioned', ['id' => $account->identifier]);
+        Log::info('API: Account provisioned', ['id' => $account->identifier]);
 
         return $account->makeVisible(['provisioning_token']);
     }

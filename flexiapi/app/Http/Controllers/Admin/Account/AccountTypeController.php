@@ -53,7 +53,7 @@ class AccountTypeController extends Controller
         $account->types()->detach($request->get('account_type_id'));
         $account->types()->attach($request->get('account_type_id'));
 
-        Log::channel('events')->info('Web Admin: Account type attached', ['id' => $account->identifier, 'type_id' => $request->get('account_type_id')]);
+        Log::info('Web Admin: Account type attached', ['id' => $account->identifier, 'type_id' => $request->get('account_type_id')]);
 
         return redirect()->route('admin.account.show', $account)->withFragment('#types');
     }
@@ -64,7 +64,7 @@ class AccountTypeController extends Controller
 
         $account->types()->detach($typeId);
 
-        Log::channel('events')->info('Web Admin: Account type detached', ['id' => $account->identifier, 'type_id' => $request->get('account_type_id')]);
+        Log::info('Web Admin: Account type detached', ['id' => $account->identifier, 'type_id' => $request->get('account_type_id')]);
 
         return redirect()->route('admin.account.show', $account)->withFragment('#types');
     }

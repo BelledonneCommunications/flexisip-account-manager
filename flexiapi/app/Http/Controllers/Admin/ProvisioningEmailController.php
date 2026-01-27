@@ -29,7 +29,7 @@ class ProvisioningEmailController extends Controller
 
         Mail::to($account)->send(new Provisioning($account));
 
-        Log::channel('events')->info('Web Admin: Sending provisioning email', ['id' => $account->identifier]);
+        Log::info('Web Admin: Sending provisioning email', ['id' => $account->identifier]);
 
         return redirect()->route('admin.account.show', $account);
     }

@@ -51,7 +51,7 @@ class RecoveryTokenController extends Controller
             ->first();
 
         if ($last) {
-            Log::channel('events')->info('API: Token throttled', ['token' => $last->token]);
+            Log::info('API: Token throttled', ['token' => $last->token]);
             abort(429, 'Last token requested too recently');
         }
 
@@ -64,7 +64,7 @@ class RecoveryTokenController extends Controller
 
         $fp = new FlexisipPusherConnector($token->pn_provider, $token->pn_param, $token->pn_prid);
         if ($fp->sendToken($token->token)) {
-            Log::channel('events')->info('API: AccountRecoveryToken sent', ['token' => $token->token]);
+            Log::info('API: AccountRecoveryToken sent', ['token' => $token->token]);
 
             $token->save();
             return;

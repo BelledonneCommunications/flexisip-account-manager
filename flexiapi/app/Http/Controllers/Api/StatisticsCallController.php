@@ -49,7 +49,7 @@ class StatisticsCallController extends Controller
         try {
             return $statisticsCall->saveOrFail();
         } catch (\Exception $e) {
-            Log::channel('database_errors')->error($e->getMessage());
+            Log::error($e->getMessage());
             abort(400, 'Database error');
         }
     }
@@ -72,7 +72,7 @@ class StatisticsCallController extends Controller
                 ]
             );
         } catch (\Exception $e) {
-            Log::channel('database_errors')->error($e->getMessage());
+            Log::error($e->getMessage());
             abort(400, 'Database error');
         }
     }

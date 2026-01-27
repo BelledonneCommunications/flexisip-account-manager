@@ -54,7 +54,7 @@ class ActionController extends Controller
         $accountAction->code = $request->get('code');
         $accountAction->save();
 
-        Log::channel('events')->info('Web Admin: Account action created', ['id' => $account->identifier, 'action' => $accountAction->key]);
+        Log::info('Web Admin: Account action created', ['id' => $account->identifier, 'action' => $accountAction->key]);
 
         return redirect()->route('admin.account.show', $accountAction->account)->withFragment('#actions');
     }
@@ -89,7 +89,7 @@ class ActionController extends Controller
         $accountAction->code = $request->get('code');
         $accountAction->save();
 
-        Log::channel('events')->info('Web Admin: Account action updated', ['id' => $account->identifier, 'action' => $accountAction->key]);
+        Log::info('Web Admin: Account action updated', ['id' => $account->identifier, 'action' => $accountAction->key]);
 
         return redirect()->route('admin.account.show', $account)->withFragment('#actions');
     }
@@ -115,7 +115,7 @@ class ActionController extends Controller
                         ->firstOrFail();
         $accountAction->delete();
 
-        Log::channel('events')->info('Web Admin: Account action deleted', ['id' => $accountAction->account->identifier, 'action_id' => $accountAction->key]);
+        Log::info('Web Admin: Account action deleted', ['id' => $accountAction->account->identifier, 'action_id' => $accountAction->key]);
 
         return redirect()->route('admin.account.show', $accountAction->account)->withFragment('#actions');
     }

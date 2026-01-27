@@ -91,7 +91,7 @@ class TypeController extends Controller
         $type = AccountType::findOrFail($typeId);
         $type->delete();
 
-        Log::channel('events')->info('Web Admin: Account type deleted', ['type' => $type->key]);
+        Log::info('Web Admin: Account type deleted', ['type' => $type->key]);
 
         return redirect()->route('admin.account.type.index');
     }

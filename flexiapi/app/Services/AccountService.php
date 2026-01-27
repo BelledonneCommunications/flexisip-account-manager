@@ -102,10 +102,10 @@ class AccountService
             $token->account_id = $account->id;
             $token->save();
 
-            Log::channel('events')->info('API: AccountCreationToken redeemed', ['account_creation_token' => $token->toLog()]);
+            Log::info('API: AccountCreationToken redeemed', ['account_creation_token' => $token->toLog()]);
         }
 
-        Log::channel('events')->info(
+        Log::info(
             $request->asAdmin
                 ? 'Account Service as Admin: Account created'
                 : 'Account Service: Account created',
@@ -176,7 +176,7 @@ class AccountService
             }
         }
 
-        Log::channel('events')->info(
+        Log::info(
             $request->asAdmin
                 ? 'Account Service as Admin: Account updated'
                 : 'Account Service: Account updated',
@@ -206,7 +206,7 @@ class AccountService
             (new FlexisipRedisConnector)->pingB2BUA($externalAccount);
         }
 
-        Log::channel('events')->info(
+        Log::info(
             'Account Service: Account destroyed',
             ['id' => $account->identifier]
         );
@@ -239,7 +239,7 @@ class AccountService
         $phoneChangeCode->fillRequestInfo($request);
         $phoneChangeCode->save();
 
-        Log::channel('events')->info('Account Service: Account phone change requested by SMS', ['id' => $account->identifier]);
+        Log::info('Account Service: Account phone change requested by SMS', ['id' => $account->identifier]);
 
         $message = 'Your ' . $account->space->name . ' validation code is ' . $phoneChangeCode->code . '.';
 
@@ -278,7 +278,7 @@ class AccountService
             $account->activated = true;
             $account->save();
 
-            Log::channel('events')->info('Account Service: Account phone changed using SMS', ['id' => $account->identifier]);
+            Log::info('Account Service: Account phone changed using SMS', ['id' => $account->identifier]);
 
             $account->refresh();
 
@@ -318,7 +318,7 @@ class AccountService
         $emailChangeCode->fillRequestInfo($request);
         $emailChangeCode->save();
 
-        Log::channel('events')->info('Account Service: Account email change requested by email', ['id' => $account->identifier]);
+        Log::info('Account Service: Account email change requested by email', ['id' => $account->identifier]);
 
         Mail::to($emailChangeCode->email)->send(new RegisterValidation($account));
     }
@@ -349,7 +349,7 @@ class AccountService
             $account->email = $emailChangeCode->email;
             $account->save();
 
-            Log::channel('events')->info('Account Service: Account email changed using email', ['id' => $account->identifier]);
+            Log::info('Account Service: Account email changed using email', ['id' => $account->identifier]);
 
             $emailChangeCode->consume();
 
@@ -380,7 +380,7 @@ class AccountService
 
         Mail::to($account)->send(new RecoverByCode($account));
 
-        Log::channel('events')->info('Account Service: Sending recovery email', ['id' => $account->identifier]);
+        Log::info('Account Service: Sending recovery email', ['id' => $account->identifier]);
 
         return $account;
     }
@@ -400,13 +400,13 @@ class AccountService
         $ovhSMS = new OvhSMS();
         $ovhSMS->send($account->phone, $message);
 
-        Log::channel('events')->info('Account Service: Sending recovery SMS', ['id' => $account->identifier]);
+        Log::info('Account Service: Sending recovery SMS', ['id' => $account->identifier]);
 
         $accountRecoveryToken->consume();
         $accountRecoveryToken->account_id = $account->id;
         $accountRecoveryToken->save();
 
-        Log::channel('events')->info('API: AccountRecoveryToken redeemed', ['account_recovery_token' => $accountRecoveryToken->toLog()]);
+        Log::info('API: AccountRecoveryToken redeemed', ['account_recovery_token' => $accountRecoveryToken->toLog()]);
 
         return $account;
     }

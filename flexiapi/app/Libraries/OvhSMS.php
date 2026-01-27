@@ -47,7 +47,7 @@ class OvhSMS
                 $this->smsService = $smsServices[0];
             }
         } catch (\Exception $e) {
-            Log::channel('events')->info('OVH SMS API unreachable, check the errors log');
+            Log::info('OVH SMS API unreachable, check the errors log');
             Log::error('OVH SMS API not reachable: ' . $e->getMessage());
         }
     }
@@ -72,7 +72,7 @@ class OvhSMS
             'validityPeriod'    => 2880
         ];
 
-        Log::channel('events')->info('OVH SMS sending', ['to' => $to, 'message' => $message]);
+        Log::info('OVH SMS sending', ['to' => $to, 'message' => $message]);
 
         try {
             $this->api->post('/sms/'. $this->smsService . '/jobs', $content);
@@ -80,7 +80,7 @@ class OvhSMS
 
             $this->api->get('/sms/'. $this->smsService . '/jobs');
         } catch (\Exception $e) {
-            Log::channel('events')->info('OVH SMS not sent, check the errors log');
+            Log::info('OVH SMS not sent, check the errors log');
             Log::error('OVH SMS not sent: ' . $e->getMessage());
         }
     }

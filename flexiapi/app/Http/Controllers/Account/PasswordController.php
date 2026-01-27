@@ -46,11 +46,11 @@ class PasswordController extends Controller
         $account->updatePassword($request->get('password'));
 
         if ($account->passwords()->count() > 0) {
-            Log::channel('events')->info('Web: Password changed', ['id' => $account->identifier]);
+            Log::info('Web: Password changed', ['id' => $account->identifier]);
             return redirect()->route('account.logout');
         }
 
-        Log::channel('events')->info('Web: Password set for the first time', ['id' => $account->identifier]);
+        Log::info('Web: Password set for the first time', ['id' => $account->identifier]);
         return redirect()->route('account.logout');
     }
 }

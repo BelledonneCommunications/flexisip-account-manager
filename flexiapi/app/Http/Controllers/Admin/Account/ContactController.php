@@ -69,7 +69,7 @@ class ContactController extends Controller
         $account->contacts()->detach($contact->id);
         $account->contacts()->attach($contact->id);
 
-        Log::channel('events')->info('Web Admin: Account contact added', ['id' => $account->identifier, 'contact' => $contact->identifier]);
+        Log::info('Web Admin: Account contact added', ['id' => $account->identifier, 'contact' => $contact->identifier]);
 
         return redirect()->route('admin.account.contact.index', $account);
     }
@@ -92,7 +92,7 @@ class ContactController extends Controller
 
         $account->contacts()->detach($contact->id);
 
-        Log::channel('events')->info('Web Admin: Account contact removed', ['id' => $account->identifier, 'contact' => $contact->identifier]);
+        Log::info('Web Admin: Account contact removed', ['id' => $account->identifier, 'contact' => $contact->identifier]);
 
         return redirect()->route('admin.account.contact.index', $account);
     }

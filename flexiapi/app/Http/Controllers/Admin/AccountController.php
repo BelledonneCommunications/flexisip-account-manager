@@ -110,7 +110,7 @@ class AccountController extends Controller
     {
         $account = (new AccountService)->store($request);
 
-        Log::channel('events')->info('Web Admin: Account created', ['id' => $account->identifier]);
+        Log::info('Web Admin: Account created', ['id' => $account->identifier]);
 
         return redirect()->route('admin.account.show', $account);
     }
@@ -132,7 +132,7 @@ class AccountController extends Controller
     {
         $account = (new AccountService)->update($request, $accountId);
 
-        Log::channel('events')->info('Web Admin: Account updated', ['id' => $account->identifier]);
+        Log::info('Web Admin: Account updated', ['id' => $account->identifier]);
 
         return redirect()->route('admin.account.show', $accountId);
     }
@@ -143,7 +143,7 @@ class AccountController extends Controller
         $account->provision();
         $account->save();
 
-        Log::channel('events')->info('Web Admin: Account provisioned', ['id' => $account->identifier]);
+        Log::info('Web Admin: Account provisioned', ['id' => $account->identifier]);
 
         return redirect()->back()->withFragment('provisioning');
     }
@@ -163,7 +163,7 @@ class AccountController extends Controller
 
         (new AccountService)->destroy($request, $request->get('account_id'));
 
-        Log::channel('events')->info('Web Admin: Account deleted', ['id' => $account->identifier]);
+        Log::info('Web Admin: Account deleted', ['id' => $account->identifier]);
 
         return redirect()->route('admin.account.index');
     }
