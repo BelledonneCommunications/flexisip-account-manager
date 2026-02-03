@@ -94,6 +94,8 @@ The API will then check if the token was signed properly, is still valid and aut
 
 ### Using DIGEST
 
+**When the JWT authentication is configured, the DIGEST auth is not available anymore.**
+
 To discover the available hashing algorythm you MUST send an unauthenticated request to one of the restricted endpoints.<br />
 Only DIGEST-MD5 and DIGEST-SHA-256 are supported through the authentication layer.
 

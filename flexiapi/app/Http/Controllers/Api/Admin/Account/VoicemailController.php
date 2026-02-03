@@ -18,6 +18,11 @@ class VoicemailController extends Controller
     public function store(Request $request, int $accountId)
     {
         $account = Account::findOrFail($accountId);
+
+        if ($account->email == null) {
+            abort(422, 'The account should be reachable by email');
+        }
+
         $request->validate([
             'sip_from' => 'nullable|starts_with:sip',
             'content_type' => [

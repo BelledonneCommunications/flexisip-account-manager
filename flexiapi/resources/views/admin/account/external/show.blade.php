@@ -54,18 +54,18 @@
                 <div>
                     <input placeholder="realm" name="realm" type="text"
                         value="@if($externalAccount->id){{ $externalAccount->realm }}@else{{ old('realm') }}@endif">
-                    <label for="username">{{ __('Realm') }}</label>
+                    <label for="username">{{ __('Realm') }} ({{ __('Domain used if empty') }})</label>
                     @include('parts.errors', ['name' => 'realm'])
                 </div>
                 <div>
                     <input placeholder="domain.tld" name="registrar" type="text"
                         value="@if($externalAccount->id){{ $externalAccount->registrar }}@else{{ old('registrar') }}@endif">
-                    <label for="domain">{{ __('Registrar') }}</label>
+                    <label for="domain">{{ __('Registrar') }} ({{ __('Must be different than domain') }})</label>
                 </div>
                 <div>
                     <input placeholder="outbound.tld" name="outbound_proxy" type="text"
                         value="@if($externalAccount->id){{ $externalAccount->outbound_proxy }}@else{{ old('outbound_proxy') }}@endif">
-                    <label for="domain">{{ __('Outbound Proxy') }}</label>
+                    <label for="domain">{{ __('Outbound Proxy') }} ({{ __('Must be different than domain') }})</label>
                 </div>
                 <div class="select">
                     <select name="protocol">

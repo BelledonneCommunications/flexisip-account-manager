@@ -28,9 +28,20 @@ class ApiVoicemailTest extends TestCase
     protected $route = '/api/accounts/me/voicemails';
     protected $uploadRoute = '/api/files/';
 
-    public function testAccount()
+    public function testAccountWithoutEmail()
     {
         $account = Account::factory()->create();
+        $account->generateUserApiKey();
+
+        $this->keyAuthenticated($account)
+            ->json('POST', $this->route, [
+                'content_type' => 'audio/opus'
+            ])->assertStatus(422);
+    }
+
+    public function testAccount()
+    {
+        $account = Account::factory()->withEmail()->create();
         $account->generateUserApiKey();
 
         $this->keyAuthenticated($account)
@@ -78,7 +89,7 @@ class ApiVoicemailTest extends TestCase
         $admin = Account::factory()->admin()->create();
         $admin->generateUserApiKey();
 
-        $account = Account::factory()->create();
+        $account = Account::factory()->withEmail()->create();
         $account->generateUserApiKey();
 
         $adminRoute = '/api/accounts/' . $account->id . '/voicemails';
@@ -115,7 +126,7 @@ class ApiVoicemailTest extends TestCase
 
     public function testUpload()
     {
-        $account = Account::factory()->create();
+        $account = Account::factory()->withEmail()->create();
         $account->generateUserApiKey();
 
         $accountFile = $this->keyAuthenticated($account)
