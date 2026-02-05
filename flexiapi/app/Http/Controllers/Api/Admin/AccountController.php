@@ -67,7 +67,7 @@ class AccountController extends Controller
 
     public function search(Request $request, string $sip)
     {
-        $account = $request->space->accounts()->sip($sip)->first();
+        $account = $request->space->accounts()->sip($sip)->with('callForwardings')->first();
 
         if (!$account)
             abort(404, 'SIP address not found');
@@ -77,7 +77,7 @@ class AccountController extends Controller
 
     public function searchByEmail(Request $request, string $email)
     {
-        $account = $request->space->accounts()->where('email', $email)->first();
+        $account = $request->space->accounts()->where('email', $email)->with('callForwardings')->first();
 
         if (!$account)
             abort(404, 'Email address not found');

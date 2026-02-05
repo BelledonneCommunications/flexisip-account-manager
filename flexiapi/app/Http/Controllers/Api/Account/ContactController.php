@@ -26,11 +26,11 @@ class ContactController extends Controller
 {
     public function index(Request $request)
     {
-        return resolveUserContacts($request)->get();
+        return resolveUserContacts($request->user())->get();
     }
 
     public function show(Request $request, string $sip)
     {
-        return resolveUserContacts($request)->sip($sip)->firstOrFail();
+        return resolveUserContacts($request->user())->sip($sip)->firstOrFail();
     }
 }

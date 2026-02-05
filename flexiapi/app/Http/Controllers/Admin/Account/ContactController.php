@@ -34,7 +34,7 @@ class ContactController extends Controller
 
         return view('admin.account.contact.index', [
             'account' => $account,
-            'contacts_lists' => ContactsList::whereNotIn('id', function ($query) use ($accountId) {
+            'contacts_lists' => $account->space->contactsLists()->whereNotIn('id', function ($query) use ($accountId) {
                 $query->select('contacts_list_id')
                     ->from('account_contacts_list')
                     ->where('account_id', $accountId);

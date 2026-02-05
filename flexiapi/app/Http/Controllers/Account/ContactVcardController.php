@@ -28,7 +28,7 @@ class ContactVcardController extends Controller
     public function index(Request $request)
     {
         return response(
-            resolveUserContacts($request)->get()->map(function ($contact) {
+            resolveUserContacts($request->user())->get()->map(function ($contact) {
                 return $contact->toVcard4();
             })->implode("\n")
         );
@@ -36,7 +36,7 @@ class ContactVcardController extends Controller
 
     public function show(Request $request, string $sip)
     {
-        return resolveUserContacts($request)
+        return resolveUserContacts($request->user())
             ->sip($sip)
             ->firstOrFail()
             ->toVcard4();

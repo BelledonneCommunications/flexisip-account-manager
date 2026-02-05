@@ -36,6 +36,7 @@ use App\Http\Controllers\Account\VcardsStorageController;
 use App\Http\Controllers\Admin\Account\AccountTypeController;
 use App\Http\Controllers\Admin\Account\ActionController;
 use App\Http\Controllers\Admin\Account\ActivityController;
+use App\Http\Controllers\Admin\Account\CallForwardingController;
 use App\Http\Controllers\Admin\Account\CardDavCredentialsController;
 use App\Http\Controllers\Admin\Account\ContactController;
 use App\Http\Controllers\Admin\Account\DeviceController as AdminAccountDeviceController;
@@ -43,6 +44,7 @@ use App\Http\Controllers\Admin\Account\DictionaryController;
 use App\Http\Controllers\Admin\Account\FileController as AdminFileController;
 use App\Http\Controllers\Admin\Account\ImportController;
 use App\Http\Controllers\Admin\Account\StatisticsController as AdminAccountStatisticsController;
+use App\Http\Controllers\Admin\Account\TelephonyController;
 use App\Http\Controllers\Admin\Account\TypeController;
 use App\Http\Controllers\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Admin\ApiKeyController as AdminApiKeyController;
@@ -310,6 +312,14 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
                 Route::post('/', 'store')->name('store');
                 Route::get('{contact_id}/delete', 'delete')->name('delete');
                 Route::delete('/', 'destroy')->name('destroy');
+            });
+
+            Route::name('telephony.')->prefix('{account}/telephony')->controller(TelephonyController::class)->group(function () {
+                Route::get('/', 'show')->name('show');
+            });
+
+            Route::name('call_forwardings.')->prefix('{account}/call_forwardings')->controller(CallForwardingController::class)->group(function () {
+                Route::put('/', 'update')->name('update');
             });
 
             Route::name('device.')->prefix('{account}/devices')->controller(AdminAccountDeviceController::class)->group(function () {

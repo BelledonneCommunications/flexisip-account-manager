@@ -20,6 +20,7 @@
 use App\Http\Controllers\Api\Account\AccountController;
 use App\Http\Controllers\Api\Account\ApiKeyController;
 use App\Http\Controllers\Api\Account\AuthTokenController;
+use App\Http\Controllers\Api\Account\CallForwardingController;
 use App\Http\Controllers\Api\Account\ContactController;
 use App\Http\Controllers\Api\Account\CreationRequestToken;
 use App\Http\Controllers\Api\Account\CreationTokenController;
@@ -33,6 +34,7 @@ use App\Http\Controllers\Api\Account\RecoveryTokenController;
 use App\Http\Controllers\Api\Account\VcardsStorageController;
 use App\Http\Controllers\Api\Account\VoicemailController;
 use App\Http\Controllers\Api\Admin\Account\ActionController;
+use App\Http\Controllers\Api\Admin\Account\CallForwardingController as AdminCallForwardingController;
 use App\Http\Controllers\Api\Admin\Account\CardDavCredentialsController;
 use App\Http\Controllers\Api\Admin\Account\ContactController as AdminContactController;
 use App\Http\Controllers\Api\Admin\Account\CreationTokenController as AdminCreationTokenController;
@@ -111,6 +113,7 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
 
         Route::apiResource('vcards-storage', VcardsStorageController::class);
         Route::apiResource('voicemails', VoicemailController::class, ['only' => ['index', 'show', 'store', 'destroy']]);
+        Route::apiResource('call_forwardings', CallForwardingController::class);
     });
 
     Route::group(['middleware' => ['auth.admin']], function () {
@@ -133,6 +136,8 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
             Route::post('phone_countries/{code}/activate', [AdminPhoneCountryController::class, 'activate']);
             Route::post('phone_countries/{code}/deactivate', [AdminPhoneCountryController::class, 'deactivate']);
         });
+
+        Route::get('resolve/{sip}', [SpaceController::class, 'resolve']);
 
         // Account creation token
         Route::post('account_creation_tokens', [AdminCreationTokenController::class, 'create']);
@@ -181,6 +186,7 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
         Route::apiResource('account_types', TypeController::class);
         Route::apiResource('accounts/{id}/vcards-storage', AdminVcardsStorageController::class);
         Route::apiResource('accounts/{id}/voicemails', AdminVoicemailController::class, ['only' => ['index', 'show', 'store', 'destroy']]);
+        Route::apiResource('accounts/{id}/call_forwardings', AdminCallForwardingController::class);
 
         Route::apiResource('contacts_lists', ContactsListController::class);
         Route::prefix('contacts_lists')->controller(ContactsListController::class)->group(function () {

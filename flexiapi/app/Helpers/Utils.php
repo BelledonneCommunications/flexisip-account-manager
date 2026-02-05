@@ -175,21 +175,21 @@ function captchaConfigured(): bool
     return env('HCAPTCHA_SECRET', false) != false || env('HCAPTCHA_SITEKEY', false) != false;
 }
 
-function resolveUserContacts(Request $request)
+function resolveUserContacts(Account $account)
 {
     $selected = ['id', 'username', 'domain', 'activated', 'dtmf_protocol', 'display_name'];
 
-    return Account::withoutGlobalScopes()->whereIn('id', function ($query) use ($request) {
+    return Account::withoutGlobalScopes()->whereIn('id', function ($query) use ($account) {
         $query->select('contact_id')
             ->from('contacts')
-            ->where('account_id', $request->user()->id)
+            ->where('account_id', $account->id)
             ->union(
                 DB::table('contacts_list_contact')
                     ->select('contact_id')
-                    ->whereIn('contacts_list_id', function ($query) use ($request) {
+                    ->whereIn('contacts_list_id', function ($query) use ($account) {
                         $query->select('contacts_list_id')
                             ->from('account_contacts_list')
-                            ->where('account_id', $request->user()->id);
+                            ->where('account_id', $account->id);
                     })
             );
     })->select($selected);

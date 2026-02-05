@@ -81,6 +81,18 @@ class SpaceController extends Controller
         return $space->refresh();
     }
 
+    public function resolve(Request $request, string $sip)
+    {
+        $account = $request->space->accounts()->sip($sip)->with('callForwardings')->firstOrFail();
+        $arrayAccount = $account->toArray();
+        unset($arrayAccount['space']);
+
+        return json_encode([
+            'type' => 'account',
+            'payload' => $arrayAccount
+        ]);
+    }
+
     public function show(string $domain)
     {
         return Space::where('domain', $domain)->firstOrFail();

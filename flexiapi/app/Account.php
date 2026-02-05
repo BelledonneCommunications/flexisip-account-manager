@@ -139,6 +139,20 @@ class Account extends Authenticatable
         return $this->hasMany(AccountFile::class)->latest();
     }
 
+    public function callForwardings()
+    {
+        return $this->hasMany(CallForwarding::class)->latest();
+    }
+
+    public function getCallForwardingsDefaultAttribute()
+    {
+        $callForwardings = $this->callForwardings->keyBy('type');
+        $resolved['always'] = $callForwardings['always'] ?? new CallForwarding(['type' => 'always']);
+        $resolved['away'] = $callForwardings['away'] ?? new CallForwarding(['type' => 'away']);
+        $resolved['busy'] = $callForwardings['busy'] ?? new CallForwarding(['type' => 'busy']);
+        return $resolved;
+    }
+
     public function voicemails()
     {
         return $this->hasMany(AccountFile::class)

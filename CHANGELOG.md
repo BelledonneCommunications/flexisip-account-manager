@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - **Rockylinux 10 support** Packages are now available in the official repository
 - **Artisan cleanup script for statistics** Add an artisan console script to clear statistics after n days `app:clear-statistics {days} {--apply}`
 - **Add Voicemail features and related API endpoints** to integrate with `flexisip-voicemail`
+- **Add Call Forwarding features and related API endpoints**
 
 ### Changed
 

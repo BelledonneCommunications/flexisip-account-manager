@@ -400,3 +400,16 @@ div.checkbox:hover > input[type="checkbox"] + label {
 div.checkbox > input[type="checkbox"]:checked + label {
     right: 0.5rem;
 }
+
+
+/* Telephony subselect */
+
+div.select[data-value] ~ div.togglable {
+    display: none;
+}
+
+div.select[data-value=voicemail] ~ div.togglable.voicemail,
+div.select[data-value=contact] ~ div.togglable.contact,
+div.select[data-value=sip_uri] ~ div.togglable.sip_uri {
+    display: block;
+}

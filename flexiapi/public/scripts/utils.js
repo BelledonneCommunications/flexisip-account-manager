@@ -135,3 +135,11 @@ function copyValueTo(from, to, append) {
         to.value = value;
     }
 }
+
+function setCheckboxValue(name, value) {
+    let checkbox = document.getElementsByName(name)[0];
+
+    if (checkbox) {
+        checkbox.checked = value;
+    }
+}

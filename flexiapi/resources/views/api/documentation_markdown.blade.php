@@ -9,6 +9,19 @@
 
 Returns `pong`
 
+## SIP URI Resolving
+
+### `GET /resolve/{sip}`
+<span class="badge badge-warning">Admin</span>
+
+Resolve a specific `SIP URI` in the space.
+All the resolved object can be reached using direct API endpoints. This endpoint is only there as a shortcut and should be used sparingly.
+
+Will return a JSON message with:
+
+* `type` resolved API object `type`, can be `acccount`
+* `payload` that contains the resolved object
+
 @include('api.documentation.spaces')
 
 @include('api.documentation.spaces.carddav')
@@ -24,6 +37,8 @@ Returns `pong`
 @include('api.documentation.accounts.carddav_credentials')
 
 @include('api.documentation.accounts.contacts_lists')
+
+@include('api.documentation.accounts.call_forwarding')
 
 @include('api.documentation.accounts.contacts')
 
