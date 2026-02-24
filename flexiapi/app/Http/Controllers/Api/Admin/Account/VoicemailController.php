@@ -20,7 +20,7 @@ class VoicemailController extends Controller
         $account = Account::findOrFail($accountId);
 
         if ($account->email == null) {
-            abort(422, 'The account should be reachable by email');
+            abort(422, 'The has not email address attached to it');
         }
 
         $request->validate([

@@ -64,8 +64,6 @@
             @include('parts.sidebar')
         @endif
 
-        @include('parts.errors')
-
         @if (!isset($welcome) || $welcome == false)
             <section @if (isset($grid) && $grid) class="grid" @endif>
 
@@ -78,6 +76,7 @@
             @endif
         @endif
 
+        @include('parts.errors')
         @yield('content')
 
         @if (!isset($welcome) || $welcome == false)

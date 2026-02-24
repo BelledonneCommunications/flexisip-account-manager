@@ -47,14 +47,18 @@ class FlexisipRedisConnector
         return $devices->keyBy('uuid');
     }
 
-    public function deleteDevice(string $from, string $uuid)
+    public function deleteDevice(string $from, string $uuid): bool
     {
         try {
-            Redis::hdel('fs:' . $from, '"<' . $uuid . '>"');
+            $count = Redis::hdel('fs:' . $from, '"<' . $uuid . '>"');
             Redis::publish($from, '');
+
+            return $count > 0;
         } catch (\Throwable $th) {
             Log::error('Redis server issue: ' . $th->getMessage());
         }
+
+        return false;
     }
 
     public function pingB2BUA(ExternalAccount $externalAccount): bool

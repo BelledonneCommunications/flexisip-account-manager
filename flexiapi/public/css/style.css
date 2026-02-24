@@ -1046,3 +1046,17 @@ small a {
 small.error {
     color: var(--danger-6);
 }
+
+/** Errors box **/
+
+ul.errors {
+    background-color: var(--color-pink);
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+ul.errors li {
+    list-style-type: none;
+    margin: 0;
+    color: white;
+}

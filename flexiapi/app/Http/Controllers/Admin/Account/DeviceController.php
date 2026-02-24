@@ -45,12 +45,16 @@ class DeviceController extends Controller
         $connector = new FlexisipRedisConnector;
         $account = Account::findOrFail($accountId);
 
+        $device = $connector->getDevices($account->identifier)
+                    ->where('uuid', $uuid)->first();
+
+        if (!$device) abort(404);
+
         return view(
             'admin.account.device.delete',
             [
                 'account' => $account,
-                'device' => $connector->getDevices($account->identifier)
-                    ->where('uuid', $uuid)->first()
+                'device' => $device
             ]
         );
     }
@@ -60,8 +64,10 @@ class DeviceController extends Controller
         $connector = new FlexisipRedisConnector;
         $account = Account::findOrFail($accountId);
 
-        $connector->deleteDevice($account->identifier, $request->get('uuid'));
+        if ($connector->deleteDevice($account->identifier, $request->get('uuid'))) {
+            return redirect()->route('admin.account.show', $account);
+        }
 
-        return redirect()->route('admin.account.show', $account);
+        return redirect()->route('admin.account.device.delete', [$account, $request->get('uuid')])->withErrors(['Device cannot be deleted']);
     }
 }
