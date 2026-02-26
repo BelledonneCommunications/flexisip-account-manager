@@ -185,7 +185,7 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
         Route::apiResource('accounts/{id}/actions', ActionController::class);
         Route::apiResource('account_types', TypeController::class);
         Route::apiResource('accounts/{id}/vcards-storage', AdminVcardsStorageController::class);
-        Route::apiResource('accounts/{id}/voicemails', AdminVoicemailController::class, ['only' => ['index', 'show', 'store', 'destroy']]);
+        Route::apiResource('accounts/{id}/voicemails', AdminVoicemailController::class, ['only' => ['store', 'destroy']]);
         Route::apiResource('accounts/{id}/call_forwardings', AdminCallForwardingController::class);
 
         Route::apiResource('contacts_lists', ContactsListController::class);

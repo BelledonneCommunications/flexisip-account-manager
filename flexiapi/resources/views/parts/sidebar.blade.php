@@ -15,10 +15,16 @@
     }
 @endphp
 
-@foreach ($items as $route => $value)
-    <a @if (str_starts_with(url()->current(), route($route)))class="current"@endif href="{{ route($route) }}">
-        <i class="ph ph-{{ $value['icon'] }}"></i>
-        {{ $value['title'] }}
-    </a>
-@endforeach
+@include('parts.sidebar_items', ['items' => $items])
+
+<hr />
+
+@php
+    $items = [];
+    $items['account.dashboard'] = ['title' => __('My Account'), 'icon' => 'gauge'];
+    $items['account.telephony'] = ['title' => __('Telephony'), 'icon' => 'phone'];
+@endphp
+
+@include('parts.sidebar_items', ['items' => $items])
+
 </nav>

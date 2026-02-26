@@ -1,4 +1,4 @@
-<div class="select" data-value="{{ $callForwardings[$type]->forward_to }}">
+<div class="select" data-value="{{ $callForwardings[$type]->forward_to ?? 'sip_uri' }}">
     <select name="{{ $type }}[forward_to]" onchange="this.parentNode.dataset.value = this.value">
         <option @if ($callForwardings[$type]->forward_to == 'voicemail') selected @endif value="voicemail">{{ __('Voicemails') }}</option>
         <option @if ($callForwardings[$type]->forward_to == null || $callForwardings[$type]->forward_to == 'sip_uri') selected @endif value="sip_uri">{{ __('SIP Adress') }}</option>

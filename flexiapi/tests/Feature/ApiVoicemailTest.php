@@ -106,22 +106,8 @@ class ApiVoicemailTest extends TestCase
         $uuid = $accountFile->json()['id'];
 
         $this->keyAuthenticated($admin)
-            ->get($adminRoute . '/' . $uuid)
-            ->assertJsonFragment(['id' => $uuid]);
-
-        $this->keyAuthenticated($admin)
-            ->get($adminRoute . '/' . $uuid)
-            ->assertJsonFragment([
-                'id' => $uuid
-            ]);
-
-        $this->keyAuthenticated($admin)
             ->delete($adminRoute . '/' . $uuid)
             ->assertOk();
-
-        $this->keyAuthenticated($admin)
-            ->get($adminRoute . '/' . $uuid)
-            ->assertNotFound();
     }
 
     public function testUpload()

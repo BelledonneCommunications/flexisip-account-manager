@@ -1,13 +1,11 @@
 ## Voicemails
 
-### `GET /accounts/{id/me}/voicemails`
-<span class="badge badge-warning">Admin</span>
+### `GET /accounts/me/voicemails`
 <span class="badge badge-info">User</span>
 
 Return the currently stored voicemails
 
-### `GET /accounts/{id/me}/voicemails/{uuid}`
-<span class="badge badge-warning">Admin</span>
+### `GET /accounts/me/voicemails/{uuid}`
 <span class="badge badge-info">User</span>
 
 ```

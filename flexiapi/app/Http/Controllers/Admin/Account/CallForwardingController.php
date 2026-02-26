@@ -19,15 +19,21 @@ class CallForwardingController extends Controller
 
         $request->validate([
             'always.forward_to' => $forwardTo,
-            'always.sip_uri' => 'nullable|starts_with:sip:|required_if:always.forward_to,sip_uri',
+            'always.sip_uri' => array_key_exists('enabled', $request->get('always'))
+                ? 'nullable|starts_with:sip:|required_if:always.forward_to,sip_uri'
+                : 'nullable',
             'always.contact_id' => ['required_if:always.forward_to,contact', Rule::in($contactsIds)],
 
             'away.forward_to' => $forwardTo,
-            'away.sip_uri' => 'nullable|starts_with:sip:|required_if:away.forward_to,sip_uri',
+            'away.sip_uri' => array_key_exists('enabled', $request->get('away'))
+                ? 'nullable|starts_with:sip:|required_if:away.forward_to,sip_uri'
+                : 'nullable',
             'away.contact_id' => ['required_if:away.forward_to,contact', Rule::in($contactsIds)],
 
             'busy.forward_to' => $forwardTo,
-            'busy.sip_uri' => 'nullable|starts_with:sip:|required_if:busy.forward_to,sip_uri',
+            'busy.sip_uri' => array_key_exists('enabled', $request->get('busy'))
+                ? 'nullable|starts_with:sip:|required_if:busy.forward_to,sip_uri'
+                : 'nullable',
             'busy.contact_id' => ['required_if:busy.forward_to,contact', Rule::in($contactsIds)],
         ]);
 
@@ -72,6 +78,8 @@ class CallForwardingController extends Controller
             $busyForwarding->save();
         }
 
-        return redirect()->route('admin.account.telephony.show', $account);
+        return $request->user()
+            ? redirect()->route('admin.account.telephony.show', $account)
+            : redirect()->route('account.telephony');
     }
 }

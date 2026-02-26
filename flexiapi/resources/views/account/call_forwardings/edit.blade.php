@@ -2,7 +2,7 @@
     {{ __('Call Forwarding') }}
 </h3>
 
-<form id="edit" method="POST" action="{{ route('admin.account.call_forwardings.update', $account->id) }}" accept-charset="UTF-8">
+<form id="edit" method="POST" action="@if ($account->admin) {{ route('admin.account.call_forwardings.update', $account->id) }}@else{{ route('account.call_forwardings.update') }}@endif" accept-charset="UTF-8">
     @csrf
     @method('put')
     @php($callForwardings = $account->callForwardingsDefault)
@@ -16,7 +16,10 @@
             <label for="always[enabled]"></label>
         </div>
 
-        @include('admin.account.call_forwardings.edit_select_part', ['callForwarding' => $callForwardings, 'type' => 'always'])
+        @include('account.call_forwardings.edit_select_part', ['callForwarding' => $callForwardings, 'type' => 'always'])
+        @if (!$account->admin)
+            <small class="large">{{ __('All incoming calls are forwarded, whether you answer, decline the call or are already on a call.') }}</small>
+        @endif
     </section>
 
     <section>
@@ -28,7 +31,10 @@
             <label for="away[enabled]"></label>
         </div>
 
-        @include('admin.account.call_forwardings.edit_select_part', ['callForwarding' => $callForwardings, 'type' => 'away'])
+        @include('account.call_forwardings.edit_select_part', ['callForwarding' => $callForwardings, 'type' => 'away'])
+        @if (!$account->admin)
+            <small class="large">{{ __('Calls are only forwarded when your line is busy with another call.') }}</small>
+        @endif
     </section>
 
     <section>
@@ -40,7 +46,10 @@
             <label for="busy[enabled]"></label>
         </div>
 
-        @include('admin.account.call_forwardings.edit_select_part', ['callForwarding' => $callForwardings, 'type' => 'busy'])
+        @include('account.call_forwardings.edit_select_part', ['callForwarding' => $callForwardings, 'type' => 'busy'])
+        @if (!$account->admin)
+            <small class="large">{{ __('Calls are only forwarded if you do not answer or if you decline the call.') }}</small>
+        @endif
     </section>
 
     <div class="large">

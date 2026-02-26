@@ -49,7 +49,7 @@ class ProvisioningController extends Controller
 
     public function qrcode(Request $request, string $provisioningToken)
     {
-        $account = Account::withoutGlobalScopes()
+        Account::withoutGlobalScopes()
             ->where('id', function ($query) use ($provisioningToken) {
                 $query->select('account_id')
                       ->from('provisioning_tokens')
