@@ -13,7 +13,7 @@ class FileController extends Controller
         $account = Account::findOrFail($accountId);
         $file = $account->files()->where('id', $fileId)->firstOrFail();
 
-        return view('admin.account.file.delete', [
+        return view('account.file.delete', [
             'account' => $account,
             'file' => $file
         ]);
@@ -27,6 +27,8 @@ class FileController extends Controller
                         ->firstOrFail();
         $accountFile->delete();
 
-        return redirect()->route('admin.account.show', $account)->withFragment('#files');
+        return $request->user()->admin
+            ? redirect()->route('admin.account.telephony.show', $account)->withFragment('#files')
+            : redirect()->route('account.telephony')->withFragment('#files');
     }
 }

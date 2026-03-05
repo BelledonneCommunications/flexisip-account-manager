@@ -40,6 +40,13 @@ class AccountController extends Controller
         ]);
     }
 
+    public function telephony(Request $request)
+    {
+        return view('account.telephony', [
+            'account' => $request->user()
+        ]);
+    }
+
     public function store(WebRequest $request)
     {
         $account = (new AccountService())->store($request);

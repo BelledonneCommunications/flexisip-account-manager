@@ -22,6 +22,7 @@ use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Account\ApiKeyController;
 use App\Http\Controllers\Account\AuthenticateController;
 use App\Http\Controllers\Account\AuthTokenController;
+use App\Http\Controllers\Account\CallForwardingController;
 use App\Http\Controllers\Account\ContactVcardController;
 use App\Http\Controllers\Account\CreationRequestTokenController;
 use App\Http\Controllers\Account\DeviceController;
@@ -36,7 +37,7 @@ use App\Http\Controllers\Account\VcardsStorageController;
 use App\Http\Controllers\Admin\Account\AccountTypeController;
 use App\Http\Controllers\Admin\Account\ActionController;
 use App\Http\Controllers\Admin\Account\ActivityController;
-use App\Http\Controllers\Admin\Account\CallForwardingController;
+use App\Http\Controllers\Admin\Account\CallForwardingController as AdminCallForwardingController;
 use App\Http\Controllers\Admin\Account\CardDavCredentialsController;
 use App\Http\Controllers\Admin\Account\ContactController;
 use App\Http\Controllers\Admin\Account\DeviceController as AdminAccountDeviceController;
@@ -80,7 +81,7 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
     });
 });
 
-Route::name('file.')->prefix('files')->controller(FileController::class)->group(function () {
+Route::name('file.')->prefix('f')->controller(FileController::class)->group(function () {
     Route::get('{uuid}/{name}', 'show')->name('show');
     Route::get('{uuid}/{name}/download', 'download')->name('download');
 });
@@ -135,6 +136,11 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
             Route::post('/', 'store')->name('email.update');
         });
 
+        Route::name('file.')->prefix('files')->controller(FileController::class)->group(function () {
+            Route::get('{uuid}/delete', 'delete')->name('delete');
+            Route::delete('{uuid}', 'destroy')->name('destroy');
+        });
+
         Route::middleware(['feature.phone_registration'])->group(function () {
             Route::prefix('phone')->controller(PhoneController::class)->group(function () {
                 Route::get('change', 'change')->name('phone.change');
@@ -150,8 +156,13 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
             Route::delete('/', 'destroy')->name('destroy');
         });
 
+        Route::name('call_forwardings.')->prefix('call_forwardings')->controller(CallForwardingController::class)->group(function () {
+            Route::put('/', 'update')->name('update');
+        });
+
         Route::controller(AccountController::class)->group(function () {
             Route::get('dashboard', 'dashboard')->name('dashboard');
+            Route::get('telephony', 'telephony')->name('telephony');
 
             Route::get('delete', 'delete')->name('delete');
             Route::delete('delete', 'destroy')->name('destroy');
@@ -318,7 +329,7 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
                 Route::get('/', 'show')->name('show');
             });
 
-            Route::name('call_forwardings.')->prefix('{account}/call_forwardings')->controller(CallForwardingController::class)->group(function () {
+            Route::name('call_forwardings.')->prefix('{account}/call_forwardings')->controller(AdminCallForwardingController::class)->group(function () {
                 Route::put('/', 'update')->name('update');
             });
 
