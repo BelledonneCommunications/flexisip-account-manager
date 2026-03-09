@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin\Account;
 
 use App\Account;
 use App\AccountFile;
+use App\Rules\SipUri;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -24,7 +25,7 @@ class VoicemailController extends Controller
         }
 
         $request->validate([
-            'sip_from' => 'nullable|starts_with:sip',
+            'sip_from' => ['nullable', new SipUri],
             'content_type' => [
                 'required',
                 Rule::in(AccountFile::VOICEMAIL_CONTENTTYPES),

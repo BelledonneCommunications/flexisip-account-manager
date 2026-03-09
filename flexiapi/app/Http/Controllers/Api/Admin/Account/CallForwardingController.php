@@ -6,6 +6,7 @@ use App\Account;
 use App\CallForwarding;
 use App\Http\Controllers\Controller;
 use App\Rules\CallForwardingEnable;
+use App\Rules\SipUri;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -26,7 +27,7 @@ class CallForwardingController extends Controller
                 Rule::unique('call_forwardings', 'type')->where(fn($query) => $query->where('account_id', $accountId))
             ],
             'forward_to' => 'required|in:sip_uri,contact,voicemail',
-            'sip_uri' => 'nullable|starts_with:sip:|required_if:forward_to,sip_uri',
+            'sip_uri' => ['nullable', new SipUri, 'required_if:forward_to,sip_uri'],
             'enabled' => ['required', 'boolean', new CallForwardingEnable($request, $account)],
             'contact_id' => ['required_if:forward_to,contact', Rule::in(resolveUserContacts($account)->pluck('id')->toArray())],
         ]);
@@ -57,7 +58,7 @@ class CallForwardingController extends Controller
                     ->ignore($callForwarding->id)
             ],
             'forward_to' => 'required|in:sip_uri',
-            'sip_uri' => 'required|starts_with:sip',
+            'sip_uri' => ['required', new SipUri],
             'enabled' => ['required', 'boolean', new CallForwardingEnable($request, $account)]
         ]);
 
