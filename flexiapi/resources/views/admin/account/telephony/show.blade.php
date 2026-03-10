@@ -11,7 +11,7 @@
     @include('admin.account.parts.tabs')
 
     <div class="grid">
-        <div class="card">
+        <div class="card large">
             @include('account.call_forwardings.edit', ['account' => $account])
         </div>
     </div>

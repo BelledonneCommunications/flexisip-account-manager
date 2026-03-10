@@ -28,7 +28,7 @@
                 <label for="password">{{ __('Password') }}</label>
             </div>
             <div>
-                <input class="btn" type="submit" value="{{ __('Login') }}">
+                <input class="btn" style="margin-top: 2.5rem;" type="submit" value="{{ __('Login') }}">
             </div>
 
         </form>

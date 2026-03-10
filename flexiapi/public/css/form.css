@@ -107,7 +107,7 @@ form div {
     position: relative;
 }
 
-form div .btn,
+form.inline div .btn,
 form div a.chip {
     margin-top: 2.5rem;
 }
@@ -412,4 +412,9 @@ div.select[data-value=voicemail] ~ div.togglable.voicemail,
 div.select[data-value=contact] ~ div.togglable.contact,
 div.select[data-value=sip_uri] ~ div.togglable.sip_uri {
     display: block;
+}
+
+form section.block div.checkbox:has(input:not(:checked)) ~ div {
+    opacity: 0.25;
+    pointer-events: none;
 }

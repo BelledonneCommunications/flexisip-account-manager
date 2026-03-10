@@ -21,7 +21,6 @@
 
 @php
     $items = [];
-    $items['account.dashboard'] = ['title' => __('My Account'), 'icon' => 'gauge'];
     $items['account.telephony'] = ['title' => __('Telephony'), 'icon' => 'phone'];
 @endphp
 
