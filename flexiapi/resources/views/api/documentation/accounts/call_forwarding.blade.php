@@ -1,5 +1,21 @@
 ## Account Call Forwardings
 
+When a `call_forwarding` object is configured to forward to a contact (`forward_to: 'contact'`) the SIP URI of the contact is returned in a `contact_sip_uri` attributes.
+
+```
+{
+  "id": 1,
+  "type": "always",
+  "forward_to": "contact",
+  "sip_uri": null,
+  "enabled": true,
+  "contact_id": 3,
+  "updated_at": "2026-03-12T14:53:22.000000Z",
+  "created_at": "2026-03-12T14:53:22.000000Z",
+  "contact_sip_uri": "sip:mcclure.kailey@sip.example.com"
+}
+```
+
 ### `GET /accounts/{id/me}/call_forwardings`
 <span class="badge badge-info">User</span>
 <span class="badge badge-warning">Admin</span>

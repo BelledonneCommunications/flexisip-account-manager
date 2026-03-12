@@ -134,6 +134,7 @@ class ApiAccountTest extends TestCase
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'domain' => $domain,
+                'sip_uri' => 'sip:' . $username . '@' . $domain,
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])->assertStatus(200);

@@ -38,7 +38,7 @@ class Account extends Authenticatable
 
     protected $with = ['passwords', 'emailChangeCode', 'types', 'actions', 'dictionaryEntries', 'carddavServers'];
     protected $hidden = ['expire_time', 'pivot', 'currentProvisioningToken', 'currentRecoveryCode', 'dictionaryEntries'];
-    protected $appends = ['realm', 'provisioning_token', 'provisioning_token_expire_at', 'dictionary'];
+    protected $appends = ['realm', 'provisioning_token', 'provisioning_token_expire_at', 'dictionary', 'sip_uri'];
     protected $casts = [
         'activated' => 'boolean',
     ];
@@ -87,7 +87,8 @@ class Account extends Authenticatable
 
             return $query->where('username', $username)
                 ->where('domain', $domain);
-        };
+        }
+        ;
 
         return $query->where('id', '<', 0);
     }
@@ -188,7 +189,8 @@ class Account extends Authenticatable
 
     public function getDictionaryAttribute()
     {
-        if ($this->dictionaryEntries->isEmpty()) return new stdClass;
+        if ($this->dictionaryEntries->isEmpty())
+            return new stdClass;
 
         return $this->dictionaryEntries->keyBy('key')->map(function ($entry) {
             return $entry->value;
@@ -362,9 +364,14 @@ class Account extends Authenticatable
     {
         return $this->space->carddavServers()->whereNotIn('id', function ($query) {
             $query->select('space_carddav_server_id')
-                  ->from('account_carddav_credentials')
-                  ->where('account_id', $this->id);
+                ->from('account_carddav_credentials')
+                ->where('account_id', $this->id);
         })->get();
+    }
+
+    public function getSipUriAttribute(): string
+    {
+        return 'sip:' . $this->getIdentifierAttribute();
     }
 
     public function getIdentifierAttribute(): string

@@ -95,6 +95,10 @@ class ApiAccountCallForwardingTest extends TestCase
             ])
             ->assertStatus(201);
 
+        $this->keyAuthenticated($account)
+            ->get($this->route)
+            ->assertJsonFragment(['contact_sip_uri' => $contactAccount->sip_uri]);
+
         // SIP URI
 
         $this->keyAuthenticated($account)
