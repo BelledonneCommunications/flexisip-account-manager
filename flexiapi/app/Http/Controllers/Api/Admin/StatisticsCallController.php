@@ -17,8 +17,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Admin;
 
+use App\Account;
 use App\Http\Controllers\Controller;
 use App\StatisticsCall;
 use App\StatisticsCallDevice;
@@ -27,6 +28,22 @@ use Illuminate\Support\Facades\Log;
 
 class StatisticsCallController extends Controller
 {
+    public function index(Request $request, ?int $accountId)
+    {
+        $account = Account::findOrFail($accountId);
+
+        $toQuery = StatisticsCall::query()
+            ->where('to_domain', $account->domain)
+            ->where('to_username', $account->username);
+        $calls = StatisticsCall::where('from_domain', $account->domain)
+            ->where('from_username', $account->username);
+
+        return $calls->with('devices')
+            ->union($toQuery)
+            ->orderBy('initiated_at', 'desc')
+            ->paginate(30);
+    }
+
     public function store(Request $request)
     {
         $request->validate([

@@ -31,6 +31,7 @@ class ApiStatisticsTest extends TestCase
 
     protected $routeMessages = '/api/statistics/messages';
     protected $routeCalls = '/api/statistics/calls';
+    protected $routeAccountCalls = '/api/accounts/me/statistics/calls';
 
     public function testMessages()
     {
@@ -140,6 +141,9 @@ class ApiStatisticsTest extends TestCase
             'username' => $fromUsername,
             'domain' => $fromDomain,
         ]);
+        $account->generateUserApiKey();
+
+        $routeAdminCalls = '/api/accounts/' . $account->id . '/statistics/calls';
 
         $this->keyAuthenticated($admin)
             ->json('POST', $this->routeCalls, [
@@ -150,9 +154,19 @@ class ApiStatisticsTest extends TestCase
             ])
             ->assertStatus(200);
 
-        $this->assertDatabaseHas('statistics_calls', [
-            'id' => $id
-        ]);
+        $this->keyAuthenticated($admin)
+            ->get($routeAdminCalls)
+            ->assertStatus(200)
+            ->assertJsonFragment([
+                'id' => $id
+            ]);
+
+        $this->keyAuthenticated($account)
+            ->get($this->routeAccountCalls)
+            ->assertStatus(200)
+            ->assertJsonFragment([
+                'id' => $id
+            ]);
 
         $this->keyAuthenticated($admin)
             ->json('POST', $this->routeCalls, [
@@ -206,6 +220,13 @@ class ApiStatisticsTest extends TestCase
             ->assertStatus(200);
 
         $this->assertSame(1, StatisticsCallDevice::count());
+
+        $this->keyAuthenticated($admin)
+            ->get($routeAdminCalls)
+            ->assertStatus(200)
+            ->assertJsonFragment([
+                'device_id' => $device
+            ]);
 
         // Update
 

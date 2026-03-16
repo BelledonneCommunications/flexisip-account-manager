@@ -34,6 +34,11 @@ class StatisticsCall extends Model
     protected $casts = ['initiated_at' => 'datetime', 'ended_at' => 'datetime'];
     protected $keyType = 'string';
 
+    public function devices()
+    {
+        return $this->hasMany(StatisticsCallDevice::class, 'call_id', 'id');
+    }
+
     public function accountFrom()
     {
         return $this->belongsTo(Account::class, ['username', 'domain'], ['to_username', 'to_domain']);

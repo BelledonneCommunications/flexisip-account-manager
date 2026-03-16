@@ -41,6 +41,7 @@ use App\Http\Controllers\Api\Admin\Account\CreationTokenController as AdminCreat
 use App\Http\Controllers\Api\Admin\Account\DictionaryController;
 use App\Http\Controllers\Api\Admin\Account\TypeController;
 use App\Http\Controllers\Api\Admin\Account\VoicemailController as AdminVoicemailController;
+use App\Http\Controllers\Api\Account\StatisticsCallController;
 use App\Http\Controllers\Api\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Api\Admin\ExternalAccountController;
 use App\Http\Controllers\Api\Admin\MessageController;
@@ -49,11 +50,11 @@ use App\Http\Controllers\Api\Admin\Space\CardDavServerController;
 use App\Http\Controllers\Api\Admin\Space\ContactsListController;
 use App\Http\Controllers\Api\Admin\Space\EmailServerController;
 use App\Http\Controllers\Api\Admin\SpaceController;
+use App\Http\Controllers\Api\Admin\StatisticsCallController as AdminStatisticsCallController;
 use App\Http\Controllers\Api\Admin\VcardsStorageController as AdminVcardsStorageController;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\PhoneCountryController;
 use App\Http\Controllers\Api\PingController;
-use App\Http\Controllers\Api\StatisticsCallController;
 use App\Http\Controllers\Api\StatisticsMessageController;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Http\Request;
@@ -114,6 +115,10 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
         Route::apiResource('vcards-storage', VcardsStorageController::class);
         Route::apiResource('voicemails', VoicemailController::class, ['only' => ['index', 'show', 'store', 'destroy']]);
         Route::apiResource('call_forwardings', CallForwardingController::class);
+
+        Route::prefix('statistics/calls')->controller(\App\Http\Controllers\Api\Account\StatisticsCallController::class)->group(function () {
+            Route::get('/', 'index');
+        });
     });
 
     Route::group(['middleware' => ['auth.admin']], function () {
@@ -208,12 +213,16 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
             Route::delete('/', 'destroy');
         });
 
+        Route::prefix('accounts/{id}/statistics/calls')->controller(AdminStatisticsCallController::class)->group(function () {
+            Route::get('/', 'index');
+        });
+
         Route::prefix('statistics/messages')->controller(StatisticsMessageController::class)->group(function () {
             Route::post('/', 'store');
             Route::patch('{message_id}/to/{to}/devices/{device_id}', 'storeDevice');
         });
 
-        Route::prefix('statistics/calls')->controller(StatisticsCallController::class)->group(function () {
+        Route::prefix('statistics/calls')->controller(AdminStatisticsCallController::class)->group(function () {
             Route::post('/', 'store');
             Route::patch('{call_id}', 'update');
             Route::patch('{call_id}/devices/{device_id}', 'storeDevice');

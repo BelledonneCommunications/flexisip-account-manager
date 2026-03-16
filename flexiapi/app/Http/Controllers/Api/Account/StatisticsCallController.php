@@ -1,7 +1,7 @@
 <?php
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
-    Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
+    Copyright (C) 2026 Belledonne Communications SARL, All rights reserved.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -17,20 +17,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App;
+namespace App\Http\Controllers\Api\Account;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Api\Admin\StatisticsCallController as AdminStatisticsCallController;
 
-class StatisticsCallDevice extends Model
+class StatisticsCallController extends Controller
 {
-    use HasFactory;
-
-    protected $fillable = ['call_id', 'device_id', 'rang_at', 'invite_terminated_at', 'invite_terminated_state', 'call_id'];
-    protected $casts = ['rang_at' => 'datetime'];
-
-    public function call()
+    public function index(Request $request)
     {
-        return $this->belongsTo(StatisticsCall::class, 'id', 'call_id');
+        return (new AdminStatisticsCallController)->index($request, $request->user()->id);
     }
 }
