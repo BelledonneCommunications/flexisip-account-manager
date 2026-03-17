@@ -1089,10 +1089,14 @@ span.line::before {
     background-image: linear-gradient(to right, var(--grey-3), transparent, var(--grey-3));
 }
 
+*:has(+i.tooltip) {
+    display: inline-block;
+}
+
 i.tooltip {
-    vertical-align: middle;
+    vertical-align: center;
     font-size: 2rem;
-    line-height: 3rem;
+    margin-left: 1rem;
 }
 
 i.tooltip:hover {
