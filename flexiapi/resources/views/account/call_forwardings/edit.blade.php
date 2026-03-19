@@ -43,14 +43,18 @@
 
     <section class="block">
         <div>
-            <i class="ph ph-info oppose tooltip" title="{{ __('All incoming calls are forwarded, whether you answer, decline the call or are already on a call.') }}"></i>
             <h4>{{ __('All the calls') }}</h4>
+            <i class="ph ph-info tooltip" title="{{ __('All incoming calls are forwarded, whether you answer, decline the call or are already on a call.') }}"></i>
         </div>
 
         <div class="checkbox">
             <span class="badge">{{ __('Priority rule') }}</span>
             <input id="always[enabled]" type="checkbox" @if ($callForwardings['always']->enabled) checked @endif name="always[enabled]"
-            onchange="if (this.checked) { setCheckboxValue('always[enabled]', false); document.querySelector('#always_dialog').showModal(); }">
+            onchange="if (this.checked
+                && (document.querySelector('#away\\[enabled\\]').checked || document.querySelector('#busy\\[enabled\\]').checked)) {
+                    setCheckboxValue('always[enabled]', false);
+                    document.querySelector('#always_dialog').showModal();
+                }">
             <label for="always[enabled]"></label>
         </div>
 
@@ -61,13 +65,17 @@
 
     <section class="block">
         <div>
-            <i class="ph ph-info oppose tooltip" title="{{ __('Calls are only forwarded when your line is busy with another call.') }}"></i>
             <h4>@if ($account->admin){{ __('No answer') }}@else{{ __('If no one is answering') }}@endif</h4>
+            <i class="ph ph-info tooltip" title="{{ __('Calls are only forwarded when your line is busy with another call.') }}"></i>
         </div>
 
         <div class="checkbox">
             <input id="away[enabled]" type="checkbox" @if ($callForwardings['away']->enabled) checked @endif name="away[enabled]"
-            onchange="if (this.checked) { setCheckboxValue('away[enabled]', false); document.querySelector('#away_dialog').showModal(); }">
+            onchange="if (this.checked
+                && document.querySelector('#always\\[enabled\\]').checked) {
+                    setCheckboxValue('away[enabled]', false);
+                    document.querySelector('#away_dialog').showModal();
+                }">
             <label for="away[enabled]"></label>
         </div>
 
@@ -76,13 +84,17 @@
 
     <section class="block">
         <div>
-            <i class="ph ph-info oppose tooltip" title="{{ __('Calls are only forwarded if you do not answer or if you decline the call.') }}"></i>
             <h4>@if ($account->admin){{ __('Busy line') }}@else{{ __('If the line is busy') }}@endif</h4>
+            <i class="ph ph-info tooltip" title="{{ __('Calls are only forwarded if you do not answer or if you decline the call.') }}"></i>
         </div>
 
         <div class="checkbox">
             <input id="busy[enabled]" type="checkbox" @if ($callForwardings['busy']->enabled) checked @endif name="busy[enabled]"
-            onchange="if (this.checked) { setCheckboxValue('busy[enabled]', false); document.querySelector('#busy_dialog').showModal(); }">
+            onchange="if (this.checked
+                && document.querySelector('#always\\[enabled\\]').checked) {
+                    setCheckboxValue('busy[enabled]', false);
+                    document.querySelector('#busy_dialog').showModal();
+                }">
             <label for="busy[enabled]"></label>
         </div>
 
