@@ -20,12 +20,7 @@
 namespace Tests\Feature;
 
 use App\Account;
-use App\Space;
-use App\AccountCreationRequestToken;
-use App\AccountCreationToken;
-use App\Http\Middleware\ValidateJSON;
 use Tests\TestCase;
-use Carbon\Carbon;
 
 class ApiPushNotificationTest extends TestCase
 {
@@ -48,7 +43,7 @@ class ApiPushNotificationTest extends TestCase
                 'pn_param' => $this->pnParam,
                 'pn_prid' => $this->pnPrid,
                 'type' => $this->type,
-                'call_id' => '@blabla@'
+                'call_id' => '✨blabla'
             ])->assertJsonValidationErrors(['call_id']);
 
         $this->keyAuthenticated($account)
