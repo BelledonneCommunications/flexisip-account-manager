@@ -17,13 +17,13 @@
 
 @include('parts.sidebar_items', ['items' => $items])
 
-<hr />
+@if (auth()->user())
+    <hr />
+    @php
+        $items = [];
+        $items['account.telephony'] = ['title' => __('Telephony'), 'icon' => 'phone'];
+    @endphp
 
-@php
-    $items = [];
-    $items['account.telephony'] = ['title' => __('Telephony'), 'icon' => 'phone'];
-@endphp
-
-@include('parts.sidebar_items', ['items' => $items])
-
+    @include('parts.sidebar_items', ['items' => $items])
+@endif
 </nav>

@@ -30,6 +30,7 @@ use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 use Endroid\QrCode\Writer\PngWriter;
+use hisorange\BrowserDetect\Parser as Browser;
 
 class ProvisioningController extends Controller
 {
@@ -43,7 +44,8 @@ class ProvisioningController extends Controller
     public function wizard(Request $request, string $provisioningToken)
     {
         return view('provisioning.wizard', [
-            'token' => $provisioningToken
+            'token' => $provisioningToken,
+            'platform' => Browser::platformFamily()
         ]);
     }
 

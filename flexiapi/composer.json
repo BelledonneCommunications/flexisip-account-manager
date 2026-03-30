@@ -9,11 +9,12 @@
     "license": "MIT",
     "require": {
         "php": ">=8.2",
-        "laravel/framework": "^11.45.1",
         "awobaz/compoships": "^2.4.1",
         "doctrine/dbal": "^3.10.1",
         "endroid/qr-code": "^5.1",
         "fakerphp/faker": "^1.24.1",
+        "hisorange/browser-detect": "^5.0",
+        "laravel/framework": "^11.45.1",
         "laravel/tinker": "^2.10.1",
         "lcobucci/jwt": "^4.3",
         "namoshek/laravel-redis-sentinel": "^0.5",
