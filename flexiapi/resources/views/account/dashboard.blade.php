@@ -7,6 +7,15 @@
 
     <div class="card">
         <h3><i class="ph ph-hand-waving"></i> {{ __('Welcome on :app_name' , ['app_name' => space()->name]) }} </h3>
+
+        <p>
+            <i class="ph ph-phone"></i>
+            {{ __('Telephony') }}
+            <a href="{{ route('account.telephony') }}">
+                {{ __('Edit') }}
+            </a>
+        </p>
+
         <p>
             <i class="ph ph-envelope"></i>
             @if (!empty($account->email))
