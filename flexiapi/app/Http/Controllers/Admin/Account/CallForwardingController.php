@@ -79,8 +79,6 @@ class CallForwardingController extends Controller
             $busyForwarding->save();
         }
 
-        return $request->user()
-            ? redirect()->route('admin.account.telephony.show', $account)
-            : redirect()->route('account.telephony');
+        return redirect()->back();
     }
 }

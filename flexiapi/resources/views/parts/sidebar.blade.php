@@ -14,4 +14,6 @@
         $items['admin.api_keys.index'] = ['title' => __('Settings'), 'icon' => 'gear'];
     }
 @endphp
+
+@include('parts.sidebar_items', ['items' => $items])
 </nav>
