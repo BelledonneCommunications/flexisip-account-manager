@@ -17,11 +17,37 @@
     @include('admin.space.head')
     @include('admin.space.tabs')
 
-    <form method="POST"
-        action="{{ route('admin.spaces.configuration.update', $space) }}"
-        accept-charset="UTF-8">
+    <form method="POST" action="{{ route('admin.spaces.configuration.update', $space) }}" accept-charset="UTF-8"
+        enctype="multipart/form-data">
         @csrf
         @method('put')
+
+        <h3 class="large">{{ __('Platform customization') }}</h3>
+
+        <div class="image-picker-group">
+            <div class="picker">
+                <canvas @if($space->logo) data-existing="{{ asset('storage/img/' . $space->logo) }}" @endif> </canvas>
+                <input name="logo" type="file" accept="image/*" onchange="imagePicker.onLoad(this)">
+                <input class="btn secondary" type="button" value="{{ __('Delete') }}" onclick="imagePicker.onDelete(this)" @if(!$space->logo) style="display:none;" @endif>
+                <input type="hidden" name="logo_delete" value="0">
+                @include('parts.errors', ['name' => 'logo'])
+            </div>
+        </div>
+        <div class="color-picker-group">
+            <input id="theme_hue" name="theme_hue" type="hidden" value="{{$space->theme_hue}}">
+            <div class="picker">
+                <div class="color-div"></div>
+                <div class="color-selector">
+                    <div class="color-input">
+                        <input id="hex-color"type="text" value="" onblur="colorPicker.onInputChange(this)">
+                        <label for="color-input">{{ __('Hex') }}</label>
+                        <i class="ph ph-arrow-counter-clockwise" onclick="colorPicker.onReset(this, {{$space->theme_hue}})"></i>
+                    </div>
+                    <input class="color" type="range" min="0" max="360" value="{{$space->theme_hue}}" oninput="colorPicker.onSliderChange(this)">
+                </div>
+            </div>
+            <span class="supporting"> {{ __('Your color will be snapped to the nearest 500 shade') }}</span>
+        </div>
 
         <div class="large">
             <textarea name="copyright_text" id="copyright_text">{{ $space->copyright_text }}</textarea>
@@ -37,21 +63,24 @@
         </div>
 
         <div>
-            <input name="newsletter_registration_address" id="newsletter_registration_address" placeholder="email@server.tld" type="email" value="{{ $space->newsletter_registration_address }}">
+            <input name="newsletter_registration_address" id="newsletter_registration_address"
+                placeholder="email@server.tld" type="email" value="{{ $space->newsletter_registration_address }}">
             <label for="newsletter_registration_address">{{ __('Newsletter registration email address') }}</label>
             <span class="supporting">{{ __('An email will be sent to this email when someone join the newsletter') }}</span>
             @include('parts.errors', ['name' => 'newsletter_registration_address'])
         </div>
 
         <div>
-            <input name="account_proxy_registrar_address" id="account_proxy_registrar_address" placeholder="server.tld" value="{{ $space->account_proxy_registrar_address }}">
+            <input name="account_proxy_registrar_address" id="account_proxy_registrar_address" placeholder="server.tld"
+                value="{{ $space->account_proxy_registrar_address }}">
             <label for="account_proxy_registrar_address">Account proxy registrar address</label>
             <span class="supporting">Will be used for informational purpose in the user panel and communication emails</span>
             @include('parts.errors', ['name' => 'account_proxy_registrar_address'])
         </div>
 
         <div>
-            <input name="account_realm" @if ($space->accounts()->count() > 0)disabled @endif id="account_realm" placeholder="server.tld" value="{{ $space->account_realm }}">
+            <input name="account_realm" @if ($space->accounts()->count() > 0) disabled @endif id="account_realm"
+                placeholder="server.tld" value="{{ $space->account_realm }}">
             <label for="account_realm">Account realm</label>
             <span class="supporting">A custom realm for the Space accounts</span>
             @include('parts.errors', ['name' => 'account_realm'])
@@ -63,31 +92,55 @@
             <textarea style="min-height: 200px;" name="custom_provisioning_entries" id="custom_provisioning_entries">{{ $space->custom_provisioning_entries }}</textarea>
             <label for="custom_provisioning_entries">{{ __('Custom entries') }}</label>
             <span class="supporting">{{ __('In ini format, will complete the other settings.') }}</span>
-            <span class="supporting">{{ __('Use ; to comment, key="value" to declare a complex string.') }} <a target="_blank" href="https://cheatsheets.zip/ini.html">{{ __('Checkout the cheatsheets to know how to format things correctly.') }}</a></span>
+            <span class="supporting">
+                {{ __('Use ; to comment, key="value" to declare a complex string.') }}
+                <a target="_blank"  href="https://cheatsheets.zip/ini.html">{{ __('Checkout the cheatsheets to know how to format things correctly.') }}</a>
+            </span>
             @include('parts.errors', ['name' => 'custom_provisioning_entries'])
         </div>
 
         <div>
-            @include('parts.form.toggle', ['object' => $space, 'key' => 'custom_provisioning_overwrite_all', 'label' => __('Allow client settings to be overwritten by the provisioning ones')])
+            @include('parts.form.toggle', [
+                'object' => $space,
+                'key' => 'custom_provisioning_overwrite_all',
+                'label' => __('Allow client settings to be overwritten by the provisioning ones'),
+            ])
         </div>
 
         <div>
-            @include('parts.form.toggle', ['object' => $space, 'key' => 'provisioning_use_linphone_provisioning_header', 'label' => 'Enforce X-Linphone-Provisioning header'])
+            @include('parts.form.toggle', [
+                'object' => $space,
+                'key' => 'provisioning_use_linphone_provisioning_header',
+                'label' => 'Enforce X-Linphone-Provisioning header',
+            ])
         </div>
 
         <h3 class="large">{{ __('Features') }}</h3>
         <div>
-            @include('parts.form.toggle', ['object' => $space, 'key' => 'public_registration', 'label' => __('Public registration')])
-        </div>
-        <div
-            @include('parts.form.toggle', ['object' => $space, 'key' => 'phone_registration', 'label' => __('Phone registration')])
+            @include('parts.form.toggle', [
+                'object' => $space,
+                'key' => 'public_registration',
+                'label' => __('Public registration'),
+            ])
         </div>
         <div>
-            @include('parts.form.toggle', ['object' => $space, 'key' => 'intercom_features', 'label' => __('Intercom features')])
+            @include('parts.form.toggle', [
+                'object' => $space,
+                'key' => 'phone_registration',
+                'label' => __('Phone registration'),
+            ])
+        </div>
+        <div>
+            @include('parts.form.toggle', [
+                'object' => $space,
+                'key' => 'intercom_features',
+                'label' => __('Intercom features'),
+            ])
         </div>
 
         <div class="large">
             <input class="btn" type="submit" value="{{ __('Update') }}">
         </div>
     </form>
+    <script src="{{ asset('scripts/colorPicker.js') }}"></script>
 @endsection

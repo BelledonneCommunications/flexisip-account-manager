@@ -42,6 +42,7 @@ class SpaceController extends Controller
             'max_accounts' => 'nullable|integer',
             'expire_at' => 'nullable|date|after_or_equal:today',
             'custom_provisioning_entries' => ['nullable', new Ini(Space::FORBIDDEN_KEYS)],
+            'theme_hue' => 'nullable|integer|min:0|max:360',
         ]);
 
         $space = new Space;
@@ -57,6 +58,7 @@ class SpaceController extends Controller
         $space->max_accounts = $request->get('max_accounts', 0);
         $space->name = $request->get('name');
         $space->newsletter_registration_address = $request->get('newsletter_registration_address');
+        $space->theme_hue = $request->get('theme_hue');
         $this->setRequestBoolean($request, $space, 'assistant_disable_qr_code');
         $this->setRequestBoolean($request, $space, 'assistant_hide_create_account');
         $this->setRequestBoolean($request, $space, 'assistant_hide_third_party_account');
@@ -76,6 +78,7 @@ class SpaceController extends Controller
         $this->setRequestBoolean($request, $space, 'public_registration');
         $this->setRequestBoolean($request, $space, 'super');
         $this->setRequestBoolean($request, $space, 'web_panel');
+
         $space->save();
 
         return $space->refresh();
@@ -125,6 +128,7 @@ class SpaceController extends Controller
             'public_registration' => 'required|boolean',
             'super' => 'required|boolean',
             'web_panel' => 'required|boolean',
+            'theme_hue' => 'nullable|integer|min:0|max:360',
         ]);
 
         $space = Space::where('domain', $domain)->firstOrFail();
@@ -170,6 +174,7 @@ class SpaceController extends Controller
         $space->provisioning_use_linphone_provisioning_header = $request->get('provisioning_use_linphone_provisioning_header');
         $space->public_registration = $request->get('public_registration');
         $space->web_panel = $request->get('web_panel');
+        $space->theme_hue = $request->get('theme_hue');
 
         $space->save();
 

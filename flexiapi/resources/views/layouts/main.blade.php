@@ -9,15 +9,15 @@
     <title>{{ space()->name }}</title>
 
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
-
-    @php
-        $space = space();
-    @endphp
-
+    <style>
+        body {
+             @if (space()?->theme_hue)  --hue: {{ $space->theme_hue }}; @endif
+             @if (space()?->logo) --space-logo: url('{{ asset('storage/img/' . $space->logo) }}');  @endif
+        }
+    </style>
     @if (space()?->custom_theme && file_exists(public_path('css/' . space()?->host . '.style.css')))
         <link rel="stylesheet" type="text/css" href="{{ asset('css/' . space()?->host . '.style.css') }}">
     @endif
-
     <script src="{{ asset('scripts/utils.js') }}"></script>
     <script src="{{ asset('scripts/chart.js') }}"></script>
     <script src="{{ asset('scripts/chartjs-plugin-datalabels@2.0.0') }}"></script>
@@ -26,8 +26,9 @@
 <body class="@if (isset($welcome) && $welcome) welcome @endif">
     <header>
         <nav>
-            <a id="logo" href="{{ route('account.home') }}"><span
-                    class="on_desktop">{{ space()->name }}</span></a>
+            <a id="logo" href="{{ route('account.home') }}">
+                <span class="on_desktop">{{ space()->name }}</span>
+            </a>
 
             @if (!isset($welcome) || $welcome == false)
                 <a id="menu" class="on_mobile" href="#"

@@ -19,6 +19,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -75,6 +76,7 @@ class Space extends Model
 
     public const HOST_REGEX = '[\w\-]+';
     public const DOMAIN_REGEX = '(?=^.{4,253}$)(^((?!-)[a-z0-9-]{1,63}(?<!-)\.)+[a-z]{2,63}$)';
+    public const LOGO_PATH = 'img';
 
     protected static function booted()
     {
@@ -128,6 +130,11 @@ class Space extends Model
         }
 
         return Command::SUCCESS;
+    }
+
+    public function getLogoPathAttribute(): string
+    {
+        return self::LOGO_PATH . '/' . $this->attributes['logo'];
     }
 
     public function isFull(): bool
@@ -196,5 +203,12 @@ class Space extends Model
         }
 
         return null;
+    }
+
+    protected function themeHue(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => $value ?? 22
+        );
     }
 }

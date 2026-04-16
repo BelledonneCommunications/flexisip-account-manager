@@ -130,6 +130,8 @@ if ! test -f %{env_config_file}; then
     php artisan key:generate
 fi
 
+php artisan storage:link
+
 # Link it once more
 ln -sf %{env_config_file} %{env_symlink_file}
 
