@@ -14,6 +14,7 @@ Clone the repository, install the dependencies and generate a key.
 
     composer install --no-dev
     php artisan key:generate
+    php artisan storage:link
 
 # 1.b Packages setup
 

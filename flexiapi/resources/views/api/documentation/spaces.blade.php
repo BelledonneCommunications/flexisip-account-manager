@@ -51,6 +51,7 @@ JSON parameters:
 * `public_registration` boolean, the public registration switch
 * `super` boolean, set the domain as a Super Domain
 * `web_panel` boolean, the web panel switch
+* `theme_hue` integer, the hue component of an HSL color (e.g. `hsl(theme_hue, 100%, 50%)`), between 0 and 360
 
 ### `PUT /spaces/{domain}`
 <span class="badge badge-error">Super Admin</span>
@@ -88,6 +89,7 @@ JSON parameters:
 * `public_registration` **required**, boolean, the public registration switch
 * `super` **required**, boolean, set the domain as a Super Domain
 * `web_panel` **required**, boolean, the web panel switch
+* `theme_hue` **required**, integer, the hue component of an HSL color (e.g. `hsl(theme_hue, 100%, 50%)`), between 0 and 360
 
 ### `DELETE /spaces/{domain}`
 <span class="badge badge-error">Super Admin</span>

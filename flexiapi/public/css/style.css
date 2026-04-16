@@ -32,7 +32,8 @@ body {
     --main-2: hsl(from var(--original) calc(h + 11) s calc(l + 29.80));
     --main-3: hsl(from var(--original) calc(h + 8) s calc(l + 20));
     --main-4: hsl(from var(--original) calc(h + 3) s calc(l + 12.35));
-    --main-5: hsl(from var(--original) calc(h + 0) s calc(l + 0)); /* original */
+    --main-5: hsl(from var(--original) calc(h + 0) s calc(l + 0));
+    /* original */
     --main-6: hsl(from var(--original) calc(h - 3) s calc(l - 7.25));
     --main-7: hsl(from var(--original) calc(h - 7) s calc(l - 14.12));
 
@@ -285,7 +286,7 @@ header nav a#menu:after {
 }
 
 body.show_menu header nav a#menu:after {
-    font-family: 'Phosphor'
+    font-family: 'Phosphor';
 
     header nav a#logo {
         position: absolute;
@@ -300,9 +301,8 @@ header nav a#logo::before {
     width: 3rem;
     height: 3rem;
     padding: 1rem;
-    background-image: url('../img/logo.svg');
-    background-color: var(--main-5);
-    background-size: 3rem;
+    background-image: var(--space-logo, url('../img/logo.svg'));
+    background-size: 5rem;
     background-position: center;
     background-repeat: no-repeat;
     display: block;

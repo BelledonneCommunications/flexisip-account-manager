@@ -1,5 +1,6 @@
 /** Forms **/
 
+form div input[type="file"]::file-selector-button,
 .btn {
     display: inline-block;
     background-color: var(--main-5);
@@ -157,7 +158,6 @@ form .disabled:not(a) {
 form label {
     color: var(--second-6);
     font-size: 1.5rem;
-
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -183,10 +183,19 @@ form div .btn.oppose {
     right: 0;
 }
 
-form div input,
+form div input:not([type=range]):not([type=button]):not([type=file]):not(.btn),
 form div textarea,
 form div select {
     padding: 1rem 2rem;
+    background-color: var(--grey-1);
+    border-radius: 3rem;
+    border: 0.063rem solid var(--grey-2);
+    font-size: 1.5rem;
+    resize: vertical;
+}
+
+form div input[type=file] {
+    color: var(--second-6);
     background-color: var(--grey-1);
     border-radius: 3rem;
     border: 1px solid var(--grey-2);
@@ -261,6 +270,7 @@ input[type=number].digit {
     height: 5rem;
     -moz-appearance: textfield;
     -webkit-appearance: textfield;
+    appearance: textfield;
     border-radius: 1.5rem;
     background-color: white;
     padding: 0.5rem;
@@ -270,8 +280,8 @@ input[type=number].digit {
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 input[type=checkbox] {
@@ -282,7 +292,7 @@ form div input[type=checkbox] {
     margin-right: 1rem;
 }
 
-form div input:not([type=checkbox]):not([type=radio]):not([type="number"].digit):not(.btn),
+form div input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type="number"].digit):not(.btn),
 form div textarea,
 form div select {
     margin-top: 2.5rem;
@@ -338,6 +348,86 @@ form div textarea:invalid:not(:placeholder-shown)+label {
     color: var(--danger);
 }
 
+/* Image and Logo Picker */
+
+form div .picker {
+    display: flex;
+    align-items: flex-end;
+    height: 11rem;
+    gap: 1.5rem;
+}
+
+form canvas,
+form .picker .color-div {
+    aspect-ratio: 1/1;
+    height: 100%;
+    border: 1px solid var(--grey-2);
+    border-radius: 1.25rem;
+}
+
+form .picker canvas {
+    background-color: var(--grey-1);
+}
+
+form .picker .color-div {
+    background-color: var(--main-5);
+}
+
+form .picker .color-selector {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+form .picker .color-input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+form .picker .color-input i {
+    font-size: 2.5rem;
+    padding-top: 2rem;
+
+}
+
+form .picker .color-input i:hover {
+    font-size: 2.5rem;
+    padding-top: 2rem;
+    color: var(--main-5);
+}
+
+
+form input[type=range].color {
+    appearance: none;
+    margin-top: 2.5rem;
+    box-sizing: border-box;
+    width: 100%;
+    height: 1.5rem;
+    border-radius: 3rem;
+    overflow: visible;
+    background: linear-gradient(to right,
+            hsl(0, 100%, 50%),
+            hsl(60, 100%, 50%),
+            hsl(120, 100%, 50%),
+            hsl(180, 100%, 50%),
+            hsl(240, 100%, 50%),
+            hsl(300, 100%, 50%),
+            hsl(360, 100%, 50%));
+}
+
+form input[type=range]::-webkit-slider-thumb,
+form input[type=range]::-moz-range-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    border: 0.25rem solid var(--grey-1);
+    cursor: pointer;
+}
+
 /* Checkbox element */
 
 form div.checkbox {
@@ -346,11 +436,11 @@ form div.checkbox {
     align-items: center;
 }
 
-form div.checkbox > div {
-        margin-right: 5rem;
+form div.checkbox>div {
+    margin-right: 5rem;
 }
 
-div.checkbox > input[type="checkbox"] {
+div.checkbox>input[type="checkbox"] {
     display: none;
     width: 0;
     height: 0;
@@ -378,7 +468,7 @@ div.checkbox:has(> input[type="checkbox"]:checked)::before {
     background-color: var(--color-green);
 }
 
-div.checkbox > input[type="checkbox"] + label {
+div.checkbox>input[type="checkbox"]+label {
     display: block;
     background-color: white;
     width: 2rem;
@@ -393,28 +483,28 @@ div.checkbox > input[type="checkbox"] + label {
     transition: right 0.3s ease;
 }
 
-div.checkbox:hover > input[type="checkbox"] + label {
+div.checkbox:hover>input[type="checkbox"]+label {
     cursor: pointer;
 }
 
-div.checkbox > input[type="checkbox"]:checked + label {
+div.checkbox>input[type="checkbox"]:checked+label {
     right: 0.5rem;
 }
 
 
 /* Telephony subselect */
 
-div.select[data-value] ~ div.togglable {
+div.select[data-value]~div.togglable {
     display: none;
 }
 
-div.select[data-value=voicemail] ~ div.togglable.voicemail,
-div.select[data-value=contact] ~ div.togglable.contact,
-div.select[data-value=sip_uri] ~ div.togglable.sip_uri {
+div.select[data-value=voicemail]~div.togglable.voicemail,
+div.select[data-value=contact]~div.togglable.contact,
+div.select[data-value=sip_uri]~div.togglable.sip_uri {
     display: block;
 }
 
-form section.block div.checkbox:has(input:not(:checked)) ~ div {
+form section.block div.checkbox:has(input:not(:checked))~div {
     opacity: 0.25;
     pointer-events: none;
 }

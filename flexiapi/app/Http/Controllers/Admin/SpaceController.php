@@ -27,6 +27,7 @@ use App\Rules\Domain;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class SpaceController extends Controller
 {
@@ -64,7 +65,7 @@ class SpaceController extends Controller
 
         $request->merge(['full_host' => $fullHost]);
         $request->validate([
-            'host' => 'nullable|regex:/'. Space::HOST_REGEX . '/',
+            'host' => 'nullable|regex:/' . Space::HOST_REGEX . '/',
             'full_host' => ['required', 'unique:spaces,host', new Domain()],
         ]);
 
@@ -113,7 +114,46 @@ class SpaceController extends Controller
 
     public function configurationUpdate(Request $request, Space $space)
     {
-        $space = $this->setConfiguration($request, $space);
+        $request->validate([
+            'newsletter_registration_address' => 'nullable|email',
+            'custom_provisioning_entries' => ['nullable', new Ini(Space::FORBIDDEN_KEYS)],
+            'logo' => ['nullable', 'image', 'mimes:png', 'max:2048'],
+            'theme_hue' => 'nullable|integer|min:0|max:360',
+        ]);
+
+        if ($request->logo_delete == 1 && $space->logo) {
+            Storage::disk('public')->delete($space->LOGO_PATH);
+            $space->logo = null;
+            $space->save();
+        }
+
+        if ($request->hasFile('logo')) {
+            if ($space->logo) {
+                Storage::disk('public')->delete($space->LOGO_PATH);
+            }
+            $filename = $request->file('logo')->hashName();
+            $request->file('logo')->storeAs('img', $filename, 'public');
+            $space->logo = $filename;
+        }
+
+        $space->theme_hue = $request->get('theme_hue');
+        $space->copyright_text = $request->get('copyright_text');
+        $space->intro_registration_text = $request->get('intro_registration_text');
+        $space->newsletter_registration_address = $request->get('newsletter_registration_address');
+        $space->account_proxy_registrar_address = $request->get('account_proxy_registrar_address');
+
+        if ($space->accounts()->count() == 0) {
+            $space->account_realm = $request->get('account_realm');
+        }
+
+        $space->custom_provisioning_entries = $request->get('custom_provisioning_entries');
+        $space->custom_provisioning_overwrite_all = getRequestBoolean($request, 'custom_provisioning_overwrite_all');
+        $space->provisioning_use_linphone_provisioning_header = getRequestBoolean($request, 'provisioning_use_linphone_provisioning_header');
+
+        $space->public_registration = getRequestBoolean($request, 'public_registration');
+        $space->phone_registration = getRequestBoolean($request, 'phone_registration');
+        $space->intercom_features = getRequestBoolean($request, 'intercom_features');
+
         $space->save();
 
         return redirect()->route('admin.spaces.configuration', $space);
@@ -150,33 +190,6 @@ class SpaceController extends Controller
         $space->save();
 
         return redirect()->route('admin.spaces.show', $space);
-    }
-
-    private function setConfiguration(Request $request, Space $space)
-    {
-        $request->validate([
-            'newsletter_registration_address' => 'nullable|email',
-            'custom_provisioning_entries' => ['nullable', new Ini(Space::FORBIDDEN_KEYS)]
-        ]);
-
-        $space->copyright_text = $request->get('copyright_text');
-        $space->intro_registration_text = $request->get('intro_registration_text');
-        $space->newsletter_registration_address = $request->get('newsletter_registration_address');
-        $space->account_proxy_registrar_address = $request->get('account_proxy_registrar_address');
-
-        if ($space->accounts()->count() == 0) {
-            $space->account_realm = $request->get('account_realm');
-        }
-
-        $space->custom_provisioning_entries = $request->get('custom_provisioning_entries');
-        $space->custom_provisioning_overwrite_all = getRequestBoolean($request, 'custom_provisioning_overwrite_all');
-        $space->provisioning_use_linphone_provisioning_header = getRequestBoolean($request, 'provisioning_use_linphone_provisioning_header');
-
-        $space->public_registration = getRequestBoolean($request, 'public_registration');
-        $space->phone_registration = getRequestBoolean($request, 'phone_registration');
-        $space->intercom_features = getRequestBoolean($request, 'intercom_features');
-
-        return $space;
     }
 
     private function setAppConfiguration(Request $request, Space $space)
