@@ -25,55 +25,43 @@ body {
     flex-direction: column;
     overflow-x: hidden;
 
-    --main-1: rgba(255, 234, 203, 1);
-    --main-2: rgba(255, 208, 152, 1);
-    --main-3: rgba(255, 178, 102, 1);
-    --main-4: rgba(255, 146, 63, 1);
-    --main-5: rgba(254, 94, 0, 1);
-    --main-6: rgba(218, 68, 0, 1);
-    --main-7: rgba(183, 45, 0, 1);
-    --main-8: rgba(147, 28, 0, 1);
-    --main-9: rgba(121, 15, 0, 1);
+    --hue: 22;
+    --original: hsl(var(--hue) 100 50);
 
-    --second-0: rgba(250, 254, 255, 1);
-    --second-1: rgba(238, 246, 248, 1);
-    --second-2: rgba(223, 236, 242, 1);
-    --second-3: rgba(192, 209, 217, 1);
-    --second-4: rgba(154, 171, 181, 1);
-    --second-5: rgba(108, 122, 135, 1);
-    --second-6: rgba(78, 96, 116, 1);
-    --second-7: rgba(54, 72, 96, 1);
-    --second-8: rgba(34, 51, 77, 1);
-    --second-9: rgba(20, 34, 64, 1);
-    --second-1: rgba(0, 0, 0, 1);
+    --main-1: hsl(from var(--original) calc(h + 14) s calc(l + 39.80));
+    --main-2: hsl(from var(--original) calc(h + 11) s calc(l + 29.80));
+    --main-3: hsl(from var(--original) calc(h + 8) s calc(l + 20));
+    --main-4: hsl(from var(--original) calc(h + 3) s calc(l + 12.35));
+    --main-5: hsl(from var(--original) calc(h + 0) s calc(l + 0)); /* original */
+    --main-6: hsl(from var(--original) calc(h - 3) s calc(l - 7.25));
+    --main-7: hsl(from var(--original) calc(h - 7) s calc(l - 14.12));
 
-    --grey-1: rgba(249, 249, 249, 1);
-    --grey-2: rgba(237, 237, 237, 1);
-    --grey-3: rgba(201, 201, 201, 1);
-    --grey-4: rgba(148, 148, 148, 1);
-    --grey-5: rgba(78, 78, 78, 1);
-    --grey-6: rgba(67, 57, 57, 1);
-    --grey-7: rgba(56, 39, 42, 1);
-    --grey-8: rgba(45, 24, 30, 1);
-    --grey-9: rgba(0, 0, 0, 1);
+    --second-4: rgb(154, 171, 181);
+    --second-5: rgb(108, 122, 135);
+    --second-6: rgb(78, 96, 116);
+    --second-7: rgb(54, 72, 96);
+    --second-8: rgb(34, 51, 77);
+    --second-9: rgb(20, 34, 64);
 
-    --danger-1: rgba(250, 232, 222, 1);
-    --danger-2: rgba(245, 204, 190, 1);
-    --danger-3: rgba(238, 170, 155, 1);
-    --danger-4: rgba(230, 137, 130, 1);
-    --danger-5: rgba(221, 95, 95, 1);
-    --danger-6: rgba(189, 72, 82, 1);
-    --danger-7: rgba(158, 53, 72, 1);
-    --danger-8: rgba(127, 37, 61, 1);
-    --danger-9: rgba(104, 26, 54, 1);
+    --grey-1: rgb(249, 249, 249);
+    --grey-2: rgb(237, 237, 237);
+    --grey-3: rgb(201, 201, 201);
+    --grey-4: rgb(148, 148, 148);
+    --grey-5: rgb(78, 78, 78);
+    --grey-6: rgb(67, 57, 57);
+    --grey-7: rgb(56, 39, 42);
+    --grey-8: rgb(45, 24, 30);
+    --grey-9: rgb(0, 0, 0);
 
-    --color-orange: rgba(254, 94, 0, 1);
-    --color-grey: rgba(108, 122, 135, 1);
-    --color-green: rgba(79, 174, 128, 1);
-    --color-blue: rgba(9, 197, 244, 1);
-    --color-yellow: rgba(255, 220, 46, 1);
-    --color-pink: rgba(255, 94, 102, 1);
-    --color-purple: rgba(151, 71, 255, 1);
+    --danger: rgb(221, 95, 95);
+
+    --color-orange: rgb(254, 94, 0);
+    --color-grey: rgb(108, 122, 135);
+    --color-green: rgb(79, 174, 128);
+    --color-blue: rgb(9, 197, 244);
+    --color-yellow: rgb(255, 220, 46);
+    --color-pink: rgb(255, 94, 102);
+    --color-purple: rgb(151, 71, 255);
 }
 
 #wizard h3 {
@@ -1055,7 +1043,7 @@ small a {
 }
 
 small.error {
-    color: var(--danger-6);
+    color: var(--danger);
 }
 
 /** Errors box **/
