@@ -40,6 +40,7 @@ package-common:
 	cp README.md $(OUTPUT_DIR)/flexisip-account-manager/
 	cp INSTALL.md $(OUTPUT_DIR)/flexisip-account-manager/
 	cp flexiapi/.env.example $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/.env.example
+	cp flexiapi/licenses.md $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
 	cp flexiapi/artisan $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
 	cp flexiapi/phpunit.xml $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
 	cp flexiapi/phpcs.xml $(OUTPUT_DIR)/flexisip-account-manager/flexiapi/
