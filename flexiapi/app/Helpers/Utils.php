@@ -82,7 +82,7 @@ function percent($value, $max): float
     return round(($value * 100) / $max, 2);
 }
 
-function markdownDocumentationView(string $view): string
+function markdownDocumentation(string $markdown): string
 {
     $converter = new CommonMarkConverter([
         'heading_permalink' => [
@@ -100,11 +100,7 @@ function markdownDocumentationView(string $view): string
     $converter->getEnvironment()->addExtension(new HeadingPermalinkExtension());
     $converter->getEnvironment()->addExtension(new TableOfContentsExtension());
 
-    return (string) $converter->convert(
-        (string) view($view, [
-            'app_name' => space()->name
-        ])->render()
-    );
+    return (string) $converter->convert($markdown);
 }
 
 function hasCoTURNConfigured(): bool

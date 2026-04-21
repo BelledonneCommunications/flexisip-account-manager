@@ -37,7 +37,9 @@ class ProvisioningController extends Controller
     public function documentation(Request $request)
     {
         return view('provisioning.documentation', [
-            'documentation' => markdownDocumentationView('provisioning.documentation_markdown')
+            'documentation' => markdownDocumentation(view('provisioning.documentation_markdown', [
+                'app_name' => space()->name
+            ])->render())
         ]);
     }
 
@@ -54,9 +56,9 @@ class ProvisioningController extends Controller
         Account::withoutGlobalScopes()
             ->where('id', function ($query) use ($provisioningToken) {
                 $query->select('account_id')
-                      ->from('provisioning_tokens')
-                      ->where('used', false)
-                      ->where('token', $provisioningToken);
+                    ->from('provisioning_tokens')
+                    ->where('used', false)
+                    ->where('token', $provisioningToken);
             })
             ->firstOrFail();
 
@@ -153,7 +155,8 @@ class ProvisioningController extends Controller
     private function checkProvisioningHeader(Request $request)
     {
         if (!$request->hasHeader('x-linphone-provisioning')
-          && $request->space->provisioning_use_linphone_provisioning_header) {
+            && $request->space->provisioning_use_linphone_provisioning_header
+        ) {
             abort(400, 'x-linphone-provisioning header is missing');
         }
     }
@@ -265,7 +268,7 @@ class ProvisioningController extends Controller
                     'max_account',
                 ] as $key) {
                     // Cast the booleans into integers
-                    $entry = $dom->createElement('entry', (int)$account->space->$key);
+                    $entry = $dom->createElement('entry', (int) $account->space->$key);
                     $entry->setAttribute('name', $key);
                     $section->appendChild($entry);
                 }

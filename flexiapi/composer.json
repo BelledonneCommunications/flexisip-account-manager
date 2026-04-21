@@ -10,6 +10,7 @@
     "require": {
         "php": ">=8.2",
         "awobaz/compoships": "^2.4.1",
+        "comcast/php-legal-licenses": "^2.2",
         "doctrine/dbal": "^3.10.1",
         "endroid/qr-code": "^5.1",
         "fakerphp/faker": "^1.24.1",
@@ -70,6 +71,9 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "post-update-cmd": [
+            "@php vendor/bin/php-legal-licenses generate"
         ]
     }
 }

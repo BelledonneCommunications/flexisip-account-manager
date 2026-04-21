@@ -63,6 +63,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', 'login')->name('account.home');
 Route::get('about', [AboutController::class, 'about'])->name('about');
+Route::get('third-party-components', [AboutController::class, 'thirdPartyComponents'])->name('third_party_components');
 
 Route::middleware(['feature.web_panel_enabled'])->group(function () {
     Route::get('wizard/{provisioning_token}', [ProvisioningController::class, 'wizard'])->name('provisioning.wizard');

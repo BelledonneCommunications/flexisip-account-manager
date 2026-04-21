@@ -27,7 +27,9 @@ class ApiController extends Controller
     public function documentation(Request $request)
     {
         return view('api.documentation', [
-            'documentation' => markdownDocumentationView('api.documentation_markdown')
+            'documentation' => markdownDocumentation(view('api.documentation_markdown', [
+                'app_name' => space()->name
+            ])->render())
         ]);
     }
 }

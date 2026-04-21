@@ -15,6 +15,8 @@
 
         <p><a href="{{ route('api') }}">API Documentation</a> and <a href="{{ route('provisioning.documentation') }}">Provisioning Documentation</a></p>
 
+        <p><a href="{{ route('third_party_components') }}">Third-party components licenses</a></p>
+
         <p>GNU General Public Licence v3.0 (Licence)</p>
 
         <p>{{ space()->instance_copyright }}</p>
