@@ -10,6 +10,7 @@
     "require": {
         "php": ">=8.2",
         "awobaz/compoships": "^2.4.1",
+        "codercat/jwk-to-pem": "^1.1",
         "comcast/php-legal-licenses": "^2.2",
         "doctrine/dbal": "^3.10.1",
         "endroid/qr-code": "^5.1",

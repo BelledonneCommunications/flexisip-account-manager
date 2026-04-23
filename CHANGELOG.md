@@ -8,18 +8,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 
-- **Add CardDav servers** They can be configured in the administration panels and the API.
+- **CardDav servers** They can be configured in the administration panels and the API.
 - **Rockylinux 10 support** Packages are now available in the official repository
 - **Artisan cleanup script for statistics** Add an artisan console script to clear statistics after n days `app:clear-statistics {days} {--apply}`
-- **Add Voicemail features and related API endpoints** to integrate with `flexisip-voicemail`
-- **Add Call Forwarding features and related API endpoints**
-- **Add generated licenses.md file in FlexiAPI**
+- **Voicemail features and related API endpoints** to integrate with `flexisip-voicemail`
+- **Call Forwarding features and related API endpoints**
+- **Generated licenses.md file in FlexiAPI**
+- **Per Space Custom SSO authentication flow**
 
 ### Changed
 
 - **Contacts Lists** The Contacts Lists are now handled per Space. During the migration, if there is only one Space present, existing Contacts Lists are automatically attached to it, otherwise the first Super Space available is used. If they are then attached to the wrong Space you'll have to change directly their `space_id` value in the `contacts_lists` database table.
 - **PHP 8.2 minimum** Laravel and its dependencies were upgraded to version 11 as well.
 - **Logout the user when the password is correctly changed**
+
+### Removed
+
+- **Space SSO authentication:** Custom SSO authentication support has now be moved into Spaces configuraton, the following environnement keys are removed.
+    - `JWT_RSA_PUBLIC_KEY_PEM`
+    - `JWT_SIP_IDENTIFIER`
+    - `ACCOUNT_AUTHENTICATION_BEARER`, it is now generated directly from the Space configuration
 
 ## [2.0]
 
