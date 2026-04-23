@@ -29,10 +29,4 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
-
-    'jwt' => [
-        'rsa_public_key_pem' => env('JWT_RSA_PUBLIC_KEY_PEM'),
-        'sip_identifier' => env('JWT_SIP_IDENTIFIER', 'sip_identity'),
-    ],
-
 ];
