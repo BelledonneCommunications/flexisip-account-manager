@@ -83,6 +83,9 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
     });
 });
 
+Route::get('login/sso', [AuthenticateController::class, 'loginSso'])->name('account.login.sso');
+Route::get('login/sso/redirect', [AuthenticateController::class, 'handleSsoRedirect']);
+
 Route::name('file.')->prefix('f')->controller(FileController::class)->group(function () {
     Route::get('{uuid}/{name}', 'show')->name('show');
     Route::get('{uuid}/{name}/download', 'download')->name('download');
@@ -199,7 +202,7 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
                 Route::get('delete', 'delete')->name('delete');
                 Route::delete('/', 'destroy')->name('destroy');
             });
-            Route::name('keycloak.')->prefix('{space}/keycloak')->controller(SSOServerController::class)->group(function () {
+            Route::name('sso.')->prefix('{space}/sso')->controller(SSOServerController::class)->group(function () {
                 Route::get('/', 'show')->name('show');
                 Route::get('refresh_public_key', 'refreshPublicKey')->name('refresh_public_key');
                 Route::post('/', 'store')->name('store');

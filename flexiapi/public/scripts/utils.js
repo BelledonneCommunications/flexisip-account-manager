@@ -15,7 +15,7 @@ Storage.prototype.getObject = function (key) {
     return JSON.parse(this.getItem(key));
 };
 
-var Utils = {
+let Utils = {
     toggleAll: function (checkbox) {
         checkbox.closest('table').querySelectorAll('tbody input[type=checkbox]').forEach(element => {
             element.checked = checkbox.checked;
@@ -59,11 +59,10 @@ var Utils = {
     clearStorageList: function (key) {
         sessionStorage.setObject('list.' + key, []);
     },
-
-    /** List toggle */
 }
 
-var ListToggle = {
+/** List toggle */
+let ListToggle = {
     init: function () {
         document.querySelectorAll('input[type=checkbox].list_toggle').forEach(checkbox => {
             checkbox.checked = Utils.existsInStorageList(checkbox.dataset.listId, checkbox.dataset.id);
@@ -106,8 +105,34 @@ var ListToggle = {
     }
 }
 
+/* Form Toggle */
+let FormToggle = {
+    init: function () {
+        document.querySelectorAll('.form-dependency').forEach(toggle => {
+            toggle.addEventListener('change', () => {
+                this.refresh(toggle);
+            });
+
+            this.refresh(toggle);
+        });
+    },
+
+    refresh: function (toggle) {
+        const target = document.querySelector(toggle.dataset.target);
+        console.log(target);
+        if (target) {
+            target.disabled = !toggle.checked;
+
+            if (toggle.dataset.required !== undefined) {
+                target.required = toggle.checked;
+            }
+        }
+    }
+};
+
 document.addEventListener("DOMContentLoaded", function (event) {
     ListToggle.init();
+    FormToggle.init();
 });
 
 function digitFilled(element) {

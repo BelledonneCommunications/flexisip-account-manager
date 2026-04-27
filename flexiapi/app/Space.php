@@ -21,6 +21,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
@@ -145,6 +146,13 @@ class Space extends Model
         return $this->host == config('app.root_host');
     }
 
+    public function isSso(): bool
+    {
+        return !empty($this->sso_client_id)
+                && !empty($this->sso_client_secret)
+                && !empty($this->sso_server_url);
+    }
+
     public function refreshSSOCertificate(): bool
     {
         if (isset($this->attributes['sso_server_url']) && isset($this->attributes['sso_realm'])) {
@@ -152,8 +160,8 @@ class Space extends Model
             $jwkConverter = new JWKConverter();
 
             if ($response->status() == '200' && $publicKey = $response->json('keys')[0]) {
-            $JWK = $publicKey;
-                $this->attributes['sso_public_key'] = $jwkConverter->toPEM($JWK);
+            $jwt = $publicKey;
+                $this->attributes['sso_public_key'] = $jwkConverter->toPEM($jwt);
                 $this->attributes['updated_at'] = Carbon::now();
 
                 return true;
@@ -197,5 +205,41 @@ class Space extends Model
         }
 
         return null;
+    }
+
+    public function injectCustomEmailConfig()
+    {
+        if ($this->emailServer) {
+            $config = [
+                'driver'     => config('mail.driver'),
+                'encryption' => config('mail.encryption'),
+                'host'       => $this->emailServer->host,
+                'port'       => $this->emailServer->port,
+                'from'       => [
+                    'address' => $this->emailServer->from_address,
+                    'name' => $this->emailServer->from_name
+                 ],
+                'username'   => $this->emailServer->username,
+                'password'   => $this->emailServer->password,
+                'signature'  => $this->emailServer->signature ?? config('mail.signature')
+            ] + Config::get('mail');
+
+            Config::set('mail', $config);
+        }
+    }
+
+    public function injectKeycloakConfig()
+    {
+        if ($this->isSso()) {
+            $config = [
+                'client_id' => $this->sso_client_id,
+                'client_secret' => $this->sso_client_secret,
+                'redirect' => 'https://' . $this->host . "/login/sso/redirect",
+                'base_url' => $this->sso_server_url,
+                'realms' => $this->sso_realm
+            ];
+
+            Config::set('services.keycloak', $config);
+        }
     }
 }

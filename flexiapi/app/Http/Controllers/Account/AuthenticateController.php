@@ -27,6 +27,8 @@ use Illuminate\Support\Str;
 use App\Account;
 use App\AuthToken;
 
+use Laravel\Socialite\Facades\Socialite;
+
 class AuthenticateController extends Controller
 {
     public static $emailCodeSize = 13;
@@ -111,9 +113,54 @@ class AuthenticateController extends Controller
         ]);
     }
 
+    public function loginSso()
+    {
+        return Socialite::driver('keycloak')->redirect();
+    }
+
+    public function handleSsoRedirect()
+    {
+        $ssoUser = Socialite::driver('keycloak')->stateless()->user();
+        $user = null;
+
+        if (space()->sso_auto_prov) {
+            $parts = explode('.', $ssoUser->token);
+            if (count($parts) === 3) {
+                $payload = json_decode(base64_decode($parts[1]), true);
+            }
+
+            if (isset($payload['realm_access']['roles']) && in_array(space()->sso_role_prov, $payload['realm_access']['roles'])) {
+                $user = Account::updateOrCreate(
+                    ['email' => $ssoUser->email],
+                    ['username'=> $ssoUser->{space()->sso_sip_identifier},
+                    'password'=> '123456', // TO MODIFY
+                    'email' => $ssoUser->email,
+                    'domain'=> space()->domain]
+                );
+            } else {
+                return redirect('login')->withErrors(['ssoNotExist' => __('You don\'t have acces to this app, contact your administrator')]);
+            }
+        } else {
+            $user = Account::where('email', $ssoUser->email)->first();
+        }
+
+        if ($user) {
+            Auth::login($user);
+            return redirect()->route('account.home');
+        }
+
+        return redirect('login')->withErrors(['ssoNotExist' => __('Incorrect username or password')]);
+    }
+
     public function logout(Request $request)
     {
         Auth::logout();
-        return redirect()->route('account.login');
+
+        if (!space()->isSso()) {
+            return redirect()->route('account.login');
+        } else {
+            $redirectUri = url('/login');
+            return redirect(Socialite::driver('keycloak')->getLogoutUrl($redirectUri, space()->sso_client_id));
+        }
     }
 }

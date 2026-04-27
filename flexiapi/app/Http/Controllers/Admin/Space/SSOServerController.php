@@ -35,13 +35,21 @@ class SSOServerController extends Controller
         $request->validate([
             'sso_server_url' => 'required|url|ends_with:/',
             'sso_realm' => 'required',
-            'sso_sip_identifier' => 'required'
+            'sso_sip_identifier' => 'required',
+            'sso_role_prov' => 'required_if:sso_auto_prov,on|nullable|string'
         ]);
 
         $space = Space::findOrFail($spaceId);
         $space->sso_server_url = $request->get('sso_server_url');
         $space->sso_realm = $request->get('sso_realm');
         $space->sso_sip_identifier = $request->get('sso_sip_identifier');
+        $space->sso_client_id = $request->get('sso_client_id');
+        $space->sso_client_secret = $request->get('sso_client_secret');
+
+        if ($request->sso_auto_prov == "on") {
+            $space->sso_auto_prov = true;
+            $space->sso_role_prov = $request->get('sso_role_prov');
+        }
 
         if ($space->refreshSSOCertificate()) {
             $space->save();

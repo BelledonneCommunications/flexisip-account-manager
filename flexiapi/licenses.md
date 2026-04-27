@@ -703,6 +703,42 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
+### firebase/php-jwt (Version v7.0.5 | 47ad26b)
+A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.
+Homepage: https://github.com/firebase/php-jwt
+Licenses Used: BSD-3-Clause
+Copyright (c) 2011, Neuman Vong
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+
+    * Redistributions in binary form must reproduce the above
+      copyright notice, this list of conditions and the following
+      disclaimer in the documentation and/or other materials provided
+      with the distribution.
+
+    * Neither the name of the copyright holder nor the names of other
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
 ### fruitcake/php-cors (Version v1.4.0 | 38aaa6c)
 Cross-origin resource sharing library for the Symfony HttpFoundation
 Homepage: https://github.com/fruitcake/php-cors
@@ -729,7 +765,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### giggsey/libphonenumber-for-php-lite (Version 9.0.28 | 08acc9d)
+### giggsey/libphonenumber-for-php-lite (Version 9.0.29 | d64c0c0)
 A lite version of giggsey/libphonenumber-for-php, which is a PHP Port of Google's libphonenumber
 Homepage: https://github.com/giggsey/libphonenumber-for-php-lite
 Licenses Used: Apache-2.0
@@ -1186,6 +1222,33 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
+### laravel/socialite (Version v5.26.1 | db6ec2e)
+Laravel wrapper around OAuth 1 & OAuth 2 libraries.
+Homepage: https://laravel.com
+Licenses Used: MIT
+The MIT License (MIT)
+
+Copyright (c) Taylor Otwell
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+
 ### laravel/tinker (Version v2.11.1 | c9f80cc)
 Powerful REPL for the Laravel framework.
 Homepage: Not configured.
@@ -1406,6 +1469,33 @@ to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+
+### league/oauth1-client (Version v1.11.0 | f9c94b0)
+OAuth 1.0 Client Library
+Homepage: Not configured.
+Licenses Used: MIT
+The MIT License (MIT)
+
+Copyright (c) 2013 Ben Corlett <bencorlett@me.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -1693,7 +1783,7 @@ permanent authorization for you to choose that version for the
 Library.
 
 
-### mobiledetect/mobiledetectlib (Version 4.8.10 | 96b1e1f)
+### mobiledetect/mobiledetectlib (Version 4.10.0 | 1473bd9)
 Mobile_Detect is a lightweight PHP class for detecting mobile devices. It uses the User-Agent string combined with specific HTTP headers to detect the mobile environment.
 Homepage: https://github.com/serbanghita/Mobile-Detect
 Licenses Used: MIT
@@ -3911,6 +4001,40 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
+### socialiteproviders/keycloak (Version 5.3.0 | 87d13f8)
+Keycloak OAuth2 Provider for Laravel Socialite
+Homepage: Not configured.
+Licenses Used: MIT
+Full license text not found in dependency source.
+
+### socialiteproviders/manager (Version 4.9.2 | 35372dc)
+Easily add new or override built-in providers in Laravel Socialite.
+Homepage: https://socialiteproviders.com
+Licenses Used: MIT
+The MIT License (MIT)
+
+Copyright (c) 2015 Andy Wendt
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+
 ### symfony/clock (Version v7.4.8 | 674fa3b)
 Decouples applications from the system clock
 Homepage: https://symfony.com
@@ -4211,7 +4335,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-ctype (Version v1.36.0 | 141046a)
+### symfony/polyfill-ctype (Version v1.37.0 | 141046a)
 Symfony polyfill for ctype functions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4236,7 +4360,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-intl-grapheme (Version v1.36.0 | ad1b7b9)
+### symfony/polyfill-intl-grapheme (Version v1.37.0 | 4864388)
 Symfony polyfill for intl's grapheme_* functions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4261,7 +4385,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-intl-idn (Version v1.36.0 | 9614ac4)
+### symfony/polyfill-intl-idn (Version v1.37.0 | 9614ac4)
 Symfony polyfill for intl's idn_to_ascii and idn_to_utf8 functions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4286,7 +4410,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-intl-normalizer (Version v1.36.0 | 3833d72)
+### symfony/polyfill-intl-normalizer (Version v1.37.0 | 3833d72)
 Symfony polyfill for intl's Normalizer class and related functions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4311,7 +4435,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-mbstring (Version v1.36.0 | 6a21eb9)
+### symfony/polyfill-mbstring (Version v1.37.0 | 6a21eb9)
 Symfony polyfill for the Mbstring extension
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4336,7 +4460,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-php80 (Version v1.36.0 | dfb5572)
+### symfony/polyfill-php80 (Version v1.37.0 | dfb5572)
 Symfony polyfill backporting some PHP 8.0+ features to lower PHP versions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4361,7 +4485,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-php83 (Version v1.36.0 | 3600c2c)
+### symfony/polyfill-php83 (Version v1.37.0 | 3600c2c)
 Symfony polyfill backporting some PHP 8.3+ features to lower PHP versions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4386,7 +4510,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-php85 (Version v1.36.0 | 2c408a6)
+### symfony/polyfill-php85 (Version v1.37.0 | fcfa497)
 Symfony polyfill backporting some PHP 8.5+ features to lower PHP versions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4411,7 +4535,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-uuid (Version v1.36.0 | 26dfec2)
+### symfony/polyfill-uuid (Version v1.37.0 | 26dfec2)
 Symfony polyfill for uuid functions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4753,7 +4877,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-### voku/portable-ascii (Version 2.1.0 | d870a33)
+### voku/portable-ascii (Version 2.1.1 | 8e1051f)
 Portable ASCII library - performance optimized (ascii) string functions for php.
 Homepage: https://github.com/voku/portable-ascii
 Licenses Used: MIT

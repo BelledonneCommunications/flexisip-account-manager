@@ -26,7 +26,7 @@
         </div>
 
         <div class="card">
-            <a class="btn small oppose secondary" href="{{ route('admin.spaces.keycloak.show', $space) }}">{{ __('Configure') }}</a>
+            <a class="btn small oppose secondary" href="{{ route('admin.spaces.sso.show', $space) }}">{{ __('Configure') }}</a>
             <span class="icon"><i class="ph ph-key"></i></span>
             <h3>{{ __('SSO Server') }}</h3>
             <p>

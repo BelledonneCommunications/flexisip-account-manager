@@ -27,7 +27,8 @@
         "react/socket": "^1.16",
         "respect/validation": "^2.4.4",
         "rvxlab/hcaptcha": "^5.2",
-        "sabre/vobject": "^4.5.7"
+        "sabre/vobject": "^4.5.7",
+        "socialiteproviders/keycloak": "^5.3"
     },
     "require-dev": {
         "mockery/mockery": "^1.6.12",
