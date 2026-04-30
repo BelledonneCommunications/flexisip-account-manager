@@ -57,6 +57,7 @@ use App\Http\Controllers\Admin\Space\CardDavServerController;
 use App\Http\Controllers\Admin\Space\ContactsListContactController;
 use App\Http\Controllers\Admin\Space\ContactsListController;
 use App\Http\Controllers\Admin\Space\EmailServerController;
+use App\Http\Controllers\Admin\Space\SSOServerController;
 use App\Http\Controllers\Admin\SpaceController;
 use App\Http\Controllers\Admin\StatisticsController;
 use Illuminate\Support\Facades\Route;
@@ -88,7 +89,6 @@ Route::name('file.')->prefix('f')->controller(FileController::class)->group(func
 });
 
 Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key']], function () {
-
     Route::get('provisioning/me', [ProvisioningController::class, 'me'])->name('provisioning.me');
 
     // vCard 4.0
@@ -198,6 +198,11 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
                 Route::post('/', 'store')->name('store');
                 Route::get('delete', 'delete')->name('delete');
                 Route::delete('/', 'destroy')->name('destroy');
+            });
+            Route::name('keycloak.')->prefix('{space}/keycloak')->controller(SSOServerController::class)->group(function () {
+                Route::get('/', 'show')->name('show');
+                Route::get('refresh_public_key', 'refreshPublicKey')->name('refresh_public_key');
+                Route::post('/', 'store')->name('store');
             });
             Route::resource('{space}/carddavs', CardDavServerController::class, ['except' => ['index', 'show']]);
             Route::get('{space}/carddavs/{carddav}/delete', [CardDavServerController::class, 'delete'])->name('carddavs.delete');

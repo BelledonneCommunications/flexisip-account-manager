@@ -20,6 +20,7 @@
 namespace App\Http\Middleware;
 
 use App\Account;
+use App\Space;
 use Closure;
 use DateTimeImmutable;
 use Illuminate\Http\Request;
@@ -39,13 +40,18 @@ class AuthenticateJWT
 {
     public function handle(Request $request, Closure $next)
     {
-        if ($request->bearerToken() && config('services.jwt.rsa_public_key_pem')) {
+        if ($request->bearerToken() && $request->space?->sso_public_key) {
             if (!extension_loaded('sodium')) {
                 abort(403, "PHP Sodium extension isn't loaded");
             }
 
-            $publicKey = InMemory::plainText(config('services.jwt.rsa_public_key_pem'));
-            $token = (new Parser(new JoseEncoder()))->parse($request->bearerToken());
+            $publicKey = InMemory::plainText($request->space->sso_public_key);
+
+            try {
+                $token = (new Parser(new JoseEncoder()))->parse($request->bearerToken());
+            } catch (\Throwable $th) {
+                return $this->generateUnauthorizedBearerResponse($request->space, 'invalid_token', 'Invalid bearer ' . $th->getMessage());
+            }
 
             $signer = null;
 
@@ -64,19 +70,19 @@ class AuthenticateJWT
             }
 
             if ($signer == null) {
-                return $this->generateUnauthorizedBearerResponse('invalid_token', 'Unsupported RSA signature');
+                return $this->generateUnauthorizedBearerResponse($request->space, 'invalid_token', 'Unsupported RSA signature');
             }
 
             if (!(new Validator())->validate($token, new SignedWith($signer, $publicKey))) {
-                return $this->generateUnauthorizedBearerResponse('invalid_token', 'Invalid JWT token signature');
+                return $this->generateUnauthorizedBearerResponse($request->space, 'invalid_token', 'Invalid JWT token signature');
             }
 
             if ($token->isExpired(new DateTimeImmutable())) {
-                return $this->generateUnauthorizedBearerResponse('invalid_token', 'Expired JWT token');
+                return $this->generateUnauthorizedBearerResponse($request->space, 'invalid_token', 'Expired JWT token');
             }
 
             $account = null;
-            $identifierKey = config('services.jwt.sip_identifier');
+            $identifierKey = $request->space->sso_sip_identifier;
             if ($identifierKey == '') $identifierKey = 'sip_identity';
 
             if ($token->claims()->has($identifierKey)) {
@@ -101,7 +107,7 @@ class AuthenticateJWT
             return $next($request);
         }
 
-        if (!empty(config('app.account_authentication_bearer'))
+        if ($request->space?->sso_authentication_bearer
             // Bypass the JWT auth if we have an API Key
             && !$request->header('x-api-key')
             && !$request->cookie('x-api-key')
@@ -110,7 +116,7 @@ class AuthenticateJWT
 
             $response->header(
                 'WWW-Authenticate',
-                'Bearer ' . config('app.account_authentication_bearer')
+                'Bearer ' . $request->space?->sso_authentication_bearer
             );
 
             $response->setStatusCode(401);
@@ -121,10 +127,10 @@ class AuthenticateJWT
         return $next($request);
     }
 
-    private function generateUnauthorizedBearerResponse(string $error, string $description): Response
+    private function generateUnauthorizedBearerResponse(Space $space, string $error, string $description): Response
     {
-        $bearer = 'Bearer ' . config('app.account_authentication_bearer');
-        $bearer .= !empty(config('app.account_authentication_bearer'))
+        $bearer = 'Bearer ' . $space->sso_authentication_bearer;
+        $bearer .= $space->sso_authentication_bearer != null
             ? ', '
             : '';
 

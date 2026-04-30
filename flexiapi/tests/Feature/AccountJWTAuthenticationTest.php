@@ -44,7 +44,7 @@ class AccountJWTAuthenticationTest extends TestCase
     {
         parent::setUp();
 
-        $keys = openssl_pkey_new(array("private_key_bits" => 4096,"private_key_type" => OPENSSL_KEYTYPE_RSA));
+        $keys = openssl_pkey_new(array("private_key_bits" => 4096, "private_key_type" => OPENSSL_KEYTYPE_RSA));
         $this->serverPublicKeyPem = openssl_pkey_get_details($keys)['key'];
         openssl_pkey_export($keys, $this->serverPrivateKeyPem);
     }
@@ -52,15 +52,20 @@ class AccountJWTAuthenticationTest extends TestCase
     public function testBaseProvisioning()
     {
         # JWT is disabled if Sodium is not loaded
-        if (!extension_loaded('sodium')) return;
+        if (!extension_loaded('sodium'))
+            return;
 
         $password = Password::factory()->create();
         $domain = 'sip_provisioning.example.com';
-        $bearer = 'authz_server="https://sso.test/", realm="sip.test.org"';
 
-        \App\Space::where('domain', $password->account->domain)->update(['host' => $domain]);
+        $space = \App\Space::where('domain', $password->account->domain)->first();
+        $space->update([
+            'host' => $domain,
+            'sso_public_key' => $this->serverPublicKeyPem,
+            'sso_sso_server_url' => 'https://sso.test/',
+            'sso_realm' => 'sip.test.org'
+        ]);
         config()->set('app.sip_domain', $domain);
-        config()->set('services.jwt.rsa_public_key_pem', $this->serverPublicKeyPem);
 
         $this->get($this->route)->assertStatus(400);
 
@@ -69,7 +74,7 @@ class AccountJWTAuthenticationTest extends TestCase
         $token = (new JwtFacade(null, $clock))->issue(
             new Sha256(),
             InMemory::plainText($this->serverPrivateKeyPem),
-            static fn (
+            static fn(
                 Builder $builder,
                 DateTimeImmutable $issuedAt
             ): Builder => $builder->withClaim('email', $password->account->email)
@@ -79,13 +84,10 @@ class AccountJWTAuthenticationTest extends TestCase
 
         // SIP identifier
 
-        // This line shoudn't be required, but the pipeline doesn't get the default value somehow
-        config()->set('services.jwt.sip_identifier', 'sip_identity');
-
         $token = (new JwtFacade(null, $clock))->issue(
             new Sha256(),
             InMemory::plainText($this->serverPrivateKeyPem),
-            static fn (
+            static fn(
                 Builder $builder,
                 DateTimeImmutable $issuedAt
             ): Builder => $builder->withClaim('sip_identity', 'sip:' . $password->account->username . '@' . $password->account->domain)
@@ -93,13 +95,11 @@ class AccountJWTAuthenticationTest extends TestCase
 
         $this->checkToken($token);
 
-        // Handle JWT_SIP_IDENTIFIER=
-        config()->set('services.jwt.sip_identifier', '');
-
+        // Handle empty sso_sip_identifier
         $token = (new JwtFacade(null, $clock))->issue(
             new Sha256(),
             InMemory::plainText($this->serverPrivateKeyPem),
-            static fn (
+            static fn(
                 Builder $builder,
                 DateTimeImmutable $issuedAt
             ): Builder => $builder->withClaim('sip_identity', 'sip:' . $password->account->username . '@' . $password->account->domain)
@@ -109,12 +109,12 @@ class AccountJWTAuthenticationTest extends TestCase
 
         // Custom SIP identifier
         $otherIdentifier = 'sip_other_identifier';
-        config()->set('services.jwt.sip_identifier', $otherIdentifier);
+        \App\Space::where('domain', $password->account->domain)->update(['sso_sip_identifier' => 'sip_other_identifier']);
 
         $token = (new JwtFacade(null, $clock))->issue(
             new Sha256(),
             InMemory::plainText($this->serverPrivateKeyPem),
-            static fn (
+            static fn(
                 Builder $builder,
                 DateTimeImmutable $issuedAt
             ): Builder => $builder->withClaim($otherIdentifier, 'sip:' . $password->account->username . '@' . $password->account->domain)
@@ -126,7 +126,7 @@ class AccountJWTAuthenticationTest extends TestCase
         $token = (new JwtFacade(null, $clock))->issue(
             new Sha512(),
             InMemory::plainText($this->serverPrivateKeyPem),
-            static fn (
+            static fn(
                 Builder $builder,
                 DateTimeImmutable $issuedAt
             ): Builder => $builder->withClaim('email', $password->account->email)
@@ -140,84 +140,89 @@ class AccountJWTAuthenticationTest extends TestCase
         $token = (new JwtFacade(null, $oldClock))->issue(
             new Sha256(),
             InMemory::plainText($this->serverPrivateKeyPem),
-            static fn (
+            static fn(
                 Builder $builder,
                 DateTimeImmutable $issuedAt
             ): Builder => $builder->withClaim('email', $password->account->email)
         );
 
         $response = $this->withHeaders([
-                'Authorization' => 'Bearer ' . $token->toString(),
-                'x-linphone-provisioning' => true,
-            ])
+            'Authorization' => 'Bearer ' . $token->toString(),
+            'x-linphone-provisioning' => true,
+        ])
             ->get($this->accountRoute)
             ->assertStatus(401);
 
         $this->assertStringContainsString('invalid_token', $response->headers->get('WWW-Authenticate'));
 
         // ...with the bearer
-        config()->set('app.account_authentication_bearer', $bearer);
-
         $response = $this->withHeaders([
-                'Authorization' => 'Bearer ' . $token->toString(),
-                'x-linphone-provisioning' => true,
-            ])
+            'Authorization' => 'Bearer ' . $token->toString(),
+            'x-linphone-provisioning' => true,
+        ])
             ->get($this->accountRoute)
             ->assertStatus(401);
 
-        $this->assertStringContainsString($bearer . ', ', $response->headers->get('WWW-Authenticate'));
+        $this->assertStringContainsString($space->sso_authentication_bearer . ', ', $response->headers->get('WWW-Authenticate'));
         $this->assertStringContainsString('invalid_token', $response->headers->get('WWW-Authenticate'));
 
         // Wrong email
         $token = (new JwtFacade(null, $clock))->issue(
             new Sha256(),
             InMemory::plainText($this->serverPrivateKeyPem),
-            static fn (
+            static fn(
                 Builder $builder,
                 DateTimeImmutable $issuedAt
             ): Builder => $builder->withClaim('email', 'unknow@man.org')
         );
 
         $this->withHeaders([
-                'Authorization' => 'Bearer ' . $token->toString(),
-                'x-linphone-provisioning' => true,
-            ])
+            'Authorization' => 'Bearer ' . $token->toString(),
+            'x-linphone-provisioning' => true,
+        ])
             ->get($this->accountRoute)
             ->assertStatus(403);
 
         // Wrong signature key
-        $keys = openssl_pkey_new(array("private_key_bits" => 4096,"private_key_type" => OPENSSL_KEYTYPE_RSA));
+        $keys = openssl_pkey_new(array("private_key_bits" => 4096, "private_key_type" => OPENSSL_KEYTYPE_RSA));
         openssl_pkey_export($keys, $wrongServerPrivateKeyPem);
 
         $wrongToken = (new JwtFacade(null, $clock))->issue(
             new Sha256(),
             InMemory::plainText($wrongServerPrivateKeyPem),
-            static fn (
+            static fn(
                 Builder $builder,
                 DateTimeImmutable $issuedAt
             ): Builder => $builder->withClaim('email', $password->account->email)
         );
 
         $this->withHeaders([
-                'Authorization' => 'Bearer ' . $wrongToken->toString(),
-                'x-linphone-provisioning' => true,
-            ])
+            'Authorization' => 'Bearer ' . $wrongToken->toString(),
+            'x-linphone-provisioning' => true,
+        ])
             ->get($this->accountRoute)
             ->assertStatus(401);
     }
 
     public function testAuthBearerUrl()
     {
-        $value = 'authz_server="https://auth_bearer.com/" realm="realm"';
-        config()->set('app.account_authentication_bearer', $value);
+        # JWT is disabled if Sodium is not loaded
+        if (!extension_loaded('sodium'))
+            return;
 
-        Password::factory()->create();
+        $password = Password::factory()->create();
+        $space = \App\Space::where('domain', $password->account->domain)->first();
+        $space->update([
+            'sso_public_key' => $this->serverPublicKeyPem,
+            'sso_server_url' => 'https://auth_bearer.com/',
+            'sso_realm' => 'realm'
+        ]);
 
         $response = $this->json($this->method, $this->routeAccountMe)
             ->assertStatus(401);
 
         $this->assertStringContainsString(
-            'Bearer ' . $value,
+            'Bearer ' . $space->sso_authentication_bearer,
             $response->headers->all()['www-authenticate'][0]
         );
 
@@ -227,19 +232,19 @@ class AccountJWTAuthenticationTest extends TestCase
             ->assertStatus(401);
 
         $this->assertStringContainsString(
-            'Bearer ' . $value,
+            'Bearer ' . $space->sso_authentication_bearer,
             $response->headers->all()['www-authenticate'][0]
         );
 
         // Wrong bearer message
         $this->withHeaders([
-                'Authorization' => 'Bearer 1234'
-            ])
+            'Authorization' => 'Bearer 1234'
+        ])
             ->json($this->method, $this->routeAccountMe)
             ->assertStatus(401);
 
         $this->assertStringContainsString(
-            'Bearer ' . $value,
+            'Bearer ' . $space->sso_authentication_bearer,
             $response->headers->all()['www-authenticate'][0]
         );
     }
@@ -247,9 +252,9 @@ class AccountJWTAuthenticationTest extends TestCase
     protected function checkToken(UnencryptedToken $token): void
     {
         $this->withHeaders([
-                'Authorization' => 'Bearer ' . $token->toString(),
-                'x-linphone-provisioning' => true,
-            ])
+            'Authorization' => 'Bearer ' . $token->toString(),
+            'x-linphone-provisioning' => true,
+        ])
             ->get($this->accountRoute)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')

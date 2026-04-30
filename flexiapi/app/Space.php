@@ -22,13 +22,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
+use CoderCat\JWKToPEM\JWKConverter;
 
 class Space extends Model
 {
     use HasFactory;
 
     protected $with = ['emailServer', 'carddavServers'];
+    protected $fillable = ['host', 'sso_public_key', 'sso_server_url', 'sso_realm'];
 
     public const FORBIDDEN_KEYS = [
         'account_proxy_registrar_address',
@@ -66,13 +69,18 @@ class Space extends Model
         'super' => 'boolean',
     ];
 
+    protected $attributes = [
+        'sso_sip_identifier' => 'sip_identity'
+    ];
+
     public const HOST_REGEX = '[\w\-]+';
     public const DOMAIN_REGEX = '(?=^.{4,253}$)(^((?!-)[a-z0-9-]{1,63}(?<!-)\.)+[a-z]{2,63}$)';
 
     protected static function booted()
     {
         static::addGlobalScope('domain', function (Builder $builder) {
-            if (!Auth::hasUser()) return;
+            if (!Auth::hasUser())
+                return;
 
             if (Auth::hasUser() || Auth::user()->superAdmin) {
                 return;
@@ -110,13 +118,13 @@ class Space extends Model
     public function scopeNotFull(Builder $query)
     {
         return $query->where('max_accounts', 0)
-                     ->orWhereRaw('max_accounts > (select count(*) from accounts where domain = spaces.domain)');
+            ->orWhereRaw('max_accounts > (select count(*) from accounts where domain = spaces.domain)');
     }
 
     public function getAccountsPercentageAttribute(): int
     {
         if ($this->max_accounts != null) {
-            return (int)($this->accounts()->count() / $this->max_accounts * 100);
+            return (int) ($this->accounts()->count() / $this->max_accounts * 100);
         }
 
         return Command::SUCCESS;
@@ -137,6 +145,37 @@ class Space extends Model
         return $this->host == config('app.root_host');
     }
 
+    public function refreshSSOCertificate(): bool
+    {
+        if (isset($this->attributes['sso_server_url']) && isset($this->attributes['sso_realm'])) {
+            $response = Http::get($this->attributes['sso_server_url'] . '/realms/' . $this->attributes['sso_realm'] . '/protocol/openid-connect/certs');
+            $jwkConverter = new JWKConverter();
+
+            if ($response->status() == '200' && $publicKey = $response->json('keys')[0]) {
+                $this->attributes['sso_public_key'] = $jwkConverter->toPEM($publicKey);
+                $this->attributes['updated_at'] = Carbon::now();
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Non standard authentication flow based on RFC 8898
+     */
+    public function getSSOAuthenticationBearerAttribute(): ?string
+    {
+        if (isset($this->attributes['sso_server_url']) && isset($this->attributes['sso_realm'])) {
+            return
+                'authz_server="' . $this->attributes['sso_server_url'] . 'realms/' . $this->attributes['sso_realm'] . '"' .
+                ',realm="' . $this->attributes['sso_realm'] . '"';
+        }
+
+        return null;
+    }
+
     public function getAccountsPercentageClassAttribute(): string
     {
         if ($this->getAccountsPercentageAttribute() >= 80) {
@@ -153,7 +192,7 @@ class Space extends Model
     public function getDaysLeftAttribute(): ?int
     {
         if ($this->expire_at != null) {
-            return (int)$this->expire_at->diffInDays(Carbon::now()) + 1;
+            return (int) $this->expire_at->diffInDays(Carbon::now()) + 1;
         }
 
         return null;
