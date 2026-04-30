@@ -34,6 +34,7 @@ use App\Http\Controllers\Account\ProvisioningController;
 use App\Http\Controllers\Account\RecoveryController;
 use App\Http\Controllers\Account\RegisterController;
 use App\Http\Controllers\Account\VcardsStorageController;
+use App\Http\Controllers\Account\WizardController;
 use App\Http\Controllers\Admin\Account\AccountTypeController;
 use App\Http\Controllers\Admin\Account\ActionController;
 use App\Http\Controllers\Admin\Account\ActivityController;
@@ -67,7 +68,7 @@ Route::get('about', [AboutController::class, 'about'])->name('about');
 Route::get('third-party-components', [AboutController::class, 'thirdPartyComponents'])->name('third_party_components');
 
 Route::middleware(['feature.web_panel_enabled'])->group(function () {
-    Route::get('wizard/{provisioning_token}', [ProvisioningController::class, 'wizard'])->name('provisioning.wizard');
+    Route::get('wizard/{token?}', [WizardController::class, 'show'])->name('wizard.show');
 
     Route::get('login', [AuthenticateController::class, 'login'])->name('account.login');
     Route::post('authenticate', [AuthenticateController::class, 'authenticate'])->name('account.authenticate');

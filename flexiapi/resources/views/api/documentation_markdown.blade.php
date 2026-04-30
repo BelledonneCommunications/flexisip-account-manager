@@ -56,6 +56,8 @@ Will return a JSON message with:
 
 @include('api.documentation.accounts.voicemail')
 
+@include('api.documentation.accounts.wizard')
+
 ## File Upload
 
 ### `POST /files/{uuid}`

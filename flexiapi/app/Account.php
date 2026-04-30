@@ -30,6 +30,7 @@ use Carbon\Carbon;
 use Awobaz\Compoships\Compoships;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use stdClass;
+use App\Http\Controllers\Api\Admin\Account\WizardController;
 
 class Account extends Authenticatable
 {
@@ -308,6 +309,16 @@ class Account extends Authenticatable
         return $this->hasMany(AuthToken::class);
     }
 
+    public function wizard()
+    {
+        return $this->hasMany(Wizard::class);
+    }
+
+    public function provisionedWizard()
+    {
+        return $this->hasMany(Wizard::class, 'provisioning_account_id', 'id');
+    }
+
     /**
      * Reset password
      */
@@ -444,8 +455,9 @@ class Account extends Authenticatable
 
     public function getProvisioningWizardUrlAttribute(): string
     {
+        $wizard = app(WizardController::class)->createForAccount($this);
         return replaceHost(
-            route('provisioning.wizard', $this->getProvisioningTokenAttribute()),
+            route('wizard.show', $wizard->token),
             $this->space->host
         );
     }

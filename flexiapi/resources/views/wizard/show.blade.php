@@ -2,9 +2,15 @@
 
 @section('content')
 <div id="wizard">
-    <h3>{{ __('Configure your Linphone application') }}</h3>
+    @if ($action == 'call')
+        <h3>{{ __('Start a Linphone call')}}</h3>
+    @elseif ($action == 'show')
+        <h3>{{ __('Open the Linphone application') }}</h3>
+    @else
+        <h3>{{ __('Configure your Linphone application') }}</h3>
+    @endif
 
-    <a class="btn" href="linphone-config:{{ route('provisioning.provision', ['provisioning_token' => $token]) }}">
+    <a class="btn" href={{ $uri }}>
         {{ __('Open the app') }}
     </a>
     @if ($platform == 'GNU/Linux')
