@@ -117,12 +117,6 @@ On nginx use `fastcgi_param` to pass the parameter directly to PHP.
 > **Warning** Do not create a cache of your configuration (using `artisan config:cache`) if you have a multi-environnement setup.
 > The cache is always having the priority on the variables set in the configuration files.
 
-## Custom Theme
-
-If you enable the Custom CSS Theme option to true in the Space administration panel, FlexiAPI will try to load a CSS file located in `public/css/$space_host.style.css`. If the file doesn't exists it will fallback to `public/css/style.css`.
-
-You can find an example CSS file at `public/css/custom.style.css`.
-
 ## Flexisip Push notifications pusher
 
 The API endpoint `POST /account_creation_tokens/send-by-push` uses the `flexisip_pusher` binary delivered by the [Flexisip](https://gitlab.linphone.org/BC/public/flexisip) project (and related package). You must configure the `APP_FLEXISIP_PUSHER_PATH` and `APP_FLEXISIP_PUSHER_FIREBASE_KEYSMAP` environnement variables to point to the correct binary.

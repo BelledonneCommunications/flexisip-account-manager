@@ -28,6 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
     - `JWT_RSA_PUBLIC_KEY_PEM`
     - `JWT_SIP_IDENTIFIER`
     - `ACCOUNT_AUTHENTICATION_BEARER`, it is now generated directly from the Space configuration
+- **Remove the custom_theme feature**
 
 ## [2.0]
 

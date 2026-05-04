@@ -64,7 +64,6 @@ class SpaceController extends Controller
         $this->setRequestBoolean($request, $space, 'assistant_hide_third_party_account');
         $this->setRequestBoolean($request, $space, 'carddav_user_credentials');
         $this->setRequestBoolean($request, $space, 'custom_provisioning_overwrite_all');
-        $this->setRequestBoolean($request, $space, 'custom_theme');
         $this->setRequestBoolean($request, $space, 'disable_broadcast_feature');
         $this->setRequestBoolean($request, $space, 'disable_call_recordings_feature');
         $this->setRequestBoolean($request, $space, 'disable_chat_feature');
@@ -111,7 +110,6 @@ class SpaceController extends Controller
             'carddav_user_credentials' => 'required|boolean',
             'custom_provisioning_entries' => ['nullable', new Ini(Space::FORBIDDEN_KEYS)],
             'custom_provisioning_overwrite_all' => 'required|boolean',
-            'custom_theme' => 'required|boolean',
             'disable_broadcast_feature' => 'required|boolean',
             'disable_call_recordings_feature' => 'required|boolean',
             'disable_chat_feature' => 'required|boolean',
@@ -156,7 +154,6 @@ class SpaceController extends Controller
         $space->carddav_user_credentials = $request->get('carddav_user_credentials');
         $space->custom_provisioning_entries = $request->get('custom_provisioning_entries');
         $space->custom_provisioning_overwrite_all = $request->get('custom_provisioning_overwrite_all');
-        $space->custom_theme = $request->get('custom_theme');
         $space->disable_broadcast_feature = $request->get('disable_broadcast_feature');
         $space->disable_call_recordings_feature = $request->get('disable_call_recordings_feature');
         $space->disable_chat_feature = $request->get('disable_chat_feature');

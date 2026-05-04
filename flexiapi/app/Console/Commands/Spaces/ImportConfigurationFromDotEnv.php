@@ -24,7 +24,6 @@ class ImportConfigurationFromDotEnv extends Command
 
         $space->name = env('APP_NAME', null);
 
-        $space->custom_theme = env('INSTANCE_CUSTOM_THEME', false);
         $space->web_panel = env('WEB_PANEL', true);
 
         $space->copyright_text = env('INSTANCE_COPYRIGHT', null);

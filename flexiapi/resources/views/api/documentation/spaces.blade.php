@@ -32,7 +32,6 @@ JSON parameters:
 * `copyright_text` text, the copyright text
 * `custom_provisioning_entries` text, the custom configuration used for the provisioning
 * `custom_provisioning_overwrite_all` boolean, allow the custom configuration to overwrite the default one
-* `custom_theme` boolean, allow a custom CSS file to be loaded
 * `disable_broadcast_feature` boolean, disable the broadcast feature, default to `true`
 * `disable_call_recordings_feature` boolean, disable the call recording feature, default to `false`
 * `disable_chat_feature` boolean, disable the chat feature, default to `false`
@@ -69,7 +68,6 @@ JSON parameters:
 * `copyright_text` **required**, text, the copyright text
 * `custom_provisioning_entries` **required**, text, the custom configuration used for the provisioning
 * `custom_provisioning_overwrite_all` **required**, boolean, allow the custom configuration to overwrite the default one
-* `custom_theme` **required**, boolean, allow a custom CSS file to be loaded
 * `disable_broadcast_feature` **required**, boolean
 * `disable_call_recordings_feature` **required**, boolean
 * `disable_chat_feature` **required**, boolean

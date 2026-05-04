@@ -35,8 +35,6 @@ class ApiSpaceWithMiddlewareTest extends TestCase
         $superAdmin = Account::factory()->superAdmin()->create();
         $superAdmin->generateUserApiKey();
 
-        $username = 'username';
-
         $space = Space::factory()->secondDomain()->expired()->create();
         $admin = Account::factory()->fromSpace($space)->admin()->create();
 

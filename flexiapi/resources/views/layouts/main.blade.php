@@ -15,9 +15,6 @@
              @if (space()?->logo) --space-logo: url('{{ asset('storage/img/' . space()->logo) }}');  @endif
         }
     </style>
-    @if (space()?->custom_theme && file_exists(public_path('css/' . space()?->host . '.style.css')))
-        <link rel="stylesheet" type="text/css" href="{{ asset('css/' . space()?->host . '.style.css') }}">
-    @endif
     <script src="{{ asset('scripts/utils.js') }}"></script>
     <script src="{{ asset('scripts/chart.js') }}"></script>
     <script src="{{ asset('scripts/chartjs-plugin-datalabels@2.0.0') }}"></script>
