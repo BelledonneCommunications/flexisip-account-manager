@@ -1,4 +1,4 @@
-## Account external Account
+## 👤📤 Account External Account
 
 ### `GET /accounts/{id}/external`
 <span class="badge badge-warning">Admin</span>

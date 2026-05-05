@@ -1,4 +1,4 @@
-## Accounts
+## 👤 Accounts
 
 ### `POST /accounts/with-account-creation-token`
 <span class="badge badge-success">Public</span>

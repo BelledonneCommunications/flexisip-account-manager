@@ -1,4 +1,4 @@
-## Account phone number
+## 👤📞 Account phone number
 
 ### `POST /accounts/me/phone/request`
 <span class="badge badge-info">User</span>
@@ -23,7 +23,7 @@ JSON parameters:
 
 Return the updated account.
 
-## Accounts devices
+## 👤💻 Account devices
 
 ### `GET /accounts/{id/me}/devices`
 <span class="badge badge-warning">Admin</span>

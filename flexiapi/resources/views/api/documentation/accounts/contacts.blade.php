@@ -1,4 +1,4 @@
-## Account contacts
+## 👤🧑‍🧒‍🧒 Account Contacts
 
 ### `GET /accounts/{id/me}/contacts`
 <span class="badge badge-info">User</span>

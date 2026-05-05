@@ -1,4 +1,4 @@
-## Spaces Email Server
+## 👾✉️ Spaces Email Server
 
 ### `GET /spaces/{domain}/email`
 <span class="badge badge-error">Super Admin</span>

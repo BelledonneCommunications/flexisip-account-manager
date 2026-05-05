@@ -1,4 +1,4 @@
-## Account Call Forwardings
+## 👤⏩ Account Call Forwardings
 
 When a `call_forwarding` object is configured to forward to a contact (`forward_to: 'contact'`) the SIP URI of the contact is returned in a `contact_sip_uri` attributes.
 
@@ -46,7 +46,7 @@ JSON parameters:
 <span class="badge badge-info">User</span>
 <span class="badge badge-warning">Admin</span>
 
-Create a new Call Forwarding configuration.
+Update a new Call Forwarding configuration.
 
 JSON parameters:
 

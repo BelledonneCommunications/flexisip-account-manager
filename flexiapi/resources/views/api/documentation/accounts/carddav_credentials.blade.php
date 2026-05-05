@@ -1,4 +1,4 @@
-## Account CardDav credentials
+## 👤🗂️ Account CardDav credentials
 
 The following endpoints will return `403 Forbidden` if the requested account Space doesn't have `carddav_user_credentials` set to `true`.
 
