@@ -1,4 +1,4 @@
-## Accounts email
+## 👤✉️ Accounts email
 
 ### `POST /accounts/me/email/request`
 <span class="badge badge-info">User</span>

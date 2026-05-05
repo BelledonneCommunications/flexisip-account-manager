@@ -1,5 +1,5 @@
 
-## Spaces
+## 👾 Spaces
 
 Manage the list of allowed `spaces`. The admin accounts declared with a `domain` that is a `super` `sip_domain` will become <span class="badge badge-error">Super Admin</span>.
 

@@ -1,4 +1,4 @@
-## Account actions
+## 👤🔨 Account Actions
 
 The following endpoints will return `403 Forbidden` if the requested account doesn't have a DTMF protocol configured.
 

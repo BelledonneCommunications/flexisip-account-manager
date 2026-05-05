@@ -1,4 +1,4 @@
-## Voicemails
+## 👤📼 Account Voicemail
 
 ### `GET /accounts/me/voicemails`
 <span class="badge badge-info">User</span>

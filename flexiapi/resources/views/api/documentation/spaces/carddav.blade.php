@@ -1,4 +1,4 @@
-## Spaces CardDav Servers
+## 👾🗂️ Spaces CardDav Servers
 
 ### `GET /spaces/{domain}/carddavs`
 <span class="badge badge-error">Super Admin</span>
