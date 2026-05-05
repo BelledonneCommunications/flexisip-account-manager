@@ -1,4 +1,4 @@
-## Account Creation Request Tokens
+## 👤❓➕🔑 Account Creation Request Tokens
 
 An `account_creation_request_token` is a unique token that can be validated and then used to generate a valid `account_creation_token`.
 
@@ -7,7 +7,7 @@ An `account_creation_request_token` is a unique token that can be validated and 
 
 Create and return an `account_creation_request_token` that should then be validated to be used, often using a browser CAPTCHA.
 
-## Account Creation Tokens
+## 👤➕🔑 Account Creation Tokens
 
 An `account_creation_token` is a unique token that allow the creation or the validation of a unique account.
 
@@ -52,7 +52,7 @@ JSON parameters:
 
 Create and return an `account_creation_token`.
 
-## Account Recovery Tokens
+## 👤🔄🔑 Account Recovery Tokens
 
 An `account_recovery_token` is a unique token that allow the recovery of an account.
 
@@ -74,7 +74,7 @@ JSON parameters:
 * `pn_param` the push notification parameter, can be null or contain only alphanumeric and underscore characters
 * `pn_prid` the push notification unique id, can be null or contain only alphanumeric, dashes, underscore and colon characters
 
-## Auth Tokens
+## 👤➡️🔑 Account Auth Tokens
 
 ### `POST /accounts/auth_token`
 <span class="badge badge-success">Public</span>

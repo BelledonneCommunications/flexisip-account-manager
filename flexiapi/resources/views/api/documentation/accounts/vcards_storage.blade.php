@@ -1,4 +1,4 @@
-## Account vCards storage
+## 👤🗃️ Account vCards storage
 
 ### `POST /accounts/{id/me}/vcards-storage`
 <span class="badge badge-warning">Admin</span>

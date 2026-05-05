@@ -1,4 +1,4 @@
-## Account Types
+## 👤🚩 Account Types
 
 ### `GET /account_types`
 <span class="badge badge-warning">Admin</span>
