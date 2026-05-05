@@ -19,7 +19,7 @@ All the resolved object can be reached using direct API endpoints. This endpoint
 
 Will return a JSON message with:
 
-* `type` resolved API object `type`, can be `acccount`
+* `type` resolved API object `type`, can be `acccount` or `group`
 * `payload` that contains the resolved object
 
 @include('api.documentation.spaces')
@@ -28,15 +28,15 @@ Will return a JSON message with:
 
 @include('api.documentation.spaces.email')
 
-@include('api.documentation.account_tokens')
+@include('api.documentation.spaces.groups')
 
 @include('api.documentation.accounts')
+
+@include('api.documentation.account_tokens')
 
 @include('api.documentation.accounts.actions')
 
 @include('api.documentation.accounts.carddav_credentials')
-
-@include('api.documentation.accounts.contacts_lists')
 
 @include('api.documentation.accounts.call_forwarding')
 
@@ -58,7 +58,9 @@ Will return a JSON message with:
 
 @include('api.documentation.accounts.wizard')
 
-## File Upload
+@include('api.documentation.accounts.contacts_lists')
+
+## ⬆️ File Upload
 
 ### `POST /files/{uuid}`
 <span class="badge badge-info">User</span>
@@ -73,7 +75,7 @@ HTTP [Form-Data](https://developer.mozilla.org/fr/docs/Web/API/FormData) paramet
 
 * `file` **required**, the file to upload, must have the same `content_type` as requested in the slot
 
-## Messages
+## 🗨️ Messages
 
 ### `POST /messages`
 <span class="badge badge-warning">Admin</span>
@@ -85,7 +87,7 @@ JSON parameters:
 * `to` **required**, SIP address of the receiver
 * `body` **required**, content of the message
 
-## Push Notifications
+## 📩 Push Notifications
 
 ### `POST /push_notification`
 <span class="badge badge-info">User</span>
@@ -100,7 +102,7 @@ JSON parameters:
 * `type` **required**, must be in `background`, `message` or `call`
 * `call_id` a Call ID, must have only alphanumeric, tilde and dashes characters
 
-## Phone Countries
+## 🗺️ Phone Countries
 
 The phone numbers managed by FlexiAPI are validated against a list of countries that can be managed in the admin web panels.
 

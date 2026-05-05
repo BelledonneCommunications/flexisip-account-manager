@@ -1,4 +1,4 @@
-## Account dictionary
+## 👤📖 Account Dictionary
 
 ### `GET /accounts/{id}/dictionary`
 <span class="badge badge-warning">Admin</span>
