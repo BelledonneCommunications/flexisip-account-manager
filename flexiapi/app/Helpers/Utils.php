@@ -112,7 +112,6 @@ function hasCoTURNConfigured(): bool
 
 function getCoTURNCredentials(): array
 {
-    $user = Str::random(8);
     $secret = config('app.coturn_static_auth_secret');
 
     $ttl = config('app.coturn_session_ttl_minutes') * 60;
@@ -126,7 +125,6 @@ function getCoTURNCredentials(): array
         'password' => $password,
     ];
 }
-
 
 /**
  * Build the RFC 3261 §19.1 compliant regex pattern.
@@ -200,10 +198,15 @@ function sipBuildPattern(): string
     return '/^sips?:(?:' . $userinfo . ')?' . $hostport . $uriParams . $headers . '$/i';
 }
 
+function stripSipProtocol(string $sipAdress): string
+{
+    return preg_replace('/^(sips?:)(.*)/', '$2', $sipAdress);
+}
+
 function parseSIP(string $sipAdress): ?array
 {
     if (isSip($sipAdress)) {
-        return explode('@', \substr($sipAdress, 4));
+        return explode('@', stripSipProtocol($sipAdress));
     }
 
     return null;

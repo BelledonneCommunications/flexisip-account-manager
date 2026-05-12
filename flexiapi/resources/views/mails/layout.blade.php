@@ -7,7 +7,7 @@
 
 <x-mail::panel>
 
-{{ __('Don’t have the app yet?') }} @if (isset($account)) [{{ __('Login to my account with Linphone') }}]({{ $account->provisioning_wizard_url }}) @else [{{ __('Download Linphone')}}](https://www.linphone.org/en/download/) @endif
+{{ __('Don’t have the app yet?') }} [{{ __('Download Linphone')}}](https://www.linphone.org/en/download/)
 
 <br />
 

@@ -6,8 +6,7 @@ use App\Account;
 use App\Http\Controllers\Controller;
 use App\Mail\Provisioning;
 
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
+use App\Services\AccountService;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
@@ -26,6 +25,7 @@ class ProvisioningEmailController extends Controller
     {
         $account = Account::findOrFail($accountId);
         $account->provision();
+        $account->newWizard();
 
         Mail::to($account)->send(new Provisioning($account));
 

@@ -2,17 +2,22 @@
 
 @section('content')
 <div id="wizard">
-    @if ($action == 'call')
-        <h3>{{ __('Start a Linphone call')}}</h3>
-    @elseif ($action == 'show')
-        <h3>{{ __('Open the Linphone application') }}</h3>
+    @if ($uri->query()->string('linphone-action') == 'call')
+        <h3 class="center">{{ __('Start a Linphone call')}}</h3>
+    @elseif ($uri->query()->string('linphone-action') == 'show')
+        <h3 class="center">{{ __('Open the Linphone application') }}</h3>
     @else
-        <h3>{{ __('Configure your Linphone application') }}</h3>
+        <h3 class="center">{{ __('Configure your Linphone application') }}</h3>
     @endif
 
-    <a class="btn" href={{ $uri }}>
+    <a id="open_app" class="btn" href="{{ $uri }}">
         {{ __('Open the app') }}
     </a>
+
+    <script>
+        document.querySelector('#open_app').click()
+    </script>
+
     @if ($platform == 'GNU/Linux')
         <a class="btn secondary" target="_blank" href="https://download.linphone.org/releases/linux/latest_app">
             {{ __('Download Linphone for GNU/Linux') }}

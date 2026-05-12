@@ -5,11 +5,9 @@ namespace App\Http\Controllers\Api\Admin\Account;
 use App\Http\Controllers\Controller;
 use App\Rules\SipUri;
 use App\Wizard;
-use App\Account;
 
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class WizardController extends Controller
 {
@@ -22,40 +20,12 @@ class WizardController extends Controller
             'linphone_use_sips' => ['nullable', 'boolean'],
         ]);
 
-        $wizard = $this->createWizard(
-            accountId: $request->user()->id,
-            provisioningAccountId: $request->provisioning_account_id,
-            sip: $request->sip,
-            linphoneAction: $request->linphone_action,
-            linphoneUseSips: $request->linphone_use_sips,
-        );
-
-        return $wizard;
-    }
-
-    public function createForAccount(Account $account): Wizard
-    {
-        $wizard = $this->createWizard(
-            accountId: $account->id,
-            provisioningAccountId: $account->id
-        );
-        return $wizard;
-    }
-
-    private function createWizard(
-        int $accountId,
-        ?int $provisioningAccountId = null,
-        ?string $sip = null,
-        ?string $linphoneAction = null,
-        bool $linphoneUseSips = false
-    ): Wizard {
-        $wizard = new Wizard();
-        $wizard->token = Str::random(8);
-        $wizard->account_id = $accountId;
-        $wizard->provisioning_account_id = $provisioningAccountId;
-        $wizard->sip = $sip;
-        $wizard->linphone_action = $linphoneAction;
-        $wizard->linphone_use_sips = $linphoneUseSips;
+        $wizard = new Wizard;
+        $wizard->account_id = $request->user()->id;
+        $wizard->provisioning_account_id = $request->provisioning_account_id;
+        $wizard->sip = $request->sip;
+        $wizard->linphone_action = $request->linphone_action;
+        $wizard->linphone_use_sips = $request->linphone_use_sips;
         $wizard->save();
 
         return $wizard;

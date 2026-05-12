@@ -25,7 +25,6 @@ use App\Password;
 use App\ProvisioningToken;
 use App\SpaceCardDavServer;
 use App\Space;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class AccountProvisioningTest extends TestCase
