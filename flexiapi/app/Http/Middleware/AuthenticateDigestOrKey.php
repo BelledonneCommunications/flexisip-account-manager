@@ -40,9 +40,11 @@ class AuthenticateDigestOrKey
         // Key authentication
 
         if ($request->header('x-api-key') || $request->cookie('x-api-key')) {
-            $apiKey = ApiKey::with(['account' => function ($query) {
-                $query->withoutGlobalScopes();
-            }])->where('key', $request->header('x-api-key') ?? $request->cookie('x-api-key'))->first();
+            $apiKey = ApiKey::with([
+                'account' => function ($query) {
+                    $query->withoutGlobalScopes();
+                }
+            ])->where('key', $request->header('x-api-key') ?? $request->cookie('x-api-key'))->first();
 
             if ($apiKey && ($apiKey->ip == null || $apiKey->ip == $request->ip())) {
                 $apiKey->last_used_at = Carbon::now();
@@ -63,12 +65,19 @@ class AuthenticateDigestOrKey
         }
 
         $from = $this->extractFromHeader($request->header('From'));
-        list($username, $domain) = parseSIP($from);
+
+        $sip = parseSIP($from);
+
+        if ($sip == null) {
+            return $this->generateUnauthorizedResponse(null, 'Invalid SIP address');
+        }
+
+        list($username, $domain) = $sip;
 
         $account = Account::withoutGlobalScopes()
-                          ->where('username', $username)
-                          ->where('domain', $domain)
-                          ->firstOrFail();
+            ->where('username', $username)
+            ->where('domain', $domain)
+            ->firstOrFail();
 
         // DIGEST authentication
 
@@ -77,7 +86,7 @@ class AuthenticateDigestOrKey
             $storedNonce = $account->nonces()->where('nonce', $auth['nonce'])->first();
 
             // Nonce handling
-            if ($storedNonce && (int)$storedNonce->nc >= (int)\hexdec($auth['nc'])) {
+            if ($storedNonce && (int) $storedNonce->nc >= (int) \hexdec($auth['nc'])) {
                 $storedNonce->delete();
 
                 return $this->generateUnauthorizedResponse($account, 'Nonce replayed');
@@ -90,17 +99,17 @@ class AuthenticateDigestOrKey
 
             // Validation
             Validator::make($auth, [
-                'opaque'    => 'required|in:'.$this->getOpaque(),
-                //'uri'       => 'in:/'.$request->path(),
-                'qop'       => 'required|in:auth',
-                'realm'     => 'required|in:'.$account->resolvedRealm,
-                'nc'        => 'required',
-                'cnonce'    => 'required',
+                'opaque' => 'required|in:' . $this->getOpaque(),
+                'uri' => 'in:/' . $request->path(),
+                'qop' => 'required|in:auth',
+                'realm' => 'required|in:' . $account->resolvedRealm,
+                'nc' => 'required',
+                'cnonce' => 'required',
                 'algorithm' => [
                     'required',
                     Rule::in(array_keys(passwordAlgorithms())),
                 ],
-                'username'  => 'required|in:'.$username,
+                'username' => 'required|in:' . $username,
             ])->validate();
 
             // Headers
@@ -108,14 +117,14 @@ class AuthenticateDigestOrKey
 
             // Retrieving the user and related passwords
             $password = $account->passwords()
-                                ->where('algorithm', $auth['algorithm'])
-                                ->first();
+                ->where('algorithm', $auth['algorithm'])
+                ->first();
 
             // CLRTXT case
             if (!$password) {
                 $password = $account->passwords()
-                                    ->where('algorithm', 'CLRTXT')
-                                    ->first();
+                    ->where('algorithm', 'CLRTXT')
+                    ->first();
             }
 
             if (!$password) {
@@ -126,18 +135,18 @@ class AuthenticateDigestOrKey
 
             // Hashing and checking
             $a1 = $password->algorithm == 'CLRTXT'
-                ? hash($hash, $account->username.':'.$account->resolvedRealm.':'.$password->password)
+                ? hash($hash, $account->username . ':' . $account->resolvedRealm . ':' . $password->password)
                 : $password->password; // username:realm/domain:password
-            $a2 = hash($hash, $request->method().':'.$auth['uri']);
+            $a2 = hash($hash, $request->method() . ':' . $auth['uri']);
 
             $validResponse = hash(
                 $hash,
-                $a1.
-                ':'.$auth['nonce'].
-                ':'.$auth['nc'].
-                ':'.$auth['cnonce'].
-                ':'.$auth['qop'].
-                ':'.$a2
+                $a1 .
+                ':' . $auth['nonce'] .
+                ':' . $auth['nc'] .
+                ':' . $auth['cnonce'] .
+                ':' . $auth['qop'] .
+                ':' . $a2
             );
 
             // Auth response don't match
@@ -220,7 +229,7 @@ class AuthenticateDigestOrKey
 
     private function generateAuthHeader(string $realm, string $algorithm, string $nonce): string
     {
-        return 'Digest realm="'.$realm.'",qop="auth",algorithm='.$algorithm.',nonce="'.$nonce.'",opaque="'.$this->getOpaque().'"';
+        return 'Digest realm="' . $realm . '",qop="auth",algorithm=' . $algorithm . ',nonce="' . $nonce . '",opaque="' . $this->getOpaque() . '"';
     }
 
     private function extractFromHeader(string $string): string
