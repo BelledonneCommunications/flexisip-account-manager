@@ -83,10 +83,19 @@ class AuthenticateJWT
 
             $account = null;
             $identifierKey = $request->space->sso_sip_identifier;
-            if ($identifierKey == '') $identifierKey = 'sip_identity';
+
+            if ($identifierKey == '') {
+                $identifierKey = 'sip_identity';
+            }
 
             if ($token->claims()->has($identifierKey)) {
-                list($username, $domain) = parseSIP($token->claims()->get($identifierKey));
+                $sip = parseSIP($token->claims()->get($identifierKey));
+
+                if ($sip == null) {
+                    return $this->generateUnauthorizedBearerResponse($request->space, 'invalid_token', 'Invalid SIP address');
+                }
+
+                list($username, $domain) = $sip;
 
                 $account = Account::withoutGlobalScopes()
                     ->where('username', $username)

@@ -729,7 +729,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### giggsey/libphonenumber-for-php-lite (Version 9.0.28 | 08acc9d)
+### giggsey/libphonenumber-for-php-lite (Version 9.0.30 | 6561e56)
 A lite version of giggsey/libphonenumber-for-php, which is a PHP Port of Google's libphonenumber
 Homepage: https://github.com/giggsey/libphonenumber-for-php-lite
 Licenses Used: Apache-2.0
@@ -1077,7 +1077,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-### jaybizzle/crawler-detect (Version v1.3.9 | 5edf2e4)
+### jaybizzle/crawler-detect (Version v1.3.11 | 4847927)
 CrawlerDetect is a PHP class for detecting bots/crawlers/spiders via the user agent
 Homepage: https://github.com/JayBizzle/Crawler-Detect/
 Licenses Used: MIT
@@ -1159,7 +1159,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### laravel/serializable-closure (Version v2.0.12 | a6abb4e)
+### laravel/serializable-closure (Version v2.0.13 | b566ee0)
 Laravel Serializable Closure provides an easy and secure way to serialize closures in PHP.
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1693,7 +1693,7 @@ permanent authorization for you to choose that version for the
 Library.
 
 
-### mobiledetect/mobiledetectlib (Version 4.8.10 | 96b1e1f)
+### mobiledetect/mobiledetectlib (Version 4.10.0 | 1473bd9)
 Mobile_Detect is a lightweight PHP class for detecting mobile devices. It uses the User-Agent string combined with specific HTTP headers to detect the mobile environment.
 Homepage: https://github.com/serbanghita/Mobile-Detect
 Licenses Used: MIT
@@ -1895,7 +1895,7 @@ you URLs with full text:
 - [GPL version 3](http://www.gnu.org/licenses/gpl-3.0.html)
 
 
-### nette/utils (Version v4.1.3 | bb3ea63)
+### nette/utils (Version v4.1.4 | 7da6c39)
 🛠  Nette Utils: lightweight utilities for string & array manipulation, image handling, safe JSON encoding/decoding, validation, slug or strong password generating etc.
 Homepage: https://nette.org
 Licenses Used: BSD-3-Clause, GPL-2.0-only, GPL-3.0-only
@@ -3287,7 +3287,7 @@ SOFTWARE.
 
 
 
-### sabre/uri (Version 3.0.3 | 4fa0b20)
+### sabre/uri (Version 3.1.0 | a926c74)
 Functions for making sense out of URIs.
 Homepage: http://sabre.io/uri/
 Licenses Used: BSD-3-Clause
@@ -3353,7 +3353,7 @@ are permitted provided that the following conditions are met:
     POSSIBILITY OF SUCH DAMAGE.
 
 
-### sabre/xml (Version 4.0.7 | 53db7ba)
+### sabre/xml (Version 4.1.0 | bec83cb)
 sabre/xml is an XML library that you may not hate.
 Homepage: https://sabre.io/xml/
 Licenses Used: BSD-3-Clause
@@ -3936,7 +3936,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/console (Version v7.4.8 | 1e92e39)
+### symfony/console (Version v7.4.9 | d7d2b64)
 Eases the creation of beautiful and testable command line interfaces
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -3961,7 +3961,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/css-selector (Version v7.4.8 | b055f22)
+### symfony/css-selector (Version v7.4.9 | b75663e)
 Converts CSS selectors to XPath expressions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -3986,7 +3986,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/deprecation-contracts (Version v3.6.0 | 63afe74)
+### symfony/deprecation-contracts (Version v3.7.0 | 50f59d1)
 A generic function and convention to trigger deprecation notices
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4036,7 +4036,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/event-dispatcher (Version v7.4.8 | f57b899)
+### symfony/event-dispatcher (Version v7.4.9 | e4a2e29)
 Provides tools that allow your application components to communicate with each other by dispatching events and listening to them
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4061,7 +4061,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/event-dispatcher-contracts (Version v3.6.0 | 59eb412)
+### symfony/event-dispatcher-contracts (Version v3.7.0 | ccba706)
 Generic abstractions related to dispatching event
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4136,7 +4136,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/http-kernel (Version v7.4.8 | 017e76a)
+### symfony/http-kernel (Version v7.4.10 | 23486f5)
 Provides a structured process for converting a Request into a Response
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4186,7 +4186,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/mime (Version v7.4.8 | 6df02f9)
+### symfony/mime (Version v7.4.9 | 2d550c4)
 Allows manipulating MIME messages
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4211,7 +4211,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-ctype (Version v1.36.0 | 141046a)
+### symfony/polyfill-ctype (Version v1.37.0 | 141046a)
 Symfony polyfill for ctype functions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4236,7 +4236,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-intl-grapheme (Version v1.36.0 | ad1b7b9)
+### symfony/polyfill-intl-grapheme (Version v1.37.0 | 4864388)
 Symfony polyfill for intl's grapheme_* functions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4261,7 +4261,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-intl-idn (Version v1.36.0 | 9614ac4)
+### symfony/polyfill-intl-idn (Version v1.37.0 | 9614ac4)
 Symfony polyfill for intl's idn_to_ascii and idn_to_utf8 functions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4286,7 +4286,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-intl-normalizer (Version v1.36.0 | 3833d72)
+### symfony/polyfill-intl-normalizer (Version v1.37.0 | 3833d72)
 Symfony polyfill for intl's Normalizer class and related functions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4311,7 +4311,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-mbstring (Version v1.36.0 | 6a21eb9)
+### symfony/polyfill-mbstring (Version v1.37.0 | 6a21eb9)
 Symfony polyfill for the Mbstring extension
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4336,7 +4336,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-php80 (Version v1.36.0 | dfb5572)
+### symfony/polyfill-php80 (Version v1.37.0 | dfb5572)
 Symfony polyfill backporting some PHP 8.0+ features to lower PHP versions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4361,7 +4361,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-php83 (Version v1.36.0 | 3600c2c)
+### symfony/polyfill-php83 (Version v1.37.0 | 3600c2c)
 Symfony polyfill backporting some PHP 8.3+ features to lower PHP versions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4386,7 +4386,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-php85 (Version v1.36.0 | 2c408a6)
+### symfony/polyfill-php85 (Version v1.37.0 | fcfa497)
 Symfony polyfill backporting some PHP 8.5+ features to lower PHP versions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4411,7 +4411,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-uuid (Version v1.36.0 | 26dfec2)
+### symfony/polyfill-uuid (Version v1.37.0 | 26dfec2)
 Symfony polyfill for uuid functions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4461,7 +4461,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/routing (Version v7.4.8 | 9608de9)
+### symfony/routing (Version v7.4.9 | 287771d)
 Maps an HTTP request to a set of configuration variables
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4486,7 +4486,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/service-contracts (Version v3.6.1 | 4511256)
+### symfony/service-contracts (Version v3.7.0 | d25d824)
 Generic abstractions related to writing services
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4536,7 +4536,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/translation (Version v7.4.8 | 33600f8)
+### symfony/translation (Version v7.4.10 | ada7578)
 Provides tools to internationalize your application
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4561,7 +4561,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/translation-contracts (Version v3.6.1 | 65a8bc8)
+### symfony/translation-contracts (Version v3.7.0 | 0ab3029)
 Generic abstractions related to translation
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4586,7 +4586,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/uid (Version v7.4.8 | 6883ebd)
+### symfony/uid (Version v7.4.9 | 2676b52)
 Provides an object-oriented API to generate and represent UIDs
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4753,7 +4753,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-### voku/portable-ascii (Version 2.1.0 | d870a33)
+### voku/portable-ascii (Version 2.1.1 | 8e1051f)
 Portable ASCII library - performance optimized (ascii) string functions for php.
 Homepage: https://github.com/voku/portable-ascii
 Licenses Used: MIT
