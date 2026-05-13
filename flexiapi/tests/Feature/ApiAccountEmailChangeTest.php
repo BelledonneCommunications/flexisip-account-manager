@@ -20,6 +20,7 @@
 namespace Tests\Feature;
 
 use App\Account;
+use App\Space;
 use App\EmailChangeCode;
 use Tests\TestCase;
 
@@ -37,20 +38,20 @@ class ApiAccountEmailChangeTest extends TestCase
         $newEmail = 'test@test.com';
 
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/request', [
+            ->json($this->method, $this->route . '/request', [
                 'email' => 'blabla'
             ])
             ->assertStatus(422);
 
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/request', [
+            ->json($this->method, $this->route . '/request', [
                 'email' => $newEmail
             ])
             ->assertStatus(200);
 
         // Same email
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/request', [
+            ->json($this->method, $this->route . '/request', [
                 'email' => $account->email
             ])
             ->assertStatus(422);
@@ -66,8 +67,8 @@ class ApiAccountEmailChangeTest extends TestCase
             ]);
 
         // Email already exists
-        config()->set('app.account_email_unique', true);
-
+        Space::where('domain', $account->domain)->update(['unique_email' => true]);
+        
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route . '/request', [
                 'email' => $otherAccount->email
@@ -80,7 +81,7 @@ class ApiAccountEmailChangeTest extends TestCase
         $account->generateUserApiKey();
 
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/request', [
+            ->json($this->method, $this->route . '/request', [
                 'email' => 'new@email.com'
             ])
             ->assertStatus(200);
@@ -103,7 +104,7 @@ class ApiAccountEmailChangeTest extends TestCase
         $account->generateUserApiKey();
 
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/request', [
+            ->json($this->method, $this->route . '/request', [
                 'email' => 'test@test.com'
             ])
             ->assertStatus(403);

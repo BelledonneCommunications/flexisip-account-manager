@@ -303,7 +303,7 @@ class AccountService
     {
         $rules = ['required', 'email', Rule::notIn([$request->user()->email])];
 
-        if (config('app.account_email_unique')) {
+        if ($request->space->unique_email) {
             array_push($rules, Rule::unique('accounts', 'email'));
         }
 

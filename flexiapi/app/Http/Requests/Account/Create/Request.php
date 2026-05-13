@@ -41,6 +41,8 @@ class Request extends FormRequest
 
     public function rules()
     {
+        $domain = resolveDomain($this);
+
         return [
             'username' => [
                 'required',
@@ -48,27 +50,37 @@ class Request extends FormRequest
                 new IsNotPhoneNumber(),
                 new BlacklistedUsername(),
                 new SIPUsername(),
-                Rule::unique('accounts', 'username')->where(function ($query) {
-                    $query->where('domain', resolveDomain($this));
+                Rule::unique('accounts', 'username')->where(function ($query) use ($domain) {
+                    $query->where('domain', $domain);
                 }),
-                Rule::unique('accounts_tombstones', 'username')->where(function ($query) {
-                    $query->where('domain', resolveDomain($this));
+                Rule::unique('accounts_tombstones', 'username')->where(function ($query) use ($domain) {
+                    $query->where('domain', $domain);
                 }),
                 'filled',
             ],
             'domain' => 'exists:spaces,domain',
             'dictionary' => [new Dictionary()],
             'password' => 'required|min:3',
-            'email' => config('app.account_email_unique')
-                ? 'nullable|email|unique:accounts,email'
-                : 'nullable|email',
+            'email' => space()->unique_email
+                ? [
+                    'nullable',
+                    'email',
+                    Rule::unique('accounts', 'email')->where(function ($query) use ($domain) {
+                        $query->where('domain', $domain);
+                    })
+                ]
+                : ['nullable', 'email'],
             'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
             'phone' => [
                 'nullable',
-                'unique:accounts,phone',
-                'unique:accounts,username',
                 'phone',
-                new FilteredPhone
+                new FilteredPhone,
+                Rule::unique('accounts', 'phone')->where(function ($query) use ($domain) {
+                    $query->where('domain', $domain);
+                }),
+                Rule::unique('accounts', 'username')->where(function ($query) use ($domain) {
+                    $query->where('domain', $domain);
+                }),
             ]
         ];
     }

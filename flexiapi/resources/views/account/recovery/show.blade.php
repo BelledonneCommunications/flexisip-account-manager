@@ -23,7 +23,7 @@
                         @include('parts.errors', ['name' => 'identifier'])
                     </div>
 
-                    @if (config('app.account_email_unique') == false)
+                    @if (space()->unique_email == false)
                         <div>
                             <input placeholder="username" name="username" type="text" value="{{ old('username') }}">
                             <label for="username">{{ __('Username') }}</label>
