@@ -35,6 +35,7 @@ use App\PhoneChangeCode;
 use App\Rules\FilteredPhone;
 
 
+use App\Wizard;
 use Carbon\Carbon;
 
 use Illuminate\Http\Request;
@@ -71,10 +72,10 @@ class AccountService
         if ($request->asAdmin) {
             $account->email = $request->get('email');
             $account->display_name = $request->get('display_name');
-            $account->activated = $request->has('activated') ? (bool)$request->get('activated') : false;
+            $account->activated = $request->has('activated') ? (bool) $request->get('activated') : false;
             $account->domain = resolveDomain($request);
             $account->user_agent = $request->header('User-Agent') ?? $request->space->name;
-            $account->admin = $request->has('admin') && (bool)$request->get('admin');
+            $account->admin = $request->has('admin') && (bool) $request->get('admin');
 
             if (!$request->api && $request->has('role')) {
                 $account->setRole($request->get('role'));
@@ -107,8 +108,8 @@ class AccountService
 
         Log::channel('events')->info(
             $request->asAdmin
-                ? 'Account Service as Admin: Account created'
-                : 'Account Service: Account created',
+            ? 'Account Service as Admin: Account created'
+            : 'Account Service: Account created',
             ['id' => $account->identifier]
         );
 
@@ -140,10 +141,10 @@ class AccountService
             $account->display_name = $request->get('display_name');
             $account->dtmf_protocol = $request->get('dtmf_protocol');
             $account->user_agent = $request->header('User-Agent') ?? $account->space->name;
-            $account->admin = $request->has('admin') && (bool)$request->get('admin');
+            $account->admin = $request->has('admin') && (bool) $request->get('admin');
 
             if ($request->api && $request->has('admin')) {
-                $account->admin = (bool)$request->get('admin');
+                $account->admin = (bool) $request->get('admin');
             }
 
             if (!$request->api && $request->has('role')) {
@@ -178,8 +179,8 @@ class AccountService
 
         Log::channel('events')->info(
             $request->asAdmin
-                ? 'Account Service as Admin: Account updated'
-                : 'Account Service: Account updated',
+            ? 'Account Service as Admin: Account updated'
+            : 'Account Service: Account updated',
             ['id' => $account->identifier]
         );
 
@@ -225,7 +226,8 @@ class AccountService
             'phone' => [
                 'phone',
                 new FilteredPhone,
-                'required', 'unique:accounts,phone',
+                'required',
+                'unique:accounts,phone',
                 'unique:accounts,username',
             ]
         ]);

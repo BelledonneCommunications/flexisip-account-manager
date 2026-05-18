@@ -120,10 +120,6 @@
                         <small>{{ __('The link can only be visited once') }}</small>
                     </div>
                 </form>
-                <p>
-                    <i class="ph ph-app-window"></i>
-                    <a target="_blank" href="{{ $account->provisioning_wizard_url }}">{{ __('Provisioning wizard URL') }}</a>
-                </p>
             @else
                 <a class="btn btn-light" href="{{ route('admin.account.provision', $account->id) }}">{{ __('Create') }}</a>
             @endif

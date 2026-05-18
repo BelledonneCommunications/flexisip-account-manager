@@ -43,14 +43,6 @@ class ProvisioningController extends Controller
         ]);
     }
 
-    public function wizard(Request $request, string $provisioningToken)
-    {
-        return view('provisioning.wizard', [
-            'token' => $provisioningToken,
-            'platform' => Browser::platformFamily()
-        ]);
-    }
-
     public function qrcode(Request $request, string $provisioningToken)
     {
         Account::withoutGlobalScopes()

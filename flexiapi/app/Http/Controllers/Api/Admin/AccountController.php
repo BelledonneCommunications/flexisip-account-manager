@@ -218,10 +218,12 @@ class AccountController extends Controller
     {
         $account = $request->space->accounts()->findOrFail($accountId);
 
-        if (!$account->email)
+        if (!$account->email) {
             abort(403, 'No email configured');
+        }
 
         $account->provision();
+        $account->newWizard();
 
         Mail::to($account)->send(new Provisioning($account));
 

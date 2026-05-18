@@ -308,6 +308,16 @@ class Account extends Authenticatable
         return $this->hasMany(AuthToken::class);
     }
 
+    public function wizards()
+    {
+        return $this->hasMany(Wizard::class);
+    }
+
+    public function currentWizard()
+    {
+        return $this->hasOne(Wizard::class)->whereNull('used_at')->latestOfMany('created_at');
+    }
+
     /**
      * Reset password
      */
@@ -442,14 +452,6 @@ class Account extends Authenticatable
         );
     }
 
-    public function getProvisioningWizardUrlAttribute(): string
-    {
-        return replaceHost(
-            route('provisioning.wizard', $this->getProvisioningTokenAttribute()),
-            $this->space->host
-        );
-    }
-
     /**
      * Utils
      */
@@ -516,6 +518,16 @@ class Account extends Authenticatable
         $provisioningToken->save();
 
         return $provisioningToken->token;
+    }
+
+    public function newWizard(): Wizard
+    {
+        $wizard = new Wizard;
+        $wizard->account_id = $this->id;
+        $wizard->provisioning_account_id = $this->id;
+        $wizard->save();
+
+        return $wizard;
     }
 
     public function setRole(string $role)

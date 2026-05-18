@@ -40,6 +40,7 @@ use App\Http\Controllers\Api\Admin\Account\ContactController as AdminContactCont
 use App\Http\Controllers\Api\Admin\Account\CreationTokenController as AdminCreationTokenController;
 use App\Http\Controllers\Api\Admin\Account\DictionaryController;
 use App\Http\Controllers\Api\Admin\Account\TypeController;
+use App\Http\Controllers\Api\Admin\Account\WizardController;
 use App\Http\Controllers\Api\Admin\Account\VoicemailController as AdminVoicemailController;
 use App\Http\Controllers\Api\Account\StatisticsCallController;
 use App\Http\Controllers\Api\Admin\AccountController as AdminAccountController;
@@ -125,6 +126,8 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
         if (!empty(config('app.linphone_daemon_unix_pipe'))) {
             Route::post('messages', [MessageController::class, 'send']);
         }
+
+        Route::post('wizard', [WizardController::class, 'store']);
 
         // Super admin
         Route::group(['middleware' => ['auth.super_admin']], function () {
