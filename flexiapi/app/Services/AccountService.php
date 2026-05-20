@@ -33,6 +33,7 @@ use App\Mail\RecoverByCode;
 use App\Mail\RegisterValidation;
 use App\PhoneChangeCode;
 use App\Rules\FilteredPhone;
+use App\Rules\ValidCode;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -266,7 +267,7 @@ class AccountService
 
         $account = $request->user();
 
-        $phoneChangeCode = $account->phoneChangeCodes()->firstOrFail();
+        $phoneChangeCode = $account->phoneChangeCode;
 
         if ($phoneChangeCode->expired()) {
             return abort(410, 'Expired code');
@@ -287,7 +288,9 @@ class AccountService
         }
 
         if ($this->api) {
-            abort(403);
+            $request->validate([
+                'code' => new ValidCode
+            ]);
         }
 
         return null;
@@ -338,7 +341,7 @@ class AccountService
 
         $account = $request->user();
 
-        $emailChangeCode = $account->emailChangeCodes()->firstOrFail();
+        $emailChangeCode = $account->emailChangeCode;
 
         if ($emailChangeCode->expired()) {
             return abort(410, 'Expired code');
@@ -361,7 +364,9 @@ class AccountService
         }
 
         if ($this->api) {
-            abort(403);
+            $request->validate([
+                'code' => new ValidCode
+            ]);
         }
 
         return null;

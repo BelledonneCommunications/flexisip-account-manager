@@ -117,7 +117,13 @@ class ApiAccountEmailChangeTest extends TestCase
             ->json($this->method, $this->route, [
                 'code' => 'wrong'
             ])
-            ->assertStatus(422);
+            ->assertJsonValidationErrors(['code']);
+
+        $this->keyAuthenticated($emailChange->account)
+            ->json($this->method, $this->route, [
+                'code' => '1234'
+            ])
+            ->assertJsonValidationErrors(['code']);
     }
 
     public function testConfirmGoodCode()
