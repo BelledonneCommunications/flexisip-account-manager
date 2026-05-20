@@ -451,7 +451,8 @@ class ApiAccountTest extends TestCase
                 'username' => $username,
                 'domain' => config('app.sip_domain'),
                 'admin' => true,
-            ]);
+            ])
+            ->assertJsonMissingPath('space');
 
         $this->assertFalse(empty($response1['provisioning_token']));
     }

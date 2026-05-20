@@ -37,7 +37,7 @@ class Account extends Authenticatable
     use Compoships;
 
     protected $with = ['passwords', 'emailChangeCode', 'types', 'actions', 'dictionaryEntries', 'carddavServers'];
-    protected $hidden = ['expire_time', 'pivot', 'currentProvisioningToken', 'currentRecoveryCode', 'dictionaryEntries'];
+    protected $hidden = ['expire_time', 'pivot', 'currentProvisioningToken', 'currentRecoveryCode', 'dictionaryEntries', 'space'];
     protected $appends = ['realm', 'provisioning_token', 'provisioning_token_expire_at', 'dictionary', 'sip_uri'];
     protected $casts = [
         'activated' => 'boolean',

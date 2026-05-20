@@ -34,10 +34,7 @@ use App\Mail\RegisterValidation;
 use App\PhoneChangeCode;
 use App\Rules\FilteredPhone;
 
-
-use App\Wizard;
 use Carbon\Carbon;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
