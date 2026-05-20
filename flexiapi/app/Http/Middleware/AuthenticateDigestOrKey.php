@@ -33,12 +33,11 @@ class AuthenticateDigestOrKey
 {
     public function handle(Request $request, Closure $next)
     {
-        if ($request->bearerToken() && Auth::check()) {
+        if (($request->server('SSL_CLIENT_CERT') || $request->bearerToken()) && Auth::check()) {
             return $next($request);
         }
 
         // Key authentication
-
         if ($request->header('x-api-key') || $request->cookie('x-api-key')) {
             $apiKey = ApiKey::with([
                 'account' => function ($query) {

@@ -30,6 +30,8 @@ use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Signer\Rsa\Sha512;
 use Tests\TestCase;
 
+use Illuminate\Support\Facades\Auth;
+
 class AccountJWTAuthenticationTest extends TestCase
 {
     protected $route = '/provisioning';
@@ -145,6 +147,9 @@ class AccountJWTAuthenticationTest extends TestCase
                 DateTimeImmutable $issuedAt
             ): Builder => $builder->withClaim('email', $password->account->email)
         );
+
+        $this->flushSession();
+        Auth::logout();
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token->toString(),

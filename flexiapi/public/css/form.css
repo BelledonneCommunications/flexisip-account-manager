@@ -189,8 +189,20 @@ form div select {
     padding: 1rem 2rem;
     background-color: var(--grey-1);
     border-radius: 3rem;
-    border: 0.063rem solid var(--grey-2);
+    border: 1px solid var(--grey-2);
     font-size: 1.5rem;
+}
+
+form div input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type="number"].digit):not(.btn),
+form div textarea,
+form div select {
+    margin-top: 2.5rem;
+    box-sizing: border-box;
+    width: 100%;
+    height: max-content;
+}
+
+form div textarea {
     resize: vertical;
 }
 
@@ -290,15 +302,6 @@ input[type=checkbox] {
 
 form div input[type=checkbox] {
     margin-right: 1rem;
-}
-
-form div input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type="number"].digit):not(.btn),
-form div textarea,
-form div select {
-    margin-top: 2.5rem;
-    box-sizing: border-box;
-    width: 100%;
-    height: max-content;
 }
 
 form div input[type=radio] {
