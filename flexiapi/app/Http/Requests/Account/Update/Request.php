@@ -38,6 +38,9 @@ class Request extends FormRequest
 
     public function rules()
     {
+        $domain = space()->domain;
+        $accountId = $this->route('account_id');
+
         return [
             'username' => [
                 'required',
@@ -45,27 +48,33 @@ class Request extends FormRequest
                 new IsNotPhoneNumber,
                 new BlacklistedUsername,
                 new SIPUsername,
-                Rule::unique('accounts', 'username')->where(function ($query) {
-                    $query->where('domain', resolveDomain($this));
-                })->ignore($this->route('account_id'), 'id'),
+                Rule::unique('accounts', 'username')->where(function ($query) use ($domain) {
+                    $query->where('domain', $domain);
+                })->ignore($accountId, 'id'),
                 'filled',
             ],
             'domain' => 'exists:spaces,domain',
-            'email' => [
-                'nullable',
-                'email',
-                config('app.account_email_unique') ? Rule::unique('accounts', 'email')->ignore($this->route('id')) : null
-            ],
+            'email' => space()->unique_email
+                ? [
+                    'nullable',
+                    'email',
+                    Rule::unique('accounts', 'email')->where(function ($query) use ($domain) {
+                        $query->where('domain', $domain);
+                    })->ignore($this->route('id'))
+                ]
+                : ['nullable', 'email'],
             'role' => 'in:admin,end_user',
             'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
             'phone' => [
                 'nullable',
                 'phone',
                 new FilteredPhone,
-                Rule::unique('accounts', 'username')->where(function ($query) {
-                    $query->where('domain', resolveDomain($this));
-                })->ignore($this->route('id'), 'id'),
-                Rule::unique('accounts', 'phone')->ignore($this->route('account_id'), 'id'),
+                Rule::unique('accounts', 'username')->where(function ($query) use ($domain) {
+                    $query->where('domain', $domain);
+                })->ignore($accountId, 'id'),
+                Rule::unique('accounts', 'phone')->where(function ($query) use ($domain) {
+                    $query->where('domain', $domain);
+                })->ignore($accountId, 'id'),
             ]
         ];
     }

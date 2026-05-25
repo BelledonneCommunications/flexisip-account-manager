@@ -31,7 +31,11 @@ class Request extends CreateRequest
     public function rules()
     {
         $rules = parent::rules();
-        $rules['account_creation_token'] = ['required', new AccountCreationToken, new AccountCreationTokenNotExpired];
+        $rules['account_creation_token'] = [
+            'required',
+            new AccountCreationToken,
+            new AccountCreationTokenNotExpired
+        ];
 
         return $rules;
     }

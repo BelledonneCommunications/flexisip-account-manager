@@ -66,7 +66,7 @@ class RecoveryController extends Controller
         $account = null;
 
         if ($request->get('email')) {
-            if (config('app.account_email_unique') == false) {
+            if (space()->unique_email == false) {
                 $rules['username'] = 'required';
             }
 
@@ -77,7 +77,7 @@ class RecoveryController extends Controller
             /**
              * Because several accounts can have the same email
              */
-            if (config('app.account_email_unique') == false) {
+            if (space()->unique_email == false) {
                 $account = $account->where('username', $request->get('username'));
             }
 

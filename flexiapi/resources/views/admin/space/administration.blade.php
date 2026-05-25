@@ -9,9 +9,7 @@
     @include('admin.space.head')
     @include('admin.space.tabs')
 
-    <form method="POST"
-        action="{{ route('admin.spaces.administration.update', $space) }}"
-        accept-charset="UTF-8">
+    <form method="POST" action="{{ route('admin.spaces.administration.update', $space) }}" accept-charset="UTF-8">
         @csrf
         @method('put')
 
@@ -29,13 +27,24 @@
         </div>
 
         <div>
-            <input name="expire_at" id="expire_at" type="date" @if ($space->expire_at) value="{{ $space->expire_at->toDateString() }}" @endif min="{{ \Carbon\Carbon::now()->toDateString() }}">
+            <input name="expire_at" id="expire_at" type="date"
+                @if ($space->expire_at) value="{{ $space->expire_at->toDateString() }}" @endif
+                min="{{ \Carbon\Carbon::now()->toDateString() }}">
             <label for="expire_at">{{ __('Expiration') }}</label>
             <span class="supporting">{{ __('Clear to never expire') }}</span>
         </div>
 
-        <div class="large">
+        <br>
+
+        <div>
             @include('parts.form.toggle', ['object' => $space, 'key' => 'super', 'label' => __('Super Space'), 'supporting' => __('All the admins will be super admins')])
+        </div>
+
+        <div>
+            @include('parts.form.toggle', ['object' => $space, 'key' => 'unique_email', 'label' => __('Unique email'), 'supporting' => __('Prevent creating multiple accounts with the same email address within this space')])
+            <span style="white-space: pre-line;">
+                @include('parts.errors', ['name' => 'unique_email'])
+            </span>
         </div>
 
         <h3 class="large">{{ __('Integration') }}</h3>

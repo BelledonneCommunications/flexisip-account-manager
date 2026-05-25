@@ -21,7 +21,6 @@ return [
 
     'allow_phone_number_username_admin_api' => env('APP_ALLOW_PHONE_NUMBER_USERNAME_ADMIN_API', false),
     'account_blacklisted_usernames' => env('ACCOUNT_BLACKLISTED_USERNAMES', ''),
-    'account_email_unique' => env('ACCOUNT_EMAIL_UNIQUE', false),
     'account_username_regex' => env('ACCOUNT_USERNAME_REGEX', '^[a-z0-9+_.-]*$'),
     'account_default_password_algorithm' => env('ACCOUNT_DEFAULT_PASSWORD_ALGORITHM', 'SHA-256'),
 

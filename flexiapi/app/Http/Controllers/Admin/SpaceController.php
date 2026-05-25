@@ -21,6 +21,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Space\Create;
+use App\Http\Requests\Space\AdministrationUpdate;
 use App\Space;
 use App\Rules\Ini;
 use App\Rules\Domain;
@@ -166,14 +167,8 @@ class SpaceController extends Controller
         ]);
     }
 
-    public function administrationUpdate(Request $request, Space $space)
+    public function administrationUpdate(AdministrationUpdate $request, Space $space)
     {
-        $request->validate([
-            'name' => ['required', Rule::unique('spaces')->ignore($space->id)],
-            'max_accounts' => 'required|integer|min:0',
-            'expire_at' => 'nullable|date|after_or_equal:today'
-        ]);
-
         if ($request->get('max_accounts') > 0) {
             $request->validate([
                 'max_accounts' => 'integer|min:' . $space->accounts()->count()
@@ -182,6 +177,7 @@ class SpaceController extends Controller
 
         $space->name = $request->get('name');
         $space->super = getRequestBoolean($request, 'super');
+        $space->unique_email = getRequestBoolean($request, 'unique_email');
         $space->max_accounts = $request->get('max_accounts');
         $space->expire_at = $request->get('expire_at');
         $space->web_panel = getRequestBoolean($request, 'web_panel');

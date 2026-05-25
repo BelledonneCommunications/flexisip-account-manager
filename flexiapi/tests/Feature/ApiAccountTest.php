@@ -692,17 +692,17 @@ class ApiAccountTest extends TestCase
         $existing->account->email = $email;
         $existing->account->save();
 
-        config()->set('app.account_email_unique', true);
-
+        Space::where('domain', $existing->account->domain)->update(['unique_email' => true]);
+        
         $admin = Account::factory()->admin()->create();
         $admin->generateUserApiKey();
         $admin->save();
-
+        
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'username' => 'hop',
                 'email' => $email,
-                'domain' => 'server.com',
+                'domain' => $existing->account->domain,
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])->assertJsonValidationErrors(['email']);

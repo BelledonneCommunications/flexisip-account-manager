@@ -9,6 +9,11 @@
     <title>{{ space()->name }}</title>
 
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
+    @if (space()?->logo)
+    <link rel="icon" href="{{ asset('storage/img/' . space()->logo) }}">
+    @else
+    <link rel="icon" href="{{ asset('img/favicon.ico') }}">
+    @endif 
     <style>
         body {
              @if (space()?->theme_hue) --hue: {{ space()->theme_hue }}; @endif
