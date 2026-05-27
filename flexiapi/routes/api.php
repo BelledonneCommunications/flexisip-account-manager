@@ -42,7 +42,6 @@ use App\Http\Controllers\Api\Admin\Account\DictionaryController;
 use App\Http\Controllers\Api\Admin\Account\TypeController;
 use App\Http\Controllers\Api\Admin\Account\WizardController;
 use App\Http\Controllers\Api\Admin\Account\VoicemailController as AdminVoicemailController;
-use App\Http\Controllers\Api\Account\StatisticsCallController;
 use App\Http\Controllers\Api\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Api\Admin\ExternalAccountController;
 use App\Http\Controllers\Api\Admin\MessageController;
@@ -58,13 +57,8 @@ use App\Http\Controllers\Api\PhoneCountryController;
 use App\Http\Controllers\Api\PingController;
 use App\Http\Controllers\Api\StatisticsMessageController;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
-use Illuminate\Http\Request;
 
 Route::get('/', [ApiController::class, 'documentation'])->name('api');
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
 Route::get('ping', [PingController::class, 'ping']);
 

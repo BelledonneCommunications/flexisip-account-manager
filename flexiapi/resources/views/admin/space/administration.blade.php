@@ -53,6 +53,10 @@
             @include('parts.form.toggle', ['object' => $space, 'key' => 'carddav_user_credentials', 'label' => __('Enable user credentials for CardDav servers')])
         </div>
 
+        <div class="large">
+            @include('parts.form.toggle', ['object' => $space, 'key' => 'client_certificate_authentication', 'label' => __('Enable client certificate authentication for provisioning')])
+        </div>
+
         <h3 class="large">Interface</h3>
         <div>
             @include('parts.form.toggle', ['object' => $space, 'key' => 'web_panel', 'label' => __('Enable the web interface'), 'supporting' => __('It might actually disable this page, be careful')])

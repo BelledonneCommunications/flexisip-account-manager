@@ -57,14 +57,14 @@ class AccountBlockingTest extends TestCase
             ->get($this->route . '/me')->assertStatus(200);
 
         $this->keyAuthenticated($admin)
-            ->json($this->method, $this->route . '/' . $account->id .'/block')
+            ->json($this->method, $this->route . '/' . $account->id . '/block')
             ->assertStatus(200);
 
         $this->keyAuthenticated($account)
             ->get($this->route . '/me')->assertStatus(403);
 
         $this->keyAuthenticated($admin)
-            ->json($this->method, $this->route . '/' . $account->id .'/unblock')
+            ->json($this->method, $this->route . '/' . $account->id . '/unblock')
             ->assertStatus(200);
 
         $this->keyAuthenticated($account)

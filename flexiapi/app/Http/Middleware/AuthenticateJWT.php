@@ -40,6 +40,10 @@ class AuthenticateJWT
 {
     public function handle(Request $request, Closure $next)
     {
+        if (Auth::check()) {
+            return $next($request);
+        }
+
         if ($request->bearerToken() && $request->space?->sso_public_key) {
             if (!extension_loaded('sodium')) {
                 abort(403, "PHP Sodium extension isn't loaded");

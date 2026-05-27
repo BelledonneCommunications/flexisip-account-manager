@@ -142,3 +142,22 @@ If you have issues connecting to that socket check the [`systemd restrictions`](
 The socket is located in the `/tmp` directory.
 
 The systemd service [PrivateTmp](https://access.redhat.com/blogs/766093/posts/1976243) setting might also restrict that access.
+
+## Client Certificate Authentification (mTLS)
+
+The [provisioning endpoints](/provisioning/documentation) can be authentified using the mTLS flow.
+
+To do that you'll have to enable the client authentication flow on your Space and verify the certificate in the web server.
+The certificate MUST have a header with the following format `CN=sip:user@domain.tld` to authenticate the user.
+
+Apache configuration exemple:
+
+```
+SSLCACertificateFile /etc/apache2/ssl/ca.crt
+
+<If "%{THE_REQUEST} =~ m#/provisioning/me#">
+    SSLVerifyClient optional
+    SSLVerifyDepth 1
+    SSLOptions +StdEnvVars +ExportCertData
+</If>
+```

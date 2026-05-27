@@ -182,6 +182,7 @@ class SpaceController extends Controller
         $space->expire_at = $request->get('expire_at');
         $space->web_panel = getRequestBoolean($request, 'web_panel');
         $space->carddav_user_credentials = getRequestBoolean($request, 'carddav_user_credentials');
+        $space->client_certificate_authentication = getRequestBoolean($request, 'client_certificate_authentication');
         $space->save();
 
         return redirect()->route('admin.spaces.show', $space);
