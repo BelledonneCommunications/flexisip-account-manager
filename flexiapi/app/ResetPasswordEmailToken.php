@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -16,10 +17,10 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 class ResetPasswordEmailToken extends Consommable
 {

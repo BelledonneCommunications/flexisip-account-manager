@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -21,7 +22,6 @@ namespace Tests\Feature;
 
 use App\Password;
 use App\Space;
-
 use Tests\TestCase;
 
 class ApiAuthenticationTest extends TestCase
@@ -50,7 +50,7 @@ class ApiAuthenticationTest extends TestCase
     {
         $password = Password::factory()->create();
         $response = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier,
+            'From' => 'sip:' . $password->account->identifier,
         ])->json($this->method, $this->route);
         $response->assertStatus(401);
     }
@@ -61,7 +61,7 @@ class ApiAuthenticationTest extends TestCase
         $password->account->generateUserApiKey();
 
         $response = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier,
+            'From' => 'sip:' . $password->account->identifier,
             'x-api-key' => $password->account->apiKey->key,
         ])->json($this->method, $this->route);
         $response->assertStatus(200);
@@ -76,7 +76,7 @@ class ApiAuthenticationTest extends TestCase
         $passwordSHA256->save();
 
         $response = $this->withHeaders([
-            'From' => 'sip:'.$passwordMD5->account->identifier,
+            'From' => 'sip:' . $passwordMD5->account->identifier,
         ])->json($this->method, $this->route);
 
         $response->assertStatus(401);
@@ -96,7 +96,7 @@ class ApiAuthenticationTest extends TestCase
 
         // We increment the nc
         $response2 = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier,
+            'From' => 'sip:' . $password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response1, 'md5', '00000002'),
         ])->json($this->method, $this->route);
 
@@ -104,7 +104,7 @@ class ApiAuthenticationTest extends TestCase
 
         // We don't increment it
         $response3 = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier,
+            'From' => 'sip:' . $password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response2, 'md5', '00000002'),
         ])->json($this->method, $this->route);
 
@@ -117,7 +117,7 @@ class ApiAuthenticationTest extends TestCase
         $password = Password::factory()->create();
         $response1 = $this->generateFirstResponse($password);
         $response2 = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier,
+            'From' => 'sip:' . $password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response1, 'md5', '00000001'),
         ])->json($this->method, $this->route);
 
@@ -127,7 +127,7 @@ class ApiAuthenticationTest extends TestCase
         $password->account->nonces()->first()->delete();
 
         $response3 = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier,
+            'From' => 'sip:' . $password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response2, 'md5', '00000002'),
         ])->json($this->method, $this->route);
 
@@ -154,7 +154,7 @@ class ApiAuthenticationTest extends TestCase
         $password = Password::factory()->sha256()->create();
         $response = $this->generateFirstResponse($password);
         $response = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier,
+            'From' => 'sip:' . $password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response, 'sha256'),
         ])->json($this->method, $this->route);
 
@@ -168,7 +168,7 @@ class ApiAuthenticationTest extends TestCase
         $password = Password::factory()->sha256()->create();
         $response = $this->generateFirstResponse($password);
         $response = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier,
+            'From' => 'sip:' . $password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response, 'md5'),
         ])->json($this->method, $this->route);
 
@@ -190,11 +190,11 @@ class ApiAuthenticationTest extends TestCase
         $hash = 'sha256';
         $password->password = hash(
             $hash,
-            $password->account->username.':'.$password->account->domain.':'.$password->password
+            $password->account->username . ':' . $password->account->domain . ':' . $password->password
         );
 
         $response = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier,
+            'From' => 'sip:' . $password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response, $hash),
         ])->json($this->method, $this->route);
 
@@ -218,11 +218,11 @@ class ApiAuthenticationTest extends TestCase
         $hash = 'sha256';
         $password->password = hash(
             $hash,
-            $password->account->username.':'.$realm.':'.$password->password
+            $password->account->username . ':' . $realm . ':' . $password->password
         );
 
         $response = $this->withHeaders([
-            'From' => 'sip:'.$password->account->identifier,
+            'From' => 'sip:' . $password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response, $hash)
         ])->json($this->method, $this->route);
 

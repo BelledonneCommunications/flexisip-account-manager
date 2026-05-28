@@ -12,7 +12,8 @@ use Illuminate\Mail\Mailables\Attachment;
 
 class Voicemail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public function __construct(public AccountFile $accountFile)
     {

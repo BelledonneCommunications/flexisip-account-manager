@@ -4,7 +4,6 @@ use App\PhoneCountry;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
 use libphonenumber\PhoneNumberUtil;
 
 return new class extends Migration {
@@ -20,7 +19,7 @@ return new class extends Migration {
         $phoneNumberUtils = PhoneNumberUtil::getInstance();
         foreach (getCountryCodes() as $code => $name) {
             if ($resolvedMetadata = $phoneNumberUtils->getMetadataForRegion($code)) {
-                $phoneCountry = new PhoneCountry();
+                $phoneCountry = new PhoneCountry;
                 $phoneCountry->code = $code;
                 $phoneCountry->country_code = $resolvedMetadata->getCountryCode();
                 $phoneCountry->save();

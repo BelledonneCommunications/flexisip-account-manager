@@ -44,7 +44,9 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
                     )
                 );
 
-                if(!in_array($element->domain, $domains)) array_push($domains, $element->domain);
+                if (!in_array($element->domain, $domains)) {
+                    array_push($domains, $element->domain);
+                }
 
                 if (isset($element->passwords)) {
                     foreach ($element->passwords as $password) {
@@ -79,12 +81,16 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
                     );
                 }
 
-                if(!in_array($element->domain, $domains)) array_push($domains, $element->domain);
+                if (!in_array($element->domain, $domains)) {
+                    array_push($domains, $element->domain);
+                }
             }
         }
 
         // Ensure that we clear previous ones
-        $ids = array_map(function($account) { return (int)$account['id']; }, $accounts);
+        $ids = array_map(function ($account) {
+            return (int)$account['id'];
+        }, $accounts);
 
         Account::withoutGlobalScopes()->whereIn('id', $ids)->delete();
 
@@ -103,7 +109,10 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
     }
 
     private function generateAccountArray(
-        int $id, string $username, string $domain, ?string $phone = null,
+        int $id,
+        string $username,
+        string $domain,
+        ?string $phone = null,
         bool $activated = true
     ): array {
         return [

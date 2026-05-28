@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -21,7 +22,6 @@ namespace App\Console\Commands\Accounts;
 
 use Illuminate\Console\Command;
 use Carbon\Carbon;
-
 use App\ApiKey;
 
 class ClearApiKeys extends Command
@@ -57,7 +57,7 @@ class ClearApiKeys extends Command
 
         foreach ($keys as $key) {
             if ($key->last_used_at->addMinutes($key->expires_after_last_used_minutes)->isPast()) {
-                $this->info('Deleting ' . $key->account->identifier . ' admin API Key expired after ' . $key->expires_after_last_used_minutes .'min');
+                $this->info('Deleting ' . $key->account->identifier . ' admin API Key expired after ' . $key->expires_after_last_used_minutes . 'min');
                 $key->delete();
                 $count++;
             }

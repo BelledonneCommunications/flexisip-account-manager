@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -20,7 +21,6 @@
 namespace App\Console\Commands\Accounts;
 
 use Illuminate\Console\Command;
-
 use App\Account;
 
 class SetAdmin extends Command
@@ -45,7 +45,7 @@ class SetAdmin extends Command
         $account->admin = true;
         $account->save();
 
-        $this->info('Account '.$account->identifier.' is now admin');
+        $this->info('Account ' . $account->identifier . ' is now admin');
 
         return Command::SUCCESS;
     }

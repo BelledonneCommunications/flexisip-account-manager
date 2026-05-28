@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -24,7 +25,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-
 use App\AccountTombstone;
 use App\AccountType;
 use App\ContactsList;
@@ -69,8 +69,9 @@ class AccountController extends Controller
     {
         $account = $request->space->accounts()->sip($sip)->with('callForwardings')->first();
 
-        if (!$account)
+        if (!$account) {
             abort(404, 'SIP address not found');
+        }
 
         return $account;
     }
@@ -79,8 +80,9 @@ class AccountController extends Controller
     {
         $account = $request->space->accounts()->where('email', $email)->with('callForwardings')->first();
 
-        if (!$account)
+        if (!$account) {
             abort(404, 'Email address not found');
+        }
 
         return $account;
     }
@@ -90,13 +92,13 @@ class AccountController extends Controller
         $account = $request->space->accounts()->findOrFail($accountId);
 
         if (!$account->hasTombstone()) {
-            $tombstone = new AccountTombstone();
+            $tombstone = new AccountTombstone;
             $tombstone->username = $account->username;
             $tombstone->domain = $account->domain;
             $tombstone->save();
         }
 
-        (new AccountService())->destroy($request, $accountId);
+        (new AccountService)->destroy($request, $accountId);
 
         Log::channel('events')->info('API Admin: Account destroyed', ['id' => $account->identifier]);
     }
@@ -158,12 +160,12 @@ class AccountController extends Controller
 
     public function store(AsAdminRequest $request)
     {
-        return (new AccountService())->store($request)->makeVisible(['confirmation_key', 'provisioning_token']);
+        return (new AccountService)->store($request)->makeVisible(['confirmation_key', 'provisioning_token']);
     }
 
     public function update(ApiAsAdminRequest $request, int $accountId)
     {
-        $account = (new AccountService())->update($request, $accountId);
+        $account = (new AccountService)->update($request, $accountId);
 
         Log::channel('events')->info('API Admin: Account updated', ['id' => $account->identifier]);
 
@@ -234,8 +236,9 @@ class AccountController extends Controller
     {
         $account = $request->space->accounts()->findOrFail($accountId);
 
-        if (!$account->email)
+        if (!$account->email) {
             abort(403, 'No email configured');
+        }
 
         $resetPasswordEmail = new ResetPasswordEmailToken;
         $resetPasswordEmail->account_id = $account->id;

@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Account;
 use App\Wizard;
-
 use Tests\TestCase;
 
 class WizardTest extends TestCase
@@ -35,7 +34,7 @@ class WizardTest extends TestCase
 
         $this->get(route('wizard.show', $response->json('token')))->assertViewHas(
             'uri',
-            fn($uri) => str_starts_with($uri, 'sip-linphone:' . stripSipProtocol($sip) . '?linphone-action=call&linphone-fetch-config=')
+            fn ($uri) => str_starts_with($uri, 'sip-linphone:' . stripSipProtocol($sip) . '?linphone-action=call&linphone-fetch-config=')
         );
 
         // SIPs
@@ -53,7 +52,7 @@ class WizardTest extends TestCase
 
         $this->get(route('wizard.show', $response->json('token')))->assertViewHas(
             'uri',
-            fn($uri) => str_starts_with($uri, 'sip-linphone:' . stripSipProtocol($sip) . '?linphone-action=bye&linphone-fetch-config=')
+            fn ($uri) => str_starts_with($uri, 'sip-linphone:' . stripSipProtocol($sip) . '?linphone-action=bye&linphone-fetch-config=')
             && str_ends_with($uri, '&linphone-use-sips=true')
         );
 

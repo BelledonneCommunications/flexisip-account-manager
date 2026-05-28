@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -22,7 +23,6 @@ namespace Tests\Feature;
 use App\Account;
 use App\Space;
 use App\SpaceCardDavServer;
-use Carbon\Carbon;
 use Tests\TestCase;
 
 class ApiSpaceCardDavServersTest extends TestCase
@@ -99,14 +99,14 @@ class ApiSpaceCardDavServersTest extends TestCase
             ->assertStatus(200);
 
         $this->keyAuthenticated($superAdmin)
-            ->json('PUT', $route. '/' . $cardDavServer->id, [
+            ->json('PUT', $route . '/' . $cardDavServer->id, [
                 'uri' => $uri2,
                 'enabled' => true
             ])
             ->assertStatus(200);
 
         $this->keyAuthenticated($superAdmin)
-            ->json('PUT', $route. '/' . $cardDavServer->id, [
+            ->json('PUT', $route . '/' . $cardDavServer->id, [
                 'uri' => $uri2,
                 'enabled' => true,
                 'fields_for_domain' => 'wrong _ data'
@@ -230,18 +230,18 @@ class ApiSpaceCardDavServersTest extends TestCase
         ];
 
         $this->keyAuthenticated($admin)
-            ->json('PUT', $route . '/431' , $credentials)
+            ->json('PUT', $route . '/431', $credentials)
             ->assertStatus(404);
 
         $this->keyAuthenticated($admin)
-            ->json('PUT', $route . '/' . $cardDavServer->id , $credentials)
+            ->json('PUT', $route . '/' . $cardDavServer->id, $credentials)
             ->assertStatus(200);
 
         $credentials['realm'] = 'hop2.com';
 
         // Again
         $this->keyAuthenticated($admin)
-            ->json('PUT', $route . '/' . $cardDavServer->id , $credentials)
+            ->json('PUT', $route . '/' . $cardDavServer->id, $credentials)
             ->assertStatus(200);
 
         $this->keyAuthenticated($admin)

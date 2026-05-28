@@ -37,7 +37,7 @@ class SpaceCardDavServer extends Model
         $section = $dom->createElement('section');
         $section->setAttribute('name', 'remote_contact_directory_' . $remoteContactDirectoryCounter);
 
-        $entry = $dom->createElement('entry', $this->enabled ? '1': '0');
+        $entry = $dom->createElement('entry', $this->enabled ? '1' : '0');
         $entry->setAttribute('name', 'enabled');
         $section->appendChild($entry);
 
@@ -73,7 +73,7 @@ class SpaceCardDavServer extends Model
         $entry->setAttribute('name', 'carddav_fields_for_domain');
         $section->appendChild($entry);
 
-        $entry = $dom->createElement('entry', $this->use_exact_match_policy ? '1': '0');
+        $entry = $dom->createElement('entry', $this->use_exact_match_policy ? '1' : '0');
         $entry->setAttribute('name', 'carddav_use_exact_match_policy');
         $section->appendChild($entry);
 

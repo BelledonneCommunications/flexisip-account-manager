@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -64,7 +65,7 @@ class PasswordFactory extends Factory
 
     public function clrtxt()
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'password' => 'testtest',
             'algorithm' => 'CLRTXT',
         ]);

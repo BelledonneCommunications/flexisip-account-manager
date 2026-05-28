@@ -7,8 +7,6 @@ use App\Http\Requests\EmailServer\CreateUpdate;
 use App\Space;
 use App\SpaceEmailServer;
 
-use Illuminate\Http\Request;
-
 class EmailServerController extends Controller
 {
     public function show(string $domain)

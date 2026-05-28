@@ -22,7 +22,7 @@ rocky10-test:
     - yum -y localinstall build/*.rpm
     - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
     - composer install --ignore-platform-req=ext-sodium # Rocky 8 and 9 use the external library
-    - vendor/bin/phpcs
+    - vendor/bin/pint --test --parallel --diff=main
     - vendor/bin/phpmd . ansi phpmd.xml
     - php artisan key:generate
     - vendor/bin/phpunit --log-junit $CI_PROJECT_DIR/flexiapi_phpunit.log
@@ -46,7 +46,7 @@ debian13-test:
     - apt install -y ./build/*.deb
     - cd /opt/belledonne-communications/share/flexisip-account-manager/flexiapi
     - composer install
-    - vendor/bin/phpcs
+    - vendor/bin/pint --test --parallel --diff=main
     - vendor/bin/phpmd . ansi phpmd.xml
     - php artisan key:generate
     - vendor/bin/phpunit --log-junit $CI_PROJECT_DIR/flexiapi_phpunit.log

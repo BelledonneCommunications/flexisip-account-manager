@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2022 Belledonne Communications SARL, All rights reserved.
@@ -24,7 +25,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class AccountTombstone extends Model
 {
-    protected $table = 'accounts_tombstones';
-
     use HasFactory;
+    protected $table = 'accounts_tombstones';
 }

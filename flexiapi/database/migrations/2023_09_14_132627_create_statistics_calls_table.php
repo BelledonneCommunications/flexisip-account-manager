@@ -6,8 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up()
     {
         Schema::create('statistics_calls', function (Blueprint $table) {
@@ -82,7 +81,7 @@ return new class extends Migration
         StatisticsMessageDevice::truncate();
         StatisticsMessage::truncate();
 
-        Schema::table('statistics_messages', function(Blueprint $table) {
+        Schema::table('statistics_messages', function (Blueprint $table) {
             $table->dropIndex('statistics_messages_from_username_from_domain_index');
             $table->dropColumn('from_username');
             $table->dropColumn('from_domain');
@@ -90,7 +89,7 @@ return new class extends Migration
             $table->string('from', 256)->index();
         });
 
-        Schema::table('statistics_message_devices', function(Blueprint $table) {
+        Schema::table('statistics_message_devices', function (Blueprint $table) {
             $table->dropForeign('statistics_message_devices_message_id_foreign');
             $table->dropUnique('statistics_message_devices_message_id_to_u_to_d_device_id_unique');
             $table->dropColumn('to_username');

@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -24,13 +25,10 @@ use App\AuthToken;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 use Endroid\QrCode\Writer\PngWriter;
-use hisorange\BrowserDetect\Parser as Browser;
 
 class ProvisioningController extends Controller
 {
@@ -63,7 +61,7 @@ class ProvisioningController extends Controller
         $url = route('provisioning.provision', $params);
 
         $result = Builder::create()
-            ->writer(new PngWriter())
+            ->writer(new PngWriter)
             ->data($url)
             ->encoding(new Encoding('UTF-8'))
             ->errorCorrectionLevel(ErrorCorrectionLevel::High)

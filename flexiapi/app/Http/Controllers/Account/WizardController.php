@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Account;
 
 use Illuminate\Support\Uri;
 use Illuminate\Http\Request;
-
 use App\Http\Controllers\Controller;
 use App\Wizard;
-
 use hisorange\BrowserDetect\Parser as Browser;
 
 class WizardController extends Controller

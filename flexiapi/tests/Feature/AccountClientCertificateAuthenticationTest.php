@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Account;
 use App\Space;
 use Tests\TestCase;
-
 use Illuminate\Support\Facades\Auth;
 
 class AccountClientCertificateAuthenticationTest extends TestCase
@@ -65,7 +64,7 @@ class AccountClientCertificateAuthenticationTest extends TestCase
         )->assertStatus(403);
 
         $serverVariables['SSL_CLIENT_S_DN'] = 'CN=' . $account->sip_uri;
-        
+
         $this->call(
             method: $this->method,
             uri: $this->route,

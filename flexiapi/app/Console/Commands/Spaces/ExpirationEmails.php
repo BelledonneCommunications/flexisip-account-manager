@@ -5,7 +5,6 @@ namespace App\Console\Commands\Spaces;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
-
 use App\Mail\ExpiringSpace;
 use App\Space;
 

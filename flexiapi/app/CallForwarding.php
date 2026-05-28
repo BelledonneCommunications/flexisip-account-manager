@@ -26,7 +26,9 @@ class CallForwarding extends Model
 
     public function getContactSipUriAttribute(): ?string
     {
-        if ($this->contact) return $this->contact->sip_uri;
+        if ($this->contact) {
+            return $this->contact->sip_uri;
+        }
         return null;
     }
 }

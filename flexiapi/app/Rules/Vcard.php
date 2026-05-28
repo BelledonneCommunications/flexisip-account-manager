@@ -19,8 +19,12 @@ class Vcard implements Rule
         try {
             $vcard = VObject\Reader::read($value);
 
-            if (!empty($vcard->validate())) return false;
-            if ($vcard->UID == null) return false;
+            if (!empty($vcard->validate())) {
+                return false;
+            }
+            if ($vcard->UID == null) {
+                return false;
+            }
 
             return true;
         } catch (\Throwable $th) {

@@ -47,6 +47,5 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withProviders()
-    ->withExceptions(function (Exceptions $exceptions) {})->create();
-
-
+    ->withExceptions(function (Exceptions $exceptions) {
+    })->create();

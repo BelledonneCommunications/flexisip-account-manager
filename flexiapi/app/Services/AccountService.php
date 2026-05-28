@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -34,7 +35,6 @@ use App\Mail\RegisterValidation;
 use App\PhoneChangeCode;
 use App\Rules\FilteredPhone;
 use App\Rules\ValidCode;
-
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -58,7 +58,7 @@ class AccountService
      */
     public function store(CreateRequest $request): Account
     {
-        $account = new Account();
+        $account = new Account;
         $account->username = $request->get('username');
         $account->activated = false;
         $account->domain = $request->space->domain;
@@ -232,7 +232,7 @@ class AccountService
 
         $account = $request->user();
 
-        $phoneChangeCode = new PhoneChangeCode();
+        $phoneChangeCode = new PhoneChangeCode;
         $phoneChangeCode->account_id = $account->id;
         $phoneChangeCode->phone = $request->get('phone');
         $phoneChangeCode->code = generatePin();
@@ -247,7 +247,7 @@ class AccountService
             $message .= ' The code is available for ' . config('app.recovery_code_expiration_minutes') . ' minutes';
         }
 
-        $ovhSMS = new OvhSMS();
+        $ovhSMS = new OvhSMS;
         $ovhSMS->send($request->get('phone'), $message);
     }
 
@@ -313,7 +313,7 @@ class AccountService
 
         $account = $request->user();
 
-        $emailChangeCode = new EmailChangeCode();
+        $emailChangeCode = new EmailChangeCode;
         $emailChangeCode->account_id = $account->id;
         $emailChangeCode->email = $request->get('email');
         $emailChangeCode->code = generatePin();
@@ -401,7 +401,7 @@ class AccountService
             $message .= ' The code is available for ' . config('app.recovery_code_expiration_minutes') . ' minutes';
         }
 
-        $ovhSMS = new OvhSMS();
+        $ovhSMS = new OvhSMS;
         $ovhSMS->send($account->phone, $message);
 
         Log::channel('events')->info('Account Service: Sending recovery SMS', ['id' => $account->identifier]);

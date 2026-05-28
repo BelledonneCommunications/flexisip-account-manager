@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -48,7 +49,9 @@ class DeviceController extends Controller
         $device = $connector->getDevices($account->identifier)
                     ->where('uuid', $uuid)->first();
 
-        if (!$device) abort(404);
+        if (!$device) {
+            abort(404);
+        }
 
         return view(
             'admin.account.device.delete',

@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2021 Belledonne Communications SARL, All rights reserved.
@@ -21,7 +22,6 @@ namespace App\Http\Controllers\Api\Admin\Account;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 use App\AccountAction;
 use App\Rules\NoUppercase;
 
@@ -89,7 +89,9 @@ class ActionController extends Controller
     private function resolveAccount(Request $request, int $accountId)
     {
         $account = $request->space->accounts()->findOrFail($accountId);
-        if ($account->dtmf_protocol == null) abort(403, 'DTMF Protocol must be configured');
+        if ($account->dtmf_protocol == null) {
+            abort(403, 'DTMF Protocol must be configured');
+        }
 
         return $account;
     }

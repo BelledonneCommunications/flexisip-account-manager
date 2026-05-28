@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2023 Belledonne Communications SARL, All rights reserved.
@@ -22,12 +23,10 @@ namespace App\Http\Controllers\Account;
 use App\Http\Controllers\Controller;
 use App\AuthToken;
 use Illuminate\Http\Request;
-
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\Writer\PngWriter;
-
 use Illuminate\Support\Facades\Auth;
 
 class AuthTokenController extends Controller
@@ -39,7 +38,7 @@ class AuthTokenController extends Controller
             ->firstOrFail();
 
         $result = Builder::create()
-            ->writer(new PngWriter())
+            ->writer(new PngWriter)
             ->data(
                 $authToken->account_id
                 ? route('auth_tokens.auth', ['token' => $authToken->token])

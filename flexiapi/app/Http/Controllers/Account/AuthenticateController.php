@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -23,7 +24,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-
 use App\Account;
 use App\AuthToken;
 
@@ -45,7 +45,7 @@ class AuthenticateController extends Controller
 
         return view('account.login', config('app.show_login_counter_temp') ? [
             'count' => Account::where('activated', true)->count()
-        ]: []);
+        ] : []);
     }
 
     public function authenticate(Request $request)

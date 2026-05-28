@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2023 Belledonne Communications SARL, All rights reserved.
@@ -20,7 +21,6 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
@@ -39,7 +39,7 @@ class MessageController extends Controller
         $loop = \React\EventLoop\Loop::get();
         $connector = new \React\Socket\UnixConnector($loop);
 
-        $connector->connect('unix://'.config('app.linphone_daemon_unix_pipe'))
+        $connector->connect('unix://' . config('app.linphone_daemon_unix_pipe'))
             ->then(function (\React\Socket\Connection $connection) use ($request, &$returnedLines) {
                 $connection->on('data', function ($message) use ($connection, &$returnedLines) {
                     foreach (preg_split("/\r\n|\n|\r/", $message) as $line) {
@@ -51,7 +51,7 @@ class MessageController extends Controller
                     $connection->close();
                 });
 
-                $connection->write("message sip:".$request->get('to')." ".$request->get('body')."\n");
+                $connection->write("message sip:" . $request->get('to') . " " . $request->get('body') . "\n");
             }, function (\Exception $e) {
                 Log::error($e->getMessage());
             });

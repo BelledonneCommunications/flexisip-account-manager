@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin\Space;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Space\CardDavServer;
-use Illuminate\Http\Request;
-
 use App\Space;
 use App\SpaceCardDavServer;
 

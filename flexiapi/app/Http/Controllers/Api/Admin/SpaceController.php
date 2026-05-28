@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2023 Belledonne Communications SARL, All rights reserved.
@@ -24,7 +25,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Space\Create;
 use App\Rules\Domain;
 use App\Rules\Ini;
-
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -38,7 +38,7 @@ class SpaceController extends Controller
     public function store(Create $request)
     {
         $request->validate([
-            'host' => ['required', 'unique:spaces', new Domain()],
+            'host' => ['required', 'unique:spaces', new Domain],
             'max_accounts' => 'nullable|integer',
             'expire_at' => 'nullable|date|after_or_equal:today',
             'custom_provisioning_entries' => ['nullable', new Ini(Space::FORBIDDEN_KEYS)],
@@ -103,7 +103,7 @@ class SpaceController extends Controller
     public function update(Request $request, string $domain)
     {
         $request->validate([
-            'account_realm' => ['nullable', new Domain()],
+            'account_realm' => ['nullable', new Domain],
             'assistant_disable_qr_code' => 'required|boolean',
             'assistant_hide_create_account' => 'required|boolean',
             'assistant_hide_third_party_account' => 'required|boolean',

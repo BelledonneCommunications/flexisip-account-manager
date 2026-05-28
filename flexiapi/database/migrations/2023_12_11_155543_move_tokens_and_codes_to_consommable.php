@@ -3,16 +3,13 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
-
 use App\Account;
 use App\ProvisioningToken;
 use App\RecoveryCode;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up()
     {
         Schema::table('phone_change_codes', function (Blueprint $table) {
@@ -68,10 +65,14 @@ return new class extends Migration
                 $recoveryCode->save();
             }
 
-            if (DB::getDriverName() !== 'sqlite') $progress->advance();
+            if (DB::getDriverName() !== 'sqlite') {
+                $progress->advance();
+            }
         }
 
-        if (DB::getDriverName() !== 'sqlite') $progress->finish();
+        if (DB::getDriverName() !== 'sqlite') {
+            $progress->finish();
+        }
 
         // In two steps for SQLite
         Schema::table('accounts', function (Blueprint $table) {
@@ -111,10 +112,14 @@ return new class extends Migration
             $account->provisioning_token = $provisioningToken->token;
             $account->save();
 
-            if (DB::getDriverName() !== 'sqlite') $progress->advance();
+            if (DB::getDriverName() !== 'sqlite') {
+                $progress->advance();
+            }
         }
 
-        if (DB::getDriverName() !== 'sqlite') $progress->finish();
+        if (DB::getDriverName() !== 'sqlite') {
+            $progress->finish();
+        }
 
         // Recovery codes
         $recoveryCodes = RecoveryCode::all();
@@ -129,10 +134,14 @@ return new class extends Migration
             $account->recovery_code = $recoveryCode->code;
             $account->save();
 
-            if (DB::getDriverName() !== 'sqlite') $progress->advance();
+            if (DB::getDriverName() !== 'sqlite') {
+                $progress->advance();
+            }
         }
 
-        if (DB::getDriverName() !== 'sqlite') $progress->finish();
+        if (DB::getDriverName() !== 'sqlite') {
+            $progress->finish();
+        }
 
         Schema::dropIfExists('provisioning_tokens');
         Schema::dropIfExists('recovery_codes');

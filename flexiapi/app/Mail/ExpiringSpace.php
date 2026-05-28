@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use App\Space;
-
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -12,7 +11,8 @@ use Illuminate\Queue\SerializesModels;
 
 class ExpiringSpace extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public function __construct(
         public Space $space

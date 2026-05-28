@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -26,7 +27,6 @@ use DateTimeImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
-
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Signer\Key\InMemory;
@@ -52,7 +52,7 @@ class AuthenticateJWT
             $publicKey = InMemory::plainText($request->space->sso_public_key);
 
             try {
-                $token = (new Parser(new JoseEncoder()))->parse($request->bearerToken());
+                $token = (new Parser(new JoseEncoder))->parse($request->bearerToken());
             } catch (\Throwable $th) {
                 return $this->generateUnauthorizedBearerResponse($request->space, 'invalid_token', 'Invalid bearer ' . $th->getMessage());
             }
@@ -61,15 +61,15 @@ class AuthenticateJWT
 
             switch ($token->headers()->get('alg')) {
                 case 'RS256':
-                    $signer = new Sha256();
+                    $signer = new Sha256;
                     break;
 
                 case 'RS384':
-                    $signer = new Sha384();
+                    $signer = new Sha384;
                     break;
 
                 case 'RS512':
-                    $signer = new Sha512();
+                    $signer = new Sha512;
                     break;
             }
 
@@ -77,11 +77,11 @@ class AuthenticateJWT
                 return $this->generateUnauthorizedBearerResponse($request->space, 'invalid_token', 'Unsupported RSA signature');
             }
 
-            if (!(new Validator())->validate($token, new SignedWith($signer, $publicKey))) {
+            if (!(new Validator)->validate($token, new SignedWith($signer, $publicKey))) {
                 return $this->generateUnauthorizedBearerResponse($request->space, 'invalid_token', 'Invalid JWT token signature');
             }
 
-            if ($token->isExpired(new DateTimeImmutable())) {
+            if ($token->isExpired(new DateTimeImmutable)) {
                 return $this->generateUnauthorizedBearerResponse($request->space, 'invalid_token', 'Expired JWT token');
             }
 
@@ -125,7 +125,7 @@ class AuthenticateJWT
             && !$request->header('x-api-key')
             && !$request->cookie('x-api-key')
         ) {
-            $response = new Response();
+            $response = new Response;
 
             $response->header(
                 'WWW-Authenticate',
@@ -147,7 +147,7 @@ class AuthenticateJWT
             ? ', '
             : '';
 
-        $response = new Response();
+        $response = new Response;
         $response->header(
             'WWW-Authenticate',
             $bearer . 'error="' . $error . '", error_description="' . $description . '"'

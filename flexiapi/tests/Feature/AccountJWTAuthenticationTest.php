@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2021 Belledonne Communications SARL, All rights reserved.
@@ -29,7 +30,6 @@ use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Signer\Rsa\Sha512;
 use Tests\TestCase;
-
 use Illuminate\Support\Facades\Auth;
 
 class AccountJWTAuthenticationTest extends TestCase
@@ -54,8 +54,9 @@ class AccountJWTAuthenticationTest extends TestCase
     public function testBaseProvisioning()
     {
         # JWT is disabled if Sodium is not loaded
-        if (!extension_loaded('sodium'))
+        if (!extension_loaded('sodium')) {
             return;
+        }
 
         $password = Password::factory()->create();
         $domain = 'sip_provisioning.example.com';
@@ -71,12 +72,12 @@ class AccountJWTAuthenticationTest extends TestCase
 
         $this->get($this->route)->assertStatus(400);
 
-        $clock = new FrozenClock(new DateTimeImmutable());
+        $clock = new FrozenClock(new DateTimeImmutable);
 
         $token = (new JwtFacade(null, $clock))->issue(
-            new Sha256(),
+            new Sha256,
             InMemory::plainText($this->serverPrivateKeyPem),
-            static fn(
+            static fn (
                 Builder $builder,
                 DateTimeImmutable $issuedAt
             ): Builder => $builder->withClaim('email', $password->account->email)
@@ -87,9 +88,9 @@ class AccountJWTAuthenticationTest extends TestCase
         // SIP identifier
 
         $token = (new JwtFacade(null, $clock))->issue(
-            new Sha256(),
+            new Sha256,
             InMemory::plainText($this->serverPrivateKeyPem),
-            static fn(
+            static fn (
                 Builder $builder,
                 DateTimeImmutable $issuedAt
             ): Builder => $builder->withClaim('sip_identity', 'sip:' . $password->account->username . '@' . $password->account->domain)
@@ -99,9 +100,9 @@ class AccountJWTAuthenticationTest extends TestCase
 
         // Handle empty sso_sip_identifier
         $token = (new JwtFacade(null, $clock))->issue(
-            new Sha256(),
+            new Sha256,
             InMemory::plainText($this->serverPrivateKeyPem),
-            static fn(
+            static fn (
                 Builder $builder,
                 DateTimeImmutable $issuedAt
             ): Builder => $builder->withClaim('sip_identity', 'sip:' . $password->account->username . '@' . $password->account->domain)
@@ -114,9 +115,9 @@ class AccountJWTAuthenticationTest extends TestCase
         \App\Space::where('domain', $password->account->domain)->update(['sso_sip_identifier' => 'sip_other_identifier']);
 
         $token = (new JwtFacade(null, $clock))->issue(
-            new Sha256(),
+            new Sha256,
             InMemory::plainText($this->serverPrivateKeyPem),
-            static fn(
+            static fn (
                 Builder $builder,
                 DateTimeImmutable $issuedAt
             ): Builder => $builder->withClaim($otherIdentifier, 'sip:' . $password->account->username . '@' . $password->account->domain)
@@ -126,9 +127,9 @@ class AccountJWTAuthenticationTest extends TestCase
 
         // Sha512
         $token = (new JwtFacade(null, $clock))->issue(
-            new Sha512(),
+            new Sha512,
             InMemory::plainText($this->serverPrivateKeyPem),
-            static fn(
+            static fn (
                 Builder $builder,
                 DateTimeImmutable $issuedAt
             ): Builder => $builder->withClaim('email', $password->account->email)
@@ -140,9 +141,9 @@ class AccountJWTAuthenticationTest extends TestCase
         $oldClock = new FrozenClock(new DateTimeImmutable('2022-06-24 22:51:10'));
 
         $token = (new JwtFacade(null, $oldClock))->issue(
-            new Sha256(),
+            new Sha256,
             InMemory::plainText($this->serverPrivateKeyPem),
-            static fn(
+            static fn (
                 Builder $builder,
                 DateTimeImmutable $issuedAt
             ): Builder => $builder->withClaim('email', $password->account->email)
@@ -173,9 +174,9 @@ class AccountJWTAuthenticationTest extends TestCase
 
         // Wrong email
         $token = (new JwtFacade(null, $clock))->issue(
-            new Sha256(),
+            new Sha256,
             InMemory::plainText($this->serverPrivateKeyPem),
-            static fn(
+            static fn (
                 Builder $builder,
                 DateTimeImmutable $issuedAt
             ): Builder => $builder->withClaim('email', 'unknow@man.org')
@@ -193,9 +194,9 @@ class AccountJWTAuthenticationTest extends TestCase
         openssl_pkey_export($keys, $wrongServerPrivateKeyPem);
 
         $wrongToken = (new JwtFacade(null, $clock))->issue(
-            new Sha256(),
+            new Sha256,
             InMemory::plainText($wrongServerPrivateKeyPem),
-            static fn(
+            static fn (
                 Builder $builder,
                 DateTimeImmutable $issuedAt
             ): Builder => $builder->withClaim('email', $password->account->email)
@@ -212,8 +213,9 @@ class AccountJWTAuthenticationTest extends TestCase
     public function testAuthBearerUrl()
     {
         # JWT is disabled if Sodium is not loaded
-        if (!extension_loaded('sodium'))
+        if (!extension_loaded('sodium')) {
             return;
+        }
 
         $password = Password::factory()->create();
         $space = \App\Space::where('domain', $password->account->domain)->first();

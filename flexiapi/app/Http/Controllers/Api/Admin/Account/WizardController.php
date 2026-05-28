@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Admin\Account;
 use App\Http\Controllers\Controller;
 use App\Rules\SipUri;
 use App\Wizard;
-
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 

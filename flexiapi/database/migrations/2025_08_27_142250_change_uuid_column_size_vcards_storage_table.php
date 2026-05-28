@@ -6,8 +6,7 @@ use Illuminate\Support\Facades\Schema;
 use App\VcardStorage;
 use Sabre\VObject;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::table('vcards_storage', function (Blueprint $table) {

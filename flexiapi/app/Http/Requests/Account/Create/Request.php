@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2023 Belledonne Communications SARL, All rights reserved.
@@ -21,7 +22,6 @@ namespace App\Http\Requests\Account\Create;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-
 use App\Account;
 use App\Space;
 use App\Rules\BlacklistedUsername;
@@ -46,10 +46,10 @@ class Request extends FormRequest
         return [
             'username' => [
                 'required',
-                new NoUppercase(),
-                new IsNotPhoneNumber(),
-                new BlacklistedUsername(),
-                new SIPUsername(),
+                new NoUppercase,
+                new IsNotPhoneNumber,
+                new BlacklistedUsername,
+                new SIPUsername,
                 Rule::unique('accounts', 'username')->where(function ($query) use ($domain) {
                     $query->where('domain', $domain);
                 }),
@@ -59,7 +59,7 @@ class Request extends FormRequest
                 'filled',
             ],
             'domain' => 'exists:spaces,domain',
-            'dictionary' => [new Dictionary()],
+            'dictionary' => [new Dictionary],
             'password' => 'required|min:3',
             'email' => space()->unique_email
                 ? [

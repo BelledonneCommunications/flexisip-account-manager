@@ -3,7 +3,6 @@
 namespace App\Rules;
 
 use App\Space;
-
 use Illuminate\Contracts\Validation\Rule;
 use Respect\Validation\Validator;
 

@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2023 Belledonne Communications SARL, All rights reserved.
@@ -27,7 +28,9 @@ class BlacklistedUsername implements Rule
     {
         if (!empty(config('app.account_blacklisted_usernames'))) {
             foreach (explode(',', config('app.account_blacklisted_usernames')) as $username) {
-                if ($value == $username) return false;
+                if ($value == $username) {
+                    return false;
+                }
 
                 // Regex rules
                 $regex = '/' . $username . '/';
@@ -35,7 +38,9 @@ class BlacklistedUsername implements Rule
                 if (isRegularExpression($regex)) {
                     $matches = [];
                     preg_match($regex, $value, $matches);
-                    if (count($matches) > 0) return false;
+                    if (count($matches) > 0) {
+                        return false;
+                    }
                 }
             }
         }

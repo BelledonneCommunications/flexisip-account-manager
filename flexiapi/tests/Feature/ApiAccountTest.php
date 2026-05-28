@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -693,11 +694,11 @@ class ApiAccountTest extends TestCase
         $existing->account->save();
 
         Space::where('domain', $existing->account->domain)->update(['unique_email' => true]);
-        
+
         $admin = Account::factory()->admin()->create();
         $admin->generateUserApiKey();
         $admin->save();
-        
+
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'username' => 'hop',

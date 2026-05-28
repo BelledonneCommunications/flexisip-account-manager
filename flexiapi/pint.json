@@ -1,0 +1,37 @@
+{
+    "preset": "psr12",
+    "paths": [
+        "app",
+        "config",
+        "public",
+        "database",
+        "resources",
+        "routes",
+        "tests"
+    ],
+    "exclude": [
+        "storage",
+        "vendor",
+        "docs"
+    ],
+    "notPaths": [
+        "public/index.php",
+        "app/Exceptions/Handler.php",
+        "app/Providers"
+    ],
+    "rules": {
+        "php_unit_method_casing": {
+            "case": "camel_case"
+        },
+        "concat_space": {
+            "spacing": "one"
+        },
+        "new_with_parentheses": {
+            "anonymous_class": false,
+            "named_class": false
+        },
+        "class_definition": {
+            "space_before_parenthesis": false
+        }
+    }
+}

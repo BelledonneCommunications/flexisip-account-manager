@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2023 Belledonne Communications SARL, All rights reserved.
@@ -23,7 +24,6 @@ use App\Http\Controllers\Controller;
 use App\Rules\Vcard;
 use App\VcardStorage;
 use Illuminate\Http\Request;
-
 use Sabre\VObject;
 use stdClass;
 
@@ -43,7 +43,7 @@ class VcardsStorageController extends Controller
     public function store(Request $request, int $accountId)
     {
         $request->validate([
-            'vcard' => ['required', new Vcard()]
+            'vcard' => ['required', new Vcard]
         ]);
 
         $vcardo = VObject\Reader::read($request->get('vcard'));
@@ -52,7 +52,7 @@ class VcardsStorageController extends Controller
             abort(409, 'Vcard already exists');
         }
 
-        $vcard = new VcardStorage();
+        $vcard = new VcardStorage;
         $vcard->account_id = $accountId;
         $vcard->uuid = $vcardo->UID;
         $vcard->vcard = preg_replace('/\r\n?/', "\n", $vcardo->serialize());
@@ -64,7 +64,7 @@ class VcardsStorageController extends Controller
     public function update(Request $request, int $accountId, string $uuid)
     {
         $request->validate([
-            'vcard' => ['required', new Vcard()]
+            'vcard' => ['required', new Vcard]
         ]);
 
         $vcardo = VObject\Reader::read($request->get('vcard'));

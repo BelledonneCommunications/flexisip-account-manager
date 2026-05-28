@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -16,6 +17,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -81,8 +83,9 @@ class Space extends Model
     protected static function booted()
     {
         static::addGlobalScope('domain', function (Builder $builder) {
-            if (!Auth::hasUser())
+            if (!Auth::hasUser()) {
                 return;
+            }
 
             if (Auth::hasUser() || Auth::user()->superAdmin) {
                 return;
@@ -156,7 +159,7 @@ class Space extends Model
     {
         if (isset($this->attributes['sso_server_url']) && isset($this->attributes['sso_realm'])) {
             $response = Http::get($this->attributes['sso_server_url'] . '/realms/' . $this->attributes['sso_realm'] . '/protocol/openid-connect/certs');
-            $jwkConverter = new JWKConverter();
+            $jwkConverter = new JWKConverter;
 
             if ($response->status() == '200' && $publicKey = $response->json('keys')[0]) {
                 $this->attributes['sso_public_key'] = $jwkConverter->toPEM($publicKey);
@@ -208,7 +211,7 @@ class Space extends Model
     protected function themeHue(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => $value ?? 22
+            get: fn ($value) => $value ?? 22
         );
     }
 }

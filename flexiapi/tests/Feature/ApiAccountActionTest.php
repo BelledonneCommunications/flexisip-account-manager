@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -37,7 +38,7 @@ class ApiAccountActionTest extends TestCase
         $admin->generateUserApiKey();
 
         $this->keyAuthenticated($admin)
-            ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
+            ->json($this->method, $this->route . '/' . $password->account->id . '/actions', [
                 'key' => '123',
                 'code' => '123'
             ])
@@ -47,21 +48,21 @@ class ApiAccountActionTest extends TestCase
 
         // Missing key
         $this->keyAuthenticated($admin)
-        ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
+        ->json($this->method, $this->route . '/' . $password->account->id . '/actions', [
             'code' => '123'
         ])
         ->assertStatus(422);
 
         // Invalid key
         $this->keyAuthenticated($admin)
-        ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
+        ->json($this->method, $this->route . '/' . $password->account->id . '/actions', [
             'key' => 'Abc1234',
             'code' => '123'
         ])
         ->assertStatus(422);
 
         $this->keyAuthenticated($admin)
-            ->get($this->route.'/'.$password->account->id.'/actions')
+            ->get($this->route . '/' . $password->account->id . '/actions')
             ->assertJson([
                 [
                     'key' => '123',
@@ -74,18 +75,18 @@ class ApiAccountActionTest extends TestCase
         $password->account->save();
 
         $this->keyAuthenticated($admin)
-        ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
+        ->json($this->method, $this->route . '/' . $password->account->id . '/actions', [
             'key' => 'abc1234',
             'code' => '123'
         ])
         ->assertStatus(403);
 
         $this->keyAuthenticated($admin)
-            ->get($this->route.'/'.$password->account->id.'/actions')
+            ->get($this->route . '/' . $password->account->id . '/actions')
             ->assertStatus(403);
 
         $this->keyAuthenticated($admin)
-            ->get($this->route.'/'.$password->account->id)
+            ->get($this->route . '/' . $password->account->id)
             ->assertStatus(200)
             ->assertJsonPath('actions', []);
     }
@@ -98,7 +99,7 @@ class ApiAccountActionTest extends TestCase
         $admin->generateUserApiKey();
 
         $this->keyAuthenticated($admin)
-            ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
+            ->json($this->method, $this->route . '/' . $password->account->id . '/actions', [
                 'key' => '123',
                 'code' => '123'
             ])
@@ -108,7 +109,7 @@ class ApiAccountActionTest extends TestCase
         $accountAction = AccountAction::first();
 
         $this->keyAuthenticated($admin)
-            ->delete($this->route.'/'.$password->account->id.'/actions/'.$accountAction->id)
+            ->delete($this->route . '/' . $password->account->id . '/actions/' . $accountAction->id)
             ->assertStatus(200);
 
         $this->assertEquals(0, AccountAction::count());
@@ -122,7 +123,7 @@ class ApiAccountActionTest extends TestCase
         $admin->generateUserApiKey();
 
         $this->keyAuthenticated($admin)
-            ->json($this->method, $this->route.'/'.$password->account->id.'/actions', [
+            ->json($this->method, $this->route . '/' . $password->account->id . '/actions', [
                 'key' => '123',
                 'code' => '123'
             ])
@@ -132,14 +133,14 @@ class ApiAccountActionTest extends TestCase
         $accountAction = AccountAction::first();
 
         $this->keyAuthenticated($admin)
-            ->json('PUT', $this->route.'/'.$password->account->id.'/actions/'.$accountAction->id, [
+            ->json('PUT', $this->route . '/' . $password->account->id . '/actions/' . $accountAction->id, [
                 'key' => '123',
                 'code' => 'abc'
             ])
             ->assertStatus(200);
 
         $this->keyAuthenticated($admin)
-            ->get($this->route.'/'.$password->account->id.'/actions')
+            ->get($this->route . '/' . $password->account->id . '/actions')
             ->assertJson([
                 [
                     'code' => 'abc',

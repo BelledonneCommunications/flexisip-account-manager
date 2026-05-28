@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\PhoneCountry;
 
-use Illuminate\Http\Request;
-
 class PhoneCountryController extends Controller
 {
     public function index()

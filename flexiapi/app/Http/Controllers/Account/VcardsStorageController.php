@@ -10,13 +10,13 @@ class VcardsStorageController extends Controller
     public function index(Request $request)
     {
         //if ($this->vcardRequested($request)) {
-            $vcards = '';
+        $vcards = '';
 
-            foreach ($request->user()->vcardsStorage()->get() as $vcard) {
-                $vcards .= $vcard->vcard . "\n";
-            }
+        foreach ($request->user()->vcardsStorage()->get() as $vcard) {
+            $vcards .= $vcard->vcard . "\n";
+        }
 
-            return $vcards;
+        return $vcards;
         /*}
 
         abort(404);*/

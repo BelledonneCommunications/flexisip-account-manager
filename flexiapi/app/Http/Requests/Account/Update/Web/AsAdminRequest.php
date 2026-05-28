@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2023 Belledonne Communications SARL, All rights reserved.
@@ -36,7 +37,7 @@ class AsAdminRequest extends UpdateRequest
         if (config('app.allow_phone_number_username_admin_api') == true) {
             array_splice(
                 $rules['username'],
-                array_search(new IsNotPhoneNumber(), $rules['username']),
+                array_search(new IsNotPhoneNumber, $rules['username']),
                 1
             );
         }

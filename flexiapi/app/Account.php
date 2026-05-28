@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -26,7 +27,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
-
 use Awobaz\Compoships\Compoships;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use stdClass;
@@ -189,8 +189,9 @@ class Account extends Authenticatable
 
     public function getDictionaryAttribute()
     {
-        if ($this->dictionaryEntries->isEmpty())
+        if ($this->dictionaryEntries->isEmpty()) {
             return new stdClass;
+        }
 
         return $this->dictionaryEntries->keyBy('key')->map(function ($entry) {
             return $entry->value;
@@ -553,7 +554,7 @@ class Account extends Authenticatable
     public function createTombstone(): bool
     {
         if (!$this->hasTombstone()) {
-            $tombstone = new AccountTombstone();
+            $tombstone = new AccountTombstone;
             $tombstone->username = $this->attributes['username'];
             $tombstone->domain = $this->attributes['domain'];
             $tombstone->save();

@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Wizard;
 use App\Account;
-
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class WizardFactory extends Factory

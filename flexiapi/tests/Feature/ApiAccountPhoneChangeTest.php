@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -35,20 +36,20 @@ class ApiAccountPhoneChangeTest extends TestCase
         $account->generateUserApiKey();
 
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/request', [
+            ->json($this->method, $this->route . '/request', [
                 'phone' => 'blabla'
             ])
             ->assertStatus(422);
 
         // Send a SMS
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/request', [
+            ->json($this->method, $this->route . '/request', [
                 'phone' => '+33216412664'
             ])
             ->assertStatus(200);
 
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/request', [
+            ->json($this->method, $this->route . '/request', [
                 'phone' => '+33216412664'
             ])
             ->assertStatus(200);
@@ -62,7 +63,7 @@ class ApiAccountPhoneChangeTest extends TestCase
         $account->generateUserApiKey();
 
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/request', [
+            ->json($this->method, $this->route . '/request', [
                 'phone' => '+33612312312'
             ])
             ->assertStatus(200);
@@ -88,13 +89,13 @@ class ApiAccountPhoneChangeTest extends TestCase
         $dutchPhoneNumber = '+31612121212';
 
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/request', [
+            ->json($this->method, $this->route . '/request', [
                 'phone' => $frenchPhoneNumber
             ])
             ->assertStatus(200);
 
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/request', [
+            ->json($this->method, $this->route . '/request', [
                 'phone' => $dutchPhoneNumber
             ])
             ->assertJsonValidationErrors(['phone']);
@@ -102,7 +103,7 @@ class ApiAccountPhoneChangeTest extends TestCase
         PhoneCountry::where('code', 'NL')->update(['activated' => true]);
 
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/request', [
+            ->json($this->method, $this->route . '/request', [
                 'phone' => $dutchPhoneNumber
             ])
             ->assertStatus(200);
@@ -114,7 +115,7 @@ class ApiAccountPhoneChangeTest extends TestCase
         $account->generateUserApiKey();
 
         $this->keyAuthenticated($account)
-            ->json($this->method, $this->route.'/request', [
+            ->json($this->method, $this->route . '/request', [
                 'phone' => 'blabla'
             ])
             ->assertStatus(403);

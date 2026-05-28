@@ -21,7 +21,7 @@ class UpdatePhoneCountries extends Command
             PhoneCountry::pluck('code')->toArray()
         ) as $code) {
             if ($resolvedMetadata = $phoneNumberUtils->getMetadataForRegion($code)) {
-                $phoneCountry = new PhoneCountry();
+                $phoneCountry = new PhoneCountry;
                 $phoneCountry->code = $code;
                 $phoneCountry->country_code = $resolvedMetadata->getCountryCode();
                 $phoneCountry->save();

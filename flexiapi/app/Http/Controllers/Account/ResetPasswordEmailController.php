@@ -27,7 +27,9 @@ class ResetPasswordEmailController extends Controller
 
         $token = ResetPasswordEmailToken::where('token', $request->get('token'))->firstOrFail();
 
-        if ($token->offed()) abort(403);
+        if ($token->offed()) {
+            abort(403);
+        }
 
         $token->account->updatePassword($request->get('password'));
         $token->consume();

@@ -3,7 +3,6 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use Respect\Validation\Validator;
 
 class CommaList implements Rule
 {

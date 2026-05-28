@@ -12,7 +12,9 @@ class FilteredPhone implements Rule
     {
         if (!PhoneCountry::where('code', (new PhoneNumber($value))->getCountry())
             ->where('activated', true)
-            ->exists()) return false;
+            ->exists()) {
+            return false;
+        }
 
         return true;
     }

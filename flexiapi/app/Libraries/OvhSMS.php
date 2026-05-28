@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -75,10 +76,10 @@ class OvhSMS
         Log::channel('events')->info('OVH SMS sending', ['to' => $to, 'message' => $message]);
 
         try {
-            $this->api->post('/sms/'. $this->smsService . '/jobs', $content);
+            $this->api->post('/sms/' . $this->smsService . '/jobs', $content);
             // One credit removed
 
-            $this->api->get('/sms/'. $this->smsService . '/jobs');
+            $this->api->get('/sms/' . $this->smsService . '/jobs');
         } catch (\Exception $e) {
             Log::channel('events')->info('OVH SMS not sent, check the errors log');
             Log::error('OVH SMS not sent: ' . $e->getMessage());

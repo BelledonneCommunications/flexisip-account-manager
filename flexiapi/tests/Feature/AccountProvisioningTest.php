@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2021 Belledonne Communications SARL, All rights reserved.
@@ -253,7 +254,7 @@ class AccountProvisioningTest extends TestCase
         ];
 
         $this->keyAuthenticated($admin)
-            ->json('PUT', '/api/accounts/' . $account->id . '/carddavs/' . $cardDavServer->id , $credentials)
+            ->json('PUT', '/api/accounts/' . $account->id . '/carddavs/' . $cardDavServer->id, $credentials)
             ->assertStatus(200);
 
         $this->withHeaders([

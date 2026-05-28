@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Account;
 
 use App\Http\Controllers\Controller;
-use \App\Http\Controllers\Api\Admin\Account\CallForwardingController as AdminCallForwardingController;
+use App\Http\Controllers\Api\Admin\Account\CallForwardingController as AdminCallForwardingController;
 use Illuminate\Http\Request;
 
 class CallForwardingController extends Controller

@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -17,9 +18,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
-
 use App\Account;
 use App\Space;
 use App\DigestNonce;
@@ -56,7 +55,7 @@ function getRequestBoolean(Request $request, string $key, bool $reversed = false
 
 function generateValidNonce(Account $account): string
 {
-    $nonce = new DigestNonce();
+    $nonce = new DigestNonce;
     $nonce->account_id = $account->id;
     $nonce->nonce = generateNonce();
     $nonce->save();
@@ -97,8 +96,8 @@ function markdownDocumentation(string $markdown): string
         ],
     ]);
 
-    $converter->getEnvironment()->addExtension(new HeadingPermalinkExtension());
-    $converter->getEnvironment()->addExtension(new TableOfContentsExtension());
+    $converter->getEnvironment()->addExtension(new HeadingPermalinkExtension);
+    $converter->getEnvironment()->addExtension(new TableOfContentsExtension);
 
     return (string) $converter->convert($markdown);
 }

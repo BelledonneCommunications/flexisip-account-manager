@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2020 Belledonne Communications SARL, All rights reserved.
@@ -42,7 +43,9 @@ class EmailChangeCode extends Consommable
     {
         $stars = 4; // Min Stars to use
         $at = strpos($this->attributes['email'], '@');
-        if ($at - 2 > $stars) $stars = $at - 2;
+        if ($at - 2 > $stars) {
+            $stars = $at - 2;
+        }
         return substr($this->attributes['email'], 0, 1) . str_repeat('*', $stars) . substr($this->attributes['email'], $at - 1);
     }
 }

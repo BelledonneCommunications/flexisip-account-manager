@@ -4,9 +4,6 @@ namespace App\Http\Controllers\Api\Admin\Account;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
-use App\Account;
-use App\Space;
 use App\AccountCardDavCredentials;
 use App\SpaceCardDavServer;
 use App\Http\Requests\Account\CardDavCredentials;
@@ -18,7 +15,9 @@ class CardDavCredentialsController extends Controller
         $account = $request->space->accounts()->findOrFail($accountId);
         $cardDavServers = $account->carddavServers;
 
-        if ($cardDavServers->isEmpty()) return new \stdClass;
+        if ($cardDavServers->isEmpty()) {
+            return new \stdClass;
+        }
 
         return $cardDavServers->map(function ($cardDavServer) {
             return $this->extractCardDavServer($cardDavServer);

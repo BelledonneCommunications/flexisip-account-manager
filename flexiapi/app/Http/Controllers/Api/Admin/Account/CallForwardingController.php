@@ -24,7 +24,7 @@ class CallForwardingController extends Controller
             'type' => [
                 'required',
                 'in:always,away,busy',
-                Rule::unique('call_forwardings', 'type')->where(fn($query) => $query->where('account_id', $accountId))
+                Rule::unique('call_forwardings', 'type')->where(fn ($query) => $query->where('account_id', $accountId))
             ],
             'forward_to' => 'required|in:sip_uri,contact,voicemail',
             'sip_uri' => ['nullable', new SipUri, 'required_if:forward_to,sip_uri'],
@@ -54,7 +54,7 @@ class CallForwardingController extends Controller
                 'required',
                 'in:always,away,busy',
                 Rule::unique('call_forwardings', 'type')
-                    ->where(fn($query) => $query->where('account_id', $accountId))
+                    ->where(fn ($query) => $query->where('account_id', $accountId))
                     ->ignore($callForwarding->id)
             ],
             'forward_to' => 'required|in:sip_uri',

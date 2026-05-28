@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2023 Belledonne Communications SARL, All rights reserved.
@@ -22,7 +23,6 @@ namespace App\Http\Requests\ExternalAccount;
 use App\Rules\DomainOrIp;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-
 use App\ExternalAccount;
 use App\Rules\SIPUsername;
 
@@ -39,8 +39,8 @@ class CreateUpdate extends FormRequest
         }
 
         return [
-            'username' => ['required', $usernameValidation, new SIPUsername()],
-            'domain' => ['required', new DomainOrIp()],
+            'username' => ['required', $usernameValidation, new SIPUsername],
+            'domain' => ['required', new DomainOrIp],
             'realm' => 'different:domain',
             'registrar' => 'different:domain',
             'outbound_proxy' => 'different:domain',
