@@ -23,6 +23,7 @@ namespace Tests\Feature;
 use App\Account;
 use App\StatisticsCallDevice;
 use App\StatisticsMessageDevice;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
@@ -180,7 +181,6 @@ class ApiStatisticsTest extends TestCase
 
         // Patch previous call with devices*
 
-        $to = $this->faker->email();
         $device = $this->faker->uuid();
 
         $rangAt = $this->faker->iso8601();
@@ -195,6 +195,27 @@ class ApiStatisticsTest extends TestCase
                 ]
             ])
             ->assertStatus(201);
+
+        $this->assertDatabaseHas('statistics_call_devices', [
+            'call_id' => $id,
+            'rang_at' => Carbon::parse($rangAt)->format('Y-m-d H:i:s'),
+            'invite_terminated_state' => 'declined'
+        ]);
+
+        $this->keyAuthenticated($admin)
+            ->json('PATCH', $this->routeCalls . '/' . $id . '/devices/' . $device, [
+                'invite_terminated' => [
+                    'at' => $this->faker->iso8601(),
+                    'state' => 'accepted'
+                ]
+            ])
+            ->assertStatus(200);
+
+        $this->assertDatabaseHas('statistics_call_devices', [
+            'call_id' => $id,
+            'rang_at' => Carbon::parse($rangAt)->format('Y-m-d H:i:s'),
+            'invite_terminated_state' => 'accepted'
+        ]);
 
         $this->keyAuthenticated($admin)
             ->json('PATCH', $this->routeCalls . '/' . $id . '/devices/' . $device, [

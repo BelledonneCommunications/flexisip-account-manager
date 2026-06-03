@@ -80,14 +80,19 @@ class StatisticsCallController extends Controller
             'invite_terminated.state' => 'required_with:invite_terminated.at,string',
         ]);
 
+        $data = [
+            'invite_terminated_at' => $request->input('invite_terminated.at'),
+            'invite_terminated_state' => $request->input('invite_terminated.state')
+        ];
+
+        if ($request->input('rang_at') != null) {
+            $data['rang_at'] = $request->input('rang_at');
+        }
+
         try {
             return StatisticsCallDevice::updateOrCreate(
                 ['call_id' => $callId, 'device_id' => $deviceId],
-                [
-                    'rang_at' => $request->get('rang_at'),
-                    'invite_terminated_at' => $request->get('invite_terminated.at'),
-                    'invite_terminated_state' => $request->get('invite_terminated.state')
-                ]
+                $data
             );
         } catch (\Exception $e) {
             Log::channel('database_errors')->error($e->getMessage());
