@@ -69,7 +69,7 @@ class AccountClientCertificateAuthenticationTest extends TestCase
             method: $this->method,
             uri: $this->route,
             server: $serverVariables
-        )->assertStatus(200);
+        )->assertOk();
         $this->assertAuthenticatedAs($account);
 
         $this->flushSession();

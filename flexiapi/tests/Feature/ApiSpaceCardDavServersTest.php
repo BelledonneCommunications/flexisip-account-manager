@@ -72,13 +72,13 @@ class ApiSpaceCardDavServersTest extends TestCase
         $this->keyAuthenticated($superAdmin)
             ->json('GET', $route)
             ->assertJson([])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($superAdmin)
             ->json('POST', $route, [
                 'uri' => $uri
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($superAdmin)
             ->json('GET', $route)
@@ -86,7 +86,7 @@ class ApiSpaceCardDavServersTest extends TestCase
                 'uri' => $uri,
                 'enabled' => false
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $cardDavServer = SpaceCardDavServer::first();
 
@@ -96,14 +96,14 @@ class ApiSpaceCardDavServersTest extends TestCase
                 'uri' => $uri,
                 'enabled' => false
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($superAdmin)
             ->json('PUT', $route . '/' . $cardDavServer->id, [
                 'uri' => $uri2,
                 'enabled' => true
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($superAdmin)
             ->json('PUT', $route . '/' . $cardDavServer->id, [
@@ -118,11 +118,11 @@ class ApiSpaceCardDavServersTest extends TestCase
                 'uri' => $uri2,
                 'enabled' => true
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($superAdmin)
             ->json('DELETE', $route . '/' . $cardDavServer->id)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($superAdmin)
             ->json('GET', $route . '/' . $cardDavServer->id)
@@ -131,7 +131,7 @@ class ApiSpaceCardDavServersTest extends TestCase
         $this->keyAuthenticated($superAdmin)
             ->json('GET', $route)
             ->assertJson([])
-            ->assertStatus(200);
+            ->assertOk();
     }
 
     public function testCardDavServerOtherAdminForbidden()
@@ -160,24 +160,24 @@ class ApiSpaceCardDavServersTest extends TestCase
             ->json('POST', $route, [
                 'uri' => 'http://server',
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         // Allowing CardDav credentials for Admin 1 space
         $server = $this->keyAuthenticated($admin)
             ->json('GET', $this->spaceRoute . '/' . $admin->space->domain)
-            ->assertStatus(200)
+            ->assertOk()
             ->json();
 
         $server['carddav_user_credentials'] = true;
 
         $this->keyAuthenticated($admin)
             ->json('PUT', $this->spaceRoute . '/' . $admin->space->domain, $server)
-            ->assertStatus(200);
+            ->assertOk();
 
         // First Admin can get its own credentials
         $this->keyAuthenticated($admin)
             ->json('GET', $this->accountRoute . '/' . $admin->id . '/carddavs')
-            ->assertStatus(200);
+            ->assertOk();
 
         // The other Admin cannot get it
         $this->keyAuthenticated($secondAdmin)
@@ -204,7 +204,7 @@ class ApiSpaceCardDavServersTest extends TestCase
         $this->keyAuthenticated($admin)
             ->json('GET', $route)
             ->assertSee('{}')
-            ->assertStatus(200);
+            ->assertOk();
 
         // Create the CardDav server
 
@@ -214,7 +214,7 @@ class ApiSpaceCardDavServersTest extends TestCase
             ->json('POST', $this->spaceRoute . '/' . $admin->space->domain . '/carddavs', [
                 'uri' => 'http://uri.com'
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         Space::where('domain', $user->domain)->update(['super' => false]);
 
@@ -235,14 +235,14 @@ class ApiSpaceCardDavServersTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->json('PUT', $route . '/' . $cardDavServer->id, $credentials)
-            ->assertStatus(200);
+            ->assertOk();
 
         $credentials['realm'] = 'hop2.com';
 
         // Again
         $this->keyAuthenticated($admin)
             ->json('PUT', $route . '/' . $cardDavServer->id, $credentials)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->json('GET', $route)
@@ -252,18 +252,18 @@ class ApiSpaceCardDavServersTest extends TestCase
             ->assertJsonFragment([
                 'realm' => $credentials['realm'],
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->json('GET', $route . '/' . $cardDavServer->id)
             ->assertJsonFragment([
                 'username' => $credentials['username'],
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->json('DELETE', $route . '/' . $cardDavServer->id)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->json('GET', $route . '/' . $cardDavServer->id)
@@ -272,6 +272,6 @@ class ApiSpaceCardDavServersTest extends TestCase
         $this->keyAuthenticated($admin)
             ->json('GET', $route)
             ->assertSee('{}')
-            ->assertStatus(200);
+            ->assertOk();
     }
 }
