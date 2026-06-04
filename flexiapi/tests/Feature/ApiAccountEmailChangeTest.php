@@ -48,7 +48,7 @@ class ApiAccountEmailChangeTest extends TestCase
             ->json($this->method, $this->route . '/request', [
                 'email' => $newEmail
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         // Same email
         $this->keyAuthenticated($account)
@@ -59,7 +59,7 @@ class ApiAccountEmailChangeTest extends TestCase
 
         $this->keyAuthenticated($account)
             ->get('/api/accounts/me')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'username' => $account->username,
                 'email_change_code' => [
@@ -85,7 +85,7 @@ class ApiAccountEmailChangeTest extends TestCase
             ->json($this->method, $this->route . '/request', [
                 'email' => 'new@email.com'
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         config()->set('app.email_change_code_expiration_minutes', 10);
 
@@ -138,7 +138,7 @@ class ApiAccountEmailChangeTest extends TestCase
 
         $this->keyAuthenticated($emailChange->account)
             ->get('/api/accounts/me')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'email' => null
             ]);
@@ -146,26 +146,26 @@ class ApiAccountEmailChangeTest extends TestCase
         // Check who can see the code
         $this->keyAuthenticated($admin)
             ->json('GET', '/api/accounts/' . $emailChange->account->id)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertSee($emailChange->code);
 
         $this->keyAuthenticated($emailChange->account)
             ->json('GET', '/api/accounts/me')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertDontSee($emailChange->code);
 
         $this->keyAuthenticated($emailChange->account)
             ->json($this->method, $this->route, [
                 'code' => $emailChange->code
             ])
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'email' => $email,
             ]);
 
         $this->keyAuthenticated($emailChange->account)
             ->get('/api/accounts/me')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'email' => $email
             ]);
@@ -173,7 +173,7 @@ class ApiAccountEmailChangeTest extends TestCase
         // Check that the code is gone
         $this->keyAuthenticated($admin)
             ->json('GET', '/api/accounts/' . $emailChange->account->id)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertDontSee($emailChange->code);
     }
 }

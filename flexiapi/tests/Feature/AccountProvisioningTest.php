@@ -47,7 +47,7 @@ class AccountProvisioningTest extends TestCase
         $this->withHeaders([
             'x-linphone-provisioning' => true,
         ])->get($this->route)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertHeader('Content-Type', 'application/xml')
             ->assertDontSee('ha1');
     }
@@ -57,7 +57,7 @@ class AccountProvisioningTest extends TestCase
         Space::factory()->withoutProvisioningHeader()->create();
 
         $this->get($this->route)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertHeader('Content-Type', 'application/xml')
             ->assertDontSee('ha1');
     }
@@ -115,7 +115,7 @@ class AccountProvisioningTest extends TestCase
                 'x-linphone-provisioning' => true,
             ])
             ->get($this->accountRoute)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('ha1')
             ->assertSee('contacts-vcard-list');
@@ -126,7 +126,7 @@ class AccountProvisioningTest extends TestCase
                 'x-linphone-provisioning' => true,
             ])
             ->get($this->accountRoute)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('ha1');
     }
@@ -145,7 +145,7 @@ class AccountProvisioningTest extends TestCase
                 'x-linphone-provisioning' => true,
             ])
             ->get($this->accountRoute)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('ha1')
             ->assertSee('disable_call_recordings_feature')
@@ -164,7 +164,7 @@ class AccountProvisioningTest extends TestCase
         // Regenerate a new provisioning token from the authenticated account
         $this->keyAuthenticated($password->account)
             ->get('/api/accounts/me/provision')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertSee('provisioning_token')
             ->assertDontSee($provisioningToken);
 
@@ -175,7 +175,7 @@ class AccountProvisioningTest extends TestCase
                 'x-linphone-provisioning' => true,
             ])
             ->get($this->route . '/' . $password->account->provisioning_token)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee($password->account->username)
             ->assertSee($password->account->display_name, false)
@@ -201,7 +201,7 @@ class AccountProvisioningTest extends TestCase
         $this->withHeaders([
                 'x-linphone-provisioning' => true,
             ])->get($this->route . '/qrcode/' . $password->account->provisioning_token . '?reset_password')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertHeader('Content-Type', 'image/png')
             ->assertHeader('X-Qrcode-URL', $provioningUrl);
 
@@ -209,7 +209,7 @@ class AccountProvisioningTest extends TestCase
         $this->withHeaders([
                 'x-linphone-provisioning' => true,
             ])->get($provioningUrl)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee($password->account->username)
             ->assertSee($password->account->display_name, false)
@@ -231,14 +231,14 @@ class AccountProvisioningTest extends TestCase
             ->json('POST', '/api/spaces/' . $admin->space->host . '/carddavs', [
                 'uri' => 'http://uri.com'
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->withHeaders([
                 'x-linphone-provisioning' => true,
             ])
             ->keyAuthenticated($account)
             ->get($this->route . '/me')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('remote_contact_directory_0')
             ->assertSee('carddav_fields_for_user_input');
@@ -255,14 +255,14 @@ class AccountProvisioningTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->json('PUT', '/api/accounts/' . $account->id . '/carddavs/' . $cardDavServer->id, $credentials)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->withHeaders([
                 'x-linphone-provisioning' => true,
             ])
             ->keyAuthenticated($account)
             ->get($this->route . '/me')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('remote_contact_directory_0')
             ->assertSee('auth_info_0')
@@ -288,7 +288,7 @@ class AccountProvisioningTest extends TestCase
                 'x-linphone-provisioning' => true,
             ])
             ->get($this->route . '/' . $password->account->provisioning_token)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('ha1');
 
@@ -309,7 +309,7 @@ class AccountProvisioningTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->json($this->method, '/api/accounts/' . $password->account->id . '/provision')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertSee('provisioning_token')
             ->assertDontSee($provisioningToken);
 
@@ -322,7 +322,7 @@ class AccountProvisioningTest extends TestCase
                 'x-linphone-provisioning' => true,
             ])
             ->get($this->route . '/' . $password->account->provisioning_token)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('ha1');
     }
@@ -343,7 +343,7 @@ class AccountProvisioningTest extends TestCase
 
         $this->keyAuthenticated($password->account)
             ->json($this->method, '/api/accounts/auth_token/' . $authToken . '/attach')
-            ->assertStatus(200);
+            ->assertOk();
 
         // Use the auth_token to provision the account
         $this->assertEquals(AuthToken::count(), 1);
@@ -352,7 +352,7 @@ class AccountProvisioningTest extends TestCase
                 'x-linphone-provisioning' => true,
             ])
             ->get($this->route . '/auth_token/' . $authToken)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('ha1');
 
@@ -374,7 +374,7 @@ class AccountProvisioningTest extends TestCase
 
         $this->keyAuthenticated($account)
             ->get('/api/accounts/me/provision')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'provisioning_token_expire_at' => null
             ]);
@@ -383,7 +383,7 @@ class AccountProvisioningTest extends TestCase
 
         $this->keyAuthenticated($account)
             ->get('/api/accounts/me/provision')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'provisioning_token_expire_at' => $account->currentProvisioningToken->created_at->addMinutes((int)$expirationMinutes)->toJSON()
             ]);
@@ -417,7 +417,7 @@ class AccountProvisioningTest extends TestCase
 
         $this->keyAuthenticated($account)
             ->get('/api/accounts/me/services/turn')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'ttl' => config()->get('app.coturn_session_ttl_minutes') * 60
             ]);

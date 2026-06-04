@@ -263,7 +263,7 @@ class AccountJWTAuthenticationTest extends TestCase
             'x-linphone-provisioning' => true,
         ])
             ->get($this->accountRoute)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee('ha1');
     }

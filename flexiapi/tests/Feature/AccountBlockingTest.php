@@ -38,7 +38,7 @@ class AccountBlockingTest extends TestCase
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route . '/me/phone/request', [
                 'phone' => '+33612312312'
-            ])->assertStatus(200);
+            ])->assertOk();
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route . '/me/email/request', [
@@ -55,20 +55,20 @@ class AccountBlockingTest extends TestCase
         $admin->generateUserApiKey();
 
         $this->keyAuthenticated($account)
-            ->get($this->route . '/me')->assertStatus(200);
+            ->get($this->route . '/me')->assertOk();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . '/block')
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($account)
             ->get($this->route . '/me')->assertStatus(403);
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . '/unblock')
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($account)
-            ->get($this->route . '/me')->assertStatus(200);
+            ->get($this->route . '/me')->assertOk();
     }
 }

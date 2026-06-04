@@ -40,10 +40,6 @@ class AuthenticateJWT
 {
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check()) {
-            return $next($request);
-        }
-
         if ($request->bearerToken() && $request->space?->sso_public_key) {
             if (!extension_loaded('sodium')) {
                 abort(403, "PHP Sodium extension isn't loaded");
@@ -120,18 +116,12 @@ class AuthenticateJWT
             return $next($request);
         }
 
-        if ($request->space?->sso_authentication_bearer
-            // Bypass the JWT auth if we have an API Key
-            && !$request->header('x-api-key')
-            && !$request->cookie('x-api-key')
-        ) {
+        if ($request->space?->sso_authentication_bearer) {
             $response = new Response;
-
             $response->header(
                 'WWW-Authenticate',
                 'Bearer ' . $request->space?->sso_authentication_bearer
             );
-
             $response->setStatusCode(401);
 
             return $response;

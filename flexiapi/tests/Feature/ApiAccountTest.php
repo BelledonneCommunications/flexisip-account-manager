@@ -34,36 +34,34 @@ class ApiAccountTest extends TestCase
     public function testMandatoryFrom()
     {
         Password::factory()->create();
-        $response = $this->json($this->method, $this->route);
-        $response->assertStatus(401);
+        $this->json('GET', '/api/accounts/me/api_key')
+            ->assertStatus(401);
     }
 
     public function testNotAdminForbidden()
     {
-        $password = Password::factory()->create();
-        $response0 = $this->generateFirstResponse($password);
-        $response1 = $this->generateSecondResponse($password, $response0)
-            ->json($this->method, $this->route);
+        $account = Account::factory()->create();
+        $account->generateUserApiKey();
 
-        $response1->assertStatus(403);
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->route)
+            ->assertForbidden();
     }
 
     public function testAdminOk()
     {
-        $password = Password::factory()->admin()->create();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateUserApiKey();
         $username = 'foobar';
 
-        $response0 = $this->generateFirstResponse($password);
-        $response1 = $this->generateSecondResponse($password, $response0)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
                 'dtmf_protocol' => 'sipinfo'
-            ]);
-
-        $response1
-            ->assertStatus(200)
+            ])
+            ->assertOk()
             ->assertJson([
                 'id' => 2,
                 'username' => $username,
@@ -79,7 +77,7 @@ class ApiAccountTest extends TestCase
 
         $this->keyAuthenticated($account)
             ->get($this->route . '/me/devices')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertSee('{}');
     }
 
@@ -109,18 +107,18 @@ class ApiAccountTest extends TestCase
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])
-            ->assertStatus(200);
+            ->assertOk();
     }
 
     public function testUsernameNotSIP()
     {
-        $password = Password::factory()->admin()->create();
-        $password->account->generateUserApiKey();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateUserApiKey();
 
         $username = 'blabla🔥';
         $domain = Space::first()->domain;
 
-        $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'domain' => $domain,
@@ -131,19 +129,19 @@ class ApiAccountTest extends TestCase
         // Change the regex
         config()->set('app.account_username_regex', '^[a-z0-9🔥+_.-]*$');
 
-        $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'domain' => $domain,
                 'sip_uri' => 'sip:' . $username . '@' . $domain,
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
-            ])->assertStatus(200);
+            ])->assertOk();
 
         $username = 'blabla hop';
         $domain = 'example.com';
 
-        $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'domain' => $domain,
@@ -159,21 +157,19 @@ class ApiAccountTest extends TestCase
         Space::factory()->domain($configDomain)->create();
         config()->set('app.sip_domain', $configDomain);
 
-        $password = Password::factory()->admin()->create();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateUserApiKey();
         $username = 'foobar';
         $domain = Space::first()->domain;
 
-        $response0 = $this->generateFirstResponse($password);
-        $response1 = $this->generateSecondResponse($password, $response0)
+        $response = $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'domain' => $domain,
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
-            ]);
-
-        $response1
-            ->assertStatus(200)
+            ])
+            ->assertOk()
             ->assertJson([
                 'id' => 2,
                 'username' => $username,
@@ -181,7 +177,7 @@ class ApiAccountTest extends TestCase
                 'activated' => false
             ]);
 
-        $this->assertFalse(empty($response1['provisioning_token']));
+        $this->assertFalse(empty($response['provisioning_token']));
     }
 
     public function testAdminMultiDomains()
@@ -205,7 +201,7 @@ class ApiAccountTest extends TestCase
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'username' => $username,
                 'domain' => $space1->domain
@@ -219,7 +215,7 @@ class ApiAccountTest extends TestCase
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'username' => $username,
                 'domain' => $space2->domain
@@ -229,7 +225,7 @@ class ApiAccountTest extends TestCase
 
         $this->keyAuthenticated($superAdmin)
             ->get($space1Accounts)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'data' => [
                     [
@@ -259,15 +255,15 @@ class ApiAccountTest extends TestCase
 
         $this->keyAuthenticated($admin1)
             ->get($space1Accounts)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin1)
             ->get($space2Accounts)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($superAdmin)
             ->get($space2Accounts)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJsonMissing([
                 'data' => [
                     [
@@ -301,7 +297,7 @@ class ApiAccountTest extends TestCase
 
         $this->keyAuthenticated($admin2)
             ->get($space2Accounts)
-            ->assertStatus(200);
+            ->assertOk();
     }
 
     public function testCreateDomainAsAdmin()
@@ -330,7 +326,7 @@ class ApiAccountTest extends TestCase
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])
-            ->assertStatus(200);
+            ->assertOk();
     }
 
     /*public function testCreateDomainAsSuperAdmin()
@@ -350,7 +346,7 @@ class ApiAccountTest extends TestCase
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'username' => $username,
                 'domain' => $newDomain
@@ -367,20 +363,19 @@ class ApiAccountTest extends TestCase
         Space::factory()->domain($configDomain)->create();
         config()->set('app.sip_domain', $configDomain);
 
-        $password = Password::factory()->admin()->create();
         $username = 'foobar';
 
-        $response0 = $this->generateFirstResponse($password);
-        $response1 = $this->generateSecondResponse($password, $response0)
+        $admin = Account::factory()->admin()->create();
+        $admin->generateUserApiKey();
+
+        $response = $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'domain' => $configDomain,
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
-            ]);
-
-        $response1
-            ->assertStatus(200)
+            ])
+            ->assertOk()
             ->assertJson([
                 'id' => 2,
                 'username' => $username,
@@ -388,25 +383,23 @@ class ApiAccountTest extends TestCase
                 'activated' => false
             ]);
 
-        $this->assertFalse(empty($response1['provisioning_token']));
+        $this->assertFalse(empty($response['provisioning_token']));
     }
 
     public function testUsernameNoDomain()
     {
-        $password = Password::factory()->admin()->create();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateUserApiKey();
 
         $username = 'username';
 
-        $response0 = $this->generateFirstResponse($password);
-        $response1 = $this->generateSecondResponse($password, $response0)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
-            ]);
-
-        $response1
-            ->assertStatus(200)
+            ])
+            ->assertOk()
             ->assertJson([
                 'id' => 2,
                 'username' => $username,
@@ -417,36 +410,32 @@ class ApiAccountTest extends TestCase
 
     public function testUsernameEmpty()
     {
-        $password = Password::factory()->admin()->create();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateUserApiKey();
 
-        $response0 = $this->generateFirstResponse($password);
-        $response1 = $this->generateSecondResponse($password, $response0)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'username' => '',
                 'algorithm' => 'SHA-256',
                 'password' => '2',
-            ]);
-
-        $response1->assertStatus(422);
+            ])
+            ->assertJsonValidationErrors(['username']);
     }
 
     public function testAdmin()
     {
-        $password = Password::factory()->admin()->create();
-
+        $admin = Account::factory()->admin()->create();
+        $admin->generateUserApiKey();
         $username = 'username';
 
-        $response0 = $this->generateFirstResponse($password);
-        $response1 = $this->generateSecondResponse($password, $response0)
+        $response = $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'algorithm' => 'SHA-256',
                 'password' => 'blabla',
                 'admin' => true,
-            ]);
-
-        $response1
-            ->assertStatus(200)
+            ])
+            ->assertOk()
             ->assertJson([
                 'id' => 2,
                 'username' => $username,
@@ -455,7 +444,7 @@ class ApiAccountTest extends TestCase
             ])
             ->assertJsonMissingPath('space');
 
-        $this->assertFalse(empty($response1['provisioning_token']));
+        $this->assertFalse(empty($response['provisioning_token']));
     }
 
     public function testAdminWithDictionary()
@@ -479,7 +468,7 @@ class ApiAccountTest extends TestCase
                     $entryKey => $entryValue
                 ]
             ])
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'dictionary' => [
                     $entryKey => $entryValue
@@ -529,7 +518,7 @@ class ApiAccountTest extends TestCase
                     $entryNewKey => $entryNewValue
                 ]
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         // ...twice
 
@@ -552,11 +541,11 @@ class ApiAccountTest extends TestCase
                     $entryNewKey => $entryNewValue
                 ]
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->json('GET', $this->route . '/' . $accountId)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJsonMissing([
                 'dictionary' => [
                     $entryKey => $entryValue
@@ -578,28 +567,28 @@ class ApiAccountTest extends TestCase
                 'dictionary' => []
             ])
             ->assertJson(['dictionary' => null])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->json('GET', $this->route . '/' . $accountId)
             ->assertSee(['"dictionary":{}'], false)
-            ->assertStatus(200);
+            ->assertOk();
     }
 
     public function testActivated()
     {
-        $password = Password::factory()->admin()->create();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateUserApiKey();
         $username = 'username';
 
-        $response0 = $this->generateFirstResponse($password);
-        $this->generateSecondResponse($password, $response0)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'algorithm' => 'SHA-256',
                 'password' => 'blabla',
                 'activated' => true,
             ])
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'id' => 2,
                 'username' => $username,
@@ -610,20 +599,17 @@ class ApiAccountTest extends TestCase
 
     public function testNotActivated()
     {
-        $password = Password::factory()->admin()->create();
-
+        $admin = Account::factory()->admin()->create();
+        $admin->generateUserApiKey();
         $username = 'username';
 
-        $response0 = $this->generateFirstResponse($password);
-        $response1 = $this->generateSecondResponse($password, $response0)
+        $response = $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'algorithm' => 'SHA-256',
                 'password' => 'blabla',
                 'activated' => false,
-            ]);
-
-        $response1->assertStatus(200)
+            ])->assertOk()
             ->assertJson([
                 'id' => 2,
                 'username' => $username,
@@ -631,7 +617,7 @@ class ApiAccountTest extends TestCase
                 'activated' => false,
             ]);
 
-        $this->assertFalse(empty($response1['provisioning_token']));
+        $this->assertFalse(empty($response['provisioning_token']));
     }
 
     public function testSimpleAccount()
@@ -649,7 +635,7 @@ class ApiAccountTest extends TestCase
          * Public information
          */
         $this->get($this->route . '/' . $password->account->identifier . '/info')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'activated' => false,
                 'realm' => $realm
@@ -663,7 +649,7 @@ class ApiAccountTest extends TestCase
          */
         $this->keyAuthenticated($password->account)
             ->get($this->route . '/me')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'username' => $password->account->username,
                 'activated' => true,
@@ -675,7 +661,7 @@ class ApiAccountTest extends TestCase
          */
         $this->keyAuthenticated($password->account)
             ->delete($this->route . '/me')
-            ->assertStatus(200);
+            ->assertOk();
 
         /**
          * Check again
@@ -711,14 +697,13 @@ class ApiAccountTest extends TestCase
 
     public function testNonAsciiPasswordAdmin()
     {
-        $password = Password::factory()->admin()->create();
-        $password->account->generateUserApiKey();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateUserApiKey();
 
         $username = 'username';
         $domain = Space::first()->domain;
 
-        $response = $this->generateFirstResponse($password, $this->method, $this->route);
-        $this->generateSecondResponse($password, $response)
+        $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
                 'username' => $username,
                 'email' => 'email@test.com',
@@ -726,11 +711,7 @@ class ApiAccountTest extends TestCase
                 'algorithm' => 'SHA-256',
                 'password' => 'nonascii€',
             ])
-            ->assertStatus(200);
-
-        $response = $this->generateFirstResponse($password, 'GET', '/api/accounts/me');
-        $response = $this->generateSecondResponse($password, $response)
-            ->json('GET', '/api/accounts/me');
+            ->assertOk();
     }
 
     public function testSendProvisioningEmail()
@@ -751,7 +732,7 @@ class ApiAccountTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->json('POST', $this->route . '/' . $account->id . '/send_provisioning_email')
-            ->assertStatus(200);
+            ->assertOk();
     }
 
     public function testSendResetPasswordEmail()
@@ -772,7 +753,7 @@ class ApiAccountTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->json('POST', $this->route . '/' . $account->id . '/send_reset_password_email')
-            ->assertStatus(200);
+            ->assertOk();
     }
 
 
@@ -807,7 +788,7 @@ class ApiAccountTest extends TestCase
                 'password' => $password,
                 'display_name' => $newDisplayName
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->json('PUT', $this->route . '/' . $account->id, [
@@ -815,7 +796,7 @@ class ApiAccountTest extends TestCase
                 'algorithm' => $algorithm,
                 'password' => $password,
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->assertDatabaseHas('accounts', [
             'id' => $account->id,
@@ -851,12 +832,12 @@ class ApiAccountTest extends TestCase
                 'algorithm' => $algorithm,
                 'password' => $password
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         // First check
         $this->keyAuthenticated($account)
             ->get($this->route . '/me')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'username' => $account->username,
                 'passwords' => [
@@ -888,12 +869,12 @@ class ApiAccountTest extends TestCase
                 'old_password' => $password,
                 'password' => $newPassword
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         // Second check
         $this->keyAuthenticated($account)
             ->get($this->route . '/me')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'username' => $account->username,
                 'passwords' => [
@@ -914,28 +895,28 @@ class ApiAccountTest extends TestCase
         // deactivate
         $this->keyAuthenticated($admin)
             ->post($this->route . '/' . $account->id . '/deactivate')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'activated' => false
             ]);
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'activated' => false
             ]);
 
         $this->keyAuthenticated($admin)
             ->post($this->route . '/' . $account->id . '/activate')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'activated' => true
             ]);
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'activated' => true
             ]);
@@ -943,7 +924,7 @@ class ApiAccountTest extends TestCase
         // Search feature
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->identifier . '/search')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'id' => $account->id,
                 'activated' => true
@@ -955,7 +936,7 @@ class ApiAccountTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->email . '/search-by-email')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'id' => $account->id,
                 'activated' => true
@@ -976,7 +957,7 @@ class ApiAccountTest extends TestCase
         // /accounts
         $this->keyAuthenticated($admin)
             ->get($this->route)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'total' => 2
             ]);
@@ -984,7 +965,7 @@ class ApiAccountTest extends TestCase
         // /accounts/id
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $admin->id)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'id' => 2,
                 'phone' => null
@@ -1000,7 +981,7 @@ class ApiAccountTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->delete($this->route . '/' . $password->account->id)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->assertEquals(1, AccountTombstone::count());
 

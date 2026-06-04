@@ -56,7 +56,7 @@ class ApiStatisticsTest extends TestCase
                 'sent_at' => $this->faker->iso8601(),
                 'encrypted' => false
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->assertDatabaseHas('statistics_messages', [
             'id' => $id
@@ -103,7 +103,7 @@ class ApiStatisticsTest extends TestCase
                 'last_status' => $newLastStatus,
                 'received_at' => $newReceivedAt
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->assertSame(1, StatisticsMessageDevice::count());
         $this->assertDatabaseHas('statistics_message_devices', [
@@ -154,18 +154,18 @@ class ApiStatisticsTest extends TestCase
                 'to' => $toUsername . '@' . $toDomain,
                 'initiated_at' => $this->faker->iso8601(),
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->get($routeAdminCalls)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJsonFragment([
                 'id' => $id
             ]);
 
         $this->keyAuthenticated($account)
             ->get($this->routeAccountCalls)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJsonFragment([
                 'id' => $id
             ]);
@@ -209,7 +209,7 @@ class ApiStatisticsTest extends TestCase
                     'state' => 'accepted'
                 ]
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->assertDatabaseHas('statistics_call_devices', [
             'call_id' => $id,
@@ -225,7 +225,7 @@ class ApiStatisticsTest extends TestCase
                     'state' => 'declined'
                 ]
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->json('PATCH', $this->routeCalls . '/' . $id . '/devices/' . $device, [
@@ -239,13 +239,13 @@ class ApiStatisticsTest extends TestCase
             ->json('PATCH', $this->routeCalls . '/' . $id . '/devices/' . $device, [
                 'rang_at' => $this->faker->iso8601()
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->assertSame(1, StatisticsCallDevice::count());
 
         $this->keyAuthenticated($admin)
             ->get($routeAdminCalls)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJsonFragment([
                 'device_id' => $device
             ]);
@@ -258,7 +258,7 @@ class ApiStatisticsTest extends TestCase
             ->json('PATCH', $this->routeCalls . '/' . $id, [
                 'ended_at' => $endedAt
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         // Deletion event test
 

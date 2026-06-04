@@ -90,7 +90,7 @@ Route::name('file.')->prefix('f')->controller(FileController::class)->group(func
     Route::get('{uuid}/{name}/download', 'download')->name('download');
 });
 
-Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key']], function () {
+Route::group(['middleware' => ['auth.jwt', 'auth.digest', 'auth.key']], function () {
     // vCard 4.0
     Route::get('contacts/vcard/{sip}', [ContactVcardController::class, 'show'])->name('account.contacts.vcard.show');
     Route::get('contacts/vcard', [ContactVcardController::class, 'index'])->name('account.contacts.vcard.index');
@@ -102,7 +102,7 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key']], function () {
 
 Route::name('provisioning.')->prefix('provisioning')->controller(ProvisioningController::class)->group(function () {
     Route::get('me', [ProvisioningController::class, 'me'])
-        ->middleware(['auth.client_certificate', 'auth.jwt', 'auth.digest_or_key'])
+        ->middleware(['auth.client_certificate', 'auth.jwt', 'auth.digest', 'auth.key'])
         ->name('me');
     Route::get('documentation', 'documentation')->name('documentation');
     Route::get('auth_token/{auth_token}', 'authToken')->name('auth_token');

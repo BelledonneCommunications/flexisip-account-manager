@@ -77,7 +77,7 @@ Route::get('accounts/me/api_key/{auth_token}', [ApiKeyController::class, 'genera
 
 Route::get('phone_countries', [PhoneCountryController::class, 'index']);
 
-Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blocked']], function () {
+Route::group(['middleware' => ['auth.jwt', 'auth.digest', 'auth.key', 'auth.check_blocked']], function () {
     Route::post('files/{uuid}', [FileController::class, 'upload'])->name('file.upload');
 
     Route::get('accounts/auth_token/{auth_token}/attach', [AuthTokenController::class, 'attach']);
@@ -116,114 +116,110 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest_or_key', 'auth.check_blo
             Route::get('/', 'index');
         });
     });
+});
 
-    Route::group(['middleware' => ['auth.admin']], function () {
-        if (!empty(config('app.linphone_daemon_unix_pipe'))) {
-            Route::post('messages', [MessageController::class, 'send']);
-        }
+Route::group(['middleware' => ['auth.key', 'auth.admin']], function () {
+    if (!empty(config('app.linphone_daemon_unix_pipe'))) {
+        Route::post('messages', [MessageController::class, 'send']);
+    }
 
-        Route::post('wizard', [WizardController::class, 'store']);
+    Route::post('wizard', [WizardController::class, 'store']);
 
-        // Super admin
-        Route::group(['middleware' => ['auth.super_admin']], function () {
-            Route::apiResource('spaces', SpaceController::class);
+    Route::group(['middleware' => ['auth.super_admin']], function () {
+        Route::apiResource('spaces', SpaceController::class);
 
-            Route::prefix('spaces/{domain}/email')->controller(EmailServerController::class)->group(function () {
-                Route::get('/', 'show');
-                Route::post('/', 'store');
-                Route::delete('/', 'destroy');
-            });
-
-            Route::apiResource('spaces/{domain}/carddavs', CardDavServerController::class);
-
-            Route::post('phone_countries/{code}/activate', [AdminPhoneCountryController::class, 'activate']);
-            Route::post('phone_countries/{code}/deactivate', [AdminPhoneCountryController::class, 'deactivate']);
-        });
-
-        Route::get('resolve/{sip}', [SpaceController::class, 'resolve']);
-
-        // Account creation token
-        Route::post('account_creation_tokens', [AdminCreationTokenController::class, 'create']);
-
-        // Accounts
-        Route::prefix('accounts')->controller(AdminAccountController::class)->group(function () {
-            Route::post('{account_id}/activate', 'activate');
-            Route::post('{account_id}/deactivate', 'deactivate');
-            Route::post('{account_id}/block', 'block');
-            Route::post('{account_id}/unblock', 'unblock');
-            Route::get('{account_id}/provision', 'provision');
-            Route::post('{account_id}/send_provisioning_email', 'sendProvisioningEmail');
-            Route::post('{account_id}/send_reset_password_email', 'sendResetPasswordEmail');
-
-            Route::post('/', 'store');
-            Route::put('{account_id}', 'update');
-            Route::get('/', 'index')->name('accounts.index');
-            Route::get('{account_id}', 'show');
-            Route::delete('{account_id}', 'destroy');
-            Route::get('{sip}/search', 'search');
-            Route::get('{email}/search-by-email', 'searchByEmail');
-
-            Route::get('{account_id}/devices', [DeviceController::class, 'index']);
-            Route::delete('{account_id}/devices/{uuid}', [DeviceController::class, 'destroy']);
-
-            Route::post('{account_id}/types/{type_id}', 'typeAdd');
-            Route::delete('{account_id}/types/{type_id}', 'typeRemove');
-
-            Route::post('{account_id}/contacts_lists/{contacts_list_id}', 'contactsListAdd');
-            Route::delete('{account_id}/contacts_lists/{contacts_list_id}', 'contactsListRemove');
-        });
-
-        // Account contacts
-        Route::prefix('accounts/{id}/contacts')->controller(AdminContactController::class)->group(function () {
-            Route::get('/', 'index');
-            Route::get('{contact_id}', 'show');
-            Route::post('{contact_id}', 'add');
-            Route::delete('{contact_id}', 'remove');
-        });
-
-        Route::group(['middleware' => ['feature.carddav_user_credentials']], function () {
-            Route::apiResource('accounts/{id}/carddavs', CardDavCredentialsController::class, ['only' => ['index', 'show', 'update', 'destroy']]);
-        });
-
-        Route::apiResource('accounts/{id}/actions', ActionController::class);
-        Route::apiResource('account_types', TypeController::class);
-        Route::apiResource('accounts/{id}/vcards-storage', AdminVcardsStorageController::class);
-        Route::apiResource('accounts/{id}/voicemails', AdminVoicemailController::class, ['only' => ['store', 'destroy']]);
-        Route::apiResource('accounts/{id}/call_forwardings', AdminCallForwardingController::class);
-
-        Route::apiResource('contacts_lists', ContactsListController::class);
-        Route::prefix('contacts_lists')->controller(ContactsListController::class)->group(function () {
-            Route::post('{id}/contacts/{contacts_id}', 'contactAdd');
-            Route::delete('{id}/contacts/{contacts_id}', 'contactRemove');
-        });
-
-        Route::prefix('accounts/{id}/dictionary')->controller(DictionaryController::class)->group(function () {
-            Route::get('/', 'index');
-            Route::delete('/', 'clear');
-            Route::get('{key}', 'show');
-            Route::post('{key}', 'set');
-            Route::delete('{key}', 'destroy');
-        });
-
-        Route::prefix('accounts/{id}/external')->controller(ExternalAccountController::class)->group(function () {
+        Route::prefix('spaces/{domain}/email')->controller(EmailServerController::class)->group(function () {
             Route::get('/', 'show');
             Route::post('/', 'store');
             Route::delete('/', 'destroy');
         });
 
-        Route::prefix('accounts/{id}/statistics/calls')->controller(AdminStatisticsCallController::class)->group(function () {
-            Route::get('/', 'index');
-        });
+        Route::apiResource('spaces/{domain}/carddavs', CardDavServerController::class);
 
-        Route::prefix('statistics/messages')->controller(StatisticsMessageController::class)->group(function () {
-            Route::post('/', 'store');
-            Route::patch('{message_id}/to/{to}/devices/{device_id}', 'storeDevice');
-        });
+        Route::post('phone_countries/{code}/activate', [AdminPhoneCountryController::class, 'activate']);
+        Route::post('phone_countries/{code}/deactivate', [AdminPhoneCountryController::class, 'deactivate']);
+    });
 
-        Route::prefix('statistics/calls')->controller(AdminStatisticsCallController::class)->group(function () {
-            Route::post('/', 'store');
-            Route::patch('{call_id}', 'update');
-            Route::patch('{call_id}/devices/{device_id}', 'storeDevice');
-        });
+    Route::get('resolve/{sip}', [SpaceController::class, 'resolve']);
+
+    Route::post('account_creation_tokens', [AdminCreationTokenController::class, 'create']);
+
+    Route::prefix('accounts')->controller(AdminAccountController::class)->group(function () {
+        Route::post('{account_id}/activate', 'activate');
+        Route::post('{account_id}/deactivate', 'deactivate');
+        Route::post('{account_id}/block', 'block');
+        Route::post('{account_id}/unblock', 'unblock');
+        Route::get('{account_id}/provision', 'provision');
+        Route::post('{account_id}/send_provisioning_email', 'sendProvisioningEmail');
+        Route::post('{account_id}/send_reset_password_email', 'sendResetPasswordEmail');
+
+        Route::post('/', 'store');
+        Route::put('{account_id}', 'update');
+        Route::get('/', 'index')->name('accounts.index');
+        Route::get('{account_id}', 'show');
+        Route::delete('{account_id}', 'destroy');
+        Route::get('{sip}/search', 'search');
+        Route::get('{email}/search-by-email', 'searchByEmail');
+
+        Route::get('{account_id}/devices', [DeviceController::class, 'index']);
+        Route::delete('{account_id}/devices/{uuid}', [DeviceController::class, 'destroy']);
+
+        Route::post('{account_id}/types/{type_id}', 'typeAdd');
+        Route::delete('{account_id}/types/{type_id}', 'typeRemove');
+
+        Route::post('{account_id}/contacts_lists/{contacts_list_id}', 'contactsListAdd');
+        Route::delete('{account_id}/contacts_lists/{contacts_list_id}', 'contactsListRemove');
+    });
+
+    Route::prefix('accounts/{id}/contacts')->controller(AdminContactController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('{contact_id}', 'show');
+        Route::post('{contact_id}', 'add');
+        Route::delete('{contact_id}', 'remove');
+    });
+
+    Route::group(['middleware' => ['feature.carddav_user_credentials']], function () {
+        Route::apiResource('accounts/{id}/carddavs', CardDavCredentialsController::class, ['only' => ['index', 'show', 'update', 'destroy']]);
+    });
+
+    Route::apiResource('accounts/{id}/actions', ActionController::class);
+    Route::apiResource('account_types', TypeController::class);
+    Route::apiResource('accounts/{id}/vcards-storage', AdminVcardsStorageController::class);
+    Route::apiResource('accounts/{id}/voicemails', AdminVoicemailController::class, ['only' => ['store', 'destroy']]);
+    Route::apiResource('accounts/{id}/call_forwardings', AdminCallForwardingController::class);
+
+    Route::apiResource('contacts_lists', ContactsListController::class);
+    Route::prefix('contacts_lists')->controller(ContactsListController::class)->group(function () {
+        Route::post('{id}/contacts/{contacts_id}', 'contactAdd');
+        Route::delete('{id}/contacts/{contacts_id}', 'contactRemove');
+    });
+
+    Route::prefix('accounts/{id}/dictionary')->controller(DictionaryController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::delete('/', 'clear');
+        Route::get('{key}', 'show');
+        Route::post('{key}', 'set');
+        Route::delete('{key}', 'destroy');
+    });
+
+    Route::prefix('accounts/{id}/external')->controller(ExternalAccountController::class)->group(function () {
+        Route::get('/', 'show');
+        Route::post('/', 'store');
+        Route::delete('/', 'destroy');
+    });
+
+    Route::prefix('accounts/{id}/statistics/calls')->controller(AdminStatisticsCallController::class)->group(function () {
+        Route::get('/', 'index');
+    });
+
+    Route::prefix('statistics/messages')->controller(StatisticsMessageController::class)->group(function () {
+        Route::post('/', 'store');
+        Route::patch('{message_id}/to/{to}/devices/{device_id}', 'storeDevice');
+    });
+
+    Route::prefix('statistics/calls')->controller(AdminStatisticsCallController::class)->group(function () {
+        Route::post('/', 'store');
+        Route::patch('{call_id}', 'update');
+        Route::patch('{call_id}/devices/{device_id}', 'storeDevice');
     });
 });

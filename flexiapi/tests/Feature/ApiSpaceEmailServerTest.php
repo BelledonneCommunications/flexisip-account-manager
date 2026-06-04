@@ -49,25 +49,25 @@ class ApiSpaceEmailServerTest extends TestCase
                 'host' => $emailHost,
                 'port' => 22
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $route, [
                 'host' => $emailHost,
                 'port' => 23
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->json('GET', $route)
             ->assertJsonFragment([
                 'port' => 23
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->json('DELETE', $route)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->json('GET', $route)

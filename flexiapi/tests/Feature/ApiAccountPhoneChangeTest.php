@@ -46,13 +46,13 @@ class ApiAccountPhoneChangeTest extends TestCase
             ->json($this->method, $this->route . '/request', [
                 'phone' => '+33216412664'
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route . '/request', [
                 'phone' => '+33216412664'
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->assertEquals(2, PhoneChangeCode::where('account_id', $account->id)->count());
     }
@@ -66,7 +66,7 @@ class ApiAccountPhoneChangeTest extends TestCase
             ->json($this->method, $this->route . '/request', [
                 'phone' => '+33612312312'
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         config()->set('app.phone_change_code_expiration_minutes', 10);
 
@@ -92,7 +92,7 @@ class ApiAccountPhoneChangeTest extends TestCase
             ->json($this->method, $this->route . '/request', [
                 'phone' => $frenchPhoneNumber
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route . '/request', [
@@ -106,7 +106,7 @@ class ApiAccountPhoneChangeTest extends TestCase
             ->json($this->method, $this->route . '/request', [
                 'phone' => $dutchPhoneNumber
             ])
-            ->assertStatus(200);
+            ->assertOk();
     }
 
     public function testUnvalidatedAccount()
@@ -148,7 +148,7 @@ class ApiAccountPhoneChangeTest extends TestCase
 
         $this->keyAuthenticated($phoneChange->account)
             ->get('/api/accounts/me')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'phone' => null
             ]);
@@ -156,26 +156,26 @@ class ApiAccountPhoneChangeTest extends TestCase
         // Check who can see the code
         $this->keyAuthenticated($admin)
             ->json('GET', '/api/accounts/' . $phoneChange->account->id)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertSee($phoneChange->code);
 
         $this->keyAuthenticated($phoneChange->account)
             ->json('GET', '/api/accounts/me')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertDontSee($phoneChange->code);
 
         $this->keyAuthenticated($phoneChange->account)
             ->json($this->method, $this->route, [
                 'code' => $phoneChange->code
             ])
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'phone' => $phone,
             ]);
 
         $this->keyAuthenticated($phoneChange->account)
             ->get('/api/accounts/me')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'phone' => $phone
             ]);
@@ -183,7 +183,7 @@ class ApiAccountPhoneChangeTest extends TestCase
         // Check that the code is gone
         $this->keyAuthenticated($admin)
             ->json('GET', '/api/accounts/' . $phoneChange->account->id)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertDontSee($phoneChange->code);
     }
 }
