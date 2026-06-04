@@ -48,7 +48,7 @@ class ApiAccountCallForwardingTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get('/api/resolve/' . $account->identifier)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJsonFragment(['type' => 'account']);
     }
 
@@ -84,7 +84,7 @@ class ApiAccountCallForwardingTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->json($this->method, '/api/accounts/' . $account->id . '/contacts/' . $contactAccount->id)
-            ->assertStatus(200);
+            ->assertOk();
 
         $response = $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
@@ -112,7 +112,7 @@ class ApiAccountCallForwardingTest extends TestCase
 
         $this->keyAuthenticated($account)
             ->json('DELETE', $this->route . '/' . $response['id'])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
@@ -149,7 +149,7 @@ class ApiAccountCallForwardingTest extends TestCase
                 'sip_uri' => $uri,
                 'enabled' => false
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [

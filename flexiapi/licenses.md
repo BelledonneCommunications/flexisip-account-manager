@@ -678,9 +678,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### firebase/php-jwt (Version v7.0.5 | 47ad26b)
+### firebase/php-jwt (Version v7.1.0 | b374a5d)
 A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.
-Homepage: https://github.com/firebase/php-jwt
+Homepage: https://github.com/googleapis/php-jwt
 Licenses Used: BSD-3-Clause
 Copyright (c) 2011, Neuman Vong
 
@@ -1045,7 +1045,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### guzzlehttp/uri-template (Version v1.0.6 | eef7f87)
+### guzzlehttp/uri-template (Version v1.0.7 | 7fe811c)
 A polyfill class for uri_template of PHP
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1088,7 +1088,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-### jaybizzle/crawler-detect (Version v1.3.11 | 4847927)
+### jaybizzle/crawler-detect (Version v1.4.0 | 20d7bd4)
 CrawlerDetect is a PHP class for detecting bots/crawlers/spiders via the user agent
 Homepage: https://github.com/JayBizzle/Crawler-Detect/
 Licenses Used: MIT
@@ -1116,7 +1116,7 @@ SOFTWARE.
 
 
 
-### laravel/framework (Version v12.61.1 | e8472ca)
+### laravel/framework (Version v12.62.0 | f7e61eb)
 The Laravel Framework.
 Homepage: https://laravel.com
 Licenses Used: MIT
@@ -1869,7 +1869,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### nesbot/carbon (Version 3.11.4 | e890471)
+### nesbot/carbon (Version 3.12.3 | 6e7853a)
 An API extension for DateTime that supports 281 different languages.
 Homepage: https://carbonphp.github.io/carbon/
 Licenses Used: MIT
@@ -2507,7 +2507,7 @@ Licenses Used: Apache-2.0
    See the License for the specific language governing permissions and
    limitations under the License.
 
-### phpseclib/phpseclib (Version 3.0.52 | 2adaefc)
+### phpseclib/phpseclib (Version 3.0.55 | db9744e)
 PHP Secure Communications Library - Pure-PHP implementations of RSA, AES, SSH2, SFTP, X.509 etc.
 Homepage: http://phpseclib.sourceforge.net
 Licenses Used: MIT

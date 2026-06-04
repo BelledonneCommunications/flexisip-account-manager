@@ -48,12 +48,12 @@ class ApiAccountContactsTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $password1->account->id . '/contacts/' . $password2->account->id)
-            ->assertStatus(200);
+            ->assertOk();
         $this->assertEquals(1, DB::table('contacts')->count());
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $password1->account->id . '/contacts/' . $password3->account->id)
-            ->assertStatus(200);
+            ->assertOk();
         $this->assertEquals(2, DB::table('contacts')->count());
 
         // Type
@@ -67,7 +67,7 @@ class ApiAccountContactsTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->json($this->method, '/api/accounts/' . $password2->account->id . '/types/' . $accountType->id)
-            ->assertStatus(200);
+            ->assertOk();
 
         // Action
         $this->keyAuthenticated($admin)
@@ -79,7 +79,7 @@ class ApiAccountContactsTest extends TestCase
         // Retry
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $password1->account->id . '/contacts/' . $password2->account->id)
-            ->assertStatus(200);
+            ->assertOk();
         $this->assertEquals(2, DB::table('contacts')->count());
 
         $this->keyAuthenticated($admin)
@@ -96,7 +96,7 @@ class ApiAccountContactsTest extends TestCase
 
         $this->keyAuthenticated($password1->account)
             ->get($this->route . '/me/contacts')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([[
                 'username' => $password2->account->username,
                 'activated' => true
@@ -104,7 +104,7 @@ class ApiAccountContactsTest extends TestCase
 
         $this->keyAuthenticated($password1->account)
             ->get($this->route . '/me/contacts/' . $password2->account->identifier)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'username' => $password2->account->username,
                 'activated' => true
@@ -113,7 +113,7 @@ class ApiAccountContactsTest extends TestCase
         // Vcard 4.0
         $this->keyAuthenticated($password1->account)
             ->get('/contacts/vcard')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertSeeText("FN:" . $password2->display_name)
             ->assertSeeText("X-LINPHONE-ACCOUNT-TYPE:" . $typeKey)
             ->assertSeeText("X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:" . $password2->dtmf_protocol)
@@ -121,14 +121,14 @@ class ApiAccountContactsTest extends TestCase
 
         $this->keyAuthenticated($password1->account)
             ->get('/contacts/vcard/' . $password2->account->identifier)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertSeeText("X-LINPHONE-ACCOUNT-TYPE:" . $typeKey)
             ->assertSeeText("X-LINPHONE-ACCOUNT-DTMF-PROTOCOL:" . $password2->dtmf_protocol)
             ->assertSeeText("X-LINPHONE-ACCOUNT-ACTION:" . $actionKey . ';' . $actionCode);
 
         $this->keyAuthenticated($password1->account)
             ->get($this->route . '/me/contacts/' . $password2->account->identifier)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'username' => $password2->account->username,
                 'activated' => true
@@ -137,7 +137,7 @@ class ApiAccountContactsTest extends TestCase
         // Remove
         $this->keyAuthenticated($admin)
             ->delete($this->route . '/' . $password1->account->id . '/contacts/' . $password2->account->id)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->assertEquals(1, DB::table('contacts')->count());
 
@@ -172,20 +172,20 @@ class ApiAccountContactsTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->post($this->contactsListsRoute . '/' . $contactsList->id . '/contacts/' . $password1->account->id)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->post($this->contactsListsRoute . '/' . $contactsList->id . '/contacts/' . $password2->account->id)
-            ->assertStatus(200);
+            ->assertOk();
 
         // Again...
         $this->keyAuthenticated($admin)
             ->post($this->contactsListsRoute . '/' . $contactsList->id . '/contacts/' . $password2->account->id)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->post($this->contactsListsRoute . '/' . $contactsList->id . '/contacts/' . $password3->account->id)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->post($this->contactsListsRoute . '/' . $contactsList->id . '/contacts/1234')
@@ -193,7 +193,7 @@ class ApiAccountContactsTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->post($this->route . '/' . $admin->id . '/contacts_lists/' . $contactsList->id)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->post($this->route . '/' . $admin->id . '/contacts_lists/' . $contactsList->id)
@@ -203,7 +203,7 @@ class ApiAccountContactsTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/me/contacts')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJsonFragment([
                 'username' => $password1->account->username,
                 'activated' => true
@@ -219,7 +219,7 @@ class ApiAccountContactsTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/me/contacts/' . $password2->account->identifier)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJsonFragment([
                 'username' => $password2->account->username,
                 'activated' => true
@@ -227,14 +227,14 @@ class ApiAccountContactsTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get('/contacts/vcard')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertSeeText("FN:" . $password1->display_name)
             ->assertSeeText("FN:" . $password2->display_name)
             ->assertSeeText("FN:" . $password3->display_name);
 
         $this->keyAuthenticated($admin)
             ->get('/contacts/vcard/' . $password2->account->identifier)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertSeeText("FN:" . $password2->display_name);
     }
 }

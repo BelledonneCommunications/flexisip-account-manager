@@ -59,13 +59,13 @@ class ApiSpaceWithMiddlewareTest extends TestCase
 
         $this->keyAuthenticated($superAdmin)
             ->json('PUT', 'http://' . $superAdmin->domain . $this->route . '/' . $admin->domain, $space)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($superAdmin)
             ->json($this->method, 'http://' . $admin->domain . $this->accountRoute, [
                 'username' => 'new',
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
-            ])->assertStatus(200);
+            ])->assertOk();
     }
 }

@@ -46,7 +46,7 @@ class ApiSpaceTest extends TestCase
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         // Second domain
         $this->keyAuthenticated($admin)
@@ -69,7 +69,7 @@ class ApiSpaceTest extends TestCase
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])
-            ->assertStatus(200);
+            ->assertOk();
     }
 
     public function testSuperAdmin()
@@ -118,7 +118,7 @@ class ApiSpaceTest extends TestCase
                 'domain' => $thirdDomain,
                 'host' => $thirdDomain,
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->json('PUT', $this->route . '/' . $thirdDomain, [
@@ -139,11 +139,11 @@ class ApiSpaceTest extends TestCase
                 'super' => true,
                 'hide_settings' => true
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->json('DELETE', $this->route . '/' . $thirdDomain)
-            ->assertStatus(200);
+            ->assertOk();
 
         // Only the admin domain remains
         $this->keyAuthenticated($admin)
@@ -155,7 +155,7 @@ class ApiSpaceTest extends TestCase
                 'max_accounts' => 0,
                 'expire_at' => null
             ])
-            ->assertStatus(200);
+            ->assertOk();
     }
 
     public function testUserCreation()
@@ -188,7 +188,7 @@ class ApiSpaceTest extends TestCase
                 'domain' => $domain,
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
-            ])->assertStatus(200);
+            ])->assertOk();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->accountRoute, [

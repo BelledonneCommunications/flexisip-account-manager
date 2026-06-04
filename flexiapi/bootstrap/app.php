@@ -3,8 +3,10 @@
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\AuthenticateAdmin;
 use App\Http\Middleware\AuthenticateClientCertificate;
+use App\Http\Middleware\AuthenticateDigest;
 use App\Http\Middleware\AuthenticateDigestOrKey;
 use App\Http\Middleware\AuthenticateJWT;
+use App\Http\Middleware\AuthenticateKey;
 use App\Http\Middleware\AuthenticateSuperAdmin;
 use App\Http\Middleware\CheckBlocked;
 use App\Http\Middleware\IsCardDavCredentialsEnabled;
@@ -33,16 +35,17 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->api(append: [ValidateJSON::class]);
 
         $middleware->alias([
-            'auth' => Authenticate::class,
             'auth.admin' => AuthenticateAdmin::class,
-            'auth.super_admin' => AuthenticateSuperAdmin::class,
             'auth.check_blocked' => CheckBlocked::class,
             'auth.client_certificate' => AuthenticateClientCertificate::class,
-            'auth.digest_or_key' => AuthenticateDigestOrKey::class,
+            'auth.digest' => AuthenticateDigest::class,
             'auth.jwt' => AuthenticateJWT::class,
-            'feature.is_space_sso' => IsSpaceSSO::class,
+            'auth.key' => AuthenticateKey::class,
+            'auth.super_admin' => AuthenticateSuperAdmin::class,
+            'auth' => Authenticate::class,
             'feature.carddav_user_credentials' => IsCardDavCredentialsEnabled::class,
             'feature.intercom' => IsIntercomFeatures::class,
+            'feature.is_space_sso' => IsSpaceSSO::class,
             'feature.phone_registration' => IsPhoneRegistration::class,
             'feature.public_registration' => IsPublicRegistration::class,
             'feature.web_panel_enabled' => IsWebPanelEnabled::class,

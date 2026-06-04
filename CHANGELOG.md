@@ -25,6 +25,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - **Logout the user when the password is correctly changed**
 - **Email Uniqueness**: Moved the email uniqueness setting from a global environment variable (`.env`) to a per-space database setting for better multi-tenancy support.
 - **Account Management**: Updated account creation and update rules to respect the space-specific uniqueness configuration.
+- **Remove DIGEST and JWT auth for admin endpoints**: Only API Key authentications are authorized
 
 ### Removed
 

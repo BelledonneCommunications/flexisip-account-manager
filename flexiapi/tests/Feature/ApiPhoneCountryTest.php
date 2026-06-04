@@ -40,7 +40,7 @@ class ApiPhoneCountryTest extends TestCase
         $dutchPhoneNumber = '+31612121212';
 
         $this->get($this->route)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJsonFragment([
                 'code' => 'FR',
                 'activated' => true
@@ -54,7 +54,7 @@ class ApiPhoneCountryTest extends TestCase
             ->json($this->method, $this->routeChangePhone . '/request', [
                 'phone' => $frenchPhoneNumber
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->routeChangePhone . '/request', [
@@ -68,10 +68,10 @@ class ApiPhoneCountryTest extends TestCase
 
         $this->keyAuthenticated($superAdmin)
             ->post($this->route . '/NL/activate')
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->get($this->route)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJsonFragment([
                 'code' => 'NL',
                 'activated' => true
@@ -81,14 +81,14 @@ class ApiPhoneCountryTest extends TestCase
             ->json($this->method, $this->routeChangePhone . '/request', [
                 'phone' => $dutchPhoneNumber
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($superAdmin)
             ->post($this->route . '/NL/deactivate')
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->get($this->route)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJsonFragment([
                 'code' => 'NL',
                 'activated' => false

@@ -179,7 +179,7 @@ class ApiAccountCreationTokenTest extends TestCase
             'algorithm' => 'SHA-256',
             'password' => '123',
             'account_creation_token' => $token->token
-        ])->assertStatus(200);
+        ])->assertOk();
 
         // Expired token
         $this->json($this->method, $this->accountRoute, [
@@ -239,7 +239,7 @@ class ApiAccountCreationTokenTest extends TestCase
             'algorithm' => 'SHA-256',
             'password' => '123',
             'account_creation_token' => $token->token
-        ])->assertStatus(200);
+        ])->assertOk();
     }
 
     public function testAccountCreationRequestToken()
@@ -294,7 +294,7 @@ class ApiAccountCreationTokenTest extends TestCase
             ->json($this->method, $this->tokenConsumeRoute, [
                 'account_creation_token' => $token
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->tokenConsumeRoute, [
@@ -306,6 +306,6 @@ class ApiAccountCreationTokenTest extends TestCase
             ->json($this->method, '/api/accounts/me/phone/request', [
                 'phone' => '+33612312312'
             ])
-            ->assertStatus(200);
+            ->assertOk();
     }
 }

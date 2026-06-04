@@ -64,7 +64,7 @@ class ApiAuthenticationTest extends TestCase
             'From' => 'sip:' . $password->account->identifier,
             'x-api-key' => $password->account->apiKey->key,
         ])->json($this->method, $this->route);
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     public function testMultiHash()
@@ -92,7 +92,7 @@ class ApiAuthenticationTest extends TestCase
         $response1 = $this->generateSecondResponse($password, $response0)
             ->json($this->method, $this->route);
 
-        $response1->assertStatus(200);
+        $response1->assertOk();
 
         // We increment the nc
         $response2 = $this->withHeaders([
@@ -100,7 +100,7 @@ class ApiAuthenticationTest extends TestCase
             'Authorization' => $this->generateDigest($password, $response1, 'md5', '00000002'),
         ])->json($this->method, $this->route);
 
-        $response2->assertStatus(200);
+        $response2->assertOk();
 
         // We don't increment it
         $response3 = $this->withHeaders([
@@ -121,7 +121,7 @@ class ApiAuthenticationTest extends TestCase
             'Authorization' => $this->generateDigest($password, $response1, 'md5', '00000001'),
         ])->json($this->method, $this->route);
 
-        $response2->assertStatus(200);
+        $response2->assertOk();
 
         // We remove the account related nonce
         $password->account->nonces()->first()->delete();
@@ -146,7 +146,7 @@ class ApiAuthenticationTest extends TestCase
 
         $this->assertStringContainsString('algorithm=MD5', $response->headers->all()['www-authenticate'][0]);
 
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     public function testAuthenticationSHA265()
@@ -160,7 +160,7 @@ class ApiAuthenticationTest extends TestCase
 
         $this->assertStringContainsString('algorithm=SHA-256', $response->headers->all()['www-authenticate'][0]);
 
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     public function testAuthenticationWrongAlgorithm()
@@ -201,7 +201,7 @@ class ApiAuthenticationTest extends TestCase
         $this->assertStringContainsString('algorithm=MD5', $response->headers->all()['www-authenticate'][0]);
         $this->assertStringContainsString('algorithm=SHA-256', $response->headers->all()['www-authenticate'][1]);
 
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     public function testAuthenticationSHA265FromCLRTXTWithRealm()
@@ -229,7 +229,7 @@ class ApiAuthenticationTest extends TestCase
         $this->assertStringContainsString('algorithm=MD5', $response->headers->all()['www-authenticate'][0]);
         $this->assertStringContainsString('algorithm=SHA-256', $response->headers->all()['www-authenticate'][1]);
 
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     public function testAuthenticationBadPassword()

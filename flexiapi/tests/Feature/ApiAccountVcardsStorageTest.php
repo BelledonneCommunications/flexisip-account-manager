@@ -66,7 +66,7 @@ END:VCARD
         // Empty
         $this->keyAuthenticated($account)
             ->get($this->route)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertSee('{}');
 
         // Missing vcard
@@ -154,7 +154,7 @@ END:VCARD'
                 'vcard' => $lastVcard
             ])->assertJsonFragment([
                 'vcard' => $lastVcard
-            ])->assertStatus(200);
+            ])->assertOk();
 
         // Update with wrong UID
         $this->keyAuthenticated($account)
@@ -170,7 +170,7 @@ END:VCARD'
         // Index
         $this->keyAuthenticated($account)
             ->get($this->route)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 $uid => ['vcard' => $lastVcard],
                 $uid2 => ['vcard' => $secondVcard]
@@ -179,7 +179,7 @@ END:VCARD'
         // Get
         $this->keyAuthenticated($account)
             ->get($this->route . '/' . $uid)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJsonFragment([
                 'vcard' => $lastVcard
             ]);
@@ -187,7 +187,7 @@ END:VCARD'
         // Admin get
         $this->keyAuthenticated($admin)
             ->get($adminRoute . '/' . $uid)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJsonFragment([
                 'vcard' => $lastVcard
             ]);
@@ -203,7 +203,7 @@ END:VCARD'
                 'accept' => 'text/vcard',
             ])*/
             ->get('vcards-storage')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertSee($lastVcard)
             ->assertSee($secondVcard);
 
@@ -213,13 +213,13 @@ END:VCARD'
                 'accept' => 'text/vcard',
             ])*/
             ->get('vcards-storage/' . $uid)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertSee($lastVcard);
 
         // Delete
         $this->keyAuthenticated($account)
             ->delete($this->route . '/' . $uid)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($account)
             ->get($this->route . '/' . $uid)

@@ -86,11 +86,11 @@ class ApiAccountRecoveryTokenTest extends TestCase
 
         $this->get($this->setSpaceOnRoute($this->space, route('account.recovery.show.phone', ['account_recovery_token' => $token->token])))
             ->assertDontSee($phone)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->get($this->setSpaceOnRoute($this->space, route('account.recovery.show.phone', ['account_recovery_token' => $token->token, 'phone' => $phone])))
             ->assertSee($phone)
-            ->assertStatus(200);
+            ->assertOk();
 
         $token->consume();
 
