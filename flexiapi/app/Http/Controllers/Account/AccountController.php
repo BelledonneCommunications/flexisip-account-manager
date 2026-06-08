@@ -61,7 +61,7 @@ class AccountController extends Controller
             return redirect()->route('account.email.validate');
         }
 
-        return abort(404);
+        abort(404);
     }
 
     public function delete(Request $request)

@@ -32,6 +32,6 @@ class IsPhoneRegistration
             return $next($request);
         }
 
-        return abort(404, 'Phone registration disabled');
+        abort(404, 'Phone registration disabled');
     }
 }

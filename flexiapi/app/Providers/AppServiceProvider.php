@@ -15,5 +15,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Validator::extend('iso_date', 'validateIsoDate');
+        \Illuminate\Support\Facades\Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {
+            $event->extendSocialite('keycloak', \SocialiteProviders\Keycloak\Provider::class);
+        });
     }
 }

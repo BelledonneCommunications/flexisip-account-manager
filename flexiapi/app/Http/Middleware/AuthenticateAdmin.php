@@ -33,7 +33,7 @@ class AuthenticateAdmin
         if (!$request->user()->admin
             || (!$request->user()->superAdmin && $request->user()->domain != $request->space->domain)
         ) {
-            return abort(403, 'Unauthorized area');
+            abort(403, 'Unauthorized area');
         }
 
         return $next($request);

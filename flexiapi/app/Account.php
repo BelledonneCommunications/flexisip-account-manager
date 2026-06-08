@@ -584,6 +584,12 @@ class Account extends Authenticatable
         $password->save();
     }
 
+    public function generatePassword(): void
+    {
+        $password = Str::random(12);
+        $this->updatePassword($password);
+    }
+
     public function toVcard4()
     {
         $vcard = 'BEGIN:VCARD

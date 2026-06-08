@@ -31,24 +31,8 @@ class SpaceCheck
                 abort($request->expectsJson() ? 403 : 490, 'The related Space has expired');
             }
 
-            // Custom email integration
-            if ($space->emailServer) {
-                $config = [
-                    'driver'     => config('mail.driver'),
-                    'encryption' => config('mail.encryption'),
-                    'host'       => $space->emailServer->host,
-                    'port'       => $space->emailServer->port,
-                    'from'       => [
-                        'address' => $space->emailServer->from_address,
-                        'name' => $space->emailServer->from_name
-                    ],
-                    'username'   => $space->emailServer->username,
-                    'password'   => $space->emailServer->password,
-                    'signature'  => $space->emailServer->signature ?? config('mail.signature')
-                ] + Config::get('mail');
-
-                Config::set('mail', $config);
-            }
+            $space->injectCustomEmailConfig();
+            $space->injectKeycloakConfig();
 
             return $next($request);
         }

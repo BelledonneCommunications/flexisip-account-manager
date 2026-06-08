@@ -27,7 +27,7 @@ class AuthenticateSuperAdmin
     public function handle($request, Closure $next)
     {
         if (!$request->user() || !$request->user()->superAdmin) {
-            return abort(403, 'Unauthorized area');
+            abort(403, 'Unauthorized area');
         }
 
         return $next($request);

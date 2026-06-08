@@ -20,21 +20,20 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
-use Carbon\Carbon;
-use CoderCat\JWKToPEM\JWKConverter;
+use Illuminate\Support\Facades\Config;
 
 class Space extends Model
 {
     use HasFactory;
 
-    protected $with = ['emailServer', 'carddavServers'];
-    protected $fillable = ['host', 'sso_public_key', 'sso_server_url', 'sso_realm'];
+    protected $with = ['emailServer', 'carddavServers', 'ssoServer'];
+    protected $fillable = ['host'];
 
     public const FORBIDDEN_KEYS = [
         'account_proxy_registrar_address',
@@ -70,10 +69,6 @@ class Space extends Model
         'hide_settings' => 'boolean',
         'only_display_sip_uri_username' => 'boolean',
         'super' => 'boolean',
-    ];
-
-    protected $attributes = [
-        'sso_sip_identifier' => 'sip_identity'
     ];
 
     public const HOST_REGEX = '[\w\-]+';
@@ -113,6 +108,11 @@ class Space extends Model
     public function carddavServers()
     {
         return $this->hasMany(SpaceCardDavServer::class);
+    }
+
+    public function ssoServer()
+    {
+        return $this->hasOne(SpaceSsoServer::class);
     }
 
     public function contactsLists()
@@ -155,32 +155,15 @@ class Space extends Model
         return $this->host == config('app.root_host');
     }
 
-    public function refreshSSOCertificate(): bool
-    {
-        if (isset($this->attributes['sso_server_url']) && isset($this->attributes['sso_realm'])) {
-            $response = Http::get($this->attributes['sso_server_url'] . '/realms/' . $this->attributes['sso_realm'] . '/protocol/openid-connect/certs');
-            $jwkConverter = new JWKConverter;
-
-            if ($response->status() == '200' && $publicKey = $response->json('keys')[0]) {
-                $this->attributes['sso_public_key'] = $jwkConverter->toPEM($publicKey);
-                $this->attributes['updated_at'] = Carbon::now();
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     /**
      * Non standard authentication flow based on RFC 8898
      */
     public function getSSOAuthenticationBearerAttribute(): ?string
     {
-        if (isset($this->attributes['sso_server_url']) && isset($this->attributes['sso_realm'])) {
+        if ($this->ssoServer) {
             return
-                'authz_server="' . $this->attributes['sso_server_url'] . 'realms/' . $this->attributes['sso_realm'] . '"' .
-                ',realm="' . $this->attributes['sso_realm'] . '"';
+                'authz_server="' . $this->ssoServer->server_url . 'realms/' . $this->ssoServer->realm . '"' .
+                ',realm="' . $this->ssoServer->realm . '"';
         }
 
         return null;
@@ -213,5 +196,37 @@ class Space extends Model
         return Attribute::make(
             get: fn ($value) => $value ?? 22
         );
+    }
+
+    public function injectCustomEmailConfig()
+    {
+        if ($this->emailServer) {
+            Config::set('mail', [
+                'driver'     => config('mail.driver'),
+                'encryption' => config('mail.encryption'),
+                'host'       => $this->emailServer->host,
+                'port'       => $this->emailServer->port,
+                'from'       => [
+                    'address' => $this->emailServer->from_address,
+                    'name' => $this->emailServer->from_name
+                 ],
+                'username'   => $this->emailServer->username,
+                'password'   => $this->emailServer->password,
+                'signature'  => $this->emailServer->signature ?? config('mail.signature')
+            ] + Config::get('mail'));
+        }
+    }
+
+    public function injectKeycloakConfig()
+    {
+        if ($this->ssoServer) {
+            Config::set('services.keycloak', [
+                'client_id' => $this->ssoServer->client_id,
+                'client_secret' => $this->ssoServer->client_secret,
+                'redirect' => 'https://' . $this->host . "/login/sso/redirect",
+                'base_url' => $this->ssoServer->server_url,
+                'realms' => $this->ssoServer->realm
+            ]);
+        }
     }
 }

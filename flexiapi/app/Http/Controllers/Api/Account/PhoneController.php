@@ -30,11 +30,11 @@ class PhoneController extends Controller
     public function requestUpdate(Request $request)
     {
         if ((new BlockingService($request->user()))->checkBlock()) {
-            return abort(403, 'Account blocked');
+            abort(403, 'Account blocked');
         }
 
         if (!$request->user()->accountCreationToken?->consumed()) {
-            return abort(403, 'Account unvalidated');
+            abort(403, 'Account unvalidated');
         }
 
         return (new AccountService)->requestPhoneChange($request);

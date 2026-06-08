@@ -50,6 +50,7 @@ class AdministrationUpdate extends FormRequest
                         : [];
 
                     if ($duplicates->isNotEmpty()) {
+                        dd($duplicates);
                         $messages = [];
 
                         foreach ($duplicates as $key => $value) {

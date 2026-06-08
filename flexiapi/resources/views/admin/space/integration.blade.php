@@ -12,7 +12,6 @@
         <div class="card">
             @if ($space->emailServer)
                 <a class="btn small oppose" href="{{ route('admin.spaces.email.show', $space) }}">{{ __('Edit') }}</a>
-                <a class="btn small oppose tertiary" href="{{ route('admin.spaces.email.delete', $space) }}">{{ __('Delete') }}</a>
             @else
                 <a class="btn small oppose secondary" href="{{ route('admin.spaces.email.show', $space) }}">{{ __('Configure') }}</a>
             @endif
@@ -26,12 +25,20 @@
         </div>
 
         <div class="card">
-            <a class="btn small oppose secondary" href="{{ route('admin.spaces.keycloak.show', $space) }}">{{ __('Configure') }}</a>
+            @if (!$space->super)
+                @if ($space->ssoServer)
+                    <a class="btn small oppose secondary" href="{{ route('admin.spaces.sso.show', $space) }}">{{ __('Edit') }}</a>
+                @else
+                    <a class="btn small oppose secondary" href="{{ route('admin.spaces.sso.show', $space) }}">{{ __('Configure') }}</a>
+                @endif
+            @else
+                <a class="btn small oppose secondary disabled" href="{{ route('admin.spaces.sso.show', $space) }}">{{ __('Disabled (super space)') }}</a>
+            @endif
             <span class="icon"><i class="ph ph-key"></i></span>
             <h3>{{ __('SSO Server') }}</h3>
             <p>
-                @if ($space->sso_server_url)
-                    <code>{{ $space->sso_server_url}}</code><br /><br />
+                @if ($space->ssoServer)
+                    <code>{{ $space->ssoServer->server_url }}</code><br /><br />
                 @endif
             </p>
         </div>

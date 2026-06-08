@@ -101,7 +101,7 @@ class CreationTokenController extends Controller
             return $accountCreationToken;
         }
 
-        return abort(404);
+        abort(404);
     }
 
     public function consume(Request $request)
@@ -119,6 +119,6 @@ class CreationTokenController extends Controller
             return $accountCreationToken;
         }
 
-        return abort(404);
+        abort(404);
     }
 }

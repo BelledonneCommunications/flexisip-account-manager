@@ -85,6 +85,11 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
     });
 });
 
+Route::middleware(['feature.is_space_sso'])->prefix('login/sso')->name('account.login.')->group(function () {
+    Route::get('/', [AuthenticateController::class, 'loginSso'])->name('sso');
+    Route::get('/redirect', [AuthenticateController::class, 'handleSsoRedirect'])->name('sso.redirect');
+});
+
 Route::name('file.')->prefix('f')->controller(FileController::class)->group(function () {
     Route::get('{uuid}/{name}', 'show')->name('show');
     Route::get('{uuid}/{name}/download', 'download')->name('download');
@@ -202,10 +207,12 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
                 Route::get('delete', 'delete')->name('delete');
                 Route::delete('/', 'destroy')->name('destroy');
             });
-            Route::name('keycloak.')->prefix('{space}/keycloak')->controller(SSOServerController::class)->group(function () {
+            Route::name('sso.')->prefix('{space}/sso')->controller(SSOServerController::class)->group(function () {
                 Route::get('/', 'show')->name('show');
                 Route::get('refresh_public_key', 'refreshPublicKey')->name('refresh_public_key');
                 Route::post('/', 'store')->name('store');
+                Route::get('delete', 'delete')->name('delete');
+                Route::delete('/', 'destroy')->name('destroy');
             });
             Route::resource('{space}/carddavs', CardDavServerController::class, ['except' => ['index', 'show']]);
             Route::get('{space}/carddavs/{carddav}/delete', [CardDavServerController::class, 'delete'])->name('carddavs.delete');

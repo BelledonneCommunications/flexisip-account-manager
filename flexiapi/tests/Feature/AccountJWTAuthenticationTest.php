@@ -31,6 +31,7 @@ use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Signer\Rsa\Sha512;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Auth;
+use App\SpaceSsoServer;
 
 class AccountJWTAuthenticationTest extends TestCase
 {
@@ -62,19 +63,21 @@ class AccountJWTAuthenticationTest extends TestCase
         $domain = 'sip_provisioning.example.com';
 
         $space = \App\Space::where('domain', $password->account->domain)->first();
-        $space->update([
-            'host' => $domain,
-            'sso_public_key' => $this->serverPublicKeyPem,
-            'sso_sso_server_url' => 'https://sso.test/',
-            'sso_realm' => 'sip.test.org'
+        $space->update(['host' => $domain,]);
+
+        SpaceSsoServer::factory()->withSpaceId($space->id)->create([
+            'public_key' => $this->serverPublicKeyPem,
         ]);
+
+        $space->refresh();
+
         config()->set('app.sip_domain', $domain);
 
         $this->get($this->route)->assertStatus(400);
 
         $clock = new FrozenClock(new DateTimeImmutable);
 
-        $token = (new JwtFacade(null, $clock))->issue(
+        $token = (new JwtFacade(clock: $clock))->issue(
             new Sha256,
             InMemory::plainText($this->serverPrivateKeyPem),
             static fn (
@@ -87,7 +90,7 @@ class AccountJWTAuthenticationTest extends TestCase
 
         // SIP identifier
 
-        $token = (new JwtFacade(null, $clock))->issue(
+        $token = (new JwtFacade(clock: $clock))->issue(
             new Sha256,
             InMemory::plainText($this->serverPrivateKeyPem),
             static fn (
@@ -99,7 +102,7 @@ class AccountJWTAuthenticationTest extends TestCase
         $this->checkToken($token);
 
         // Handle empty sso_sip_identifier
-        $token = (new JwtFacade(null, $clock))->issue(
+        $token = (new JwtFacade(clock: $clock))->issue(
             new Sha256,
             InMemory::plainText($this->serverPrivateKeyPem),
             static fn (
@@ -112,9 +115,9 @@ class AccountJWTAuthenticationTest extends TestCase
 
         // Custom SIP identifier
         $otherIdentifier = 'sip_other_identifier';
-        \App\Space::where('domain', $password->account->domain)->update(['sso_sip_identifier' => 'sip_other_identifier']);
+        $space->ssoServer->update(['sip_identifier' => 'sip_other_identifier']);
 
-        $token = (new JwtFacade(null, $clock))->issue(
+        $token = (new JwtFacade(clock: $clock))->issue(
             new Sha256,
             InMemory::plainText($this->serverPrivateKeyPem),
             static fn (
@@ -126,7 +129,7 @@ class AccountJWTAuthenticationTest extends TestCase
         $this->checkToken($token);
 
         // Sha512
-        $token = (new JwtFacade(null, $clock))->issue(
+        $token = (new JwtFacade(clock: $clock))->issue(
             new Sha512,
             InMemory::plainText($this->serverPrivateKeyPem),
             static fn (
@@ -140,7 +143,7 @@ class AccountJWTAuthenticationTest extends TestCase
         // Expired token
         $oldClock = new FrozenClock(new DateTimeImmutable('2022-06-24 22:51:10'));
 
-        $token = (new JwtFacade(null, $oldClock))->issue(
+        $token = (new JwtFacade(clock: $oldClock))->issue(
             new Sha256,
             InMemory::plainText($this->serverPrivateKeyPem),
             static fn (
@@ -173,7 +176,7 @@ class AccountJWTAuthenticationTest extends TestCase
         $this->assertStringContainsString('invalid_token', $response->headers->get('WWW-Authenticate'));
 
         // Wrong email
-        $token = (new JwtFacade(null, $clock))->issue(
+        $token = (new JwtFacade(clock: $clock))->issue(
             new Sha256,
             InMemory::plainText($this->serverPrivateKeyPem),
             static fn (
@@ -193,7 +196,7 @@ class AccountJWTAuthenticationTest extends TestCase
         $keys = openssl_pkey_new(array("private_key_bits" => 4096, "private_key_type" => OPENSSL_KEYTYPE_RSA));
         openssl_pkey_export($keys, $wrongServerPrivateKeyPem);
 
-        $wrongToken = (new JwtFacade(null, $clock))->issue(
+        $wrongToken = (new JwtFacade(clock: $clock))->issue(
             new Sha256,
             InMemory::plainText($wrongServerPrivateKeyPem),
             static fn (
@@ -219,11 +222,12 @@ class AccountJWTAuthenticationTest extends TestCase
 
         $password = Password::factory()->create();
         $space = \App\Space::where('domain', $password->account->domain)->first();
-        $space->update([
-            'sso_public_key' => $this->serverPublicKeyPem,
-            'sso_server_url' => 'https://auth_bearer.com/',
-            'sso_realm' => 'realm'
+
+        SpaceSsoServer::factory()->withSpaceId($space->id)->create([
+            'public_key' => $this->serverPublicKeyPem,
         ]);
+
+        $space->refresh();
 
         $response = $this->json($this->method, $this->routeAccountMe)
             ->assertStatus(401);

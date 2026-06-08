@@ -270,7 +270,7 @@ class AccountService
         $phoneChangeCode = $account->phoneChangeCode;
 
         if ($phoneChangeCode->expired()) {
-            return abort(410, 'Expired code');
+            abort(410, 'Expired code');
         }
 
         if ($phoneChangeCode->code == $code) {
@@ -344,7 +344,7 @@ class AccountService
         $emailChangeCode = $account->emailChangeCode;
 
         if ($emailChangeCode->expired()) {
-            return abort(410, 'Expired code');
+            abort(410, 'Expired code');
         }
 
         if ($emailChangeCode->validate($code)) {

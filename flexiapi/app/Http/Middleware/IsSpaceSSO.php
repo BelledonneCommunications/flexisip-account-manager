@@ -6,14 +6,14 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class IsIntercomFeatures
+class IsSpaceSSO
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->space->intercom_features) {
-            return $next($request);
+        if (!$request->space || !$request->space->ssoServer) {
+            abort(403, 'SSO is not enabled on this space');
         }
 
-        abort(404, 'Intercom features disabled');
+        return $next($request);
     }
 }

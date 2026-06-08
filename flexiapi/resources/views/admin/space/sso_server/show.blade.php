@@ -8,31 +8,67 @@
 @section('content')
     <header>
         <h1><i class="ph ph-key"></i> {{ $space->name }}</h1>
+        @if ($space->ssoServer)
+            <a class="btn secondary oppose" title="{{ __('Delete') }}"
+            href="{{ route('admin.spaces.sso.delete', $space) }}">
+            <i class="ph ph-trash"></i>
+            </a>
+        @endif
     </header>
 
-    <form method="POST"
-        action="{{ route('admin.spaces.keycloak.store', $space->id) }}"
-        id="show" accept-charset="UTF-8">
+    @if ($space->unique_email)
+        <form method="POST" action="{{ route('admin.spaces.sso.store', $space) }}" id="show" accept-charset="UTF-8">
         @csrf
         @method('post')
         <div>
-            <input placeholder="https://keycloak.server.tld/" required="required" name="sso_server_url" type="url"
-                value="@if($space->id){{ $space->sso_server_url }}@else{{ old('sso_server_url') }}@endif">
-            <label for="sso_server_url">{{ __('Server URL') }}</label>
-            @include('parts.errors', ['name' => 'sso_server_url'])
+            <input placeholder="https://keycloak.server.tld/" required="required" name="server_url" type="url"
+                value="{{ ($space->ssoServer?->server_url) ?: old('server_url') }}">
+            <label for="server_url">{{ __('Server URL') }}</label>
+            @include('parts.errors', ['name' => 'server_url'])
         </div>
         <div>
-            <input placeholder="cogip" required="required" name="sso_realm" type="text"
-                value="@if($space->id){{ $space->sso_realm }}@else{{ old('sso_realm') }}@endif">
-            <label for="sso_realm">{{ __('Realm') }}</label>
-            @include('parts.errors', ['name' => 'sso_realm'])
+            <input placeholder="cogip" required="required" name="realm" type="text"
+                value="{{ ($space->ssoServer?->realm) ?: old('realm') }}">
+            <label for="realm">{{ __('Realm') }}</label>
+            @include('parts.errors', ['name' => 'realm'])
         </div>
         <div>
-            <input placeholder="sip_identity" name="sso_sip_identifier" type="text" required="required"
-                value="@if($space->id && isset($space->sso_sip_identifier)){{ $space->sso_sip_identifier }}@else{{ old('sso_sip_identifier') }}@endif">
-            <label for="sso_sip_identifier">{{ __('SIP Identifier') }}</label>
-            @include('parts.errors', ['name' => 'sso_sip_identifier'])
-            <span class="supporting">{{ __("JWT key containing the user's SIP identity. sip_identity by default.")}}</span>
+            <input placeholder="sip_identifier" name="sip_identifier" type="text" required="required"
+                value="{{ ($space->ssoServer?->sip_identifier) ?: old('sip_identifier') }}">
+            <label for="sip_identifier">{{ __('SIP Identifier') }}</label>
+            @include('parts.errors', ['name' => 'sip_identifier'])
+            <span class="supporting">{{ __("JWT key containing the user's SIP identity. sip_identity by default.") }}</span>
+        </div>
+        <div>
+            <input placeholder="client_id" name="client_id" type="text" required="required"
+                value="{{ ($space->ssoServer?->client_id) ?: old('client_id') }}">
+            <label for="client_id">{{ __('Client id') }}</label>
+            @include('parts.errors', ['name' => 'client_id'])
+        </div>
+        <div>
+            <input placeholder="client_secret" name="client_secret" type="text" required="required"
+                value="{{ ($space->ssoServer?->client_secret) ?: old('client_secret') }}">
+            <label for="client_secret">{{ __('Client Secret') }}</label>
+            @include('parts.errors', ['name' => 'client_secret'])
+        </div>
+        <br>
+        <div>
+            @include('parts.form.toggle', [
+                'object' => $space->ssoServer ?? (object)['auto_provisioning' => false],
+                'key' => 'auto_provisioning',
+                'label' => __('Automatic user provisioning'),
+                'attributes' => [
+                    'class' => 'form-dependency',
+                    'data-target' => '#role_provisioning',
+                ],
+            ])
+            <span class="supporting">{{ __('Enable automatic user provisioning: new users with the required Keycloak role will be registered automatically on their first sign-in.') }}</span>
+        </div>
+        <div>
+            <input placeholder="role_provisioning" name="role_provisioning" type="text" required="required" id="role_provisioning"
+                value="{{ ($space->ssoServer?->role_provisioning) ?: old('role_provisioning') }}">
+            <label for="client_secret">{{ __('Role') }}</label>
+            @include('parts.errors', ['name' => 'role_provisioning'])
         </div>
     </form>
 
@@ -40,18 +76,28 @@
 
     <hr />
 
-    @include('parts.errors', ['name' => 'sso_public_key'])
-
-    @if ($space->sso_public_key)
-    <h4>{{ __('Public key') }}</h4> <small>{{ __('Last update') }}: {{ $space->updated_at }}</small>
+    @include('parts.errors', ['name' => 'public_key'])
 
     <br />
-    <pre style="display: inline-block;"><code>{{ $space->sso_public_key }}</code></pre>
-    <br />
-    <a class="btn small secondary" href="{{ route('admin.spaces.keycloak.refresh_public_key', $space) }}">{{ __('Refresh') }}</a>
-    <hr />
+
+    @if ($space->ssoServer?->public_key)
+        <h4>{{ __('Public key') }}</h4> <small>{{ __('Last update') }}: {{ $space->ssoServer->updated_at }}</small>
+
+        <br />
+        <pre style="display: inline-block;"><code>{{ $space->ssoServer->public_key }}</code></pre>
+        <br />
+        <a class="btn small secondary"
+            href="{{ route('admin.spaces.sso.refresh_public_key', $space) }}">{{ __('Refresh') }}</a>
+        <hr />
     @endif
 
 
-    <input form="show" class="btn" type="submit" value="@if($space->id){{ __('Update') }}@else{{ __('Create') }}@endif">
+    <input form="show" class="btn" type="submit"
+        value="@if ($space->id) {{ __('Update') }}@else{{ __('Create') }} @endif">
+    @else
+        <h3>{{ __('SSO Activation Failed') }}</h3>
+        <p>{{ __('Email uniqueness is disabled. SSO authentication cannot be enabled without this option. Please contact your super-admin.') }}</p>
+    @endif
+
+
 @endsection

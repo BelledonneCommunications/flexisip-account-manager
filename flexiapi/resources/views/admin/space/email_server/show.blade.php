@@ -8,6 +8,12 @@
 @section('content')
     <header>
         <h1><i class="ph ph-envelope"></i> {{ $space->name }}</h1>
+        @if ($space->emailServer)
+        <a class="btn secondary oppose" title="{{ __('Delete') }}"
+            href="{{ route('admin.spaces.email.delete', $space) }}">
+            <i class="ph ph-trash"></i>
+        </a>
+        @endif
     </header>
 
     <form method="POST"

@@ -60,7 +60,7 @@ class AccountController extends Controller
             ];
         }
 
-        return abort(404, 'No TURN service configured');
+        abort(404, 'No TURN service configured');
     }
 
     public function store(ApiRequest $request)

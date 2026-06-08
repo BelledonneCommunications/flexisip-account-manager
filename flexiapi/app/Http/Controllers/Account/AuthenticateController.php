@@ -20,12 +20,17 @@
 
 namespace App\Http\Controllers\Account;
 
+use App\Account;
+use App\AuthToken;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Account\Create\Request as CreateRequest;
+use App\Services\AccountService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use App\Account;
-use App\AuthToken;
+use Laravel\Socialite\Facades\Socialite;
+use Lcobucci\JWT\Encoding\JoseEncoder;
+use Lcobucci\JWT\Token\Parser;
 
 class AuthenticateController extends Controller
 {
@@ -48,6 +53,12 @@ class AuthenticateController extends Controller
         ] : []);
     }
 
+    private function loginAndRedirect(Account $account)
+    {
+        Auth::login($account);
+        return redirect()->route('account.home');
+    }
+
     public function authenticate(Request $request)
     {
         $request->validate([
@@ -68,12 +79,13 @@ class AuthenticateController extends Controller
 
         // Try out the passwords
         foreach ($account->passwords as $password) {
-            if (hash_equals(
-                $password->password,
-                bchash($account->username, $account->resolvedRealm, $request->get('password'), $password->algorithm)
-            )) {
-                Auth::login($account);
-                return redirect()->route('account.home');
+            if (
+                hash_equals(
+                    $password->password,
+                    bchash($account->username, $account->resolvedRealm, $request->get('password'), $password->algorithm)
+                )
+            ) {
+                return $this->loginAndRedirect($account);
             }
         }
 
@@ -111,9 +123,74 @@ class AuthenticateController extends Controller
         ]);
     }
 
+    public function loginSso()
+    {
+        return Socialite::driver('keycloak')->redirect();
+    }
+
+    public function handleSsoRedirect(Request $request)
+    {
+        $ssoUser = Socialite::driver('keycloak')->stateless()->user();
+
+        if (space()->ssoServer?->auto_provisioning) {
+            $token = (new Parser(new JoseEncoder))->parse($ssoUser->token);
+            $realmAccess = $token->claims()->get('realm_access');
+
+            $hasRole = $realmAccess
+                && !empty($realmAccess['roles'])
+                && in_array(space()->ssoServer->role_provisioning, $realmAccess['roles']);
+
+            if (!$hasRole) {
+                Account::where('email', $ssoUser->email)->update(['activated' => false]);
+                return redirect('login')->withErrors(['sso_not_found' => __('You don\'t have access to this app, contact your administrator')]);
+            }
+
+            $sip = parseSIP($token->claims()->get(space()->ssoServer->sip_identifier));
+
+            if (!$sip) {
+                return redirect('login')->withErrors(['sso_not_found' => __('Incorrect username or password')]);
+            }
+
+            $account = Account::where('username', $sip[0])->first();
+
+            if ($account && $account->email != $ssoUser->email) {
+                return redirect('login')->withErrors(['sso_not_found' => __('Username already taken. Please contact your administrator.')]);
+            }
+
+            if (!$account) {
+                $createRequest = CreateRequest::create('/', 'POST', [
+                    'username' => $sip[0],
+                    'email' => $ssoUser->email,
+                    'password' => Str::random(12),
+                    'asAdmin' => true,
+                ]);
+
+                $createRequest->space = $request->space;
+
+                $accountService = new AccountService;
+                $account = $accountService->store($createRequest);
+            }
+
+            return $this->loginAndRedirect($account);
+        }
+
+        $account = Account::where('email', $ssoUser->email)->first();
+
+        if (!$account) {
+            return redirect('login')->withErrors(['sso_not_found' => __('Incorrect username or password')]);
+        }
+
+        return $this->loginAndRedirect($account);
+    }
+
     public function logout(Request $request)
     {
         Auth::logout();
-        return redirect()->route('account.login');
+
+        if (!space()->ssoServer) {
+            return redirect()->route('account.login');
+        }
+
+        return redirect(Socialite::driver('keycloak')->getLogoutUrl(route('account.login'), space()->ssoServer->client_id));
     }
 }

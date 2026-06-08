@@ -44,12 +44,12 @@ class AuthenticateJWT
             return $next($request);
         }
 
-        if ($request->bearerToken() && $request->space?->sso_public_key) {
+        if ($request->bearerToken() && $request->space->ssoServer?->public_key) {
             if (!extension_loaded('sodium')) {
                 abort(403, "PHP Sodium extension isn't loaded");
             }
 
-            $publicKey = InMemory::plainText($request->space->sso_public_key);
+            $publicKey = InMemory::plainText($request->space->ssoServer->public_key);
 
             try {
                 $token = (new Parser(new JoseEncoder))->parse($request->bearerToken());
@@ -86,7 +86,7 @@ class AuthenticateJWT
             }
 
             $account = null;
-            $identifierKey = $request->space->sso_sip_identifier;
+            $identifierKey = $request->space->ssoServer->sip_identifier;
 
             if ($identifierKey == '') {
                 $identifierKey = 'sip_identity';

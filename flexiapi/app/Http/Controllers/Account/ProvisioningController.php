@@ -128,11 +128,11 @@ class ProvisioningController extends Controller
             ->firstOrFail();
 
         if ($provisioningToken != $account->provisioning_token) {
-            return abort(404);
+            abort(404);
         }
 
         if ($account->currentProvisioningToken->expired()) {
-            return abort(410, 'Expired');
+            abort(410, 'Expired');
         }
 
         $account->activated = true;
