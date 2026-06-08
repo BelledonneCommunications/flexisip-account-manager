@@ -113,7 +113,7 @@ Route::name('provisioning.')->prefix('provisioning')->controller(ProvisioningCon
 
 Route::middleware(['feature.web_panel_enabled'])->group(function () {
     Route::middleware(['feature.public_registration'])->group(function () {
-        Route::redirect('register', 'register/email')->name('account.register');
+        Route::get('register', [RegisterController::class, 'register'])->name('account.register');
 
         Route::middleware(['feature.phone_registration'])->group(function () {
             Route::get('register/phone', [RegisterController::class, 'registerPhone'])->name('account.register.phone');

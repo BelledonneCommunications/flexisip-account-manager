@@ -21,7 +21,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ### Changed
 
 - **Contacts Lists** The Contacts Lists are now handled per Space. During the migration, if there is only one Space present, existing Contacts Lists are automatically attached to it, otherwise the first Super Space available is used. If they are then attached to the wrong Space you'll have to change directly their `space_id` value in the `contacts_lists` database table.
-- **PHP 8.2 minimum** Laravel and its dependencies were upgraded to version 11 as well.
+- **PHP 8.2 minimum and Laravel 12**
 - **Logout the user when the password is correctly changed**
 - **Email Uniqueness**: Moved the email uniqueness setting from a global environment variable (`.env`) to a per-space database setting for better multi-tenancy support.
 - **Account Management**: Updated account creation and update rules to respect the space-specific uniqueness configuration.

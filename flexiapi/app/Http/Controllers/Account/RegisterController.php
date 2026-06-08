@@ -25,6 +25,15 @@ use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
+    public function register(Request $request)
+    {
+        if ($request->space->isFull()) {
+            abort(403, 'The current space is full');
+        }
+
+        return redirect()->route('account.register.email');
+    }
+
     public function registerPhone(Request $request)
     {
         return view('account.register.phone', [
