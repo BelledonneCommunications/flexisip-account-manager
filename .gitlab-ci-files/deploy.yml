@@ -38,15 +38,15 @@ debian13-deploy:
     - debian13-package
     - debian13-test
 
-remi-rocky8-deploy:
-  extends: .deploy
+#remi-rocky8-deploy:
+#  extends: .deploy
   #rules:
     #- changes:
     #  - .gitlab-ci.yml
-  script:
-    - ./deploy_packages.sh rockylinux 8
-  needs:
-    - remi-rocky8-package
+#  script:
+#    - ./deploy_packages.sh rockylinux 8
+#  needs:
+#    - remi-rocky8-package
 
 .deploy:
   stage: deploy
