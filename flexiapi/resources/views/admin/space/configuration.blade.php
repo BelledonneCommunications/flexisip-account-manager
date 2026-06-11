@@ -95,6 +95,11 @@
                 {{ __('Use ; to comment, key="value" to declare a complex string.') }}
                 <a target="_blank"  href="https://cheatsheets.zip/ini.html">{{ __('Checkout the cheatsheets to know how to format things correctly.') }}</a>
             </span>
+            <span class="supporting">
+                {{ __('A complete documentation describing all the elements and sections presents in this field are available on the following link:') }}
+                <a target="_blank"  href="https://download.linphone.org/snapshots/docs/liblinphone/latest/c/group__group__provisioning__configuration__key.html">Provisioning configuration keys documentation.</a>
+            </span>
+
             @include('parts.errors', ['name' => 'custom_provisioning_entries'])
         </div>
 
