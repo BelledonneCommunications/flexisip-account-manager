@@ -627,16 +627,15 @@ class ApiAccountTest extends TestCase
         Space::factory()->withRealm($realm)->create();
 
         $password = Password::factory()->create();
-        $password->account->activated = false;
         $password->account->generateUserApiKey();
+        $password->account->activated = false;
         $password->account->save();
 
-        /**
-         * Public information
-         */
-        $this->get($this->route . '/' . $password->account->identifier . '/info')
+        $this->keyAuthenticated($password->account)
+            ->get($this->route . '/me')
             ->assertOk()
             ->assertJson([
+                'username' => $password->account->username,
                 'activated' => false,
                 'realm' => $realm
             ]);
@@ -644,9 +643,6 @@ class ApiAccountTest extends TestCase
         $password->account->activated = true;
         $password->account->save();
 
-        /**
-         * Retrieve the authenticated account
-         */
         $this->keyAuthenticated($password->account)
             ->get($this->route . '/me')
             ->assertOk()
@@ -656,16 +652,10 @@ class ApiAccountTest extends TestCase
                 'realm' => $realm
             ]);
 
-        /**
-         * Retrieve the authenticated account
-         */
         $this->keyAuthenticated($password->account)
             ->delete($this->route . '/me')
             ->assertOk();
 
-        /**
-         * Check again
-         */
         $this->get($this->route . '/' . $password->account->identifier . '/info')
             ->assertStatus(404);
     }

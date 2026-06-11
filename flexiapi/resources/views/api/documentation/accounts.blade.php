@@ -17,12 +17,6 @@ JSON parameters:
 * `account_creation_token` the unique `account_creation_token`
 * `dtmf_protocol` optional, values must be `sipinfo`, `sipmessage` or `rfc2833`
 
-### `GET /accounts/{sip}/info`
-<span class="badge badge-success">Public</span>
-
-Retrieve public information about the account.
-Return `404` if the account doesn't exists.
-
 ### `GET /accounts/me/api_key/{auth_token}`
 <span class="badge badge-success">Public</span>
 

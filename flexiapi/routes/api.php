@@ -69,8 +69,6 @@ Route::post('account_creation_tokens/using-account-creation-request-token', [Cre
 Route::post('accounts/with-account-creation-token', [AccountController::class, 'store']);
 Route::post('account_recovery_tokens/send-by-push', [RecoveryTokenController::class, 'sendByPush']);
 
-Route::get('accounts/{sip}/info', [AccountController::class, 'info']);
-
 Route::post('accounts/auth_token', [AuthTokenController::class, 'store']);
 
 Route::get('accounts/me/api_key/{auth_token}', [ApiKeyController::class, 'generateFromToken'])->middleware(AddQueuedCookiesToResponse::class);

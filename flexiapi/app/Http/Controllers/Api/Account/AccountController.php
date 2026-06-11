@@ -30,19 +30,6 @@ use App\Services\AccountService;
 class AccountController extends Controller
 {
     /**
-     * Public information on a specific account
-     */
-    public function info(Request $request, string $sip)
-    {
-        $account = Account::sip($sip)->firstOrFail();
-
-        return \response()->json([
-            'activated' => $account->activated,
-            'realm' => $account->realm
-        ]);
-    }
-
-    /**
      * Get services credentials
      */
     public function turnService(Request $request)

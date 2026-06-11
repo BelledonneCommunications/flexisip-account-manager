@@ -35,6 +35,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
     - `ACCOUNT_AUTHENTICATION_BEARER`, it is now generated directly from the Space configuration
 - **Remove the custom_theme feature**
 - **Environment**: Removed the global `ACCOUNT_EMAIL_UNIQUE` variable from `.env` and `.env.example`.
+- **Remove the GET /accounts/{sip}/info endpoint**, not used anymore and bringing security issues
 
 ## [2.0]
 
