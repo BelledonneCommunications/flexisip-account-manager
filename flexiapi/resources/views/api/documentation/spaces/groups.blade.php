@@ -17,18 +17,39 @@ Create a group.
 
 JSON parameters:
 
-* `username` **required**, HTTP address of the server
-* `strategy` **required**, in `parallel`, `sequential`, `round_robin`, `svi`
+* `name` **required**, Group name
+* `username` **required**, Username of the group's SIP address
+* `strategy` **required**, The routing strategy for the group. Must be one of :
+    - `ring-all`, 
+    - `sequential`, 
+    - `round_robin`
 
-### `PUT /spaces/{domain}/groups/{id}`
+### `PATCH /spaces/{domain}/groups/{id}`
 <span class="badge badge-warning">Admin</span>
 
-TODO
+Edit an existing group
+
+* `name`, Group name
+* `strategy`, The routing strategy for the group. Must be one of :
+    - `ring-all`, 
+    - `sequential`, 
+    - `round_robin`
 
 ### `DELETE /spaces/{domain}/groups/{id}`
 <span class="badge badge-warning">Admin</span>
 
 Delete a specific group
+
+### `POST /spaces/{domain}/groups/{id}/accounts/{account_id}`
+<span class="badge badge-warning">Admin</span>
+
+Add a specific account to a group
+
+### `DELETE /spaces/{domain}/groups/{id}/accounts/{account_id}`
+<span class="badge badge-warning">Admin</span>
+
+Delete a specific account from a group
+
 
 ## 👾👥📤 Spaces External Groups
 

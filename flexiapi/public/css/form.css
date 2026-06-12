@@ -117,6 +117,11 @@ form div.oppose {
     justify-content: right;
 }
 
+form div.center-flex {
+    display: flex; 
+    align-items: center;
+}
+
 form div .btn,
 form div .chip {
     display: inline-block;
