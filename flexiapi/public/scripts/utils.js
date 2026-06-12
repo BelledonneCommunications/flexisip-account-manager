@@ -101,6 +101,7 @@ var ListToggle = {
 
     refreshCounters: function () {
         document.querySelectorAll('span.list_toggle').forEach(counter => {
+            console.log(counter.innerHTML = Utils.getStorageList(counter.dataset.listId).length)
             counter.innerHTML = Utils.getStorageList(counter.dataset.listId).length;
         });
     }

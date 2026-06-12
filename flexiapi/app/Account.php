@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Carbon\Carbon;
 use Awobaz\Compoships\Compoships;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
@@ -143,6 +144,11 @@ class Account extends Authenticatable
     public function callForwardings()
     {
         return $this->hasMany(CallForwarding::class)->latest();
+    }
+
+    public function groups(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class);
     }
 
     public function getCallForwardingsDefaultAttribute()

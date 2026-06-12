@@ -59,6 +59,7 @@ use App\Http\Controllers\Admin\Space\CardDavServerController;
 use App\Http\Controllers\Admin\Space\ContactsListContactController;
 use App\Http\Controllers\Admin\Space\ContactsListController;
 use App\Http\Controllers\Admin\Space\EmailServerController;
+use App\Http\Controllers\Admin\Space\GroupController;
 use App\Http\Controllers\Admin\Space\SSOServerController;
 use App\Http\Controllers\Admin\SpaceController;
 use App\Http\Controllers\Admin\StatisticsController;
@@ -225,6 +226,22 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
                     Route::post('search', 'search')->name('search');
                     Route::post('/', 'store')->name('store');
                     Route::delete('/', 'destroy')->name('destroy');
+                });
+            });
+
+            Route::name('groups.')->prefix('{space}/groups')->controller(GroupController::class)->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('create', 'create')->name('create');
+                Route::post('/', 'store')->name('store');
+                Route::get('{group}/edit', 'edit')->name('edit');
+                Route::put('{group}', 'update')->name('update');
+                Route::get('{group}/delete', 'delete')->name('delete');
+                Route::delete('{group}', 'destroy')->name('destroy');
+
+                Route::name('accounts.')->prefix('{group}/accounts')->controller(GroupController::class)->group(function () {
+                    Route::get('/', 'add')->name('add');
+                    Route::post('/', 'attach')->name('attach');
+                    Route::delete('/', 'detach')->name('detach');
                 });
             });
         });
