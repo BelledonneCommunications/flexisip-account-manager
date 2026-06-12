@@ -51,6 +51,7 @@ use App\Http\Controllers\Api\Admin\PhoneCountryController as AdminPhoneCountryCo
 use App\Http\Controllers\Api\Admin\Space\CardDavServerController;
 use App\Http\Controllers\Api\Admin\Space\ContactsListController;
 use App\Http\Controllers\Api\Admin\Space\EmailServerController;
+use App\Http\Controllers\Api\Admin\Space\GroupController;
 use App\Http\Controllers\Api\Admin\SpaceController;
 use App\Http\Controllers\Api\Admin\StatisticsCallController as AdminStatisticsCallController;
 use App\Http\Controllers\Api\Admin\VcardsStorageController as AdminVcardsStorageController;
@@ -192,6 +193,12 @@ Route::group(['middleware' => ['auth.key', 'auth.admin']], function () {
     Route::prefix('contacts_lists')->controller(ContactsListController::class)->group(function () {
         Route::post('{id}/contacts/{contacts_id}', 'contactAdd');
         Route::delete('{id}/contacts/{contacts_id}', 'contactRemove');
+    });
+
+    Route::apiResource('spaces/{domain}/groups', GroupController::class);
+    Route::prefix('spaces/{domain}/groups/{group}')->controller(GroupController::class)->group(function () {
+        Route::post('accounts/{account_id}', 'attach');
+        Route::delete('accounts/{account_id}', 'detach');
     });
 
     Route::prefix('accounts/{id}/dictionary')->controller(DictionaryController::class)->group(function () {
