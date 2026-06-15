@@ -126,6 +126,15 @@ class ApiVoicemailTest extends TestCase
         $this->keyAuthenticated($account)
             ->json('POST', $this->uploadRoute . $uuid, [
                 'file' => UploadedFile::fake()->image('photo.jpg')
+            ])->assertForbidden();
+
+        // Only admins can upload files for now
+        $account->admin = true;
+        $account->save();
+
+        $this->keyAuthenticated($account)
+            ->json('POST', $this->uploadRoute . $uuid, [
+                'file' => UploadedFile::fake()->image('photo.jpg')
             ])->assertJsonValidationErrors(['file']);
 
         $this->keyAuthenticated($account)

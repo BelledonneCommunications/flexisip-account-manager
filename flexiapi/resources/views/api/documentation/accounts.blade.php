@@ -24,13 +24,10 @@ Generate and retrieve a fresh API Key from an `auth_token`. The `auth_token` mus
 
 Return `404` if the token is invalid or not attached.
 
-This endpoint is also setting the API Key as a Cookie.
-
 ### `GET /accounts/me/api_key`
 <span class="badge badge-info">User</span>
 
 Generate and retrieve a fresh API Key.
-This endpoint is also setting the API Key as a Cookie.
 
 ### `GET /accounts/me`
 <span class="badge badge-info">User</span>

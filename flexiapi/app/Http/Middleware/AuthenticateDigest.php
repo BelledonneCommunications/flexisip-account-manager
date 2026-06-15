@@ -21,8 +21,6 @@
 namespace App\Http\Middleware;
 
 use App\Account;
-use App\ApiKey;
-use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
@@ -30,34 +28,12 @@ use Illuminate\Http\Request;
 use Closure;
 use Validator;
 
-class AuthenticateDigestOrKey
+class AuthenticateDigest
 {
     public function handle(Request $request, Closure $next)
     {
-        if (($request->server('SSL_CLIENT_CERT') || $request->bearerToken()) && Auth::check()) {
+        if ($request->header('x-api-key') || ($request->server('SSL_CLIENT_CERT') || $request->bearerToken()) && Auth::check()) {
             return $next($request);
-        }
-
-        // Key authentication
-        if ($request->header('x-api-key') || $request->cookie('x-api-key')) {
-            $apiKey = ApiKey::with([
-                'account' => function ($query) {
-                    $query->withoutGlobalScopes();
-                }
-            ])->where('key', $request->header('x-api-key') ?? $request->cookie('x-api-key'))->first();
-
-            if ($apiKey && ($apiKey->ip == null || $apiKey->ip == $request->ip())) {
-                $apiKey->last_used_at = Carbon::now();
-                $apiKey->requests = $apiKey->requests + 1;
-                $apiKey->save();
-
-                Auth::login($apiKey->account);
-                $response = $next($request);
-
-                return $response;
-            }
-
-            return $this->generateUnauthorizedResponse(null, 'Invalid API Key');
         }
 
         if (empty($request->header('From'))) {

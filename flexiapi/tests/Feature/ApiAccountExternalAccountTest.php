@@ -59,7 +59,7 @@ class ApiAccountExternalAccountTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/external/')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'username' => $username,
             ]);
@@ -73,7 +73,7 @@ class ApiAccountExternalAccountTest extends TestCase
                 'username' => $username . '2',
                 'domain' => 'bar.dev',
                 'protocol' => 'UDP'
-            ])->assertStatus(200);
+            ])->assertOk();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . '/external/', [
@@ -85,14 +85,14 @@ class ApiAccountExternalAccountTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/external/')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'username' => $username . '2',
             ]);
 
         $this->keyAuthenticated($admin)
             ->delete($this->route . '/' . $account->id . '/external')
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/external/')

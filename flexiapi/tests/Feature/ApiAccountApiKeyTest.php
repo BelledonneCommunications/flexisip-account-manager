@@ -42,7 +42,7 @@ class ApiAccountApiKeyTest extends TestCase
         // Get the API Key using the DIGEST method
         $password->account->refresh();
 
-        $response1->assertStatus(200)
+        $response1->assertOk()
                   ->assertSee($password->account->apiKey->key)
                   ->assertPlainCookie('x-api-key', $password->account->apiKey->key);
 
@@ -52,7 +52,7 @@ class ApiAccountApiKeyTest extends TestCase
 
         $password->account->refresh();
 
-        $response2->assertStatus(200)
+        $response2->assertOk()
                   ->assertSee($password->account->apiKey->key)
                   ->assertPlainCookie('x-api-key', $password->account->apiKey->key);
     }
@@ -64,18 +64,18 @@ class ApiAccountApiKeyTest extends TestCase
 
         $this->keyAuthenticated($account)
             ->json($this->method, '/api/accounts/me')
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($account)
             ->json($this->method, '/api/accounts/me')
-            ->assertStatus(200);
+            ->assertOk();
 
         // Bypass the JWT middleware
         config()->set('app.account_authentication_bearer', 'fake-bearer');
 
         $this->keyAuthenticated($account)
             ->json($this->method, '/api/accounts/me')
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->assertDatabaseHas('api_keys', [
             'account_id' => $account->id,
@@ -112,7 +112,7 @@ class ApiAccountApiKeyTest extends TestCase
 
         $this->keyAuthenticated($password->account)
             ->json($this->method, '/api/accounts/auth_token/' . $authToken . '/attach')
-            ->assertStatus(200);
+            ->assertOk();
 
         // Re-attach
         $this->keyAuthenticated($password->account)
@@ -126,7 +126,7 @@ class ApiAccountApiKeyTest extends TestCase
 
         // Retrieve an API key from the attached auth_token
         $response = $this->json($this->method, $this->route . '/' . $authToken)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'api_key' => true
             ]);
@@ -140,7 +140,7 @@ class ApiAccountApiKeyTest extends TestCase
         // Check the if the API key can be used for the account
         $response = $this->withHeaders(['x-api-key' => $apiKey])
             ->json($this->method, '/api/accounts/me')
-            ->assertStatus(200);
+            ->assertOk();
 
         // Try with a wrong From
         $response = $this->withHeaders([
@@ -148,7 +148,7 @@ class ApiAccountApiKeyTest extends TestCase
                 'From' => 'sip:baduser@server.tld'
             ])
             ->json($this->method, '/api/accounts/me')
-            ->assertStatus(200);
+            ->assertOk();
 
         // Check if the account was correctly attached
         $this->assertEquals($response->json('email'), $password->account->email);

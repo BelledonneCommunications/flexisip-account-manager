@@ -46,7 +46,7 @@ class ApiAccountMessageTest extends TestCase
                 'to' => 'username@sip.linphone.org',
                 'body' => 'Message content'
             ])
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson(function (AssertableJson $json) {
                 $json->has('id');
             });

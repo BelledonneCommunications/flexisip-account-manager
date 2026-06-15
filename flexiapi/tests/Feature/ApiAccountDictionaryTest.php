@@ -47,14 +47,14 @@ class ApiAccountDictionaryTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/dictionary/')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 $key => $value
             ]);
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson([
                 'dictionary' => [
                     $key => $value
@@ -63,13 +63,13 @@ class ApiAccountDictionaryTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/dictionary/' . $key)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson(['value' => $value]);
 
         // Test dictionary accessor
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/dictionary/' . $key)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJson(['value' => $account->dictionary->get($key)]);
 
         // Update
@@ -80,7 +80,7 @@ class ApiAccountDictionaryTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/dictionary/')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertExactJson([
                 $key => $newValue
             ]);
@@ -93,7 +93,7 @@ class ApiAccountDictionaryTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/dictionary/')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertExactJson([
                 $key => $newValue,
                 $secondKey => $newValue
@@ -102,11 +102,11 @@ class ApiAccountDictionaryTest extends TestCase
         // Delete
         $this->keyAuthenticated($admin)
             ->delete($this->route . '/' . $account->id . '/dictionary/' . $key)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/dictionary/')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertExactJson([
                 $secondKey => $newValue
             ]);
@@ -124,7 +124,7 @@ class ApiAccountDictionaryTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/dictionary/')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertExactJson([
                 $key => $value,
                 $secondKey => $newValue
@@ -132,11 +132,11 @@ class ApiAccountDictionaryTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->delete($this->route . '/' . $account->id . '/dictionary/')
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/dictionary/')
-            ->assertStatus(200)
+            ->assertOk()
             ->assertExactJson([]);
     }
 }

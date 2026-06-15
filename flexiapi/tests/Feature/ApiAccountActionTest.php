@@ -87,7 +87,7 @@ class ApiAccountActionTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $password->account->id)
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJsonPath('actions', []);
     }
 
@@ -110,7 +110,7 @@ class ApiAccountActionTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->delete($this->route . '/' . $password->account->id . '/actions/' . $accountAction->id)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->assertEquals(0, AccountAction::count());
     }
@@ -137,7 +137,7 @@ class ApiAccountActionTest extends TestCase
                 'key' => '123',
                 'code' => 'abc'
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $password->account->id . '/actions')

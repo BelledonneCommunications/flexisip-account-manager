@@ -89,7 +89,7 @@ class ApiAccountTypeTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->delete($this->route . '/' . $accountType->id)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->assertEquals(0, AccountType::count());
     }
@@ -112,7 +112,7 @@ class ApiAccountTypeTest extends TestCase
             ->json('PUT', $this->route . '/' . $accountType->id, [
                 'key' => 'door',
             ])
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->get($this->route)
@@ -143,7 +143,7 @@ class ApiAccountTypeTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->json($this->method, '/api/accounts/' . $password->account->id . '/types/' . $accountType->id)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, '/api/accounts/' . $password->account->id . '/types/' . $accountType->id)
@@ -163,7 +163,7 @@ class ApiAccountTypeTest extends TestCase
         // Remove
         $this->keyAuthenticated($admin)
             ->delete('/api/accounts/' . $password->account->id . '/types/' . $accountType->id)
-            ->assertStatus(200);
+            ->assertOk();
 
         $this->assertEquals(0, DB::table('account_account_type')->count());
 

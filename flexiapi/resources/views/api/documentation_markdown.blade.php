@@ -61,7 +61,7 @@ Will return a JSON message with:
 ## File Upload
 
 ### `POST /files/{uuid}`
-<span class="badge badge-info">User</span>
+<span class="badge badge-warning">Admin</span>
 
 Upload a file to a previously created slot. This endpoint will directly be returned when creating the upload slot in the `upload_url` parameter.
 
