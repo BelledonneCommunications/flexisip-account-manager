@@ -43,8 +43,8 @@ class StatisticsSeeder extends Seeder
         Account::factory(10)
             ->hasStatisticsFromMessages(20)
             ->hasStatisticsToMessageDevices(20)
-            ->hasStatisticsFromCalls(20)
-            ->hasStatisticsToCalls(20)
+            ->has(StatisticsCall::factory()->count(20)->hasDevices(2), 'statisticsFromCalls')
+            ->has(StatisticsCall::factory()->count(20)->hasDevices(2), 'statisticsToCalls')
             ->create();
     }
 }

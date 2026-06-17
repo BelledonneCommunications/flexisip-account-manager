@@ -65,6 +65,18 @@ body {
     --color-purple: rgb(151, 71, 255);
 }
 
+.color.orange {
+    color: var(--color-orange);
+}
+
+.color.green {
+    color: var(--color-green);
+}
+
+.color.red {
+    color: var(--danger);
+}
+
 #wizard h3 {
     margin-bottom: 3rem;
 }

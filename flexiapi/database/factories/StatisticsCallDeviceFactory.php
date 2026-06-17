@@ -20,23 +20,28 @@
 
 namespace Database\Factories;
 
+use App\InviteTerminatedState;
+use App\StatisticsCall;
 use DateInterval;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Awobaz\Compoships\Database\Eloquent\Factories\ComposhipsFactory;
 
-class StatisticsCallFactory extends Factory
+class StatisticsCallDeviceFactory extends Factory
 {
+    use ComposhipsFactory;
+
     public function definition(): array
     {
-        $initiatedAt = $this->faker->dateTimeBetween('-1 year');
+        $rangAt = $this->faker->dateTimeBetween('-1 year');
 
         return [
-            'id' => $this->faker->uuid(),
-            'from_username' => $this->faker->userName(),
-            'from_domain' => $this->faker->domainName(),
-            'to_username' => $this->faker->userName(),
-            'to_domain' => $this->faker->domainName(),
-            'initiated_at' => $initiatedAt,
-            'ended_at' => $this->faker->dateTimeBetween($initiatedAt, (clone $initiatedAt)->add(new DateInterval("PT1H"))),
+            'call_id' => StatisticsCall::factory(),
+            'device_id' => $this->faker->uuid(),
+            'rang_at' => $rangAt,
+            'invite_terminated_at' => $this->faker->dateTimeBetween($rangAt, (clone $rangAt)->add(new DateInterval("PT1H"))),
+            'invite_terminated_state' => InviteTerminatedState::values()[
+                array_rand(InviteTerminatedState::values())
+            ],
         ];
     }
 }

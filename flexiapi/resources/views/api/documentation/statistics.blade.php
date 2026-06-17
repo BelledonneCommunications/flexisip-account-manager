@@ -55,7 +55,7 @@ JSON parameters:
 * `rang_at` format ISO8601, when the device rang
 * `invite_terminated`
   * `at` format ISO8601, when the invitation ended
-  * `state` the termination state
+  * `state` the termination state, must be in `error`, `declined`, `canceled`, `accepted_elsewhere`, `declined_elsewhere`, `accepted`
 
 ### `PATCH /statistics/calls/{call_id}`
 <span class="badge badge-warning">Admin</span>
