@@ -573,8 +573,7 @@ class Account extends Authenticatable
 
     public function updatePassword(string $newPassword, ?string $algorithm = null)
     {
-        $algorithm = $algorithm ?? config('app.account_default_password_algorithm');
-
+        $algorithm = $algorithm ?? Space::where('domain', $this->domain)->first()->account_default_password_algorithm->value;
         $this->passwords()->delete();
 
         $password = new Password;

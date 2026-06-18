@@ -24,6 +24,9 @@ use App\Account;
 use App\Space;
 use Tests\TestCase;
 
+use function PHPUnit\Framework\assertEquals;
+use function PHPUnit\Framework\assertNotEquals;
+
 class ApiSpaceTest extends TestCase
 {
     protected $method = 'POST';
@@ -197,5 +200,47 @@ class ApiSpaceTest extends TestCase
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])->assertStatus(403);
+    }
+
+    public function testHashAlgorithmChange()
+    {
+        $admin = Account::factory()->superAdmin()->create();
+        $admin->generateUserApiKey();
+
+        $domain = fake()->domainName();
+
+        $this->keyAuthenticated($admin)
+            ->json($this->method, $this->route, [
+                'name' => 'test',
+                'domain' => $domain,
+                'host' => $domain,
+                'account_default_password_algorithm' => 'SHA-257',
+
+            ])->assertStatus(422);
+
+        $this->keyAuthenticated($admin)
+            ->json($this->method, $this->route, [
+                'name' => 'test',
+                'domain' => $domain,
+                'host' => $domain,
+                'account_default_password_algorithm' => 'SHA-256',
+
+            ])->assertStatus(201);
+
+        $space = Space::where('domain', $domain)->firstOrFail();
+        $account = Account::factory()->fromSpace($space)->create();
+        $account->updatePassword(fake()->password(), null);
+        assertEquals($space->account_default_password_algorithm->value, $account->passwords->first()->algorithm);
+
+        $space->account_default_password_algorithm = 'MD5';
+        $space->save();
+
+        assertNotEquals($space->account_default_password_algorithm->value, $account->passwords->first()->algorithm);
+
+        $account->updatePassword(fake()->password(), null);
+        $account->refresh();
+        assertEquals($space->account_default_password_algorithm->value, $account->passwords->first()->algorithm);
+
+
     }
 }

@@ -24,11 +24,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Space\Create;
 use App\Http\Requests\Space\AdministrationUpdate;
 use App\Space;
+use App\PasswordAlgorithm;
 use App\Rules\Ini;
 use App\Rules\Domain;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rules\Enum;
 
 class SpaceController extends Controller
 {
@@ -60,9 +62,9 @@ class SpaceController extends Controller
 
     public function store(Create $request)
     {
-        $fullHost = empty($request->get('host'))
+        $fullHost = empty($request->input('host'))
             ? config('app.root_host')
-            : $request->get('host') . '.' . config('app.root_host');
+            : $request->input('host') . '.' . config('app.root_host');
 
         $request->merge(['full_host' => $fullHost]);
         $request->validate([
@@ -71,10 +73,11 @@ class SpaceController extends Controller
         ]);
 
         $space = new Space;
-        $space->name = $request->get('name');
-        $space->domain = $request->get('domain');
-        $space->host = $request->get('full_host');
-        $space->account_realm = $request->get('account_realm');
+        $space->name = $request->input('name');
+        $space->domain = $request->input('domain');
+        $space->host = $request->input('full_host');
+        $space->account_realm = $request->input('account_realm');
+        $space->account_default_password_algorithm = $request->input('account_default_password_algorithm');
         $space->save();
 
         return redirect()->route('admin.spaces.index');
@@ -115,11 +118,13 @@ class SpaceController extends Controller
 
     public function configurationUpdate(Request $request, Space $space)
     {
+
         $request->validate([
             'newsletter_registration_address' => 'nullable|email',
             'custom_provisioning_entries' => ['nullable', new Ini(Space::FORBIDDEN_KEYS)],
             'logo' => ['nullable', 'image', 'mimes:png', 'max:2048'],
             'theme_hue' => 'nullable|integer|min:0|max:360',
+            'account_default_password_algorithm' => ['required', 'string', new Enum(PasswordAlgorithm::class)],
         ]);
 
         if ($request->logo_delete == 1 && $space->logo) {
@@ -137,23 +142,24 @@ class SpaceController extends Controller
             $space->logo = $filename;
         }
 
-        $space->theme_hue = $request->get('theme_hue');
-        $space->copyright_text = $request->get('copyright_text');
-        $space->intro_registration_text = $request->get('intro_registration_text');
-        $space->newsletter_registration_address = $request->get('newsletter_registration_address');
-        $space->account_proxy_registrar_address = $request->get('account_proxy_registrar_address');
+        $space->theme_hue = $request->input('theme_hue');
+        $space->copyright_text = $request->input('copyright_text');
+        $space->intro_registration_text = $request->input('intro_registration_text');
+        $space->newsletter_registration_address = $request->input('newsletter_registration_address');
+        $space->account_proxy_registrar_address = $request->input('account_proxy_registrar_address');
 
         if ($space->accounts()->count() == 0) {
-            $space->account_realm = $request->get('account_realm');
+            $space->account_realm = $request->input('account_realm');
         }
 
-        $space->custom_provisioning_entries = $request->get('custom_provisioning_entries');
+        $space->custom_provisioning_entries = $request->input('custom_provisioning_entries');
         $space->custom_provisioning_overwrite_all = getRequestBoolean($request, 'custom_provisioning_overwrite_all');
         $space->provisioning_use_linphone_provisioning_header = getRequestBoolean($request, 'provisioning_use_linphone_provisioning_header');
 
         $space->public_registration = getRequestBoolean($request, 'public_registration');
         $space->phone_registration = getRequestBoolean($request, 'phone_registration');
         $space->intercom_features = getRequestBoolean($request, 'intercom_features');
+        $space->account_default_password_algorithm = $request->input('account_default_password_algorithm');
 
         $space->save();
 
@@ -169,20 +175,21 @@ class SpaceController extends Controller
 
     public function administrationUpdate(AdministrationUpdate $request, Space $space)
     {
-        if ($request->get('max_accounts') > 0) {
+        if ($request->input('max_accounts') > 0) {
             $request->validate([
                 'max_accounts' => 'integer|min:' . $space->accounts()->count()
             ]);
         }
 
-        $space->name = $request->get('name');
+        $space->name = $request->input('name');
         $space->super = getRequestBoolean($request, 'super');
         $space->unique_email = getRequestBoolean($request, 'unique_email');
-        $space->max_accounts = $request->get('max_accounts');
-        $space->expire_at = $request->get('expire_at');
+        $space->max_accounts = $request->input('max_accounts');
+        $space->expire_at = $request->input('expire_at');
         $space->web_panel = getRequestBoolean($request, 'web_panel');
         $space->carddav_user_credentials = getRequestBoolean($request, 'carddav_user_credentials');
         $space->client_certificate_authentication = getRequestBoolean($request, 'client_certificate_authentication');
+        $space->account_default_password_algorithm = $request->input('account_default_password_algorithm');
         $space->save();
 
         return redirect()->route('admin.spaces.show', $space);
@@ -198,7 +205,7 @@ class SpaceController extends Controller
         $space->disable_meetings_feature = getRequestBoolean($request, 'disable_meetings_feature', reversed: true);
         $space->disable_broadcast_feature = getRequestBoolean($request, 'disable_broadcast_feature', reversed: true);
         $space->hide_settings = getRequestBoolean($request, 'hide_settings', reversed: true);
-        $space->max_account = $request->get('max_account', 0);
+        $space->max_account = $request->input('max_account', 0);
         $space->hide_account_settings = getRequestBoolean($request, 'hide_account_settings', reversed: true);
         $space->disable_call_recordings_feature = getRequestBoolean($request, 'disable_call_recordings_feature', reversed: true);
         $space->only_display_sip_uri_username = getRequestBoolean($request, 'only_display_sip_uri_username');

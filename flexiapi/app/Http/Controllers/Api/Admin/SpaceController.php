@@ -20,6 +20,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\PasswordAlgorithm;
 use App\Space;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Space\Create;
@@ -27,6 +28,7 @@ use App\Rules\Domain;
 use App\Rules\Ini;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
 
 class SpaceController extends Controller
 {
@@ -46,19 +48,20 @@ class SpaceController extends Controller
         ]);
 
         $space = new Space;
-        $space->account_proxy_registrar_address = $request->get('account_proxy_registrar_address');
-        $space->account_realm = $request->get('account_realm');
-        $space->copyright_text = $request->get('copyright_text');
-        $space->custom_provisioning_entries = $request->get('custom_provisioning_entries');
-        $space->domain = $request->get('domain');
-        $space->expire_at = $request->get('expire_at');
-        $space->host = $request->get('host');
-        $space->intro_registration_text = $request->get('intro_registration_text');
-        $space->max_account = $request->get('max_account', 0);
-        $space->max_accounts = $request->get('max_accounts', 0);
-        $space->name = $request->get('name');
-        $space->newsletter_registration_address = $request->get('newsletter_registration_address');
-        $space->theme_hue = $request->get('theme_hue');
+        $space->account_proxy_registrar_address = $request->input('account_proxy_registrar_address');
+        $space->account_realm = $request->input('account_realm');
+        $space->copyright_text = $request->input('copyright_text');
+        $space->custom_provisioning_entries = $request->input('custom_provisioning_entries');
+        $space->domain = $request->input('domain');
+        $space->expire_at = $request->input('expire_at');
+        $space->host = $request->input('host');
+        $space->intro_registration_text = $request->input('intro_registration_text');
+        $space->max_account = $request->input('max_account', 0);
+        $space->max_accounts = $request->input('max_accounts', 0);
+        $space->name = $request->input('name');
+        $space->newsletter_registration_address = $request->input('newsletter_registration_address');
+        $space->theme_hue = $request->input('theme_hue');
+        $space->account_default_password_algorithm = $request->input('account_default_password_algorithm', 'SHA-256');
         $this->setRequestBoolean($request, $space, 'assistant_disable_qr_code');
         $this->setRequestBoolean($request, $space, 'assistant_hide_create_account');
         $this->setRequestBoolean($request, $space, 'assistant_hide_third_party_account');
@@ -127,11 +130,12 @@ class SpaceController extends Controller
             'super' => 'required|boolean',
             'web_panel' => 'required|boolean',
             'theme_hue' => 'nullable|integer|min:0|max:360',
+            'account_default_password_algorithm' => ['required', 'string', new Enum(PasswordAlgorithm::class)]
         ]);
 
         $space = Space::where('domain', $domain)->firstOrFail();
 
-        if ($request->get('max_accounts') > 0) {
+        if ($request->input('max_accounts') > 0) {
             $request->validate([
                 'max_accounts' => 'integer|min:' . $space->accounts()->count()
             ]);
@@ -142,36 +146,37 @@ class SpaceController extends Controller
             'host' => ['required', Rule::unique('spaces')->ignore($space->id)]
         ]);
 
-        $space->name = $request->get('name');
-        $space->host = $request->get('host');
-        $space->super = $request->get('super');
-        $space->account_proxy_registrar_address = $request->get('account_proxy_registrar_address');
-        $space->account_realm = $request->get('account_realm');
-        $space->assistant_disable_qr_code = $request->get('assistant_disable_qr_code');
-        $space->assistant_hide_create_account = $request->get('assistant_hide_create_account');
-        $space->assistant_hide_third_party_account = $request->get('assistant_hide_third_party_account');
-        $space->copyright_text = $request->get('copyright_text');
-        $space->carddav_user_credentials = $request->get('carddav_user_credentials');
-        $space->custom_provisioning_entries = $request->get('custom_provisioning_entries');
-        $space->custom_provisioning_overwrite_all = $request->get('custom_provisioning_overwrite_all');
-        $space->disable_broadcast_feature = $request->get('disable_broadcast_feature');
-        $space->disable_call_recordings_feature = $request->get('disable_call_recordings_feature');
-        $space->disable_chat_feature = $request->get('disable_chat_feature');
-        $space->disable_meetings_feature = $request->get('disable_meetings_feature');
-        $space->expire_at = $request->get('expire_at');
-        $space->hide_account_settings = $request->get('hide_account_settings');
-        $space->hide_settings = $request->get('hide_settings');
-        $space->intercom_features = $request->get('intercom_features');
-        $space->intro_registration_text = $request->get('intro_registration_text');
-        $space->max_account = $request->get('max_account', 0);
-        $space->max_accounts = $request->get('max_accounts', 0);
-        $space->newsletter_registration_address = $request->get('newsletter_registration_address');
-        $space->only_display_sip_uri_username = $request->get('only_display_sip_uri_username');
-        $space->phone_registration = $request->get('phone_registration');
-        $space->provisioning_use_linphone_provisioning_header = $request->get('provisioning_use_linphone_provisioning_header');
-        $space->public_registration = $request->get('public_registration');
-        $space->web_panel = $request->get('web_panel');
-        $space->theme_hue = $request->get('theme_hue');
+        $space->name = $request->input('name');
+        $space->host = $request->input('host');
+        $space->super = $request->input('super');
+        $space->account_proxy_registrar_address = $request->input('account_proxy_registrar_address');
+        $space->account_realm = $request->input('account_realm');
+        $space->assistant_disable_qr_code = $request->input('assistant_disable_qr_code');
+        $space->assistant_hide_create_account = $request->input('assistant_hide_create_account');
+        $space->assistant_hide_third_party_account = $request->input('assistant_hide_third_party_account');
+        $space->copyright_text = $request->input('copyright_text');
+        $space->carddav_user_credentials = $request->input('carddav_user_credentials');
+        $space->custom_provisioning_entries = $request->input('custom_provisioning_entries');
+        $space->custom_provisioning_overwrite_all = $request->input('custom_provisioning_overwrite_all');
+        $space->disable_broadcast_feature = $request->input('disable_broadcast_feature');
+        $space->disable_call_recordings_feature = $request->input('disable_call_recordings_feature');
+        $space->disable_chat_feature = $request->input('disable_chat_feature');
+        $space->disable_meetings_feature = $request->input('disable_meetings_feature');
+        $space->expire_at = $request->input('expire_at');
+        $space->hide_account_settings = $request->input('hide_account_settings');
+        $space->hide_settings = $request->input('hide_settings');
+        $space->intercom_features = $request->input('intercom_features');
+        $space->intro_registration_text = $request->input('intro_registration_text');
+        $space->max_account = $request->input('max_account', 0);
+        $space->max_accounts = $request->input('max_accounts', 0);
+        $space->newsletter_registration_address = $request->input('newsletter_registration_address');
+        $space->only_display_sip_uri_username = $request->input('only_display_sip_uri_username');
+        $space->phone_registration = $request->input('phone_registration');
+        $space->provisioning_use_linphone_provisioning_header = $request->input('provisioning_use_linphone_provisioning_header');
+        $space->public_registration = $request->input('public_registration');
+        $space->web_panel = $request->input('web_panel');
+        $space->theme_hue = $request->input('theme_hue');
+        $space->account_default_password_algorithm = $request->input('account_default_password_algorithm');
 
         $space->save();
 
@@ -181,7 +186,7 @@ class SpaceController extends Controller
     private function setRequestBoolean(Request $request, Space $space, string $key)
     {
         if ($request->has($key)) {
-            $space->$key = (bool)$request->get($key);
+            $space->$key = (bool)$request->input($key);
         }
     }
 

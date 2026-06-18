@@ -142,6 +142,18 @@
             ])
         </div>
 
+        <h3 class="large">{{ __('Security') }}</h3>
+        <div class="select">
+            <select name="account_default_password_algorithm">
+                @foreach (App\PasswordAlgorithm::cases() as $algorithm)
+                    <option value="{{ $algorithm }}" @if ($space->account_default_password_algorithm == $algorithm->value) selected="selected" @endif>
+                        {{ $algorithm }}</option>
+                @endforeach
+            </select>
+            <label for="domain">{{ __('Password Hashing Algorithm') }}</label>
+            <span class="supporting">{{ __('Note: changing the password hashing algorithm will not affect existing passwords. It will only apply to new passwords created after this change.') }}</span>
+        </div>
+
         <div class="large">
             <input class="btn" type="submit" value="{{ __('Update') }}">
         </div>
