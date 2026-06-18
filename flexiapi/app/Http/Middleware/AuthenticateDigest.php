@@ -22,11 +22,13 @@ namespace App\Http\Middleware;
 
 use App\Account;
 use App\Opaque;
+use App\PasswordAlgorithm;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Closure;
+use Illuminate\Validation\Rules\Enum;
 use Validator;
 
 class AuthenticateDigest
@@ -87,7 +89,7 @@ class AuthenticateDigest
                 'cnonce' => 'required',
                 'algorithm' => [
                     'required',
-                    Rule::in(array_keys(passwordAlgorithms())),
+                    new Enum(PasswordAlgorithm::class),
                 ],
                 'username' => 'required|in:' . $username,
             ])->validate();
@@ -111,7 +113,7 @@ class AuthenticateDigest
                 return $this->generateUnauthorizedResponse($request, $account, 'Wrong algorithm');
             }
 
-            $hash = passwordAlgorithms()[$auth['algorithm']];
+            $hash = PasswordAlgorithm::from($auth['algorithm'])->hashFunction();
 
             // Hashing and checking
             $a1 = $password->algorithm == 'CLRTXT'
@@ -189,14 +191,14 @@ class AuthenticateDigest
 
         foreach ($account->passwords as $password) {
             if ($password->algorithm == 'CLRTXT') {
-                foreach (array_keys(passwordAlgorithms()) as $algorithm) {
+                foreach (PasswordAlgorithm::cases() as $algorithm) {
                     array_push(
                         $headers,
-                        $this->generateAuthHeader($account->resolvedRealm, $algorithm, $opaque)
+                        $this->generateAuthHeader($account->resolvedRealm, $algorithm->value, $opaque)
                     );
                 }
                 break;
-            } elseif (\in_array($password->algorithm, array_keys(passwordAlgorithms()))) {
+            } elseif (\in_array($password->algorithm, array_column(PasswordAlgorithm::cases(), 'value'))) {
                 array_push(
                     $headers,
                     $this->generateAuthHeader($account->resolvedRealm, $password->algorithm, $opaque)

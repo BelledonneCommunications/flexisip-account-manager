@@ -180,7 +180,7 @@ class ImportController extends Controller
             $this->errors['Those emails numbers already exists'] = $existingEmails->join(', ', ' and ');
         }
 
-        if ($emails = $lines->pluck('email')->filter(fn (string $value) => $value != '')->duplicates()) {
+        if ($emails = $lines->pluck('email')->filter(fn(string $value) => $value != '')->duplicates()) {
             if ($emails->isNotEmpty()) {
                 $this->errors['Those emails are declared several times'] = $emails->join(', ', ' and ');
             }

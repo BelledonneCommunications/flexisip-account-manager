@@ -33,7 +33,7 @@ class Create extends FormRequest
             'name' => 'required|unique:spaces',
             'domain' => ['required', 'unique:spaces', new Domain],
             'account_realm' => ['nullable', new Domain],
-            'account_default_password_algorithm' => ['string', new Enum(PasswordAlgorithm::class)]
+            'account_default_password_algorithm' => [new Enum(PasswordAlgorithm::class)]
         ];
     }
 }

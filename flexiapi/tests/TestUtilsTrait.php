@@ -22,6 +22,7 @@ namespace Tests;
 
 use App\Password;
 use App\Account;
+use App\PasswordAlgorithm;
 
 trait TestUtilsTrait
 {
@@ -87,7 +88,7 @@ trait TestUtilsTrait
             $extractedChallenge['qop'],
             $response,
             $extractedChallenge['opaque'],
-            array_flip(passwordAlgorithms())[$hash],
+            PasswordAlgorithm::fromHashFunction($hash)->value,
         );
 
         return 'Digest ' . $digest;

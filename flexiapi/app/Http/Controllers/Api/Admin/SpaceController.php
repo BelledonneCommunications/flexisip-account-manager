@@ -130,7 +130,7 @@ class SpaceController extends Controller
             'super' => 'required|boolean',
             'web_panel' => 'required|boolean',
             'theme_hue' => 'nullable|integer|min:0|max:360',
-            'account_default_password_algorithm' => ['required', 'string', new Enum(PasswordAlgorithm::class)]
+            'account_default_password_algorithm' => ['required', new Enum(PasswordAlgorithm::class)]
         ]);
 
         $space = Space::where('domain', $domain)->firstOrFail();

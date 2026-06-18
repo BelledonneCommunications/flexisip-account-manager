@@ -24,7 +24,8 @@ use App\Http\Requests\Account\Create\Request;
 use App\Http\Requests\Api as RequestsApi;
 use App\Http\Requests\AsAdmin;
 use App\Rules\IsNotPhoneNumber;
-use App\Rules\PasswordAlgorithm;
+use App\PasswordAlgorithm;
+use Illuminate\Validation\Rules\Enum;
 
 class AsAdminRequest extends Request
 {
@@ -35,7 +36,7 @@ class AsAdminRequest extends Request
     {
         $rules = parent::rules();
 
-        $rules['algorithm'] = ['required', new PasswordAlgorithm];
+        $rules['algorithm'] = ['required', new Enum(PasswordAlgorithm::class)];
         $rules['admin'] = 'boolean|nullable';
         $rules['activated'] = 'boolean|nullable';
 

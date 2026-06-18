@@ -22,7 +22,6 @@ namespace App\Http\Controllers\Account;
 
 use App\Account;
 use App\AccountRecoveryToken;
-use App\RecoveryCode;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\AccountService;

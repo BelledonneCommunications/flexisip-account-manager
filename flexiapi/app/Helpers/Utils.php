@@ -20,6 +20,7 @@
 
 use App\Account;
 use App\Space;
+use App\PasswordAlgorithm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -30,14 +31,6 @@ use League\CommonMark\Extension\TableOfContents\TableOfContentsExtension;
 function space(): ?Space
 {
     return is_object(request()->space) ? request()->space : null;
-}
-
-function passwordAlgorithms(): array
-{
-    return [
-        'MD5' => 'md5',
-        'SHA-256' => 'sha256',
-    ];
 }
 
 function generateNonce(): string
@@ -54,7 +47,7 @@ function getRequestBoolean(Request $request, string $key, bool $reversed = false
 
 function bchash(string $username, string $domain, string $password, string $algorithm = 'MD5'): string
 {
-    return hash(passwordAlgorithms()[$algorithm], $username . ':' . $domain . ':' . $password);
+    return hash(PasswordAlgorithm::from($algorithm)->hashFunction(), $username . ':' . $domain . ':' . $password);
 }
 
 function generatePin(): int
