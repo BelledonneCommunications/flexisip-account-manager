@@ -28,6 +28,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
+enum PasswordAlgorithm: string
+{
+    case Sha256 = 'SHA-256';
+    case MD5 = 'MD5';
+}
+
 class Space extends Model
 {
     use HasFactory;
@@ -69,6 +75,7 @@ class Space extends Model
         'hide_settings' => 'boolean',
         'only_display_sip_uri_username' => 'boolean',
         'super' => 'boolean',
+        'account_default_password_algorithm' => PasswordAlgorithm::class,
     ];
 
     public const HOST_REGEX = '[\w\-]+';
