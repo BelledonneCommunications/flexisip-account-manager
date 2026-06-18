@@ -124,7 +124,7 @@ class SpaceController extends Controller
             'custom_provisioning_entries' => ['nullable', new Ini(Space::FORBIDDEN_KEYS)],
             'logo' => ['nullable', 'image', 'mimes:png', 'max:2048'],
             'theme_hue' => 'nullable|integer|min:0|max:360',
-            'account_default_password_algorithm' => ['required', 'string', new Enum(PasswordAlgorithm::class)],
+            'account_default_password_algorithm' => ['required', new Enum(PasswordAlgorithm::class)],
         ]);
 
         if ($request->logo_delete == 1 && $space->logo) {

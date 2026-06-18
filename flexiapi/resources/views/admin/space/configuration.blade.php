@@ -146,8 +146,9 @@
         <div class="select">
             <select name="account_default_password_algorithm">
                 @foreach (App\PasswordAlgorithm::cases() as $algorithm)
-                    <option value="{{ $algorithm }}" @if ($space->account_default_password_algorithm == $algorithm->value) selected="selected" @endif>
-                        {{ $algorithm }}</option>
+                    <option value="{{ $algorithm->value }}" @if ($space->account_default_password_algorithm == $algorithm) selected="selected" @endif>
+                        {{ $algorithm }}
+                    </option>
                 @endforeach
             </select>
             <label for="domain">{{ __('Password Hashing Algorithm') }}</label>

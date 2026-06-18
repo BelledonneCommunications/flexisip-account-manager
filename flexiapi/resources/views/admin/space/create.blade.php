@@ -52,7 +52,7 @@
         <div class="select">
             <select name="account_default_password_algorithm">
                 @foreach (App\PasswordAlgorithm::cases() as $algorithm)
-                    <option value="{{ $algorithm }}" @selected($algorithm === 'SHA-256')>
+                    <option value="{{ $algorithm }}" @selected($algorithm === App\PasswordAlgorithm::DEFAULT)>
                         {{ $algorithm }}</option>
                 @endforeach
             </select>

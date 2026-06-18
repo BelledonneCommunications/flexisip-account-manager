@@ -23,8 +23,9 @@ namespace App\Http\Requests\Account\Update\Api;
 use App\Http\Requests\Account\Update\Request as UpdateRequest;
 use App\Http\Requests\Api as RequestsApi;
 use App\Http\Requests\AsAdmin;
+use App\PasswordAlgorithm;
 use App\Rules\IsNotPhoneNumber;
-use App\Rules\PasswordAlgorithm;
+use Illuminate\Validation\Rules\Enum;
 
 class AsAdminRequest extends UpdateRequest
 {
@@ -35,7 +36,7 @@ class AsAdminRequest extends UpdateRequest
     {
         $rules = parent::rules();
 
-        $rules['algorithm'] = ['required', new PasswordAlgorithm];
+        $rules['algorithm'] = ['required', new Enum(PasswordAlgorithm::class)];
         $rules['admin'] = 'boolean|nullable';
         $rules['activated'] = 'boolean|nullable';
 

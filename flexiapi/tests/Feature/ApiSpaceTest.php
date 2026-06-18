@@ -21,11 +21,11 @@
 namespace Tests\Feature;
 
 use App\Account;
+use App\PasswordAlgorithm;
 use App\Space;
 use Tests\TestCase;
 
 use function PHPUnit\Framework\assertEquals;
-use function PHPUnit\Framework\assertNotEquals;
 
 class ApiSpaceTest extends TestCase
 {
@@ -84,7 +84,7 @@ class ApiSpaceTest extends TestCase
         $accountRealm = 'account.realm';
 
         $response = $this->keyAuthenticated($admin)
-            -> json($this->method, $this->route, [
+            ->json($this->method, $this->route, [
                 'name' => $thirdDomain,
                 'domain' => $thirdDomain,
                 'host' => $thirdDomain,
@@ -96,7 +96,7 @@ class ApiSpaceTest extends TestCase
             ]);
 
         $this->keyAuthenticated($admin)
-            -> json($this->method, $this->route, [
+            ->json($this->method, $this->route, [
                 'name' => 'Another Domain',
                 'domain' => 'baddomain',
                 'host' => $thirdDomain,
@@ -104,7 +104,7 @@ class ApiSpaceTest extends TestCase
             ->assertJsonValidationErrors(['domain']);
 
         $this->keyAuthenticated($admin)
-            -> json($this->method, $this->route, [
+            ->json($this->method, $this->route, [
                 'name' => 'Another Domain',
                 'domain' => 'another.domain',
                 'host' => 'another.host',
@@ -177,7 +177,7 @@ class ApiSpaceTest extends TestCase
             ])->assertStatus(403);
 
         $this->keyAuthenticated($admin)
-            -> json($this->method, $this->route, [
+            ->json($this->method, $this->route, [
                 'name' => $domain,
                 'domain' => $domain,
                 'host' => $domain,
@@ -207,40 +207,39 @@ class ApiSpaceTest extends TestCase
         $admin = Account::factory()->superAdmin()->create();
         $admin->generateUserApiKey();
 
-        $domain = fake()->domainName();
+        $response = $this->keyAuthenticated($admin)
+            ->json('GET', $this->route . '/' . $admin->domain)
+            ->assertJson(['account_default_password_algorithm' => PasswordAlgorithm::SHA256->value])
+            ->assertOk();
+
+        $json = $response->json();
+        $json['account_default_password_algorithm'] = 'WRONGEHASH';
+
+        // Switch to MD5
+
+        $admin->updatePassword(fake()->password());
+        $currentHash = $admin->passwords()->first()->algorithm;
+
+        assertEquals($currentHash, PasswordAlgorithm::SHA256->value);
 
         $this->keyAuthenticated($admin)
-            ->json($this->method, $this->route, [
-                'name' => 'test',
-                'domain' => $domain,
-                'host' => $domain,
-                'account_default_password_algorithm' => 'SHA-257',
+            ->json('PUT', $this->route . '/' . $admin->domain, $json)
+            ->assertJsonValidationErrorFor('account_default_password_algorithm');
 
-            ])->assertStatus(422);
+        $json['account_default_password_algorithm'] = PasswordAlgorithm::MD5->value;
 
         $this->keyAuthenticated($admin)
-            ->json($this->method, $this->route, [
-                'name' => 'test',
-                'domain' => $domain,
-                'host' => $domain,
-                'account_default_password_algorithm' => 'SHA-256',
+            ->json('PUT', $this->route . '/' . $admin->domain, $json)
+            ->assertOk();
 
-            ])->assertStatus(201);
+        $response = $this->keyAuthenticated($admin)
+            ->json('GET', $this->route . '/' . $admin->domain)
+            ->assertJson(['account_default_password_algorithm' => PasswordAlgorithm::MD5->value])
+            ->assertOk();
 
-        $space = Space::where('domain', $domain)->firstOrFail();
-        $account = Account::factory()->fromSpace($space)->create();
-        $account->updatePassword(fake()->password(), null);
-        assertEquals($space->account_default_password_algorithm->value, $account->passwords->first()->algorithm);
+        $admin->updatePassword(fake()->password());
+        $newHash = $admin->passwords()->first()->algorithm;
 
-        $space->account_default_password_algorithm = 'MD5';
-        $space->save();
-
-        assertNotEquals($space->account_default_password_algorithm->value, $account->passwords->first()->algorithm);
-
-        $account->updatePassword(fake()->password(), null);
-        $account->refresh();
-        assertEquals($space->account_default_password_algorithm->value, $account->passwords->first()->algorithm);
-
-
+        assertEquals($newHash, PasswordAlgorithm::MD5->value);
     }
 }
