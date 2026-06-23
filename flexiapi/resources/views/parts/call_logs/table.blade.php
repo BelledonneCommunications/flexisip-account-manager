@@ -4,12 +4,13 @@
             <th>{{ __('From') }}</th>
             <th>{{ __('To') }}</th>
             <th><i class="ph ph-clock"></i></th>
+            <th>{{ __('State') }}</th>
         </tr>
     </thead>
     <tbody>
         @if ($calls->isEmpty())
             <tr class="empty">
-                <td colspan="3">{{ __('Empty') }}</td>
+                <td colspan="4">{{ __('Empty') }}</td>
             </tr>
         @endif
         @foreach ($calls as $call)
@@ -28,11 +29,17 @@
                         {{ $call->to }}
                     @endif
                 </td>
-                <td class="line">
-                    {{ $call->initiated_at }}
+                <td class="line" title="{{ $call->initiated_at }}">
                     @if ($call->ended_at)
-                        ({{ $call->ended_at->diffForHumans($call->initiated_at, true) }})
+                        {{ $call->ended_at->diffForHumans($call->initiated_at, true) }}
+
+                        -
                     @endif
+
+                    {{ $call->initiated_at->diffForHumans() }}
+                </td>
+                <td class="{{ $call->state->cssClass() }}">
+                    <i class="ph ph-{{ $call->state->icon() }}"></i> {{ $call->state->label() }}
                 </td>
             </tr>
         @endforeach

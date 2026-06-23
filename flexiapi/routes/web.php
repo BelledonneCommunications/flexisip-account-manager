@@ -34,6 +34,7 @@ use App\Http\Controllers\Account\PhoneController;
 use App\Http\Controllers\Account\ProvisioningController;
 use App\Http\Controllers\Account\RecoveryController;
 use App\Http\Controllers\Account\RegisterController;
+use App\Http\Controllers\Account\StatisticsController as AccountStatisticsController;
 use App\Http\Controllers\Account\VcardsStorageController;
 use App\Http\Controllers\Account\WizardController;
 use App\Http\Controllers\Admin\Account\AccountTypeController;
@@ -157,6 +158,11 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
                 Route::get('validate', 'validateChange')->name('phone.validate');
                 Route::post('/', 'store')->name('phone.update');
             });
+        });
+
+        Route::name('statistics.')->prefix('statistics')->controller(AccountStatisticsController::class)->group(function () {
+            Route::post('call_logs', 'editCallLogs')->name('edit_call_logs');
+            Route::get('call_logs', 'showCallLogs')->name('show_call_logs');
         });
 
         Route::name('device.')->prefix('devices')->controller(DeviceController::class)->group(function () {

@@ -35,9 +35,9 @@ class StatisticsController extends Controller
 
         return redirect()->route('admin.account.statistics.show', [
             'account' => $account,
-            'from' => $request->get('from'),
-            'to' => $request->get('to'),
-            'by' => $request->get('by'),
+            'from' => $request->input('from'),
+            'to' => $request->input('to'),
+            'by' => $request->input('by'),
         ]);
     }
 
@@ -83,13 +83,13 @@ class StatisticsController extends Controller
     public function editCallLogs(Request $request, int $accountId)
     {
         return redirect()->route('admin.account.statistics.show_call_logs', [
-            'from' => $request->get('from'),
-            'to' => $request->get('to'),
+            'from' => $request->input('from'),
+            'to' => $request->input('to'),
             'account' => $accountId
         ]);
     }
 
-    public function showCallLogs(Request $request, int $accountId)
+    public function showCallLogs(Request $request, int $accountId, ?bool $adminView = true)
     {
         $account = Account::findOrFail($accountId);
         $toQuery = DB::table('statistics_calls')
@@ -98,14 +98,14 @@ class StatisticsController extends Controller
         $calls = StatisticsCall::where('from_domain', $account->domain)
             ->where('from_username', $account->username);
 
-        if ($request->get('to')) {
-            $toQuery = $toQuery->where('initiated_at', '<=', $request->get('to'));
-            $calls = $calls->where('initiated_at', '<=', $request->get('to'));
+        if ($request->input('to')) {
+            $toQuery = $toQuery->where('initiated_at', '<=', $request->input('to'));
+            $calls = $calls->where('initiated_at', '<=', $request->input('to'));
         }
 
-        if ($request->get('from')) {
-            $toQuery = $toQuery->where('initiated_at', '>=', $request->get('from'));
-            $calls = $calls->where('initiated_at', '>=', $request->get('from'));
+        if ($request->input('from')) {
+            $toQuery = $toQuery->where('initiated_at', '>=', $request->input('from'));
+            $calls = $calls->where('initiated_at', '>=', $request->input('from'));
         }
 
         $calls = $calls->union($toQuery);
@@ -114,6 +114,7 @@ class StatisticsController extends Controller
             'account' => $account,
             'calls' => $calls->orderBy('initiated_at', 'desc')->paginate(30),
             'request' => $request,
+            'adminView' => $adminView
         ]);
     }
 }

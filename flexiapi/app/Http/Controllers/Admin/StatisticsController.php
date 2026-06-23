@@ -41,12 +41,12 @@ class StatisticsController extends Controller
     public function edit(Request $request)
     {
         return redirect()->route('admin.statistics.show', [
-            'from' => $request->get('from'),
-            'to' => $request->get('to'),
-            'by' => $request->get('by'),
-            'type' => $request->get('type'),
-            'domain' => $request->get('domain'),
-            'contacts_list' => $request->get('contacts_list'),
+            'from' => $request->input('from'),
+            'to' => $request->input('to'),
+            'by' => $request->input('by'),
+            'type' => $request->input('type'),
+            'domain' => $request->input('domain'),
+            'contacts_list' => $request->input('contacts_list'),
         ]);
     }
 
@@ -58,11 +58,11 @@ class StatisticsController extends Controller
             'by' => 'in:day,week,month,year',
         ]);
 
-        $graph = new StatisticsGraphFactory($request, type: $type, domain: $request->get('domain'));
+        $graph = new StatisticsGraphFactory($request, type: $type, domain: $request->input('domain'));
         $config = $graph->getConfig();
         $domains = collect();
 
-        if ($request->get('export', false)) {
+        if ($request->input('export', false)) {
             return $graph->export();
         }
 
@@ -94,10 +94,10 @@ class StatisticsController extends Controller
     public function editCallLogs(Request $request)
     {
         return redirect()->route('admin.statistics.show_call_logs', [
-            'from' => $request->get('from'),
-            'to' => $request->get('to'),
-            'domain' => $request->get('domain'),
-            'contacts_list' => $request->get('contacts_list'),
+            'from' => $request->input('from'),
+            'to' => $request->input('to'),
+            'domain' => $request->input('domain'),
+            'contacts_list' => $request->input('contacts_list'),
         ]);
     }
 
@@ -107,7 +107,7 @@ class StatisticsController extends Controller
         $toQuery = StatisticsCall::query();
 
         $domain = $request->user()->superAdmin
-            ? $request->get('domain')
+            ? $request->input('domain')
             : $request->space->domain;
 
         if ($domain) {
@@ -115,19 +115,19 @@ class StatisticsController extends Controller
             $toQuery->where('from_domain', $domain);
         }
 
-        if ($request->get('to')) {
-            $fromQuery->where('initiated_at', '<=', $request->get('to'));
-            $toQuery->where('initiated_at', '<=', $request->get('to'));
+        if ($request->input('to')) {
+            $fromQuery->where('initiated_at', '<=', $request->input('to'));
+            $toQuery->where('initiated_at', '<=', $request->input('to'));
         }
 
-        if ($request->get('from')) {
-            $fromQuery->where('initiated_at', '>=', $request->get('from'));
-            $toQuery->where('initiated_at', '>=', $request->get('from'));
+        if ($request->input('from')) {
+            $fromQuery->where('initiated_at', '>=', $request->input('from'));
+            $toQuery->where('initiated_at', '>=', $request->input('from'));
         }
 
         if ($request->has('contacts_list')) {
-            $fromQuery->fromByContactsList($request->get('contacts_list'));
-            $toQuery->toByContactsList($request->get('contacts_list'));
+            $fromQuery->fromByContactsList($request->input('contacts_list'));
+            $toQuery->toByContactsList($request->input('contacts_list'));
         }
 
         $calls = $fromQuery->union($toQuery);

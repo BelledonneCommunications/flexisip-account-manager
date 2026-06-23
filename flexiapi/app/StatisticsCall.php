@@ -32,6 +32,7 @@ class StatisticsCall extends Model
 
     public $incrementing = false;
     protected $casts = ['initiated_at' => 'datetime', 'ended_at' => 'datetime'];
+    protected $with = ['devices'];
     protected $keyType = 'string';
 
     public function devices()
@@ -57,6 +58,37 @@ class StatisticsCall extends Model
     public function getToAttribute()
     {
         return $this->attributes['to_username'] . '@' . $this->attributes['to_domain'];
+    }
+
+    public function getStateAttribute(): InviteTerminatedState
+    {
+        if (
+            $this->devices->contains(function ($device) {
+                return $device->invite_terminated_state == InviteTerminatedState::Accepted
+                    || $device->invite_terminated_state == InviteTerminatedState::AcceptedElsewhere;
+            })
+        ) {
+            return InviteTerminatedState::Accepted;
+        }
+
+        if (
+            $this->devices->contains(function ($device) {
+                return $device->invite_terminated_state == InviteTerminatedState::Declined
+                    || $device->invite_terminated_state == InviteTerminatedState::DeclinedElsewhere;
+            })
+        ) {
+            return InviteTerminatedState::Declined;
+        }
+
+        if (
+            $this->devices->contains(function ($device) {
+                return $device->invite_terminated_state == InviteTerminatedState::Canceled;
+            })
+        ) {
+            return InviteTerminatedState::Canceled;
+        }
+
+        return InviteTerminatedState::Error;
     }
 
     public function scopeToByContactsList(Builder $query, int $contactsListId)

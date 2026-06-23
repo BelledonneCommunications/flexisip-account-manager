@@ -45,6 +45,15 @@
                 {{ __('Manage') }}
             </a>
         </p>
+
+        <p>
+            <i class="ph ph-phone"></i>
+            {{ __('Calls logs') }}
+            <a href="{{ route('account.statistics.show_call_logs') }}">
+                {{ __('View') }}
+            </a>
+        </p>
+
         <p>
             <i class="ph ph-lock"></i>
             {{ __('Password') }}

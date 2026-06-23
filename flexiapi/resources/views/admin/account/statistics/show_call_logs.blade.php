@@ -1,19 +1,32 @@
 @extends('layouts.main')
 
-@section('breadcrumb')
-    @include('admin.parts.breadcrumb.accounts.show', ['account' => $account])
-    <li class="breadcrumb-item active" aria-current="page">{{ __('Calls logs') }}</li>
-@endsection
+@if ($adminView)
+    @section('breadcrumb')
+        @include('admin.parts.breadcrumb.accounts.show', ['account' => $account])
+        <li class="breadcrumb-item active" aria-current="page">{{ __('Calls logs') }}</li>
+    @endsection
+@endif
 
 @section('content')
-    <header>
-        <h1><i class="ph ph-users"></i> {{ $account->identifier }}</h1>
-    </header>
-
-    @include('admin.account.parts.tabs')
+    @if ($adminView)
+        <header>
+            <h1><i class="ph ph-users"></i> {{ $account->identifier }}</h1>
+        </header>
+        @include('admin.account.parts.tabs')
+    @else
+        <header>
+            <h1><i class="ph ph-phone"></i> {{ __('Calls logs') }}</h1>
+        </header>
+    @endif
 
     <div>
-        <form class="inline" method="POST" action="{{ route('admin.account.statistics.edit_call_logs', $account->id) }}" accept-charset="UTF-8">
+        <form class="inline" method="POST"
+            @if ($adminView)
+                action="{{ route('admin.account.statistics.edit_call_logs', $account->id) }}"
+            @else
+                action="{{ route('account.statistics.edit_call_logs') }}"
+            @endif
+            accept-charset="UTF-8">
             @csrf
             @method('post')
 
@@ -27,7 +40,12 @@
             </div>
 
             <div class="oppose">
-                <a class="btn secondary" href="{{ route('admin.account.statistics.show_call_logs', $account->id) }}">{{ __('Reset') }}</a>
+                <a class="btn secondary"
+                    @if ($adminView)
+                        href="{{ route('admin.account.statistics.show_call_logs', $account->id) }}"
+                    @else
+                        href="{{ route('account.statistics.show_call_logs') }}"
+                    @endif>{{ __('Reset') }}</a>
             </div>
         </form>
     </div>

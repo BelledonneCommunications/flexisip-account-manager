@@ -229,6 +229,16 @@ class ApiStatisticsTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->json('PATCH', $this->routeCalls . '/' . $id . '/devices/' . $device, [
+                'rang_at' => $newRangAt,
+                'invite_terminated' => [
+                    'at' => $this->faker->iso8601(),
+                    'state' => 'whatever'
+                ]
+            ])
+            ->assertJsonValidationErrors(['invite_terminated.state']);
+
+        $this->keyAuthenticated($admin)
+            ->json('PATCH', $this->routeCalls . '/' . $id . '/devices/' . $device, [
                 'invite_terminated' => [
                     'state' => 'declined'
                 ]
