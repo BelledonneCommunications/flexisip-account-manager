@@ -20,8 +20,12 @@
 
 namespace Tests\Feature;
 
+use App\Account;
+use App\RecoveryCode;
+use App\Services\AccountService;
 use App\Space;
 use App\AccountRecoveryToken;
+use Crypt;
 use Tests\TestCase;
 
 class ApiAccountRecoveryTokenTest extends TestCase
@@ -96,5 +100,42 @@ class ApiAccountRecoveryTokenTest extends TestCase
 
         $this->get($this->setSpaceOnRoute($this->space, route('account.recovery.show.phone', ['account_recovery_token' => $token->token])))
             ->assertStatus(404);
+    }
+
+    public function testAttemptsRecoveryPage()
+    {
+        $phone = '+33667676767';
+        $account = Account::factory()->admin()->state([
+            'phone' => $phone,
+        ])->create();
+
+        $accountRecoveryToken = AccountRecoveryToken::factory()->create([
+            'pn_provider' => $this->pnProvider,
+            'pn_param' => $this->pnParam,
+            'pn_prid' => $this->pnPrid,
+        ]);
+
+        $account = (new AccountService)->recoverByPhone($account, $account->phone, $accountRecoveryToken);
+
+        for ($i = 1; $i <= RecoveryCode::MAX_ATTEMPTS; $i++) {
+            $this->post(route('account.recovery.confirm'), [
+                'account_id' => Crypt::encryptString($account->id),
+                'method' => 'phone',
+                'number_1' => 1,
+                'number_2' => 2,
+                'number_3' => 3,
+                'number_4' => 4,
+            ])->assertOk()
+                ->assertSeeText((RecoveryCode::MAX_ATTEMPTS - $i) . ' attempts left');
+        }
+
+        $this->post(route('account.recovery.confirm'), [
+            'account_id' => Crypt::encryptString($account->id),
+            'method' => 'phone',
+            'number_1' => 1,
+            'number_2' => 2,
+            'number_3' => 3,
+            'number_4' => 4,
+        ])->assertStatus(419);
     }
 }

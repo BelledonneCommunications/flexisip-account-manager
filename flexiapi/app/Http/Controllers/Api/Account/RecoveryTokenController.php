@@ -42,9 +42,9 @@ class RecoveryTokenController extends Controller
             'pn_prid' => [new PnPrid],
         ]);
 
-        $last = AccountRecoveryToken::where('pn_provider', $request->get('pn_provider'))
-            ->where('pn_param', $request->get('pn_param'))
-            ->where('pn_prid', $request->get('pn_prid'))
+        $last = AccountRecoveryToken::where('pn_provider', $request->input('pn_provider'))
+            ->where('pn_param', $request->input('pn_param'))
+            ->where('pn_prid', $request->input('pn_prid'))
             ->where('created_at', '>=', Carbon::now()->subMinutes(config('app.account_recovery_token_retry_minutes'))->toDateTimeString())
             ->where('used', true)
             ->latest()
@@ -57,9 +57,9 @@ class RecoveryTokenController extends Controller
 
         $token = new AccountRecoveryToken;
         $token->token = Str::random(WebAuthenticateController::$emailCodeSize);
-        $token->pn_provider = $request->get('pn_provider');
-        $token->pn_param = $request->get('pn_param');
-        $token->pn_prid = $request->get('pn_prid');
+        $token->pn_provider = $request->input('pn_provider');
+        $token->pn_param = $request->input('pn_param');
+        $token->pn_prid = $request->input('pn_prid');
         $token->fillRequestInfo($request);
 
         $fp = new FlexisipPusherConnector($token->pn_provider, $token->pn_param, $token->pn_prid);
