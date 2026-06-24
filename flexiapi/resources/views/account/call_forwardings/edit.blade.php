@@ -1,5 +1,5 @@
 <h3>
-    {{ __('Call Forwarding') }}
+    @if ($account->admin){{ __('Call Forwarding') }}@else{{ __('My Call Forwarding') }}@endif
 </h3>
 
 <dialog id="always_dialog" closedby="any">
