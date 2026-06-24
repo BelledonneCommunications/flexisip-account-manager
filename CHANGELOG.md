@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - **Per Space Custom SSO authentication flow**
 - **Space Administration**: Added a new toggle to enable/disable email uniqueness per space.
 - **Validation**: Added a safety check preventing the activation of email uniqueness if duplicate emails already exist within the space domain (includes a detailed error message listing the conflicting accounts).
+- **Recovery code attempts**: Recovery codes now have a maximum of 3 attempts before being discarded, to prevent brute force attack
 
 ### Changed
 

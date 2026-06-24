@@ -22,6 +22,7 @@ namespace App\Http\Controllers\Account;
 
 use App\Account;
 use App\AccountRecoveryToken;
+use App\RecoveryCode;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\AccountService;
@@ -44,10 +45,14 @@ class RecoveryController extends Controller
             ->where('used', false)
             ->firstOrFail();
 
+        if ($accountRecoveryToken->expired()) {
+            abort(419, 'Token expired');
+        }
+
         return view('account.recovery.show', [
             'method' => 'phone',
             'account_recovery_token' => $accountRecoveryToken->token,
-            'phone' => $request->get('phone'),
+            'phone' => $request->input('phone'),
             'domain' => resolveDomain($request)
         ]);
     }
@@ -57,55 +62,55 @@ class RecoveryController extends Controller
         $rules = [
             'email' => 'required_without:phone|email|exists:accounts,email',
             'phone' => 'required_without:email|starts_with:+',
-            'h-captcha-response'  => captchaConfigured() ? 'required_with:email|HCaptcha' : '',
+            'h-captcha-response' => captchaConfigured() ? 'required_with:email|HCaptcha' : '',
             'account_recovery_token' => 'required_with:phone',
         ];
 
         $account = null;
 
-        if ($request->get('email')) {
+        if ($request->input('email')) {
             if (space()->unique_email == false) {
                 $rules['username'] = 'required';
             }
 
             $request->validate($rules);
 
-            $account = Account::where('email', $request->get('email'));
+            $account = Account::where('email', $request->input('email'));
 
             /**
              * Because several accounts can have the same email
              */
             if (space()->unique_email == false) {
-                $account = $account->where('username', $request->get('username'));
+                $account = $account->where('username', $request->input('username'));
             }
 
             $account = $account->first();
 
             if (!$account) {
-                $account = Account::where('phone', $request->get('username'))
-                    ->where('email', $request->get('email'))
+                $account = Account::where('phone', $request->input('username'))
+                    ->where('email', $request->input('email'))
                     ->first();
             }
-        } elseif ($request->get('phone')) {
-            $account = Account::where('username', $request->get('phone'))->first();
+        } elseif ($request->input('phone')) {
+            $account = Account::where('username', $request->input('phone'))->first();
 
             if (!$account) {
-                $account = Account::where('phone', $request->get('phone'))->first();
+                $account = Account::where('phone', $request->input('phone'))->first();
             }
         }
 
         if (!$account) {
-            return redirect()->back()->withErrors(['identifier' => __("The account doesn't exists")]);
+            return redirect()->back()->withErrors(['identifier' => __('A recovery code was sent if the account exists')]);
         }
 
         if ($account->failedRecentRecovery()) {
             return redirect()->back()->withErrors(['code' => __('Account recovered recently, try again later')]);
         }
 
-        if ($request->get('email')) {
-            $account = (new AccountService)->recoverByEmail($account, $request->get('email'));
-        } elseif ($request->get('phone')) {
-            $accountRecoveryToken = AccountRecoveryToken::where('token', $request->get('account_recovery_token'))
+        if ($request->input('email')) {
+            $account = (new AccountService)->recoverByEmail($account, $request->input('email'));
+        } elseif ($request->input('phone')) {
+            $accountRecoveryToken = AccountRecoveryToken::where('token', $request->input('account_recovery_token'))
                 ->where('used', false)
                 ->first();
 
@@ -113,12 +118,13 @@ class RecoveryController extends Controller
                 abort(403, 'Wrong Account Recovery Token');
             }
 
-            $account = (new AccountService)->recoverByPhone($account, $request->get('phone'), $accountRecoveryToken);
+            $account = (new AccountService)->recoverByPhone($account, $request->input('phone'), $accountRecoveryToken);
         }
 
         return view('account.recovery.confirm', [
-            'method' => $request->get('phone') ? 'phone' : 'email',
-            'account_id' => Crypt::encryptString($account->id)
+            'method' => $request->input('phone') ? 'phone' : 'email',
+            'account_id' => Crypt::encryptString($account->id),
+            'code' => $account->currentRecoveryCode
         ]);
     }
 
@@ -133,23 +139,24 @@ class RecoveryController extends Controller
             'number_4' => 'required|digits:1'
         ]);
 
-        $code = $request->get('number_1') . $request->get('number_2') . $request->get('number_3') . $request->get('number_4');
+        $code = $request->input('number_1') . $request->input('number_2') . $request->input('number_3') . $request->input('number_4');
 
-        $account = Account::where('id', Crypt::decryptString($request->get('account_id')))->firstOrFail();
+        $account = Account::where('id', Crypt::decryptString($request->input('account_id')))->firstOrFail();
 
-        if ($account->currentRecoveryCode->expired()) {
-            return redirect()->route($request->get('method') == 'phone'
-                ? 'account.recovery.show.phone'
-                : 'account.recovery.show.email')->withErrors([
-                'code' => __('The code has expired')
-            ]);
+        $recoveryCode = $account->currentRecoveryCode;
+
+        if ($recoveryCode->expired() || $recoveryCode->attemptsLeft() == 0) {
+            abort(419, __('The code has expired'));
         }
 
-        if ($account->recovery_code != $code) {
-            return redirect()->route($request->get('method') == 'phone'
-                ? 'account.recovery.show.phone'
-                : 'account.recovery.show.email')->withErrors([
-                'code' => 'The code is not valid'
+        if ($recoveryCode->code != $code) {
+            $recoveryCode->attempts++;
+            $recoveryCode->save();
+
+            return view('account.recovery.confirm', [
+                'method' => $request->input('phone') ? 'phone' : 'email',
+                'account_id' => Crypt::encryptString($account->id),
+                'code' => $recoveryCode
             ]);
         }
 

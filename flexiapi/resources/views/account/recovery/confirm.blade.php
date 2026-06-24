@@ -5,8 +5,7 @@
 <section>
     <h1><i class="ph ph-user-circle"></i> {{ __('Account recovery') }}</h1>
     <form method="POST" action="{{ route('account.recovery.confirm') }}" accept-charset="UTF-8">
-@csrf
-
+        @csrf
         <p class="large">{{ __('Enter the code you received below') }}</p>
         <div class="large">
             <input oninput="digitFilled(this)" onfocus="this.value = ''" autofocus class="digit" name="number_1" type="number" min="0" max="9">
@@ -18,6 +17,9 @@
             <input name="account_id" type="hidden" value="{{ $account_id }}">
         </div>
         <div class="large">
+            <small class="error">
+                {{ __(':attempts attempts left', ['attempts' => $code->attemptsLeft()]) }}
+            </small>
             <input class="btn oppose" type="submit" value="{{ __('Login') }}">
         </div>
     </form>
