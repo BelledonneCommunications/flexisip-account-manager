@@ -4,7 +4,6 @@ use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\AuthenticateAdmin;
 use App\Http\Middleware\AuthenticateClientCertificate;
 use App\Http\Middleware\AuthenticateDigest;
-use App\Http\Middleware\AuthenticateDigestOrKey;
 use App\Http\Middleware\AuthenticateJWT;
 use App\Http\Middleware\AuthenticateKey;
 use App\Http\Middleware\AuthenticateSuperAdmin;

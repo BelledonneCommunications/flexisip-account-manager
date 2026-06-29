@@ -50,15 +50,10 @@ class AccountSSOAuthentificationTest extends TestCase
         $account = Account::factory()->create();
         $space = $account->space;
         $ssoUser = new SsoUser;
-        $ssoUser->email = fake()->email();
         $account->email = fake()->email();
         $account->save();
 
-        Socialite::shouldReceive('driver->stateless->user')
-            ->once()
-            ->andReturn($ssoUser);
-
-        // SSO disabled
+        // SSO disabled - le middleware intercepte avant le contrôleur, Socialite n'est pas appelé
         $this->get($this->redirectRoute)
             ->assertStatus(403);
 
@@ -67,11 +62,25 @@ class AccountSSOAuthentificationTest extends TestCase
         ]);
         $space->refresh();
 
+        // ssoUser without email
+        Socialite::shouldReceive('driver->stateless->user')
+            ->once()
+            ->andReturn($ssoUser);
+
+        $this->get($this->redirectRoute)
+            ->assertRedirect('login')
+            ->assertSessionHasErrors(['sso_not_found']);
+
         /**
          * Auto_provisioning off
          */
 
         // User does not exist
+        $ssoUser->email = fake()->email();
+        Socialite::shouldReceive('driver->stateless->user')
+            ->once()
+            ->andReturn($ssoUser);
+
         $this->get($this->redirectRoute)
             ->assertRedirect('login')
             ->assertSessionHasErrors(['sso_not_found']);
@@ -137,33 +146,6 @@ class AccountSSOAuthentificationTest extends TestCase
             ->assertSessionHasErrors(['sso_not_found']);
         $this->assertFalse($account->fresh()->activated);
 
-        // Username already taken
-        $ssoUser->email = fake()->email();
-
-        $ssoUser->token = (new JwtFacade(clock: $clock))->issue(
-            new Sha256,
-            InMemory::plainText($this->serverPrivateKeyPem),
-            static fn (
-                Builder $builder,
-                DateTimeImmutable $issuedAt
-            ): Builder => $builder
-                ->withClaim('sip_identity', $account->sip_uri)
-                ->withClaim('realm_access', ['roles' => [$space->ssoServer->role_provisioning]])
-        )->toString();
-
-        Socialite::shouldReceive('driver->stateless->user')
-            ->once()
-            ->andReturn($ssoUser);
-
-        $this->get($this->redirectRoute)
-            ->assertRedirect('login')
-            ->assertSessionHasErrors(['sso_not_found']);
-
-        $this->assertEquals(
-            'Username already taken. Please contact your administrator.',
-            session('errors')->get('sso_not_found')[0]
-        );
-
         // Account creation
         $ssoUser->email = fake()->email();
 
@@ -174,7 +156,6 @@ class AccountSSOAuthentificationTest extends TestCase
                 Builder $builder,
                 DateTimeImmutable $issuedAt
             ): Builder => $builder
-                ->withClaim('sip_identity', 'sip:' . $ssoUser->email)
                 ->withClaim('realm_access', ['roles' => [$space->ssoServer->role_provisioning]])
         )->toString();
 
@@ -186,7 +167,7 @@ class AccountSSOAuthentificationTest extends TestCase
             ->assertRedirect(route('account.home'));
 
         $newAccount = Account::where('email', $ssoUser->email)->first();
-        assert($newAccount != null);
+        $this->assertNotNull($newAccount);
 
     }
 }

@@ -54,7 +54,13 @@ body {
     --grey-8: rgb(45, 24, 30);
     --grey-9: rgb(0, 0, 0);
 
-    --danger: rgb(221, 95, 95);
+    --danger-1: rgb(254, 246, 246);
+    --danger-5: rgb(221, 95, 95);
+    --danger-6: rgb(189, 72, 82);
+
+    --warning-1: rgb(255, 253, 239);
+    --warning-5: rgb(255, 220, 46);
+    --warning-6: rgb(219, 184, 32);
 
     --color-orange: rgb(254, 94, 0);
     --color-grey: rgb(108, 122, 135);
@@ -74,7 +80,7 @@ body {
 }
 
 .color.red {
-    color: var(--danger);
+    color: var(--danger-5);
 }
 
 #wizard h3 {
@@ -1055,7 +1061,7 @@ small a {
 }
 
 small.error {
-    color: var(--danger);
+    color: var(--danger-5);
 }
 
 /** Errors box **/
@@ -1093,18 +1099,54 @@ span.line::before {
     background-image: linear-gradient(to right, var(--grey-3), transparent, var(--grey-3));
 }
 
+/* Tooltip */
 *:has(+i.tooltip) {
     display: inline-block;
 }
 
 i.tooltip {
-    vertical-align: center;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
     font-size: 2rem;
     margin-left: 1rem;
 }
 
+i.tooltip::before {
+    color: var(--grey-6);
+}
+
 i.tooltip:hover {
     cursor: pointer;
+}
+
+i.tooltip:hover::before {
+    color: var(--main-5);
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+.tooltiptext {
+    visibility: hidden;
+    width: 30rem;
+    font-size: 1.5rem;
+    font-family: 'Noto Sans', sans-serif;
+    background-color: white;
+    color: var(--second-6);
+    padding: 10px;
+    border-style: solid;
+    border-color: var(--main-5);
+    border: 1px solid var(--main-1);
+    border-left: 4px solid var(--main-5);
+    border-radius: 6px;
+    box-shadow: 4px 2px 22px -6px  var(--main-1);
+    position: absolute;
+    z-index: 1;
+    top: 125%;
+    left: 50%;
+    line-height: 1.5;
 }
 
 /* Dialogs */
@@ -1130,4 +1172,62 @@ dialog p {
 dialog::backdrop {
     background-color: black;
     opacity: 0.5;
+}
+
+/* Info Panel */
+.panel {
+    background-color: var(--grey-1);
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--main-1);
+    border-left: 4px solid var(--main-5);
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+    color: var(--main-5);
+}
+
+.panel i {
+    font-size:3rem;
+}
+
+.panel .text {
+    display: flex;
+    flex-direction: column;
+    color: var(--second-6);
+}
+
+.panel .text .title {
+    font-weight: 700;
+    font-size: 1.7rem;
+}
+
+.panel .text .description {
+    font-size: 1.5rem;
+}
+
+.panel.panel-danger {
+    background-color: var(--danger-1); 
+    border-color: var(--danger-5);
+    color: var(--danger-5);
+    margin-bottom: 2rem;
+}
+
+.panel.panel-danger .text {
+    color: var(--danger-6);
+}
+
+.panel.panel-warning {
+    background-color: var(--warning-1); 
+    border-color: var(--warning-5);
+    color: var(--warning-6);
+    margin-bottom: 2rem; 
+}
+
+.panel.panel-warning .text {
+    color: var(--warning-6);
 }

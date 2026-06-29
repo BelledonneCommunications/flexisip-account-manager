@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Space;
 
 use App\Space;
+use App\Account;
 use App\SpaceSsoServer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -10,10 +11,13 @@ use Illuminate\Support\Facades\DB;
 
 class SSOServerController extends Controller
 {
-    public function show(int $spaceId)
+    public function show(Space $space)
     {
         return view('admin.space.sso_server.show', [
-            'space' => Space::findOrFail($spaceId)
+            'space' => $space,
+            'accountWithoutEmail' => Account::whereNull('email')
+                ->where('domain', $space->domain)
+                ->count(),
         ]);
     }
 
@@ -44,25 +48,25 @@ class SSOServerController extends Controller
         if ($space->unique_email) {
             $ssoServer = $space->ssoServer ?: new SpaceSsoServer;
 
-            $ssoServer->server_url = $request->get('server_url');
-            $ssoServer->realm = $request->get('realm');
-            $ssoServer->sip_identifier = $request->get('sip_identifier');
-            $ssoServer->client_id = $request->get('client_id');
-            $ssoServer->client_secret = $request->get('client_secret');
+            $ssoServer->server_url = $request->input('server_url');
+            $ssoServer->realm = $request->input('realm');
+            $ssoServer->sip_identifier = $request->input('sip_identifier');
+            $ssoServer->client_id = $request->input('client_id');
+            $ssoServer->client_secret = $request->input('client_secret');
             $ssoServer->auto_provisioning = false;
             $ssoServer->space_id = $space->id;
 
             if ($request->boolean('auto_provisioning')) {
                 $ssoServer->auto_provisioning = true;
-                $ssoServer->role_provisioning = $request->get('role_provisioning');
+                $ssoServer->role_provisioning = $request->input('role_provisioning');
             }
 
             if ($ssoServer->refreshSSOCertificate()) {
                 $ssoServer->save();
             } else {
                 return redirect()->back()->withErrors([
-                    'public_key' => __('The public key cannot be refreshed')
-                ]);
+                    'public_key' => __('Unable to connect to the SSO server. Please verify the provided settings.')
+                ])->withInput();
             }
         }
 
