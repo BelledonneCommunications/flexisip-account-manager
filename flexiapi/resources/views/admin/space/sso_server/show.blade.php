@@ -17,6 +17,17 @@
     </header>
 
     @if ($space->unique_email)
+
+        @if($accountWithoutEmail > 0)
+            <div class="panel panel-warning">
+                <i class="ph ph-warning"></i>
+                <div class="text">
+                    <span class="title">{{ __('Accounts Missing Email Address') }}</span>
+                    <span class="description"><strong>{{ $accountWithoutEmail }}</strong> {{ __("accounts in this space don't have an email address set. Once SSO is enabled, these users won't be able to log in, since authentication is based on matching email addresses.") }}</span>
+                </div>
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('admin.spaces.sso.store', $space) }}" id="show" accept-charset="UTF-8">
         @csrf
         @method('post')
@@ -27,13 +38,13 @@
             @include('parts.errors', ['name' => 'server_url'])
         </div>
         <div>
-            <input placeholder="cogip" required="required" name="realm" type="text"
+            <input placeholder="flexiapi" required="required" name="realm" type="text"
                 value="{{ ($space->ssoServer?->realm) ?: old('realm') }}">
             <label for="realm">{{ __('Realm') }}</label>
             @include('parts.errors', ['name' => 'realm'])
         </div>
         <div>
-            <input placeholder="sip_identifier" name="sip_identifier" type="text" required="required"
+            <input placeholder="sip_identity" name="sip_identifier" type="text" required="required"
                 value="{{ ($space->ssoServer?->sip_identifier) ?: old('sip_identifier') }}">
             <label for="sip_identifier">{{ __('SIP Identifier') }}</label>
             @include('parts.errors', ['name' => 'sip_identifier'])
@@ -46,28 +57,27 @@
             @include('parts.errors', ['name' => 'client_id'])
         </div>
         <div>
-            <input placeholder="client_secret" name="client_secret" type="text" required="required"
-                value="{{ ($space->ssoServer?->client_secret) ?: old('client_secret') }}">
+            <input placeholder="client_secret" name="client_secret" type="text" value="{{ ($space->ssoServer?->client_secret) ?: old('client_secret') }}" required="required">
             <label for="client_secret">{{ __('Client Secret') }}</label>
             @include('parts.errors', ['name' => 'client_secret'])
         </div>
         <br>
         <div>
+            <br>
             @include('parts.form.toggle', [
                 'object' => $space->ssoServer ?? (object)['auto_provisioning' => false],
                 'key' => 'auto_provisioning',
                 'label' => __('Automatic user provisioning'),
+                'tooltiptext'=> __("Automatic user provisioning allows Keycloak users with the required role to be created automatically if they don't already exist. Their SIP username will be generated from their email; if it already exists, a number will be appended to make it unique."),
                 'attributes' => [
                     'class' => 'form-dependency',
                     'data-target' => '#role_provisioning',
                 ],
             ])
-            <span class="supporting">{{ __('Enable automatic user provisioning: new users with the required Keycloak role will be registered automatically on their first sign-in.') }}</span>
         </div>
         <div>
-            <input placeholder="role_provisioning" name="role_provisioning" type="text" required="required" id="role_provisioning"
-                value="{{ ($space->ssoServer?->role_provisioning) ?: old('role_provisioning') }}">
-            <label for="client_secret">{{ __('Role') }}</label>
+            <input placeholder="linphone" name="role_provisioning" type="text" id="role_provisioning" value="{{ ($space->ssoServer?->role_provisioning) ?: old('role_provisioning') }}">
+            <label for="role_provisioning">{{ __('Role') }}</label>
             @include('parts.errors', ['name' => 'role_provisioning'])
         </div>
     </form>
@@ -95,8 +105,13 @@
     <input form="show" class="btn" type="submit"
         value="@if ($space->id) {{ __('Update') }}@else{{ __('Create') }} @endif">
     @else
-        <h3>{{ __('SSO Activation Failed') }}</h3>
-        <p>{{ __('Email uniqueness is disabled. SSO authentication cannot be enabled without this option. Please contact your super-admin.') }}</p>
+        <div class="panel panel-danger">
+            <i class="ph ph-warning"></i>
+            <div class="text">
+                <span class="title">{{ __('Cannot Enable SSO — Email Uniqueness Required') }}</span>
+                <span class="description">{{ __("Email uniqueness is disabled. SSO authentication cannot be enabled without this option. Please contact your super-admin.") }}</span>
+            </div>
+        </div>
     @endif
 
 

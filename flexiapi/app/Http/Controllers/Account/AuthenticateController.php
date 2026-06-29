@@ -29,6 +29,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token\Parser;
 
@@ -130,7 +131,20 @@ class AuthenticateController extends Controller
 
     public function handleSsoRedirect(Request $request)
     {
-        $ssoUser = Socialite::driver('keycloak')->stateless()->user();
+        try {
+            $ssoUser = Socialite::driver('keycloak')->stateless()->user();
+        } catch (InvalidStateException $e) {
+            return redirect('login')->withErrors([
+                'sso_not_found' => __('SSO authentication failed') . ': ' . $e->getMessage()
+            ]);
+        }
+
+        if ($ssoUser->email == null) {
+            return redirect('login')->withErrors([
+                'sso_not_found' => __('No email address associated with your SSO account.') .
+                    ' ' . __('Please contact your administrator.')
+            ]);
+        }
 
         if (space()->ssoServer?->auto_provisioning) {
             $token = (new Parser(new JoseEncoder))->parse($ssoUser->token);
@@ -142,24 +156,34 @@ class AuthenticateController extends Controller
 
             if (!$hasRole) {
                 Account::where('email', $ssoUser->email)->update(['activated' => false]);
-                return redirect('login')->withErrors(['sso_not_found' => __('You don\'t have access to this app, contact your administrator')]);
+
+                return redirect('login')->withErrors([
+                    'sso_not_found' => __("You don't have access to this app.") .
+                        ' ' . __('Please contact your administrator.')
+                ]);
             }
 
-            $sip = parseSIP($token->claims()->get(space()->ssoServer->sip_identifier));
-
-            if (!$sip) {
-                return redirect('login')->withErrors(['sso_not_found' => __('Incorrect username or password')]);
-            }
-
-            $account = Account::where('username', $sip[0])->first();
-
-            if ($account && $account->email != $ssoUser->email) {
-                return redirect('login')->withErrors(['sso_not_found' => __('Username already taken. Please contact your administrator.')]);
-            }
+            $account = Account::where('email', $ssoUser->email)->first();
 
             if (!$account) {
+                $username = Str::before($ssoUser->email, '@');
+
+                $base = $username;
+                $i = 1;
+
+                while (Account::where('username', $username)->exists()) {
+                    $username = $base . $i++;
+                }
+
+                if (!isSip('sip:' . $username . '@' . $request->space->domain)) {
+                    return redirect('login')->withErrors([
+                        'sso_not_found' => __("Auto-provisioning is not possible because the user's email address contains invalid characters.") .
+                            ' ' . __('Please contact your administrator.')
+                    ]);
+                }
+
                 $createRequest = CreateRequest::create('/', 'POST', [
-                    'username' => $sip[0],
+                    'username' => $username,
                     'email' => $ssoUser->email,
                     'password' => Str::random(12),
                     'asAdmin' => true,
@@ -177,7 +201,10 @@ class AuthenticateController extends Controller
         $account = Account::where('email', $ssoUser->email)->first();
 
         if (!$account) {
-            return redirect('login')->withErrors(['sso_not_found' => __('Incorrect username or password')]);
+            return redirect('login')->withErrors([
+                'sso_not_found' => __('Account not found.') .
+                    ' ' . __('Please contact your administrator.')
+            ]);
         }
 
         return $this->loginAndRedirect($account);
