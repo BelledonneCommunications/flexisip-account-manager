@@ -62,11 +62,11 @@ This will remove the API Keys that were not used after `x minutes`.
 
     php artisan digest:clear-api-keys {minutes}
 
-### Clear Expired Nonces for DIGEST authentication
+### Clear Expired Opaques for DIGEST authentication
 
-This will remove the nonces stored that were not updated after `x minutes`.
+This will remove the opaques stored that were not updated after `x minutes`.
 
-    php artisan digest:clear-nonces {minutes}
+    php artisan digest:clear-opaques {minutes}
 
 ### Remove the unconfirmed accounts
 

@@ -123,15 +123,15 @@ class ApiAuthenticationTest extends TestCase
 
         $response2->assertOk();
 
-        // We remove the account related nonce
-        $password->account->nonces()->first()->delete();
+        // We remove the account related opaque
+        $password->account->opaques()->first()->delete();
 
         $response3 = $this->withHeaders([
             'From' => 'sip:' . $password->account->identifier,
             'Authorization' => $this->generateDigest($password, $response2, 'md5', '00000002'),
         ])->json($this->method, $this->route);
 
-        $response3->assertSee('Nonce invalid');
+        $response3->assertSee('Invalid opaque');
         $response3->assertStatus(401);
         $this->assertStringContainsString('algorithm=MD5', $response3->headers->all()['www-authenticate'][0]);
     }
@@ -142,11 +142,24 @@ class ApiAuthenticationTest extends TestCase
 
         $response = $this->generateFirstResponse($password);
         $response = $this->generateSecondResponse($password, $response)
-                         ->json($this->method, $this->route);
+            ->json($this->method, $this->route);
 
         $this->assertStringContainsString('algorithm=MD5', $response->headers->all()['www-authenticate'][0]);
 
         $response->assertOk();
+    }
+
+    public function testReplayAnotherIP()
+    {
+        $password = Password::factory()->create();
+
+        $response = $this->generateFirstResponse($password);
+        $response = $this->generateSecondResponse($password, $response)
+            ->withServerVariables(['REMOTE_ADDR' => '0.0.0.0'])
+            ->json($this->method, $this->route);
+
+        $response->assertSee('Invalid opaque');
+        $response->assertStatus(401);
     }
 
     public function testAuthenticationSHA265()
@@ -240,7 +253,7 @@ class ApiAuthenticationTest extends TestCase
         $password->password = 'wrong';
 
         $response = $this->generateSecondResponse($password, $response)
-                         ->json($this->method, $this->route);
+            ->json($this->method, $this->route);
 
         $response->assertStatus(401);
     }

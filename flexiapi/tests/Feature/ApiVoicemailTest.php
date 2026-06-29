@@ -152,7 +152,7 @@ class ApiVoicemailTest extends TestCase
                 'file' => UploadedFile::fake()->create('audio.opus', 500, 'audio/opus')
             ])->assertNotFound();
 
-        $this->head($file->json()['download_url'])->dump()->assertOk();
+        $this->head($file->json()['download_url'])->assertOk();
 
         // Delete the file
         $this->keyAuthenticated($account)

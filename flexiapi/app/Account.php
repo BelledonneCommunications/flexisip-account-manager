@@ -211,9 +211,9 @@ class Account extends Authenticatable
         return $entry;
     }
 
-    public function nonces()
+    public function opaques()
     {
-        return $this->hasMany(DigestNonce::class);
+        return $this->hasMany(Opaque::class);
     }
 
     public function passwords()

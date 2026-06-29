@@ -18,30 +18,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Console\Commands\Digest;
+namespace App;
 
-use Illuminate\Console\Command;
-use Carbon\Carbon;
-use App\DigestNonce;
+use Illuminate\Database\Eloquent\Model;
 
-class ClearNonces extends Command
+class Opaque extends Model
 {
-    protected $signature = 'digest:clear-nonces {minutes}';
-    protected $description = 'Clear the expired DIGEST nonces after n minutes';
-
-    public function __construct()
+    public function account()
     {
-        parent::__construct();
-    }
-
-    public function handle()
-    {
-        $count = DigestNonce::where(
-            'created_at',
-            '<',
-            Carbon::now()->subMinutes($this->argument('minutes'))->toDateTimeString()
-        )->delete();
-
-        $this->info($count . ' expired nonces deleted');
+        return $this->belongsTo(Account::class);
     }
 }
