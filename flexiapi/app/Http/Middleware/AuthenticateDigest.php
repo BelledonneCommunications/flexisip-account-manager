@@ -21,6 +21,7 @@
 namespace App\Http\Middleware;
 
 use App\Account;
+use App\Opaque;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
@@ -37,7 +38,7 @@ class AuthenticateDigest
         }
 
         if (empty($request->header('From'))) {
-            return $this->generateUnauthorizedResponse(null, 'From header is required or invalid token');
+            return $this->generateUnauthorizedResponse($request, message: 'From header is required or invalid token');
         }
 
         $from = $this->extractFromHeader($request->header('From'));
@@ -45,7 +46,7 @@ class AuthenticateDigest
         $sip = parseSIP($from);
 
         if ($sip == null) {
-            return $this->generateUnauthorizedResponse(null, 'Invalid SIP address');
+            return $this->generateUnauthorizedResponse($request, message: 'Invalid SIP address');
         }
 
         list($username, $domain) = $sip;
@@ -59,23 +60,26 @@ class AuthenticateDigest
 
         if ($request->header('Authorization')) {
             $auth = $this->extractAuthorizationHeader($request->header('Authorization'));
-            $storedNonce = $account->nonces()->where('nonce', $auth['nonce'])->first();
+            $storedOpaque = $account->opaques()
+                ->where('opaque', $auth['opaque'])
+                ->where('ip', $request->ip())
+                ->first();
 
             // Nonce handling
-            if ($storedNonce && (int) $storedNonce->nc >= (int) \hexdec($auth['nc'])) {
-                $storedNonce->delete();
+            if ($storedOpaque && (int) $storedOpaque->nc >= (int) \hexdec($auth['nc'])) {
+                $storedOpaque->delete();
 
-                return $this->generateUnauthorizedResponse($account, 'Nonce replayed');
-            } elseif (!$storedNonce) {
-                return $this->generateUnauthorizedResponse($account, 'Nonce invalid');
+                return $this->generateUnauthorizedResponse($request, $account, 'Nonce replayed');
+            } elseif (!$storedOpaque) {
+                return $this->generateUnauthorizedResponse($request, $account, 'Invalid opaque');
             }
 
-            $storedNonce->nc++;
-            $storedNonce->save();
+            $storedOpaque->nc++;
+            $storedOpaque->save();
 
             // Validation
             Validator::make($auth, [
-                'opaque' => 'required|in:' . $this->getOpaque(),
+                'opaque' => 'required|in:' . $storedOpaque->opaque,
                 'uri' => 'in:/' . $request->path(),
                 'qop' => 'required|in:auth',
                 'realm' => 'required|in:' . $account->resolvedRealm,
@@ -89,7 +93,7 @@ class AuthenticateDigest
             ])->validate();
 
             // Headers
-            $headers = $this->generateAuthHeaders($account, $storedNonce->nonce);
+            $headers = $this->generateAuthHeaders($account, $storedOpaque);
 
             // Retrieving the user and related passwords
             $password = $account->passwords()
@@ -104,7 +108,7 @@ class AuthenticateDigest
             }
 
             if (!$password) {
-                return $this->generateUnauthorizedResponse($account, 'Wrong algorithm');
+                return $this->generateUnauthorizedResponse($request, $account, 'Wrong algorithm');
             }
 
             $hash = passwordAlgorithms()[$auth['algorithm']];
@@ -127,7 +131,7 @@ class AuthenticateDigest
 
             // Auth response don't match
             if (!hash_equals($auth['response'], $validResponse)) {
-                return $this->generateUnauthorizedResponse($account, 'Unauthorized');
+                return $this->generateUnauthorizedResponse($request, $account, 'Unauthorized');
             }
 
             Auth::login($account);
@@ -140,16 +144,16 @@ class AuthenticateDigest
             return $response;
         }
 
-        return $this->generateUnauthorizedResponse($account);
+        return $this->generateUnauthorizedResponse($request, $account);
     }
 
-    private function generateUnauthorizedResponse(?Account $account = null, $message = 'Unauthenticated request')
+    private function generateUnauthorizedResponse(Request $request, ?Account $account = null, ?string $message = 'Unauthenticated request')
     {
         $response = new Response;
 
         if ($account) {
-            $nonce = generateValidNonce($account);
-            $headers = $this->generateAuthHeaders($account, $nonce);
+            $opaque = $this->generateOpaque($request, $account);
+            $headers = $this->generateAuthHeaders($account, $opaque);
 
             if (!empty($headers)) {
                 $response->header('WWW-Authenticate', $headers);
@@ -179,7 +183,7 @@ class AuthenticateDigest
         return $array;
     }
 
-    private function generateAuthHeaders(Account $account, string $nonce): array
+    private function generateAuthHeaders(Account $account, Opaque $opaque): array
     {
         $headers = [];
 
@@ -188,14 +192,14 @@ class AuthenticateDigest
                 foreach (array_keys(passwordAlgorithms()) as $algorithm) {
                     array_push(
                         $headers,
-                        $this->generateAuthHeader($account->resolvedRealm, $algorithm, $nonce)
+                        $this->generateAuthHeader($account->resolvedRealm, $algorithm, $opaque)
                     );
                 }
                 break;
             } elseif (\in_array($password->algorithm, array_keys(passwordAlgorithms()))) {
                 array_push(
                     $headers,
-                    $this->generateAuthHeader($account->resolvedRealm, $password->algorithm, $nonce)
+                    $this->generateAuthHeader($account->resolvedRealm, $password->algorithm, $opaque)
                 );
             }
         }
@@ -203,19 +207,26 @@ class AuthenticateDigest
         return $headers;
     }
 
-    private function generateAuthHeader(string $realm, string $algorithm, string $nonce): string
+    private function generateOpaque(Request $request, Account $account): Opaque
     {
-        return 'Digest realm="' . $realm . '",qop="auth",algorithm=' . $algorithm . ',nonce="' . $nonce . '",opaque="' . $this->getOpaque() . '"';
+        $opaque = new Opaque;
+        $opaque->opaque = generateNonce();
+        $opaque->account_id = $account->id;
+        $opaque->ip = $request->ip();
+        $opaque->nonce = generateNonce();
+        $opaque->save();
+
+        return $opaque;
+    }
+
+    private function generateAuthHeader(string $realm, string $algorithm, Opaque $opaque): string
+    {
+        return 'Digest realm="' . $realm . '",qop="auth",algorithm=' . $algorithm . ',nonce="' . $opaque->nonce . '",opaque="' . $opaque->opaque . '"';
     }
 
     private function extractFromHeader(string $string): string
     {
         list($from) = explode(';', $string);
         return \rawurldecode($from);
-    }
-
-    private function getOpaque(): string
-    {
-        return base64_encode(config('app.key'));
     }
 }

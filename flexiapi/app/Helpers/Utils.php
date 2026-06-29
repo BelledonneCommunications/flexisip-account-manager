@@ -18,15 +18,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use Illuminate\Support\Str;
 use App\Account;
 use App\Space;
-use App\DigestNonce;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 use League\CommonMark\Extension\TableOfContents\TableOfContentsExtension;
-use Illuminate\Support\Facades\DB;
 
 function space(): ?Space
 {
@@ -51,16 +50,6 @@ function getRequestBoolean(Request $request, string $key, bool $reversed = false
     $bool = $request->has($key) ? $request->get($key) == "on" : false;
 
     return $reversed ? !$bool : $bool;
-}
-
-function generateValidNonce(Account $account): string
-{
-    $nonce = new DigestNonce;
-    $nonce->account_id = $account->id;
-    $nonce->nonce = generateNonce();
-    $nonce->save();
-
-    return $nonce->nonce;
 }
 
 function bchash(string $username, string $domain, string $password, string $algorithm = 'MD5'): string
