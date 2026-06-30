@@ -48,5 +48,5 @@
         </form>
     </div>
 
-    @include('parts.call_logs.table', ['calls' => $calls])
+    @include('parts.call_logs.table', ['calls' => $calls, 'admin_view' => $admin_view])
 @endsection

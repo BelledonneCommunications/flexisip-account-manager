@@ -137,6 +137,7 @@ class StatisticsController extends Controller
             'domains' => StatisticsCall::groupBy('from_domain')->pluck('from_domain'),
             'contacts_lists' => ContactsList::all()->pluck('title', 'id'),
             'request' => $request,
+            'admin_view' => true,
         ]);
     }
 }

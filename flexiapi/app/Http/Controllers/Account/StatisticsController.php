@@ -30,7 +30,9 @@ class StatisticsController extends Controller
         return redirect()->route('account.statistics.show_call_logs', [
             'from' => $request->input('from'),
             'to' => $request->input('to'),
-            'account' => $request->user()->id
+            'direction' => $request->input('direction'),
+            'account' => $request->user()->id,
+            'page' => $request->input('page'),
         ]);
     }
 

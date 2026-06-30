@@ -1,8 +1,13 @@
 <table>
     <thead>
         <tr>
-            <th>{{ __('From') }}</th>
-            <th>{{ __('To') }}</th>
+            @if (isset($admin_view) && $admin_view)
+                <th>{{ __('From') }}</th>
+                <th>{{ __('To') }}</th>
+            @else
+                <th>{{ __('Contact') }}</th>
+            @endif
+            <th>{{ __('Length') }}</th>
             <th><i class="ph ph-clock"></i></th>
             <th>{{ __('State') }}</th>
         </tr>
@@ -15,30 +20,47 @@
         @endif
         @foreach ($calls as $call)
             <tr>
-                <td class="line">
-                    @if (isset($account) && $account->identifier != $call->from)
-                        <b>{{ $call->from }}</b>
-                    @else
-                        {{ $call->from }}
-                    @endif
-                </td>
-                <td class="line">
-                    @if (isset($account) && $account->identifier != $call->to)
-                        <b>{{ $call->to }}</b>
-                    @else
-                        {{ $call->to }}
+                @if (isset($admin_view) && $admin_view)
+                    <td class="line">
+                        @if (isset($account) && $account->identifier != $call->from)
+                            <b>{{ $call->from }}</b>
+                        @else
+                            {{ $call->from }}
+                        @endif
+                    </td>
+                    <td class="line">
+                        @if (isset($account) && $account->identifier != $call->to)
+                            <b>{{ $call->to }}</b>
+                        @else
+                            {{ $call->to }}
+                        @endif
+                    </td>
+                @else
+                    <td class="line">
+                        @if (isset($account) && $account->identifier != $call->to)
+                            {{ $call->to }}
+                        @else
+                            {{ $call->from }}
+                        @endif
+                    </td>
+                @endif
+                <td class="line" >
+                    @if ($call->ended_at)
+                        {{ $call->ended_at->diffForHumans($call->initiated_at, true) }}
                     @endif
                 </td>
                 <td class="line" title="{{ $call->initiated_at }}">
-                    @if ($call->ended_at)
-                        {{ $call->ended_at->diffForHumans($call->initiated_at, true) }}
-
-                        -
-                    @endif
-
                     {{ $call->initiated_at->diffForHumans() }}
                 </td>
                 <td class="{{ $call->state->cssClass() }}">
+                    @if (isset($account) )
+                        @if ($account->identifier != $call->to)
+                            <i title="{{ __('Outgoing call') }}" class="ph ph-phone-outgoing"></i>
+                        @else
+                            <i title="{{ __('Incoming call') }}" class="ph ph-phone-incoming"></i>
+                        @endif
+                        -
+                    @endif
                     <i class="ph ph-{{ $call->state->icon() }}"></i> {{ $call->state->label() }}
                 </td>
             </tr>
@@ -46,4 +68,4 @@
     </tbody>
 </table>
 
-{{ $calls->links('pagination::bootstrap-4') }}
+{{ $calls->appends(request()->only('direction', 'from', 'to', 'contacts_list', 'domain'))->links('pagination::bootstrap-4') }}

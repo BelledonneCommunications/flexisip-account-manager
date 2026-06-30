@@ -85,7 +85,8 @@ class StatisticsController extends Controller
         return redirect()->route('admin.account.statistics.show_call_logs', [
             'from' => $request->input('from'),
             'to' => $request->input('to'),
-            'account' => $accountId
+            'direction' => $request->input('direction'),
+            'account' => $accountId,
         ]);
     }
 
@@ -108,13 +109,18 @@ class StatisticsController extends Controller
             $calls = $calls->where('initiated_at', '>=', $request->input('from'));
         }
 
-        $calls = $calls->union($toQuery);
+        if ($request->input('direction') == 'incoming') {
+            $calls = StatisticsCall::where('to_domain', $account->domain)
+                ->where('to_username', $account->username);
+        } elseif ($request->input('direction') != 'outgoing') {
+            $calls = $calls->union($toQuery);
+        }
 
         return view('admin.account.statistics.show_call_logs', [
             'account' => $account,
             'calls' => $calls->orderBy('initiated_at', 'desc')->paginate(30),
             'request' => $request,
-            'adminView' => $adminView
+            'admin_view' => $adminView
         ]);
     }
 }

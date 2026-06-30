@@ -239,6 +239,15 @@ function maxUploadSize(): int
     );
 }
 
+function getDirections(): array
+{
+    return [
+        'both' => __('Both'),
+        'incoming' => __('Incoming call'),
+        'outgoing' => __('Outgoing call'),
+    ];
+}
+
 function captchaConfigured(): bool
 {
     return env('HCAPTCHA_SECRET', false) != false || env('HCAPTCHA_SITEKEY', false) != false;
