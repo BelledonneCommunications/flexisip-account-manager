@@ -41,9 +41,10 @@ use App\Http\Controllers\Api\Admin\Account\ContactController as AdminContactCont
 use App\Http\Controllers\Api\Admin\Account\CreationTokenController as AdminCreationTokenController;
 use App\Http\Controllers\Api\Admin\Account\DictionaryController;
 use App\Http\Controllers\Api\Admin\Account\TypeController;
-use App\Http\Controllers\Api\Admin\Account\WizardController;
 use App\Http\Controllers\Api\Admin\Account\VoicemailController as AdminVoicemailController;
+use App\Http\Controllers\Api\Admin\Account\WizardController;
 use App\Http\Controllers\Api\Admin\AccountController as AdminAccountController;
+use App\Http\Controllers\Api\Admin\DeviceController as AdminDeviceController;
 use App\Http\Controllers\Api\Admin\ExternalAccountController;
 use App\Http\Controllers\Api\Admin\MessageController;
 use App\Http\Controllers\Api\Admin\PhoneCountryController as AdminPhoneCountryController;
@@ -160,8 +161,8 @@ Route::group(['middleware' => ['auth.key', 'auth.admin']], function () {
         Route::get('{sip}/search', 'search');
         Route::get('{email}/search-by-email', 'searchByEmail');
 
-        Route::get('{account_id}/devices', [DeviceController::class, 'index']);
-        Route::delete('{account_id}/devices/{uuid}', [DeviceController::class, 'destroy']);
+        Route::get('{account_id}/devices', [AdminDeviceController::class, 'index']);
+        Route::delete('{account_id}/devices/{uuid}', [AdminDeviceController::class, 'destroy']);
 
         Route::post('{account_id}/types/{type_id}', 'typeAdd');
         Route::delete('{account_id}/types/{type_id}', 'typeRemove');
