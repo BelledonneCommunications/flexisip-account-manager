@@ -1,6 +1,7 @@
 <table>
     <thead>
         <tr>
+            <th style="width: 1%"><i class="ph ph-arrows-out-simple"></i></th>
             @if (isset($admin_view) && $admin_view)
                 <th>{{ __('From') }}</th>
                 <th>{{ __('To') }}</th>
@@ -20,6 +21,15 @@
         @endif
         @foreach ($calls as $call)
             <tr>
+                <td>
+                    @if (isset($account) )
+                        @if ($account->identifier != $call->to)
+                            <i title="{{ __('Outgoing call') }}" class="{{ $call->state->cssClass() }} ph ph-arrow-up-right"></i>
+                        @else
+                            <i title="{{ __('Incoming call') }}" class="{{ $call->state->cssClass() }} ph ph-arrow-down-left"></i>
+                        @endif
+                    @endif
+                </td>
                 @if (isset($admin_view) && $admin_view)
                     <td class="line">
                         @if (isset($account) && $account->identifier != $call->from)
@@ -53,14 +63,6 @@
                     {{ $call->initiated_at->diffForHumans() }}
                 </td>
                 <td class="{{ $call->state->cssClass() }}">
-                    @if (isset($account) )
-                        @if ($account->identifier != $call->to)
-                            <i title="{{ __('Outgoing call') }}" class="ph ph-phone-outgoing"></i>
-                        @else
-                            <i title="{{ __('Incoming call') }}" class="ph ph-phone-incoming"></i>
-                        @endif
-                        -
-                    @endif
                     <i class="ph ph-{{ $call->state->icon() }}"></i> {{ $call->state->label() }}
                 </td>
             </tr>
