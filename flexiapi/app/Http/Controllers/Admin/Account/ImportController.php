@@ -100,33 +100,41 @@ class ImportController extends Controller
             }
         }
 
-        if ($lines->pluck('username')->contains(function ($value) {
-            return strlen($value) < 2;
-        })) {
+        if (
+            $lines->pluck('username')->contains(function ($value) {
+                return strlen($value) < 2;
+            })
+        ) {
             $this->errors['Some usernames are shorter than expected'] = '';
         }
 
         // Passwords
 
-        if ($lines->pluck('password')->contains(function ($value) {
-            return strlen($value) < 6;
-        })) {
+        if (
+            $lines->pluck('password')->contains(function ($value) {
+                return strlen($value) < 6;
+            })
+        ) {
             $this->errors['Some passwords are shorter than expected'] = '';
         }
 
         // Roles
 
-        if ($lines->pluck('role')->contains(function ($value) {
-            return !in_array($value, ['admin', 'user']);
-        })) {
+        if (
+            $lines->pluck('role')->contains(function ($value) {
+                return !in_array($value, ['admin', 'user']);
+            })
+        ) {
             $this->errors['Some roles are not correct'] = '';
         }
 
         // Status
 
-        if ($lines->pluck('status')->contains(function ($value) {
-            return !in_array($value, ['active', 'inactive']);
-        })) {
+        if (
+            $lines->pluck('status')->contains(function ($value) {
+                return !in_array($value, ['active', 'inactive']);
+            })
+        ) {
             $this->errors['Some statuses are not correct'] = '';
         }
 
@@ -134,11 +142,13 @@ class ImportController extends Controller
 
         $phoneCountries = PhoneCountry::where('activated', true)->get();
 
-        if ($phones = $lines->pluck('phone')->filter(function ($value) {
-            return !empty($value);
-        })->filter(function ($value) use ($phoneCountries) {
-            return !$phoneCountries->firstWhere('code', (new PhoneNumber($value))->getCountry());
-        })) {
+        if (
+            $phones = $lines->pluck('phone')->filter(function ($value) {
+                return !empty($value);
+            })->filter(function ($value) use ($phoneCountries) {
+                return !$phoneCountries->firstWhere('code', (new PhoneNumber($value))->getCountry());
+            })
+        ) {
             if ($phones->isNotEmpty()) {
                 $this->errors['Some phone numbers are not correct'] = $phones->join(', ', ' and ');
             }
@@ -153,9 +163,11 @@ class ImportController extends Controller
 
         // Emails
 
-        if ($emails = $lines->pluck('email')->filter(function ($value) {
-            return $value != '' && !filter_var($value, FILTER_VALIDATE_EMAIL);
-        })) {
+        if (
+            $emails = $lines->pluck('email')->filter(function ($value) {
+                return $value != '' && !filter_var($value, FILTER_VALIDATE_EMAIL);
+            })
+        ) {
             if ($emails->isNotEmpty()) {
                 $this->errors['Some emails are not correct'] = $emails->join(', ', ' and ');
             }
@@ -184,9 +196,11 @@ class ImportController extends Controller
             }
 
             if ($line->external_username != null && $line->external_password != null && $line->external_domain != null) {
-                if ($line->external_domain == $line->external_realm
-                 || $line->external_domain == $line->external_registrar
-                 || $line->external_domain == $line->external_outbound_proxy) {
+                if (
+                    $line->external_domain == $line->external_realm
+                    || $line->external_domain == $line->external_registrar
+                    || $line->external_domain == $line->external_outbound_proxy
+                ) {
                     $this->errors['Line ' . $line->line . ': External realm, registrar or outbound proxy must be different than domain'] = '';
                 }
 
@@ -301,7 +315,8 @@ class ImportController extends Controller
             ->where('domain', $domain)
             ->get();
 
-        $algorithm = config('app.account_default_password_algorithm');
+        $space = Space::where('domain', $domain)->first();
+        $algorithm = $space->account_default_password_algorithm->value;
 
         foreach ($passwordAccounts as $passwordAccount) {
             array_push($passwordsToInsert, [
@@ -359,7 +374,7 @@ class ImportController extends Controller
                     continue;
                 }
 
-                $lines->push((object)[
+                $lines->push((object) [
                     'line' => $i,
                     'username' => !empty($line[0]) ? $line[0] : null,
                     'password' => !empty($line[1]) ? $line[1] : null,

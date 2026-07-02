@@ -25,13 +25,13 @@ class ResetPasswordEmailController extends Controller
             'h-captcha-response'  => captchaConfigured() ? 'required|HCaptcha' : ''
         ]);
 
-        $token = ResetPasswordEmailToken::where('token', $request->get('token'))->firstOrFail();
+        $token = ResetPasswordEmailToken::where('token', $request->input('token'))->firstOrFail();
 
         if ($token->offed()) {
             abort(403);
         }
 
-        $token->account->updatePassword($request->get('password'));
+        $token->account->updatePassword($request->input('password'));
         $token->consume();
 
         return view('account.password_changed');

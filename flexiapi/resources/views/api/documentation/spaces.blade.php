@@ -25,6 +25,7 @@ JSON parameters:
 * `host` **required**, the space host
 * `account_proxy_registrar_address`, the account proxy registrar address
 * `account_realm`, the default realm for the accounts, fallback to the domain if not set
+* `account_default_password_algorithm`, the algorithm used to hash passwords (MD5 or SHA-256). Defaults to SHA-256
 * `assistant_disable_qr_code` boolean, disable the QR code feature in the assistant, default to `false`
 * `assistant_hide_create_account` boolean, disable the account creation assistant, default to `false`
 * `assistant_hide_third_party_account` boolean, disable the call recording feature, default to `false`
@@ -61,6 +62,7 @@ JSON parameters:
 
 * `account_proxy_registrar_address`, **required**, the account proxy registrar address
 * `account_realm`, **required**, the default realm for the accounts, fallback to the domain if not set
+* `account_default_password_algorithm`, **required**, the algorithm used to hash passwords (MD5 or SHA-256).
 * `assistant_disable_qr_code` **required**, boolean
 * `assistant_hide_create_account` **required**, boolean
 * `assistant_hide_third_party_account` **required**, boolean

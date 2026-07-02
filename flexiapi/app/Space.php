@@ -28,6 +28,33 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
+enum PasswordAlgorithm: string
+{
+    case MD5 = 'MD5';
+    case SHA256 = 'SHA-256';
+
+    public const DEFAULT = self::SHA256;
+
+    public function hashFunction(): string
+    {
+        return match ($this) {
+            self::SHA256 => 'sha256',
+            self::MD5 => 'md5',
+        };
+    }
+
+    public static function fromHashFunction(string $hash): self
+    {
+        foreach (self::cases() as $case) {
+            if ($case->hashFunction() === $hash) {
+                return $case;
+            }
+        }
+
+        throw new \ValueError("No PasswordAlgorithm found for hash function '$hash'");
+    }
+}
+
 class Space extends Model
 {
     use HasFactory;
@@ -69,6 +96,7 @@ class Space extends Model
         'hide_settings' => 'boolean',
         'only_display_sip_uri_username' => 'boolean',
         'super' => 'boolean',
+        'account_default_password_algorithm' => PasswordAlgorithm::class,
     ];
 
     public const HOST_REGEX = '[\w\-]+';
@@ -202,17 +230,17 @@ class Space extends Model
     {
         if ($this->emailServer) {
             Config::set('mail', [
-                'driver'     => config('mail.driver'),
+                'driver' => config('mail.driver'),
                 'encryption' => config('mail.encryption'),
-                'host'       => $this->emailServer->host,
-                'port'       => $this->emailServer->port,
-                'from'       => [
+                'host' => $this->emailServer->host,
+                'port' => $this->emailServer->port,
+                'from' => [
                     'address' => $this->emailServer->from_address,
                     'name' => $this->emailServer->from_name
-                 ],
-                'username'   => $this->emailServer->username,
-                'password'   => $this->emailServer->password,
-                'signature'  => $this->emailServer->signature ?? config('mail.signature')
+                ],
+                'username' => $this->emailServer->username,
+                'password' => $this->emailServer->password,
+                'signature' => $this->emailServer->signature ?? config('mail.signature')
             ] + Config::get('mail'));
         }
     }

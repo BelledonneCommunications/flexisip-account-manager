@@ -20,8 +20,10 @@
 
 namespace App\Http\Requests\Space;
 
+use App\PasswordAlgorithm;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\Domain;
+use Illuminate\Validation\Rules\Enum;
 
 class Create extends FormRequest
 {
@@ -31,6 +33,7 @@ class Create extends FormRequest
             'name' => 'required|unique:spaces',
             'domain' => ['required', 'unique:spaces', new Domain],
             'account_realm' => ['nullable', new Domain],
+            'account_default_password_algorithm' => [new Enum(PasswordAlgorithm::class)]
         ];
     }
 }

@@ -20,8 +20,9 @@
 
 namespace App\Http\Requests\Account;
 
+use App\PasswordAlgorithm;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Rules\PasswordAlgorithm;
+use Illuminate\Validation\Rules\Enum;
 
 class CardDavCredentials extends FormRequest
 {
@@ -30,7 +31,7 @@ class CardDavCredentials extends FormRequest
         return [
             'username' => 'required',
             'password' => 'required',
-            'algorithm' => ['required', new PasswordAlgorithm],
+            'algorithm' => ['required', new Enum(PasswordAlgorithm::class)],
             'realm' => 'required',
         ];
     }

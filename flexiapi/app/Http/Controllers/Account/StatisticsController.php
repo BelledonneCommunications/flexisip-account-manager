@@ -38,7 +38,7 @@ class StatisticsController extends Controller
 
     public function showCallLogs(Request $request)
     {
-        return (new \App\Http\Controllers\Admin\Account\StatisticsController())
+        return (new \App\Http\Controllers\Admin\Account\StatisticsController)
             ->showCallLogs($request, $request->user()->id, adminView: false);
     }
 }

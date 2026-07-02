@@ -49,6 +49,15 @@
             <span class="supporting">{{ __('Leave empty if similar to the domain') }}</span>
         </div>
 
+        <div class="select">
+            <select name="account_default_password_algorithm">
+                @foreach (App\PasswordAlgorithm::cases() as $algorithm)
+                    <option value="{{ $algorithm }}" @selected($algorithm === App\PasswordAlgorithm::DEFAULT)>
+                        {{ $algorithm }}</option>
+                @endforeach
+            </select>
+            <label for="domain">{{ __('Password Hashing Algorithm') }}</label>
+        </div>
 
         <div class="large">
             <input class="btn" type="submit" value="{{ __('Create') }}">

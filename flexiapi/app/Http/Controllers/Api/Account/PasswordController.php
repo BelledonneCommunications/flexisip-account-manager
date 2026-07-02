@@ -20,17 +20,18 @@
 
 namespace App\Http\Controllers\Api\Account;
 
+use App\Http\Controllers\Controller;
+use App\PasswordAlgorithm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
-use App\Rules\PasswordAlgorithm;
+use Illuminate\Validation\Rules\Enum;
 
 class PasswordController extends Controller
 {
     public function update(Request $request)
     {
         $request->validate([
-            'algorithm' => ['required', new PasswordAlgorithm],
+            'algorithm' => ['required', new Enum(PasswordAlgorithm::class)],
             'password' => 'required',
         ]);
 
@@ -38,7 +39,7 @@ class PasswordController extends Controller
         $account->activated = true;
         $account->save();
 
-        $algorithm = $request->get('algorithm');
+        $algorithm = $request->input('algorithm');
 
         if ($account->passwords()->count() > 0) {
             $request->validate(['old_password' => 'required']);
@@ -46,9 +47,9 @@ class PasswordController extends Controller
             foreach ($account->passwords as $password) {
                 if (hash_equals(
                     $password->password,
-                    bchash($account->username, $account->resolvedRealm, $request->get('old_password'), $password->algorithm)
+                    bchash($account->username, $account->resolvedRealm, $request->input('old_password'), $password->algorithm)
                 )) {
-                    $account->updatePassword($request->get('password'), $algorithm);
+                    $account->updatePassword($request->input('password'), $algorithm);
 
                     Log::channel('events')->info('API: Account password updated', ['id' => $account->identifier]);
 
@@ -59,6 +60,6 @@ class PasswordController extends Controller
             return response()->json(['errors' => ['old_password' => 'Incorrect old password']], 422);
         }
 
-        $account->updatePassword($request->get('password'), $algorithm);
+        $account->updatePassword($request->input('password'), $algorithm);
     }
 }

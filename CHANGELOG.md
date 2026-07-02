@@ -25,6 +25,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - **PHP 8.2 minimum and Laravel 12**
 - **Logout the user when the password is correctly changed**
 - **Email Uniqueness**: Moved the email uniqueness setting from a global environment variable (`.env`) to a per-space database setting for better multi-tenancy support.
+- **Account Defaut Password Algorythm**: moved the Account Defaut Password Algorythm from a global environment variable (`.env`) to a per-space database setting for better multi-tenancy.
 - **Account Management**: Updated account creation and update rules to respect the space-specific uniqueness configuration.
 - **Remove DIGEST and JWT auth for admin endpoints**: Only API Key authentications are authorized
 
@@ -37,6 +38,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - **Remove the custom_theme feature**
 - **Environment**: Removed the global `ACCOUNT_EMAIL_UNIQUE` variable from `.env` and `.env.example`.
 - **Remove the GET /accounts/{sip}/info endpoint**, not used anymore and bringing security issues
+- **Remove the `ACCOUNT_DEFAULT_PASSWORD_ALGORITHM`** DotEnv parameter, since it is also migrated in the database.
 
 ## [2.0]
 

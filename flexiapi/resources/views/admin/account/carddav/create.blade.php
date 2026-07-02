@@ -40,7 +40,7 @@
 
         <div class="select">
             <select name="algorithm">
-                @foreach (passwordAlgorithms() as $value => $key)
+                @foreach (App\PasswordAlgorithm::cases() as $value => $key)
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>

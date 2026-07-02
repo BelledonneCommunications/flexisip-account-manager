@@ -950,7 +950,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### guzzlehttp/guzzle (Version 7.11.1 | 5af96f3)
+### guzzlehttp/guzzle (Version 7.12.0 | eaa8159)
 Guzzle is a PHP HTTP client library
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1013,7 +1013,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### guzzlehttp/psr7 (Version 2.11.0 | bbb5e61)
+### guzzlehttp/psr7 (Version 2.12.0 | 9b38012)
 PSR-7 message implementation that also provides common utility methods
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1197,7 +1197,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### laravel/socialite (Version v5.27.0 | 40e0757)
+### laravel/socialite (Version v5.28.0 | 4c131ff)
 Laravel wrapper around OAuth 1 & OAuth 2 libraries.
 Homepage: https://laravel.com
 Licenses Used: MIT
@@ -3080,7 +3080,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### ramsey/uuid (Version 4.9.2 | 8429c78)
+### ramsey/uuid (Version 4.9.3 | 1df1584)
 A PHP library for generating and working with universally unique identifiers (UUIDs).
 Homepage: Not configured.
 Licenses Used: MIT

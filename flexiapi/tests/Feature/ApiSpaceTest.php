@@ -21,8 +21,11 @@
 namespace Tests\Feature;
 
 use App\Account;
+use App\PasswordAlgorithm;
 use App\Space;
 use Tests\TestCase;
+
+use function PHPUnit\Framework\assertEquals;
 
 class ApiSpaceTest extends TestCase
 {
@@ -81,7 +84,7 @@ class ApiSpaceTest extends TestCase
         $accountRealm = 'account.realm';
 
         $response = $this->keyAuthenticated($admin)
-            -> json($this->method, $this->route, [
+            ->json($this->method, $this->route, [
                 'name' => $thirdDomain,
                 'domain' => $thirdDomain,
                 'host' => $thirdDomain,
@@ -93,7 +96,7 @@ class ApiSpaceTest extends TestCase
             ]);
 
         $this->keyAuthenticated($admin)
-            -> json($this->method, $this->route, [
+            ->json($this->method, $this->route, [
                 'name' => 'Another Domain',
                 'domain' => 'baddomain',
                 'host' => $thirdDomain,
@@ -101,7 +104,7 @@ class ApiSpaceTest extends TestCase
             ->assertJsonValidationErrors(['domain']);
 
         $this->keyAuthenticated($admin)
-            -> json($this->method, $this->route, [
+            ->json($this->method, $this->route, [
                 'name' => 'Another Domain',
                 'domain' => 'another.domain',
                 'host' => 'another.host',
@@ -174,7 +177,7 @@ class ApiSpaceTest extends TestCase
             ])->assertStatus(403);
 
         $this->keyAuthenticated($admin)
-            -> json($this->method, $this->route, [
+            ->json($this->method, $this->route, [
                 'name' => $domain,
                 'domain' => $domain,
                 'host' => $domain,
@@ -197,5 +200,46 @@ class ApiSpaceTest extends TestCase
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])->assertStatus(403);
+    }
+
+    public function testHashAlgorithmChange()
+    {
+        $admin = Account::factory()->superAdmin()->create();
+        $admin->generateUserApiKey();
+
+        $response = $this->keyAuthenticated($admin)
+            ->json('GET', $this->route . '/' . $admin->domain)
+            ->assertJson(['account_default_password_algorithm' => PasswordAlgorithm::SHA256->value])
+            ->assertOk();
+
+        $json = $response->json();
+        $json['account_default_password_algorithm'] = 'WRONGEHASH';
+
+        // Switch to MD5
+
+        $admin->updatePassword(fake()->password());
+        $currentHash = $admin->passwords()->first()->algorithm;
+
+        assertEquals($currentHash, PasswordAlgorithm::SHA256->value);
+
+        $this->keyAuthenticated($admin)
+            ->json('PUT', $this->route . '/' . $admin->domain, $json)
+            ->assertJsonValidationErrorFor('account_default_password_algorithm');
+
+        $json['account_default_password_algorithm'] = PasswordAlgorithm::MD5->value;
+
+        $this->keyAuthenticated($admin)
+            ->json('PUT', $this->route . '/' . $admin->domain, $json)
+            ->assertOk();
+
+        $response = $this->keyAuthenticated($admin)
+            ->json('GET', $this->route . '/' . $admin->domain)
+            ->assertJson(['account_default_password_algorithm' => PasswordAlgorithm::MD5->value])
+            ->assertOk();
+
+        $admin->updatePassword(fake()->password());
+        $newHash = $admin->passwords()->first()->algorithm;
+
+        assertEquals($newHash, PasswordAlgorithm::MD5->value);
     }
 }
