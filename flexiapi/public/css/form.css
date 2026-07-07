@@ -146,7 +146,7 @@ form h2 {
 form .disabled:not(a) {
     opacity: 0.5;
     pointer-events: none;
-    filter: blur(0.25rem);
+    filter: blur(0.15rem);
 }
 
 @media screen and (max-width: 800px) {
@@ -167,7 +167,7 @@ form label {
 form input[type="radio"]~label:after,
 form input[required]+label:after {
     content: '' '*';
-    color: var(--danger);
+    color: var(--danger-5);
 }
 
 form input:not([type=checkbox])~label,
@@ -262,7 +262,7 @@ form div span.supporting a {
     font-size: 1.25rem;
 }
 
-form div input[disabled],
+form div input:not([type=range]):not([type=button]):not([type=file]):not(.btn)[disabled],
 form div textarea[disabled] {
     border-color: var(--grey-4);
     color: var(--grey-4);
@@ -342,13 +342,13 @@ form div textarea:active+label {
 
 form div input:invalid:not(:placeholder-shown),
 form div textarea:invalid:not(:placeholder-shown) {
-    border-color: var(--danger);
-    color: var(--danger);
+    border-color: var(--danger-5);
+    color: var(--danger-5);
 }
 
 form div input:invalid:not(:placeholder-shown)+label,
 form div textarea:invalid:not(:placeholder-shown)+label {
-    color: var(--danger);
+    color: var(--danger-5);
 }
 
 /* Image and Logo Picker */
@@ -443,6 +443,10 @@ form div.checkbox>div {
     margin-right: 5rem;
 }
 
+form > div:has(> div.checkbox) {
+    align-self: center;
+}
+
 div.checkbox>input[type="checkbox"] {
     display: none;
     width: 0;
@@ -451,6 +455,8 @@ div.checkbox>input[type="checkbox"] {
 
 div.checkbox p {
     margin-bottom: 0;
+    color: var(--second-6);
+    font-weight: 700;
 }
 
 div.checkbox::before {

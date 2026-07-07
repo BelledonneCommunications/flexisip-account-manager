@@ -9,10 +9,15 @@
             @endforeach
         @endif
         >
-
+        
     <label for="{{ $key }}"></label>
     <div>
         <p>{{ $label }}</p>
+        @if (isset($tooltiptext))
+            <i class="ph ph-info tooltip">
+                <span class="tooltiptext">{{ $tooltiptext }}</span>
+            </i>
+        @endif
         @if (isset($supporting))
             <span class="supporting">{{ $supporting }}</span>
         @endif

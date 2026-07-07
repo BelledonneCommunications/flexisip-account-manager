@@ -44,7 +44,9 @@
     <section class="block">
         <div>
             <h4>{{ __('All the calls') }}</h4>
-            <i class="ph ph-info tooltip" title="{{ __('All incoming calls are forwarded, whether you answer, decline the call or are already on a call.') }}"></i>
+            <i class="ph ph-info tooltip">
+                <span class="tooltiptext">{{ __('All incoming calls are forwarded, whether you answer, decline the call or are already on a call.') }}</span>
+            </i>
         </div>
 
         <div class="checkbox">
@@ -66,7 +68,9 @@
     <section class="block">
         <div>
             <h4>@if ($account->admin){{ __('No answer') }}@else{{ __('If no one is answering') }}@endif</h4>
-            <i class="ph ph-info tooltip" title="{{ __('Calls are only forwarded when your line is busy with another call.') }}"></i>
+            <i class="ph ph-info tooltip">
+                <span class="tooltiptext">{{ __('Calls are only forwarded when your line is busy with another call.') }}</span>
+            </i>
         </div>
 
         <div class="checkbox">
@@ -85,7 +89,9 @@
     <section class="block">
         <div>
             <h4>@if ($account->admin){{ __('Busy line') }}@else{{ __('If the line is busy') }}@endif</h4>
-            <i class="ph ph-info tooltip" title="{{ __('Calls are only forwarded if you do not answer or if you decline the call.') }}"></i>
+            <i class="ph ph-info tooltip">
+                <span class="tooltiptext">{{ __('Calls are only forwarded if you do not answer or if you decline the call.') }}</span>
+            </i>
         </div>
 
         <div class="checkbox">
