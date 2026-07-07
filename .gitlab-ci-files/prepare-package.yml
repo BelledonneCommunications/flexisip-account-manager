@@ -1,5 +1,5 @@
 prepare-package:
-  tags: ["docker"]
+  tags: ["docker-fam"]
   stage: prepare-package
   image: gitlab.linphone.org:4567/bc/public/docker/debian12-php:$DEBIAN_12_IMAGE_VERSION
   script:

@@ -50,7 +50,7 @@ remi-rocky8-deploy:
 
 .deploy:
   stage: deploy
-  tags: ["docker"]
+  tags: ["docker-fam"]
   rules:
     - if: $CI_COMMIT_REF_NAME == "master"
     - if: $CI_COMMIT_REF_NAME =~ /^release/

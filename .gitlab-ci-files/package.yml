@@ -83,7 +83,7 @@ remi-rocky8-package:
     - rm -r /root/rpmbuild # Cleanup
 
 .package:
-  tags: ["docker"]
+  tags: ["docker-fam"]
 
   stage: package
   artifacts:
