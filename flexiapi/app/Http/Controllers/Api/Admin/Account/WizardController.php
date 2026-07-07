@@ -14,7 +14,7 @@ class WizardController extends Controller
     {
         $request->validate([
             'provisioning_account_id' => ['nullable', 'integer', 'exists:accounts,id'],
-            'sip' => ['required', 'string', new SipUri],
+            'sip' => ['required_if:linphone_action,call', 'string', new SipUri],
             'linphone_action' => ['nullable', 'string', Rule::in(Wizard::LINPHONE_ACTION)],
             'linphone_use_sips' => ['nullable', 'boolean'],
         ]);
