@@ -26,7 +26,7 @@ class WizardTest extends TestCase
                 'linphone_action' => 'call',
                 'linphone_use_sips' => false
             ])
-            ->assertStatus(201);
+            ->assertCreated();
 
         // Move to the web side
 
@@ -46,7 +46,7 @@ class WizardTest extends TestCase
                 'linphone_action' => 'bye',
                 'linphone_use_sips' => true
             ])
-            ->assertStatus(201);
+            ->assertCreated();
 
         $this->flushHeaders();
 
@@ -65,13 +65,36 @@ class WizardTest extends TestCase
                 'linphone_action' => null,
                 'linphone_use_sips' => false
             ])
-            ->assertStatus(201);
+            ->assertCreated();
 
         $this->flushHeaders();
 
         $this->get(route('wizard.show', $response->json('token')))->assertViewHas(
             'uri',
             'sip-linphone:' . stripSipProtocol($sip) . '?linphone-action=show'
+        );
+
+        // No SIP depending of the action
+
+        $response = $this->keyAuthenticated($admin)
+            ->json('POST', 'api/wizard', [
+                'provisioning_account_id' => null,
+                'linphone_action' => 'call',
+            ])
+            ->assertJsonValidationErrorFor('sip');
+
+        $response = $this->keyAuthenticated($admin)
+            ->json('POST', 'api/wizard', [
+                'provisioning_account_id' => null,
+                'linphone_action' => 'show',
+            ])
+            ->assertCreated();
+
+        $this->flushHeaders();
+
+        $this->get(route('wizard.show', $response->json('token')))->assertViewHas(
+            'uri',
+            'sip-linphone:?linphone-action=show'
         );
 
         // Custom parameters
