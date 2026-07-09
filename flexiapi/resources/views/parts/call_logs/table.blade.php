@@ -16,7 +16,7 @@
     <tbody>
         @if ($calls->isEmpty())
             <tr class="empty">
-                <td colspan="4">{{ __('Empty') }}</td>
+                <td colspan="6">{{ __('Empty') }}</td>
             </tr>
         @endif
         @foreach ($calls as $call)

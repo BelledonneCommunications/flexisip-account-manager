@@ -44,7 +44,7 @@ class DictionaryController extends Controller
             'value' => 'required'
         ]);
 
-        $account->setDictionaryEntry($request->get('key'), $request->get('value'));
+        $account->setDictionaryEntry($request->input('key'), $request->input('value'));
 
         if (function_exists('accountServiceAccountEditedHook')) {
             $account->refresh();
@@ -73,7 +73,7 @@ class DictionaryController extends Controller
         $account = Account::findOrFail($accountId);
 
         $entry = $account->dictionaryEntries()->findOrFail($entryId);
-        $entry->value = $request->get('value');
+        $entry->value = $request->input('value');
         $entry->save();
 
         if (function_exists('accountServiceAccountEditedHook')) {
@@ -100,7 +100,15 @@ class DictionaryController extends Controller
     public function destroy(Request $request, int $accountId)
     {
         $account = Account::findOrFail($accountId);
-        $account->dictionaryEntries()->where('key', $request->get('key'))->delete();
+        $account->dictionaryEntries()->where('key', $request->input('key'))->delete();
+
+        return redirect()->route('admin.account.show', $account);
+    }
+
+    public function clear(Request $request, int $accountId)
+    {
+        $account = Account::findOrFail($accountId);
+        $account->dictionaryEntries()->delete();
 
         return redirect()->route('admin.account.show', $account);
     }
