@@ -39,48 +39,52 @@ debian13-package:
   script:
     - make package-deb
 
-remi-rocky8-package:
-  image: gitlab.linphone.org:4567/bc/public/docker/rocky8-php:$ROCKY_8_IMAGE_VERSION
-  extends: .remi-rocky-package
-  variables:
-    ROCKY_RELEASE: 8
-  before_script:
-    - dnf -y module reset redis
-    - dnf -y install @redis:6
-
-.remi-rocky-package:
-  extends: .package
-  rules:
-    - if: $CI_COMMIT_REF_NAME =~ /^release/ || $CI_COMMIT_REF_NAME == "master"
-    #- changes:
-    #  - .gitlab-ci.yml
-  script:
-    # Remi
-    - mkdir -p $CI_PROJECT_DIR/build
-    - dnf -y install https://rpms.remirepo.net/enterprise/remi-release-$ROCKY_RELEASE.rpm
-    - yum -y install wget php-devel gcc liblzf php-pear lz4-devel liblzf-devel libzstd-devel php-pecl-apcu-devel
-    # igbinary
-    - wget https://rpms.remirepo.net/SRPMS/$PHP_IGBINARY_REMI_VERSION.remi.src.rpm
-    - rpmbuild --rebuild $PHP_IGBINARY_REMI_VERSION.remi.src.rpm
-    - rm /root/rpmbuild/RPMS/*/*debug*.rpm
-    - mv /root/rpmbuild/RPMS/*/*devel*.rpm $CI_PROJECT_DIR/build/$PHP_IGBINARY_REMI_VERSION-devel.el$ROCKY_RELEASE.x86_64.rpm || true # Rename to fit our naming format
-    - mv /root/rpmbuild/RPMS/*/*.rpm $CI_PROJECT_DIR/build/$PHP_IGBINARY_REMI_VERSION.el$ROCKY_RELEASE.x86_64.rpm # Rename to fit our naming format
-    # msgpack
-    - wget https://rpms.remirepo.net/SRPMS/$PHP_MSGPACK_REMI_VERSION.remi.src.rpm
-    - rpmbuild --rebuild $PHP_MSGPACK_REMI_VERSION.remi.src.rpm
-    - rm /root/rpmbuild/RPMS/*/*debug*.rpm
-    - mv /root/rpmbuild/RPMS/*/*devel*.rpm $CI_PROJECT_DIR/build/$PHP_MSGPACK_REMI_VERSION-devel.el$ROCKY_RELEASE.x86_64.rpm || true
-    - mv /root/rpmbuild/RPMS/*/*.rpm $CI_PROJECT_DIR/build/$PHP_MSGPACK_REMI_VERSION.el$ROCKY_RELEASE.x86_64.rpm
-    # install and cleanup the dependencies
-    - yum -y localinstall build/*.rpm
-    # phpredis
-    - wget https://rpms.remirepo.net/SRPMS/$PHP_REDIS_REMI_VERSION.remi.src.rpm
-    - rpmbuild --rebuild $PHP_REDIS_REMI_VERSION.remi.src.rpm
-    - rm /root/rpmbuild/RPMS/*/*debug*.rpm
-    - mv /root/rpmbuild/RPMS/*/*devel*.rpm $CI_PROJECT_DIR/build/$PHP_REDIS_REMI_VERSION-devel.el$ROCKY_RELEASE.x86_64.rpm || true
-    - mv /root/rpmbuild/RPMS/*/*.rpm $CI_PROJECT_DIR/build/$PHP_REDIS_REMI_VERSION.el$ROCKY_RELEASE.x86_64.rpm
-
-    - rm -r /root/rpmbuild # Cleanup
+#remi-rocky8-package:
+#  image: gitlab.linphone.org:4567/bc/public/docker/rocky8-php:$ROCKY_8_IMAGE_VERSION
+#  extends: .remi-rocky-package
+#  variables:
+#    ROCKY_RELEASE: 8
+#  before_script:
+#    - dnf -y module reset redis
+#    - dnf -y install @redis:6
+#
+#.remi-rocky-package:
+#  extends: .package
+#  #rules:
+#  #  - if: $CI_COMMIT_REF_NAME =~ /^release/ || $CI_COMMIT_REF_NAME == "master"
+#    #- changes:
+#    #  - .gitlab-ci.yml
+#  script:
+#    # Remi
+#    - mkdir -p $CI_PROJECT_DIR/build
+#    - dnf -y install https://rpms.remirepo.net/enterprise/remi-release-$ROCKY_RELEASE.rpm
+#    - yum -y install wget php-devel gcc liblzf php-pear lz4-devel liblzf-devel libzstd-devel php-pecl-apcu-devel valkey-devel
+#    # igbinary
+#    - wget https://rpms.remirepo.net/SRPMS/$PHP_IGBINARY_REMI_VERSION.remi.src.rpm
+#    - rpmbuild --rebuild $PHP_IGBINARY_REMI_VERSION.remi.src.rpm
+#    - rm /root/rpmbuild/RPMS/*/*debug*.rpm
+#    - mv /root/rpmbuild/RPMS/*/*devel*.rpm $CI_PROJECT_DIR/build/$PHP_IGBINARY_REMI_VERSION-devel.el$ROCKY_RELEASE.x86_64.rpm || true # Rename to fit our naming format
+#    - mv /root/rpmbuild/RPMS/*/*.rpm $CI_PROJECT_DIR/build/$PHP_IGBINARY_REMI_VERSION.el$ROCKY_RELEASE.x86_64.rpm # Rename to fit our naming format
+#    # msgpack
+#    - wget https://rpms.remirepo.net/SRPMS/$PHP_MSGPACK_REMI_VERSION.remi.src.rpm
+#    - rpm -ivh $PHP_MSGPACK_REMI_VERSION.remi.src.rpm  --nosignature
+#    - rpmbuild --ba  ~/rpmbuild/SPECS/php-pecl-msgpack.spec
+#    # - rpmbuild --rebuild $PHP_MSGPACK_REMI_VERSION.remi.src.rpm // see https://github.com/remicollet/remirepo/issues/340
+#    - rm /root/rpmbuild/RPMS/*/*debug*.rpm
+#    - mv /root/rpmbuild/RPMS/*/*devel*.rpm $CI_PROJECT_DIR/build/$PHP_MSGPACK_REMI_VERSION-devel.el$ROCKY_RELEASE.x86_64.rpm || true
+#    - mv /root/rpmbuild/RPMS/*/*.rpm $CI_PROJECT_DIR/build/$PHP_MSGPACK_REMI_VERSION.el$ROCKY_RELEASE.x86_64.rpm
+#    # install and cleanup the dependencies
+#    - yum -y localinstall build/*.rpm
+#    # phpredis
+#    - wget https://rpms.remirepo.net/SRPMS/$PHP_REDIS_REMI_VERSION.remi.src.rpm
+#    - rpm -ivh $PHP_REDIS_REMI_VERSION.remi.src.rpm  --nosignature
+#    - rpmbuild --ba  ~/rpmbuild/SPECS/php-pecl-redis6.spec
+#    #- rpmbuild --rebuild $PHP_REDIS_REMI_VERSION.remi.src.rpm
+#    - rm /root/rpmbuild/RPMS/*/*debug*.rpm
+#    - mv /root/rpmbuild/RPMS/*/*devel*.rpm $CI_PROJECT_DIR/build/$PHP_REDIS_REMI_VERSION-devel.el$ROCKY_RELEASE.x86_64.rpm || true
+#    - mv /root/rpmbuild/RPMS/*/*.rpm $CI_PROJECT_DIR/build/$PHP_REDIS_REMI_VERSION.el$ROCKY_RELEASE.x86_64.rpm
+#
+#    - rm -r /root/rpmbuild # Cleanup
 
 .package:
   tags: ["docker-fam"]

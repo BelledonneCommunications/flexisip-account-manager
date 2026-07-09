@@ -25,6 +25,8 @@ FlexiAPI is packaged for Debian and RedHat, you can setup those repositories usi
 
 The `artisan` script is in the root directory of where the application is setup, with packages its often `/opt/belledonne-communications/share/flexisip-account-manager/flexiapi/`.
 
+⚠️ RockyLinux 8 official repositories doesn't provide all the required dependencies to setup FlexiAPI. We recommend to setup the Remi repositories to retrieve the missing packages or upgrade to RockyLinux 9 or later.
+
 ⚠️ If you want to enable JWT authentication the php-sodium dependency is required, on Rockylinux it is only available in the Remi repository in some cases. You can install it with the following steps:
 
     dnf -y install https://rpms.remirepo.net/enterprise/remi-release-{rockylinux-release}.rpm

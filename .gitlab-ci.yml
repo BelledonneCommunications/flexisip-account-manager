@@ -1,12 +1,12 @@
 variables:
-  ROCKY_8_IMAGE_VERSION: 20250702_171834_update_rocky8_dockerhub
+  ROCKY_8_IMAGE_VERSION: 20260610_121034_upgrade
   ROCKY_9_IMAGE_VERSION: 20250702_171314_update_rocky9_dockerhub
   ROCKY_10_IMAGE_VERSION: 20250908_164454_rocky10_first
   DEBIAN_12_IMAGE_VERSION: 20260525_103953_update_dependencies
   DEBIAN_13_IMAGE_VERSION: 20260521_095034_update_packages
-  PHP_REDIS_REMI_VERSION: php-pecl-redis6-6.1.0-1
-  PHP_IGBINARY_REMI_VERSION: php-pecl-igbinary-3.2.16-2
-  PHP_MSGPACK_REMI_VERSION: php-pecl-msgpack-2.2.0-3
+  PHP_REDIS_REMI_VERSION: php-pecl-redis6-6.3.0-2
+  PHP_IGBINARY_REMI_VERSION: php-pecl-igbinary-3.2.16-8
+  PHP_MSGPACK_REMI_VERSION: php-pecl-msgpack-3.0.1-1
 
 include:
   - '.gitlab-ci-files/prepare-package.yml'
