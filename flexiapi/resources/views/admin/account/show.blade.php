@@ -207,11 +207,23 @@
             </table>
         </div>
 
+        <dialog id="dictionary_clear" closedby="any">
+            <h2>{{ __('Clear') }}</h2>
+            <p>{{ __('Are you sure you want to clear all the dictionary items?') }}</p>
+
+            <a class="btn small oppose" href="{{ route('admin.account.dictionary.clear', $account) }}">{{ __('Clear') }}</a>
+            <button class="btn small oppose secondary" commandfor="away_dialog" command="close" onclick="document.querySelector('#dictionary_clear').close()">{{ __('Cancel') }}</button>
+        </dialog>
+
         <div class="card large">
             <a class="btn small oppose" href="{{ route('admin.account.dictionary.create', $account) }}">
                 <i class="ph ph-plus"></i>
                 {{ __('Add') }}
             </a>
+            <button class="btn small secondary oppose" onclick="document.querySelector('#dictionary_clear').showModal()">
+                <i class="ph ph-broom"></i>
+                {{ __('Clear') }}
+            </button>
             <h3>
                 {{ __('Dictionary') }}
             </h3>

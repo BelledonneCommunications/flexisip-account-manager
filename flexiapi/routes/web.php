@@ -365,6 +365,7 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
 
             Route::name('dictionary.')->prefix('{account}/dictionary')->controller(DictionaryController::class)->group(function () {
                 Route::get('create', 'create')->name('create');
+                Route::get('clear', 'clear')->name('clear');
                 Route::post('/', 'store')->name('store');
                 Route::get('{entry}/edit', 'edit')->name('edit');
                 Route::put('{entry}', 'update')->name('update');

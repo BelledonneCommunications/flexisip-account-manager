@@ -740,7 +740,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### giggsey/libphonenumber-for-php-lite (Version 9.0.32 | 8e3b2cf)
+### giggsey/libphonenumber-for-php-lite (Version 9.0.34 | a9f129a)
 A lite version of giggsey/libphonenumber-for-php, which is a PHP Port of Google's libphonenumber
 Homepage: https://github.com/giggsey/libphonenumber-for-php-lite
 Licenses Used: Apache-2.0
@@ -950,7 +950,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### guzzlehttp/guzzle (Version 7.12.0 | eaa8159)
+### guzzlehttp/guzzle (Version 7.14.0 | aef2424)
 Guzzle is a PHP HTTP client library
 Homepage: Not configured.
 Licenses Used: MIT
@@ -983,7 +983,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### guzzlehttp/promises (Version 2.5.0 | 4360e98)
+### guzzlehttp/promises (Version 2.5.1 | 9ad1e4f)
 Guzzle promises library
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1013,7 +1013,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### guzzlehttp/psr7 (Version 2.12.0 | 9b38012)
+### guzzlehttp/psr7 (Version 2.12.4 | 51e27f9)
 PSR-7 message implementation that also provides common utility methods
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1045,7 +1045,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### guzzlehttp/uri-template (Version v1.0.7 | 7fe811c)
+### guzzlehttp/uri-template (Version v1.0.9 | d7580af)
 A polyfill class for uri_template of PHP
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1116,7 +1116,7 @@ SOFTWARE.
 
 
 
-### laravel/framework (Version v12.62.0 | f7e61eb)
+### laravel/framework (Version v12.63.0 | 7adfddb)
 The Laravel Framework.
 Homepage: https://laravel.com
 Licenses Used: MIT
@@ -1143,7 +1143,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### laravel/prompts (Version v0.3.18 | a19af51)
+### laravel/prompts (Version v0.3.21 | 7753c65)
 Add beautiful and user-friendly forms to your command-line applications.
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1379,7 +1379,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-### league/flysystem (Version 3.34.0 | 2daaac3)
+### league/flysystem (Version 3.35.2 | b277b5d)
 File storage abstraction for PHP
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1869,7 +1869,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### nesbot/carbon (Version 3.12.3 | 6e7853a)
+### nesbot/carbon (Version 3.13.0 | 40f6618)
 An API extension for DateTime that supports 281 different languages.
 Homepage: https://carbonphp.github.io/carbon/
 Licenses Used: MIT
@@ -2026,7 +2026,7 @@ you URLs with full text:
 - [GPL version 3](http://www.gnu.org/licenses/gpl-3.0.html)
 
 
-### nikic/php-parser (Version v5.7.0 | dca41cd)
+### nikic/php-parser (Version v5.8.0 | 044a6a3)
 A PHP parser written in PHP
 Homepage: Not configured.
 Licenses Used: BSD-3-Clause
@@ -2707,7 +2707,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-### phpunit/phpunit (Version 11.5.55 | adc7262)
+### phpunit/phpunit (Version 11.5.56 | 5f83edf)
 The PHP Unit Testing framework.
 Homepage: https://phpunit.de/
 Licenses Used: BSD-3-Clause
@@ -3001,7 +3001,7 @@ Copyright (c) 2016 PHP Framework Interoperability Group
 > THE SOFTWARE.
 
 
-### psy/psysh (Version v0.12.23 | 4dcc0f0)
+### psy/psysh (Version v0.12.24 | ca0fdcf)
 An interactive shell for modern PHP.
 Homepage: https://psysh.org
 Licenses Used: MIT
@@ -3357,7 +3357,7 @@ are permitted provided that the following conditions are met:
     POSSIBILITY OF SUCH DAMAGE.
 
 
-### sabre/vobject (Version 4.6.0 | 9432544)
+### sabre/vobject (Version 4.6.1 | 63613f6)
 The VObject library for PHP allows you to easily parse and manipulate iCalendar and vCard objects
 Homepage: http://sabre.io/vobject/
 Licenses Used: BSD-3-Clause
@@ -4062,7 +4062,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/console (Version v7.4.13 | 85095d2)
+### symfony/console (Version v7.4.14 | 92f58bc)
 Eases the creation of beautiful and testable command line interfaces
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4112,7 +4112,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/deprecation-contracts (Version v3.7.0 | 50f59d1)
+### symfony/deprecation-contracts (Version v3.7.1 | f3202fa)
 A generic function and convention to trigger deprecation notices
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4137,7 +4137,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/error-handler (Version v7.4.8 | 8dd79d8)
+### symfony/error-handler (Version v7.4.14 | 4e1a093)
 Provides tools to manage errors and ease debugging PHP code
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4162,7 +4162,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/event-dispatcher (Version v7.4.9 | e4a2e29)
+### symfony/event-dispatcher (Version v7.4.14 | 51fe3d1)
 Provides tools that allow your application components to communicate with each other by dispatching events and listening to them
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4187,7 +4187,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/event-dispatcher-contracts (Version v3.7.0 | ccba706)
+### symfony/event-dispatcher-contracts (Version v3.7.1 | c7de7a0)
 Generic abstractions related to dispatching event
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4212,7 +4212,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/finder (Version v7.4.8 | e0be088)
+### symfony/finder (Version v7.4.14 | 13b3872)
 Finds files and directories via an intuitive fluent interface
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4237,7 +4237,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/http-foundation (Version v7.4.13 | bc354f4)
+### symfony/http-foundation (Version v7.4.14 | 06db5ae)
 Defines an object-oriented layer for the HTTP specification
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4262,7 +4262,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/http-kernel (Version v7.4.13 | 9df8479)
+### symfony/http-kernel (Version v7.4.14 | e99af79)
 Provides a structured process for converting a Request into a Response
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4287,7 +4287,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/mailer (Version v7.4.12 | 5cefb71)
+### symfony/mailer (Version v7.4.14 | f88ce03)
 Helps sending emails
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4637,7 +4637,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/service-contracts (Version v3.7.0 | d25d824)
+### symfony/service-contracts (Version v3.7.1 | c0a284b)
 Generic abstractions related to writing services
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4687,7 +4687,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/translation (Version v7.4.10 | ada7578)
+### symfony/translation (Version v7.4.14 | a1af4da)
 Provides tools to internationalize your application
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4712,7 +4712,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/translation-contracts (Version v3.7.0 | 0ab3029)
+### symfony/translation-contracts (Version v3.7.1 | ccb206b)
 Generic abstractions related to translation
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4762,7 +4762,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/var-dumper (Version v7.4.8 | 9510c39)
+### symfony/var-dumper (Version v7.4.14 | 9a3a56a)
 Provides mechanisms for walking through any arbitrary PHP variable
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4868,7 +4868,7 @@ spyc-0.5, for loading the YAML, is licensed under the MIT license.
 The initial list of generic feature phones & smartphones came from Mobile Web OSP under the MIT license
 The initial list of spiders was taken from Yiibu's profile project under the MIT license.
 
-### vlucas/phpdotenv (Version v5.6.3 | 955e781)
+### vlucas/phpdotenv (Version v5.6.4 | 416df70)
 Loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` automagically.
 Homepage: Not configured.
 Licenses Used: BSD-3-Clause
