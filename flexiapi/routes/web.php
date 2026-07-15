@@ -70,6 +70,7 @@ Route::get('about', [AboutController::class, 'about'])->name('about');
 Route::get('third-party-components', [AboutController::class, 'thirdPartyComponents'])->name('third_party_components');
 
 Route::middleware(['feature.web_panel_enabled'])->group(function () {
+    Route::get('wizard/documentation', [WizardController::class, 'documentation'])->name('wizard.documentation');
     Route::get('wizard/{token?}', [WizardController::class, 'show'])->name('wizard.show');
 
     Route::get('login', [AuthenticateController::class, 'login'])->name('account.login');

@@ -98,7 +98,6 @@ class WizardTest extends TestCase
         );
 
         // Custom parameters
-
         $this->get(route('wizard.show', [
             'sip' => $sip,
             'linphone-action' => 'decline'
