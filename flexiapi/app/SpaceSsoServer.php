@@ -12,6 +12,8 @@ class SpaceSsoServer extends Model
 {
     use HasFactory;
 
+    public ?string $refreshSsoError = null;
+
     protected $hidden = ['space_id', 'client_secret'];
     protected $fillable = ['server_url', 'realm', 'sip_identifier', 'client_id', 'client_secret', 'role_provisioning'];
     protected $casts = [
@@ -37,6 +39,7 @@ class SpaceSsoServer extends Model
                     return true;
                 }
             } catch (\Throwable $th) {
+                $this->refreshSsoError = $th->getMessage();
                 // Something bad happened during the query
             }
         }

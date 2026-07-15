@@ -65,8 +65,14 @@ class SSOServerController extends Controller
             if ($ssoServer->refreshSSOCertificate()) {
                 $ssoServer->save();
             } else {
+                $error = __('Unable to connect to the SSO server. Please verify the provided settings.');
+
+                if ($ssoServer->refreshSsoError !== null) {
+                    $error .= " (" . $ssoServer->refreshSsoError . ')';
+                }
+
                 return redirect()->back()->withErrors([
-                    'public_key' => __('Unable to connect to the SSO server. Please verify the provided settings.')
+                    'public_key' => $error
                 ])->withInput();
             }
         }
