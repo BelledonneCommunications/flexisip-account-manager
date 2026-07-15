@@ -950,7 +950,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### guzzlehttp/guzzle (Version 7.14.0 | aef2424)
+### guzzlehttp/guzzle (Version 7.14.2 | fa88c57)
 Guzzle is a PHP HTTP client library
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1013,7 +1013,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### guzzlehttp/psr7 (Version 2.12.4 | 51e27f9)
+### guzzlehttp/psr7 (Version 2.12.5 | 9365d57)
 PSR-7 message implementation that also provides common utility methods
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1088,7 +1088,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-### jaybizzle/crawler-detect (Version v1.4.0 | 20d7bd4)
+### jaybizzle/crawler-detect (Version v1.4.1 | 770e00e)
 CrawlerDetect is a PHP class for detecting bots/crawlers/spiders via the user agent
 Homepage: https://github.com/JayBizzle/Crawler-Detect/
 Licenses Used: MIT
@@ -1116,7 +1116,7 @@ SOFTWARE.
 
 
 
-### laravel/framework (Version v12.63.0 | 7adfddb)
+### laravel/framework (Version v12.64.0 | 727a8ea)
 The Laravel Framework.
 Homepage: https://laravel.com
 Licenses Used: MIT
@@ -1311,7 +1311,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-### league/commonmark (Version 2.8.2 | 59fb075)
+### league/commonmark (Version 2.8.3 | 1902f60)
 Highly-extensible PHP Markdown parser which fully supports the CommonMark spec and GitHub-Flavored Markdown (GFM)
 Homepage: https://commonmark.thephpleague.com
 Licenses Used: BSD-3-Clause
@@ -1429,7 +1429,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### league/mime-type-detection (Version 1.16.0 | 2d6702f)
+### league/mime-type-detection (Version 1.17.0 | f5f47ef)
 Mime-type detection for Flysystem
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1869,7 +1869,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### nesbot/carbon (Version 3.13.0 | 40f6618)
+### nesbot/carbon (Version 3.13.1 | 2937ad3)
 An API extension for DateTime that supports 281 different languages.
 Homepage: https://carbonphp.github.io/carbon/
 Licenses Used: MIT

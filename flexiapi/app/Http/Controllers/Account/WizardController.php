@@ -2,14 +2,23 @@
 
 namespace App\Http\Controllers\Account;
 
-use Illuminate\Support\Uri;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Wizard;
 use hisorange\BrowserDetect\Parser as Browser;
+use Illuminate\Http\Request;
+use Illuminate\Support\Uri;
 
 class WizardController extends Controller
 {
+    public function documentation(Request $request)
+    {
+        return view('wizard.documentation', [
+            'documentation' => markdownDocumentation(view('wizard.documentation_markdown', [
+                'app_name' => space()->name
+            ])->render())
+        ]);
+    }
+
     public function show(Request $request, ?string $token = null)
     {
         $sip = '';
