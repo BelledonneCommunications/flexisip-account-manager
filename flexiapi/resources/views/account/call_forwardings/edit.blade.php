@@ -1,5 +1,5 @@
 <h3>
-    @if ($account->admin){{ __('Call Forwarding') }}@else{{ __('My Call Forwarding') }}@endif
+    @if (auth()->user()->admin){{ __('Call Forwarding') }}@else{{ __('My Call Forwarding') }}@endif
 </h3>
 
 <dialog id="always_dialog" closedby="any">
@@ -67,9 +67,9 @@
 
     <section class="block">
         <div>
-            <h4>@if ($account->admin){{ __('No answer') }}@else{{ __('If no one is answering') }}@endif</h4>
+            <h4>@if (auth()->user()->admin){{ __('No answer') }}@else{{ __('If no one is answering') }}@endif</h4>
             <i class="ph ph-info tooltip">
-                <span class="tooltiptext">{{ __('Calls are only forwarded when your line is busy with another call.') }}</span>
+                <span class="tooltiptext">{{ __('Calls are only forwarded if you do not answer or if you decline the call.') }}</span>
             </i>
         </div>
 
@@ -88,9 +88,9 @@
 
     <section class="block">
         <div>
-            <h4>@if ($account->admin){{ __('Busy line') }}@else{{ __('If the line is busy') }}@endif</h4>
+            <h4>@if (auth()->user()->admin){{ __('Busy line') }}@else{{ __('If the line is busy') }}@endif</h4>
             <i class="ph ph-info tooltip">
-                <span class="tooltiptext">{{ __('Calls are only forwarded if you do not answer or if you decline the call.') }}</span>
+                <span class="tooltiptext">{{ __('Calls are only forwarded when your line is busy with another call.') }}</span>
             </i>
         </div>
 
