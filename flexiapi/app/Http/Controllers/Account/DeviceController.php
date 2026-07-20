@@ -58,6 +58,9 @@ class DeviceController extends Controller
         $connector = new FlexisipRedisConnector;
         $connector->deleteDevice($request->user()->identifier, $request->get('uuid'));
 
-        return redirect()->route('account.device.index');
+        return match ($request->input('from')) {
+            'dashboard' => redirect()->route('account.dashboard'),
+            default => redirect()->route('account.device.index'),
+        };
     }
 }

@@ -22,7 +22,7 @@
         </div>
         <input name="account_id" type="hidden" value="{{ $file->account->id }}">
         <input name="action_id" type="hidden" value="{{ $file->id }}">
-
+        <input type="hidden" name="from" value="{{ request('from') }}">
         <div>
             <input class="btn" type="submit" value="{{ __('Delete') }}">
         </div>

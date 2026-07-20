@@ -12,101 +12,176 @@
 
     <div class="grid">
         <div class="card">
-            <a class="btn small oppose" href="{{ route('admin.account.edit', $account) }}">
-                <i class="ph ph-pencil"></i>
-                {{ __('Edit') }}
-            </a>
-            <h3>
-                @if ($account->updated_at)
-                    <small class="oppose" title="{{ $account->updated_at }}">{{ __('Updated on') }} {{ $account->updated_at->format('d/m/Y') }}</small>
+            <div class="header">
+                <h3><i class="ph ph-info"></i>{{ __('Information') }}</h3>
+                <div>
+                    <a class="btn small secondary" href="{{ route('admin.account.edit', $account) }}">
+                        <i class="ph ph-pencil"></i>
+                        {{ __('Edit') }}
+                    </a>
+                </div>
+            </div>
+            <ul>
+                <li>
+                    <span class="icon"><i class="ph ph-user"></i></span>
+                    <div class="content">
+                        <span class="title"> {{ __('SIP Adress') }} </span>
+                        <span class="subtitle"> sip:{{ $account->identifier }}</span>
+                    </div>
+                    <div class="meta"> @include('admin.account.parts.badges', ['account' => $account])</div>
+                </li>
+                @if ($account->passwords()->count() > 0)
+                <li>
+                    <span class="icon"><i class="ph ph-password"></i></span>
+                    <div class="content">
+                        <span class="title"> {{ __('Password') }} </span>
+                        <span class="subtitle">**********</span>
+                    </div>
+                </li>
                 @endif
-                {{ __('Information') }}
-            </h3>
-
-            <p><i class="ph ph-user"></i> {{ __('SIP Adress') }}: sip:{{ $account->identifier }}</p>
-            @if ($account->email)
-                <p><i class="ph ph-envelope"></i> {{ __('Email') }}: {{ $account->email }}</p>
-            @endif
-            @if ($account->phone)
-                <p><i class="ph ph-phone"></i> {{ __('Phone') }}: {{ $account->phone }}</p>
-            @endif
-            @if ($account->passwords()->count() > 0)
-                <p><i class="ph ph-password"></i> {{ __('Password') }}: **********</p>
-            @endif
-
-            <p>
-                <i class="ph ph-globe-hemisphere-west"></i>
-                {{ __('Space') }}: <a href="{{ route('admin.spaces.show', $account->space->id) }}">{{ $account->domain }}</a>
-            </p>
-            <p>
-                @include('admin.account.parts.badges', ['account' => $account])
-            </p>
+                @if ($account->email)
+                <li>
+                    <span class="icon"><i class="ph ph-envelope"></i></span>
+                    <div class="content">
+                        <span class="title"> {{ __('Email') }} </span>
+                        <span class="subtitle">{{ $account->email }}</span>
+                    </div>
+                </li>
+                @endif
+                @if ($account->phone)
+                <li>
+                    <span class="icon"><i class="ph ph-phone"></i></span>
+                    <div class="content">
+                        <span class="title"> {{ __('Phone number') }} </span>
+                        <span class="subtitle">{{ $account->phone }}</span>
+                    </div>
+                </li>
+                @endif
+                <li>
+                    <span class="icon"><i class="ph ph-globe-hemisphere-west"></i></span>
+                    <div class="content">
+                        <span class="title">{{ __('Space') }}</span>
+                        <span class="subtitle"><p><a href="{{ route('admin.spaces.show', $account->space->id) }}">{{ $account->domain }}</a></p></span>
+                    </div>
+                </li>
+                <li>
+                    <span class="icon"><i class="ph ph-check-circle"></i></span>
+                    <div class="content">
+                        <span class="title"> {{ __('Status') }} </span>
+                        <span class="subtitle">
+                            @if ($account->updated_at)
+                            {{  __('Updated on') . ' ' . $account->updated_at->format('d/m/Y') }}
+                            @endif
+                        </span>
+                    </div>
+                </li>
+            </ul>
         </div>
         <div class="card">
-            <h3>
-                {{ __('Manage') }}
-            </h3>
-            <table>
-                <tbody>
-                    <tr @if (empty($account->email))class="disabled"@endif>
-                        <td>{{ __('Send an email to the user to reset the password') }}</td>
-                        <td class="actions">
-                            <a class="btn secondary small" href="{{ route('admin.account.reset_password_email.create', $account) }}">
-                                <i class="ph ph-paper-plane-right"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr @if (empty($account->email))class="disabled"@endif>
-                        <td>{{ __('Send an email to the user with provisioning information') }}</td>
-                        <td class="actions">
-                            <a class="btn secondary small" href="{{ route('admin.account.provisioning_email.create', $account) }}">
-                                <i class="ph ph-paper-plane-right"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            {{ __('Delete') }}
-                        </td>
-                        <td class="actions">
-                            <a class="btn tertiary small" href="{{ route('admin.account.delete', $account->id) }}">
-                                <i class="ph ph-trash"></i>
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="header">
+                <h3>
+                    <i class="ph ph-user-circle-gear"></i>
+                    {{ __('Manage') }}
+                </h3>
+            </div>
+            <ul>
+                <li @if (empty($account->email))class="disabled" @endif>
+                    <span class="icon"><i class="ph ph-password"></i></span>
+                    <div class="content"> 
+                        <span class="title">{{ __('Reset password') }}</span>
+                        <span class="subtitle">{{ __('Send an email to the user to reset the password') }}</span>
+                    </div>
+                    <div class="meta">
+                        <a class="btn secondary small" href="{{ route('admin.account.reset_password_email.create', $account) }}">
+                            <i class="ph ph-paper-plane-right"></i>
+                        </a>
+                    </div>
+                </li>
+                <li @if (empty($account->email))class="disabled" @endif>
+                    <span class="icon"><i class="ph ph-faders"></i></span>
+                    <div class="content"> 
+                        <span class="title">{{ __('Provisioning') }}</span>
+                        <span class="subtitle">{{ __('Send an email to the user with provisioning information') }}</span>
+                    </div>
+                    <div class="meta">
+                        <a class="btn secondary small" href="{{ route('admin.account.provisioning_email.create', $account) }}">
+                            <i class="ph ph-paper-plane-right"></i>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <span class="icon color red"><i class="ph ph-trash"></i></span>
+                    <div class="content"> 
+                        <span class="title">{{ __('Delete') }}</span>
+                        <span class="subtitle">{{ __("Delete the user's account") }}</span>
+                    </div>
+                    <div class="meta">
+                        <a class="btn danger secondary small" href="{{ route('admin.account.delete', $account->id) }}">
+                            <i class="ph ph-trash"></i>
+                        </a>
+                    </div>
+                </li>
+            </ul>
         </div>
 
         <div class="card">
-            <a class="btn small oppose" href="{{ route('admin.account.external.show', $account) }}">
-                <i class="ph ph-plus"></i>
-                @if ($account->external){{ __('Edit') }}@else{{ __('Create') }}@endif
-            </a>
-            <h3>
-                {{ __('External Account') }}
-            </h3>
+            <div class="header">
+                <h3>
+                    <i class="ph ph-user-circle-plus"></i>
+                    {{ __('External Account') }}
+                </h3>
+                <a class="btn small secondary oppose" href="{{ route('admin.account.external.show', $account) }}">
+                    <i class="ph ph-plus"></i>
+                    @if ($account->external){{ __('Edit') }}@else{{ __('Create') }}@endif
+                </a>
+            </div>
             @if ($account->external)
-                @if ($account->external->username)
-                    <p><i class="ph ph-user"></i> {{ __('Username') }}: {{ $account->external->username }}</p>
-                @endif
-                @if ($account->external->domain)
-                    <p><i class="ph ph-hard-drive"></i> {{ __('Domain') }}: {{ $account->external->domain }}</p>
-                @endif
-                @if ($account->external->password)
-                    <p><i class="ph ph-password"></i> {{ __('Password') }}: **********</p>
-                @endif
+                <ul>
+                    @if ($account->external->username)
+                    <li>
+                        <span class="icon"><i class="ph ph-user"></i></span>
+                        <div class="content">
+                            <span class="title">{{ __('Username') }}</span>
+                            <span class="subtitle">{{ $account->external->username }}</span>
+                        </div>
+                    </li>
+                    @endif
+                    @if ($account->external->domain)
+                        <li>
+                            <span class="icon"><i class="ph ph-hard-drive"></i></span>
+                            <div class="content">
+                                <span class="title">{{ __('Domain') }}</span>
+                                <span class="subtitle">{{ $account->external->domain }}</span>
+                            </div>
+                        </li>
+                    @endif
+                    @if ($account->external->password)
+                        <li>
+                            <span class="icon"><i class="ph ph-password"></i> </span>
+                            <div class="content">
+                                <span class="title">{{ __('Password') }}</span>
+                                <span class="subtitle">**********</span>
+                            </div>
+                        </li>
+                    @endif
+                </ul>
             @else
-                <p>{{ __('Empty') }}</p>
+                <div class="empty">
+                    <i class="ph ph-user-circle-plus"></i>
+                    <p>{{ __('No external accounts configured') }}</p>
+                </div>
             @endif
         </div>
 
         <div class="card">
-            <a class="btn small oppose" href="{{ route('admin.account.provision', $account->id) }}">
-                <i class="ph ph-repeat"></i>
-                {{ __('Renew') }}
-            </a>
-            <h3 class="large" id="provisioning">{{ __('Provisioning') }}</h3>
+            
+            <div class="header">
+                <h3 class="large" id="provisioning"><i class="ph ph-faders"></i> {{ __('Provisioning') }}</h3>
+                <a class="btn small secondary oppose" href="{{ route('admin.account.provision', $account->id) }}">
+                    <i class="ph ph-repeat"></i>
+                    {{ __('Renew') }}
+                </a>
+            </div>
 
             @if ($account->provisioning_token)
                 <div>
@@ -134,8 +209,14 @@
                     </a>
                 @endif
                 <h3>
-                    {{ __('CardDav credentials') }}
+                    {{ __('CardDAV credentials') }}
                 </h3>
+                @if ($account->carddavServers->isEmpty())
+                    <div class="empty">
+                        <i class="ph ph-address-book"></i>
+                        <p>{{ __('No CardDAV account is configured') }}</p>
+                    </div>
+                @else
                 <table>
                     <thead>
                         <tr>
@@ -147,31 +228,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if ($account->carddavServers->isEmpty())
-                            <tr class="empty">
-                                <td colspan="5">{{ __('Empty') }}</td>
+                        @foreach ($account->carddavServers as $carddavServer)
+                            <tr>
+                                <td class="line">
+                                    {{ $carddavServer->name }}
+                                    <br>
+                                    <small>{{ $carddavServer->uri }}</small>
+                                </td>
+                                <td class="line">{{ $carddavServer->pivot->username }}</td>
+                                <td class="line">{{ $carddavServer->pivot->realm }}</td>
+                                <td class="line">{{ $carddavServer->pivot->algorithm }}</td>
+                                <td class="actions">
+                                    <a type="button" class="btn small tertiary" href="{{ route('admin.account.carddavs.delete', [$account, $carddavServer]) }}">
+                                        <i class="ph ph-trash"></i>
+                                    </a>
+                                </td>
                             </tr>
-                        @else
-                            @foreach ($account->carddavServers as $carddavServer)
-                                <tr>
-                                    <td class="line">
-                                        {{ $carddavServer->name }}
-                                        <br>
-                                        <small>{{ $carddavServer->uri }}</small>
-                                    </td>
-                                    <td class="line">{{ $carddavServer->pivot->username }}</td>
-                                    <td class="line">{{ $carddavServer->pivot->realm }}</td>
-                                    <td class="line">{{ $carddavServer->pivot->algorithm }}</td>
-                                    <td class="actions">
-                                        <a type="button" class="btn small tertiary" href="{{ route('admin.account.carddavs.delete', [$account, $carddavServer]) }}">
-                                            <i class="ph ph-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @endif
+                        @endforeach
                     </tbody>
                 </table>
+                @endif
             </div>
         @endif
 
@@ -179,32 +255,29 @@
             <h3>
                 {{ __('Devices') }}
             </h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>User Agent</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if ($devices->isEmpty())
-                        <tr class="empty">
-                            <td colspan="2">{{ __('Empty') }}</td>
-                        </tr>
-                    @else
-                        @foreach ($devices as $device)
-                            <tr>
-                                <td class="line">{{ $device->user_agent }}</td>
-                                <td class="actions">
-                                    <a type="button" class="btn small tertiary" href="{{ route('admin.account.device.delete', [$account->id, $device->uuid]) }}">
-                                        <i class="ph ph-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    @endif
-                </tbody>
-            </table>
+             @if ($devices->isEmpty())
+                <div class="empty"><i class="ph ph-devices"></i>
+                    <p>{{ __('No device') }}</p>
+                </div>
+            @else
+                <ul>
+                    @foreach ($devices as $device)
+                        <li>
+                            <span class="icon"> <i class=" ph {{ $device->app_icon }}"></i></span>
+                            <div class="content">
+                                <span class="title">{{ $device->app_label . ' - ' . $device->version }}</span>
+                                <span class="subtitle">{{ $device->user_agent }}</span>
+                            </div>
+                            <div class="meta">
+                                <span class="subtitle">{{ __(':time ago', ['time' => $device->update_time->diffForHumans(now(), true)]) }} </span>
+                                <a type="button" class="btn small oppose secondary" href="{{ route('admin.account.device.delete', [$account->id, $device->uuid]) }}">
+                                    <i class="ph ph-trash"></i>
+                                </a>
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
 
         <dialog id="dictionary_clear" closedby="any">
@@ -225,8 +298,15 @@
                 {{ __('Clear') }}
             </button>
             <h3>
+                <i class="ph ph-book-open-text"></i>
                 {{ __('Dictionary') }}
             </h3>
+            @if ($account->dictionaryEntries->isEmpty())
+                <div class="empty">
+                    <i class="ph ph-book-open-text"></i>
+                    <p>{{ __('Empty') }}</p>
+                </div>
+            @else
             <table>
                 <thead>
                     <tr>
@@ -236,11 +316,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if ($account->dictionaryEntries->isEmpty())
-                        <tr class="empty">
-                            <td colspan="3">{{ __('Empty') }}</td>
-                        </tr>
-                    @endif
                     @foreach ($account->dictionaryEntries as $dictionaryEntry)
                         <tr>
                             <td class="line">{{ $dictionaryEntry->key }}</td>
@@ -261,6 +336,7 @@
                     @endforeach
                 </tbody>
             </table>
+            @endif
         </div>
 
     @if (space()?->intercom_features)
@@ -281,7 +357,6 @@
                     <small class="oppose">{{ $account->dtmf_protocol}}</small>
                 @endif
             </h3>
-
             @if ($account->dtmf_protocol)
                 <table>
                     <tbody>

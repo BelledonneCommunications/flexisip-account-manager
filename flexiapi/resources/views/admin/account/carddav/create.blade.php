@@ -3,12 +3,12 @@
 @section('breadcrumb')
     @include('admin.parts.breadcrumb.accounts.show', ['account' => $account])
     <li class="breadcrumb-item active" aria-current="page">
-        {{ __('CardDav credentials') }}
+        {{ __('CardDAV credentials') }}
     </li>
 @endsection
 
 @section('content')
-    <h1><i class="ph ph-plus"></i> {{ __('CardDav credentials') }}</h1>
+    <h1><i class="ph ph-plus"></i> {{ __('CardDAV credentials') }}</h1>
 
     <form method="POST" action="{{ route('admin.account.carddavs.store', $account->id) }}" accept-charset="UTF-8">
         @csrf
