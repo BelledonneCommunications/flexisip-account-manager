@@ -3,13 +3,13 @@
 @section('breadcrumb')
     @include('admin.parts.breadcrumb.accounts.show', ['account' => $account])
     <li class="breadcrumb-item active">
-        {{ __('CardDav credentials') }}
+        {{ __('CardDAV credentials') }}
     </li>
     <li class="breadcrumb-item active" aria-current="page">{{ __('Delete') }}</li>
 @endsection
 
 @section('content')
-    <h1><i class="ph ph-trash"></i> {{ __('CardDav credentials') }}</h1>
+    <h1><i class="ph ph-trash"></i> {{ __('CardDAV credentials') }}</h1>
 
     <form method="POST" action="{{ route('admin.account.carddavs.destroy', [$account, $carddavCredentials->cardDavServer]) }}"
         accept-charset="UTF-8">

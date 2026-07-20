@@ -19,12 +19,18 @@
     @if ($space->unique_email)
 
         @if($accountWithoutEmail > 0)
-            <div class="panel panel-warning">
-                <i class="ph ph-warning"></i>
-                <div class="text">
-                    <span class="title">{{ __('Accounts Missing Email Address') }}</span>
-                    <span class="description"><strong>{{ $accountWithoutEmail }}</strong> {{ __("accounts in this space don't have an email address set. Once SSO is enabled, these users won't be able to log in, since authentication is based on matching email addresses.") }}</span>
-                </div>
+            <div class="card warning large">
+                <ul>
+                    <li>
+                        <span class="icon">
+                            <i class="ph ph-warning"></i>
+                        </span>
+                        <div class="content">
+                            <p>{{ __('Accounts Missing Email Address') }}</p>
+                            <p><strong>{{ $accountWithoutEmail }}</strong> {{ __("accounts in this space don't have an email address set. Once SSO is enabled, these users won't be able to log in, since authentication is based on matching email addresses.") }}</p>
+                        </div>
+                    </li>
+                </ul>
             </div>
         @endif
 
@@ -105,12 +111,18 @@
     <input form="show" class="btn" type="submit"
         value="@if ($space->id) {{ __('Update') }}@else{{ __('Create') }} @endif">
     @else
-        <div class="panel panel-danger">
-            <i class="ph ph-warning"></i>
-            <div class="text">
-                <span class="title">{{ __('Cannot Enable SSO — Email Uniqueness Required') }}</span>
-                <span class="description">{{ __("Email uniqueness is disabled. SSO authentication cannot be enabled without this option. Please contact your super-admin.") }}</span>
-            </div>
+        <div class="card danger large">
+            <ul>
+                <li>
+                    <span class="icon">
+                        <i class="ph ph-warning"></i>
+                    </span>
+                    <div class="content">
+                        <p>{{ __('Cannot Enable SSO — Email Uniqueness Required') }}</p>
+                        <p>{{ __("Email uniqueness is disabled. SSO authentication cannot be enabled without this option. Please contact your super-admin.") }}</p>
+                    </div>
+                </li>
+            </ul>
         </div>
     @endif
 

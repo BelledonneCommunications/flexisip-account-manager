@@ -24,7 +24,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\Create\Web\Request as WebRequest;
+use App\Libraries\FlexisipRedisConnector;
 use App\Services\AccountService;
+use App\StatisticsCall;
 
 class AccountController extends Controller
 {
@@ -35,8 +37,25 @@ class AccountController extends Controller
 
     public function dashboard(Request $request)
     {
+        $account = $request->user();
+        $connector = new FlexisipRedisConnector;
+
+        $out = StatisticsCall::where('from_domain', $account->domain)
+            ->where('from_username', $account->username)
+            ->latest('initiated_at')->take(3)->get();
+
+        $in = StatisticsCall::where('to_domain', $account->domain)
+            ->where('to_username', $account->username)
+            ->latest('initiated_at')->take(3)->get();
+
+        $calls = $out->concat($in)->sortByDesc('initiated_at')->take(3);
+
         return view('account.dashboard', [
-            'account' => $request->user()
+            'account' => $account,
+            'devices' => $connector->getDevices($account->identifier)
+                ->sortByDesc('update_time')
+                ->take(3),
+            'calls' => $calls,
         ]);
     }
 

@@ -10,31 +10,29 @@
         <h1><i class="ph ph-devices"></i> {{ __('Devices') }}</h1>
     </header>
 
-    <table>
-        <thead>
-            <tr>
-                <th>User Agent</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @if ($devices->isEmpty())
-                <tr class="empty">
-                    <td colspan="3">{{ __('Empty') }}</td>
-                </tr>
-            @else
+    <div class="card">
+        @if ($devices->isEmpty())
+            <div class="empty"><i class="ph ph-devices"></i>
+                <p>{{ __('No device') }}</p>
+            </div>
+        @else
+            <ul>
                 @foreach ($devices as $device)
-                    <tr>
-                        <td>{{ $device->user_agent }}</td>
-                        <td>
-                            <a type="button" class="btn" href="{{ route('account.device.delete', [$device->uuid]) }}">
-                                {{ __('Delete') }}
+                    <li>
+                        <span class="icon"> <i class=" ph {{ $device->app_icon }}"></i></span>
+                        <div class="content">
+                            <p>{{ $device->app_label . ' - ' . $device->version }}</p>
+                            <p>{{ $device->user_agent }}</p>
+                        </div>
+                        <div class="meta">
+                            <p>{{ __(':time ago', ['time' => $device->update_time->diffForHumans(now(), true)]) }} </p>
+                            <a type="button" class="btn small oppose secondary" href="{{ route('account.device.delete', [$device->uuid]) }}">
+                                <i class="ph ph-trash"></i>
                             </a>
-                        </td>
-                    </tr>
+                        </div>
+                    </li>
                 @endforeach
-            @endif
-        </tbody>
-    </table>
-
+            </ul>
+        @endif
+    </div>
 @endsection
