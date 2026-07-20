@@ -90,6 +90,29 @@ p .btn.oppose {
     border-color: var(--main-3);
 }
 
+.btn.icon {
+    background-color: var(--grey-2);
+    border-color: var(--grey-2);
+    line-height: 1;
+    padding: 3px;
+}
+
+.btn.icon>i {
+    color: var(--second-4);
+    font-size: 1.6rem;
+}
+
+.btn.icon:hover,
+.btn.icon:focus-visible {
+    background-color: var(--grey-3);
+    border-color: var(--grey-3);
+}
+
+.btn.icon:active {
+    background-color: var(--grey-4);
+    border-color: var(--grey-4);
+}
+
 form,
 form section {
     display: grid;

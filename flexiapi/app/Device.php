@@ -39,5 +39,40 @@ class Device extends Model
         $this->uuid = substr($sipHeaders['sip_instance'], 2, -2);
         $this->update_time = Carbon::createFromTimestamp($sipParams['updatedAt']);
         $this->user_agent = $query["user-agent"];
+        $parsedUserAgent = $this->parseDeviceUserAgent($this->user_agent);
+        $this->app = $parsedUserAgent["app"];
+        $this->version = $parsedUserAgent["version"];
+        $this->device_name = $parsedUserAgent["device"];
+    }
+
+    public function getAppLabelAttribute(): string
+    {
+        return match ($this->app) {
+            'Linphone-Desktop' => 'Linphone Desktop',
+            'LinphoneAndroid' => 'Linphone Android',
+            'LinphoneiOS' => 'Linphone iOS',
+            default => $this->app,
+        };
+    }
+
+    public function getAppIconAttribute(): string
+    {
+        return match ($this->app) {
+            'Linphone-Desktop' => 'ph-desktop',
+            'LinphoneAndroid' => 'ph-android-logo',
+            'LinphoneiOS' => 'ph-apple-logo',
+            default => 'ph-device-mobile',
+        };
+    }
+
+    public function parseDeviceUserAgent(string $userAgent): array
+    {
+        preg_match("/(?<app>[\w-]+)\/(?<version>[\d.]+)[^(]*\((?<device>[^)]*)/", $userAgent, $matches);
+
+        return [
+            'app' => $matches['app'] ?? $userAgent,
+            'version' => $matches['version'] ?? '',
+            'device' => $matches['device'] ?? '',
+        ];
     }
 }

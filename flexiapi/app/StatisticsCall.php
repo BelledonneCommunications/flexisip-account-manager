@@ -42,7 +42,7 @@ class StatisticsCall extends Model
 
     public function accountFrom()
     {
-        return $this->belongsTo(Account::class, ['username', 'domain'], ['to_username', 'to_domain']);
+        return $this->belongsTo(Account::class, ['username', 'domain'], ['from_username', 'from_domain']);
     }
 
     public function accountTo()

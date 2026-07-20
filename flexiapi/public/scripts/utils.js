@@ -160,6 +160,10 @@ function copyValueTo(from, to, append) {
     }
 }
 
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text);
+}
+
 function setCheckboxValue(name, value) {
     let checkbox = document.getElementsByName(name)[0];
 

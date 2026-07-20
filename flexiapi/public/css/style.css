@@ -55,8 +55,12 @@ body {
     --grey-9: rgb(0, 0, 0);
 
     --danger-1: rgb(254, 246, 246);
+    --danger-2: rgb(250 232 222);
     --danger-5: rgb(221, 95, 95);
     --danger-6: rgb(189, 72, 82);
+
+    --success-1: rgb(229 243 236);
+    --success-5: rgb(79, 174, 128);
 
     --warning-1: rgb(255, 253, 239);
     --warning-5: rgb(255, 220, 46);
@@ -81,6 +85,13 @@ body {
 
 .color.red {
     color: var(--danger-5);
+}
+
+.btn.danger {
+    --main-1: var(--danger-2);
+    --main-5: var(--danger-5);
+    --main-6: var(--danger-6);
+    --main-7: var(--danger-6);
 }
 
 #wizard h3 {
@@ -205,6 +216,7 @@ body.welcome content {
 audio {
     border-radius: 1rem;
     max-width: 12rem;
+    max-height: 4rem;
 }
 
 hr {
@@ -219,6 +231,23 @@ hr.clear {
 
 a.permalink {
     margin-left: 1rem;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.space-between {
+    justify-content: space-between;
 }
 
 /** Tabs **/
@@ -587,11 +616,17 @@ h2 {
     font-weight: 800;
     padding: 1rem 0;
     color: var(--second-7);
+    display: flex;
+    align-items: center;
 }
 
 h2 i {
     font-size: 2rem;
     margin-right: 1rem;
+}
+
+h2 .badge {
+    margin-left: 1rem;
 }
 
 h3 {
@@ -662,6 +697,10 @@ h3 .badge {
 
 h3 .badge+.badge {
     margin-left: 0;
+}
+
+.badge.badge-main {
+    background-color: var(--main-5);
 }
 
 .badge.badge-info {
@@ -899,6 +938,8 @@ select.list_toggle {
     }
 }
 
+/** Cards */
+
 .card {
     background-color: var(--grey-1);
     border-radius: 1rem;
@@ -908,9 +949,117 @@ select.list_toggle {
     overflow: hidden;
 }
 
-.card .icon {
+.card .header {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--grey-2);
+}
+
+.card .header h3 {
+    border-bottom: none;
+}
+
+.card .header a {
+    color: var(--main-5);
+    font-weight: 700;
+    padding-bottom: 1rem;
+}
+
+.card > .icon {
     font-size: 3rem;
     color: var(--second-6);
+}
+
+.card .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 2rem 0;
+    color: var(--second-4);
+}
+
+.card .empty i {
+    font-size: 3rem;
+}
+
+.card .empty p {
+    margin: 0;
+    font-size: 1.4rem;
+    color: inherit;
+}
+
+.card ul {
+    overflow-y: auto;
+    max-height: 19rem;
+    margin-bottom: 0;
+}
+
+.card li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1rem 1rem 1rem 0;
+    margin-left: 0;
+    border-bottom: 1px solid var(--grey-2);
+}
+
+.card li:last-child {
+    border-bottom: none
+}
+
+.card li .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background: var(--grey-2);
+    color: var(--second-5);
+    font-size: 18px;
+}
+
+.card li .icon.green {
+    color: var(--success-5);
+    background-color: var(--success-1);
+}
+
+.card li .icon.red {
+    color: var(--danger-5);
+    background-color: var(--danger-1);
+}
+
+.card li .content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+}
+
+.card li .title {
+    font-weight: 600;
+    color: var(--second-7);
+    font-size: 14px;
+}
+
+.card .subtitle {
+    font-size: 13px;
+    color: var(--second-4);
+}
+
+.card li .meta {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--second-4);
+    font-weight: 700;
+    font-size: 13px;
 }
 
 .disabled {
@@ -1141,7 +1290,7 @@ i.tooltip:hover::before {
     border: 1px solid var(--main-1);
     border-left: 4px solid var(--main-5);
     border-radius: 6px;
-    box-shadow: 4px 2px 22px -6px  var(--main-1);
+    box-shadow: 4px 2px 22px -6px var(--main-1);
     position: absolute;
     z-index: 1;
     top: 125%;
@@ -1191,14 +1340,19 @@ dialog::backdrop {
     color: var(--main-5);
 }
 
-.panel i {
-    font-size:3rem;
+.panel > i {
+    font-size: 3rem;
 }
 
 .panel .text {
     display: flex;
     flex-direction: column;
     color: var(--second-6);
+    flex: 1;
+}
+
+.panel .btn {
+    flex-shrink: 0;
 }
 
 .panel .text .title {
@@ -1211,7 +1365,7 @@ dialog::backdrop {
 }
 
 .panel.panel-danger {
-    background-color: var(--danger-1); 
+    background-color: var(--danger-1);
     border-color: var(--danger-5);
     color: var(--danger-5);
     margin-bottom: 2rem;
@@ -1222,10 +1376,10 @@ dialog::backdrop {
 }
 
 .panel.panel-warning {
-    background-color: var(--warning-1); 
+    background-color: var(--warning-1);
     border-color: var(--warning-5);
     color: var(--warning-6);
-    margin-bottom: 2rem; 
+    margin-bottom: 2rem;
 }
 
 .panel.panel-warning .text {

@@ -19,6 +19,7 @@
         @method('delete')
         @csrf
         <input name="uuid" type="hidden" value="{{ $device->uuid }}">
+        <input name="from" type="hidden" value="{{ request('from') }}">
         <div>
             <input class="btn" type="submit" value="{{ __('Delete') }}">
         </div>

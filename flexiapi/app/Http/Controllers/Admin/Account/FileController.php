@@ -23,12 +23,14 @@ class FileController extends Controller
     {
         $account = Account::findOrFail($accountId);
         $accountFile = $account->files()
-                        ->where('id', $fileId)
-                        ->firstOrFail();
+            ->where('id', $fileId)
+            ->firstOrFail();
         $accountFile->delete();
 
-        return $request->user()->admin
-            ? redirect()->route('admin.account.telephony.show', $account)->withFragment('#files')
-            : redirect()->route('account.telephony')->withFragment('#files');
+
+        return match ($request->input('from')) {
+            'dashboard' => redirect()->route('account.dashboard'),
+            default => redirect()->route('account.telephony')->withFragment('#files'),
+        };
     }
 }
