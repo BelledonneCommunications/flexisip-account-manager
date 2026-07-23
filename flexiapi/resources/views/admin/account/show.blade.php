@@ -212,7 +212,7 @@
             <p>{{ __('Are you sure you want to clear all the dictionary items?') }}</p>
 
             <a class="btn small oppose" href="{{ route('admin.account.dictionary.clear', $account) }}">{{ __('Clear') }}</a>
-            <button class="btn small oppose secondary" commandfor="away_dialog" command="close" onclick="document.querySelector('#dictionary_clear').close()">{{ __('Cancel') }}</button>
+            <button class="btn small oppose secondary" commandfor="dictionary_clear" command="close" onclick="document.querySelector('#dictionary_clear').close()">{{ __('Cancel') }}</button>
         </dialog>
 
         <div class="card large">

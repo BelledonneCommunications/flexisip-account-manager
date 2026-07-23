@@ -16,7 +16,7 @@ class CallForwardingEnable implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if ($value == true) {
-            $filter = $this->request->get('type') == 'always' ? ['away', 'busy'] : ['always'];
+            $filter = $this->request->input('type') == 'always' ? ['no_answer', 'busy'] : ['always'];
 
             if ($this->account->callForwardings()->whereIn('type', $filter)->where('enabled', true)->exists()) {
                 $fail('type: always and type: always/busy cannot be enabled at the same time');

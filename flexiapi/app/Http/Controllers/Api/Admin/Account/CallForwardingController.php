@@ -23,7 +23,7 @@ class CallForwardingController extends Controller
         $request->validate([
             'type' => [
                 'required',
-                'in:always,away,busy',
+                'in:always,no_answer,busy',
                 Rule::unique('call_forwardings', 'type')->where(fn ($query) => $query->where('account_id', $accountId))
             ],
             'forward_to' => 'required|in:sip_uri,contact,voicemail',
@@ -34,11 +34,11 @@ class CallForwardingController extends Controller
 
         $callForwarding = new CallForwarding;
         $callForwarding->account_id = $account->id;
-        $callForwarding->type = $request->get('type');
-        $callForwarding->forward_to = $request->get('forward_to');
-        $callForwarding->sip_uri = $request->get('sip_uri');
-        $callForwarding->enabled = $request->get('enabled');
-        $callForwarding->contact_id = $request->get('contact_id');
+        $callForwarding->type = $request->input('type');
+        $callForwarding->forward_to = $request->input('forward_to');
+        $callForwarding->sip_uri = $request->input('sip_uri');
+        $callForwarding->enabled = $request->input('enabled');
+        $callForwarding->contact_id = $request->input('contact_id');
         $callForwarding->save();
 
         return $callForwarding;
@@ -52,7 +52,7 @@ class CallForwardingController extends Controller
         $request->validate([
             'type' => [
                 'required',
-                'in:always,away,busy',
+                'in:always,no_answer,busy',
                 Rule::unique('call_forwardings', 'type')
                     ->where(fn ($query) => $query->where('account_id', $accountId))
                     ->ignore($callForwarding->id)
@@ -62,9 +62,9 @@ class CallForwardingController extends Controller
             'enabled' => ['required', 'boolean', new CallForwardingEnable($request, $account)]
         ]);
 
-        $callForwarding->forward_to = $request->get('forward_to');
-        $callForwarding->sip_uri = $request->get('sip_uri');
-        $callForwarding->enabled = $request->get('enabled');
+        $callForwarding->forward_to = $request->input('forward_to');
+        $callForwarding->sip_uri = $request->input('sip_uri');
+        $callForwarding->enabled = $request->input('enabled');
         $callForwarding->save();
 
         return $callForwarding;
