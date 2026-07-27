@@ -149,7 +149,7 @@ class Account extends Authenticatable
     {
         $callForwardings = $this->callForwardings->keyBy('type');
         $resolved['always'] = $callForwardings['always'] ?? new CallForwarding(['type' => 'always']);
-        $resolved['away'] = $callForwardings['away'] ?? new CallForwarding(['type' => 'away']);
+        $resolved['no_answer'] = $callForwardings['no_answer'] ?? new CallForwarding(['type' => 'no_answer']);
         $resolved['busy'] = $callForwardings['busy'] ?? new CallForwarding(['type' => 'busy']);
         return $resolved;
     }

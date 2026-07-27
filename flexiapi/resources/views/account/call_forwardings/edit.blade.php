@@ -8,21 +8,21 @@
 
     <button class="btn small oppose" commandfor="always_dialog" onclick="
         setCheckboxValue('always[enabled]', true);
-        setCheckboxValue('away[enabled]', false);
+        setCheckboxValue('no_answer[enabled]', false);
         setCheckboxValue('busy[enabled]', false);
         document.querySelector('#always_dialog').close()">{{ __('Activate') }}</button>
     <button class="btn small oppose secondary" commandfor="always_dialog" command="close" onclick="document.querySelector('#always_dialog').close()">{{ __('Cancel') }}</button>
 </dialog>
 
-<dialog id="away_dialog" closedby="any">
+<dialog id="no_answer_dialog" closedby="any">
     <h2>{{ __('Activate conditional call forwarding?') }}</h2>
     <p>{{ __('Activating conditional call forwarding will automatically disable the Forward All Calls rule.') }}</p>
 
-    <button class="btn small oppose" commandfor="away_dialog" onclick="
+    <button class="btn small oppose" commandfor="no_answer_dialog" onclick="
         setCheckboxValue('always[enabled]', false);
-        setCheckboxValue('away[enabled]', true);
-        document.querySelector('#away_dialog').close()">{{ __('Activate') }}</button>
-    <button class="btn small oppose secondary" commandfor="away_dialog" command="close" onclick="document.querySelector('#away_dialog').close()">{{ __('Cancel') }}</button>
+        setCheckboxValue('no_answer[enabled]', true);
+        document.querySelector('#no_answer_dialog').close()">{{ __('Activate') }}</button>
+    <button class="btn small oppose secondary" commandfor="no_answer_dialog" command="close" onclick="document.querySelector('#no_answer_dialog').close()">{{ __('Cancel') }}</button>
 </dialog>
 
 <dialog id="busy_dialog" closedby="any">
@@ -53,7 +53,7 @@
             <span class="badge">{{ __('Priority rule') }}</span>
             <input id="always[enabled]" type="checkbox" @if ($callForwardings['always']->enabled) checked @endif name="always[enabled]"
             onchange="if (this.checked
-                && (document.querySelector('#away\\[enabled\\]').checked || document.querySelector('#busy\\[enabled\\]').checked)) {
+                && (document.querySelector('#no_answer\\[enabled\\]').checked || document.querySelector('#busy\\[enabled\\]').checked)) {
                     setCheckboxValue('always[enabled]', false);
                     document.querySelector('#always_dialog').showModal();
                 }">
@@ -74,16 +74,16 @@
         </div>
 
         <div class="checkbox">
-            <input id="away[enabled]" type="checkbox" @if ($callForwardings['away']->enabled) checked @endif name="away[enabled]"
+            <input id="no_answer[enabled]" type="checkbox" @if ($callForwardings['no_answer']->enabled) checked @endif name="no_answer[enabled]"
             onchange="if (this.checked
                 && document.querySelector('#always\\[enabled\\]').checked) {
-                    setCheckboxValue('away[enabled]', false);
-                    document.querySelector('#away_dialog').showModal();
+                    setCheckboxValue('no_answer[enabled]', false);
+                    document.querySelector('#no_answer_dialog').showModal();
                 }">
-            <label for="away[enabled]"></label>
+            <label for="no_answer[enabled]"></label>
         </div>
 
-        @include('account.call_forwardings.edit_select_part', ['callForwarding' => $callForwardings, 'type' => 'away'])
+        @include('account.call_forwardings.edit_select_part', ['callForwarding' => $callForwardings, 'type' => 'no_answer'])
     </section>
 
     <section class="block">

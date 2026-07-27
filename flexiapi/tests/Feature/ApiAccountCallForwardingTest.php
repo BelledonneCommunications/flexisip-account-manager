@@ -134,7 +134,7 @@ class ApiAccountCallForwardingTest extends TestCase
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
-                'type' => 'away',
+                'type' => 'no_answer',
                 'forward_to' => 'sip_uri',
                 'sip_uri' => $uri,
                 'enabled' => true
@@ -153,7 +153,7 @@ class ApiAccountCallForwardingTest extends TestCase
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
-                'type' => 'away',
+                'type' => 'no_answer',
                 'forward_to' => 'sip_uri',
                 'sip_uri' => $uri,
                 'enabled' => true

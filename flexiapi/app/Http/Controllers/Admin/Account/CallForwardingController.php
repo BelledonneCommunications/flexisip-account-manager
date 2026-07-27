@@ -20,19 +20,19 @@ class CallForwardingController extends Controller
 
         $request->validate([
             'always.forward_to' => $forwardTo,
-            'always.sip_uri' => array_key_exists('enabled', $request->get('always'))
+            'always.sip_uri' => array_key_exists('enabled', $request->input('always'))
                 ? ['nullable', new SipUri, 'required_if:always.forward_to,sip_uri']
                 : 'nullable',
             'always.contact_id' => ['required_if:always.forward_to,contact', Rule::in($contactsIds)],
 
-            'away.forward_to' => $forwardTo,
-            'away.sip_uri' => array_key_exists('enabled', $request->get('away'))
-                ? ['nullable', new SipUri, 'required_if:away.forward_to,sip_uri']
+            'no_answer.forward_to' => $forwardTo,
+            'no_answer.sip_uri' => array_key_exists('enabled', $request->input('no_answer'))
+                ? ['nullable', new SipUri, 'required_if:no_answer.forward_to,sip_uri']
                 : 'nullable',
-            'away.contact_id' => ['required_if:away.forward_to,contact', Rule::in($contactsIds)],
+            'no_answer.contact_id' => ['required_if:no_answer.forward_to,contact', Rule::in($contactsIds)],
 
             'busy.forward_to' => $forwardTo,
-            'busy.sip_uri' => array_key_exists('enabled', $request->get('busy'))
+            'busy.sip_uri' => array_key_exists('enabled', $request->input('busy'))
                 ? ['nullable', new SipUri, 'required_if:busy.forward_to,sip_uri']
                 : 'nullable',
             'busy.contact_id' => ['required_if:busy.forward_to,contact', Rule::in($contactsIds)],
@@ -40,41 +40,41 @@ class CallForwardingController extends Controller
 
         $account->callForwardings()->update(['enabled' => false]);
 
-        if (array_key_exists('enabled', $request->get('always'))) {
+        if (array_key_exists('enabled', $request->input('always'))) {
             $alwaysForwarding = $account->callForwardings()->where('type', 'always')->first() ?? new CallForwarding;
             $alwaysForwarding->enabled = true;
             $alwaysForwarding->account_id = $account->id;
             $alwaysForwarding->type = 'always';
-            $alwaysForwarding->forward_to = $request->get('always')['forward_to'];
-            $alwaysForwarding->sip_uri = $request->get('always')['sip_uri'];
-            $alwaysForwarding->contact_id = $request->get('always')['forward_to'] == 'contact'
-                ? $request->get('always')['contact_id']
+            $alwaysForwarding->forward_to = $request->input('always')['forward_to'];
+            $alwaysForwarding->sip_uri = $request->input('always')['sip_uri'];
+            $alwaysForwarding->contact_id = $request->input('always')['forward_to'] == 'contact'
+                ? $request->input('always')['contact_id']
                 : null;
             $alwaysForwarding->save();
         }
 
-        if (array_key_exists('enabled', $request->get('away'))) {
-            $awayForwarding = $account->callForwardings()->where('type', 'away')->first() ?? new CallForwarding;
-            $awayForwarding->enabled = true;
-            $awayForwarding->account_id = $account->id;
-            $awayForwarding->type = 'away';
-            $awayForwarding->forward_to = $request->get('away')['forward_to'];
-            $awayForwarding->sip_uri = $request->get('away')['sip_uri'];
-            $awayForwarding->contact_id = $request->get('away')['forward_to'] == 'contact'
-                ? $request->get('away')['contact_id']
+        if (array_key_exists('enabled', $request->input('no_answer'))) {
+            $noAnswerForwarding = $account->callForwardings()->where('type', 'no_answer')->first() ?? new CallForwarding;
+            $noAnswerForwarding->enabled = true;
+            $noAnswerForwarding->account_id = $account->id;
+            $noAnswerForwarding->type = 'no_answer';
+            $noAnswerForwarding->forward_to = $request->input('no_answer')['forward_to'];
+            $noAnswerForwarding->sip_uri = $request->input('no_answer')['sip_uri'];
+            $noAnswerForwarding->contact_id = $request->input('no_answer')['forward_to'] == 'contact'
+                ? $request->input('no_answer')['contact_id']
                 : null;
-            $awayForwarding->save();
+            $noAnswerForwarding->save();
         }
 
-        if (array_key_exists('enabled', $request->get('busy'))) {
+        if (array_key_exists('enabled', $request->input('busy'))) {
             $busyForwarding = $account->callForwardings()->where('type', 'busy')->first() ?? new CallForwarding;
             $busyForwarding->enabled = true;
             $busyForwarding->account_id = $account->id;
             $busyForwarding->type = 'busy';
-            $busyForwarding->forward_to = $request->get('busy')['forward_to'];
-            $busyForwarding->sip_uri = $request->get('busy')['sip_uri'];
-            $busyForwarding->contact_id = $request->get('busy')['forward_to'] == 'contact'
-                ? $request->get('busy')['contact_id']
+            $busyForwarding->forward_to = $request->input('busy')['forward_to'];
+            $busyForwarding->sip_uri = $request->input('busy')['sip_uri'];
+            $busyForwarding->contact_id = $request->input('busy')['forward_to'] == 'contact'
+                ? $request->input('busy')['contact_id']
                 : null;
             $busyForwarding->save();
         }
