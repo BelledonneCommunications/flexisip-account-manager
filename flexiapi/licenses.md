@@ -346,7 +346,7 @@ Licenses Used: Apache-2.0
    limitations under the License.
 
 
-### composer/ca-bundle (Version 1.5.12 | 00a2f42)
+### composer/ca-bundle (Version 1.5.13 | c008272)
 Lets you find a path to the system CA bundle, and includes a fallback to the Mozilla CA bundle.
 Homepage: Not configured.
 Licenses Used: MIT
@@ -424,7 +424,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### doctrine/dbal (Version 4.4.3 | 61e730f)
+### doctrine/dbal (Version 4.4.4 | fb9e0ff)
 Powerful PHP database abstraction layer (DBAL) with many features for database schema introspection and management.
 Homepage: https://www.doctrine-project.org/projects/dbal.html
 Licenses Used: MIT
@@ -740,7 +740,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### giggsey/libphonenumber-for-php-lite (Version 9.0.34 | a9f129a)
+### giggsey/libphonenumber-for-php-lite (Version 9.0.35 | 2fcb986)
 A lite version of giggsey/libphonenumber-for-php, which is a PHP Port of Google's libphonenumber
 Homepage: https://github.com/giggsey/libphonenumber-for-php-lite
 Licenses Used: Apache-2.0
@@ -950,7 +950,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### guzzlehttp/guzzle (Version 7.14.2 | fa88c57)
+### guzzlehttp/guzzle (Version 7.15.2 | 7441019)
 Guzzle is a PHP HTTP client library
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1013,7 +1013,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### guzzlehttp/psr7 (Version 2.12.5 | 9365d57)
+### guzzlehttp/psr7 (Version 2.13.0 | dad8962)
 PSR-7 message implementation that also provides common utility methods
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1045,7 +1045,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### guzzlehttp/uri-template (Version v1.0.9 | d7580af)
+### guzzlehttp/uri-template (Version v1.0.10 | f6c24c2)
 A polyfill class for uri_template of PHP
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1170,7 +1170,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### laravel/serializable-closure (Version v2.0.13 | b566ee0)
+### laravel/serializable-closure (Version v2.0.15 | dccd8bc)
 Laravel Serializable Closure provides an easy and secure way to serialize closures in PHP.
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1197,7 +1197,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### laravel/socialite (Version v5.28.0 | 4c131ff)
+### laravel/socialite (Version v5.29.0 | cd343a5)
 Laravel wrapper around OAuth 1 & OAuth 2 libraries.
 Homepage: https://laravel.com
 Licenses Used: MIT
@@ -1960,7 +1960,7 @@ you URLs with full text:
 - [GPL version 3](http://www.gnu.org/licenses/gpl-3.0.html)
 
 
-### nette/utils (Version v4.1.4 | 7da6c39)
+### nette/utils (Version v4.1.5 | b043439)
 🛠  Nette Utils: lightweight utilities for string & array manipulation, image handling, safe JSON encoding/decoding, validation, slug or strong password generating etc.
 Homepage: https://nette.org
 Licenses Used: BSD-3-Clause, GPL-2.0-only, GPL-3.0-only
@@ -3297,7 +3297,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-### respect/validation (Version 2.4.12 | f05659f)
+### respect/validation (Version 2.5.0 | 48254ed)
 The most awesome validation engine ever created for PHP
 Homepage: http://respect.github.io/Validation/
 Licenses Used: MIT

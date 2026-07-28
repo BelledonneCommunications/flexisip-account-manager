@@ -18,43 +18,43 @@
         @csrf
         @method('post')
 
-        <input type="hidden" name="by" value="{{ request()->get('by', 'day') }}">
+        <input type="hidden" name="by" value="{{ request()->input('by', 'day') }}">
 
         <div>
-            <input type="date" name="from" value="{{ request()->get('from') }}" onchange="this.form.submit()">
+            <input type="date" name="from" value="{{ request()->input('from') }}" onchange="this.form.submit()">
             <label for="from">{{ __('From') }}</label>
         </div>
         <div>
-            <input type="date" name="to" value="{{ request()->get('to') }}" onchange="this.form.submit()">
+            <input type="date" name="to" value="{{ request()->input('to') }}" onchange="this.form.submit()">
             <label for="to">{{ __('To') }}</label>
         </div>
 
         <div>
             <a href="{{ route('admin.account.statistics.show', ['account' => $account, 'by' => 'day'] + request()->only(['from', 'to', 'domain'])) }}"
-                class="chip @if (request()->get('by', 'day') == 'day') selected @endif">{{ __('Day') }}</a>
+                class="chip @if (request()->input('by', 'day') == 'day') selected @endif">{{ __('Day') }}</a>
             <a href="{{ route('admin.account.statistics.show', ['account' => $account, 'by' => 'week'] + request()->only(['from', 'to', 'domain'])) }}"
-                class="chip @if (request()->get('by', 'day') == 'week') selected @endif">{{ __('Week') }}</a>
+                class="chip @if (request()->input('by', 'day') == 'week') selected @endif">{{ __('Week') }}</a>
             <a href="{{ route('admin.account.statistics.show', ['account' => $account, 'by' => 'month'] + request()->only(['from', 'to', 'domain'])) }}"
-                class="chip @if (request()->get('by', 'day') == 'month') selected @endif">{{ __('Month') }}</a>
+                class="chip @if (request()->input('by', 'day') == 'month') selected @endif">{{ __('Month') }}</a>
             <a href="{{ route('admin.account.statistics.show', ['account' => $account, 'by' => 'year'] + request()->only(['from', 'to', 'domain'])) }}"
-                class="chip @if (request()->get('by', 'day') == 'year') selected @endif">{{ __('Year') }}</a>
+                class="chip @if (request()->input('by', 'day') == 'year') selected @endif">{{ __('Year') }}</a>
         </div>
     </form>
 </div>
 
-<h2><i class="ph ph-envelope"></i> Messages from the account</h2>
+<h2><i class="ph ph-envelope"></i> {{ __('From the account') }}</h2>
 
 {!! $messagesFromGraph !!}
 
-<h2><i class="ph ph-envelope"></i> Messages to the account</h2>
+<h2><i class="ph ph-envelope"></i> {{ __('To the account') }}</h2>
 
 {!! $messagesToGraph !!}
 
-<h2><i class="ph ph-phone"></i> Calls from the account</h2>
+<h2><i class="ph ph-phone"></i> {{ __('From the account') }}</h2>
 
 {!! $callsFromGraph !!}
 
-<h2><i class="ph ph-phone"></i> Calls to the account</h2>
+<h2><i class="ph ph-phone"></i> {{ __('To the account') }}</h2>
 
 {!! $callsToGraph !!}
 
