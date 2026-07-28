@@ -72,16 +72,16 @@
         <div>
             <input name="account_proxy_registrar_address" id="account_proxy_registrar_address" placeholder="server.tld"
                 value="{{ $space->account_proxy_registrar_address }}">
-            <label for="account_proxy_registrar_address">Account proxy registrar address</label>
-            <span class="supporting">Will be used for informational purpose in the user panel and communication emails</span>
+            <label for="account_proxy_registrar_address">{{ __('Account proxy registrar address') }}</label>
+            <span class="supporting">{{ __('Will be used for informational purpose in the user panel and communication emails') }}</span>
             @include('parts.errors', ['name' => 'account_proxy_registrar_address'])
         </div>
 
         <div>
             <input name="account_realm" @if ($space->accounts()->count() > 0) disabled @endif id="account_realm"
                 placeholder="server.tld" value="{{ $space->account_realm }}">
-            <label for="account_realm">Account realm</label>
-            <span class="supporting">A custom realm for the Space accounts</span>
+            <label for="account_realm">{{ __('Account realm') }}</label>
+            <span class="supporting">{{ __('A custom realm for the Space accounts') }}</span>
             @include('parts.errors', ['name' => 'account_realm'])
         </div>
 
