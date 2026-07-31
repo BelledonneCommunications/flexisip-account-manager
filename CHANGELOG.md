@@ -28,6 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - **Account Defaut Password Algorythm**: moved the Account Defaut Password Algorythm from a global environment variable (`.env`) to a per-space database setting for better multi-tenancy.
 - **Account Management**: Updated account creation and update rules to respect the space-specific uniqueness configuration.
 - **Remove DIGEST and JWT auth for admin endpoints**: Only API Key authentications are authorized
+- **Migrate the daily maintenance cron jobs to the Laravel Scheduler**: The tasks previously run from `/etc/cron.daily/flexiapi.debian` (Debian) or `/etc/cron.daily/flexiapi.redhat` (RHEL) — clearing tombstoned accounts, API keys, files, unconfirmed accounts, statistics, DIGEST opaques, and sending space expiration emails — are now scheduled directly in `flexiapi/routes/console.php` and executed by the `php artisan schedule:run` cron entry already installed at `/etc/cron.d/flexiapi`. No action is required. On upgrade, the now obsolete `/etc/cron.daily/flexiapi.debian`/`.redhat` file is automatically removed; if you had customized it, your version is kept as a backup (`.dpkg-bak` on Debian, `.rpmsave` on RHEL) but will no longer run — port any customization into `console.php` instead.
 
 ### Removed
 
