@@ -101,6 +101,21 @@ chown -R %{web_user}:%{web_user} %{var_dir}/log/flexiapi
 ln -sf %{var_dir}/log/flexiapi %{var_dir}/flexiapi/storage/logs
 ln -sf %{var_dir}/flexiapi/storage %{opt_dir}/flexiapi/.
 
+# Remove deprecated cron jobs files
+%if %{with deb}
+    if [ -f /etc/cron.daily/flexiapi.debian ]
+    then 
+        cp /etc/cron.daily/flexiapi.debian $RPM_BUILD_ROOT%{opt_dir}/flexiapi.debian.old
+        rm /etc/cron.daily/flexiapi.debian
+    fi
+%else
+    if [ -f /etc/cron.daily/flexiapi.redhat ]
+    then 
+        cp /etc/cron.daily/flexiapi.redhat $RPM_BUILD_ROOT%{opt_dir}/flexiapi.redhat.old
+        rm /etc/cron.daily/flexiapi.redhat
+    fi
+%endif
+
 # if selinux is installed on the system (even if not enabled)
 which setsebool > /dev/null 2>&1
 if [ $? -eq 0 ] ; then
