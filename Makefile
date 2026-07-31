@@ -87,6 +87,10 @@ deb-only:
 	rm -r $(OUTPUT_DIR)/rpmbuild
 	rm -rf $(OUTPUT_DIR)/*.orig
 	sed -i 's/Depends:.*/Depends: $${shlibs:Depends}, php (>= 8.2), php-xml, php-pdo, php-gd, php-redis, php-mysql, php-mbstring, php-sqlite3/g' $(OUTPUT_DIR)/bc-flexisip-account-manager*/debian/control
+	
+	# Required by the dpkg-maintscript-helper calls in preinst/postinst/postrm 
+	# (used to properly drop the cron.daily conffile deprecated by FLEXIAPI-526)
+	sed -i '/^Depends:/i Pre-Depends: dpkg (>= 1.15.7.2)' $(OUTPUT_DIR)/bc-flexisip-account-manager*/debian/control
 
 	cd `ls -rt $(OUTPUT_DIR) | tail -1` && dpkg-buildpackage --no-sign
 	@echo "📦✅ DEB Package Created"

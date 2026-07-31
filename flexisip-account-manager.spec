@@ -14,6 +14,9 @@
 
 %define env_symlink_file %{opt_dir}/flexiapi/.env
 
+# cron.daily scripts deprecated by FLEXIAPI-526 
+%define deprecated_debian_cron_job /etc/cron.daily/flexiapi.debian
+
 %bcond_with deb
 
 %if %{with deb}
@@ -53,19 +56,10 @@ cp flexiapi/composer.json "$RPM_BUILD_ROOT%{opt_dir}/flexiapi"
 
 cp README* "$RPM_BUILD_ROOT%{opt_dir}/"
 cp INSTALL* "$RPM_BUILD_ROOT%{opt_dir}/"
-mkdir -p $RPM_BUILD_ROOT/etc/cron.daily
 mkdir -p $RPM_BUILD_ROOT/etc/cron.d
 
 mkdir -p $RPM_BUILD_ROOT%{apache_conf_path}
 cp httpd/flexisip-account-manager.conf "$RPM_BUILD_ROOT%{apache_conf_path}/"
-
-%if %{with deb}
-    cp cron/flexiapi.debian "$RPM_BUILD_ROOT/etc/cron.daily/"
-    chmod +x "$RPM_BUILD_ROOT/etc/cron.daily/flexiapi.debian"
-%else
-    cp cron/flexiapi.redhat "$RPM_BUILD_ROOT/etc/cron.daily/"
-    chmod +x "$RPM_BUILD_ROOT/etc/cron.daily/flexiapi.redhat"
-%endif
 
 cp cron/flexiapi.cron "$RPM_BUILD_ROOT/etc/cron.d/flexiapi"
 chmod +x "$RPM_BUILD_ROOT/etc/cron.d/flexiapi"
@@ -75,6 +69,11 @@ chmod +x "$RPM_BUILD_ROOT/etc/cron.d/flexiapi"
 %endif
 
 # POST INSTALLATION
+
+%pre
+%if %{with deb}
+    dpkg-maintscript-helper rm_conffile %{deprecated_debian_cron_job} %{version}-%{release}~ -- "$@"
+%endif
 
 %posttrans
 # Create the var directory if it doesn't exists
@@ -100,6 +99,11 @@ chown -R %{web_user}:%{web_user} %{var_dir}/log/flexiapi
 # Forces the creation of the symbolic links event if they already exists
 ln -sf %{var_dir}/log/flexiapi %{var_dir}/flexiapi/storage/logs
 ln -sf %{var_dir}/flexiapi/storage %{opt_dir}/flexiapi/.
+
+# Remove the cron.daily script deprecated in favor of the Laravel Scheduler.
+%if %{with deb}
+    dpkg-maintscript-helper rm_conffile %{deprecated_debian_cron_job} %{version}-%{release}~ -- "$@"
+%endif
 
 # if selinux is installed on the system (even if not enabled)
 which setsebool > /dev/null 2>&1
@@ -147,6 +151,10 @@ fi
 
 
 %postun
+%if %{with deb}
+    dpkg-maintscript-helper rm_conffile %{deprecated_debian_cron_job} %{version}-%{release}~ -- "$@"
+%endif
+
 # Final removal.
 # if selinux is installed on the system (even if not enabled)
 which setsebool > /dev/null 2>&1
@@ -173,11 +181,6 @@ fi
 
 %config /etc/cron.d/flexiapi
 %config(noreplace) %{apache_conf_path}/flexisip-account-manager.conf
-%if %{with deb}
-    %config(noreplace) /etc/cron.daily/flexiapi.debian
-%else
-    %config(noreplace) /etc/cron.daily/flexiapi.redhat
-%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
