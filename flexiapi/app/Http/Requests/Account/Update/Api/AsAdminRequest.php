@@ -36,7 +36,7 @@ class AsAdminRequest extends UpdateRequest
     {
         $rules = parent::rules();
 
-        $rules['algorithm'] = ['required', new Enum(PasswordAlgorithm::class)];
+        $rules['algorithm'] = ['required_with:password', new Enum(PasswordAlgorithm::class)];
         $rules['admin'] = 'boolean|nullable';
         $rules['activated'] = 'boolean|nullable';
 

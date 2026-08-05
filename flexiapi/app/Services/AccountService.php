@@ -59,24 +59,24 @@ class AccountService
     public function store(CreateRequest $request): Account
     {
         $account = new Account;
-        $account->username = $request->get('username');
+        $account->username = $request->input('username');
         $account->activated = false;
         $account->domain = $request->space->domain;
         $account->ip_address = $request->ip();
         $account->created_at = Carbon::now();
         $account->user_agent = $request->space->name;
-        $account->dtmf_protocol = $request->get('dtmf_protocol');
+        $account->dtmf_protocol = $request->input('dtmf_protocol');
 
         if ($request->asAdmin) {
-            $account->email = $request->get('email');
-            $account->display_name = $request->get('display_name');
-            $account->activated = $request->has('activated') ? (bool) $request->get('activated') : false;
+            $account->email = $request->input('email');
+            $account->display_name = $request->input('display_name');
+            $account->activated = $request->has('activated') ? (bool) $request->input('activated') : false;
             $account->domain = resolveDomain($request);
             $account->user_agent = $request->header('User-Agent') ?? $request->space->name;
-            $account->admin = $request->has('admin') && (bool) $request->get('admin');
+            $account->admin = $request->has('admin') && (bool) $request->input('admin');
 
             if (!$request->api && $request->has('role')) {
-                $account->setRole($request->get('role'));
+                $account->setRole($request->input('role'));
             }
         }
 
@@ -84,19 +84,19 @@ class AccountService
 
         if ($request->asAdmin) {
             if ($request->has('dictionary')) {
-                foreach ($request->get('dictionary') as $key => $value) {
+                foreach ($request->input('dictionary') as $key => $value) {
                     $account->setDictionaryEntry($key, $value);
                 }
             }
 
-            $account->phone = $request->get('phone');
+            $account->phone = $request->input('phone');
             $account->save();
         }
 
-        $account->updatePassword($request->get('password'), $request->get('algorithm'));
+        $account->updatePassword($request->input('password'), $request->input('algorithm'));
 
         if ($request->api && !$request->asAdmin) {
-            $token = AccountCreationToken::where('token', $request->get('account_creation_token'))->first();
+            $token = AccountCreationToken::where('token', $request->input('account_creation_token'))->first();
             $token->consume();
             $token->account_id = $account->id;
             $token->save();
@@ -133,43 +133,48 @@ class AccountService
         $account = Account::findOrFail($accountId);
 
         if ($request->asAdmin) {
-            $account->username = $request->get('username') ?? $account->username;
+            $account->username = $request->input('username') ?? $account->username;
             $account->domain = $request->has('domain') ? resolveDomain($request) : $account->domain;
-            $account->email = $request->get('email');
-            $account->display_name = $request->get('display_name');
-            $account->dtmf_protocol = $request->get('dtmf_protocol');
+            $account->email = $request->input('email');
+            $account->display_name = $request->input('display_name');
+            $account->dtmf_protocol = $request->input('dtmf_protocol');
             $account->user_agent = $request->header('User-Agent') ?? $account->space->name;
-            $account->admin = $request->has('admin') && (bool) $request->get('admin');
 
-            if ($request->api && $request->has('admin')) {
-                $account->admin = (bool) $request->get('admin');
+            if ($request->api) {
+                if ($request->has('activated')) {
+                    $account->activated = $request->boolean('activated');
+                }
+
+                if ($request->has('blocked')) {
+                    $account->blocked = $request->boolean('blocked');
+                }
+
+                if ($request->has('admin')) {
+                    $account->admin = $request->boolean('admin');
+                }
+            } else {
+                $account->activated = getRequestBoolean($request, 'activated');
+                $account->blocked = getRequestBoolean($request, 'blocked');
+
+                if ($request->has('role')) {
+                    $account->setRole($request->input('role'));
+                }
             }
 
-            if (!$request->api && $request->has('role')) {
-                $account->setRole($request->get('role'));
-            }
-
-            $account->activated = !$request->api
-                && $request->has('activated')
-                && in_array($request->get('activated'), ['true', 'on']);
-            $account->blocked = !$request->api
-                && $request->has('blocked')
-                && in_array($request->get('blocked'), ['true', 'on']);
-
-            if ($request->get('password')) {
+            if ($request->input('password')) {
                 $account->updatePassword(
-                    $request->get('password'),
-                    $request->api ? $request->get('algorithm') : null
+                    $request->input('password'),
+                    $request->api ? $request->input('algorithm') : null
                 );
             }
 
-            $account->phone = $request->get('phone');
+            $account->phone = $request->input('phone');
             $account->save();
 
             if ($request->has('dictionary')) {
                 $account->dictionaryEntries()->delete();
 
-                foreach ($request->get('dictionary') as $key => $value) {
+                foreach ($request->input('dictionary') as $key => $value) {
                     $account->setDictionaryEntry($key, $value);
                 }
             }
@@ -234,7 +239,7 @@ class AccountService
 
         $phoneChangeCode = new PhoneChangeCode;
         $phoneChangeCode->account_id = $account->id;
-        $phoneChangeCode->phone = $request->get('phone');
+        $phoneChangeCode->phone = $request->input('phone');
         $phoneChangeCode->code = generatePin();
         $phoneChangeCode->fillRequestInfo($request);
         $phoneChangeCode->save();
@@ -248,7 +253,7 @@ class AccountService
         }
 
         $ovhSMS = new OvhSMS;
-        $ovhSMS->send($request->get('phone'), $message);
+        $ovhSMS->send($request->input('phone'), $message);
     }
 
     public function updatePhone(Request $request): ?Account
@@ -262,8 +267,8 @@ class AccountService
             'number_4' => 'required|digits:1'
         ]);
 
-        $code = $this->api ? $request->get('code')
-            : $request->get('number_1') . $request->get('number_2') . $request->get('number_3') . $request->get('number_4');
+        $code = $this->api ? $request->input('code')
+            : $request->input('number_1') . $request->input('number_2') . $request->input('number_3') . $request->input('number_4');
 
         $account = $request->user();
 
@@ -315,7 +320,7 @@ class AccountService
 
         $emailChangeCode = new EmailChangeCode;
         $emailChangeCode->account_id = $account->id;
-        $emailChangeCode->email = $request->get('email');
+        $emailChangeCode->email = $request->input('email');
         $emailChangeCode->code = generatePin();
         $emailChangeCode->fillRequestInfo($request);
         $emailChangeCode->save();
@@ -336,8 +341,8 @@ class AccountService
             'number_4' => 'required|digits:1'
         ]);
 
-        $code = $this->api ? $request->get('code')
-            : $request->get('number_1') . $request->get('number_2') . $request->get('number_3') . $request->get('number_4');
+        $code = $this->api ? $request->input('code')
+            : $request->input('number_1') . $request->input('number_2') . $request->input('number_3') . $request->input('number_4');
 
         $account = $request->user();
 
@@ -425,9 +430,9 @@ class AccountService
         $externalAccount = $account->external ?? new ExternalAccount;
 
         $password = '';
-        if ($account->external?->realm != $request->get('realm')) {
+        if ($account->external?->realm != $request->input('realm')) {
             $password = 'required_with:realm';
-        } elseif ($account->external?->domain != $request->get('domain')) {
+        } elseif ($account->external?->domain != $request->input('domain')) {
             $password = 'required_with:domain';
         } elseif ($externalAccount->password == null) {
             $password = 'required';
@@ -438,19 +443,19 @@ class AccountService
         $algorithm = 'MD5';
 
         $externalAccount->account_id = $account->id;
-        $externalAccount->username = $request->get('username');
-        $externalAccount->domain = $request->get('domain');
-        $externalAccount->realm = $request->get('realm');
-        $externalAccount->registrar = $request->get('registrar');
-        $externalAccount->outbound_proxy = $request->get('outbound_proxy');
-        $externalAccount->protocol = $request->get('protocol');
+        $externalAccount->username = $request->input('username');
+        $externalAccount->domain = $request->input('domain');
+        $externalAccount->realm = $request->input('realm');
+        $externalAccount->registrar = $request->input('registrar');
+        $externalAccount->outbound_proxy = $request->input('outbound_proxy');
+        $externalAccount->protocol = $request->input('protocol');
         $externalAccount->algorithm = $algorithm;
 
-        if (!empty($request->get('password'))) {
+        if (!empty($request->input('password'))) {
             $externalAccount->password = bchash(
                 $externalAccount->username,
                 $externalAccount->realm ?? $externalAccount->domain,
-                $request->get('password'),
+                $request->input('password'),
                 $algorithm
             );
         }

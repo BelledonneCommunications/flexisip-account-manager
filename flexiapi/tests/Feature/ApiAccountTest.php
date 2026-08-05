@@ -33,7 +33,7 @@ class ApiAccountTest extends TestCase
 
     public function testMandatoryFrom()
     {
-        Password::factory()->create();
+        Account::factory()->create();
         $this->json('GET', '/api/accounts/me/api_key')
             ->assertStatus(401);
     }
@@ -620,43 +620,69 @@ class ApiAccountTest extends TestCase
         $this->assertFalse(empty($response['provisioning_token']));
     }
 
+    public function testBlock()
+    {
+        $account = Account::factory()->create();
+        $admin = Account::factory()->admin()->create();
+        $admin->generateUserApiKey();
+        $admin->save();
+
+        $this->keyAuthenticated($admin)
+            ->json('PUT', $this->route . '/' . $account->id, [
+                'username' => $account->username,
+                'algorithm' => 'SHA-256',
+                'blocked' => true
+            ])
+            ->assertJson(['blocked' => true])
+            ->assertOk();
+
+        $this->keyAuthenticated($admin)
+            ->json('PUT', $this->route . '/' . $account->id, [
+                'username' => $account->username,
+                'algorithm' => 'SHA-256',
+                'blocked' => false
+            ])
+            ->assertJson(['blocked' => false])
+            ->assertOk();
+    }
+
     public function testSimpleAccount()
     {
         $realm = 'realm.com';
 
         Space::factory()->withRealm($realm)->create();
 
-        $password = Password::factory()->create();
-        $password->account->generateUserApiKey();
-        $password->account->activated = false;
-        $password->account->save();
+        $account = Account::factory()->create();
+        $account->generateUserApiKey();
+        $account->activated = false;
+        $account->save();
 
-        $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($account)
             ->get($this->route . '/me')
             ->assertOk()
             ->assertJson([
-                'username' => $password->account->username,
+                'username' => $account->username,
                 'activated' => false,
                 'realm' => $realm
             ]);
 
-        $password->account->activated = true;
-        $password->account->save();
+        $account->activated = true;
+        $account->save();
 
-        $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($account)
             ->get($this->route . '/me')
             ->assertOk()
             ->assertJson([
-                'username' => $password->account->username,
+                'username' => $account->username,
                 'activated' => true,
                 'realm' => $realm
             ]);
 
-        $this->keyAuthenticated($password->account)
+        $this->keyAuthenticated($account)
             ->delete($this->route . '/me')
             ->assertOk();
 
-        $this->get($this->route . '/' . $password->account->identifier . '/info')
+        $this->get($this->route . '/' . $account->identifier . '/info')
             ->assertStatus(404);
     }
 
@@ -664,12 +690,12 @@ class ApiAccountTest extends TestCase
     {
         $email = 'collision@email.com';
 
-        $existing = Password::factory()->create();
-        $existing->account->activated = false;
-        $existing->account->email = $email;
-        $existing->account->save();
+        $account = Account::factory()->create();
+        $account->activated = false;
+        $account->email = $email;
+        $account->save();
 
-        Space::where('domain', $existing->account->domain)->update(['unique_email' => true]);
+        Space::where('domain', $account->domain)->update(['unique_email' => true]);
 
         $admin = Account::factory()->admin()->create();
         $admin->generateUserApiKey();
@@ -679,7 +705,7 @@ class ApiAccountTest extends TestCase
             ->json($this->method, $this->route, [
                 'username' => 'hop',
                 'email' => $email,
-                'domain' => $existing->account->domain,
+                'domain' => $account->domain,
                 'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])->assertJsonValidationErrors(['email']);
@@ -706,9 +732,7 @@ class ApiAccountTest extends TestCase
 
     public function testSendProvisioningEmail()
     {
-        $password = Password::factory()->create();
-        $account = $password->account;
-
+        $account = Account::factory()->create();
         $admin = Account::factory()->admin()->create();
         $admin->generateUserApiKey();
         $admin->save();
@@ -727,9 +751,7 @@ class ApiAccountTest extends TestCase
 
     public function testSendResetPasswordEmail()
     {
-        $password = Password::factory()->create();
-        $account = $password->account;
-
+        $account = Account::factory()->create();
         $admin = Account::factory()->admin()->create();
         $admin->generateUserApiKey();
         $admin->save();
@@ -749,9 +771,7 @@ class ApiAccountTest extends TestCase
 
     public function testEditAdmin()
     {
-        $password = Password::factory()->create();
-        $account = $password->account;
-
+        $account = Account::factory()->create();
         $admin = Account::factory()->admin()->create();
         $admin->generateUserApiKey();
         $admin->save();
@@ -764,12 +784,6 @@ class ApiAccountTest extends TestCase
         $this->keyAuthenticated($admin)
             ->json('PUT', $this->route . '/1234')
             ->assertJsonValidationErrors(['username']);
-
-        $this->keyAuthenticated($admin)
-            ->json('PUT', $this->route . '/1234', [
-                'username' => 'good'
-            ])
-            ->assertStatus(422);
 
         $this->keyAuthenticated($admin)
             ->json('PUT', $this->route . '/' . $account->id, [
@@ -791,7 +805,8 @@ class ApiAccountTest extends TestCase
         $this->assertDatabaseHas('accounts', [
             'id' => $account->id,
             'username' => $username,
-            'display_name' => null
+            'display_name' => null,
+            'activated' => true
         ]);
 
         $this->assertDatabaseHas('passwords', [
@@ -808,6 +823,12 @@ class ApiAccountTest extends TestCase
         $algorithm = 'MD5';
         $newPassword = 'new_password';
         $newAlgorithm = 'SHA-256';
+
+        // Missing algorithm
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->route . '/me/password', [
+                'password' => $password
+            ])->assertJsonValidationErrors(['algorithm']);
 
         // Wrong algorithm
         $this->keyAuthenticated($account)
@@ -939,8 +960,7 @@ class ApiAccountTest extends TestCase
 
     public function testGetAll()
     {
-        Password::factory()->create();
-
+        Account::factory()->create();
         $admin = Account::factory()->admin()->create();
         $admin->generateUserApiKey();
 
@@ -964,19 +984,18 @@ class ApiAccountTest extends TestCase
 
     public function testDelete()
     {
-        $password = Password::factory()->create();
-
+        $account = Account::factory()->create();
         $admin = Account::factory()->admin()->create();
         $admin->generateUserApiKey();
 
         $this->keyAuthenticated($admin)
-            ->delete($this->route . '/' . $password->account->id)
+            ->delete($this->route . '/' . $account->id)
             ->assertOk();
 
         $this->assertEquals(1, AccountTombstone::count());
 
         $this->keyAuthenticated($admin)
-            ->get($this->route . '/' . $password->account->id)
+            ->get($this->route . '/' . $account->id)
             ->assertStatus(404);
     }
 }

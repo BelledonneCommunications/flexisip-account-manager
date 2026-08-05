@@ -92,8 +92,8 @@ JSON parameters:
 
 * `username` unique username, minimum 6 characters
 * `domain` **not configurable by default**, must exist in one of the configured Spaces. Only configurable if the admin is a super admin. Otherwise the SIP domain of the corresponding space is used.
-* `password` **required** minimum 6 characters
-* `algorithm` **required**, values can be `SHA-256` or `MD5`
+* `password` minimum 6 characters
+* `algorithm` **required with password**, values can be `SHA-256` or `MD5`
 * `display_name` optional, string
 * `email` optional, must be an email, must be unique if `ACCOUNT_EMAIL_UNIQUE` is set to `true`
 * `admin` optional, a boolean, set to `false` by default
