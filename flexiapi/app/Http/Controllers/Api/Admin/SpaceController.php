@@ -76,7 +76,6 @@ class SpaceController extends Controller
         $this->setRequestBoolean($request, $space, 'intercom_features');
         $this->setRequestBoolean($request, $space, 'only_display_sip_uri_username');
         $this->setRequestBoolean($request, $space, 'phone_registration');
-        $this->setRequestBoolean($request, $space, 'provisioning_use_linphone_provisioning_header');
         $this->setRequestBoolean($request, $space, 'public_registration');
         $this->setRequestBoolean($request, $space, 'super');
         $this->setRequestBoolean($request, $space, 'web_panel');
@@ -125,7 +124,6 @@ class SpaceController extends Controller
             'max_accounts' => 'required|integer',
             'only_display_sip_uri_username' => 'required|boolean',
             'phone_registration' => 'required|boolean',
-            'provisioning_use_linphone_provisioning_header' => 'required|boolean',
             'public_registration' => 'required|boolean',
             'super' => 'required|boolean',
             'web_panel' => 'required|boolean',
@@ -172,7 +170,6 @@ class SpaceController extends Controller
         $space->newsletter_registration_address = $request->input('newsletter_registration_address');
         $space->only_display_sip_uri_username = $request->input('only_display_sip_uri_username');
         $space->phone_registration = $request->input('phone_registration');
-        $space->provisioning_use_linphone_provisioning_header = $request->input('provisioning_use_linphone_provisioning_header');
         $space->public_registration = $request->input('public_registration');
         $space->web_panel = $request->input('web_panel');
         $space->theme_hue = $request->input('theme_hue');

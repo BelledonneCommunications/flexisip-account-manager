@@ -47,7 +47,6 @@ JSON parameters:
 * `newsletter_registration_address`, the newsletter registration email address
 * `only_display_sip_uri_username` boolean, hide the SIP uris in the app, default to `false`
 * `phone_registration` boolean, the phone registration switch
-* `provisioning_use_linphone_provisioning_header` boolean
 * `public_registration` boolean, the public registration switch
 * `super` boolean, set the domain as a Super Domain
 * `web_panel` boolean, the web panel switch
@@ -85,7 +84,6 @@ JSON parameters:
 * `newsletter_registration_address`, **required**, the newsletter registration email address
 * `only_display_sip_uri_username` **required**, boolean
 * `phone_registration` **required**, boolean, the phone registration switch
-* `provisioning_use_linphone_provisioning_header` **required**, boolean
 * `public_registration` **required**, boolean, the public registration switch
 * `super` **required**, boolean, set the domain as a Super Domain
 * `web_panel` **required**, boolean, the web panel switch

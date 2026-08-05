@@ -111,14 +111,6 @@
             ])
         </div>
 
-        <div>
-            @include('parts.form.toggle', [
-                'object' => $space,
-                'key' => 'provisioning_use_linphone_provisioning_header',
-                'label' => 'Enforce X-Linphone-Provisioning header',
-            ])
-        </div>
-
         <h3 class="large">{{ __('Features') }}</h3>
         <div>
             @include('parts.form.toggle', [

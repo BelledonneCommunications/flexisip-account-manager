@@ -154,7 +154,6 @@ class SpaceController extends Controller
 
         $space->custom_provisioning_entries = $request->input('custom_provisioning_entries');
         $space->custom_provisioning_overwrite_all = getRequestBoolean($request, 'custom_provisioning_overwrite_all');
-        $space->provisioning_use_linphone_provisioning_header = getRequestBoolean($request, 'provisioning_use_linphone_provisioning_header');
 
         $space->public_registration = getRequestBoolean($request, 'public_registration');
         $space->phone_registration = getRequestBoolean($request, 'phone_registration');

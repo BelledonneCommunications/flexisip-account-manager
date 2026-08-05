@@ -32,7 +32,6 @@ class ImportConfigurationFromDotEnv extends Command
         $space->account_proxy_registrar_address = env('ACCOUNT_PROXY_REGISTRAR_ADDRESS', 'sip.domain.com');
         $space->account_realm = env('ACCOUNT_REALM', null);
         $space->custom_provisioning_overwrite_all = env('ACCOUNT_PROVISIONING_OVERWRITE_ALL', false);
-        $space->provisioning_use_linphone_provisioning_header = env('ACCOUNT_PROVISIONING_USE_X_LINPHONE_PROVISIONING_HEADER', true);
 
         $space->public_registration = env('PUBLIC_REGISTRATION', true);
         $space->phone_registration = env('PHONE_AUTHENTICATION', true);

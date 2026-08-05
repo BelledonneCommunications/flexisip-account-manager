@@ -144,9 +144,7 @@ class ProvisioningController extends Controller
 
     private function checkProvisioningHeader(Request $request)
     {
-        if (!$request->hasHeader('x-linphone-provisioning')
-            && $request->space->provisioning_use_linphone_provisioning_header
-        ) {
+        if (!$request->hasHeader('x-linphone-provisioning')) {
             abort(400, 'x-linphone-provisioning header is missing');
         }
     }

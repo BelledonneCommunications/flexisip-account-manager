@@ -39,6 +39,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - **Environment**: Removed the global `ACCOUNT_EMAIL_UNIQUE` variable from `.env` and `.env.example`.
 - **Remove the GET /accounts/{sip}/info endpoint**, not used anymore and bringing security issues
 - **Remove the `ACCOUNT_DEFAULT_PASSWORD_ALGORITHM`** DotEnv parameter, since it is also migrated in the database.
+- **Remove the enforce X-Linphone-Provisioning header** from the Spaces
 
 ## [2.0]
 

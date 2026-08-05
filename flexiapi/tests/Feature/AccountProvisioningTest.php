@@ -52,16 +52,6 @@ class AccountProvisioningTest extends TestCase
             ->assertDontSee('ha1');
     }
 
-    public function testDisabledProvisioningHeader()
-    {
-        Space::factory()->withoutProvisioningHeader()->create();
-
-        $this->get($this->route)
-            ->assertOk()
-            ->assertHeader('Content-Type', 'application/xml')
-            ->assertDontSee('ha1');
-    }
-
     public function testDontProvisionHeaderDisabled()
     {
         $account = Account::factory()->deactivated()->create();

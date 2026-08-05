@@ -37,13 +37,6 @@ class SpaceFactory extends Factory
         ];
     }
 
-    public function withoutProvisioningHeader()
-    {
-        return $this->state(fn (array $attributes) => [
-            'provisioning_use_linphone_provisioning_header' => false,
-        ]);
-    }
-
     public function domain(string $domain)
     {
         return $this->state(fn (array $attributes) => [
