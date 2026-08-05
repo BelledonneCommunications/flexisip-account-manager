@@ -40,7 +40,7 @@ function generateNonce(): string
 
 function getRequestBoolean(Request $request, string $key, bool $reversed = false): bool
 {
-    $bool = $request->has($key) ? $request->get($key) == "on" : false;
+    $bool = $request->has($key) ? $request->input($key) == "on" : false;
 
     return $reversed ? !$bool : $bool;
 }
@@ -220,7 +220,7 @@ function resolveDomain(Request $request): string
     return $request->has('domain')
         && $request->user()
         && $request->user()->superAdmin
-        ? $request->get('domain')
+        ? $request->input('domain')
         : $request->space->domain;
 }
 
