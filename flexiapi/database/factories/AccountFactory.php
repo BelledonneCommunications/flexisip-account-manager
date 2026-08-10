@@ -20,6 +20,7 @@
 
 namespace Database\Factories;
 
+use App\SpaceDigestAuthenticationConfiguration;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Awobaz\Compoships\Database\Eloquent\Factories\ComposhipsFactory;
 use App\Account;
@@ -33,14 +34,16 @@ class AccountFactory extends Factory
 
     public function definition()
     {
-        $domain = Space::count() == 0
+        $space = Space::count() == 0
             ? Space::factory()->create()
             : Space::first();
+
+        SpaceDigestAuthenticationConfiguration::factory()->withSpaceId($space->id)->create();
 
         return [
             'username' => $this->faker->username,
             'display_name' => $this->faker->name,
-            'domain' => $domain->domain,
+            'domain' => $space->domain,
             'user_agent' => $this->faker->userAgent,
             'ip_address' => $this->faker->ipv4,
             'created_at' => $this->faker->dateTimeBetween('-1 year'),

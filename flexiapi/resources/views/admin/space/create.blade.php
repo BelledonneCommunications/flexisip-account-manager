@@ -33,7 +33,7 @@
             <span class="supporting">{{ __('Cannot be changed once created.') }} {{ __('Leave empty to create a root Space.') }}</span>
         </div>
 
-        <div class="large">
+        <div>
             <input placeholder="domain.sip" required="required" name="domain" type="text" pattern="{{ $space::DOMAIN_REGEX}}" value="{{ $space->domain ?? old('domain') }}">
             <label for="username">{{ __('SIP Domain') }}</label>
             @include('parts.errors', ['name' => 'domain'])
@@ -42,21 +42,22 @@
 
         @include('parts.form.toggle', ['object' => $space, 'key' => 'super', 'label' => __('Super space'), 'supporting' => __('All the admins will be super admins')])
 
+        <h3 class="large">{{  __('Digest authentication') }}</h3>
         <div>
-            <input placeholder="realp.sip" name="account_realm" type="text" pattern="{{ $space::DOMAIN_REGEX}}" value="{{ $space->account_realm ?? old('account_realm') }}">
+            <input placeholder="realp.sip" name="realm" type="text" pattern="{{ $space::DOMAIN_REGEX}}" value="{{ old('realm') }}">
             <label for="username">{{ __('Account realm') }}</label>
-            @include('parts.errors', ['name' => 'account_realm'])
+            @include('parts.errors', ['name' => 'realm'])
             <span class="supporting">{{ __('Leave empty if similar to the domain') }}</span>
         </div>
 
         <div class="select">
-            <select name="account_default_password_algorithm">
+            <select name="default_password_algorithm">
                 @foreach (App\PasswordAlgorithm::cases() as $algorithm)
                     <option value="{{ $algorithm }}" @selected($algorithm === App\PasswordAlgorithm::DEFAULT)>
                         {{ $algorithm }}</option>
                 @endforeach
             </select>
-            <label for="domain">{{ __('Password Hashing Algorithm') }}</label>
+            <label for="default_password_algorithm">{{ __('Password Hashing Algorithm') }}</label>
         </div>
 
         <div class="large">

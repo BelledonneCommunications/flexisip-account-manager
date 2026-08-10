@@ -59,10 +59,12 @@ use App\Http\Controllers\Admin\ResetPasswordEmailController;
 use App\Http\Controllers\Admin\Space\CardDavServerController;
 use App\Http\Controllers\Admin\Space\ContactsListContactController;
 use App\Http\Controllers\Admin\Space\ContactsListController;
+use App\Http\Controllers\Admin\Space\DigestController;
 use App\Http\Controllers\Admin\Space\EmailServerController;
-use App\Http\Controllers\Admin\Space\SSOServerController;
+use App\Http\Controllers\Admin\Space\OIDCServerController;
 use App\Http\Controllers\Admin\SpaceController;
 use App\Http\Controllers\Admin\StatisticsController;
+use App\Http\Middleware\IsSpaceDigest;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', 'login')->name('account.home');
@@ -78,8 +80,8 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
     Route::get('authenticate/qrcode/{token?}', [AuthenticateController::class, 'loginAuthToken'])->name('account.authenticate.auth_token');
     Route::get('logout', [AuthenticateController::class, 'logout'])->name('account.logout');
 
-    Route::get('reset_password/{token}', [ResetPasswordEmailController::class, 'change'])->name('account.reset_password_email.change');
-    Route::post('reset_password', [ResetPasswordEmailController::class, 'reset'])->name('account.reset_password_email.reset');
+    Route::get('reset_password/{token}', [ResetPasswordEmailController::class, 'change'])->middleware(IsSpaceDigest::class)->name('account.reset_password_email.change');
+    Route::post('reset_password', [ResetPasswordEmailController::class, 'reset'])->middleware(IsSpaceDigest::class)->name('account.reset_password_email.reset');
 
     Route::prefix('creation_token')->controller(CreationRequestTokenController::class)->group(function () {
         Route::get('check/{token}', 'check')->name('account.creation_request_token.check');
@@ -87,9 +89,9 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
     });
 });
 
-Route::middleware(['feature.is_space_sso'])->prefix('login/sso')->name('account.login.')->group(function () {
-    Route::get('/', [AuthenticateController::class, 'loginSso'])->name('sso');
-    Route::get('/redirect', [AuthenticateController::class, 'handleSsoRedirect'])->name('sso.redirect');
+Route::middleware(['feature.is_space_oidc'])->prefix('login/oidc')->name('account.login.')->group(function () {
+    Route::get('/', [AuthenticateController::class, 'loginSso'])->name('oidc');
+    Route::get('/redirect', [AuthenticateController::class, 'handleSsoRedirect'])->name('oidc.redirect');
 });
 
 Route::name('file.')->prefix('f')->controller(FileController::class)->group(function () {
@@ -184,7 +186,7 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
             Route::delete('delete', 'destroy')->name('destroy');
         });
 
-        Route::name('password.')->prefix('password')->controller(PasswordController::class)->group(function () {
+        Route::name('password.')->prefix('password')->middleware(IsSpaceDigest::class)->controller(PasswordController::class)->group(function () {
             Route::get('/', 'show')->name('show');
             Route::post('/', 'update')->name('update');
         });
@@ -214,12 +216,16 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
                 Route::get('delete', 'delete')->name('delete');
                 Route::delete('/', 'destroy')->name('destroy');
             });
-            Route::name('sso.')->prefix('{space}/sso')->controller(SSOServerController::class)->group(function () {
+            Route::name('oidc.')->prefix('{space}/oidc')->controller(OIDCServerController::class)->group(function () {
                 Route::get('/', 'show')->name('show');
-                Route::get('refresh_public_key', 'refreshPublicKey')->name('refresh_public_key');
                 Route::post('/', 'store')->name('store');
                 Route::get('delete', 'delete')->name('delete');
                 Route::delete('/', 'destroy')->name('destroy');
+                Route::get('refresh_public_key', 'refreshPublicKey')->name('refresh_public_key');
+            });
+            Route::name('digest.')->prefix('{space}/digest')->controller(DigestController::class)->group(function () {
+                Route::get('/', 'show')->name('show');
+                Route::post('/', 'store')->name('store');
             });
             Route::resource('{space}/carddavs', CardDavServerController::class, ['except' => ['index', 'show']]);
             Route::get('{space}/carddavs/{carddav}/delete', [CardDavServerController::class, 'delete'])->name('carddavs.delete');
@@ -330,7 +336,7 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
                 Route::post('{account_id}/contacts_lists', 'contactsListAdd')->name('contacts_lists.attach');
             });
 
-            Route::name('reset_password_email.')->controller(ResetPasswordEmailController::class)->prefix('{account_id}/reset_password_email')->group(function () {
+            Route::name('reset_password_email.')->middleware(IsSpaceDigest::class)->controller(ResetPasswordEmailController::class)->prefix('{account_id}/reset_password_email')->group(function () {
                 Route::get('create', 'create')->name('create');
                 Route::get('send', 'send')->name('send');
             });

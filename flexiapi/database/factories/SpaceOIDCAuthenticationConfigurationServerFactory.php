@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
+use App\SpaceOIDCAuthenticationConfiguration;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\SpaceSsoServer;
 
-class SpaceSsoServerFactory extends Factory
+class SpaceOIDCAuthenticationConfigurationFactory extends Factory
 {
-    protected $model = SpaceSsoServer::class;
+    protected $model = SpaceOIDCAuthenticationConfiguration::class;
 
     public function definition(): array
     {

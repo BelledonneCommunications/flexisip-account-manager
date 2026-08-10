@@ -3,6 +3,35 @@
 
 Manage the list of allowed `spaces`. The admin accounts declared with a `domain` that is a `super` `sip_domain` will become <span class="badge badge-error">Super Admin</span>.
 
+Space object with the related data:
+
+* `email_server` the configuration of the email server, if configured
+* `carddav_servers` the configuration of the CardDav servers, if configured
+* `digest_authentication_configuration` the Digest settings, if Digest authentication is enabled
+* `oidc_authentication_configuration` the OpenID Connect settings, if OIDC authentication is enabled
+
+```
+{
+    "domain": "sip.example.com",
+    "host": "sip.example.com",
+    "name": "Example Space",
+    "account_proxy_registrar_address": null,
+    "assistant_disable_qr_code": false,
+    "assistant_hide_create_account": false,
+    "assistant_hide_third_party_account": false,
+    "carddav_servers": [],
+    "carddav_user_credentials": false,
+...
+    "updated_at": "2026-08-20T09:28:37.000000Z",
+    "web_panel": true,
+    "digest_authentication_configuration": {
+        "realm": "realm_example",
+        "default_password_algorithm": "SHA-256"
+    },
+    "oidc_authentication_configuration": null
+}
+```
+
 ### `GET /spaces`
 <span class="badge badge-error">Super Admin</span>
 
@@ -24,8 +53,6 @@ JSON parameters:
 * `domain` **required**, the SIP domain to use, must be unique
 * `host` **required**, the space host
 * `account_proxy_registrar_address`, the account proxy registrar address
-* `account_realm`, the default realm for the accounts, fallback to the domain if not set
-* `account_default_password_algorithm`, the algorithm used to hash passwords (MD5 or SHA-256). Defaults to SHA-256
 * `assistant_disable_qr_code` boolean, disable the QR code feature in the assistant, default to `false`
 * `assistant_hide_create_account` boolean, disable the account creation assistant, default to `false`
 * `assistant_hide_third_party_account` boolean, disable the call recording feature, default to `false`
@@ -57,37 +84,7 @@ JSON parameters:
 
 Update an existing `sip_domain`.
 
-JSON parameters:
-
-* `account_proxy_registrar_address`, **required**, the account proxy registrar address
-* `account_realm`, **required**, the default realm for the accounts, fallback to the domain if not set
-* `account_default_password_algorithm`, **required**, the algorithm used to hash passwords (MD5 or SHA-256).
-* `assistant_disable_qr_code` **required**, boolean
-* `assistant_hide_create_account` **required**, boolean
-* `assistant_hide_third_party_account` **required**, boolean
-* `carddav_user_credentials` **required** boolean, enable credentials for CardDav servers
-* `copyright_text` **required**, text, the copyright text
-* `custom_provisioning_entries` **required**, text, the custom configuration used for the provisioning
-* `custom_provisioning_overwrite_all` **required**, boolean, allow the custom configuration to overwrite the default one
-* `disable_broadcast_feature` **required**, boolean
-* `disable_call_recordings_feature` **required**, boolean
-* `disable_chat_feature` **required**, boolean
-* `disable_meetings_feature` **required**, boolean
-* `expire_at` **required**, date, the moment the space is expiring, set to `null` to never expire
-* `hide_account_settings` **required**, boolean
-* `hide_settings` **required**, boolean
-* `intercom_features` **required**, boolean, the intercom features switch
-* `intro_registration_text` **required**, Markdown text, the main registration page text
-* `max_account` **required**, integer
-* `max_accounts` **required**,integer, the maximum number of accounts that can be created in the space, default to `0` (infinite), cannot be less than the actual amount of accounts
-* `name` **required**, the space name
-* `newsletter_registration_address`, **required**, the newsletter registration email address
-* `only_display_sip_uri_username` **required**, boolean
-* `phone_registration` **required**, boolean, the phone registration switch
-* `public_registration` **required**, boolean, the public registration switch
-* `super` **required**, boolean, set the domain as a Super Domain
-* `web_panel` **required**, boolean, the web panel switch
-* `theme_hue` **required**, integer, the hue component of an HSL color (e.g. `hsl(theme_hue, 100%, 50%)`), between 0 and 360
+JSON parameters: same as for creation except the complete object need to be re-published. `domain` and `host` cannot be changed.
 
 ### `DELETE /spaces/{domain}`
 <span class="badge badge-error">Super Admin</span>

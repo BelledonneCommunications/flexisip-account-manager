@@ -23,10 +23,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Space\Create;
 use App\Http\Requests\Space\AdministrationUpdate;
-use App\Space;
 use App\PasswordAlgorithm;
+use App\Space;
 use App\Rules\Ini;
 use App\Rules\Domain;
+use App\SpaceDigestAuthenticationConfiguration;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
@@ -70,15 +71,21 @@ class SpaceController extends Controller
         $request->validate([
             'host' => 'nullable|regex:/' . Space::HOST_REGEX . '/',
             'full_host' => ['required', 'unique:spaces,host', new Domain],
+            'realm' => ['nullable', new Domain],
+            'default_password_algorithm' => [new Enum(PasswordAlgorithm::class)]
         ]);
 
         $space = new Space;
         $space->name = $request->input('name');
         $space->domain = $request->input('domain');
         $space->host = $request->input('full_host');
-        $space->account_realm = $request->input('account_realm');
-        $space->account_default_password_algorithm = $request->input('account_default_password_algorithm');
         $space->save();
+
+        $digestAuthenticationConfiguration = new SpaceDigestAuthenticationConfiguration;
+        $digestAuthenticationConfiguration->space_id = $space->id;
+        $digestAuthenticationConfiguration->realm = $request->input('realm') ?? $request->input('domain');
+        $digestAuthenticationConfiguration->default_password_algorithm = $request->input('default_password_algorithm');
+        $digestAuthenticationConfiguration->save();
 
         return redirect()->route('admin.spaces.index');
     }
@@ -118,13 +125,11 @@ class SpaceController extends Controller
 
     public function configurationUpdate(Request $request, Space $space)
     {
-
         $request->validate([
             'newsletter_registration_address' => 'nullable|email',
             'custom_provisioning_entries' => ['nullable', new Ini(Space::FORBIDDEN_KEYS)],
             'logo' => ['nullable', 'image', 'mimes:png', 'max:2048'],
             'theme_hue' => 'nullable|integer|min:0|max:360',
-            'account_default_password_algorithm' => ['required', new Enum(PasswordAlgorithm::class)],
         ]);
 
         if ($request->logo_delete == 1 && $space->logo) {
@@ -148,17 +153,12 @@ class SpaceController extends Controller
         $space->newsletter_registration_address = $request->input('newsletter_registration_address');
         $space->account_proxy_registrar_address = $request->input('account_proxy_registrar_address');
 
-        if ($space->accounts()->count() == 0) {
-            $space->account_realm = $request->input('account_realm');
-        }
-
         $space->custom_provisioning_entries = $request->input('custom_provisioning_entries');
         $space->custom_provisioning_overwrite_all = getRequestBoolean($request, 'custom_provisioning_overwrite_all');
 
         $space->public_registration = getRequestBoolean($request, 'public_registration');
         $space->phone_registration = getRequestBoolean($request, 'phone_registration');
         $space->intercom_features = getRequestBoolean($request, 'intercom_features');
-        $space->account_default_password_algorithm = $request->input('account_default_password_algorithm');
 
         $space->save();
 
@@ -188,7 +188,6 @@ class SpaceController extends Controller
         $space->web_panel = getRequestBoolean($request, 'web_panel');
         $space->carddav_user_credentials = getRequestBoolean($request, 'carddav_user_credentials');
         $space->client_certificate_authentication = getRequestBoolean($request, 'client_certificate_authentication');
-        $space->account_default_password_algorithm = $request->input('account_default_password_algorithm');
         $space->save();
 
         return redirect()->route('admin.spaces.show', $space);

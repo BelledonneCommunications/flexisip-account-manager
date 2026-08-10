@@ -31,8 +31,8 @@ class SpaceCheck
                 abort($request->expectsJson() ? 403 : 490, 'The related Space has expired');
             }
 
-            $space->injectCustomEmailConfig();
-            $space->injectKeycloakConfig();
+            $space->injectCustomEmailConfiguration();
+            $space->injectOIDCConfiguration();
 
             return $next($request);
         }

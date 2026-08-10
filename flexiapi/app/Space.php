@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Symfony\Component\Console\Command\Command;
 
 enum PasswordAlgorithm: string
 {
@@ -59,12 +60,11 @@ class Space extends Model
 {
     use HasFactory;
 
-    protected $with = ['emailServer', 'carddavServers', 'ssoServer'];
+    protected $with = ['emailServer', 'carddavServers', 'digestAuthenticationConfiguration', 'oidcAuthenticationConfiguration'];
     protected $fillable = ['host'];
 
     public const FORBIDDEN_KEYS = [
         'account_proxy_registrar_address',
-        'account_realm',
         'assistant_disable_qr_code',
         'assistant_hide_create_account',
         'assistant_hide_third_party_account',
@@ -87,6 +87,8 @@ class Space extends Model
         'assistant_hide_create_account' => 'boolean',
         'assistant_hide_third_party_account' => 'boolean',
         'carddav_user_credentials' => 'boolean',
+        'client_certificate_authentication' => 'boolean',
+        'custom_provisioning_overwrite_all' => 'boolean',
         'disable_broadcast_feature' => 'boolean',
         'disable_call_recordings_feature' => 'boolean',
         'disable_chat_feature' => 'boolean',
@@ -94,9 +96,13 @@ class Space extends Model
         'expire_at' => 'date',
         'hide_account_settings' => 'boolean',
         'hide_settings' => 'boolean',
+        'intercom_features' => 'boolean',
         'only_display_sip_uri_username' => 'boolean',
+        'phone_registration' => 'boolean',
+        'public_registration' => 'boolean',
         'super' => 'boolean',
-        'account_default_password_algorithm' => PasswordAlgorithm::class,
+        'unique_email' => 'boolean',
+        'web_panel' => 'boolean',
     ];
 
     public const HOST_REGEX = '[\w\-]+';
@@ -138,9 +144,14 @@ class Space extends Model
         return $this->hasMany(SpaceCardDavServer::class);
     }
 
-    public function ssoServer()
+    public function digestAuthenticationConfiguration()
     {
-        return $this->hasOne(SpaceSsoServer::class);
+        return $this->hasOne(SpaceDigestAuthenticationConfiguration::class);
+    }
+
+    public function oidcAuthenticationConfiguration()
+    {
+        return $this->hasOne(SpaceOIDCAuthenticationConfiguration::class);
     }
 
     public function contactsLists()
@@ -186,12 +197,12 @@ class Space extends Model
     /**
      * Non standard authentication flow based on RFC 8898
      */
-    public function getSSOAuthenticationBearerAttribute(): ?string
+    public function getOIDCAuthenticationBearerAttribute(): ?string
     {
-        if ($this->ssoServer) {
+        if ($this->oidcAuthenticationConfiguration) {
             return
-                'authz_server="' . $this->ssoServer->server_url . 'realms/' . $this->ssoServer->realm . '"' .
-                ',realm="' . $this->ssoServer->realm . '"';
+                'authz_server="' . $this->oidcAuthenticationConfiguration->server_url . 'realms/' . $this->oidcAuthenticationConfiguration->realm . '"' .
+                ',realm="' . $this->oidcAuthenticationConfiguration->realm . '"';
         }
 
         return null;
@@ -226,7 +237,7 @@ class Space extends Model
         );
     }
 
-    public function injectCustomEmailConfig()
+    public function injectCustomEmailConfiguration()
     {
         if ($this->emailServer) {
             Config::set('mail', [
@@ -245,15 +256,15 @@ class Space extends Model
         }
     }
 
-    public function injectKeycloakConfig()
+    public function injectOIDCConfiguration()
     {
-        if ($this->ssoServer) {
+        if ($this->oidcAuthenticationConfiguration) {
             Config::set('services.keycloak', [
-                'client_id' => $this->ssoServer->client_id,
-                'client_secret' => $this->ssoServer->client_secret,
-                'redirect' => 'https://' . $this->host . "/login/sso/redirect",
-                'base_url' => $this->ssoServer->server_url,
-                'realms' => $this->ssoServer->realm
+                'client_id' => $this->oidcAuthenticationConfiguration->client_id,
+                'client_secret' => $this->oidcAuthenticationConfiguration->client_secret,
+                'redirect' => route('account.login.oidc.redirect'),
+                'base_url' => $this->oidcAuthenticationConfiguration->server_url,
+                'realms' => $this->oidcAuthenticationConfiguration->realm
             ]);
         }
     }

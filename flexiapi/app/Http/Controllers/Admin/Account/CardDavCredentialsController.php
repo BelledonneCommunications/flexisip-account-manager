@@ -53,17 +53,17 @@ class CardDavCredentialsController extends Controller
         ]);
 
         $accountCarddavCredentials = new AccountCardDavCredentials;
-        $accountCarddavCredentials->space_carddav_server_id = $request->get('carddav_id');
+        $accountCarddavCredentials->space_carddav_server_id = $request->input('carddav_id');
         $accountCarddavCredentials->account_id = $account->id;
-        $accountCarddavCredentials->username = $request->get('username');
-        $accountCarddavCredentials->realm = $request->get('realm');
+        $accountCarddavCredentials->username = $request->input('username');
+        $accountCarddavCredentials->realm = $request->input('realm');
         $accountCarddavCredentials->password = bchash(
-            $request->get('username'),
-            $request->get('realm'),
-            $request->get('password'),
-            $request->get('algorithm')
+            $request->input('username'),
+            $request->input('realm'),
+            $request->input('password'),
+            $request->input('algorithm')
         );
-        $accountCarddavCredentials->algorithm = $request->get('algorithm');
+        $accountCarddavCredentials->algorithm = $request->input('algorithm');
         $accountCarddavCredentials->save();
 
         return redirect()->route('admin.account.show', $account);
@@ -89,7 +89,7 @@ class CardDavCredentialsController extends Controller
         $account = Account::findOrFail($accountId);
         $this->checkFeatureEnabled($account);
 
-        $accountCarddavCredentials = AccountCardDavCredentials::where('space_carddav_server_id', $request->carddav_id)
+        AccountCardDavCredentials::where('space_carddav_server_id', $request->carddav_id)
             ->where('account_id', $account->id)
             ->delete();
 

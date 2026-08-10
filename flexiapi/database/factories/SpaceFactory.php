@@ -53,13 +53,6 @@ class SpaceFactory extends Factory
         ]);
     }
 
-    public function withRealm(string $realm)
-    {
-        return $this->state(fn (array $attributes) => [
-            'account_realm' => $realm,
-        ]);
-    }
-
     public function expired()
     {
         return $this->state(fn (array $attributes) => [

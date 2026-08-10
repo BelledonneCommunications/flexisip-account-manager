@@ -58,6 +58,7 @@ use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\PhoneCountryController;
 use App\Http\Controllers\Api\PingController;
 use App\Http\Controllers\Api\StatisticsMessageController;
+use App\Http\Middleware\IsSpaceDigest;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 
 Route::get('/', [ApiController::class, 'documentation'])->name('api');
@@ -101,7 +102,7 @@ Route::group(['middleware' => ['auth.jwt', 'auth.digest', 'auth.key', 'auth.chec
         Route::post('email/request', [EmailController::class, 'requestUpdate']);
         Route::post('email', [EmailController::class, 'update']);
 
-        Route::post('password', [PasswordController::class, 'update']);
+        Route::post('password', [PasswordController::class, 'update'])->middleware(IsSpaceDigest::class);
 
         Route::get('contacts/{sip}', [ContactController::class, 'show']);
         Route::get('contacts', [ContactController::class, 'index']);

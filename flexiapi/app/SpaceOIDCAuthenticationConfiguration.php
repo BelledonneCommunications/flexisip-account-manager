@@ -8,13 +8,14 @@ use Illuminate\Support\Facades\Http;
 use CoderCat\JWKToPEM\JWKConverter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class SpaceSsoServer extends Model
+class SpaceOIDCAuthenticationConfiguration extends Model
 {
     use HasFactory;
 
     public ?string $refreshSsoError = null;
 
-    protected $hidden = ['space_id', 'client_secret'];
+    protected $table = 'space_oidc_authentication_configurations';
+    protected $hidden = ['space_id', 'client_secret', 'id', 'created_at', 'updated_at'];
     protected $fillable = ['server_url', 'realm', 'sip_identifier', 'client_id', 'client_secret', 'role_provisioning'];
     protected $casts = [
         'auto_provisioning' => 'boolean',
@@ -25,7 +26,7 @@ class SpaceSsoServer extends Model
         return $this->belongsTo(Space::class);
     }
 
-    public function refreshSSOCertificate(): bool
+    public function refreshOIDCCertificate(): bool
     {
         if ($this->server_url) {
             try {

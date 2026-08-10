@@ -101,13 +101,6 @@ class AuthenticateDigest
                 ->where('algorithm', $auth['algorithm'])
                 ->first();
 
-            // CLRTXT case
-            if (!$password) {
-                $password = $account->passwords()
-                    ->where('algorithm', 'CLRTXT')
-                    ->first();
-            }
-
             if (!$password) {
                 return $this->generateUnauthorizedResponse($request, $account, 'Wrong algorithm');
             }
@@ -115,9 +108,7 @@ class AuthenticateDigest
             $hash = PasswordAlgorithm::from($auth['algorithm'])->hashFunction();
 
             // Hashing and checking
-            $a1 = $password->algorithm == 'CLRTXT'
-                ? hash($hash, $account->username . ':' . $account->resolvedRealm . ':' . $password->password)
-                : $password->password; // username:realm/domain:password
+            $a1 = $password->password; // username:realm/domain:password
             $a2 = hash($hash, $request->method() . ':' . $auth['uri']);
 
             $validResponse = hash(
@@ -178,7 +169,7 @@ class AuthenticateDigest
         $array = array_combine($array[1], $array[2]);
 
         if (!array_key_exists('algorithm', $array)) {
-            $array['algorithm'] = 'MD5';
+            $array['algorithm'] = PasswordAlgorithm::MD5->value;
         }
 
         return $array;
@@ -189,20 +180,10 @@ class AuthenticateDigest
         $headers = [];
 
         foreach ($account->passwords as $password) {
-            if ($password->algorithm == 'CLRTXT') {
-                foreach (PasswordAlgorithm::cases() as $algorithm) {
-                    array_push(
-                        $headers,
-                        $this->generateAuthHeader($account->resolvedRealm, $algorithm->value, $opaque)
-                    );
-                }
-                break;
-            } elseif (\in_array($password->algorithm, array_column(PasswordAlgorithm::cases(), 'value'))) {
-                array_push(
-                    $headers,
-                    $this->generateAuthHeader($account->resolvedRealm, $password->algorithm, $opaque)
-                );
-            }
+            array_push(
+                $headers,
+                $this->generateAuthHeader($account->resolvedRealm, $password->algorithm, $opaque)
+            );
         }
 
         return $headers;
@@ -220,9 +201,9 @@ class AuthenticateDigest
         return $opaque;
     }
 
-    private function generateAuthHeader(string $realm, string $algorithm, Opaque $opaque): string
+    private function generateAuthHeader(string $realm, PasswordAlgorithm $algorithm, Opaque $opaque): string
     {
-        return 'Digest realm="' . $realm . '",qop="auth",algorithm=' . $algorithm . ',nonce="' . $opaque->nonce . '",opaque="' . $opaque->opaque . '"';
+        return 'Digest realm="' . $realm . '",qop="auth",algorithm=' . $algorithm->value . ',nonce="' . $opaque->nonce . '",opaque="' . $opaque->opaque . '"';
     }
 
     private function extractFromHeader(string $string): string

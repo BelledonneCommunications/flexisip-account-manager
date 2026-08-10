@@ -308,7 +308,7 @@ class ProvisioningController extends Controller
                 $entry->setAttribute('name', 'realm');
                 $section->appendChild($entry);
 
-                $entry = $dom->createElement('entry', $password->algorithm);
+                $entry = $dom->createElement('entry', $password->algorithm->value);
                 $entry->setAttribute('name', 'algorithm');
                 $section->appendChild($entry);
 

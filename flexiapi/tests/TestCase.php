@@ -34,6 +34,9 @@ abstract class TestCase extends BaseTestCase
     protected $route = '/api/accounts/me';
     protected $method = 'GET';
 
+    protected $serverPrivateKeyPem = null;
+    protected $serverPublicKeyPem = null;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -49,5 +52,12 @@ abstract class TestCase extends BaseTestCase
     protected function setSpaceOnRoute(Space $space, string $route)
     {
         return str_replace('localhost', $space->domain, $route);
+    }
+
+    protected function generateKeyPair()
+    {
+        $keys = openssl_pkey_new(array("private_key_bits" => 4096, "private_key_type" => OPENSSL_KEYTYPE_RSA));
+        $this->serverPublicKeyPem = openssl_pkey_get_details($keys)['key'];
+        openssl_pkey_export($keys, $this->serverPrivateKeyPem);
     }
 }

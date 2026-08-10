@@ -168,7 +168,6 @@ class ApiAccountCreationTokenTest extends TestCase
         // Invalid token
         $this->json($this->method, $this->accountRoute, [
             'username' => 'username',
-            'algorithm' => 'SHA-256',
             'password' => '123',
             'account_creation_token' => '0123456789abc'
         ])->assertStatus(422);
@@ -176,7 +175,6 @@ class ApiAccountCreationTokenTest extends TestCase
         // Valid token
         $this->json($this->method, $this->accountRoute, [
             'username' => 'username',
-            'algorithm' => 'SHA-256',
             'password' => '123',
             'account_creation_token' => $token->token
         ])->assertOk();
@@ -184,7 +182,6 @@ class ApiAccountCreationTokenTest extends TestCase
         // Expired token
         $this->json($this->method, $this->accountRoute, [
             'username' => 'username2',
-            'algorithm' => 'SHA-256',
             'password' => '123',
             'account_creation_token' => $token->token
         ])->assertStatus(422);
@@ -204,7 +201,6 @@ class ApiAccountCreationTokenTest extends TestCase
 
         $this->json($this->method, $this->accountRoute, [
             'username' => 'username',
-            'algorithm' => 'SHA-256',
             'password' => '123',
             'account_creation_token' => $token->token
         ])->assertJsonValidationErrors(['account_creation_token']);
@@ -220,7 +216,6 @@ class ApiAccountCreationTokenTest extends TestCase
         // Blacklisted username
         $this->json($this->method, $this->accountRoute, [
             'username' => 'blacklisted',
-            'algorithm' => 'SHA-256',
             'password' => '123',
             'account_creation_token' => $token->token
         ])->assertJsonValidationErrors(['username']);
@@ -228,7 +223,6 @@ class ApiAccountCreationTokenTest extends TestCase
         // Blacklisted regex username
         $this->json($this->method, $this->accountRoute, [
             'username' => 'username-gnap',
-            'algorithm' => 'SHA-256',
             'password' => '123',
             'account_creation_token' => $token->token
         ])->assertJsonValidationErrors(['username']);
@@ -236,7 +230,6 @@ class ApiAccountCreationTokenTest extends TestCase
         // Valid username
         $this->json($this->method, $this->accountRoute, [
             'username' => 'valid-username',
-            'algorithm' => 'SHA-256',
             'password' => '123',
             'account_creation_token' => $token->token
         ])->assertOk();
@@ -249,7 +242,6 @@ class ApiAccountCreationTokenTest extends TestCase
 
         $this->json($this->method, $this->accountRoute, [
             'username' => 'valid-username',
-            'algorithm' => 'SHA-256',
             'password' => '123',
             'account_creation_token' => $token->token,
             'asAdmin' => true,

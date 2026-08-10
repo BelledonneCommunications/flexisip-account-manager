@@ -21,7 +21,6 @@
 namespace Tests\Feature;
 
 use App\Password;
-use App\Space;
 use Tests\TestCase;
 
 class ApiAuthenticationTest extends TestCase
@@ -186,63 +185,6 @@ class ApiAuthenticationTest extends TestCase
         ])->json($this->method, $this->route);
 
         $response->assertStatus(401);
-    }
-
-    public function testAuthenticationSHA265FromCLRTXT()
-    {
-        Space::factory()->create();
-
-        $password = Password::factory()->clrtxt()->create();
-        $response = $this->generateFirstResponse($password);
-
-        // The server is generating all the available hash algorythms
-        $this->assertStringContainsString('algorithm=MD5', $response->headers->all()['www-authenticate'][0]);
-        $this->assertStringContainsString('algorithm=SHA-256', $response->headers->all()['www-authenticate'][1]);
-
-        // Let's simulate a local hash for the clear password
-        $hash = 'sha256';
-        $password->password = hash(
-            $hash,
-            $password->account->username . ':' . $password->account->domain . ':' . $password->password
-        );
-
-        $response = $this->withHeaders([
-            'From' => 'sip:' . $password->account->identifier,
-            'Authorization' => $this->generateDigest($password, $response, $hash),
-        ])->json($this->method, $this->route);
-
-        $this->assertStringContainsString('algorithm=MD5', $response->headers->all()['www-authenticate'][0]);
-        $this->assertStringContainsString('algorithm=SHA-256', $response->headers->all()['www-authenticate'][1]);
-
-        $response->assertOk();
-    }
-
-    public function testAuthenticationSHA265FromCLRTXTWithRealm()
-    {
-        $realm = 'realm.com';
-
-        Space::truncate();
-        Space::factory()->withRealm($realm)->create();
-
-        $password = Password::factory()->clrtxt()->create();
-        $response = $this->generateFirstResponse($password);
-
-        // Let's simulate a local hash for the clear password
-        $hash = 'sha256';
-        $password->password = hash(
-            $hash,
-            $password->account->username . ':' . $realm . ':' . $password->password
-        );
-
-        $response = $this->withHeaders([
-            'From' => 'sip:' . $password->account->identifier,
-            'Authorization' => $this->generateDigest($password, $response, $hash)
-        ])->json($this->method, $this->route);
-
-        $this->assertStringContainsString('algorithm=MD5', $response->headers->all()['www-authenticate'][0]);
-        $this->assertStringContainsString('algorithm=SHA-256', $response->headers->all()['www-authenticate'][1]);
-
-        $response->assertOk();
     }
 
     public function testAuthenticationBadPassword()

@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Account;
 use App\Space;
-use App\SpaceSsoServer;
+use App\SpaceOIDCAuthenticationConfiguration;
 use DateTimeImmutable;
 use Lcobucci\Clock\FrozenClock;
 use Lcobucci\JWT\Builder;
@@ -16,32 +16,27 @@ use Laravel\Socialite\Two\User as SsoUser;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
-class AccountSSOAuthentificationTest extends TestCase
+class AccountOIDCAuthentificationTest extends TestCase
 {
-    protected $route = '/login/sso';
-    protected $redirectRoute = '/login/sso/redirect';
+    protected $route = '/login/oidc';
+    protected $redirectRoute = '/login/oidc/redirect';
     protected $method = 'GET';
-    protected $serverPrivateKeyPem = null;
-    protected $serverPublicKeyPem = null;
 
     public function setUp(): void
     {
         parent::setUp();
-
-        $keys = openssl_pkey_new(array("private_key_bits" => 4096, "private_key_type" => OPENSSL_KEYTYPE_RSA));
-        $this->serverPublicKeyPem = openssl_pkey_get_details($keys)['key'];
-        openssl_pkey_export($keys, $this->serverPrivateKeyPem);
-
+        $this->generateKeyPair();
     }
+
     public function testLoginSso(): void
     {
         $space = Space::factory()->create();
+
         $this->get($this->route)->assertStatus(403);
 
-        SpaceSsoServer::factory()->withSpaceId($space->id)->create([
+        SpaceOIDCAuthenticationConfiguration::factory()->withSpaceId($space->id)->create([
             'public_key' => $this->serverPublicKeyPem,
         ]);
-        $space->refresh();
 
         $this->get($this->route)->assertStatus(302);
     }
@@ -58,7 +53,7 @@ class AccountSSOAuthentificationTest extends TestCase
         $this->get($this->redirectRoute)
             ->assertStatus(403);
 
-        SpaceSsoServer::factory()->withSpaceId($space->id)->create([
+        SpaceOIDCAuthenticationConfiguration::factory()->withSpaceId($space->id)->create([
             'public_key' => $this->serverPublicKeyPem,
         ]);
         $space->refresh();
@@ -99,8 +94,8 @@ class AccountSSOAuthentificationTest extends TestCase
          * Auto_provisioning on
          */
 
-        SpaceSsoServer::where('space_id', $space->id)->update(['auto_provisioning' => true]);
-        $space->load('ssoServer');
+        SpaceOIDCAuthenticationConfiguration::where('space_id', $space->id)->update(['auto_provisioning' => true]);
+        $space->load('oidcAuthenticationConfiguration');
 
         // Without Roles - User does not exist
         $ssoUser->email = fake()->email();
@@ -155,7 +150,7 @@ class AccountSSOAuthentificationTest extends TestCase
                 Builder $builder,
                 DateTimeImmutable $issuedAt
             ): Builder => $builder
-                ->withClaim('realm_access', ['roles' => [$space->ssoServer->role_provisioning]])
+                ->withClaim('realm_access', ['roles' => [$space->oidcAuthenticationConfiguration->role_provisioning]])
         )->toString();
 
         Socialite::shouldReceive('driver->stateless->user')

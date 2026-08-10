@@ -74,11 +74,6 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
                             $element->activated ?? true,
                         )
                     );
-
-                    array_push(
-                        $passwords,
-                        $this->generatePasswordArray($element->idStart + $i, 'secret', 'CLRTXT')
-                    );
                 }
 
                 if (!in_array($element->domain, $domains)) {
@@ -131,12 +126,12 @@ class LiblinphoneTesterAccoutSeeder extends Seeder
     private function generatePasswordArray(
         int $accountId,
         string $password,
-        string $algorythm
+        string $algorithm
     ): array {
         return [
             'account_id' => $accountId,
             'password' => $password,
-            'algorithm' => $algorythm
+            'algorithm' => $algorithm
         ];
     }
 }

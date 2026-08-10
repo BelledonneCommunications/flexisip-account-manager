@@ -740,7 +740,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### giggsey/libphonenumber-for-php-lite (Version 9.0.35 | 2fcb986)
+### giggsey/libphonenumber-for-php-lite (Version 9.0.37 | 8e25148)
 A lite version of giggsey/libphonenumber-for-php, which is a PHP Port of Google's libphonenumber
 Homepage: https://github.com/giggsey/libphonenumber-for-php-lite
 Licenses Used: Apache-2.0
@@ -950,7 +950,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### guzzlehttp/guzzle (Version 7.15.2 | 7441019)
+### guzzlehttp/guzzle (Version 7.15.3 | ae311b8)
 Guzzle is a PHP HTTP client library
 Homepage: Not configured.
 Licenses Used: MIT
@@ -983,7 +983,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### guzzlehttp/promises (Version 2.5.1 | 9ad1e4f)
+### guzzlehttp/promises (Version 2.5.2 | 2823687)
 Guzzle promises library
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1116,7 +1116,7 @@ SOFTWARE.
 
 
 
-### laravel/framework (Version v12.64.0 | 727a8ea)
+### laravel/framework (Version v12.66.0 | 82a5332)
 The Laravel Framework.
 Homepage: https://laravel.com
 Licenses Used: MIT
@@ -1143,7 +1143,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### laravel/prompts (Version v0.3.21 | 7753c65)
+### laravel/prompts (Version v0.3.22 | 02b89b3)
 Add beautiful and user-friendly forms to your command-line applications.
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1311,7 +1311,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-### league/commonmark (Version 2.8.3 | 1902f60)
+### league/commonmark (Version 2.10.0 | d2d1aa8)
 Highly-extensible PHP Markdown parser which fully supports the CommonMark spec and GitHub-Flavored Markdown (GFM)
 Homepage: https://commonmark.thephpleague.com
 Licenses Used: BSD-3-Clause
@@ -1816,7 +1816,7 @@ Homepage: https://github.com/mustangostang/spyc/
 Licenses Used: MIT
 Full license text not found in dependency source.
 
-### myclabs/deep-copy (Version 1.13.4 | 07d290f)
+### myclabs/deep-copy (Version 1.14.0 | 8680aa2)
 Create deep copies (clones) of your objects
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1869,7 +1869,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### nesbot/carbon (Version 3.13.1 | 2937ad3)
+### nesbot/carbon (Version 3.13.2 | a1c5491)
 An API extension for DateTime that supports 281 different languages.
 Homepage: https://carbonphp.github.io/carbon/
 Licenses Used: MIT
@@ -2507,7 +2507,7 @@ Licenses Used: Apache-2.0
    See the License for the specific language governing permissions and
    limitations under the License.
 
-### phpseclib/phpseclib (Version 3.0.55 | db9744e)
+### phpseclib/phpseclib (Version 3.0.56 | 7adbbe3)
 PHP Secure Communications Library - Pure-PHP implementations of RSA, AES, SSH2, SFTP, X.509 etc.
 Homepage: http://phpseclib.sourceforge.net
 Licenses Used: MIT
@@ -4062,7 +4062,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/console (Version v7.4.14 | 92f58bc)
+### symfony/console (Version v7.4.16 | f4c69c9)
 Eases the creation of beautiful and testable command line interfaces
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4137,7 +4137,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/error-handler (Version v7.4.14 | 4e1a093)
+### symfony/error-handler (Version v7.4.15 | d49f6a1)
 Provides tools to manage errors and ease debugging PHP code
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4162,7 +4162,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/event-dispatcher (Version v7.4.14 | 51fe3d1)
+### symfony/event-dispatcher (Version v7.4.15 | 336e7f3)
 Provides tools that allow your application components to communicate with each other by dispatching events and listening to them
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4237,7 +4237,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/http-foundation (Version v7.4.14 | 06db5ae)
+### symfony/http-foundation (Version v7.4.16 | b676451)
 Defines an object-oriented layer for the HTTP specification
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4262,7 +4262,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/http-kernel (Version v7.4.14 | e99af79)
+### symfony/http-kernel (Version v7.4.16 | f5e7286)
 Provides a structured process for converting a Request into a Response
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4287,7 +4287,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/mailer (Version v7.4.14 | f88ce03)
+### symfony/mailer (Version v7.4.15 | 68c1f27)
 Helps sending emails
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4312,7 +4312,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/mime (Version v7.4.13 | a845722)
+### symfony/mime (Version v7.4.16 | 20094b7)
 Allows manipulating MIME messages
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4362,7 +4362,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-intl-grapheme (Version v1.38.1 | e9247d2)
+### symfony/polyfill-intl-grapheme (Version v1.41.0 | bb899c1)
 Symfony polyfill for intl's grapheme_* functions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4487,7 +4487,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-php83 (Version v1.38.2 | 796a26a)
+### symfony/polyfill-php83 (Version v1.41.0 | 5ea9908)
 Symfony polyfill backporting some PHP 8.3+ features to lower PHP versions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4537,7 +4537,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-php85 (Version v1.38.1 | ba2ba04)
+### symfony/polyfill-php85 (Version v1.41.0 | 255fab4)
 Symfony polyfill backporting some PHP 8.5+ features to lower PHP versions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4612,7 +4612,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/routing (Version v7.4.13 | 3a16217)
+### symfony/routing (Version v7.4.15 | 80c0a93)
 Maps an HTTP request to a set of configuration variables
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4662,7 +4662,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/string (Version v7.4.13 | 9616830)
+### symfony/string (Version v7.4.15 | e394af3)
 Provides an object-oriented API to strings and deals with bytes, UTF-8 code points and grapheme clusters in a unified way
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4687,7 +4687,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/translation (Version v7.4.14 | a1af4da)
+### symfony/translation (Version v7.4.16 | 501e0ff)
 Provides tools to internationalize your application
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4762,7 +4762,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/var-dumper (Version v7.4.14 | 9a3a56a)
+### symfony/var-dumper (Version v7.4.15 | 04ba4ad)
 Provides mechanisms for walking through any arbitrary PHP variable
 Homepage: https://symfony.com
 Licenses Used: MIT
