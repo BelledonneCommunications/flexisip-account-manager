@@ -1,4 +1,5 @@
 <?php
+
 /*
     Flexisip Account Manager is a set of tools to manage SIP accounts.
     Copyright (C) 2023 Belledonne Communications SARL, All rights reserved.
@@ -17,19 +18,22 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Http\Requests\EmailServer;
+namespace App\Http\Requests;
 
-use App\Http\Requests\BaseRequest;
-use App\Rules\Domain;
+use Illuminate\Foundation\Http\FormRequest;
 
-class CreateUpdate extends BaseRequest
+abstract class BaseRequest extends FormRequest
 {
-    public function rules()
+    public function all($keys = null)
     {
-        return [
-            'host' => ['required', new Domain()],
-            'port' => 'required|integer',
-            'from_address' => 'nullable|email',
-        ];
+        return $this->sanitize(parent::all($keys));
+    }
+
+    protected function sanitize(array $inputs)
+    {
+        unset($inputs['asAdmin']);
+        unset($inputs['api']);
+
+        return $inputs;
     }
 }
