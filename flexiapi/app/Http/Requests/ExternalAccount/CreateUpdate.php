@@ -20,13 +20,13 @@
 
 namespace App\Http\Requests\ExternalAccount;
 
+use App\Http\Requests\BaseRequest;
 use App\Rules\DomainOrIp;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\ExternalAccount;
 use App\Rules\SIPUsername;
 
-class CreateUpdate extends FormRequest
+class CreateUpdate extends BaseRequest
 {
     public function rules()
     {

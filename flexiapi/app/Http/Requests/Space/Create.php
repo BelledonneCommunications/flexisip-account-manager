@@ -20,12 +20,12 @@
 
 namespace App\Http\Requests\Space;
 
+use App\Http\Requests\BaseRequest;
 use App\PasswordAlgorithm;
-use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\Domain;
 use Illuminate\Validation\Rules\Enum;
 
-class Create extends FormRequest
+class Create extends BaseRequest
 {
     public function rules()
     {

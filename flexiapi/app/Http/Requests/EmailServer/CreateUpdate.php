@@ -20,10 +20,10 @@
 
 namespace App\Http\Requests\EmailServer;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 use App\Rules\Domain;
 
-class CreateUpdate extends FormRequest
+class CreateUpdate extends BaseRequest
 {
     public function rules()
     {

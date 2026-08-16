@@ -20,12 +20,12 @@
 
 namespace App\Http\Requests\Space;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use App\Account;
 
-class AdministrationUpdate extends FormRequest
+class AdministrationUpdate extends BaseRequest
 {
     public function rules()
     {

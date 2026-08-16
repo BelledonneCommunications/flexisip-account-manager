@@ -23,7 +23,7 @@ namespace App\Http\Controllers\Account;
 use App\Account;
 use App\AuthToken;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Account\Create\Request as CreateRequest;
+use App\Http\Requests\Account\Create\Api\AsAdminRequest;
 use App\Services\AccountService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -182,11 +182,10 @@ class AuthenticateController extends Controller
                     ]);
                 }
 
-                $createRequest = CreateRequest::create('/', 'POST', [
+                $createRequest = AsAdminRequest::create('/', 'POST', [
                     'username' => $username,
                     'email' => $ssoUser->email,
                     'password' => Str::random(12),
-                    'asAdmin' => true,
                 ]);
 
                 $createRequest->space = $request->space;

@@ -20,10 +20,10 @@
 
 namespace App\Http\Requests\Space;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 use App\Rules\CommaList;
 
-class CardDavServer extends FormRequest
+class CardDavServer extends BaseRequest
 {
     public function rules()
     {
