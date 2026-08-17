@@ -18,21 +18,22 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace App\Http\Requests\Account;
+namespace App\Http\Requests;
 
-use App\Http\Requests\BaseRequest;
-use App\PasswordAlgorithm;
-use Illuminate\Validation\Rules\Enum;
+use Illuminate\Foundation\Http\FormRequest;
 
-class CardDavCredentials extends BaseRequest
+abstract class BaseRequest extends FormRequest
 {
-    public function rules()
+    public function all($keys = null)
     {
-        return [
-            'username' => 'required',
-            'password' => 'required',
-            'algorithm' => ['required', new Enum(PasswordAlgorithm::class)],
-            'realm' => 'required',
-        ];
+        return $this->sanitize(parent::all($keys));
+    }
+
+    protected function sanitize(array $inputs)
+    {
+        unset($inputs['asAdmin']);
+        unset($inputs['api']);
+
+        return $inputs;
     }
 }

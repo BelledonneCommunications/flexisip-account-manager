@@ -41,6 +41,8 @@ class Account extends Authenticatable
     protected $appends = ['realm', 'provisioning_token', 'provisioning_token_expire_at', 'dictionary', 'sip_uri'];
     protected $casts = [
         'activated' => 'boolean',
+        'admin' => 'boolean',
+        'blocked' => 'boolean'
     ];
     protected $fillable = ['username', 'domain', 'email'];
 
