@@ -56,10 +56,10 @@ class ApiAccountCreationTokenTest extends TestCase
             ),
             '{"first_name": "John", "last_name": "Smith", "is_alive": true, "age": 27,'
         )->assertStatus(400)
-        ->assertJsonPath(
-            'message',
-            fn ($error) => substr($error, 0, strlen(ValidateJSON::$message)) == ValidateJSON::$message
-        );
+            ->assertJsonPath(
+                'message',
+                fn($error) => substr($error, 0, strlen(ValidateJSON::$message)) == ValidateJSON::$message
+            );
     }
     public function testCorrectParameters()
     {
@@ -226,6 +226,25 @@ class ApiAccountCreationTokenTest extends TestCase
             'password' => '123',
             'account_creation_token' => $token->token
         ])->assertStatus(200);
+    }
+
+    public function testAdminInjection()
+    {
+        $token = AccountCreationToken::factory()->create();
+
+        $this->json($this->method, $this->accountRoute, [
+            'username' => 'valid-username',
+            'algorithm' => 'SHA-256',
+            'password' => '123',
+            'account_creation_token' => $token->token,
+            'asAdmin' => true,
+            'admin' => true,
+            'activated' => true
+        ])->assertOk()
+            ->assertJsonFragment([
+                'admin' => false,
+                'activated' => false
+            ]);
     }
 
     public function testAccountCreationRequestToken()

@@ -30,13 +30,13 @@ debian12-deploy:
     - debian12-package
     - debian12-test
 
-remi-rocky8-deploy:
-  extends: .deploy
-  script:
-    - ./deploy_packages.sh rockylinux
-  needs:
-    - remi-rocky8-package
-    - remi-rocky8-test
+#remi-rocky8-deploy:
+#  extends: .deploy
+#  script:
+#    - ./deploy_packages.sh rockylinux
+#  needs:
+#    - remi-rocky8-package
+#    - remi-rocky8-test
 
 .deploy:
   stage: deploy

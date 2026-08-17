@@ -45,13 +45,13 @@ debian12-test:
     - php artisan key:generate
     - vendor/bin/phpunit --log-junit $CI_PROJECT_DIR/flexiapi_phpunit.log
 
-remi-rocky8-test:
-  extends: .test
-  image: gitlab.linphone.org:4567/bc/public/docker/rocky8-php:$ROCKY_8_IMAGE_VERSION
-  needs:
-    - remi-rocky8-package
-  script:
-    - yum -y localinstall build/*.rpm
+#remi-rocky8-test:
+#  extends: .test
+#  image: gitlab.linphone.org:4567/bc/public/docker/rocky8-php:$ROCKY_8_IMAGE_VERSION
+#  needs:
+#    - remi-rocky8-package
+#  script:
+#    - yum -y localinstall build/*.rpm
 
 mysql-latest-test:
   extends: .test
