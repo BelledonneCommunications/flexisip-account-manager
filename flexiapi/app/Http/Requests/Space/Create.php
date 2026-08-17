@@ -19,13 +19,10 @@
 
 namespace App\Http\Requests\Space;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
-
-use App\EmailServer;
+use App\Http\Requests\BaseRequest;
 use App\Rules\Domain;
 
-class Create extends FormRequest
+class Create extends BaseRequest
 {
     public function rules()
     {

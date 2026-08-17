@@ -19,7 +19,7 @@
 
 namespace App\Http\Requests\Account\Create;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rule;
 
 use App\Account;
@@ -31,7 +31,7 @@ use App\Rules\IsNotPhoneNumber;
 use App\Rules\NoUppercase;
 use App\Rules\SIPUsername;
 
-class Request extends FormRequest
+class Request extends BaseRequest
 {
     public function authorize()
     {

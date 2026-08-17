@@ -19,14 +19,14 @@
 
 namespace App\Http\Requests\ExternalAccount;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rule;
 
 use App\ExternalAccount;
 use App\Rules\SIPUsername;
 use App\Rules\Domain;
 
-class CreateUpdate extends FormRequest
+class CreateUpdate extends BaseRequest
 {
     public function rules()
     {
