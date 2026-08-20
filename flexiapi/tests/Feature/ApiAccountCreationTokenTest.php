@@ -96,7 +96,7 @@ class ApiAccountCreationTokenTest extends TestCase
             'pn_provider' => $this->pnProvider,
             'pn_param' => $this->pnParam,
             'pn_prid' => $this->pnPrid,
-        ])->assertStatus(503);
+        ])->assertServiceUnavailable();
     }
 
     public function testMandatoryParameters()
@@ -126,7 +126,7 @@ class ApiAccountCreationTokenTest extends TestCase
             'pn_provider' => $this->pnProvider,
             'pn_param' => $this->pnParam,
             'pn_prid' => $this->pnPrid,
-        ])->assertStatus(503);
+        ])->assertServiceUnavailable();
 
         // Redeem all the tokens
         AccountCreationToken::where('used', false)->update(['used' => true]);
@@ -145,7 +145,7 @@ class ApiAccountCreationTokenTest extends TestCase
 
         $response = $this->keyAuthenticated($admin)
             ->json($this->method, $this->adminRoute)
-            ->assertStatus(201)
+            ->assertCreated()
             ->assertJson(['expire_at' => null]);
 
         $this->assertDatabaseHas('account_creation_tokens', [
@@ -156,8 +156,29 @@ class ApiAccountCreationTokenTest extends TestCase
 
         $response = $this->keyAuthenticated($admin)
             ->json($this->method, $this->adminRoute)
-            ->assertStatus(201)
+            ->assertCreated()
             ->assertJson(['expire_at' => AccountCreationToken::latest()->first()->expire_at]);
+    }
+
+    public function testNonAdminCreation()
+    {
+        $token = AccountCreationToken::factory()->create();
+        Space::factory()->create();
+
+        $this->json($this->method, $this->accountRoute, [
+            'username' => 'username',
+            'password' => '123',
+            'account_creation_token' => $token->token,
+            'admin' => true
+        ])->assertJsonValidationErrorFor('admin');
+
+        $this->json($this->method, $this->accountRoute, [
+            'username' => 'valid-username',
+            'password' => '123',
+            'account_creation_token' => $token->token,
+            'asAdmin' => true,
+            'activated' => true
+        ])->assertJsonValidationErrorFor('activated');
     }
 
     public function testInvalidToken()
@@ -170,7 +191,7 @@ class ApiAccountCreationTokenTest extends TestCase
             'username' => 'username',
             'password' => '123',
             'account_creation_token' => '0123456789abc'
-        ])->assertStatus(422);
+        ])->assertJsonValidationErrorFor('account_creation_token');
 
         // Valid token
         $this->json($this->method, $this->accountRoute, [
@@ -184,7 +205,7 @@ class ApiAccountCreationTokenTest extends TestCase
             'username' => 'username2',
             'password' => '123',
             'account_creation_token' => $token->token
-        ])->assertStatus(422);
+        ])->assertJsonValidationErrorFor('account_creation_token');
 
         $this->assertDatabaseHas('account_creation_tokens', [
             'used' => true,
@@ -235,31 +256,12 @@ class ApiAccountCreationTokenTest extends TestCase
         ])->assertOk();
     }
 
-    public function testAdminInjection()
-    {
-        $token = AccountCreationToken::factory()->create();
-        Space::factory()->create();
-
-        $this->json($this->method, $this->accountRoute, [
-            'username' => 'valid-username',
-            'password' => '123',
-            'account_creation_token' => $token->token,
-            'asAdmin' => true,
-            'admin' => true,
-            'activated' => true
-        ])->assertOk()
-            ->assertJsonFragment([
-                'admin' => false,
-                'activated' => false
-            ]);
-    }
-
     public function testAccountCreationRequestToken()
     {
         Space::factory()->create();
 
         $response = $this->json($this->method, $this->tokenRequestRoute);
-        $response->assertStatus(201);
+        $response->assertCreated();
         $creationRequestToken = $response->json()['token'];
 
         $this->assertSame($response->json()['validation_url'], route('account.creation_request_token.check', $creationRequestToken));
@@ -269,7 +271,7 @@ class ApiAccountCreationTokenTest extends TestCase
 
         $response = $this->json($this->method, $this->tokenUsingCreationTokenRoute, [
             'account_creation_request_token' => $creationRequestToken
-        ])->assertStatus(201);
+        ])->assertCreated();
 
         $creationToken = $response->json()['token'];
 
@@ -300,7 +302,7 @@ class ApiAccountCreationTokenTest extends TestCase
             ->json($this->method, $this->tokenConsumeRoute, [
                 'account_creation_token' => '123'
             ])
-            ->assertStatus(404);
+            ->assertNotFound();
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->tokenConsumeRoute, [
@@ -312,7 +314,7 @@ class ApiAccountCreationTokenTest extends TestCase
             ->json($this->method, $this->tokenConsumeRoute, [
                 'account_creation_token' => $token
             ])
-            ->assertStatus(404);
+            ->assertNotFound();
 
         $this->keyAuthenticated($account)
             ->json($this->method, '/api/accounts/me/phone/request', [

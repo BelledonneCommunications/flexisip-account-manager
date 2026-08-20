@@ -40,7 +40,7 @@ class ApiAccountTypeTest extends TestCase
             ->json($this->method, $this->route, [
                 'key' => 'phone',
             ])
-            ->assertStatus(201);
+            ->assertCreated();
 
         $this->assertEquals(1, AccountType::count());
 
@@ -82,7 +82,7 @@ class ApiAccountTypeTest extends TestCase
             ->json($this->method, $this->route, [
                 'key' => 'phone',
             ])
-            ->assertStatus(201);
+            ->assertCreated();
 
         $this->assertEquals(1, AccountType::count());
         $accountType = AccountType::first();
@@ -103,7 +103,7 @@ class ApiAccountTypeTest extends TestCase
             ->json($this->method, $this->route, [
                 'key' => 'phone',
             ])
-            ->assertStatus(201);
+            ->assertCreated();
 
         $this->assertEquals(1, AccountType::count());
         $accountType = AccountType::first();
@@ -132,7 +132,7 @@ class ApiAccountTypeTest extends TestCase
             ->json($this->method, $this->route, [
                 'key' => 'phone',
             ])
-            ->assertStatus(201)
+            ->assertCreated()
             ->assertJson([
                 'id' => 1,
                 'key' => 'phone',

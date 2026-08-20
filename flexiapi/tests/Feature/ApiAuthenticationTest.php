@@ -42,7 +42,7 @@ class ApiAuthenticationTest extends TestCase
             'From' => 'sip:missing@username',
         ])->json($this->method, $this->route);
 
-        $response->assertStatus(404);
+        $response->assertNotFound();
     }
 
     public function testAuthenticate()

@@ -43,7 +43,7 @@ class ApiAccountDictionaryTest extends TestCase
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . '/dictionary/' . $key, [
                 'value' => $value
-            ])->assertStatus(201);
+            ])->assertCreated();
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/dictionary/')
@@ -76,7 +76,7 @@ class ApiAccountDictionaryTest extends TestCase
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . '/dictionary/' . $key, [
                 'value' => $newValue
-            ])->assertStatus(201);
+            ])->assertCreated();
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/dictionary/')
@@ -89,7 +89,7 @@ class ApiAccountDictionaryTest extends TestCase
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . '/dictionary/' . $secondKey, [
                 'value' => $newValue
-            ])->assertStatus(201);
+            ])->assertCreated();
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/dictionary/')
@@ -115,12 +115,12 @@ class ApiAccountDictionaryTest extends TestCase
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . '/dictionary/' . $key, [
                 'value' => $value
-            ])->assertStatus(201);
+            ])->assertCreated();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . '/dictionary/' . $secondKey, [
                 'value' => $newValue
-            ])->assertStatus(201);
+            ])->assertCreated();
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/dictionary/')

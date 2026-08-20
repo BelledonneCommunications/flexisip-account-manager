@@ -53,7 +53,7 @@ class ApiPushNotificationTest extends TestCase
                 'pn_param' => $this->pnParam,
                 'pn_prid' => $this->pnPrid,
                 'type' => $this->type
-            ])->assertStatus(503);
+            ])->assertServiceUnavailable();
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->tokenRoute, [
@@ -62,7 +62,7 @@ class ApiPushNotificationTest extends TestCase
                 'pn_prid' => $this->pnPrid,
                 'type' => $this->type,
                 'call_id' => 'call_id-123'
-            ])->assertStatus(503);
+            ])->assertServiceUnavailable();
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->tokenRoute, [
@@ -71,7 +71,7 @@ class ApiPushNotificationTest extends TestCase
                 'pn_prid' => $this->pnPrid,
                 'type' => $this->type,
                 'call_id' => 'call_id-123'
-            ])->assertStatus(503);
+            ])->assertServiceUnavailable();
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->tokenRoute, [

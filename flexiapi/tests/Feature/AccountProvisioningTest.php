@@ -266,7 +266,7 @@ class AccountProvisioningTest extends TestCase
         $response = $this->withHeaders([
             'x-linphone-provisioning' => true,
         ])->get($this->route . '/1234');
-        $response->assertStatus(404);
+        $response->assertNotFound();
 
         $password = Password::factory()->create();
         $password->account->generateUserApiKey();
@@ -287,7 +287,7 @@ class AccountProvisioningTest extends TestCase
 
         // And then twice
         $response = $this->get($this->route . '/' . $password->account->provisioning_token)
-            ->assertStatus(404);
+            ->assertNotFound();
 
         $password->account->refresh();
 
@@ -324,7 +324,7 @@ class AccountProvisioningTest extends TestCase
 
         // Generate a public auth_token and attach it
         $response = $this->json('POST', '/api/accounts/auth_token')
-            ->assertStatus(201)
+            ->assertCreated()
             ->assertJson([
                 'token' => true
             ]);
@@ -353,7 +353,7 @@ class AccountProvisioningTest extends TestCase
                 'x-linphone-provisioning' => true,
             ])
             ->get($this->route . '/auth_token/' . $authToken)
-            ->assertStatus(404);
+            ->assertNotFound();
     }
 
     public function testTokenExpiration()
@@ -400,7 +400,7 @@ class AccountProvisioningTest extends TestCase
 
         $this->keyAuthenticated($account)
             ->get('/api/accounts/me/services/turn')
-            ->assertStatus(404);
+            ->assertNotFound();
 
         config()->set('app.coturn_server_host', $host);
         config()->set('app.coturn_static_auth_secret', 'secret');

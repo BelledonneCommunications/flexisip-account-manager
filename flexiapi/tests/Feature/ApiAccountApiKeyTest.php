@@ -95,7 +95,7 @@ class ApiAccountApiKeyTest extends TestCase
 
         // Generate a public auth_token
         $response = $this->json('POST', '/api/accounts/auth_token')
-            ->assertStatus(201)
+            ->assertCreated()
             ->assertJson([
                 'token' => true
             ]);
@@ -104,7 +104,7 @@ class ApiAccountApiKeyTest extends TestCase
 
         // Try to retrieve an API key from the un-attached auth_token
         $response = $this->json($this->method, $this->route . '/' . $authToken)
-            ->assertStatus(404);
+            ->assertNotFound();
 
         // Attach the auth_token to the account
         $password = Password::factory()->create();
@@ -117,12 +117,12 @@ class ApiAccountApiKeyTest extends TestCase
         // Re-attach
         $this->keyAuthenticated($password->account)
             ->json($this->method, '/api/accounts/auth_token/' . $authToken . '/attach')
-            ->assertStatus(404);
+            ->assertNotFound();
 
         // Attach using a wrong auth_token
         $this->keyAuthenticated($password->account)
             ->json($this->method, '/api/accounts/auth_token/wrong_token/attach')
-            ->assertStatus(404);
+            ->assertNotFound();
 
         // Retrieve an API key from the attached auth_token
         $response = $this->json($this->method, $this->route . '/' . $authToken)
@@ -135,7 +135,7 @@ class ApiAccountApiKeyTest extends TestCase
 
         // Re-retrieve
         $this->json($this->method, $this->route . '/' . $authToken)
-            ->assertStatus(404);
+            ->assertNotFound();
 
         // Check the if the API key can be used for the account
         $response = $this->withHeaders(['x-api-key' => $apiKey])

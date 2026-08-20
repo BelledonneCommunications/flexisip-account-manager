@@ -32,6 +32,8 @@ class AsAdminRequest extends UpdateRequest
     {
         $rules = parent::rules();
         $rules['password'] = 'confirmed';
+        unset($rules['admin']);
+        unset($rules['activated']);
 
         if (config('app.allow_phone_number_username_admin_api') == true) {
             array_splice(

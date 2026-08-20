@@ -42,7 +42,7 @@ class ApiAccountActionTest extends TestCase
                 'key' => '123',
                 'code' => '123'
             ])
-            ->assertStatus(201);
+            ->assertCreated();
 
         $this->assertEquals(1, AccountAction::count());
 
@@ -103,7 +103,7 @@ class ApiAccountActionTest extends TestCase
                 'key' => '123',
                 'code' => '123'
             ])
-            ->assertStatus(201);
+            ->assertCreated();
 
         $this->assertEquals(1, AccountAction::count());
         $accountAction = AccountAction::first();
@@ -127,7 +127,7 @@ class ApiAccountActionTest extends TestCase
                 'key' => '123',
                 'code' => '123'
             ])
-            ->assertStatus(201);
+            ->assertCreated();
 
         $this->assertEquals(1, AccountAction::count());
         $accountAction = AccountAction::first();

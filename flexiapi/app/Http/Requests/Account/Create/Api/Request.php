@@ -37,6 +37,8 @@ class Request extends CreateRequest
             new AccountCreationToken,
             new AccountCreationTokenNotExpired
         ];
+        $rules['admin'] = 'missing';
+        $rules['activated'] = 'missing';
 
         return $rules;
     }

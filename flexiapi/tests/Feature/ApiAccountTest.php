@@ -652,7 +652,7 @@ class ApiAccountTest extends TestCase
             ->assertOk();
 
         $this->get($this->route . '/' . $account->identifier . '/info')
-            ->assertStatus(404);
+            ->assertNotFound();
     }
 
     public function testUniqueEmailAdmin()
@@ -919,7 +919,7 @@ class ApiAccountTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/wrong/search')
-            ->assertStatus(404);
+            ->assertNotFound();
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->email . '/search-by-email')
@@ -931,7 +931,7 @@ class ApiAccountTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/wrong@email.com/search-by-email')
-            ->assertStatus(404);
+            ->assertNotFound();
     }
 
     public function testGetAll()
@@ -972,6 +972,6 @@ class ApiAccountTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id)
-            ->assertStatus(404);
+            ->assertNotFound();
     }
 }

@@ -96,7 +96,7 @@ class ApiStatisticsTest extends TestCase
                 'last_status' => $lastStatus,
                 'received_at' => $receivedAt
             ])
-            ->assertStatus(201);
+            ->assertCreated();
 
         $this->keyAuthenticated($admin)
             ->json('PATCH', $this->routeMessages . '/' . $id . '/to/' . $to . ' /devices/' . $device, [
@@ -116,7 +116,7 @@ class ApiStatisticsTest extends TestCase
                 'last_status' => $newLastStatus,
                 'received_at' => $newReceivedAt
             ])
-            ->assertStatus(201);
+            ->assertCreated();
 
         $this->assertSame(2, StatisticsMessageDevice::count());
 
@@ -194,7 +194,7 @@ class ApiStatisticsTest extends TestCase
                     'state' => 'declined'
                 ]
             ])
-            ->assertStatus(201);
+            ->assertCreated();
 
         $this->assertDatabaseHas('statistics_call_devices', [
             'call_id' => $id,

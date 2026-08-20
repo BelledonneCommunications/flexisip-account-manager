@@ -61,7 +61,7 @@ class ApiAccountContactsTest extends TestCase
             ->json($this->method, '/api/account_types', [
                 'key' => $typeKey,
             ])
-            ->assertStatus(201);
+            ->assertCreated();
 
         $accountType = AccountType::first();
 
@@ -144,7 +144,7 @@ class ApiAccountContactsTest extends TestCase
         // Retry
         $this->keyAuthenticated($admin)
             ->delete($this->route . '/' . $password1->account->id . '/contacts/' . $password2->account->id)
-            ->assertStatus(404);
+            ->assertNotFound();
         $this->assertEquals(1, DB::table('contacts')->count());
 
         /**
@@ -160,7 +160,7 @@ class ApiAccountContactsTest extends TestCase
                 'title' => $contactsListsTitle,
                 'description' => 'Description'
             ])
-            ->assertStatus(201);
+            ->assertCreated();
 
         $this->assertDatabaseHas('contacts_lists', [
             'title' => $contactsListsTitle
@@ -189,7 +189,7 @@ class ApiAccountContactsTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->post($this->contactsListsRoute . '/' . $contactsList->id . '/contacts/1234')
-            ->assertStatus(404);
+            ->assertNotFound();
 
         $this->keyAuthenticated($admin)
             ->post($this->route . '/' . $admin->id . '/contacts_lists/' . $contactsList->id)

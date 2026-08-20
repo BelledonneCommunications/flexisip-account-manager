@@ -41,7 +41,7 @@ class ApiAccountCallForwardingTest extends TestCase
                 'sip_uri' => $uri,
                 'enabled' => true
             ])
-            ->assertStatus(201);
+            ->assertCreated();
 
         $admin = Account::factory()->admin()->create();
         $admin->generateUserApiKey();
@@ -93,7 +93,7 @@ class ApiAccountCallForwardingTest extends TestCase
                 'contact_id' => $contactAccount->id,
                 'enabled' => true
             ])
-            ->assertStatus(201);
+            ->assertCreated();
 
         $this->keyAuthenticated($account)
             ->get($this->route)
@@ -130,7 +130,7 @@ class ApiAccountCallForwardingTest extends TestCase
                 'sip_uri' => $uri,
                 'enabled' => true
             ])
-            ->assertStatus(201);
+            ->assertCreated();
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
@@ -158,7 +158,7 @@ class ApiAccountCallForwardingTest extends TestCase
                 'sip_uri' => $uri,
                 'enabled' => true
             ])
-            ->assertStatus(201);
+            ->assertCreated();
 
         $this->assertCount(2, $this->keyAuthenticated($account)
             ->json('GET', $this->route)->json());

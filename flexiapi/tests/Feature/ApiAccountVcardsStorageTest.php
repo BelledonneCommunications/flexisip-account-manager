@@ -110,7 +110,7 @@ FN:Simon Perreault
 UID:' . $uid . '
 END:VCARD
 '
-            ])->assertStatus(201);
+            ])->assertCreated();
 
         // Admin create
         $this->keyAuthenticated($admin)
@@ -118,7 +118,7 @@ END:VCARD
                 'vcard' => $thirdVcard])
             ->assertJson([
                 'vcard' => $thirdVcard
-            ])->assertStatus(201);
+            ])->assertCreated();
 
         // Again...
         $this->keyAuthenticated($account)
@@ -134,7 +134,7 @@ END:VCARD'
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
                 'vcard' => $secondVcard
-            ])->assertStatus(201);
+            ])->assertCreated();
 
         $this->assertDatabaseHas('vcards_storage', [
             'uuid' => $uid
@@ -195,7 +195,7 @@ END:VCARD'
         // Vcard format endpoints
         /*$this->keyAuthenticated($account)
             ->get('vcards-storage')
-            ->assertStatus(404);*/
+            ->assertNotFound();*/
 
         $this->keyAuthenticated($account)
             /*->withHeaders([
@@ -223,6 +223,6 @@ END:VCARD'
 
         $this->keyAuthenticated($account)
             ->get($this->route . '/' . $uid)
-            ->assertStatus(404);
+            ->assertNotFound();
     }
 }

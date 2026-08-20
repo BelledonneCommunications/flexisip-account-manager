@@ -41,7 +41,7 @@ class ApiSpaceEmailServerTest extends TestCase
                 'host' => $emailHost,
                 'port' => 22
             ])
-            ->assertStatus(201);
+            ->assertCreated();
 
         $this->keyAuthenticated($admin)
             ->json('GET', $route)
@@ -71,6 +71,6 @@ class ApiSpaceEmailServerTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->json('GET', $route)
-            ->assertStatus(404);
+            ->assertNotFound();
     }
 }

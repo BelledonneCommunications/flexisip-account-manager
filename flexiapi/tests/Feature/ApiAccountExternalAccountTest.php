@@ -38,7 +38,7 @@ class ApiAccountExternalAccountTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/external/')
-            ->assertStatus(404);
+            ->assertNotFound();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . '/external/', [
@@ -46,7 +46,7 @@ class ApiAccountExternalAccountTest extends TestCase
                 'domain' => 'bar.dev',
                 'password' => 'password',
                 'protocol' => 'UDP'
-            ])->assertStatus(201);
+            ])->assertCreated();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . '/external/', [
@@ -66,7 +66,7 @@ class ApiAccountExternalAccountTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/123/external/')
-            ->assertStatus(404);
+            ->assertNotFound();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . '/external/', [
@@ -96,7 +96,7 @@ class ApiAccountExternalAccountTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get($this->route . '/' . $account->id . '/external/')
-            ->assertStatus(404);
+            ->assertNotFound();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->route . '/' . $account->id . '/external/', [
@@ -104,6 +104,6 @@ class ApiAccountExternalAccountTest extends TestCase
                 'domain' => '2345:425:2CA1:0000:0000:567:5673:23b5', // IPv6
                 'password' => 'password',
                 'protocol' => 'UDP'
-            ])->assertStatus(201);
+            ])->assertCreated();
     }
 }

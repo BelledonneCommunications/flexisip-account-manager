@@ -68,7 +68,7 @@ class ApiAccountRecoveryTokenTest extends TestCase
             'pn_provider' => $this->pnProvider,
             'pn_param' => $this->pnParam,
             'pn_prid' => $this->pnPrid,
-        ])->assertStatus(503);
+        ])->assertServiceUnavailable();
 
         // Redeem all the tokens
         AccountRecoveryToken::where('used', false)->update(['used' => true]);
@@ -86,7 +86,7 @@ class ApiAccountRecoveryTokenTest extends TestCase
         $phone = '+3312345';
 
         $this->get($this->setSpaceOnRoute($this->space, route('account.recovery.show.phone', ['account_recovery_token' => 'bad_token'])))
-            ->assertStatus(404);
+            ->assertNotFound();
 
         $this->get($this->setSpaceOnRoute($this->space, route('account.recovery.show.phone', ['account_recovery_token' => $token->token])))
             ->assertDontSee($phone)
@@ -99,7 +99,7 @@ class ApiAccountRecoveryTokenTest extends TestCase
         $token->consume();
 
         $this->get($this->setSpaceOnRoute($this->space, route('account.recovery.show.phone', ['account_recovery_token' => $token->token])))
-            ->assertStatus(404);
+            ->assertNotFound();
     }
 
     public function testAttemptsRecoveryPage()

@@ -84,7 +84,7 @@ class ApiSpaceTest extends TestCase
                 'domain' => $thirdDomain,
                 'host' => $thirdDomain,
             ])
-            ->assertStatus(201)
+            ->assertCreated()
             ->assertJsonFragment([
                 'super' => false,
             ]);
@@ -172,7 +172,7 @@ class ApiSpaceTest extends TestCase
                 'host' => $domain,
                 'super' => false,
                 'max_accounts' => 1
-            ])->assertStatus(201);
+            ])->assertCreated();
 
         $this->keyAuthenticated($admin)
             ->json($this->method, $this->accountRoute, [

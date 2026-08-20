@@ -32,6 +32,8 @@ class Request extends CreateRequest
         $rules['password'] = 'confirmed';
         $rules['email'] = 'confirmed';
         $rules['terms'] = 'accepted';
+        $rules['admin'] = 'missing';
+        $rules['activated'] = 'missing';
 
         return $rules;
     }

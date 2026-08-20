@@ -53,6 +53,8 @@ class Request extends BaseRequest
                 })->ignore($accountId, 'id'),
                 'filled',
             ],
+            'admin' => 'missing',
+            'activated' => 'missing',
             'domain' => 'exists:spaces,domain',
             'email' => space()->unique_email
                 ? [

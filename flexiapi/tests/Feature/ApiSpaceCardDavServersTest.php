@@ -126,7 +126,7 @@ class ApiSpaceCardDavServersTest extends TestCase
 
         $this->keyAuthenticated($superAdmin)
             ->json('GET', $route . '/' . $cardDavServer->id)
-            ->assertStatus(404);
+            ->assertNotFound();
 
         $this->keyAuthenticated($superAdmin)
             ->json('GET', $route)
@@ -231,7 +231,7 @@ class ApiSpaceCardDavServersTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->json('PUT', $route . '/431', $credentials)
-            ->assertStatus(404);
+            ->assertNotFound();
 
         $this->keyAuthenticated($admin)
             ->json('PUT', $route . '/' . $cardDavServer->id, $credentials)
@@ -267,7 +267,7 @@ class ApiSpaceCardDavServersTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->json('GET', $route . '/' . $cardDavServer->id)
-            ->assertStatus(404);
+            ->assertNotFound();
 
         $this->keyAuthenticated($admin)
             ->json('GET', $route)
