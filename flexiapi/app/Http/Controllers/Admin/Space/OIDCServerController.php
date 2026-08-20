@@ -22,9 +22,9 @@ class OIDCServerController extends Controller
         ]);
     }
 
-    public function refreshPublicKey(int $spaceId)
+    public function refreshPublicKey(Space $space)
     {
-        $oidcAuthenticationConfiguration = SpaceOIDCAuthenticationConfiguration::where('space_id', $spaceId)->firstOrFail();
+        $oidcAuthenticationConfiguration = SpaceOIDCAuthenticationConfiguration::where('space_id', $space->id)->firstOrFail();
 
         if (!$oidcAuthenticationConfiguration->refreshOIDCCertificate()) {
             return redirect()->back()->withErrors([

@@ -9,9 +9,8 @@ use App\Http\Controllers\Controller;
 
 class EmailServerController extends Controller
 {
-    public function show(int $spaceId)
+    public function show(Space $space)
     {
-        $space = Space::findOrFail($spaceId);
 
         return view('admin.space.email_server.show', [
             'space' => $space,
@@ -19,39 +18,35 @@ class EmailServerController extends Controller
         ]);
     }
 
-    public function store(CreateUpdate $request, int $spaceId)
+    public function store(CreateUpdate $request, Space $space)
     {
-        $space = Space::findOrFail($spaceId);
         $emailServer = $space->emailServer ?? new SpaceEmailServer;
 
         $emailServer->space_id = $space->id;
-        $emailServer->host = $request->get('host');
-        $emailServer->port = $request->get('port');
-        $emailServer->username = $request->get('username');
-        $emailServer->password = $request->get('password');
-        $emailServer->from_address = $request->get('from_address') ?? null;
-        $emailServer->from_name = $request->get('from_name') ?? null;
-        $emailServer->signature = $request->get('signature') ?? null;
+        $emailServer->host = $request->input('host');
+        $emailServer->port = $request->input('port');
+        $emailServer->username = $request->input('username');
+        $emailServer->password = $request->input('password');
+        $emailServer->from_address = $request->input('from_address') ?? null;
+        $emailServer->from_name = $request->input('from_name') ?? null;
+        $emailServer->signature = $request->input('signature') ?? null;
 
         $emailServer->save();
 
-        return redirect()->route('admin.spaces.integration', $spaceId);
+        return redirect()->route('admin.spaces.integration', $space->id);
     }
 
-    public function delete(int $spaceId)
+    public function delete(Space $space)
     {
-        $space = Space::findOrFail($spaceId);
-
         return view('admin.space.email_server.delete', [
             'space' => $space
         ]);
     }
 
-    public function destroy(int $spaceId)
+    public function destroy(Space $space)
     {
-        $space = Space::findOrFail($spaceId);
         $space->emailServer->delete();
 
-        return redirect()->route('admin.spaces.integration', $spaceId);
+        return redirect()->route('admin.spaces.integration', $space->id);
     }
 }

@@ -206,45 +206,48 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
     Route::name('admin.')->prefix('admin')->middleware(['auth.admin', 'auth.check_blocked'])->group(function () {
         Route::name('spaces.')->prefix('spaces')->group(function () {
             Route::get('me', [SpaceController::class, 'me'])->name('me');
-            Route::get('{space}/configuration', [SpaceController::class, 'configuration'])->name('configuration');
-            Route::put('{space}/configuration', [SpaceController::class, 'configurationUpdate'])->name('configuration.update');
-            Route::get('{space}/integration', [SpaceController::class, 'integration'])->name('integration');
 
-            Route::name('email.')->prefix('{space}/email')->controller(EmailServerController::class)->group(function () {
-                Route::get('/', 'show')->name('show');
-                Route::post('/', 'store')->name('store');
-                Route::get('delete', 'delete')->name('delete');
-                Route::delete('/', 'destroy')->name('destroy');
-            });
-            Route::name('oidc.')->prefix('{space}/oidc')->controller(OIDCServerController::class)->group(function () {
-                Route::get('/', 'show')->name('show');
-                Route::post('/', 'store')->name('store');
-                Route::get('delete', 'delete')->name('delete');
-                Route::delete('/', 'destroy')->name('destroy');
-                Route::get('refresh_public_key', 'refreshPublicKey')->name('refresh_public_key');
-            });
-            Route::name('digest.')->prefix('{space}/digest')->controller(DigestController::class)->group(function () {
-                Route::get('/', 'show')->name('show');
-                Route::post('/', 'store')->name('store');
-            });
-            Route::resource('{space}/carddavs', CardDavServerController::class, ['except' => ['index', 'show']]);
-            Route::get('{space}/carddavs/{carddav}/delete', [CardDavServerController::class, 'delete'])->name('carddavs.delete');
+            Route::prefix('{space}')->group(function () {
+                Route::get('configuration', [SpaceController::class, 'configuration'])->name('configuration');
+                Route::put('configuration', [SpaceController::class, 'configurationUpdate'])->name('configuration.update');
+                Route::get('integration', [SpaceController::class, 'integration'])->name('integration');
 
-            Route::name('contacts_lists.')->prefix('{space}/contacts_lists')->controller(ContactsListController::class)->group(function () {
-                Route::get('/', 'index')->name('index');
-                Route::get('create', 'create')->name('create');
-                Route::post('/', 'store')->name('store');
-                Route::post('{contacts_list_id}/search', 'search')->name('search');
-                Route::get('{contacts_list_id}/edit', 'edit')->name('edit');
-                Route::put('{contacts_list_id}', 'update')->name('update');
-                Route::get('{contacts_list_id}/delete', 'delete')->name('delete');
-                Route::delete('{contacts_list_id}', 'destroy')->name('destroy');
-
-                Route::name('contacts.')->prefix('{contacts_list_id}/contacts')->controller(ContactsListContactController::class)->group(function () {
-                    Route::get('add', 'add')->name('add');
-                    Route::post('search', 'search')->name('search');
+                Route::name('email.')->prefix('email')->controller(EmailServerController::class)->group(function () {
+                    Route::get('/', 'show')->name('show');
                     Route::post('/', 'store')->name('store');
+                    Route::get('delete', 'delete')->name('delete');
                     Route::delete('/', 'destroy')->name('destroy');
+                });
+                Route::name('oidc.')->prefix('oidc')->controller(OIDCServerController::class)->group(function () {
+                    Route::get('/', 'show')->name('show');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('delete', 'delete')->name('delete');
+                    Route::delete('/', 'destroy')->name('destroy');
+                    Route::get('refresh_public_key', 'refreshPublicKey')->name('refresh_public_key');
+                });
+                Route::name('digest.')->prefix('digest')->controller(DigestController::class)->group(function () {
+                    Route::get('/', 'show')->name('show');
+                    Route::post('/', 'store')->name('store');
+                });
+                Route::resource('carddavs', CardDavServerController::class, ['except' => ['index', 'show']]);
+                Route::get('carddavs/{carddav}/delete', [CardDavServerController::class, 'delete'])->name('carddavs.delete');
+
+                Route::name('contacts_lists.')->prefix('contacts_lists')->controller(ContactsListController::class)->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::post('{contacts_list_id}/search', 'search')->name('search');
+                    Route::get('{contacts_list_id}/edit', 'edit')->name('edit');
+                    Route::put('{contacts_list_id}', 'update')->name('update');
+                    Route::get('{contacts_list_id}/delete', 'delete')->name('delete');
+                    Route::delete('{contacts_list_id}', 'destroy')->name('destroy');
+
+                    Route::name('contacts.')->prefix('{contacts_list_id}/contacts')->controller(ContactsListContactController::class)->group(function () {
+                        Route::get('add', 'add')->name('add');
+                        Route::post('search', 'search')->name('search');
+                        Route::post('/', 'store')->name('store');
+                        Route::delete('/', 'destroy')->name('destroy');
+                    });
                 });
             });
         });
