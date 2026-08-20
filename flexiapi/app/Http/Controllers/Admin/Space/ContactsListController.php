@@ -66,7 +66,7 @@ class ContactsListController extends Controller
         $contactsList->description = $request->get('description');
         $contactsList->save();
 
-        return redirect()->route('admin.spaces.contacts_lists.edit', [$space, $contactsList->id]);
+        return redirect()->route('admin.spaces.contacts_lists.edit', [$space->domain, $contactsList->id]);
     }
 
     public function search(Request $request, Space $space, int $contactsListId)
@@ -112,7 +112,7 @@ class ContactsListController extends Controller
         $contactsList->description = $request->get('description');
         $contactsList->save();
 
-        return redirect()->route('admin.spaces.contacts_lists.index', $space);
+        return redirect()->route('admin.spaces.contacts_lists.index', $space->domain);
     }
 
     public function delete(Space $space, int $id)
@@ -128,6 +128,6 @@ class ContactsListController extends Controller
         $contactsList = $space->contactsLists()->findOrFail($request->get('contacts_lists_id'));
         $contactsList->delete();
 
-        return redirect()->route('admin.spaces.contacts_lists.index', $space);
+        return redirect()->route('admin.spaces.contacts_lists.index', $space->domain);
     }
 }

@@ -59,7 +59,7 @@
                     <span class="icon"><i class="ph ph-globe-hemisphere-west"></i></span>
                     <div class="content">
                         <p>{{ __('Space') }}</p>
-                        <p><p><a href="{{ route('admin.spaces.show', $account->space->id) }}">{{ $account->domain }}</a></p></p>
+                        <p><p><a href="{{ route('admin.spaces.show', $account->space->domain) }}">{{ $account->domain }}</a></p></p>
                     </div>
                 </li>
                 <li>

@@ -67,7 +67,7 @@ class ContactsListContactController extends Controller
         $contactsList->contacts()->detach($request->get('contacts_ids')); // Just in case
         $contactsList->contacts()->attach($request->get('contacts_ids'));
 
-        return redirect()->route('admin.spaces.contacts_lists.edit', [$space, $contactsList->id]);
+        return redirect()->route('admin.spaces.contacts_lists.edit', [$space->domain, $contactsList->id]);
     }
 
     public function destroy(Request $request, Space $space, int $contactsListId)
@@ -79,6 +79,6 @@ class ContactsListContactController extends Controller
         $contactsList = $space->contactsLists()->findOrFail($contactsListId);
         $contactsList->contacts()->detach($request->get('contacts_ids'));
 
-        return redirect()->route('admin.spaces.contacts_lists.edit', [$space, $contactsList->id]);
+        return redirect()->route('admin.spaces.contacts_lists.edit', [$space->domain, $contactsList->id]);
     }
 }

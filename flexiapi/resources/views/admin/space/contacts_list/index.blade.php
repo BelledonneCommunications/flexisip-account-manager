@@ -11,7 +11,7 @@
 
     <header>
         <h1><i class="ph ph-user-rectangle"></i> {{ __('Contacts Lists') }}</h1>
-        <a class="btn oppose" href="{{ route('admin.spaces.contacts_lists.create', $space) }}">
+        <a class="btn oppose" href="{{ route('admin.spaces.contacts_lists.create', $space->domain) }}">
             <i class="ph ph-plus"></i>
             {{ __('Create') }}
         </a>
@@ -34,7 +34,7 @@
             @foreach ($contacts_lists as $contacts_list)
                 <tr>
                     <td>
-                        <a href="{{ route('admin.spaces.contacts_lists.edit', [$space, $contacts_list->id]) }}">
+                        <a href="{{ route('admin.spaces.contacts_lists.edit', [$space->domain, $contacts_list->id]) }}">
                             {{ $contacts_list->title }}
                         </a>
                     </td>

@@ -18,7 +18,7 @@
 </header>
 
 <form method="POST"
-action="{{ $carddavServer->id ? route('admin.spaces.carddavs.update', [$space->id, $carddavServer->id]) : route('admin.spaces.carddavs.store', $space->id) }}"
+action="{{ $carddavServer->id ? route('admin.spaces.carddavs.update', [$space->domain, $carddavServer->id]) : route('admin.spaces.carddavs.store', $space->domain) }}"
 id="create_edit" accept-charset="UTF-8">
     @csrf
     @method($carddavServer->id ? 'put' : 'post')

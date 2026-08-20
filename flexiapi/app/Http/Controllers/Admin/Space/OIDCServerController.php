@@ -22,9 +22,9 @@ class OIDCServerController extends Controller
         ]);
     }
 
-    public function refreshPublicKey(int $spaceId)
+    public function refreshPublicKey(Space $space)
     {
-        $oidcAuthenticationConfiguration = SpaceOIDCAuthenticationConfiguration::where('space_id', $spaceId)->firstOrFail();
+        $oidcAuthenticationConfiguration = SpaceOIDCAuthenticationConfiguration::where('space_id', $space->id)->firstOrFail();
 
         if (!$oidcAuthenticationConfiguration->refreshOIDCCertificate()) {
             return redirect()->back()->withErrors([
@@ -75,12 +75,12 @@ class OIDCServerController extends Controller
             }
         }
 
-        return redirect()->route('admin.spaces.integration', $space->id);
+        return redirect()->route('admin.spaces.integration', $space->domain);
     }
 
     public function delete(Space $space)
     {
-        return view('admin.space.oidc_server.delete', ['space' => $space]);
+        return view('admin.space.oidc_server.delete', ['space' => $space->domain]);
     }
 
     public function destroy(Space $space)
@@ -89,6 +89,6 @@ class OIDCServerController extends Controller
             ->where('space_id', $space->id)
             ->delete();
 
-        return redirect()->route('admin.spaces.integration', $space);
+        return redirect()->route('admin.spaces.integration', $space->domain);
     }
 }

@@ -10,7 +10,7 @@
 
     <div class="grid third">
         <div class="card">
-            <a class="btn small oppose secondary" href="{{ route('admin.spaces.email.show', $space) }}">
+            <a class="btn small oppose secondary" href="{{ route('admin.spaces.email.show', $space->domain) }}">
                 <i class="ph ph-pencil"></i>
             </a>
             <h3 class="line"><i class="ph ph-envelope"></i> {{ __('Email Server') }}</h3>
@@ -27,7 +27,7 @@
 
         <div class="card">
             @if (!$space->super)
-                <a class="btn small oppose secondary" href="{{ route('admin.spaces.oidc.show', $space) }}">
+                <a class="btn small oppose secondary" href="{{ route('admin.spaces.oidc.show', $space->domain) }}">
                     <i class="ph ph-pencil"></i>
                 </a>
             @else
@@ -48,7 +48,7 @@
         </div>
 
         <div class="card">
-            <a class="btn small oppose secondary" href="{{ route('admin.spaces.digest.show', $space) }}">
+            <a class="btn small oppose secondary" href="{{ route('admin.spaces.digest.show', $space->domain) }}">
                 <i class="ph ph-pencil"></i>
             </a>
             <h3 class="line"><i class="ph ph-key"></i> {{ __('Digest configuration') }}</h3>
@@ -71,7 +71,7 @@
 
     <br />
 
-    <a class="btn small oppose" href="{{ route('admin.spaces.carddavs.create', $space) }}">
+    <a class="btn small oppose" href="{{ route('admin.spaces.carddavs.create', $space->domain) }}">
         <i class="ph ph-plus"></i>
         {{ __('Create') }}
     </a>
@@ -81,10 +81,10 @@
     <div class="grid third">
         @foreach ($space->carddavServers as $carddavServer)
             <div class="card">
-                <a class="btn small oppose secondary" href="{{ route('admin.spaces.carddavs.edit', [$space, $carddavServer]) }}">
+                <a class="btn small oppose secondary" href="{{ route('admin.spaces.carddavs.edit', [$space->domain, $carddavServer]) }}">
                     <i class="ph ph-pencil"></i>
                 </a>
-                <a class="btn small oppose tertiary" href="{{ route('admin.spaces.carddavs.delete', [$space, $carddavServer]) }}">
+                <a class="btn small oppose tertiary" href="{{ route('admin.spaces.carddavs.delete', [$space->domain, $carddavServer]) }}">
                     <i class="ph ph-trash"></i>
                 </a>
                 <h3 class="line"><i class="ph ph-identification-card"></i> {{ $carddavServer->name }}</h3>

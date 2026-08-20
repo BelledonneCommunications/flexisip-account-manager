@@ -10,7 +10,7 @@
         <h1><i class="ph ph-key"></i> {{ $space->name }}</h1>
         @if ($space->oidcAuthenticationConfiguration)
             <a class="btn secondary oppose" title="{{ __('Delete') }}"
-            href="{{ route('admin.spaces.oidc.delete', $space) }}">
+            href="{{ route('admin.spaces.oidc.delete', $space->domain) }}">
             <i class="ph ph-trash"></i>
             </a>
         @endif
@@ -34,7 +34,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('admin.spaces.oidc.store', $space) }}" id="show" accept-charset="UTF-8">
+        <form method="POST" action="{{ route('admin.spaces.oidc.store', $space->domain) }}" id="show" accept-charset="UTF-8">
         @csrf
         @method('post')
         <div>
@@ -123,7 +123,7 @@
         <pre style="display: inline-block;"><code>{{ $space->oidcAuthenticationConfiguration->public_key }}</code></pre>
         <br />
         <a class="btn small secondary"
-            href="{{ route('admin.spaces.oidc.refresh_public_key', $space) }}">{{ __('Refresh') }}</a>
+            href="{{ route('admin.spaces.oidc.refresh_public_key', $space->domain) }}">{{ __('Refresh') }}</a>
         <hr />
     @endif
 

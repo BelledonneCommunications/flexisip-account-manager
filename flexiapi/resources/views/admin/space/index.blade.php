@@ -22,7 +22,7 @@
         @foreach ($spaces as $space)
             <tr>
                 <td>
-                    <a href="{{ route('admin.spaces.show', $space->id) }}">{{ $space->name }}</a>
+                    <a href="{{ route('admin.spaces.show', $space->domain) }}">{{ $space->name }}</a>
                     @if ($space->super) <span class="badge badge-error oppose" title="Super domain">Super</span> @endif
                     @if ($space->digestAuthenticationConfiguration) <span class="badge badge-message oppose" title="Digest ">Digest</span> @endif
                     @if ($space->oidcAuthenticationConfiguration) <span class="badge badge-info oppose" title="OIDC domain">OIDC</span> @endif

@@ -162,7 +162,7 @@ class SpaceController extends Controller
 
         $space->save();
 
-        return redirect()->route('admin.spaces.configuration', $space);
+        return redirect()->route('admin.spaces.configuration', $space->domain);
     }
 
     public function administration(Space $space)
@@ -190,7 +190,7 @@ class SpaceController extends Controller
         $space->client_certificate_authentication = getRequestBoolean($request, 'client_certificate_authentication');
         $space->save();
 
-        return redirect()->route('admin.spaces.show', $space);
+        return redirect()->route('admin.spaces.show', $space->domain);
     }
 
     private function setAppConfiguration(Request $request, Space $space)
@@ -214,18 +214,15 @@ class SpaceController extends Controller
         return $space;
     }
 
-    public function delete(Request $request, int $id)
+    public function delete(Request $request, Space $space)
     {
-        $space = Space::findOrFail($id);
         return view('admin.space.delete', [
             'space' => $space
         ]);
     }
 
-    public function destroy(Request $request, int $id)
+    public function destroy(Request $request, Space $space)
     {
-        $space = Space::findOrFail($id);
-
         $request->validate([
             'domain' => [
                 'required',

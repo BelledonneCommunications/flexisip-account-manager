@@ -10,7 +10,7 @@
         <h1><i class="ph ph-key"></i> {{ $space->name }}</h1>
     </header>
 
-    <form method="POST" action="{{ route('admin.spaces.digest.store', $space) }}" id="show" accept-charset="UTF-8">
+    <form method="POST" action="{{ route('admin.spaces.digest.store', $space->domain) }}" id="show" accept-charset="UTF-8">
         @csrf
         @method('post')
         @php

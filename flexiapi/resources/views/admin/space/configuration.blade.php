@@ -17,7 +17,7 @@
     @include('admin.space.head')
     @include('admin.space.tabs')
 
-    <form method="POST" action="{{ route('admin.spaces.configuration.update', $space) }}" accept-charset="UTF-8"
+    <form method="POST" action="{{ route('admin.spaces.configuration.update', $space->domain) }}" accept-charset="UTF-8"
         enctype="multipart/form-data">
         @csrf
         @method('put')
