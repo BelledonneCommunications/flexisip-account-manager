@@ -77,14 +77,6 @@
             @include('parts.errors', ['name' => 'account_proxy_registrar_address'])
         </div>
 
-        <div>
-            <input name="account_realm" @if ($space->accounts()->count() > 0) disabled @endif id="account_realm"
-                placeholder="server.tld" value="{{ $space->account_realm }}">
-            <label for="account_realm">{{ __('Account realm') }}</label>
-            <span class="supporting">{{ __('A custom realm for the Space accounts') }}</span>
-            @include('parts.errors', ['name' => 'account_realm'])
-        </div>
-
         <h3 class="large">{{ __('Remote provisioning') }}</h3>
 
         <div class="large">
@@ -132,19 +124,6 @@
                 'key' => 'intercom_features',
                 'label' => __('Intercom features'),
             ])
-        </div>
-
-        <h3 class="large">{{ __('Security') }}</h3>
-        <div class="select">
-            <select name="account_default_password_algorithm">
-                @foreach (App\PasswordAlgorithm::cases() as $algorithm)
-                    <option value="{{ $algorithm->value }}" @if ($space->account_default_password_algorithm == $algorithm) selected="selected" @endif>
-                        {{ $algorithm }}
-                    </option>
-                @endforeach
-            </select>
-            <label for="domain">{{ __('Password Hashing Algorithm') }}</label>
-            <span class="supporting">{{ __('Note: changing the password hashing algorithm will not affect existing passwords. It will only apply to new passwords created after this change.') }}</span>
         </div>
 
         <div class="large">

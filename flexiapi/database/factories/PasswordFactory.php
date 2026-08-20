@@ -22,6 +22,7 @@ namespace Database\Factories;
 
 use App\Account;
 use App\Password;
+use App\PasswordAlgorithm;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PasswordFactory extends Factory
@@ -35,7 +36,7 @@ class PasswordFactory extends Factory
         return [
             'account_id' => $account->id,
             'password' => hash('md5', $account->username . ':' . $account->resolvedRealm . ':testtest'),
-            'algorithm' => 'MD5',
+            'algorithm' => PasswordAlgorithm::MD5->value,
         ];
     }
 
@@ -58,16 +59,8 @@ class PasswordFactory extends Factory
             return [
                 'password' => hash('sha256', $account->username . ':' . $account->resolvedRealm . ':testtest'),
                 'account_id' => $account->id,
-                'algorithm' => 'SHA-256',
+                'algorithm' => PasswordAlgorithm::SHA256->value,
             ];
         });
-    }
-
-    public function clrtxt()
-    {
-        return $this->state(fn (array $attributes) => [
-            'password' => 'testtest',
-            'algorithm' => 'CLRTXT',
-        ]);
     }
 }

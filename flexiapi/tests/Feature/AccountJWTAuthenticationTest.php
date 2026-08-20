@@ -21,6 +21,7 @@
 namespace Tests\Feature;
 
 use App\Password;
+use App\SpaceOIDCAuthenticationConfiguration;
 use DateTimeImmutable;
 use Lcobucci\Clock\FrozenClock;
 use Lcobucci\JWT\Builder;
@@ -31,7 +32,6 @@ use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Signer\Rsa\Sha512;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Auth;
-use App\SpaceSsoServer;
 
 class AccountJWTAuthenticationTest extends TestCase
 {
@@ -46,10 +46,7 @@ class AccountJWTAuthenticationTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-
-        $keys = openssl_pkey_new(array("private_key_bits" => 4096, "private_key_type" => OPENSSL_KEYTYPE_RSA));
-        $this->serverPublicKeyPem = openssl_pkey_get_details($keys)['key'];
-        openssl_pkey_export($keys, $this->serverPrivateKeyPem);
+        $this->generateKeyPair();
     }
 
     public function testBaseProvisioning()
@@ -65,7 +62,7 @@ class AccountJWTAuthenticationTest extends TestCase
         $space = \App\Space::where('domain', $password->account->domain)->first();
         $space->update(['host' => $domain,]);
 
-        SpaceSsoServer::factory()->withSpaceId($space->id)->create([
+        SpaceOIDCAuthenticationConfiguration::factory()->withSpaceId($space->id)->create([
             'public_key' => $this->serverPublicKeyPem,
         ]);
 
@@ -115,7 +112,7 @@ class AccountJWTAuthenticationTest extends TestCase
 
         // Custom SIP identifier
         $otherIdentifier = 'sip_other_identifier';
-        $space->ssoServer->update(['sip_identifier' => 'sip_other_identifier']);
+        $space->oidcAuthenticationConfiguration->update(['sip_identifier' => 'sip_other_identifier']);
 
         $token = (new JwtFacade(clock: $clock))->issue(
             new Sha256,
@@ -172,7 +169,7 @@ class AccountJWTAuthenticationTest extends TestCase
             ->get($this->accountRoute)
             ->assertStatus(401);
 
-        $this->assertStringContainsString($space->sso_authentication_bearer . ', ', $response->headers->get('WWW-Authenticate'));
+        $this->assertStringContainsString($space->oidc_authentication_bearer . ', ', $response->headers->get('WWW-Authenticate'));
         $this->assertStringContainsString('invalid_token', $response->headers->get('WWW-Authenticate'));
 
         // Wrong email
@@ -223,7 +220,7 @@ class AccountJWTAuthenticationTest extends TestCase
         $password = Password::factory()->create();
         $space = \App\Space::where('domain', $password->account->domain)->first();
 
-        SpaceSsoServer::factory()->withSpaceId($space->id)->create([
+        SpaceOIDCAuthenticationConfiguration::factory()->withSpaceId($space->id)->create([
             'public_key' => $this->serverPublicKeyPem,
         ]);
 
@@ -233,7 +230,7 @@ class AccountJWTAuthenticationTest extends TestCase
             ->assertStatus(401);
 
         $this->assertStringContainsString(
-            'Bearer ' . $space->sso_authentication_bearer,
+            'Bearer ' . $space->oidc_authentication_bearer,
             $response->headers->all()['www-authenticate'][0]
         );
 
@@ -243,7 +240,7 @@ class AccountJWTAuthenticationTest extends TestCase
             ->assertStatus(401);
 
         $this->assertStringContainsString(
-            'Bearer ' . $space->sso_authentication_bearer,
+            'Bearer ' . $space->oidc_authentication_bearer,
             $response->headers->all()['www-authenticate'][0]
         );
 
@@ -255,7 +252,7 @@ class AccountJWTAuthenticationTest extends TestCase
             ->assertStatus(401);
 
         $this->assertStringContainsString(
-            'Bearer ' . $space->sso_authentication_bearer,
+            'Bearer ' . $space->oidc_authentication_bearer,
             $response->headers->all()['www-authenticate'][0]
         );
     }

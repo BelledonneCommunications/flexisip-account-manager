@@ -29,8 +29,8 @@ use App\AccountTombstone;
 use App\AccountType;
 use App\ContactsList;
 use App\ResetPasswordEmailToken;
-use App\Http\Requests\Account\Create\Api\AsAdminRequest;
-use App\Http\Requests\Account\Update\Api\AsAdminRequest as ApiAsAdminRequest;
+use App\Http\Requests\Account\Create\Api\AsAdminRequest as CreateAsAdminRequest;
+use App\Http\Requests\Account\Update\Api\AsAdminRequest as UpdateAsAdminRequest;
 use App\Mail\Provisioning;
 use App\Mail\ResetPassword;
 use App\Services\AccountService;
@@ -158,12 +158,12 @@ class AccountController extends Controller
         return $account->makeVisible(['provisioning_token']);
     }
 
-    public function store(AsAdminRequest $request)
+    public function store(CreateAsAdminRequest $request)
     {
         return (new AccountService)->store($request)->makeVisible(['confirmation_key', 'provisioning_token']);
     }
 
-    public function update(ApiAsAdminRequest $request, int $accountId)
+    public function update(UpdateAsAdminRequest $request, int $accountId)
     {
         $account = (new AccountService)->update($request, $accountId);
 

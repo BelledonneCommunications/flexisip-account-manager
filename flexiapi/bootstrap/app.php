@@ -12,7 +12,8 @@ use App\Http\Middleware\IsCardDavCredentialsEnabled;
 use App\Http\Middleware\IsIntercomFeatures;
 use App\Http\Middleware\IsPhoneRegistration;
 use App\Http\Middleware\IsPublicRegistration;
-use App\Http\Middleware\IsSpaceSSO;
+use App\Http\Middleware\IsSpaceDigest;
+use App\Http\Middleware\IsSpaceOIDC;
 use App\Http\Middleware\IsWebPanelEnabled;
 use App\Http\Middleware\Localization;
 use App\Http\Middleware\SpaceCheck;
@@ -44,7 +45,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth' => Authenticate::class,
             'feature.carddav_user_credentials' => IsCardDavCredentialsEnabled::class,
             'feature.intercom' => IsIntercomFeatures::class,
-            'feature.is_space_sso' => IsSpaceSSO::class,
+            'feature.is_space_oidc' => IsSpaceOIDC::class,
+            'feature.is_space_digest' => IsSpaceDigest::class,
             'feature.phone_registration' => IsPhoneRegistration::class,
             'feature.public_registration' => IsPublicRegistration::class,
             'feature.web_panel_enabled' => IsWebPanelEnabled::class,

@@ -30,12 +30,15 @@ class ImportConfigurationFromDotEnv extends Command
         $space->intro_registration_text = env('INSTANCE_INTRO_REGISTRATION', null);
         $space->newsletter_registration_address = env('NEWSLETTER_REGISTRATION_ADDRESS', null);
         $space->account_proxy_registrar_address = env('ACCOUNT_PROXY_REGISTRAR_ADDRESS', 'sip.domain.com');
-        $space->account_realm = env('ACCOUNT_REALM', null);
         $space->custom_provisioning_overwrite_all = env('ACCOUNT_PROVISIONING_OVERWRITE_ALL', false);
 
         $space->public_registration = env('PUBLIC_REGISTRATION', true);
         $space->phone_registration = env('PHONE_AUTHENTICATION', true);
         $space->intercom_features = env('INTERCOM_FEATURES', false);
+
+        if ($realm = env('ACCOUNT_REALM', null)) {
+            $this->info('The realm ' . $realm . ' cannot be set in the space using this script, please configure it from the administration panel');
+        }
 
         foreach ($space->getDirty() as $key => $value) {
             $show = '    - ' . $key . ' => ';

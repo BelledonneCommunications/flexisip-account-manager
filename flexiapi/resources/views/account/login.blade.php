@@ -9,8 +9,8 @@
             @parsedown(space()->intro_registration_text)
         @endif
 
-        @if (space()->ssoServer)
-            <a class="btn" href="{{ route('account.login.sso') }}"> {{ __('Login with SSO') }} </a>
+        @if (space()->oidcAuthenticationConfiguration)
+            <a class="btn" href="{{ route('account.login.oidc') }}"> {{ __('Login with OpenID Connect') }} </a>
             @include('parts.errors', ['name' => 'sso_not_found'])
         @else
             <form style="margin-top: 3rem; margin-bottom: 3rem;" method="POST" action="{{ route('account.authenticate') }}" accept-charset="UTF-8">

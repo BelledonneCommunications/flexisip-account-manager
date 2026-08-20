@@ -14,7 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - **Voicemail features and related API endpoints** to integrate with `flexisip-voicemail`
 - **Call Forwarding features and related API endpoints**
 - **Generated licenses.md file in FlexiAPI**
-- **Per Space Custom SSO authentication flow**
+- **Per Space Custom OIDC authentication flow**
 - **Space Administration**: Added a new toggle to enable/disable email uniqueness per space.
 - **Validation**: Added a safety check preventing the activation of email uniqueness if duplicate emails already exist within the space domain (includes a detailed error message listing the conflicting accounts).
 - **Recovery code attempts**: Recovery codes now have a maximum of 3 attempts before being discarded, to prevent brute force attack
@@ -31,7 +31,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Removed
 
-- **Space SSO authentication:** Custom SSO authentication support has now be moved into Spaces configuraton, the following environnement keys are removed.
+- **Space OIDC authentication:** Custom OpenID Connect authentication support has now be moved into Spaces configuraton, the following environnement keys are removed.
     - `JWT_RSA_PUBLIC_KEY_PEM`
     - `JWT_SIP_IDENTIFIER`
     - `ACCOUNT_AUTHENTICATION_BEARER`, it is now generated directly from the Space configuration
@@ -61,6 +61,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 - **Complete and reorganize the Markdown documentation**
 - **Refactor the emails templates** All the emails were modernized and are now generated in HTML
+- **API password endpoints complies with the Space Digest algorithm** The `algorithm` parameter is deprecated, now optional and will throw an error is the value is different than the Space Digest algorithm configuration
 
 ### Removed
 
@@ -87,6 +88,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - **Enforce the session and cache in the configuration** The following variables can be removed from your DotEnv file as well:
     - SESSION_DRIVER
     - CACHE_DRIVER
+- **Remove outdated Digest CLRTXT support**
 
 ### Migrate from [1.6]
 

@@ -30,6 +30,7 @@ class Password extends Model
     public $timestamps = false;
     protected $fillable = ['account_id', 'password', 'algorithm'];
     protected $hidden = ['id', 'password', 'account_id', 'created_at', 'updated_at'];
+    protected $casts = ['algorithm' => PasswordAlgorithm::class];
 
     public function account()
     {

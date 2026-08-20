@@ -25,8 +25,6 @@ use App\PasswordAlgorithm;
 use App\Space;
 use Tests\TestCase;
 
-use function PHPUnit\Framework\assertEquals;
-
 class ApiSpaceTest extends TestCase
 {
     protected $method = 'POST';
@@ -46,7 +44,6 @@ class ApiSpaceTest extends TestCase
             ->json($this->method, $this->accountRoute, [
                 'username' => $username,
                 'domain' => $admin->domain,
-                'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])
             ->assertOk();
@@ -57,7 +54,6 @@ class ApiSpaceTest extends TestCase
                 'username' => $username,
                 // The domain is ignored there, to fallback on the admin one
                 'domain' => $secondDomain->domain,
-                'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])
             ->assertJsonValidationErrors(['username']);
@@ -69,7 +65,6 @@ class ApiSpaceTest extends TestCase
             ->json($this->method, $this->accountRoute, [
                 'username' => $username,
                 'domain' => $secondDomain->domain,
-                'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])
             ->assertOk();
@@ -92,7 +87,6 @@ class ApiSpaceTest extends TestCase
             ->assertStatus(201)
             ->assertJsonFragment([
                 'super' => false,
-                'account_realm' => null
             ]);
 
         $this->keyAuthenticated($admin)
@@ -108,10 +102,6 @@ class ApiSpaceTest extends TestCase
                 'name' => 'Another Domain',
                 'domain' => 'another.domain',
                 'host' => 'another.host',
-                'account_realm' => $accountRealm
-            ])
-            ->assertJsonFragment([
-                'account_realm' => $accountRealm
             ]);
 
         $this->keyAuthenticated($admin)
@@ -172,7 +162,6 @@ class ApiSpaceTest extends TestCase
             ->json($this->method, $this->accountRoute, [
                 'username' => 'first',
                 'domain' => $domain,
-                'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])->assertStatus(403);
 
@@ -189,7 +178,6 @@ class ApiSpaceTest extends TestCase
             ->json($this->method, $this->accountRoute, [
                 'username' => 'first',
                 'domain' => $domain,
-                'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])->assertOk();
 
@@ -197,7 +185,6 @@ class ApiSpaceTest extends TestCase
             ->json($this->method, $this->accountRoute, [
                 'username' => 'second',
                 'domain' => $domain,
-                'algorithm' => 'SHA-256',
                 'password' => '123456',
             ])->assertStatus(403);
     }
@@ -206,40 +193,36 @@ class ApiSpaceTest extends TestCase
     {
         $admin = Account::factory()->superAdmin()->create();
         $admin->generateUserApiKey();
+        $password = fake()->password();
 
-        $response = $this->keyAuthenticated($admin)
-            ->json('GET', $this->route . '/' . $admin->domain)
-            ->assertJson(['account_default_password_algorithm' => PasswordAlgorithm::SHA256->value])
-            ->assertOk();
-
-        $json = $response->json();
-        $json['account_default_password_algorithm'] = 'WRONGEHASH';
+        $this->keyAuthenticated($admin)
+            ->json($this->method, '/api/accounts/me/password', [
+                'password' => $password,
+            ])->assertJsonFragment([
+                    'passwords' => [
+                        ['algorithm' => PasswordAlgorithm::SHA256->value]
+                    ]
+                ]);
 
         // Switch to MD5
 
-        $admin->updatePassword(fake()->password());
-        $currentHash = $admin->passwords()->first()->algorithm;
-
-        assertEquals($currentHash, PasswordAlgorithm::SHA256->value);
+        $admin->space->digestAuthenticationConfiguration->default_password_algorithm = PasswordAlgorithm::MD5->value;
+        $admin->space->digestAuthenticationConfiguration->save();
 
         $this->keyAuthenticated($admin)
-            ->json('PUT', $this->route . '/' . $admin->domain, $json)
-            ->assertJsonValidationErrorFor('account_default_password_algorithm');
-
-        $json['account_default_password_algorithm'] = PasswordAlgorithm::MD5->value;
+            ->json($this->method, '/api/accounts/me/password', [
+                'password' => fake()->password(),
+                'old_password' => 'wrong'
+            ])->assertJsonValidationErrorFor('old_password');
 
         $this->keyAuthenticated($admin)
-            ->json('PUT', $this->route . '/' . $admin->domain, $json)
-            ->assertOk();
-
-        $response = $this->keyAuthenticated($admin)
-            ->json('GET', $this->route . '/' . $admin->domain)
-            ->assertJson(['account_default_password_algorithm' => PasswordAlgorithm::MD5->value])
-            ->assertOk();
-
-        $admin->updatePassword(fake()->password());
-        $newHash = $admin->passwords()->first()->algorithm;
-
-        assertEquals($newHash, PasswordAlgorithm::MD5->value);
+            ->json($this->method, '/api/accounts/me/password', [
+                'password' => fake()->password(),
+                'old_password' => $password
+            ])->assertJsonFragment([
+                    'passwords' => [
+                        ['algorithm' => PasswordAlgorithm::MD5->value]
+                    ]
+                ]);
     }
 }

@@ -41,13 +41,13 @@
         </div>
 
         <div>
-            <div @if ($space->ssoServer) class="disabled" @endif>
+            <div @if ($space->oidcAuthenticationConfiguration) class="disabled" @endif>
                 @include('parts.form.toggle', ['object' => $space, 'key' => 'unique_email', 'label' => __('Unique email'), 'supporting' => __('Prevent creating multiple accounts with the same email address within this space')])
                 <span style="white-space: pre-line;">
                     @include('parts.errors', ['name' => 'unique_email'])
                 </span>
             </div>
-            @if ($space->ssoServer) <span class="supporting">{{ __("Email uniqueness can't be disabled if SSO authentication is enabled.") }}</span>@endif
+            @if ($space->oidcAuthenticationConfiguration) <span class="supporting">{{ __("Email uniqueness can't be disabled if OIDC authentication is enabled.") }}</span>@endif
         </div>
 
         <h3 class="large">{{ __('Integration') }}</h3>

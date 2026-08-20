@@ -32,6 +32,7 @@ use App\Libraries\OvhSMS;
 use App\Mail\NewsletterRegistration;
 use App\Mail\RecoverByCode;
 use App\Mail\RegisterValidation;
+use App\PasswordAlgorithm;
 use App\PhoneChangeCode;
 use App\Rules\FilteredPhone;
 use App\Rules\ValidCode;
@@ -93,7 +94,7 @@ class AccountService
             $account->save();
         }
 
-        $account->updatePassword($request->input('password'), $request->input('algorithm'));
+        $account->updatePassword($request->input('password'));
 
         if ($request->api && !$request->asAdmin) {
             $token = AccountCreationToken::where('token', $request->input('account_creation_token'))->first();
@@ -162,10 +163,7 @@ class AccountService
             }
 
             if ($request->input('password')) {
-                $account->updatePassword(
-                    $request->input('password'),
-                    $request->api ? $request->input('algorithm') : null
-                );
+                $account->updatePassword($request->input('password'));
             }
 
             $account->phone = $request->input('phone');
@@ -440,7 +438,7 @@ class AccountService
 
         $request->validate(['password' => $password]);
 
-        $algorithm = 'MD5';
+        $algorithm = PasswordAlgorithm::MD5;
 
         $externalAccount->account_id = $account->id;
         $externalAccount->username = $request->input('username');

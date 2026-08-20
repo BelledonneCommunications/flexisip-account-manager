@@ -23,9 +23,7 @@ namespace App\Http\Requests\Account\Update\Api;
 use App\Http\Requests\Account\Update\Request as UpdateRequest;
 use App\Http\Requests\Api as RequestsApi;
 use App\Http\Requests\AsAdmin;
-use App\PasswordAlgorithm;
 use App\Rules\IsNotPhoneNumber;
-use Illuminate\Validation\Rules\Enum;
 
 class AsAdminRequest extends UpdateRequest
 {
@@ -35,8 +33,7 @@ class AsAdminRequest extends UpdateRequest
     public function rules()
     {
         $rules = parent::rules();
-
-        $rules['algorithm'] = ['required_with:password', new Enum(PasswordAlgorithm::class)];
+        $rules['algorithm'] = ['nullable', 'in:' . space()->digestAuthenticationConfiguration?->default_password_algorithm->value];
         $rules['admin'] = 'boolean|nullable';
         $rules['activated'] = 'boolean|nullable';
 

@@ -40,12 +40,12 @@ class AuthenticateJWT
 {
     public function handle(Request $request, Closure $next)
     {
-        if ($request->bearerToken() && $request->space->ssoServer?->public_key) {
+        if ($request->bearerToken() && $request->space->oidcAuthenticationConfiguration?->public_key) {
             if (!extension_loaded('sodium')) {
                 abort(403, "PHP Sodium extension isn't loaded");
             }
 
-            $publicKey = InMemory::plainText($request->space->ssoServer->public_key);
+            $publicKey = InMemory::plainText($request->space->oidcAuthenticationConfiguration->public_key);
 
             try {
                 $token = (new Parser(new JoseEncoder))->parse($request->bearerToken());
@@ -82,7 +82,7 @@ class AuthenticateJWT
             }
 
             $account = null;
-            $identifierKey = $request->space->ssoServer->sip_identifier;
+            $identifierKey = $request->space->oidcAuthenticationConfiguration->sip_identifier;
 
             if ($identifierKey == '') {
                 $identifierKey = 'sip_identity';
@@ -116,11 +116,11 @@ class AuthenticateJWT
             return $next($request);
         }
 
-        if ($request->space?->sso_authentication_bearer) {
+        if ($request->space?->oidc_authentication_bearer) {
             $response = new Response;
             $response->header(
                 'WWW-Authenticate',
-                'Bearer ' . $request->space?->sso_authentication_bearer
+                'Bearer ' . $request->space?->oidc_authentication_bearer
             );
             $response->setStatusCode(401);
 
@@ -132,8 +132,8 @@ class AuthenticateJWT
 
     private function generateUnauthorizedBearerResponse(Space $space, string $error, string $description): Response
     {
-        $bearer = 'Bearer ' . $space->sso_authentication_bearer;
-        $bearer .= $space->sso_authentication_bearer != null
+        $bearer = 'Bearer ' . $space->oidc_authentication_bearer;
+        $bearer .= $space->oidc_authentication_bearer != null
             ? ', '
             : '';
 

@@ -45,9 +45,9 @@ function getRequestBoolean(Request $request, string $key, bool $reversed = false
     return $reversed ? !$bool : $bool;
 }
 
-function bchash(string $username, string $domain, string $password, string $algorithm = 'MD5'): string
+function bchash(string $username, string $domain, string $password, PasswordAlgorithm $algorithm): string
 {
-    return hash(PasswordAlgorithm::from($algorithm)->hashFunction(), $username . ':' . $domain . ':' . $password);
+    return hash(PasswordAlgorithm::from($algorithm->value)->hashFunction(), $username . ':' . $domain . ':' . $password);
 }
 
 function generatePin(): int

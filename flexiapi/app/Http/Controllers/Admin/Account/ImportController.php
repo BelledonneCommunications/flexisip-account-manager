@@ -23,6 +23,7 @@ namespace App\Http\Controllers\Admin\Account;
 use App\Account;
 use App\ExternalAccount;
 use App\Password;
+use App\PasswordAlgorithm;
 use App\PhoneCountry;
 use App\Space;
 use App\Http\Controllers\Controller;
@@ -60,7 +61,7 @@ class ImportController extends Controller
         ]);
 
         $domain = $request->user()->superAdmin
-            ? $request->get('domain')
+            ? $request->input('domain')
             : $request->user()->domain;
 
         /**
@@ -240,7 +241,7 @@ class ImportController extends Controller
         ]);
 
         $domain = $request->user()->superAdmin
-            ? $request->get('domain')
+            ? $request->input('domain')
             : $request->user()->domain;
 
         $lines = $this->csvToCollection(storage_path('app/' . $request->get('file_path')));
@@ -250,7 +251,7 @@ class ImportController extends Controller
 
         $admins = $phones = $passwords = $externals = [];
 
-        $externalAlgorithm = 'MD5';
+        $externalAlgorithm = PasswordAlgorithm::MD5;
 
         foreach ($lines as $line) {
             if ($line->role == 'admin') {
@@ -310,26 +311,29 @@ class ImportController extends Controller
         // Set passwords
 
         $passwordsToInsert = [];
-
-        $passwordAccounts = Account::whereIn('username', array_keys($passwords))
-            ->where('domain', $domain)
-            ->get();
-
         $space = Space::where('domain', $domain)->first();
-        $algorithm = $space->account_default_password_algorithm->value;
 
-        foreach ($passwordAccounts as $passwordAccount) {
-            array_push($passwordsToInsert, [
-                'account_id' => $passwordAccount->id,
-                'password' => bchash(
-                    $passwordAccount->username,
-                    $request->space?->account_realm ?? $domain,
-                    $passwords[$passwordAccount->username],
-                    $algorithm
-                ),
-                'algorithm' => $algorithm
-            ]);
+        if ($digestConfiguration = $space->digestAuthenticationConfiguration) {
+            $passwordAccounts = Account::whereIn('username', array_keys($passwords))
+                ->where('domain', $domain)
+                ->get();
+
+            $algorithm = $digestConfiguration->default_password_algorithm->value;
+
+            foreach ($passwordAccounts as $passwordAccount) {
+                array_push($passwordsToInsert, [
+                    'account_id' => $passwordAccount->id,
+                    'password' => bchash(
+                        $passwordAccount->username,
+                        $digestConfiguration->realm->value,
+                        $passwords[$passwordAccount->username],
+                        $algorithm
+                    ),
+                    'algorithm' => $algorithm
+                ]);
+            }
         }
+
 
         Password::insert($passwordsToInsert);
 

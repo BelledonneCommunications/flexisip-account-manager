@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin\Account;
 
 use App\Http\Controllers\Controller;
+use App\PasswordAlgorithm;
 use Illuminate\Http\Request;
 use App\AccountCardDavCredentials;
 use App\SpaceCardDavServer;
@@ -44,15 +45,15 @@ class CardDavCredentialsController extends Controller
         $accountCarddavCredentials = new AccountCardDavCredentials;
         $accountCarddavCredentials->space_carddav_server_id = $cardDavServer->id;
         $accountCarddavCredentials->account_id = $account->id;
-        $accountCarddavCredentials->username = $request->get('username');
-        $accountCarddavCredentials->realm = $request->get('realm');
+        $accountCarddavCredentials->username = $request->input('username');
+        $accountCarddavCredentials->realm = $request->input('realm');
         $accountCarddavCredentials->password = bchash(
-            $request->get('username'),
-            $request->get('realm'),
-            $request->get('password'),
-            $request->get('algorithm')
+            $request->input('username'),
+            $request->input('realm'),
+            $request->input('password'),
+            PasswordAlgorithm::from($request->input('algorithm'))
         );
-        $accountCarddavCredentials->algorithm = $request->get('algorithm');
+        $accountCarddavCredentials->algorithm = $request->input('algorithm');
         return $accountCarddavCredentials->save();
     }
 

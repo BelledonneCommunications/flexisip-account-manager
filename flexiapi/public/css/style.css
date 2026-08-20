@@ -59,12 +59,17 @@ body {
     --danger-5: rgb(221, 95, 95);
     --danger-6: rgb(189, 72, 82);
 
-    --success-1: rgb(229 243 236);
-    --success-5: rgb(79, 174, 128);
+    --success-1: hsl(from var(--color-green) h s calc(l + 40));
+    --success-5: var(--color-green);
+    --success-6: hsl(from var(--color-green) h s calc(l - 20));
 
-    --warning-1: rgb(255, 253, 239);
-    --warning-5: rgb(255, 220, 46);
-    --warning-6: rgb(219, 184, 32);
+    --warning-1: hsl(from var(--color-yellow) h s calc(l + 40));
+    --warning-5: var(--color-yellow);
+    --warning-6: hsl(from var(--color-yellow) h s calc(l - 20));
+
+    --info-1: hsl(from var(--color-blue) h s calc(l + 40));
+    --info-5: var(--color-blue);
+    --info-6: hsl(from var(--color-blue) h s calc(l + -20));
 
     --color-orange: rgb(254, 94, 0);
     --color-grey: rgb(108, 122, 135);
@@ -438,6 +443,11 @@ form section.block {
     margin: 0;
 }
 
+.grid .card h3 {
+    padding-top: 0;
+    line-height: 3.25rem;
+}
+
 .grid.third {
     grid-template-columns: repeat(3, 1fr);
 }
@@ -693,6 +703,7 @@ h3+p:has(span.badge) {
 
 h3 .badge {
     margin-left: 1rem;
+    vertical-align: center;
 }
 
 h3 .badge+.badge {
@@ -1082,13 +1093,15 @@ select.list_toggle {
 /* Info cards */
 
 .card.danger,
-.card.warning {
+.card.warning,
+.card.info {
     border: 1px solid var(--main-1);
     border-left: 4px solid var(--main-5);
 }
 
 .card.danger li .icon,
-.card.warning li .icon {
+.card.warning li .icon,
+.card.info li .icon {
     background-color: transparent;
 }
 
@@ -1114,6 +1127,18 @@ select.list_toggle {
 .card.warning li p,
 .card.warning li .icon {
     color: var(--warning-6);
+}
+
+.card.info {
+    background-color: var(--info-1);
+    border-color: var(--info-5);
+    color: var(--info-6);
+    margin-bottom: 2rem;
+}
+
+.card.info li p,
+.card.info li .icon {
+    color: var(--info-6);
 }
 
 /** Breadcrumb **/

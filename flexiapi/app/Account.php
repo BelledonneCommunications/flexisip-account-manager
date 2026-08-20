@@ -38,7 +38,7 @@ class Account extends Authenticatable
 
     protected $with = ['passwords', 'emailChangeCode', 'types', 'actions', 'dictionaryEntries', 'carddavServers'];
     protected $hidden = ['expire_time', 'pivot', 'currentProvisioningToken', 'currentRecoveryCode', 'dictionaryEntries', 'space'];
-    protected $appends = ['realm', 'provisioning_token', 'provisioning_token_expire_at', 'dictionary', 'sip_uri'];
+    protected $appends = ['provisioning_token', 'provisioning_token_expire_at', 'dictionary', 'sip_uri'];
     protected $casts = [
         'activated' => 'boolean',
         'admin' => 'boolean',
@@ -401,14 +401,13 @@ class Account extends Authenticatable
         return $displayName . '<sip:' . $this->getIdentifierAttribute() . '>';
     }
 
-    public function getRealmAttribute()
+    public function getResolvedRealmAttribute(): string
     {
-        return $this->space->account_realm;
-    }
+        if ($digestConfiguration = $this->space->digestAuthenticationConfiguration) {
+            return $digestConfiguration->realm;
+        }
 
-    public function getResolvedRealmAttribute()
-    {
-        return $this->space->account_realm ?? $this->domain;
+        return $this->domain;
     }
 
     public function getConfirmationKeyExpiresAttribute()
@@ -573,22 +572,23 @@ class Account extends Authenticatable
         return !empty($this->recovery_code) && $this->updated_at->greaterThan($oneHourAgo);
     }
 
-    public function updatePassword(string $newPassword, ?string $algorithm = null)
+    public function updatePassword(string $newPassword): bool
     {
-        $algorithm = $algorithm ?? space()->account_default_password_algorithm->value;
+        $digestConfiguration = space()->digestAuthenticationConfiguration;
+
+        if ($digestConfiguration == null) {
+            return false;
+        }
+
         $this->passwords()->delete();
 
         $password = new Password;
         $password->account_id = $this->id;
-        $password->password = bchash($this->username, $this->resolvedRealm, $newPassword, $algorithm);
-        $password->algorithm = $algorithm;
+        $password->password = bchash($this->username, $this->resolvedRealm, $newPassword, $digestConfiguration->default_password_algorithm);
+        $password->algorithm = $digestConfiguration->default_password_algorithm->value;
         $password->save();
-    }
 
-    public function generatePassword(): void
-    {
-        $password = Str::random(12);
-        $this->updatePassword($password);
+        return true;
     }
 
     public function toVcard4()

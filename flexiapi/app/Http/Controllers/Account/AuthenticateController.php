@@ -67,11 +67,11 @@ class AuthenticateController extends Controller
             'password' => 'required'
         ]);
 
-        $account = Account::where('username', $request->get('username'))
+        $account = Account::where('username', $request->input('username'))
             ->first();
 
         if (!$account) {
-            $account = Account::where('phone', $request->get('username'))->first();
+            $account = Account::where('phone', $request->input('username'))->first();
         }
 
         if (!$account) {
@@ -83,7 +83,7 @@ class AuthenticateController extends Controller
             if (
                 hash_equals(
                     $password->password,
-                    bchash($account->username, $account->resolvedRealm, $request->get('password'), $password->algorithm)
+                    bchash($account->username, $account->resolvedRealm, $request->input('password'), $password->algorithm)
                 )
             ) {
                 return $this->loginAndRedirect($account);
@@ -135,24 +135,24 @@ class AuthenticateController extends Controller
             $ssoUser = Socialite::driver('keycloak')->stateless()->user();
         } catch (InvalidStateException $e) {
             return redirect('login')->withErrors([
-                'sso_not_found' => __('SSO authentication failed') . ': ' . $e->getMessage()
+                'sso_not_found' => __('OIDC authentication failed') . ': ' . $e->getMessage()
             ]);
         }
 
         if ($ssoUser->email == null) {
             return redirect('login')->withErrors([
-                'sso_not_found' => __('No email address associated with your SSO account.') .
+                'sso_not_found' => __('No email address associated with your OIDC account.') .
                     ' ' . __('Please contact your administrator.')
             ]);
         }
 
-        if (space()->ssoServer?->auto_provisioning) {
+        if (space()->oidcAuthenticationConfiguration?->auto_provisioning) {
             $token = (new Parser(new JoseEncoder))->parse($ssoUser->token);
             $realmAccess = $token->claims()->get('realm_access');
 
             $hasRole = $realmAccess
                 && !empty($realmAccess['roles'])
-                && in_array(space()->ssoServer->role_provisioning, $realmAccess['roles']);
+                && in_array(space()->oidcAuthenticationConfiguration->role_provisioning, $realmAccess['roles']);
 
             if (!$hasRole) {
                 Account::where('email', $ssoUser->email)->update(['activated' => false]);
@@ -213,10 +213,10 @@ class AuthenticateController extends Controller
     {
         Auth::logout();
 
-        if (!space()->ssoServer) {
+        if (!space()->oidcAuthenticationConfiguration) {
             return redirect()->route('account.login');
         }
 
-        return redirect(Socialite::driver('keycloak')->getLogoutUrl(route('account.login'), space()->ssoServer->client_id));
+        return redirect(Socialite::driver('keycloak')->getLogoutUrl(route('account.login'), space()->oidcAuthenticationConfiguration->client_id));
     }
 }

@@ -20,7 +20,6 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\PasswordAlgorithm;
 use App\Space;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Space\Create;
@@ -28,7 +27,6 @@ use App\Rules\Domain;
 use App\Rules\Ini;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Enum;
 
 class SpaceController extends Controller
 {
@@ -49,7 +47,6 @@ class SpaceController extends Controller
 
         $space = new Space;
         $space->account_proxy_registrar_address = $request->input('account_proxy_registrar_address');
-        $space->account_realm = $request->input('account_realm');
         $space->copyright_text = $request->input('copyright_text');
         $space->custom_provisioning_entries = $request->input('custom_provisioning_entries');
         $space->domain = $request->input('domain');
@@ -61,7 +58,6 @@ class SpaceController extends Controller
         $space->name = $request->input('name');
         $space->newsletter_registration_address = $request->input('newsletter_registration_address');
         $space->theme_hue = $request->input('theme_hue');
-        $space->account_default_password_algorithm = $request->input('account_default_password_algorithm', 'SHA-256');
         $this->setRequestBoolean($request, $space, 'assistant_disable_qr_code');
         $this->setRequestBoolean($request, $space, 'assistant_hide_create_account');
         $this->setRequestBoolean($request, $space, 'assistant_hide_third_party_account');
@@ -105,7 +101,6 @@ class SpaceController extends Controller
     public function update(Request $request, string $domain)
     {
         $request->validate([
-            'account_realm' => ['nullable', new Domain],
             'assistant_disable_qr_code' => 'required|boolean',
             'assistant_hide_create_account' => 'required|boolean',
             'assistant_hide_third_party_account' => 'required|boolean',
@@ -128,7 +123,6 @@ class SpaceController extends Controller
             'super' => 'required|boolean',
             'web_panel' => 'required|boolean',
             'theme_hue' => 'nullable|integer|min:0|max:360',
-            'account_default_password_algorithm' => ['required', new Enum(PasswordAlgorithm::class)]
         ]);
 
         $space = Space::where('domain', $domain)->firstOrFail();
@@ -148,7 +142,6 @@ class SpaceController extends Controller
         $space->host = $request->input('host');
         $space->super = $request->input('super');
         $space->account_proxy_registrar_address = $request->input('account_proxy_registrar_address');
-        $space->account_realm = $request->input('account_realm');
         $space->assistant_disable_qr_code = $request->input('assistant_disable_qr_code');
         $space->assistant_hide_create_account = $request->input('assistant_hide_create_account');
         $space->assistant_hide_third_party_account = $request->input('assistant_hide_third_party_account');
@@ -173,7 +166,6 @@ class SpaceController extends Controller
         $space->public_registration = $request->input('public_registration');
         $space->web_panel = $request->input('web_panel');
         $space->theme_hue = $request->input('theme_hue');
-        $space->account_default_password_algorithm = $request->input('account_default_password_algorithm');
 
         $space->save();
 

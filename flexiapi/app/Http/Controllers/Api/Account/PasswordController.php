@@ -21,25 +21,23 @@
 namespace App\Http\Controllers\Api\Account;
 
 use App\Http\Controllers\Controller;
-use App\PasswordAlgorithm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rules\Enum;
 
 class PasswordController extends Controller
 {
     public function update(Request $request)
     {
+        $algorithm = $request->space->digestAuthenticationConfiguration->default_password_algorithm;
+
         $request->validate([
-            'algorithm' => ['required', new Enum(PasswordAlgorithm::class)],
+            'algorithm' => ['nullable', 'in:' . $algorithm->value],
             'password' => 'required',
         ]);
 
         $account = $request->user();
         $account->activated = true;
         $account->save();
-
-        $algorithm = $request->input('algorithm');
 
         if ($account->passwords()->count() > 0) {
             $request->validate(['old_password' => 'required']);
@@ -49,17 +47,19 @@ class PasswordController extends Controller
                     $password->password,
                     bchash($account->username, $account->resolvedRealm, $request->input('old_password'), $password->algorithm)
                 )) {
-                    $account->updatePassword($request->input('password'), $algorithm);
+                    $account->updatePassword($request->input('password'));
 
                     Log::channel('events')->info('API: Account password updated', ['id' => $account->identifier]);
 
-                    return response()->json();
+                    return $account->refresh();
                 }
             }
 
             return response()->json(['errors' => ['old_password' => 'Incorrect old password']], 422);
         }
 
-        $account->updatePassword($request->input('password'), $algorithm);
+        $account->updatePassword($request->input('password'));
+
+        return $account->refresh();
     }
 }

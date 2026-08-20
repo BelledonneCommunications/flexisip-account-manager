@@ -281,8 +281,7 @@ form div span.supporting {
 
 form div span.supporting,
 form div span.supporting a {
-    line-height: 2rem;
-    font-size: 1.25rem;
+    font-size: 1.3rem;
 }
 
 form div input:not([type=range]):not([type=button]):not([type=file]):not(.btn)[disabled],
