@@ -39,7 +39,8 @@ class CreateAdminTest extends Command
             'sip_domain' => $domain,
             'host' => $domain,
             'name' => $domain,
-            '--super' => 'true'
+            '--super' => 'true',
+            '--digest-realm' => $domain
         ]);
 
         $this->call('accounts:create-admin-account', [

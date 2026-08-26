@@ -572,9 +572,11 @@ class Account extends Authenticatable
         return !empty($this->recovery_code) && $this->updated_at->greaterThan($oneHourAgo);
     }
 
-    public function updatePassword(string $newPassword): bool
+    public function updatePassword(string $newPassword, ?Space $space = null): bool
     {
-        $digestConfiguration = space()->digestAuthenticationConfiguration;
+        $digestConfiguration = $space
+            ? $space->digestAuthenticationConfiguration
+            : space()->digestAuthenticationConfiguration;
 
         if ($digestConfiguration == null) {
             return false;

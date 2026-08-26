@@ -67,6 +67,14 @@ class CreateAdminAccount extends Command
             return Command::FAILURE;
         }
 
+        $space = Space::where('domain', $domain)->first();
+
+        if (!$space->digestAuthenticationConfiguration) {
+            $this->error("The Space doesn't have a Digest authentication configuration, the account cannot be created.");
+            $this->comment('You can create this configuration using the Space create and update command.');
+            return Command::FAILURE;
+        }
+
         // Delete the account if it already exists
         $account = Account::withoutGlobalScopes()
             ->where('username', $username)
@@ -90,7 +98,7 @@ class CreateAdminAccount extends Command
         $account->save();
 
         $account->generateUserApiKey(ip: $this->option('api_key_ip') ?? null);
-        $account->updatePassword($password);
+        $account->updatePassword($password, space: $space);
 
         $this->info('Admin test account created: "' . $username . '@' . $domain . '" | Password: "' . $password . '" | API Key: "' . $account->apiKey->key . '" (valid on ' . ($account->apiKey->ip ?? 'any') . ' ip)');
 
