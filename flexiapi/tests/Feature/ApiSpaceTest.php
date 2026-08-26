@@ -70,13 +70,36 @@ class ApiSpaceTest extends TestCase
             ->assertOk();
     }
 
+    // Testing some non-API pages
+    public function testAdminPanel()
+    {
+        $admin = Account::factory()->admin()->create();
+        $admin->generateUserApiKey();
+
+        $secondDomain = Space::factory()->secondDomain()->create();
+
+        $this->actingAs($admin)
+            ->get('/admin/spaces/' . $admin->space->domain . '/integration')
+            ->assertOk();
+
+        $this->actingAs($admin)
+            ->get('/admin/spaces/' . $secondDomain->domain . '/integration')
+            ->assertNotFound();
+
+        $admin->space->super = true;
+        $admin->space->save();
+
+        $this->actingAs($admin)
+            ->get('/admin/spaces/' . $secondDomain->domain . '/integration')
+            ->assertOk();
+    }
+
     public function testSuperAdmin()
     {
         $admin = Account::factory()->superAdmin()->create();
         $admin->generateUserApiKey();
 
         $thirdDomain = 'third.domain';
-        $accountRealm = 'account.realm';
 
         $response = $this->keyAuthenticated($admin)
             ->json($this->method, $this->route, [
@@ -102,7 +125,8 @@ class ApiSpaceTest extends TestCase
                 'name' => 'Another Domain',
                 'domain' => 'another.domain',
                 'host' => 'another.host',
-            ]);
+            ])
+            ->assertStatus(201);
 
         $this->keyAuthenticated($admin)
             ->json('GET', $this->route)
@@ -111,6 +135,10 @@ class ApiSpaceTest extends TestCase
                 'domain' => $thirdDomain,
                 'host' => $thirdDomain,
             ])
+            ->assertOk();
+
+        $this->keyAuthenticated($admin)
+            ->json('GET', $this->route . '/' . $thirdDomain)
             ->assertOk();
 
         $this->keyAuthenticated($admin)

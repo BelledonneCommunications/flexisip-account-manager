@@ -3,10 +3,10 @@
 @section('breadcrumb')
     @include('admin.parts.breadcrumb.spaces.show')
     <li class="breadcrumb-item">
-        <a href="{{ route('admin.spaces.contacts_lists.index', $space) }}">{{ __('Contacts Lists') }}</a>
+        <a href="{{ route('admin.spaces.contacts_lists.index', $space->domain) }}">{{ __('Contacts Lists') }}</a>
     </li>
     <li class="breadcrumb-item">
-        <a href="{{ route('admin.spaces.contacts_lists.edit', [$space, $contacts_list->id]) }}">{{ $contacts_list->title }}</a>
+        <a href="{{ route('admin.spaces.contacts_lists.edit', [$space->domain, $contacts_list->id]) }}">{{ $contacts_list->title }}</a>
     </li>
     <li class="breadcrumb-item active" aria-current="page">{{ __('Add') }}</li>
 @endsection
@@ -15,9 +15,9 @@
     <header>
         <h1><i class="ph ph-user-rectangle"></i> {{ $contacts_list->title }}</h1>
 
-        <a href="{{ route('admin.spaces.contacts_lists.edit', [$space, $contacts_list->id]) }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
+        <a href="{{ route('admin.spaces.contacts_lists.edit', [$space->domain, $contacts_list->id]) }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
 
-        <form method="POST" action="{{ route('admin.spaces.contacts_lists.contacts.store', [$space, $contacts_list->id]) }}"
+        <form method="POST" action="{{ route('admin.spaces.contacts_lists.contacts.store', [$space->domain, $contacts_list->id]) }}"
             name="contacts_lists_contacts_store" accept-charset="UTF-8">
             @csrf
             @method('post')
@@ -40,7 +40,7 @@
                 <button type="submit" class="btn" title="{{ __('Search') }}">
                     <i class="ph ph-magnifying-glass"></i>
                 </button>
-                <a href="{{ route('admin.spaces.contacts_lists.contacts.add', [$space, $contacts_list->id]) }}" type="reset"
+                <a href="{{ route('admin.spaces.contacts_lists.contacts.add', [$space->domain, $contacts_list->id]) }}" type="reset"
                     class="btn secondary">{{ __('Reset') }}</a>
             </div>
             <div class="oppose">

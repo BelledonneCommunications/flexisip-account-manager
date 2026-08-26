@@ -93,12 +93,12 @@ class SpaceController extends Controller
         ]);
     }
 
-    public function show(string $domain)
+    public function show(Space $space)
     {
-        return Space::where('domain', $domain)->firstOrFail();
+        return $space;
     }
 
-    public function update(Request $request, string $domain)
+    public function update(Request $request, Space $space)
     {
         $request->validate([
             'assistant_disable_qr_code' => 'required|boolean',
@@ -124,8 +124,6 @@ class SpaceController extends Controller
             'web_panel' => 'required|boolean',
             'theme_hue' => 'nullable|integer|min:0|max:360',
         ]);
-
-        $space = Space::where('domain', $domain)->firstOrFail();
 
         if ($request->input('max_accounts') > 0) {
             $request->validate([
@@ -179,8 +177,8 @@ class SpaceController extends Controller
         }
     }
 
-    public function destroy(string $domain)
+    public function destroy(Space $space)
     {
-        return Space::where('domain', $domain)->delete();
+        return $space->delete();
     }
 }

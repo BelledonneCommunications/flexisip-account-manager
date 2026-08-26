@@ -3,7 +3,7 @@
 @section('breadcrumb')
     @include('admin.parts.breadcrumb.spaces.integration')
     <li class="breadcrumb-item">
-        <a href="{{ route('admin.spaces.contacts_lists.index', $space) }}">{{ __('Contacts Lists') }}</a>
+        <a href="{{ route('admin.spaces.contacts_lists.index', $space->domain) }}">{{ __('Contacts Lists') }}</a>
     </li>
     <li class="breadcrumb-item active" aria-current="page">{{ __('Delete') }}</li>
 @endsection
@@ -14,11 +14,11 @@
 
     <header>
         <h1><i class="ph ph-trash"></i> {{ __('Delete') }}</h1>
-        <a href="{{ route('admin.spaces.contacts_lists.edit', [$space, $contacts_list->id]) }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
+        <a href="{{ route('admin.spaces.contacts_lists.edit', [$space->domain, $contacts_list->id]) }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
         <input form="delete" class="btn" type="submit" value="{{ __('Delete') }}">
     </header>
 
-    <form id="delete" method="POST" action="{{ route('admin.spaces.contacts_lists.destroy', [$space, $contacts_list->id]) }}" accept-charset="UTF-8">
+    <form id="delete" method="POST" action="{{ route('admin.spaces.contacts_lists.destroy', [$space->domain, $contacts_list->id]) }}" accept-charset="UTF-8">
         @csrf
         @method('delete')
 

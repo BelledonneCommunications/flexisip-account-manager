@@ -10,14 +10,14 @@
         <h1><i class="ph ph-envelope"></i> {{ $space->name }}</h1>
         @if ($space->emailServer)
         <a class="btn secondary oppose" title="{{ __('Delete') }}"
-            href="{{ route('admin.spaces.email.delete', $space) }}">
+            href="{{ route('admin.spaces.email.delete', $space->domain) }}">
             <i class="ph ph-trash"></i>
         </a>
         @endif
     </header>
 
     <form method="POST"
-        action="{{ route('admin.spaces.email.store', $space->id) }}"
+        action="{{ route('admin.spaces.email.store', $space->domain) }}"
         id="show" accept-charset="UTF-8">
         @csrf
         @method('post')

@@ -26,7 +26,7 @@ class CardDavServerController extends Controller
         $carddavServer->use_exact_match_policy = getRequestBoolean($request, 'use_exact_match_policy');
         $carddavServer->save();
 
-        return redirect()->route('admin.spaces.integration', $space);
+        return redirect()->route('admin.spaces.integration', $space->domain);
     }
 
     public function edit(Space $space, int $carddavServerId)
@@ -45,7 +45,7 @@ class CardDavServerController extends Controller
         $carddavServer->use_exact_match_policy = getRequestBoolean($request, 'use_exact_match_policy');
         $carddavServer->save();
 
-        return redirect()->route('admin.spaces.integration', $space);
+        return redirect()->route('admin.spaces.integration', $space->domain);
     }
 
     public function delete(Space $space, int $carddavServerId)
@@ -61,6 +61,6 @@ class CardDavServerController extends Controller
         $carddavServer = $space->carddavServers()->findOrFail($carddavServerId);
         $carddavServer->delete();
 
-        return redirect()->route('admin.spaces.integration', $space->id);
+        return redirect()->route('admin.spaces.integration', $space->domain);
     }
 }

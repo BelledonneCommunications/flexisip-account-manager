@@ -8,9 +8,9 @@
 @section('content')
     <header>
         <h1><i class="ph ph-trash"></i> {{ __('Delete') }}</h1>
-        <a href="{{ route('admin.spaces.edit', $space->id) }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
+        <a href="{{ route('admin.spaces.edit', $space->domain) }}" class="btn secondary oppose">{{ __('Cancel') }}</a>
     </header>
-    <form id="delete" method="POST" action="{{ route('admin.spaces.destroy', $space) }}" accept-charset="UTF-8">
+    <form id="delete" method="POST" action="{{ route('admin.spaces.destroy', $space->domain) }}" accept-charset="UTF-8">
         @csrf
         @method('delete')
 
@@ -19,7 +19,7 @@
             <h3>{{ $space->domain }}</h3>
             <p>This will also destroy <b>{{ $space->accounts()->count() }} related accounts</b></p>
 
-            <input name="sip_domain" type="hidden" value="{{ $space->id }}">
+            <input name="sip_domain" type="hidden" value="{{ $space->domain }}">
         </div>
 
         <div>

@@ -17,7 +17,7 @@
         </a>
 
         @if (auth()->user()->superAdmin)
-            <a class="btn tertiary" href="{{ route('admin.spaces.delete', $space->id) }}">
+            <a class="btn tertiary" href="{{ route('admin.spaces.delete', $space->domain) }}">
                 <i class="ph ph-trash"></i>
                 {{ __('Delete') }}
             </a>

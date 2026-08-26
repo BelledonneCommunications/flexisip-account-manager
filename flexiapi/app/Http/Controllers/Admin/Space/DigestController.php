@@ -35,6 +35,6 @@ class DigestController extends Controller
         $digestAuthenticationConfiguration->default_password_algorithm = $request->input('default_password_algorithm');
         $digestAuthenticationConfiguration->save();
 
-        return redirect()->route('admin.spaces.integration', $space->id);
+        return redirect()->route('admin.spaces.integration', $space->domain);
     }
 }
