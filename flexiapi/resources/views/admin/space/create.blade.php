@@ -30,7 +30,7 @@
             <label for="username">{{ __('Subdomain') }}</label>
             @include('parts.errors', ['name' => 'host'])
             @include('parts.errors', ['name' => 'full_host'])
-            <span class="supporting">{{ __('Cannot be changed once created.') }} {{ __('Leave empty to create a root Space.') }}</span>
+            <span class="supporting">{{ __('Any word character (letter, number, underscore).') }} {{ __('Cannot be changed once created.') }} {{ __('Leave empty to create a root Space.') }}</span>
         </div>
 
         <div>

@@ -51,7 +51,7 @@
         </div>
         <div>
             <input placeholder="sip_identity" name="sip_identifier" type="text" required="required"
-                value="{{ ($space->oidcAuthenticationConfiguration?->sip_identifier) ?: old('sip_identifier') }}">
+                value="{{ ($space->oidcAuthenticationConfiguration?->sip_identifier) ?: old('sip_identifier') ?: 'sip_identity' }}">
             <label for="sip_identifier">{{ __('SIP Identifier') }}</label>
             @include('parts.errors', ['name' => 'sip_identifier'])
             <span class="supporting">{{ __("JWT key containing the user's SIP identity. sip_identity by default.") }}</span>

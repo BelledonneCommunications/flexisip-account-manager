@@ -20,13 +20,13 @@ class EmailServerController extends Controller
         $emailServer = $space->emailServer ?? new SpaceEmailServer;
 
         $emailServer->space_id = $space->id;
-        $emailServer->host = $request->get('host');
-        $emailServer->port = $request->get('port');
-        $emailServer->username = $request->get('username');
-        $emailServer->password = $request->get('password');
-        $emailServer->from_address = $request->get('from_address') ?? null;
-        $emailServer->from_name = $request->get('from_name') ?? null;
-        $emailServer->signature = $request->get('signature') ?? null;
+        $emailServer->host = $request->input('host');
+        $emailServer->port = $request->input('port');
+        $emailServer->username = $request->input('username');
+        $emailServer->password = $request->input('password');
+        $emailServer->from_address = $request->input('from_address') ?? null;
+        $emailServer->from_name = $request->input('from_name') ?? null;
+        $emailServer->signature = $request->input('signature') ?? null;
 
         $emailServer->save();
 

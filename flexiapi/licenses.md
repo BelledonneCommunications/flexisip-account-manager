@@ -1116,7 +1116,7 @@ SOFTWARE.
 
 
 
-### laravel/framework (Version v12.67.0 | fe2cdab)
+### laravel/framework (Version v12.68.0 | 1343c22)
 The Laravel Framework.
 Homepage: https://laravel.com
 Licenses Used: MIT
@@ -1143,7 +1143,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### laravel/prompts (Version v0.3.23 | b7b4c35)
+### laravel/prompts (Version v0.3.24 | 5d3cdef)
 Add beautiful and user-friendly forms to your command-line applications.
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1170,7 +1170,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### laravel/serializable-closure (Version v2.0.15 | dccd8bc)
+### laravel/serializable-closure (Version v2.0.16 | 7cfc24e)
 Laravel Serializable Closure provides an easy and secure way to serialize closures in PHP.
 Homepage: Not configured.
 Licenses Used: MIT
