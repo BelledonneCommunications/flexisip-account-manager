@@ -34,9 +34,11 @@ FlexiAPI is shipped with several console commands that you can launch using the 
 
 ### Create or update a Space
 
-Create or update a Space, required to then create accounts afterward. The `super` option enable/disable the domain as a super domain.
+Create or update a Space, required to then create accounts afterward.
+The `super` option enable/disable the domain as a super domain.
+The `digest-realm` option try to create a Digest authentication configuration with this realm.
 
-    php artisan spaces:create-update {sip_domain} {host} {name} {--super}
+    php artisan spaces:create-update {sip_domain} {host} {name} {--super} {--digest-realm=}
 
 ### Import the old DotEnv instance configuration into a Space
 

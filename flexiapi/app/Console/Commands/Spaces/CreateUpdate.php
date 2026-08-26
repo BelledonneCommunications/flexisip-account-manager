@@ -20,12 +20,14 @@
 
 namespace App\Console\Commands\Spaces;
 
+use App\PasswordAlgorithm;
 use App\Space;
+use App\SpaceDigestAuthenticationConfiguration;
 use Illuminate\Console\Command;
 
 class CreateUpdate extends Command
 {
-    protected $signature = 'spaces:create-update {sip_domain} {host} {name} {--super}';
+    protected $signature = 'spaces:create-update {sip_domain} {host} {name} {--super} {--digest-realm=}';
     protected $description = 'Create a Space';
 
     public function handle()
@@ -34,10 +36,19 @@ class CreateUpdate extends Command
 
         if (empty(config('app.root_host'))) {
             $this->error('The environnement variable APP_ROOT_HOST doesn\'t seems to be set');
+            return Command::FAILURE;
         }
 
         if (!str_ends_with($this->argument('host'), config('app.root_host'))) {
             $this->error('The provided host doesn\'t seems to ends with ' . config('app.root_host'));
+            return Command::FAILURE;
+        }
+
+        if ($spaceName = Space::where('name', $this->argument('name'))->first()) {
+            if ($spaceName->domain != $this->argument('sip_domain')) {
+                $this->error('A Space already exists with the same name in the system');
+                return Command::FAILURE;
+            }
         }
 
         $space = Space::where('domain', $this->argument('sip_domain'))->firstOrNew();
@@ -56,12 +67,36 @@ class CreateUpdate extends Command
             ? $this->info('The space already exists, updating it')
             : $this->info('A new Space will be created');
 
-        $space->super = (bool)$this->option('super');
+        $space->super = (bool) $this->option('super');
         $space->super
             ? $this->info('Set as a super Space')
             : $this->info('Set as a normal Space');
 
         $space->save();
+        $space->refresh();
+
+        if (!$space->digestAuthenticationConfiguration) {
+            $realm = $this->option('digest-realm');
+
+            $digestMessage = empty($realm)
+                ? "This new Space doesn't have a Digest authentication configuration, do you want to create it?"
+                : 'A Digest authentication configuration will be set with the realm "' . $realm . '", is it ok?';
+
+            if ($this->confirm($digestMessage, true)) {
+                if (empty($realm)) {
+                    $realm = $this->ask('Which realm do you want to use for the authentication? (default to the SIP domain)', $this->argument('sip_domain'));
+                }
+
+                $digestAuthenticationConfiguration = new SpaceDigestAuthenticationConfiguration([
+                    'realm' => $realm,
+                    'default_password_algorithm' => PasswordAlgorithm::SHA256,
+                    'space_id' => $space->id,
+                ]);
+                $digestAuthenticationConfiguration->save();
+
+                $this->info('Digest configuration set');
+            }
+        }
 
         return Command::SUCCESS;
     }
