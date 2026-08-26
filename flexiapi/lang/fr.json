@@ -44,6 +44,7 @@
     "An email will be sent to :email with a QR Code and provisioning link.": "Un email sera envoyé à :email contenant un QR Code et un lien de déploiement.",
     "An email will be sent to :email with a unique link allowing the user to reset its password.": "Un email sera envoyé à :email avec un lien unique l'invitant à réinitialiser son mot de passe",
     "An email will be sent to this email when someone join the newsletter": "Un email sera envoyé à cette addresse quand quelqu'un rejoint la liste de diffusion",
+    "Any word character (letter, number, underscore).": "Tout caractère alphanumérique (lettre, chiffre, trait de soulignement).",
     "Api Keys": "Clefs d'API",
     "App Configuration": "Configuration de l'App",
     "App settings": "Paramètres d'application",
