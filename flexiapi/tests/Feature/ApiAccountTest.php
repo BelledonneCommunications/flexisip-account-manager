@@ -750,7 +750,7 @@ class ApiAccountTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->json('PUT', $this->route . '/1234')
-            ->assertJsonValidationErrors(['username']);
+            ->assertNotFound();
 
         $this->keyAuthenticated($admin)
             ->json('PUT', $this->route . '/' . $account->id, [
