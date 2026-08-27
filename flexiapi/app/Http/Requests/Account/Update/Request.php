@@ -38,8 +38,7 @@ class Request extends BaseRequest
 
     public function rules()
     {
-        $domain = space()->domain;
-        $accountId = $this->route('account_id');
+        $account = Account::findOrFail($this->route('account_id'));
 
         return [
             'username' => [
@@ -48,9 +47,9 @@ class Request extends BaseRequest
                 new IsNotPhoneNumber,
                 new BlacklistedUsername,
                 new SIPUsername,
-                Rule::unique('accounts', 'username')->where(function ($query) use ($domain) {
-                    $query->where('domain', $domain);
-                })->ignore($accountId, 'id'),
+                Rule::unique('accounts', 'username')->where(function ($query) use ($account) {
+                    $query->where('domain', $account->domain);
+                })->ignore($account->id, 'id'),
                 'filled',
             ],
             'admin' => 'missing',
@@ -60,9 +59,9 @@ class Request extends BaseRequest
                 ? [
                     'nullable',
                     'email',
-                    Rule::unique('accounts', 'email')->where(function ($query) use ($domain) {
-                        $query->where('domain', $domain);
-                    })->ignore($this->route('id'))
+                    Rule::unique('accounts', 'email')->where(function ($query) use ($account) {
+                        $query->where('domain', $account->domain);
+                    })->ignore($account->id, 'id')
                 ]
                 : ['nullable', 'email'],
             'role' => 'in:admin,end_user',
@@ -71,12 +70,12 @@ class Request extends BaseRequest
                 'nullable',
                 'phone',
                 new FilteredPhone,
-                Rule::unique('accounts', 'username')->where(function ($query) use ($domain) {
-                    $query->where('domain', $domain);
-                })->ignore($accountId, 'id'),
-                Rule::unique('accounts', 'phone')->where(function ($query) use ($domain) {
-                    $query->where('domain', $domain);
-                })->ignore($accountId, 'id'),
+                Rule::unique('accounts', 'username')->where(function ($query) use ($account) {
+                    $query->where('domain', $account->domain);
+                })->ignore($account->id, 'id'),
+                Rule::unique('accounts', 'phone')->where(function ($query) use ($account) {
+                    $query->where('domain', $account->domain);
+                })->ignore($account->id, 'id'),
             ]
         ];
     }

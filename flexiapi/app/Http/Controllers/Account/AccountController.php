@@ -23,7 +23,7 @@ namespace App\Http\Controllers\Account;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Account\Create\Web\Request as WebRequest;
+use App\Http\Requests\Account\Create\Web\Request as CreateWebRequest;
 use App\Libraries\FlexisipRedisConnector;
 use App\Services\AccountService;
 use App\StatisticsCall;
@@ -66,7 +66,7 @@ class AccountController extends Controller
         ]);
     }
 
-    public function store(WebRequest $request)
+    public function store(CreateWebRequest $request)
     {
         $account = (new AccountService)->store($request);
 

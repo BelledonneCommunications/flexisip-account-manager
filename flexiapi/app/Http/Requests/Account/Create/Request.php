@@ -60,7 +60,7 @@ class Request extends BaseRequest
             ],
             'domain' => 'exists:spaces,domain',
             'dictionary' => [new Dictionary],
-            'password' => 'required|min:3',
+            'password' => ['required', 'min:3'],
             'email' => space()->unique_email
                 ? [
                     'nullable',

@@ -25,8 +25,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Account;
 use App\ContactsList;
-use App\Http\Requests\Account\Create\Web\AsAdminRequest;
-use App\Http\Requests\Account\Update\Web\AsAdminRequest as WebAsAdminRequest;
+use App\Http\Requests\Account\Create\Web\AsAdminRequest as CreateAsAdminRequest;
+use App\Http\Requests\Account\Update\Web\AsAdminRequest as UpdateWebAsAdminRequest;
 use App\Libraries\FlexisipRedisConnector;
 use App\Services\AccountService;
 use App\Space;
@@ -106,7 +106,7 @@ class AccountController extends Controller
         ]);
     }
 
-    public function store(AsAdminRequest $request)
+    public function store(CreateAsAdminRequest $request)
     {
         $account = (new AccountService)->store($request);
 
@@ -128,7 +128,7 @@ class AccountController extends Controller
         ]);
     }
 
-    public function update(WebAsAdminRequest $request, int $accountId)
+    public function update(UpdateWebAsAdminRequest $request, int $accountId)
     {
         $account = (new AccountService)->update($request, $accountId);
 
