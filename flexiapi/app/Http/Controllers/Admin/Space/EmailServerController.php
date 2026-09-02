@@ -11,7 +11,6 @@ class EmailServerController extends Controller
 {
     public function show(Space $space)
     {
-
         return view('admin.space.email_server.show', [
             'space' => $space,
             'emailServer' => $space->emailServer ?? new SpaceEmailServer

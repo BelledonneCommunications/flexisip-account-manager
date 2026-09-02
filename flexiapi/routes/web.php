@@ -62,6 +62,7 @@ use App\Http\Controllers\Admin\Space\ContactsListController;
 use App\Http\Controllers\Admin\Space\DigestController;
 use App\Http\Controllers\Admin\Space\EmailServerController;
 use App\Http\Controllers\Admin\Space\OIDCServerController;
+use App\Http\Controllers\Admin\Space\VoicemailController;
 use App\Http\Controllers\Admin\SpaceController;
 use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Middleware\IsSpaceDigest;
@@ -224,6 +225,10 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
                     Route::get('delete', 'delete')->name('delete');
                     Route::delete('/', 'destroy')->name('destroy');
                     Route::get('refresh_public_key', 'refreshPublicKey')->name('refresh_public_key');
+                });
+                Route::name('voicemail.')->prefix('voicemail')->controller(VoicemailController::class)->group(function () {
+                    Route::get('/', 'show')->name('show');
+                    Route::get('/enable', 'enable')->name('enable');
                 });
                 Route::name('digest.')->prefix('digest')->controller(DigestController::class)->group(function () {
                     Route::get('/', 'show')->name('show');

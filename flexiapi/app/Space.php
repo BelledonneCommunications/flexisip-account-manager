@@ -108,6 +108,7 @@ class Space extends Model
     public const HOST_REGEX = '[\w\-]+';
     public const DOMAIN_REGEX = '(?=^.{4,253}$)(^((?!-)[a-z0-9-]{1,63}(?<!-)\.)+[a-z]{2,63}$)';
     public const LOGO_PATH = 'img';
+    public const VOICEMAIL_USERNAME = 'voicemail';
 
     protected static function booted()
     {
@@ -152,6 +153,16 @@ class Space extends Model
     public function oidcAuthenticationConfiguration()
     {
         return $this->hasOne(SpaceOIDCAuthenticationConfiguration::class);
+    }
+
+    public function voicemailAccount()
+    {
+        return $this->hasOne(Account::class, 'id', 'voicemail_account_id');
+    }
+
+    public function voicemailEnableable(): bool
+    {
+        return !$this->voicemailAccount && !$this->accounts()->where('username', self::VOICEMAIL_USERNAME)->exists();
     }
 
     public function contactsLists()
