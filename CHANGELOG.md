@@ -40,6 +40,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - **Remove the GET /accounts/{sip}/info endpoint**, not used anymore and bringing security issues
 - **Remove the `ACCOUNT_DEFAULT_PASSWORD_ALGORITHM`** DotEnv parameter, since it is also migrated in the database.
 - **Remove the enforce X-Linphone-Provisioning header** from the Spaces
+- **Remove outdated Digest CLRTXT support**
 
 ## [2.0]
 
@@ -88,7 +89,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - **Enforce the session and cache in the configuration** The following variables can be removed from your DotEnv file as well:
     - SESSION_DRIVER
     - CACHE_DRIVER
-- **Remove outdated Digest CLRTXT support**
 
 ### Migrate from [1.6]
 

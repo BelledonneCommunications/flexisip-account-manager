@@ -26,6 +26,22 @@
         </div>
 
         <div class="card">
+            <a class="btn small oppose secondary" href="{{ route('admin.spaces.voicemail.show', $space->domain) }}">
+                <i class="ph ph-pencil"></i>
+            </a>
+            <h3 class="line"><i class="ph ph-voicemail"></i> {{ __('Voicemails') }}</h3>
+            @if ($space->voicemailAccount)
+                <p>
+                    {{ $space->voicemailAccount->identifier}}<br /><br />
+                </p>
+            @else
+                <div class="empty">
+                    <i class="ph ph-voicemail"></i>
+                </div>
+            @endif
+        </div>
+
+        <div class="card">
             @if (!$space->super)
                 <a class="btn small oppose secondary" href="{{ route('admin.spaces.oidc.show', $space->domain) }}">
                     <i class="ph ph-pencil"></i>

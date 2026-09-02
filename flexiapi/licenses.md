@@ -740,7 +740,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### giggsey/libphonenumber-for-php-lite (Version 9.0.37 | 8e25148)
+### giggsey/libphonenumber-for-php-lite (Version 9.0.38 | a165edb)
 A lite version of giggsey/libphonenumber-for-php, which is a PHP Port of Google's libphonenumber
 Homepage: https://github.com/giggsey/libphonenumber-for-php-lite
 Licenses Used: Apache-2.0
@@ -1116,7 +1116,7 @@ SOFTWARE.
 
 
 
-### laravel/framework (Version v12.68.0 | 1343c22)
+### laravel/framework (Version v12.69.1 | 0c07b0b)
 The Laravel Framework.
 Homepage: https://laravel.com
 Licenses Used: MIT
@@ -1379,7 +1379,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-### league/flysystem (Version 3.35.3 | 5fc8404)
+### league/flysystem (Version 3.36.0 | f7fb152)
 File storage abstraction for PHP
 Homepage: Not configured.
 Licenses Used: MIT
@@ -4062,7 +4062,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/console (Version v7.4.17 | 962e18f)
+### symfony/console (Version v7.4.18 | 23d6f88)
 Eases the creation of beautiful and testable command line interfaces
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4087,7 +4087,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/css-selector (Version v7.4.17 | e3822e1)
+### symfony/css-selector (Version v7.4.18 | fecf400)
 Converts CSS selectors to XPath expressions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4237,7 +4237,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/http-foundation (Version v7.4.17 | 2ebe78c)
+### symfony/http-foundation (Version v7.4.18 | d070b71)
 Defines an object-oriented layer for the HTTP specification
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4262,7 +4262,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/http-kernel (Version v7.4.17 | aa16038)
+### symfony/http-kernel (Version v7.4.18 | 275d2d2)
 Provides a structured process for converting a Request into a Response
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4312,7 +4312,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/mime (Version v7.4.17 | bf328d8)
+### symfony/mime (Version v7.4.18 | bf328d8)
 Allows manipulating MIME messages
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4587,7 +4587,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/process (Version v7.4.17 | 058d17f)
+### symfony/process (Version v7.4.18 | 058d17f)
 Executes commands in sub-processes
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4612,7 +4612,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/routing (Version v7.4.17 | ddd5589)
+### symfony/routing (Version v7.4.18 | ddd5589)
 Maps an HTTP request to a set of configuration variables
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4637,7 +4637,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/service-contracts (Version v3.7.1 | c0a284b)
+### symfony/service-contracts (Version v3.7.3 | 15e6a07)
 Generic abstractions related to writing services
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4762,7 +4762,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/var-dumper (Version v7.4.17 | 53712df)
+### symfony/var-dumper (Version v7.4.18 | e088da5)
 Provides mechanisms for walking through any arbitrary PHP variable
 Homepage: https://symfony.com
 Licenses Used: MIT

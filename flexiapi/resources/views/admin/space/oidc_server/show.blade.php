@@ -11,13 +11,12 @@
         @if ($space->oidcAuthenticationConfiguration)
             <a class="btn secondary oppose" title="{{ __('Delete') }}"
             href="{{ route('admin.spaces.oidc.delete', $space->domain) }}">
-            <i class="ph ph-trash"></i>
+                <i class="ph ph-trash"></i>
             </a>
         @endif
     </header>
 
     @if ($space->unique_email)
-
         @if($accountWithoutEmail > 0)
             <div class="card warning large">
                 <ul>
