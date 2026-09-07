@@ -28,6 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - **Account Defaut Password Algorythm**: moved the Account Defaut Password Algorythm from a global environment variable (`.env`) to a per-space database setting for better multi-tenancy.
 - **Account Management**: Updated account creation and update rules to respect the space-specific uniqueness configuration.
 - **Remove DIGEST and JWT auth for admin endpoints**: Only API Key authentications are authorized
+- **Deprecating the `POST /messages` endpoint**
 
 ### Removed
 
@@ -37,10 +38,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
     - `ACCOUNT_AUTHENTICATION_BEARER`, it is now generated directly from the Space configuration
 - **Remove the custom_theme feature**
 - **Environment**: Removed the global `ACCOUNT_EMAIL_UNIQUE` variable from `.env` and `.env.example`.
-- **Remove the GET /accounts/{sip}/info endpoint**, not used anymore and bringing security issues
+- **Remove the `GET /accounts/{sip}/info` endpoint**, not used anymore and bringing security issues
 - **Remove the `ACCOUNT_DEFAULT_PASSWORD_ALGORITHM`** DotEnv parameter, since it is also migrated in the database.
-- **Remove the enforce X-Linphone-Provisioning header** from the Spaces
+- **Remove the enforce `X-Linphone-Provisioning header`** from the Spaces
 - **Remove outdated Digest CLRTXT support**
+
+### Migrate from [2.0]
+
+1. Deploy the new version and migrate the database.
+
+```
+php artisan migrate
+```
+
+2. Remove the instance based environnement variables (see **Removed** above) and configure them directly in the spaces using the API or Web Panel. You can use the `.env.example` as a reference.
+
+3. Ensure to upgrade your clients using the API to respect the changes listed above (deprecated and removed endpoints and parameters, admin rights).
 
 ## [2.0]
 
@@ -119,7 +132,7 @@ php artisan spaces:create-update beta.sip beta.myhost.com "Beta Space"
 
 6. (Optional) Import the old instance DotEnv environnement variables into a space.
 
-7. Remove the instance based environnement variables (see **Changed** above) and configure them directly in the spaces using the API or Web Panel.
+7. Remove the instance based environnement variables (see **Removed** above) and configure them directly in the spaces using the API or Web Panel.
 
 ⚠️ Be careful, during this import only the project DotEnv file variables will be imported, other environnement (eg. set in Apache, nginx or Docker) will be ignored.
 

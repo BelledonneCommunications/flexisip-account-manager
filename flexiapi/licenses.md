@@ -1311,7 +1311,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-### league/commonmark (Version 2.10.0 | d2d1aa8)
+### league/commonmark (Version 2.10.1 | 9d489ab)
 Highly-extensible PHP Markdown parser which fully supports the CommonMark spec and GitHub-Flavored Markdown (GFM)
 Homepage: https://commonmark.thephpleague.com
 Licenses Used: BSD-3-Clause

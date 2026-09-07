@@ -76,7 +76,7 @@ HTTP [Form-Data](https://developer.mozilla.org/fr/docs/Web/API/FormData) paramet
 ## Messages
 
 ### `POST /messages`
-<span class="badge badge-warning">Admin</span>
+<span class="badge badge-message">Deprecated</span> <span class="badge badge-warning">Admin</span>
 
 Send a message over SIP.
 
