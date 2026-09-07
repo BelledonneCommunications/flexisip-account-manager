@@ -13,7 +13,7 @@ JSON parameters:
 
 * `username` unique username, minimum 6 characters
 * `password` **required** minimum 6 characters
-* `algorithm` values can be `SHA-256` or `MD5`, will throw an error if the value is different than the Space configuration <span class="badge badge-message">deprecated</span>
+* `algorithm` values can be `SHA-256` or `MD5`, will throw an error if the value is different than the Space configuration <span class="badge badge-message">Deprecated</span>
 * `account_creation_token` the unique `account_creation_token`
 * `dtmf_protocol` optional, values must be `sipinfo`, `sipmessage` or `rfc2833`
 
@@ -58,7 +58,7 @@ Change the account password.
 
 JSON parameters:
 
-* `algorithm` values can be `SHA-256` or `MD5`, will throw an error if the value is different than the Space configuration <span class="badge badge-message">deprecated</span>
+* `algorithm` values can be `SHA-256` or `MD5`, will throw an error if the value is different than the Space configuration <span class="badge badge-message">Deprecated</span>
 * `old_password` **required** if the password is already set, the old password
 * `password` **required**, the new password
 
@@ -73,7 +73,7 @@ JSON parameters:
 
 * `username` **required** unique username, minimum 6 characters
 * `password` **required** minimum 6 characters
-* `algorithm` values can be `SHA-256` or `MD5`, will throw an error if the value is different than the Space configuration <span class="badge badge-message">deprecated</span>
+* `algorithm` values can be `SHA-256` or `MD5`, will throw an error if the value is different than the Space configuration <span class="badge badge-message">Deprecated</span>
 * `domain` **not configurable by default**, must exist in one of the configured Spaces. Only configurable if the admin is a super admin. Otherwise the SIP domain of the corresponding space is used. Return 403 if the value doesn't resolve to a Space or if the Space is full.
 * `activated` optional, a boolean, set to `false` by default
 * `display_name` optional, string
@@ -93,7 +93,7 @@ JSON parameters:
 * `username` unique username, minimum 6 characters
 * `domain` **not configurable by default**, must exist in one of the configured Spaces. Only configurable if the admin is a super admin. Otherwise the SIP domain of the corresponding space is used.
 * `password` minimum 6 characters
-* `algorithm` values can be `SHA-256` or `MD5`, will throw an error if the value is different than the Space configuration <span class="badge badge-message">deprecated</span>
+* `algorithm` values can be `SHA-256` or `MD5`, will throw an error if the value is different than the Space configuration <span class="badge badge-message">Deprecated</span>
 * `display_name` optional, string
 * `email` optional, must be an email, must be unique if `ACCOUNT_EMAIL_UNIQUE` is set to `true`
 * `admin` optional, a boolean, set to `false` by default
