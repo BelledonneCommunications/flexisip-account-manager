@@ -11,7 +11,7 @@
 @section('content')
     <h2>{{ __('Delete') }}</h2>
 
-    <form method="POST" action="{{ route('admin.account.file.destroy', [$file->account, $file->id]) }}"
+    <form method="POST" action="@if (auth()->user()->admin) {{ route('admin.account.file.destroy', [$file->account, $file->id]) }}@else{{ route('account.file.destroy', $file->id) }}@endif"
         accept-charset="UTF-8">
         @csrf
         @method('delete')

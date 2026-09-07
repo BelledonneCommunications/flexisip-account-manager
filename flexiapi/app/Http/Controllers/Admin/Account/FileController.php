@@ -27,7 +27,6 @@ class FileController extends Controller
             ->firstOrFail();
         $accountFile->delete();
 
-
         return match ($request->input('from')) {
             'dashboard' => redirect()->route('account.dashboard'),
             default => redirect()->route('account.telephony')->withFragment('#files'),

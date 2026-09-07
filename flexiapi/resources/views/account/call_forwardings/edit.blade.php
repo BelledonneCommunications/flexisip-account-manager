@@ -36,7 +36,7 @@
     <button class="btn small oppose secondary" commandfor="busy_dialog" command="close" onclick="document.querySelector('#busy_dialog').close()">{{ __('Cancel') }}</button>
 </dialog>
 
-<form id="edit" method="POST" action="@if ($account->admin) {{ route('admin.account.call_forwardings.update', $account->id) }}@else{{ route('account.call_forwardings.update') }}@endif" accept-charset="UTF-8">
+<form id="edit" method="POST" action="@if (auth()->user()->admin) {{ route('admin.account.call_forwardings.update', $account->id) }}@else{{ route('account.call_forwardings.update') }}@endif" accept-charset="UTF-8">
     @csrf
     @method('put')
     @php($callForwardings = $account->callForwardingsDefault)
@@ -45,7 +45,9 @@
         <div>
             <h4>{{ __('All the calls') }}</h4>
             <i class="ph ph-info tooltip">
-                <span class="tooltiptext">{{ __('All incoming calls are forwarded, whether you answer, decline the call or are already on a call.') }}</span>
+                <span class="tooltiptext">
+                    {{ __('All incoming calls are forwarded, whether you answer, decline the call or are already on a call.') }}
+                </span>
             </i>
         </div>
 
