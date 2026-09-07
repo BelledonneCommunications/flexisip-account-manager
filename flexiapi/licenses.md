@@ -85,7 +85,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-### carbonphp/carbon-doctrine-types (Version 3.2.0 | 18ba5dd)
+### carbonphp/carbon-doctrine-types (Version 3.2.1 | 5fa5eac)
 Types to use Carbon in Doctrine
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1785,7 +1785,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-### monolog/monolog (Version 3.10.0 | b321dd6)
+### monolog/monolog (Version 3.11.0 | 147f303)
 Sends your logs to files, sockets, inboxes, databases and various web services
 Homepage: https://github.com/Seldaek/monolog
 Licenses Used: MIT

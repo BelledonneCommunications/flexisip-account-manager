@@ -53,7 +53,7 @@
                                 @if ($voicemail->url)
                                     <a style="margin-left: 3px;" href="{{ $voicemail->download_url }}" download><i class="ph ph-download"></i></a>
                                 @endif
-</p>
+                            </p>
                         </div>
                         <div class="meta">
                             <audio class="oppose" controls src="{{ $voicemail->url }}"></audio>
@@ -64,7 +64,7 @@
                                 href="{{ route('account.file.delete', [$voicemail->id, 'from' => 'dashboard']) }}"
                             @endif
                             >
-                            <i class="ph ph-trash"></i>
+                                <i class="ph ph-trash"></i>
                             </a>
                         </div>
                     </li>

@@ -954,7 +954,7 @@ select.list_toggle {
 .card {
     background-color: var(--grey-1);
     border-radius: 1rem;
-    padding: 1.5rem;
+    padding: 1rem;
     box-sizing: border-box;
     margin-bottom: 1rem;
     overflow: hidden;
