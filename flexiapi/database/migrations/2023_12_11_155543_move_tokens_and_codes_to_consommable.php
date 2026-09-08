@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use App\Account;
 use App\ProvisioningToken;
 use App\RecoveryCode;
 
@@ -108,9 +107,9 @@ return new class extends Migration {
         }
 
         foreach ($provisioningTokens as $provisioningToken) {
-            $account = Account::where('id', $provisioningToken->account_id)->first();
-            $account->provisioning_token = $provisioningToken->token;
-            $account->save();
+            DB::table('accounts')->where('id', $provisioningToken->account_id)->update([
+                'provisioning_token' => $provisioningToken->code
+            ]);
 
             if (DB::getDriverName() !== 'sqlite') {
                 $progress->advance();
@@ -130,9 +129,9 @@ return new class extends Migration {
         }
 
         foreach ($recoveryCodes as $recoveryCode) {
-            $account = Account::where('id', $recoveryCode->account_id)->first();
-            $account->recovery_code = $recoveryCode->code;
-            $account->save();
+            DB::table('accounts')->where('id', $recoveryCode->account_id)->update([
+                'recovery_code' => $recoveryCode->code
+            ]);
 
             if (DB::getDriverName() !== 'sqlite') {
                 $progress->advance();

@@ -26,6 +26,8 @@ return new class extends Migration {
 
     public function down(): void
     {
+        DB::table('api_keys')->truncate();
+
         Schema::table('api_keys', function (Blueprint $table) {
             $table->dropColumn('name');
             $table->dropColumn('expires_after_last_used_minutes');
