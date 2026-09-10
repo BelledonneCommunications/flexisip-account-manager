@@ -30,7 +30,7 @@ class SpaceOIDCAuthenticationConfiguration extends Model
     {
         if ($this->server_url) {
             try {
-                $response = Http::get($this->server_url . '/realms/' . $this->realm . '/protocol/openid-connect/certs');
+                $response = Http::get($this->server_url . 'realms/' . $this->realm . '/protocol/openid-connect/certs');
                 $jwkConverter = new JWKConverter;
 
                 if ($response->status() == '200' && $publicKey = $response->json('keys')[0]) {
