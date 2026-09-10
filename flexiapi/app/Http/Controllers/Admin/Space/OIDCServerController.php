@@ -40,6 +40,7 @@ class OIDCServerController extends Controller
     public function store(Request $request, Space $space)
     {
         $request->validate([
+            'realm' => 'required',
             'server_url' => 'required|url|ends_with:/',
             'sip_identifier' => 'required',
             'role_provisioning' => 'required_if:sso_auto_provisioning,on|nullable|string'
@@ -50,6 +51,7 @@ class OIDCServerController extends Controller
 
             $oidcAuthenticationConfiguration->server_url = $request->input('server_url');
             $oidcAuthenticationConfiguration->sip_identifier = $request->input('sip_identifier');
+            $oidcAuthenticationConfiguration->realm = $request->input('realm');
             $oidcAuthenticationConfiguration->client_id = $request->input('client_id');
             $oidcAuthenticationConfiguration->client_secret = $request->input('client_secret');
             $oidcAuthenticationConfiguration->auto_provisioning = false;
