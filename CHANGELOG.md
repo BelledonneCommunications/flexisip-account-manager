@@ -30,6 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - **Remove DIGEST and JWT auth for admin endpoints**: Only API Key authentications are authorized
 - **Deprecating the `POST /messages` endpoint**
 - **Migrate the daily maintenance cron jobs to the Laravel Scheduler**: The tasks previously run from `/etc/cron.daily/flexiapi.debian` (Debian) or `/etc/cron.daily/flexiapi.redhat` (RHEL) are now scheduled directly in `flexiapi/routes/console.php` and executed by the `php artisan schedule:run` cron entry already installed at `/etc/cron.d/flexiapi`. No action is required. On upgrade, the now obsolete `/etc/cron.daily/flexiapi.debian`/`.redhat` file is automatically removed; if you had customized it, your version is kept as a backup (`.dpkg-bak` on Debian, `.rpmsave` on RHEL) but will no longer run. Port any customization into `console.php` instead.
+- **`APP_PROVISIONING_TOKEN_EXPIRATION_MINUTES` is now set by default to 2 days**
 
 ### Removed
 
