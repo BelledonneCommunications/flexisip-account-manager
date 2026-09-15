@@ -35,7 +35,7 @@ return [
     'email_change_code_expiration_minutes' => env('APP_EMAIL_CHANGE_CODE_EXPIRATION_MINUTES', 10),
     'phone_change_code_expiration_minutes' => env('APP_PHONE_CHANGE_CODE_EXPIRATION_MINUTES', 10),
     'recovery_code_expiration_minutes' => env('APP_RECOVERY_CODE_EXPIRATION_MINUTES', 10),
-    'provisioning_token_expiration_minutes' => env('APP_PROVISIONING_TOKEN_EXPIRATION_MINUTES', 0),
+    'provisioning_token_expiration_minutes' => env('APP_PROVISIONING_TOKEN_EXPIRATION_MINUTES', 2880),
     'reset_password_email_token_expiration_minutes' => env('APP_RESET_PASSWORD_EMAIL_TOKEN_EXPIRATION_MINUTES', 1440),
 
     /**

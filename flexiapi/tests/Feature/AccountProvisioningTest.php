@@ -177,8 +177,8 @@ class AccountProvisioningTest extends TestCase
 
         // And use the fresh provisioning token
         $this->withHeaders([
-                'x-linphone-provisioning' => true,
-            ])
+            'x-linphone-provisioning' => true,
+        ])
             ->get($this->route . '/' . $password->account->provisioning_token)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
@@ -204,17 +204,17 @@ class AccountProvisioningTest extends TestCase
 
         // Check the QRCode
         $this->withHeaders([
-                'x-linphone-provisioning' => true,
-            ])->get($this->route . '/qrcode/' . $password->account->provisioning_token . '?reset_password')
-            ->assertStatus(200)
+            'x-linphone-provisioning' => true,
+        ])->get($this->route . '/qrcode/' . $password->account->provisioning_token . '?reset_password')
+            ->assertOk()
             ->assertHeader('Content-Type', 'image/png')
             ->assertHeader('X-Qrcode-URL', $provioningUrl);
 
         // And use the fresh provisioning token
         $this->withHeaders([
-                'x-linphone-provisioning' => true,
-            ])->get($provioningUrl)
-            ->assertStatus(200)
+            'x-linphone-provisioning' => true,
+        ])->get($provioningUrl)
+            ->assertOk()
             ->assertHeader('Content-Type', 'application/xml')
             ->assertSee($password->account->username)
             ->assertSee($password->account->display_name, false)
@@ -238,8 +238,8 @@ class AccountProvisioningTest extends TestCase
 
         // Ensure that we get the authentication password once
         $response = $this->withHeaders([
-                'x-linphone-provisioning' => true,
-            ])
+            'x-linphone-provisioning' => true,
+        ])
             ->get($this->route . '/' . $password->account->provisioning_token)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
@@ -272,8 +272,8 @@ class AccountProvisioningTest extends TestCase
 
         // And then provision one last time
         $this->withHeaders([
-                'x-linphone-provisioning' => true,
-            ])
+            'x-linphone-provisioning' => true,
+        ])
             ->get($this->route . '/' . $password->account->provisioning_token)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
@@ -302,8 +302,8 @@ class AccountProvisioningTest extends TestCase
         $this->assertEquals(AuthToken::count(), 1);
 
         $this->withHeaders([
-                'x-linphone-provisioning' => true,
-            ])
+            'x-linphone-provisioning' => true,
+        ])
             ->get($this->route . '/auth_token/' . $authToken)
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml')
@@ -313,8 +313,8 @@ class AccountProvisioningTest extends TestCase
 
         // Try to re-use the auth_token
         $this->withHeaders([
-                'x-linphone-provisioning' => true,
-            ])
+            'x-linphone-provisioning' => true,
+        ])
             ->get($this->route . '/auth_token/' . $authToken)
             ->assertStatus(404);
     }
@@ -329,7 +329,10 @@ class AccountProvisioningTest extends TestCase
             ->get('/api/accounts/me/provision')
             ->assertStatus(200)
             ->assertJson([
-                'provisioning_token_expire_at' => null
+                'provisioning_token_expire_at' =>
+                    $account->currentProvisioningToken->created_at->addMinutes(
+                        (int) config()->get('app.provisioning_token_expiration_minutes')
+                    )->toJSON()
             ]);
 
         config()->set('app.provisioning_token_expiration_minutes', $expirationMinutes);
@@ -338,7 +341,7 @@ class AccountProvisioningTest extends TestCase
             ->get('/api/accounts/me/provision')
             ->assertStatus(200)
             ->assertJson([
-                'provisioning_token_expire_at' => $account->currentProvisioningToken->created_at->addMinutes((int)$expirationMinutes)->toJSON()
+                'provisioning_token_expire_at' => $account->currentProvisioningToken->created_at->addMinutes((int) $expirationMinutes)->toJSON()
             ]);
 
         $account->refresh();
