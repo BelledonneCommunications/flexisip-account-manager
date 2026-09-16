@@ -38,7 +38,7 @@ Will return a JSON message with:
 
 @include('api.documentation.accounts.contacts_lists')
 
-@include('api.documentation.accounts.call_forwarding')
+{{-- @include('api.documentation.accounts.call_forwarding') --}}
 
 @include('api.documentation.accounts.contacts')
 
@@ -54,11 +54,11 @@ Will return a JSON message with:
 
 @include('api.documentation.accounts.vcards_storage')
 
-@include('api.documentation.accounts.voicemail')
+{{-- @include('api.documentation.accounts.voicemail') --}}
 
 @include('api.documentation.accounts.wizard')
 
-## File Upload
+{{-- ## File Upload
 
 ### `POST /files/{uuid}`
 <span class="badge badge-warning">Admin</span>
@@ -73,6 +73,7 @@ HTTP [Form-Data](https://developer.mozilla.org/fr/docs/Web/API/FormData) paramet
 
 * `file` **required**, the file to upload, must have the same `content_type` as requested in the slot
 
+--}}
 ## Messages
 
 ### `POST /messages`

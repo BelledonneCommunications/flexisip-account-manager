@@ -62,7 +62,7 @@ use App\Http\Controllers\Admin\Space\ContactsListController;
 use App\Http\Controllers\Admin\Space\DigestController;
 use App\Http\Controllers\Admin\Space\EmailServerController;
 use App\Http\Controllers\Admin\Space\OIDCServerController;
-use App\Http\Controllers\Admin\Space\VoicemailController;
+//use App\Http\Controllers\Admin\Space\VoicemailController;
 use App\Http\Controllers\Admin\SpaceController;
 use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Middleware\IsSpaceDigest;
@@ -175,13 +175,13 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
             Route::delete('/', 'destroy')->name('destroy');
         });
 
-        Route::name('call_forwardings.')->prefix('call_forwardings')->controller(CallForwardingController::class)->group(function () {
+        /*Route::name('call_forwardings.')->prefix('call_forwardings')->controller(CallForwardingController::class)->group(function () {
             Route::put('/', 'update')->name('update');
-        });
+        });*/
 
         Route::controller(AccountController::class)->group(function () {
             Route::get('dashboard', 'dashboard')->name('dashboard');
-            Route::get('telephony', 'telephony')->name('telephony');
+            //Route::get('telephony', 'telephony')->name('telephony');
 
             Route::get('delete', 'delete')->name('delete');
             Route::delete('delete', 'destroy')->name('destroy');
@@ -226,10 +226,10 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
                     Route::delete('/', 'destroy')->name('destroy');
                     Route::get('refresh_public_key', 'refreshPublicKey')->name('refresh_public_key');
                 });
-                Route::name('voicemail.')->prefix('voicemail')->controller(VoicemailController::class)->group(function () {
+                /*Route::name('voicemail.')->prefix('voicemail')->controller(VoicemailController::class)->group(function () {
                     Route::get('/', 'show')->name('show');
                     Route::get('/enable', 'enable')->name('enable');
-                });
+                });*/
                 Route::name('digest.')->prefix('digest')->controller(DigestController::class)->group(function () {
                     Route::get('/', 'show')->name('show');
                     Route::post('/', 'store')->name('store');
@@ -362,13 +362,13 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
                 Route::delete('/', 'destroy')->name('destroy');
             });
 
-            Route::name('telephony.')->prefix('{account}/telephony')->controller(TelephonyController::class)->group(function () {
+            /*Route::name('telephony.')->prefix('{account}/telephony')->controller(TelephonyController::class)->group(function () {
                 Route::get('/', 'show')->name('show');
             });
 
             Route::name('call_forwardings.')->prefix('{account}/call_forwardings')->controller(AdminCallForwardingController::class)->group(function () {
                 Route::put('/', 'update')->name('update');
-            });
+            });*/
 
             Route::name('device.')->prefix('{account}/devices')->controller(AdminAccountDeviceController::class)->group(function () {
                 Route::get('{device_id}/delete', 'delete')->name('delete');

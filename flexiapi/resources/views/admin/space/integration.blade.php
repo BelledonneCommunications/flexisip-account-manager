@@ -25,7 +25,7 @@
             @endif
         </div>
 
-        <div class="card">
+        {{--<div class="card">
             <a class="btn small oppose secondary" href="{{ route('admin.spaces.voicemail.show', $space->domain) }}">
                 <i class="ph ph-pencil"></i>
             </a>
@@ -39,7 +39,7 @@
                     <i class="ph ph-voicemail"></i>
                 </div>
             @endif
-        </div>
+        </div>--}}
 
         <div class="card">
             @if (!$space->super)

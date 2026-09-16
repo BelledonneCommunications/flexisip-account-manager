@@ -11,7 +11,7 @@
         </div>
 
         <div class="card">
-            @include('account.call_forwardings.edit', ['account' => $account])
+            {{-- @include('account.call_forwardings.edit', ['account' => $account]) --}}
         </div>
     </div>
 @endsection

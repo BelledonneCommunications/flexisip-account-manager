@@ -25,7 +25,7 @@
     </div>
 
     {{-- Voice Mail --}}
-    <div class="card">
+    {{--<div class="card">
         <header>
             <h3>
                 <i class="ph ph-voicemail"></i>
@@ -71,7 +71,7 @@
                 @endforeach
             </ul>
         @endif
-    </div>
+    </div>--}}
 
     {{-- My Account --}}
     <div class="card">
@@ -185,7 +185,7 @@
     </div>
 
     {{-- Call Fowarding --}}
-    <div class="card">
+    {{--<div class="card">
         @php
             $forwarding = $account->callForwardings->firstWhere('enabled', true);
         @endphp
@@ -224,7 +224,7 @@
                 <p>{{ __('No call forwarding configured') }}</p>
             </div>
         @endif
-    </div>
+    </div>--}}
 
     {{-- Security --}}
     <div class="card">
