@@ -46,7 +46,7 @@
             <h4>{{ __('All the calls') }}</h4>
             <i class="ph ph-info tooltip">
                 <span class="tooltiptext">
-                    {{ __('All incoming calls are forwarded, whether you answer, decline the call or are already on a call.') }}
+                    {{ __('All incoming calls are forwarded.') }}
                 </span>
             </i>
         </div>
