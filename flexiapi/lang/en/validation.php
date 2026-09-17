@@ -139,6 +139,15 @@ return [
             'required' => 'Please verify that you are not a robot.',
             'captcha' => 'Captcha error! try again later or contact site admin.',
         ],
+        'always.sip_uri' => [
+            'required_if' => 'Please enter a valid SIP address'
+        ],
+        'no_answer.sip_uri' => [
+            'required_if' => 'Please enter a valid SIP address',
+        ],
+        'busy.sip_uri' => [
+            'required_if' => 'Please enter a valid SIP address'
+        ]
     ],
 
     /*
@@ -153,5 +162,4 @@ return [
     */
 
     'attributes' => [],
-
 ];
