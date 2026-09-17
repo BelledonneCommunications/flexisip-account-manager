@@ -158,6 +158,19 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'h-captcha-response' => [
+            'required' => "Veuillez vérifier que vous n'êtes pas un robot.",
+            'captcha' => 'Captcha error! try again later or contact site admin.',
+        ],
+        'always.sip_uri' => [
+            'required_if' => 'Veuillez saisir une addresse SIP valide'
+        ],
+        'no_answer.sip_uri' => [
+            'required_if' => 'Veuillez saisir une addresse SIP valide'
+        ],
+        'busy.sip_uri' => [
+            'required_if' => 'Veuillez saisir une addresse SIP valide'
+        ]
     ],
 
     /*
@@ -303,5 +316,4 @@ return [
         "year" => "année",
         "years" => "années",
     ],
-
 ];
