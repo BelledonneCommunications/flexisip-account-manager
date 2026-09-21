@@ -74,7 +74,7 @@
 
             <div class="search">
                 <input placeholder="Search by username: +1234, foo_bar…" name="search" type="text"
-                    value="{{ request()->get('search', '') }}">
+                    value="{{ request()->input('search', '') }}">
                 <label for="search">{{ __('Search') }}</label>
             </div>
             <div class="large">

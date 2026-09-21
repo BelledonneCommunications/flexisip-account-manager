@@ -28,14 +28,14 @@ class ContactsListContactController extends Controller
 {
     public function add(Request $request, Space $space, int $contactsListId)
     {
-        $accounts = $space->accounts()->orderBy('updated_at', $request->get('updated_at_order', 'desc'));
+        $accounts = $space->accounts()->orderBy('updated_at', $request->input('updated_at_order', 'desc'));
 
         if ($request->has('search')) {
-            $accounts = $accounts->where('username', 'like', '%' . $request->get('search') . '%');
+            $accounts = $accounts->where('username', 'like', '%' . $request->input('search') . '%');
         }
 
         if ($request->has('domain')) {
-            $accounts = $accounts->where('domain', $request->get('domain'));
+            $accounts = $accounts->where('domain', $request->input('domain'));
         }
 
         return view('admin.space.contacts_list.contacts.add', [
@@ -64,8 +64,8 @@ class ContactsListContactController extends Controller
         ]);
 
         $contactsList = $space->contactsLists()->findOrFail($contactsListId);
-        $contactsList->contacts()->detach($request->get('contacts_ids')); // Just in case
-        $contactsList->contacts()->attach($request->get('contacts_ids'));
+        $contactsList->contacts()->detach($request->input('contacts_ids')); // Just in case
+        $contactsList->contacts()->attach($request->input('contacts_ids'));
 
         return redirect()->route('admin.spaces.contacts_lists.edit', [$space->domain, $contactsList->id]);
     }
@@ -77,7 +77,7 @@ class ContactsListContactController extends Controller
         ]);
 
         $contactsList = $space->contactsLists()->findOrFail($contactsListId);
-        $contactsList->contacts()->detach($request->get('contacts_ids'));
+        $contactsList->contacts()->detach($request->input('contacts_ids'));
 
         return redirect()->route('admin.spaces.contacts_lists.edit', [$space->domain, $contactsList->id]);
     }

@@ -287,7 +287,6 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
             Route::get('call_logs', 'showCallLogs')->name('show_call_logs');
             Route::get('/{type?}', 'show')->name('show');
             Route::post('/', 'edit')->name('edit');
-            //Route::post('search', 'search')->name('search');
         });
 
         Route::name('account.')->prefix('accounts')->group(function () {

@@ -36,7 +36,7 @@ class ContactsListController extends Controller
             'order_sort' => 'in:asc,desc',
         ]);
 
-        $contactsLists = $space->contactsLists()->orderBy($request->get('order_by', 'updated_at'), $request->get('order_sort', 'desc'));
+        $contactsLists = $space->contactsLists()->orderBy($request->input('order_by', 'updated_at'), $request->input('order_sort', 'desc'));
 
         return view('admin.space.contacts_list.index', [
             'space' => $space,
@@ -62,8 +62,8 @@ class ContactsListController extends Controller
 
         $contactsList = new ContactsList;
         $contactsList->space_id = $space->id;
-        $contactsList->title = $request->get('title');
-        $contactsList->description = $request->get('description');
+        $contactsList->title = $request->input('title');
+        $contactsList->description = $request->input('description');
         $contactsList->save();
 
         return redirect()->route('admin.spaces.contacts_lists.edit', [$space->domain, $contactsList->id]);
@@ -72,7 +72,7 @@ class ContactsListController extends Controller
     public function search(Request $request, Space $space, int $contactsListId)
     {
         return redirect()->route('admin.spaces.contacts_lists.edit', [
-            'space' => $space,
+            'space' => $space->domain,
             'contacts_list_id' => $contactsListId] + $request->except('_token'));
     }
 
@@ -81,20 +81,14 @@ class ContactsListController extends Controller
         $contacts = $space->contactsLists()->findOrFail($id)->contacts();
 
         if ($request->has('search')) {
-            $contacts = $contacts->where('username', 'like', '%' . $request->get('search') . '%');
+            $contacts = $contacts->where('username', 'like', '%' . $request->input('search') . '%');
         }
-
-        if ($request->has('domain')) {
-            $contact = $contacts->where('domain', $request->get('domain'));
-        }
-
-        $contacts = $contacts->get();
 
         return view('admin.space.contacts_list.create_edit', [
             'space' => $space,
             'domains' => Account::groupBy('domain')->pluck('domain'),
             'contacts_list' => $space->contactsLists()->findOrFail($id),
-            'contacts' => $contacts
+            'contacts' => $contacts->get()
         ]);
     }
 
@@ -108,8 +102,8 @@ class ContactsListController extends Controller
         ]);
 
         $contactsList = $space->contactsLists()->findOrFail($id);
-        $contactsList->title = $request->get('title');
-        $contactsList->description = $request->get('description');
+        $contactsList->title = $request->input('title');
+        $contactsList->description = $request->input('description');
         $contactsList->save();
 
         return redirect()->route('admin.spaces.contacts_lists.index', $space->domain);
@@ -125,7 +119,7 @@ class ContactsListController extends Controller
 
     public function destroy(Request $request, Space $space)
     {
-        $contactsList = $space->contactsLists()->findOrFail($request->get('contacts_lists_id'));
+        $contactsList = $space->contactsLists()->findOrFail($request->input('contacts_lists_id'));
         $contactsList->delete();
 
         return redirect()->route('admin.spaces.contacts_lists.index', $space->domain);
