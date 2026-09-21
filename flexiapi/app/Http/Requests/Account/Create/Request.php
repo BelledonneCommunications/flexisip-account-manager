@@ -63,16 +63,22 @@ class Request extends BaseRequest
             'password' => ['required', 'min:3'],
             'email' => space()->unique_email
                 ? [
-                    'nullable',
+                    'sometimes',
+                    'required',
                     'email',
                     Rule::unique('accounts', 'email')->where(function ($query) use ($domain) {
                         $query->where('domain', $domain);
                     })
                 ]
-                : ['nullable', 'email'],
+                : [
+                    'sometimes',
+                    'required',
+                    'email'
+                ],
             'dtmf_protocol' => 'nullable|in:' . Account::dtmfProtocolsRule(),
             'phone' => [
-                'nullable',
+                'sometimes',
+                'required',
                 'phone',
                 new FilteredPhone,
                 Rule::unique('accounts', 'phone')->where(function ($query) use ($domain) {

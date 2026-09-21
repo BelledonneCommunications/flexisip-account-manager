@@ -15,7 +15,7 @@
 <div class="select togglable contact">
     <select name="{{ $type }}[contact_id]">
         @foreach (resolveUserContacts($account)->get() as $contact)
-            <option @if ($callForwardings[$type]->contact_id == $contact->id) selected @endif value="{{ $contact->id }}">{{ $contact->identifier }}</option>
+            <option @if ($callForwardings[$type]->contact_id == $contact->id) selected @endif value="{{ $contact->id }}">sip:{{ $contact->identifier }}</option>
         @endforeach
     </select>
     <label for="contact">{{ __('Contact') }}</label>

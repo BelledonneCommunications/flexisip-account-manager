@@ -28,7 +28,6 @@ class Request extends CreateRequest
     {
         $rules = parent::rules();
 
-
         $rules['h-captcha-response'] = captchaConfigured() ? 'required|HCaptcha' : '';
         array_push($rules['password'], 'confirmed');
         array_push($rules['email'], 'confirmed');
