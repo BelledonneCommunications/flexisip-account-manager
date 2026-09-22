@@ -1,8 +1,12 @@
+@php
+$contacts = resolveUserContacts($account)->get()
+@endphp
+
 <div class="select" data-value="{{ $callForwardings[$type]->forward_to ?? 'sip_uri' }}">
     <select name="{{ $type }}[forward_to]" onchange="this.parentNode.dataset.value = this.value">
         <option @if ($callForwardings[$type]->forward_to == 'voicemail') selected @endif value="voicemail">{{ __('Voicemails') }}</option>
         <option @if ($callForwardings[$type]->forward_to == null || $callForwardings[$type]->forward_to == 'sip_uri') selected @endif value="sip_uri">{{ __('SIP Adress') }}</option>
-        <option @if ($callForwardings[$type]->forward_to == 'contact') selected @endif value="contact">{{ __('Contact') }}</option>
+        <option @if ($callForwardings[$type]->forward_to == 'contact') selected @endif @if($contacts->isEmpty()) disabled @endif value="contact">{{ __('Contact') }}</option>
     </select>
     <label for="{{ $type }}[forward_to]">{{ __('Destination') }}</label>
 </div>
@@ -14,7 +18,7 @@
 <div class="togglable voicemail"></div>
 <div class="select togglable contact">
     <select name="{{ $type }}[contact_id]">
-        @foreach (resolveUserContacts($account)->get() as $contact)
+        @foreach ($contacts as $contact)
             <option @if ($callForwardings[$type]->contact_id == $contact->id) selected @endif value="{{ $contact->id }}">{{ $contact->identifier }}</option>
         @endforeach
     </select>

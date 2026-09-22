@@ -324,6 +324,7 @@
     "This link is not available anymore.": "Ce lien n'est plus disponible.",
     "This link will be available for :hours hours.": "Ce lien restera disponible pour :hours heures.",
     "This link will expire in :hour hours.":"Ce lien expirera dans :hour heures.",
+    "This field must be a valid SIP URI.": "Ce champ doit être une URI SIP valide.",
     "This will create a new account with the username :username": "Cela va créer un nouveau compte avec l'identifiant :username",
     "To complete your registration, please enter the verification code below in the registration form:":"Pour finaliser votre inscription, veuillez saisir le code de vérification ci-dessous dans le formulaire d'inscription :",
     "To ensure the continuity of your services (SIP calls, user accounts, configurations, etc.), we recommend renewing or updating your subscription before the expiration date.":"Afin d’assurer la continuité de vos services (appels SIP, comptes utilisateurs, configurations, etc.), nous vous invitons à renouveler ou mettre à jour votre abonnement avant cette date.",

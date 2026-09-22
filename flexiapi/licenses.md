@@ -678,7 +678,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### firebase/php-jwt (Version v7.1.0 | b374a5d)
+### firebase/php-jwt (Version v7.1.1 | 9bc93bd)
 A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.
 Homepage: https://github.com/googleapis/php-jwt
 Licenses Used: BSD-3-Clause
@@ -740,7 +740,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### giggsey/libphonenumber-for-php-lite (Version 9.0.38 | a165edb)
+### giggsey/libphonenumber-for-php-lite (Version 9.0.39 | 35cd53e)
 A lite version of giggsey/libphonenumber-for-php, which is a PHP Port of Google's libphonenumber
 Homepage: https://github.com/giggsey/libphonenumber-for-php-lite
 Licenses Used: Apache-2.0
@@ -1116,7 +1116,7 @@ SOFTWARE.
 
 
 
-### laravel/framework (Version v12.69.1 | 0c07b0b)
+### laravel/framework (Version v12.69.2 | 17d034e)
 The Laravel Framework.
 Homepage: https://laravel.com
 Licenses Used: MIT
@@ -1481,7 +1481,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### league/oauth2-client (Version 2.9.0 | 26e8c5d)
+### league/oauth2-client (Version 2.9.1 | 8cedfef)
 OAuth 2.0 Client Library
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1785,7 +1785,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-### monolog/monolog (Version 3.11.0 | 147f303)
+### monolog/monolog (Version 3.12.0 | 72c534f)
 Sends your logs to files, sockets, inboxes, databases and various web services
 Homepage: https://github.com/Seldaek/monolog
 Licenses Used: MIT
@@ -1869,7 +1869,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### nesbot/carbon (Version 3.13.2 | a1c5491)
+### nesbot/carbon (Version 3.14.0 | 0023eaa)
 An API extension for DateTime that supports 281 different languages.
 Homepage: https://carbonphp.github.io/carbon/
 Licenses Used: MIT
@@ -2026,7 +2026,7 @@ you URLs with full text:
 - [GPL version 3](http://www.gnu.org/licenses/gpl-3.0.html)
 
 
-### nikic/php-parser (Version v5.8.0 | 044a6a3)
+### nikic/php-parser (Version v5.9.0 | 9e33da9)
 A PHP parser written in PHP
 Homepage: Not configured.
 Licenses Used: BSD-3-Clause
@@ -3080,7 +3080,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### ramsey/uuid (Version 4.9.3 | 1df1584)
+### ramsey/uuid (Version 4.9.4 | 75d73f4)
 A PHP library for generating and working with universally unique identifiers (UUIDs).
 Homepage: Not configured.
 Licenses Used: MIT
@@ -4062,7 +4062,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/console (Version v7.4.18 | 23d6f88)
+### symfony/console (Version v7.4.19 | 3a19734)
 Eases the creation of beautiful and testable command line interfaces
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4212,7 +4212,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/finder (Version v7.4.17 | 5ce2882)
+### symfony/finder (Version v7.4.19 | 1b900bc)
 Finds files and directories via an intuitive fluent interface
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4237,7 +4237,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/http-foundation (Version v7.4.18 | d070b71)
+### symfony/http-foundation (Version v7.4.19 | f7b953b)
 Defines an object-oriented layer for the HTTP specification
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4262,7 +4262,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/http-kernel (Version v7.4.18 | 275d2d2)
+### symfony/http-kernel (Version v7.4.19 | 6835074)
 Provides a structured process for converting a Request into a Response
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4287,7 +4287,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/mailer (Version v7.4.17 | b17c9bf)
+### symfony/mailer (Version v7.4.19 | 6f6f244)
 Helps sending emails
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4312,7 +4312,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/mime (Version v7.4.18 | bf328d8)
+### symfony/mime (Version v7.4.19 | f8ac7d0)
 Allows manipulating MIME messages
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4587,7 +4587,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/process (Version v7.4.18 | 058d17f)
+### symfony/process (Version v7.4.19 | ed0ae09)
 Executes commands in sub-processes
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4662,7 +4662,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/string (Version v7.4.15 | e394af3)
+### symfony/string (Version v7.4.19 | 02731ce)
 Provides an object-oriented API to strings and deals with bytes, UTF-8 code points and grapheme clusters in a unified way
 Homepage: https://symfony.com
 Licenses Used: MIT

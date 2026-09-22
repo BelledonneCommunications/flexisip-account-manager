@@ -465,7 +465,7 @@ form div.checkbox>div {
     margin-right: 5rem;
 }
 
-form > div:has(> div.checkbox) {
+form>div:has(> div.checkbox) {
     align-self: center;
 }
 
@@ -481,25 +481,35 @@ div.checkbox p {
     font-weight: 700;
 }
 
-div.checkbox::before {
-    content: '';
+div.checkbox::before,
+div.checkbox>input[type="checkbox"]+label {
     display: block;
     position: absolute;
     height: 3rem;
     width: 5rem;
+    top: calc(50% - 1.5rem);
+    right: 0;
+
+}
+
+div.checkbox::before {
+    content: '';
     background-color: var(--grey-3);
     box-sizing: border-box;
     transition: background-color 0.3s ease;
-    top: calc(50% - 1.5rem);
-    right: 0;
     border-radius: 4rem;
+}
+
+div.checkbox>input[type="checkbox"]+label {
+    cursor: pointer;
 }
 
 div.checkbox:has(> input[type="checkbox"]:checked)::before {
     background-color: var(--color-green);
 }
 
-div.checkbox>input[type="checkbox"]+label {
+div.checkbox>input[type="checkbox"]+label:after {
+    content: '';
     display: block;
     background-color: white;
     width: 2rem;
@@ -514,11 +524,7 @@ div.checkbox>input[type="checkbox"]+label {
     transition: right 0.3s ease;
 }
 
-div.checkbox:hover>input[type="checkbox"]+label {
-    cursor: pointer;
-}
-
-div.checkbox>input[type="checkbox"]:checked+label {
+div.checkbox>input[type="checkbox"]:checked+label:after {
     right: 0.5rem;
 }
 
