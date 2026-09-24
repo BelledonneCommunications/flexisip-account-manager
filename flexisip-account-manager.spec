@@ -14,7 +14,7 @@
 
 %define env_symlink_file %{opt_dir}/flexiapi/.env
 
-# cron.daily scripts deprecated by FLEXIAPI-526 
+# cron.daily scripts deprecated by FLEXIAPI-526
 %define deprecated_debian_cron_job /etc/cron.daily/flexiapi.debian
 
 %bcond_with deb
@@ -91,13 +91,11 @@ mkdir -p %{var_dir}/flexiapi/bootstrap/cache
 
 mkdir -p %{var_dir}/log
 
-chown -R %{web_user}:%{web_user} %{var_dir}/log
 chown -R %{web_user}:%{web_user} %{var_dir}/flexiapi/storage
 chown -R %{web_user}:%{web_user} %{var_dir}/flexiapi/bootstrap
 chown -R %{web_user}:%{web_user} %{var_dir}/log/flexiapi
 
 # Forces the creation of the symbolic links event if they already exists
-ln -sf %{var_dir}/log/flexiapi %{var_dir}/flexiapi/storage/logs
 ln -sf %{var_dir}/flexiapi/storage %{opt_dir}/flexiapi/.
 
 # Remove the cron.daily script deprecated in favor of the Laravel Scheduler.
