@@ -13,7 +13,7 @@
 @csrf
 
         <div>
-            <input placeholder="username" name="username" type="text" value="{{ old('username') }}">
+            <input placeholder="username" name="username" type="text" required value="{{ old('username') }}">
             <label for="username">{{ __('Username') }}</label>
             <small>{{ __('In lowercase letters') }}</small>
             @include('parts.errors', ['name' => 'username'])
@@ -23,7 +23,7 @@
         </div>
 
         <div>
-            <input placeholder="+123456789" name="phone" type="text" value="{{ old('phone') }}">
+            <input placeholder="+123456789" name="phone" type="text" required value="{{ old('phone') }}">
             <label for="phone">{{ __('Phone number') }}</label>
             @include('parts.errors', ['name' => 'phone'])
         </div>
