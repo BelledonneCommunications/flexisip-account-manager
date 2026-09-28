@@ -19,7 +19,7 @@
                 </p>
             </div>
             <div class="meta">
-                <audio class="oppose" controls src="{{ $voicemail->url }}"></audio>
+                <audio class="oppose" preload="metadata" controls src="{{ $voicemail->url }}"></audio>
                 <a type="button" class="oppose btn tertiary"
                 @if ($account->admin)
                     href="{{ route('admin.account.file.delete', [$account, $voicemail->id]) }}" @else
