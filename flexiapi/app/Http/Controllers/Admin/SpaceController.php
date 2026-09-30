@@ -79,6 +79,7 @@ class SpaceController extends Controller
         $space->name = $request->input('name');
         $space->domain = $request->input('domain');
         $space->host = $request->input('full_host');
+        $space->super = getRequestBoolean($request, 'super');
         $space->save();
 
         $digestAuthenticationConfiguration = new SpaceDigestAuthenticationConfiguration;
