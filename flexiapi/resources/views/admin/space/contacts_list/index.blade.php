@@ -19,10 +19,10 @@
     <table>
         <thead>
             <tr>
-                @include('parts.column_sort', ['key' => 'title', 'title' => __('Name')])
+                @include('parts.column_sort', ['uriParams' => ['space' => $space->domain], 'key' => 'title', 'title' => __('Name')])
                 <th>{{ __('Description') }}</th>
-                @include('parts.column_sort', ['key' => 'contacts_count', 'title' => __('Contacts')])
-                @include('parts.column_sort', ['key' => 'updated_at', 'title' => __('Updated')])
+                @include('parts.column_sort', ['uriParams' => ['space' => $space->domain], 'key' => 'contacts_count', 'title' => __('Contacts')])
+                @include('parts.column_sort', ['uriParams' => ['space' => $space->domain], 'key' => 'updated_at', 'title' => __('Updated')])
             </tr>
         </thead>
         <tbody>

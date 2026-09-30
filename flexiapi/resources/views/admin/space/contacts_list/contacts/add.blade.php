@@ -63,7 +63,7 @@
                 @include('parts.column_sort', [
                     'key' => 'updated_at',
                     'title' => __('Updated'),
-                    'uriParams' => ['contacts_list_id' => $contacts_list->id],
+                    'uriParams' => ['contacts_list_id' => $contacts_list->id, 'space' => $space->domain],
                 ])
             </tr>
         </thead>
