@@ -73,7 +73,7 @@
             @csrf
 
             <div class="search">
-                <input placeholder="Search by username: +1234, foo_bar…" name="search" type="text"
+                <input placeholder="{{ __('Search by username') }}" name="search" type="text"
                     value="{{ request()->input('search', '') }}">
                 <label for="search">{{ __('Search') }}</label>
             </div>

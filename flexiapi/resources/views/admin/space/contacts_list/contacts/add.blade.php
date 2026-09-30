@@ -32,7 +32,7 @@
             accept-charset="UTF-8">
             @csrf
             <div class="search">
-                <input placeholder="Search by username: +1234, foo_bar…" name="search" type="text"
+                <input placeholder="{{ __('Search by username') }}" name="search" type="text"
                     value="{{ request()->input('search', '') }}">
                 <label for="search">{{ __('Search') }}</label>
             </div>
@@ -47,7 +47,7 @@
                 <a class="btn "
                     onclick="Utils.clearStorageList('a{{ $contacts_list->id }}'); document.querySelector('form[name=contacts_lists_contacts_store]').submit()">
                     <i class="ph ph-plus"></i>
-                    Add <span class="list_toggle" data-list-id="a{{ $contacts_list->id }}"></span> contacts
+                    {{ __('Add') }} <span class="list_toggle" data-list-id="a{{ $contacts_list->id }}"></span> <i class="ph ph-users"></i>
                 </a>
             </div>
         </form>
@@ -70,7 +70,7 @@
         <tbody>
             @if ($accounts->isEmpty())
                 <tr class="empty">
-                    <td colspan="3">No Contact</td>
+                    <td colspan="3">{{ __('No contact') }}</td>
                 </tr>
             @endif
             @foreach ($accounts as $account)
