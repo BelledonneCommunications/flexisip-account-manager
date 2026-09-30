@@ -8,7 +8,7 @@ class SpaceCardDavServer extends Model
 {
     protected $hidden = ['space_id'];
     protected $table = 'space_carddav_servers';
-    protected $fillable = ['uri', 'enabled', 'min_characters', 'results_limist', 'use_exact_match_policy', 'timeout', 'delay', 'fields_for_user_input', 'fields_for_domain'];
+    protected $fillable = ['uri', 'enabled', 'min_characters', 'results_limit', 'use_exact_match_policy', 'timeout', 'delay', 'fields_for_user_input', 'fields_for_domain'];
 
     protected $casts = [
         'enabled' => 'boolean',
