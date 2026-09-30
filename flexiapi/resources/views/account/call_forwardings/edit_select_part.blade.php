@@ -18,7 +18,7 @@ $contacts = resolveUserContacts($account)->get()
 <div class="togglable voicemail"></div>
 <div class="select togglable contact">
     <select name="{{ $type }}[contact_id]">
-        @foreach (resolveUserContacts($account)->get() as $contact)
+        @foreach ($contacts as $contact)
             <option @if ($callForwardings[$type]->contact_id == $contact->id) selected @endif value="{{ $contact->id }}">sip:{{ $contact->identifier }}</option>
         @endforeach
     </select>
