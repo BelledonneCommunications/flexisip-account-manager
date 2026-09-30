@@ -21,6 +21,7 @@
 namespace App\Http\Requests\Account\Create;
 
 use App\Http\Requests\BaseRequest;
+use App\Password;
 use Illuminate\Validation\Rule;
 use App\Account;
 use App\Space;
@@ -60,7 +61,7 @@ class Request extends BaseRequest
             ],
             'domain' => 'exists:spaces,domain',
             'dictionary' => [new Dictionary],
-            'password' => ['required', 'min:3'],
+            'password' => ['required', 'min:' . Password::MINIMUM_LENGTH],
             'email' => space()->unique_email
                 ? [
                     'sometimes',

@@ -85,6 +85,14 @@ class ImportController extends Controller
          * Error checking
          */
 
+        // Space limit
+
+        $space = Space::where('domain', $domain)->first();
+
+        if ($space->max_accounts > 0 && count($lines) > ($space->max_accounts - $space->accounts()->count())) {
+            $this->errors['You cannot import more accounts than the remaining accounts number limit'] = '';
+        }
+
         // Usernames
 
         $existingUsernames = Account::where('domain', $domain)
@@ -113,10 +121,10 @@ class ImportController extends Controller
 
         if (
             $lines->pluck('password')->contains(function ($value) {
-                return strlen($value) < 6;
+                return strlen($value) < Password::MINIMUM_LENGTH;
             })
         ) {
-            $this->errors['Some passwords are shorter than expected'] = '';
+            $this->errors['Some passwords are shorter than expected, minimum ' . Password::MINIMUM_LENGTH . ' chararters'] = '';
         }
 
         // Roles
@@ -174,7 +182,7 @@ class ImportController extends Controller
             }
         }
 
-        $existingEmails = Account::whereIn('email', $lines->pluck('email')->all())
+        $existingEmails = Account::whereIn('email', $lines->pluck('email')->all())->where('email', '!=', '')
             ->pluck('email');
 
         if ($existingEmails->isNotEmpty()) {
@@ -288,7 +296,7 @@ class ImportController extends Controller
             array_push($accounts, [
                 'username' => $line->username,
                 'domain' => $domain,
-                'email' => $line->email,
+                'email' => !empty($line->email) ? $line->email : null,
                 'activated' => $line->status == 'active',
                 'ip_address' => '127.0.0.1',
                 'user_agent' => 'CSV Import',
@@ -318,14 +326,14 @@ class ImportController extends Controller
                 ->where('domain', $domain)
                 ->get();
 
-            $algorithm = $digestConfiguration->default_password_algorithm->value;
+            $algorithm = $digestConfiguration->default_password_algorithm;
 
             foreach ($passwordAccounts as $passwordAccount) {
                 array_push($passwordsToInsert, [
                     'account_id' => $passwordAccount->id,
                     'password' => bchash(
                         $passwordAccount->username,
-                        $digestConfiguration->realm->value,
+                        $digestConfiguration->realm,
                         $passwords[$passwordAccount->username],
                         $algorithm
                     ),
@@ -333,7 +341,6 @@ class ImportController extends Controller
                 ]);
             }
         }
-
 
         Password::insert($passwordsToInsert);
 
