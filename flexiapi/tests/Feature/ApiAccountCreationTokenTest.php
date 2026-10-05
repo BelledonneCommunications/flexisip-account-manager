@@ -196,14 +196,14 @@ class ApiAccountCreationTokenTest extends TestCase
         // Valid token
         $this->json($this->method, $this->accountRoute, [
             'username' => 'username',
-            'password' => '123',
+            'password' => '123456',
             'account_creation_token' => $token->token
         ])->assertOk();
 
         // Expired token
         $this->json($this->method, $this->accountRoute, [
             'username' => 'username2',
-            'password' => '123',
+            'password' => '123456',
             'account_creation_token' => $token->token
         ])->assertJsonValidationErrorFor('account_creation_token');
 
@@ -237,21 +237,21 @@ class ApiAccountCreationTokenTest extends TestCase
         // Blacklisted username
         $this->json($this->method, $this->accountRoute, [
             'username' => 'blacklisted',
-            'password' => '123',
+            'password' => '123456',
             'account_creation_token' => $token->token
         ])->assertJsonValidationErrors(['username']);
 
         // Blacklisted regex username
         $this->json($this->method, $this->accountRoute, [
             'username' => 'username-gnap',
-            'password' => '123',
+            'password' => '123456',
             'account_creation_token' => $token->token
         ])->assertJsonValidationErrors(['username']);
 
         // Valid username
         $this->json($this->method, $this->accountRoute, [
             'username' => 'valid-username',
-            'password' => '123',
+            'password' => '123456',
             'account_creation_token' => $token->token
         ])->assertOk();
     }

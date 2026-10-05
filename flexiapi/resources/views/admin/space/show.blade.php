@@ -60,8 +60,8 @@
     <table>
         <thead>
             <tr>
-                @include('parts.column_sort', ['uriParams' => ['space' => $space], 'key' => 'username', 'title' => __('Identifier')])
-                @include('parts.column_sort', ['uriParams' => ['space' => $space], 'key' => 'updated_at', 'title' => __('Updated')])
+                @include('parts.column_sort', ['uriParams' => ['space' => $space->domain], 'key' => 'username', 'title' => __('Identifier')])
+                @include('parts.column_sort', ['uriParams' => ['space' => $space->domain], 'key' => 'updated_at', 'title' => __('Updated')])
             </tr>
         </thead>
         <tbody>

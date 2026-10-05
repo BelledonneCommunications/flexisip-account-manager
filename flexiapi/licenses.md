@@ -424,7 +424,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### doctrine/dbal (Version 4.4.4 | fb9e0ff)
+### doctrine/dbal (Version 4.5.0 | c435cd7)
 Powerful PHP database abstraction layer (DBAL) with many features for database schema introspection and management.
 Homepage: https://www.doctrine-project.org/projects/dbal.html
 Licenses Used: MIT
@@ -499,7 +499,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-### doctrine/lexer (Version 3.0.1 | 31ad66a)
+### doctrine/lexer (Version 3.0.2 | e96fe45)
 PHP Doctrine Lexer parser library that can be used in Top-Down, Recursive Descent Parsers.
 Homepage: https://www.doctrine-project.org/projects/lexer.html
 Licenses Used: MIT
@@ -678,7 +678,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### firebase/php-jwt (Version v7.1.1 | 9bc93bd)
+### firebase/php-jwt (Version v7.2.1 | 0501f57)
 A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.
 Homepage: https://github.com/googleapis/php-jwt
 Licenses Used: BSD-3-Clause
@@ -740,7 +740,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### giggsey/libphonenumber-for-php-lite (Version 9.0.39 | 35cd53e)
+### giggsey/libphonenumber-for-php-lite (Version 9.0.40 | 314fdac)
 A lite version of giggsey/libphonenumber-for-php, which is a PHP Port of Google's libphonenumber
 Homepage: https://github.com/giggsey/libphonenumber-for-php-lite
 Licenses Used: Apache-2.0
@@ -1170,7 +1170,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### laravel/serializable-closure (Version v2.0.16 | 7cfc24e)
+### laravel/serializable-closure (Version v2.1.0 | 2d5869a)
 Laravel Serializable Closure provides an easy and secure way to serialize closures in PHP.
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1311,7 +1311,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-### league/commonmark (Version 2.10.1 | 9d489ab)
+### league/commonmark (Version 2.10.3 | 6efbd9c)
 Highly-extensible PHP Markdown parser which fully supports the CommonMark spec and GitHub-Flavored Markdown (GFM)
 Homepage: https://commonmark.thephpleague.com
 Licenses Used: BSD-3-Clause
@@ -1454,7 +1454,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### league/oauth1-client (Version v1.11.0 | f9c94b0)
+### league/oauth1-client (Version v1.12.0 | aa8fe76)
 OAuth 1.0 Client Library
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1869,7 +1869,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### nesbot/carbon (Version 3.14.0 | 0023eaa)
+### nesbot/carbon (Version 3.14.1 | 34e9109)
 An API extension for DateTime that supports 281 different languages.
 Homepage: https://carbonphp.github.io/carbon/
 Licenses Used: MIT

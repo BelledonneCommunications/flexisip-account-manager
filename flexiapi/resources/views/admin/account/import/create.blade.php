@@ -55,14 +55,18 @@
             </div>
             <div class="on_desktop"></div>
 
-            <div class="select">
-                <select name="domain">
-                    @foreach ($domains as $domain)
-                        <option value="{{ $domain }}">{{ $domain }}</option>
-                    @endforeach
-                </select>
-                <label for="domain">{{ __('Domain') }}</label>
-            </div>
+            @if (auth()->user()->superAdmin)
+                <div class="select">
+                    <select name="domain">
+                        @foreach ($domains as $domain)
+                            <option value="{{ $domain }}">{{ $domain }}</option>
+                        @endforeach
+                    </select>
+                    <label for="domain">{{ __('Domain') }}</label>
+                </div>
+            @else
+                <input name="domain" type="hidden" value="{{ $domains[0] }}">
+            @endif
         </form>
     </div>
 @endsection
