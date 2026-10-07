@@ -1,0 +1,28 @@
+/* INI helper */
+
+#custom_provisioning_entries {
+    font-family: monospace;
+}
+
+#ini_helper {
+    display: flex;
+    margin: 2rem 0;
+    gap: 1rem;
+}
+
+#ini_helper div {
+    flex: 1 auto;
+}
+
+#ini_helper div pre:before {
+    content: attr(data-type);
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: block;
+    background-color: var(--second-6);
+    color: white;
+    padding: 0 0.5rem;
+    border-radius: 0.5rem;
+    line-height: 2.5rem;
+}

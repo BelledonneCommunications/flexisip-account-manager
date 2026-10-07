@@ -34,7 +34,7 @@ class Ini implements Rule
 
     public function passes($attribute, $value): bool
     {
-        $parsed = parse_ini_string($value);
+        $parsed = @parse_ini_string($value);
 
         if ($parsed == false) {
             return false;

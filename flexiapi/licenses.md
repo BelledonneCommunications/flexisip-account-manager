@@ -499,7 +499,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-### doctrine/lexer (Version 3.0.2 | e96fe45)
+### doctrine/lexer (Version 3.0.3 | 71d305e)
 PHP Doctrine Lexer parser library that can be used in Top-Down, Recursive Descent Parsers.
 Homepage: https://www.doctrine-project.org/projects/lexer.html
 Licenses Used: MIT
@@ -1116,7 +1116,7 @@ SOFTWARE.
 
 
 
-### laravel/framework (Version v12.69.2 | 17d034e)
+### laravel/framework (Version v12.69.3 | 58ea544)
 The Laravel Framework.
 Homepage: https://laravel.com
 Licenses Used: MIT
@@ -1143,7 +1143,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### laravel/prompts (Version v0.3.24 | 5d3cdef)
+### laravel/prompts (Version v0.3.25 | 21b7b49)
 Add beautiful and user-friendly forms to your command-line applications.
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1587,7 +1587,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-### matomo/device-detector (Version 6.5.1 | f304575)
+### matomo/device-detector (Version 6.5.2 | e83ce7a)
 The Universal Device Detection library, that parses User Agents and detects devices (desktop, tablet, mobile, tv, cars, console, etc.), clients (browsers, media players, mobile apps, feed readers, libraries, etc), operating systems, devices, brands and models.
 Homepage: https://matomo.org
 Licenses Used: LGPL-3.0-or-later
@@ -1785,7 +1785,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-### monolog/monolog (Version 3.12.0 | 72c534f)
+### monolog/monolog (Version 3.12.1 | d7059e4)
 Sends your logs to files, sockets, inboxes, databases and various web services
 Homepage: https://github.com/Seldaek/monolog
 Licenses Used: MIT
@@ -1869,7 +1869,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### nesbot/carbon (Version 3.14.1 | 34e9109)
+### nesbot/carbon (Version 3.14.2 | 94cfc34)
 An API extension for DateTime that supports 281 different languages.
 Homepage: https://carbonphp.github.io/carbon/
 Licenses Used: MIT
@@ -2707,7 +2707,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-### phpunit/phpunit (Version 11.5.56 | 5f83edf)
+### phpunit/phpunit (Version 11.5.57 | 36b75bf)
 The PHP Unit Testing framework.
 Homepage: https://phpunit.de/
 Licenses Used: BSD-3-Clause
@@ -2742,7 +2742,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-### propaganistas/laravel-phone (Version 6.0.3 | b0e2bdb)
+### propaganistas/laravel-phone (Version 6.1.0 | 7433d79)
 Adds phone number functionality to Laravel based on Google's libphonenumber API.
 Homepage: Not configured.
 Licenses Used: MIT
@@ -4062,7 +4062,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/console (Version v7.4.19 | 3a19734)
+### symfony/console (Version v7.4.20 | d7bca2f)
 Eases the creation of beautiful and testable command line interfaces
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4137,7 +4137,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/error-handler (Version v7.4.17 | 8373921)
+### symfony/error-handler (Version v7.4.20 | 82239fe)
 Provides tools to manage errors and ease debugging PHP code
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4212,7 +4212,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/finder (Version v7.4.19 | 1b900bc)
+### symfony/finder (Version v7.4.20 | 2dd31e5)
 Finds files and directories via an intuitive fluent interface
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4237,7 +4237,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/http-foundation (Version v7.4.19 | f7b953b)
+### symfony/http-foundation (Version v7.4.20 | 9d0761c)
 Defines an object-oriented layer for the HTTP specification
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4262,7 +4262,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/http-kernel (Version v7.4.19 | 6835074)
+### symfony/http-kernel (Version v7.4.20 | 392784b)
 Provides a structured process for converting a Request into a Response
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4362,7 +4362,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-intl-grapheme (Version v1.41.0 | bb899c1)
+### symfony/polyfill-intl-grapheme (Version v1.43.0 | 5cac8f4)
 Symfony polyfill for intl's grapheme_* functions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4387,7 +4387,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-intl-idn (Version v1.42.0 | 51b5ff5)
+### symfony/polyfill-intl-idn (Version v1.43.0 | 533d68c)
 Symfony polyfill for intl's idn_to_ascii and idn_to_utf8 functions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4412,7 +4412,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-intl-normalizer (Version v1.42.0 | aa20ede)
+### symfony/polyfill-intl-normalizer (Version v1.43.0 | ebd57cc)
 Symfony polyfill for intl's Normalizer class and related functions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4437,7 +4437,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-mbstring (Version v1.38.2 | d3d318b)
+### symfony/polyfill-mbstring (Version v1.43.0 | 4d5d331)
 Symfony polyfill for the Mbstring extension
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4462,7 +4462,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-php80 (Version v1.37.0 | dfb5572)
+### symfony/polyfill-php80 (Version v1.43.0 | 9c6a5d6)
 Symfony polyfill backporting some PHP 8.0+ features to lower PHP versions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4487,7 +4487,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-php83 (Version v1.41.0 | 5ea9908)
+### symfony/polyfill-php83 (Version v1.43.0 | 80ccff9)
 Symfony polyfill backporting some PHP 8.3+ features to lower PHP versions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4512,7 +4512,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-php84 (Version v1.38.1 | f4e1dfa)
+### symfony/polyfill-php84 (Version v1.43.0 | 22c6548)
 Symfony polyfill backporting some PHP 8.4+ features to lower PHP versions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4537,7 +4537,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-php85 (Version v1.41.0 | 255fab4)
+### symfony/polyfill-php85 (Version v1.43.0 | 86a42cb)
 Symfony polyfill backporting some PHP 8.5+ features to lower PHP versions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4562,7 +4562,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-uuid (Version v1.37.0 | 26dfec2)
+### symfony/polyfill-uuid (Version v1.43.0 | b23ff82)
 Symfony polyfill for uuid functions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4612,7 +4612,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/routing (Version v7.4.18 | ddd5589)
+### symfony/routing (Version v7.4.20 | 2bacb72)
 Maps an HTTP request to a set of configuration variables
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4737,7 +4737,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/uid (Version v7.4.17 | 69d7323)
+### symfony/uid (Version v7.4.20 | a96bbdb)
 Provides an object-oriented API to generate and represent UIDs
 Homepage: https://symfony.com
 Licenses Used: MIT
