@@ -226,7 +226,10 @@ form div select {
 }
 
 form div textarea {
-    resize: vertical;
+    resize: none;
+    field-sizing: content;
+    min-height: 10rem;
+    max-height: 25rem;
 }
 
 form div input[type=file] {

@@ -80,19 +80,31 @@
         <h3 class="large">{{ __('Remote provisioning') }}</h3>
 
         <div class="large">
-            <textarea style="min-height: 200px;" name="custom_provisioning_entries" id="custom_provisioning_entries">{{ $space->custom_provisioning_entries }}</textarea>
-            <label for="custom_provisioning_entries">{{ __('Custom entries') }}</label>
-            <span class="supporting">{{ __('In ini format, will complete the other settings.') }}</span>
-            <span class="supporting">
-                {{ __('Use ; to comment, key="value" to declare a complex string.') }}
-                <a target="_blank"  href="https://cheatsheets.zip/ini.html">{{ __('Checkout the cheatsheets to know how to format things correctly.') }}</a>
-            </span>
-            <span class="supporting">
-                {{ __('A complete documentation describing all the elements and sections presents in this field are available on the following link:') }}
-                <a target="_blank"  href="https://download.linphone.org/snapshots/docs/liblinphone/latest/c/group__group__provisioning__configuration__key.html">Provisioning configuration keys documentation.</a>
-            </span>
-
+            <textarea name="custom_provisioning_entries" id="custom_provisioning_entries">{{ $space->custom_provisioning_entries }}</textarea>
             @include('parts.errors', ['name' => 'custom_provisioning_entries'])
+
+            <div id="ini_helper">
+                <div>
+                    <span class="supporting">{{ __('In INI format. This field complement the settings configured in the other forms.') }}</span>
+                    <span class="supporting">
+                        <a target="_blank"  href="https://cheatsheets.zip/ini.html">{{ __('Checkout the cheatsheets to know how to format things correctly.') }}</a>
+                    </span>
+                    <span class="supporting">
+                        {{ __('A complete documentation describing all the elements and sections presents in this field are available on the following link:') }}
+                        <a target="_blank"  href="https://download.linphone.org/snapshots/docs/liblinphone/latest/c/group__group__provisioning__configuration__key.html">Provisioning configuration keys documentation.</a>
+                    </span>
+                </div>
+                <div>
+                    <pre data-type="{{ __('Exemple') }}"><code><span style="color: var(--grey-4)">; Here are the comments</span>
+<span style="color: var(--color-green)">[section]</span>
+<span style="color: var(--color-blue)">key</span>=Value
+<span style="color: var(--color-blue)">sip_adress_with_comment</span>=sip:voip@sip.server.org<span style="color: var(--grey-4)">;transport=tcp</span>
+<span style="color: var(--color-blue)">sip_adress</span>=<span style="color: var(--color-orange)">"sip:voip@sip.server.org;transport=tcp"</span>
+<span style="color: var(--color-blue)">enabled</span>=1</code></pre>
+                </div>
+            </div>
+
+            <label for="custom_provisioning_entries">{{ __('Custom entries') }}</label>
         </div>
 
         <div>
