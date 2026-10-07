@@ -31,7 +31,7 @@ class ClearUnconfirmed extends Command
 
     public function handle()
     {
-        $accounts = Account::where(
+        $accounts = Account::withoutGlobalScopes()->where(
             'created_at',
             '<',
             Carbon::now()->subDays($this->argument('days'))->toDateTimeString()
