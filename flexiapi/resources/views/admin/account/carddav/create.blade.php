@@ -40,7 +40,7 @@
 
         <div class="select">
             <select name="algorithm">
-                @foreach (App\PasswordAlgorithm::cases() as $value => $key)
+                @foreach (App\Enums\PasswordAlgorithm::cases() as $value => $key)
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>

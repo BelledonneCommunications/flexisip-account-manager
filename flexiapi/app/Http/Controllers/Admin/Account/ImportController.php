@@ -21,9 +21,9 @@
 namespace App\Http\Controllers\Admin\Account;
 
 use App\Account;
+use App\Enums\PasswordAlgorithm;
 use App\ExternalAccount;
 use App\Password;
-use App\PasswordAlgorithm;
 use App\PhoneCountry;
 use App\Space;
 use App\Http\Controllers\Controller;

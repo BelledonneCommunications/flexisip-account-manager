@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\PasswordAlgorithm;
+use App\Enums\PasswordAlgorithm;
 use App\SpaceDigestAuthenticationConfiguration;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

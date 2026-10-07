@@ -22,7 +22,7 @@ namespace Database\Factories;
 
 use App\Account;
 use App\Password;
-use App\PasswordAlgorithm;
+use App\Enums\PasswordAlgorithm;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PasswordFactory extends Factory

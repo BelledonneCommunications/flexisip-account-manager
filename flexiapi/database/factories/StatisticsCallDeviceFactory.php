@@ -20,7 +20,7 @@
 
 namespace Database\Factories;
 
-use App\InviteTerminatedState;
+use App\Enums\InviteTerminatedState;
 use App\StatisticsCall;
 use DateInterval;
 use Illuminate\Database\Eloquent\Factories\Factory;

@@ -22,7 +22,7 @@ namespace Tests;
 
 use App\Password;
 use App\Account;
-use App\PasswordAlgorithm;
+use App\Enums\PasswordAlgorithm;
 
 trait TestUtilsTrait
 {

@@ -20,10 +20,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\PasswordAlgorithm;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Space\Create;
 use App\Http\Requests\Space\AdministrationUpdate;
-use App\PasswordAlgorithm;
 use App\Space;
 use App\Rules\Ini;
 use App\Rules\Domain;

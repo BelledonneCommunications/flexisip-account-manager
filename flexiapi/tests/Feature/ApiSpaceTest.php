@@ -21,7 +21,7 @@
 namespace Tests\Feature;
 
 use App\Account;
-use App\PasswordAlgorithm;
+use App\Enums\PasswordAlgorithm;
 use App\Space;
 use Tests\TestCase;
 

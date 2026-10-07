@@ -52,8 +52,8 @@
 
         <div class="select">
             <select name="default_password_algorithm">
-                @foreach (App\PasswordAlgorithm::cases() as $algorithm)
-                    <option value="{{ $algorithm }}" @selected($algorithm === App\PasswordAlgorithm::DEFAULT)>
+                @foreach (App\Enums\PasswordAlgorithm::cases() as $algorithm)
+                    <option value="{{ $algorithm }}" @selected($algorithm === App\Enums\PasswordAlgorithm::DEFAULT)>
                         {{ $algorithm }}</option>
                 @endforeach
             </select>
