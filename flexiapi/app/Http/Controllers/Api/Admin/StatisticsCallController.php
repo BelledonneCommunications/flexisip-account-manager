@@ -22,7 +22,6 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Account;
 use App\Http\Controllers\Controller;
-use App\InviteTerminatedState;
 use App\StatisticsCall;
 use App\StatisticsCallDevice;
 use Illuminate\Http\Request;
@@ -79,7 +78,7 @@ class StatisticsCallController extends Controller
         $request->validate([
             'rang_at' => 'iso_date',
             'invite_terminated.at' => 'required_with:invite_terminated.state,iso_date',
-            'invite_terminated.state' => ['required_with:invite_terminated.at', new Enum(InviteTerminatedState::class)],
+            'invite_terminated.state' => ['required_with:invite_terminated.at', new Enum(\App\Enums\InviteTerminatedState::class)],
         ]);
 
         $data = [

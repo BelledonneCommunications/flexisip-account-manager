@@ -20,8 +20,8 @@
 
 namespace App\Http\Requests\Account;
 
+use App\Enums\PasswordAlgorithm;
 use App\Http\Requests\BaseRequest;
-use App\PasswordAlgorithm;
 use Illuminate\Validation\Rules\Enum;
 
 class CardDavCredentials extends BaseRequest

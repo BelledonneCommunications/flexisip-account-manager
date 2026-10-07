@@ -20,7 +20,7 @@
 
 namespace App\Console\Commands\Spaces;
 
-use App\PasswordAlgorithm;
+use App\Enums\PasswordAlgorithm;
 use App\Space;
 use App\SpaceDigestAuthenticationConfiguration;
 use Illuminate\Console\Command;
