@@ -218,7 +218,9 @@ class ImportController extends Controller
                 }
             }
 
-            $checkExternalUsernameDomains->push($line->external_username . ',' . $line->external_domain);
+            if ($line->external_username != null) {
+                $checkExternalUsernameDomains->push($line->external_username . ',' . $line->external_domain);
+            }
         }
 
         foreach ($checkExternalUsernameDomains->duplicates() as $duplicate) {
