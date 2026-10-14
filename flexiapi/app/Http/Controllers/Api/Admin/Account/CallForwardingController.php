@@ -6,7 +6,6 @@ use App\Account;
 use App\CallForwarding;
 use App\Http\Controllers\Controller;
 use App\Rules\CallForwardingEnable;
-use App\Rules\SipUri;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -20,63 +19,82 @@ class CallForwardingController extends Controller
     public function store(Request $request, int $accountId)
     {
         $account = Account::findOrFail($accountId);
-        $request->validate([
-            'type' => [
-                'required',
-                'in:always,no_answer,busy',
-                Rule::unique('call_forwardings', 'type')->where(fn ($query) => $query->where('account_id', $accountId))
-            ],
-            'forward_to' => 'required|in:sip_uri,contact,voicemail',
-            'sip_uri' => ['nullable', new SipUri, 'required_if:forward_to,sip_uri'],
-            'enabled' => ['required', 'boolean', new CallForwardingEnable($request, $account)],
-            'contact_id' => ['required_if:forward_to,contact', Rule::in(resolveUserContacts($account)->pluck('id')->toArray())],
-        ]);
+        $request->validate($this->validationRules($request, $account));
 
         $callForwarding = new CallForwarding;
         $callForwarding->account_id = $account->id;
         $callForwarding->type = $request->input('type');
-        $callForwarding->forward_to = $request->input('forward_to');
-        $callForwarding->sip_uri = $request->input('sip_uri');
-        $callForwarding->enabled = $request->input('enabled');
-        $callForwarding->contact_id = $request->input('contact_id');
-        $callForwarding->save();
 
-        return $callForwarding;
+        return $this->save($request, $account, $callForwarding);
     }
 
-    public function update(Request $request, int $accountId, string $id)
+    public function update(Request $request, int $accountId, string $callForwardingId)
     {
         $account = Account::findOrFail($accountId);
-        $callForwarding = $account->callForwardings()->where('id', $id)->firstOrFail();
+        $callForwarding = $account->callForwardings()->where('id', $callForwardingId)->firstOrFail();
+        $request->validate($this->validationRules($request, $account, $callForwarding));
 
-        $request->validate([
+        return $this->save($request, $account, $callForwarding);
+    }
+
+    public function show(Request $request, int $accountId, string $callForwardingId)
+    {
+        return Account::findOrFail($accountId)->callForwardings()->where('id', $callForwardingId)->firstOrFail();
+    }
+
+    public function destroy(Request $request, int $accountId, string $callForwardingId)
+    {
+        return Account::findOrFail($accountId)->callForwardings()->where('id', $callForwardingId)->delete();
+    }
+
+    private function validationRules(Request $request, Account $account, ?CallForwarding $callForwarding = null): array
+    {
+        $uniqueType = Rule::unique('call_forwardings', 'type')
+            ->where(fn ($query) => $query->where('account_id', $account->id));
+
+        if ($callForwarding != null) {
+            $uniqueType->ignore($callForwarding->id);
+        }
+
+        return [
             'type' => [
                 'required',
-                'in:always,no_answer,busy',
-                Rule::unique('call_forwardings', 'type')
-                    ->where(fn ($query) => $query->where('account_id', $accountId))
-                    ->ignore($callForwarding->id)
+                'in:always,no_answer',
+                $uniqueType
             ],
-            'forward_to' => 'required|in:sip_uri',
-            'sip_uri' => ['required', new SipUri],
-            'enabled' => ['required', 'boolean', new CallForwardingEnable($request, $account)]
-        ]);
+            'enabled' => ['required', 'boolean', new CallForwardingEnable($request, $account)],
+            'voicemail' => ['boolean', 'missing_with:sip_account_id', 'missing_if:type,no_answer'],
+            'sip_account_id' => [
+                'missing_with:voicemail',
+                'not_in:' . $account->id,
+                Rule::exists('accounts', 'id')->where(function ($query) use ($account) {
+                    $query->where('domain', $account->domain);
+                }),
+            ],
+        ];
+    }
 
-        $callForwarding->forward_to = $request->input('forward_to');
-        $callForwarding->sip_uri = $request->input('sip_uri');
+    private function save(Request $request, Account $account, CallForwarding $callForwarding): CallForwarding
+    {
         $callForwarding->enabled = $request->input('enabled');
+        $callForwarding->sip_account_id = $request->input('sip_account_id');
+        $callForwarding->voicemail_account_id = null;
+
+        if ((bool) $request->input('voicemail')) {
+            if ($voicemailAccount = $account->space->voicemailAccount) {
+                $callForwarding->voicemail_account_id = $voicemailAccount->id;
+            } else {
+                abort(422, 'The voicemail is not configured in the Space');
+            }
+        }
+
+        if ($callForwarding->voicemail_account_id == null
+            && $callForwarding->sip_account_id == null) {
+            abort(422, 'A call forwarding must have a target');
+        }
+
         $callForwarding->save();
 
         return $callForwarding;
-    }
-
-    public function show(Request $request, int $accountId, string $id)
-    {
-        return Account::findOrFail($accountId)->callForwardings()->where('id', $id)->firstOrFail();
-    }
-
-    public function destroy(Request $request, int $accountId, string $id)
-    {
-        return Account::findOrFail($accountId)->callForwardings()->where('id', $id)->delete();
     }
 }

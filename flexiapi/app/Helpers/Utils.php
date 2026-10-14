@@ -179,23 +179,23 @@ function sipBuildPattern(): string
     return '/^sips?:(?:' . $userinfo . ')?' . $hostport . $uriParams . $headers . '$/i';
 }
 
-function stripSipProtocol(string $sipAdress): string
+function stripSipProtocol(string $sipAddress): string
 {
-    return preg_replace('/^(sips?:)(.*)/', '$2', $sipAdress);
+    return preg_replace('/^(sips?:)(.*)/', '$2', $sipAddress);
 }
 
-function parseSIP(string $sipAdress): ?array
+function parseSIP(string $sipAddress): ?array
 {
-    if (isSip($sipAdress)) {
-        return explode('@', stripSipProtocol($sipAdress));
+    if (isSip($sipAddress)) {
+        return explode('@', stripSipProtocol($sipAddress));
     }
 
     return null;
 }
 
-function isSip(string $sipAdress): bool
+function isSip(string $sipAddress): bool
 {
-    return preg_match(sipBuildPattern(), $sipAdress);
+    return preg_match(sipBuildPattern(), $sipAddress);
 }
 
 function isRegularExpression(string $string): bool
@@ -250,7 +250,7 @@ function resolveUserContacts(Account $account)
 {
     $selected = ['id', 'username', 'domain', 'activated', 'dtmf_protocol', 'display_name'];
 
-    return Account::withoutGlobalScopes()->whereIn('id', function ($query) use ($account) {
+    return Account::whereIn('id', function ($query) use ($account) {
         $query->select('contact_id')
             ->from('contacts')
             ->where('account_id', $account->id)
@@ -263,7 +263,7 @@ function resolveUserContacts(Account $account)
                             ->where('account_id', $account->id);
                     })
             );
-    })->select($selected);
+    })->where('id', '!=', $account->id)->select($selected);
 }
 
 /**

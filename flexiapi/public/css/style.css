@@ -958,7 +958,6 @@ select.list_toggle {
     padding: 1rem;
     box-sizing: border-box;
     margin-bottom: 1rem;
-    overflow: hidden;
 }
 
 .card header {
@@ -1323,7 +1322,7 @@ span.line::before {
 i.tooltip {
     display: inline-block;
     position: relative;
-    vertical-align: middle;
+    vertical-align: center;
     font-size: 2rem;
     margin-left: 1rem;
 }

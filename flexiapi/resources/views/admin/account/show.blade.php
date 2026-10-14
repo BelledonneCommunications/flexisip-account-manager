@@ -23,7 +23,7 @@
                 <li>
                     <span class="icon"><i class="ph ph-user"></i></span>
                     <div class="content">
-                        <p>{{ __('SIP Adress') }}</p>
+                        <p>{{ __('SIP Address') }}</p>
                         <p> sip:{{ $account->identifier }}</p>
                     </div>
                     <div class="meta"> @include('admin.account.parts.badges', ['account' => $account])</div>
