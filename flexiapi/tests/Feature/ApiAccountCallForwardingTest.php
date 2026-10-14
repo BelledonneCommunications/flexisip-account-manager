@@ -31,14 +31,17 @@ class ApiAccountCallForwardingTest extends TestCase
     public function testResolving()
     {
         $account = Account::factory()->create();
+
+        $voicemail = Account::factory()->create();
+        $account->space->voicemail_account_id = $voicemail->id;
+        $account->space->save();
+
         $account->generateUserApiKey();
 
-        $uri = 'sip:uri';
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
                 'type' => 'always',
-                'forward_to' => 'sip_uri',
-                'sip_uri' => $uri,
+                'voicemail' => true,
                 'enabled' => true
             ])
             ->assertCreated();
@@ -59,7 +62,27 @@ class ApiAccountCallForwardingTest extends TestCase
         $admin = Account::factory()->admin()->create();
         $admin->generateUserApiKey();
 
-        $uri = 'sip:uri';
+        // Voicemail
+
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->route, [
+                'type' => 'always',
+                'voicemail' => true,
+                'enabled' => true
+            ])
+            ->assertStatus(422);
+
+        $voicemail = Account::factory()->create();
+        $account->space->voicemail_account_id = $voicemail->id;
+        $account->space->save();
+
+        $voicemailResponse = $this->keyAuthenticated($account)
+            ->json($this->method, $this->route, [
+                'type' => 'always',
+                'voicemail' => true,
+                'enabled' => true
+            ])
+            ->assertCreated();
 
         // Contacts
 
@@ -68,29 +91,39 @@ class ApiAccountCallForwardingTest extends TestCase
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
                 'type' => 'always',
-                'forward_to' => 'contact',
+                'contact_account_id' => 123,
                 'enabled' => true
             ])
-            ->assertJsonValidationErrors(['contact_id']);
+            ->assertJsonValidationErrors(['contact_account_id']);
 
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
                 'type' => 'always',
-                'forward_to' => 'contact',
-                'contact_id' => $contactAccount->id,
+                'contact_account_id' => $contactAccount->id,
                 'enabled' => true
             ])
-            ->assertJsonValidationErrors(['contact_id']);
+            ->assertJsonValidationErrors(['contact_account_id']);
 
         $this->keyAuthenticated($admin)
             ->json($this->method, '/api/accounts/' . $account->id . '/contacts/' . $contactAccount->id)
             ->assertOk();
 
+        $this->keyAuthenticated($account)
+            ->json($this->method, $this->route, [
+                'type' => 'always',
+                'contact_account_id' => $contactAccount->id,
+                'enabled' => true
+            ])
+            ->assertJsonValidationErrorFor('type');
+
+        $this->keyAuthenticated($account)
+            ->json('DELETE', $this->route . '/' . $voicemailResponse['id'])
+            ->assertOk();
+
         $response = $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
                 'type' => 'always',
-                'forward_to' => 'contact',
-                'contact_id' => $contactAccount->id,
+                'contact_account_id' => $contactAccount->id,
                 'enabled' => true
             ])
             ->assertCreated();
@@ -104,8 +137,7 @@ class ApiAccountCallForwardingTest extends TestCase
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
                 'type' => 'always',
-                'forward_to' => 'sip_uri',
-                'sip_uri' => null,
+                'sip_account_id' => $admin->id,
                 'enabled' => true
             ])
             ->assertJsonValidationErrors(['type']);
@@ -117,17 +149,15 @@ class ApiAccountCallForwardingTest extends TestCase
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
                 'type' => 'always',
-                'forward_to' => 'sip_uri',
-                'sip_uri' => null,
+                'sip_account_id' => 123,
                 'enabled' => true
             ])
-            ->assertJsonValidationErrors(['sip_uri']);
+            ->assertJsonValidationErrors(['sip_account_id']);
 
         $response = $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
                 'type' => 'always',
-                'forward_to' => 'sip_uri',
-                'sip_uri' => $uri,
+                'sip_account_id' => $admin->id,
                 'enabled' => true
             ])
             ->assertCreated();
@@ -135,18 +165,15 @@ class ApiAccountCallForwardingTest extends TestCase
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
                 'type' => 'no_answer',
-                'forward_to' => 'sip_uri',
-                'sip_uri' => $uri,
+                'sip_account_id' => $admin->id,
                 'enabled' => true
             ])
             ->assertJsonValidationErrors(['enabled']);
 
-
         $this->keyAuthenticated($account)
             ->json('PUT', $this->route . '/' . $response->json()['id'], [
                 'type' => 'always',
-                'forward_to' => 'sip_uri',
-                'sip_uri' => $uri,
+                'sip_account_id' => $admin->id,
                 'enabled' => false
             ])
             ->assertOk();
@@ -154,8 +181,7 @@ class ApiAccountCallForwardingTest extends TestCase
         $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
                 'type' => 'no_answer',
-                'forward_to' => 'sip_uri',
-                'sip_uri' => $uri,
+                'sip_account_id' => $admin->id,
                 'enabled' => true
             ])
             ->assertCreated();

@@ -163,14 +163,13 @@ return [
             'captcha' => 'Erreur de Captcha! Réessayez plus tard ou contactez un administrateur.',
         ],
         'always.sip_uri' => [
-            'required_if' => 'Veuillez saisir une addresse SIP valide'
+            'required_if' => 'Veuillez saisir une addresse SIP valide',
+            'not_in' => 'Vous ne pouvez pas mettre votre propre addresse SIP',
         ],
         'no_answer.sip_uri' => [
-            'required_if' => 'Veuillez saisir une addresse SIP valide'
+            'required_if' => 'Veuillez saisir une addresse SIP valide',
+            'not_in' => 'Vous ne pouvez pas mettre votre propre addresse SIP',
         ],
-        'busy.sip_uri' => [
-            'required_if' => 'Veuillez saisir une addresse SIP valide'
-        ]
     ],
 
     /*

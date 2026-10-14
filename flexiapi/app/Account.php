@@ -84,6 +84,8 @@ class Account extends Authenticatable
 
     public function scopeSip($query, string $sip)
     {
+        $sip = stripSipProtocol($sip);
+
         if (\str_contains($sip, '@')) {
             list($username, $domain) = explode('@', $sip);
 

@@ -10,25 +10,68 @@ class CallForwarding extends Model
         'enabled' => 'boolean'
     ];
     protected $fillable = ['enabled', 'account_id', 'type', 'forward_to', 'sip_uri'];
-    protected $hidden = ['account_id', 'contact'];
-    protected $with = ['contact'];
-    protected $appends = ['contact_sip_uri'];
+    protected $hidden = ['account_id'];
+    protected $appends = ['contact_sip_uri', 'sip_sip_uri'];
 
     public function account()
     {
         return $this->belongsTo(Account::class);
     }
 
-    public function contact()
+    public function contactAccount()
     {
-        return $this->hasOne(Account::class, 'id', 'contact_id');
+        return $this->hasOne(Account::class, 'id', 'contact_account_id');
+    }
+
+    public function sipAccount()
+    {
+        return $this->hasOne(Account::class, 'id', 'sip_account_id');
+    }
+
+    public function getForwardToAttribute(): string
+    {
+        // Current form values
+
+        if (old($this->type . '.forward_to') == 'voicemail') {
+            return 'voicemail';
+        }
+
+        if (old($this->type . '.forward_to') == 'contact') {
+            return 'contact';
+        }
+
+        if (old($this->type . '.forward_to') == 'sip_uri') {
+            return 'sip_uri';
+        }
+
+        // Saved values
+
+        if ($this->voicemail_account_id) {
+            return 'voicemail';
+        }
+
+        if ($this->contact_account_id) {
+            return 'contact';
+        }
+
+        return 'sip_uri';
     }
 
     public function getContactSipUriAttribute(): ?string
     {
-        if ($this->contact) {
-            return $this->contact->sip_uri;
+        if ($this->contactAccount) {
+            return $this->contactAccount->sip_uri;
         }
+
+        return null;
+    }
+
+    public function getSipSipUriAttribute(): ?string
+    {
+        if ($this->sipAccount) {
+            return $this->sipAccount->sip_uri;
+        }
+
         return null;
     }
 }

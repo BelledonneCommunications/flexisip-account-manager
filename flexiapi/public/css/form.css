@@ -531,6 +531,21 @@ div.checkbox>input[type="checkbox"]:checked+label:after {
     right: 0.5rem;
 }
 
+/* Radio */
+
+div.radio {
+    display: flex;
+    align-items: center;
+    justify-self: end;
+}
+
+div.radio input[type="radio"] {
+    margin: 0;
+    float: right;
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
 
 /* Telephony subselect */
 
@@ -544,7 +559,7 @@ div.select[data-value=sip_uri]~div.togglable.sip_uri {
     display: block;
 }
 
-form section.block div.checkbox:has(input:not(:checked))~div {
+form section.block div.radio:has(input:not(:checked))~div {
     opacity: 0.25;
     pointer-events: none;
 }

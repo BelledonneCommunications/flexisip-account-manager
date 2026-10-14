@@ -958,7 +958,6 @@ select.list_toggle {
     padding: 1rem;
     box-sizing: border-box;
     margin-bottom: 1rem;
-    overflow: hidden;
 }
 
 .card header {
