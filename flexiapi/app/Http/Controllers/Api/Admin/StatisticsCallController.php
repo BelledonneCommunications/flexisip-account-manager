@@ -54,7 +54,7 @@ class StatisticsCallController extends Controller
             'to' => 'required|string|max:256',
             'initiated_at' => 'required|iso_date',
             'ended_at' => 'iso_date|nullable',
-            'conference_id' => 'string|nullable',
+            //'conference_id' => 'string|nullable',
         ]);
 
         $statisticsCall = new StatisticsCall;

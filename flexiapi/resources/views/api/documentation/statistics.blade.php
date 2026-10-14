@@ -19,7 +19,7 @@ JSON parameters:
 * `from` **required**, string the sender of the message
 * `sent_at` **required**, string, format ISO8601, when the message was actually sent
 * `encrypted` **required**, boolean
-* `conference_id` string
+* `conference_id` string **Not used yet**
 
 ### `PATCH /statistics/messages/{message_id}/to/{to}/devices/{device_id}`
 <span class="badge badge-warning">Admin</span>
@@ -43,7 +43,7 @@ JSON parameters:
 * `to` **required**, string the destination of the call
 * `initiated_at` **required**, string, format ISO8601, when the call was started
 * `ended_at` string, format ISO8601, when the call finished
-* `conference_id` string
+* `conference_id` string **Not used yet**
 
 ### `PATCH /statistics/calls/{call_id}/devices/{device_id}`
 <span class="badge badge-warning">Admin</span>

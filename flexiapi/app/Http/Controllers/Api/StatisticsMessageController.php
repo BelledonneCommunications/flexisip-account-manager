@@ -35,7 +35,7 @@ class StatisticsMessageController extends Controller
             'from' => 'required|string|max:256',
             'sent_at' => 'required|iso_date',
             'encrypted' => 'required|boolean',
-            'conference_id' => 'string|nullable',
+            //'conference_id' => 'string|nullable',
         ]);
 
         $statisticsMessage = new StatisticsMessage;
