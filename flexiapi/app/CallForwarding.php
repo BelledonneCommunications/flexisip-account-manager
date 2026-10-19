@@ -13,6 +13,17 @@ class CallForwarding extends Model
     protected $hidden = ['account_id'];
     protected $appends = ['contact_sip_uri', 'sip_sip_uri'];
 
+    protected static function booted()
+    {
+        static::saving(function ($forwarding) {
+            if (!$forwarding->voicemail_account_id
+                && !$forwarding->sip_account_id
+                && !$forwarding->contact_account_id) {
+                throw new \RuntimeException('A call forwarding must have a target');
+            }
+        });
+    }
+
     public function account()
     {
         return $this->belongsTo(Account::class);

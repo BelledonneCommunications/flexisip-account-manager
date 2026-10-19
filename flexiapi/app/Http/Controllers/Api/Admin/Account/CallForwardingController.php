@@ -29,6 +29,7 @@ class CallForwardingController extends Controller
             'voicemail' => ['boolean', 'missing_with:sip_account_id,contact_account_id', 'missing_if:type,no_answer'],
             'sip_account_id' => [
                 'missing_with:voicemail,contact_account_id',
+                'not_in:' . $account->id,
                 Rule::exists('accounts', 'id')->where(function ($query) use ($account) {
                     $query->where('domain', $account->domain);
                 }),
@@ -55,6 +56,12 @@ class CallForwardingController extends Controller
             }
         }
 
+        if ($callForwarding->voicemail_account_id == null
+            && $callForwarding->sip_account_id == null
+            && $callForwarding->contact_account_id == null) {
+            abort(422, 'A call forwarding must have a target');
+        }
+
         $callForwarding->save();
 
         return $callForwarding;
@@ -77,6 +84,7 @@ class CallForwardingController extends Controller
             'voicemail' => ['boolean', 'missing_with:sip_account_id,contact_account_id', 'missing_if:type,no_answer'],
             'sip_account_id' => [
                 'missing_with:voicemail,contact_account_id',
+                'not_in:' . $account->id,
                 Rule::exists('accounts', 'id')->where(function ($query) use ($account) {
                     $query->where('domain', $account->domain);
                 }),
@@ -103,6 +111,12 @@ class CallForwardingController extends Controller
             } else {
                 abort(422, 'The voicemail is not configured in the Space');
             }
+        }
+
+        if ($callForwarding->voicemail_account_id == null
+            && $callForwarding->sip_account_id == null
+            && $callForwarding->contact_account_id == null) {
+            abort(422, 'A call forwarding must have a target');
         }
 
         $callForwarding->save();

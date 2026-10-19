@@ -31,6 +31,9 @@ use Awobaz\Compoships\Compoships;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use stdClass;
 
+/**
+ * @method static \Database\Factories\AccountFactory factory($count = null, $state = [])
+ */
 class Account extends Authenticatable
 {
     use HasFactory;
