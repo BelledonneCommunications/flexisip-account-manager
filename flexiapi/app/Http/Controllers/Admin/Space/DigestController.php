@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Space;
 
-use App\PasswordAlgorithm;
+use App\Enums\PasswordAlgorithm;
 use App\Rules\Domain;
 use App\Space;
 use App\Http\Controllers\Controller;

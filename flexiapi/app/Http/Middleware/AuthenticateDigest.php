@@ -21,8 +21,8 @@
 namespace App\Http\Middleware;
 
 use App\Account;
+use App\Enums\PasswordAlgorithm;
 use App\Opaque;
-use App\PasswordAlgorithm;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;

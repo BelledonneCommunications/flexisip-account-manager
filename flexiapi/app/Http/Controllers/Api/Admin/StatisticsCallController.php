@@ -22,7 +22,6 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Account;
 use App\Http\Controllers\Controller;
-use App\InviteTerminatedState;
 use App\StatisticsCall;
 use App\StatisticsCallDevice;
 use Illuminate\Http\Request;
@@ -55,16 +54,16 @@ class StatisticsCallController extends Controller
             'to' => 'required|string|max:256',
             'initiated_at' => 'required|iso_date',
             'ended_at' => 'iso_date|nullable',
-            'conference_id' => 'string|nullable',
+            //'conference_id' => 'string|nullable',
         ]);
 
         $statisticsCall = new StatisticsCall;
-        $statisticsCall->id = $request->get('id');
-        list($statisticsCall->from_username, $statisticsCall->from_domain) = explode('@', $request->get('from'));
-        list($statisticsCall->to_username, $statisticsCall->to_domain) = explode('@', $request->get('to'));
-        $statisticsCall->initiated_at = $request->get('initiated_at');
-        $statisticsCall->ended_at = $request->get('ended_at');
-        //$statisticsCall->conference_id = $request->get('conference_id');
+        $statisticsCall->id = $request->input('id');
+        list($statisticsCall->from_username, $statisticsCall->from_domain) = explode('@', $request->input('from'));
+        list($statisticsCall->to_username, $statisticsCall->to_domain) = explode('@', $request->input('to'));
+        $statisticsCall->initiated_at = $request->input('initiated_at');
+        $statisticsCall->ended_at = $request->input('ended_at');
+        //$statisticsCall->conference_id = $request->input('conference_id');
 
         try {
             return $statisticsCall->saveOrFail();
@@ -79,7 +78,7 @@ class StatisticsCallController extends Controller
         $request->validate([
             'rang_at' => 'iso_date',
             'invite_terminated.at' => 'required_with:invite_terminated.state,iso_date',
-            'invite_terminated.state' => ['required_with:invite_terminated.at', new Enum(InviteTerminatedState::class)],
+            'invite_terminated.state' => ['required_with:invite_terminated.at', new Enum(\App\Enums\InviteTerminatedState::class)],
         ]);
 
         $data = [
@@ -109,7 +108,7 @@ class StatisticsCallController extends Controller
         ]);
 
         $statisticsCall = StatisticsCall::where('id', $callId)->firstOrFail();
-        $statisticsCall->ended_at = $request->get('ended_at');
+        $statisticsCall->ended_at = $request->input('ended_at');
         $statisticsCall->save();
 
         return $statisticsCall;

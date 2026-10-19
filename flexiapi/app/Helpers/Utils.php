@@ -19,8 +19,8 @@
 */
 
 use App\Account;
+use App\Enums\PasswordAlgorithm;
 use App\Space;
-use App\PasswordAlgorithm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;

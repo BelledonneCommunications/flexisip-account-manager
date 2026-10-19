@@ -20,6 +20,7 @@
 
 namespace App;
 
+use App\Enums\InviteTerminatedState;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Awobaz\Compoships\Compoships;

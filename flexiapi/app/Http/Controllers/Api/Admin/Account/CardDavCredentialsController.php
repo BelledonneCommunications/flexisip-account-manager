@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Admin\Account;
 
 use App\Http\Controllers\Controller;
-use App\PasswordAlgorithm;
+use App\Enums\PasswordAlgorithm;
 use Illuminate\Http\Request;
 use App\AccountCardDavCredentials;
 use App\SpaceCardDavServer;

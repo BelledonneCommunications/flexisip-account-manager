@@ -28,7 +28,7 @@
         </div>
         <div class="select">
             <select name="default_password_algorithm">
-                @foreach (App\PasswordAlgorithm::cases() as $algorithm)
+                @foreach (App\Enums\PasswordAlgorithm::cases() as $algorithm)
                     <option value="{{ $algorithm }}" @selected($algorithm == $digestAuthenticationConfiguration->default_password_algorithm)>
                         {{ $algorithm }}
                     </option>

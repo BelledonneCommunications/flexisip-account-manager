@@ -35,15 +35,15 @@ class StatisticsMessageController extends Controller
             'from' => 'required|string|max:256',
             'sent_at' => 'required|iso_date',
             'encrypted' => 'required|boolean',
-            'conference_id' => 'string|nullable',
+            //'conference_id' => 'string|nullable',
         ]);
 
         $statisticsMessage = new StatisticsMessage;
-        $statisticsMessage->id = $request->get('id');
-        list($statisticsMessage->from_username, $statisticsMessage->from_domain) = explode('@', $request->get('from'));
-        $statisticsMessage->sent_at = $request->get('sent_at');
-        $statisticsMessage->encrypted = $request->get('encrypted');
-        //$statisticsMessage->conference_id = $request->get('conference_id');
+        $statisticsMessage->id = $request->input('id');
+        list($statisticsMessage->from_username, $statisticsMessage->from_domain) = explode('@', $request->input('from'));
+        $statisticsMessage->sent_at = $request->input('sent_at');
+        $statisticsMessage->encrypted = $request->input('encrypted');
+        //$statisticsMessage->conference_id = $request->input('conference_id');
 
         try {
             return $statisticsMessage->saveOrFail();
@@ -66,7 +66,7 @@ class StatisticsMessageController extends Controller
         try {
             return StatisticsMessageDevice::updateOrCreate(
                 ['message_id' => $messageId, 'to_username' => $toUsername, 'to_domain' => $toDomain, 'device_id' => $deviceId],
-                ['last_status' => $request->get('last_status'), 'received_at' => $request->get('received_at')]
+                ['last_status' => $request->input('last_status'), 'received_at' => $request->input('received_at')]
             );
         } catch (\Exception $e) {
             Log::channel('database_errors')->error($e->getMessage());
