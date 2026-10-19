@@ -12,6 +12,7 @@ class SipUriFromTheSpace implements ValidationRule
     {
         if (!is_string($value) || !isSip($value)) {
             $fail('This field must be a valid SIP URI.')->translate();
+            return;
         }
 
         if (!Account::sip($value)->exists()) {
