@@ -9,8 +9,8 @@ class CallForwarding extends Model
     protected $casts = [
         'enabled' => 'boolean'
     ];
-    protected $fillable = ['enabled', 'account_id', 'type', 'forward_to', 'sip_uri'];
-    protected $hidden = ['account_id'];
+    protected $fillable = ['enabled', 'account_id', 'type', 'contact_account_id', 'sip_account_id', 'voicemail_account_id'];
+    protected $hidden = ['account_id', 'contactAccount', 'sipAccount'];
     protected $appends = ['contact_sip_uri', 'sip_sip_uri'];
 
     protected static function booted()
