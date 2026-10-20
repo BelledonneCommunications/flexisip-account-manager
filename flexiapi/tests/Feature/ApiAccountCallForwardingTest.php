@@ -135,6 +135,10 @@ class ApiAccountCallForwardingTest extends TestCase
             ->assertCreated();
 
         $this->keyAuthenticated($account)
+            ->get($this->route)
+            ->assertJsonFragment(['sip_uri' => $voicemail->sip_uri]);
+
+        $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
                 'type' => 'no_answer',
                 'voicemail' => true,
@@ -227,7 +231,7 @@ class ApiAccountCallForwardingTest extends TestCase
 
         $this->keyAuthenticated($account)
             ->get($this->route)
-            ->assertJsonFragment(['contact_sip_uri' => $contactAccount->sip_uri]);
+            ->assertJsonFragment(['sip_uri' => $contactAccount->sip_uri]);
     }
 
     public function testCrudSipUri()
@@ -282,6 +286,10 @@ class ApiAccountCallForwardingTest extends TestCase
                 'enabled' => true
             ])
             ->assertCreated();
+
+        $this->keyAuthenticated($account)
+            ->get($this->route)
+            ->assertJsonFragment(['sip_uri' => $admin->sip_uri]);
 
         $this->keyAuthenticated($account)
             ->json('PUT', $this->route . '/' . $response->json()['id'], [

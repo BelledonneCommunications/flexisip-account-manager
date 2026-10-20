@@ -210,8 +210,6 @@
                     <div class="meta">
                         @if ($forwarding->forward_to === 'voicemail')
                             {{ __('Voicemails')}}
-                        @elseif ($forwarding->forward_to === 'contact')
-                            {{ $forwarding->contact_sip_uri }}
                         @else
                             {{ $forwarding->sip_uri }}
                         @endif

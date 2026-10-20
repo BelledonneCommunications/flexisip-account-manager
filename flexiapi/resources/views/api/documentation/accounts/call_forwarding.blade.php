@@ -1,6 +1,6 @@
 ## Account Call Forwardings
 
-When a `call_forwarding` object is configured to forward to a contact (`contact_account_id: 1234`) the SIP URI of the contact is returned in a `contact_sip_uri` attribute, and when it is configured to forward to an account of the Space (`sip_account_id: 1234`) the SIP URI of the account is returned in a `sip_sip_uri` attribute.
+When a `call_forwarding` object is configured, the SIP URI of the target is returned in a `sip_uri` attribute: the SIP URI of the contact (`contact_account_id`), of the account of the Space (`sip_account_id`) or of the voicemail account of the Space (`voicemail_account_id`).
 
 ```
 {
@@ -10,8 +10,7 @@ When a `call_forwarding` object is configured to forward to a contact (`contact_
   "sip_account_id": null,
   "voicemail_account_id": null,
   "contact_account_id": 3,
-  "contact_sip_uri": "sip:mcclure.kailey@sip.example.com",
-  "sip_sip_uri": null,
+  "sip_uri": "sip:mcclure.kailey@sip.example.com",
   "updated_at": "2026-03-12T14:53:22.000000Z",
   "created_at": "2026-03-12T14:53:22.000000Z"
 }

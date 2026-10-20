@@ -10,8 +10,8 @@ class CallForwarding extends Model
         'enabled' => 'boolean'
     ];
     protected $fillable = ['enabled', 'account_id', 'type', 'contact_account_id', 'sip_account_id', 'voicemail_account_id'];
-    protected $hidden = ['account_id', 'contactAccount', 'sipAccount'];
-    protected $appends = ['contact_sip_uri', 'sip_sip_uri'];
+    protected $hidden = ['account_id', 'contactAccount', 'sipAccount', 'voicemailAccount'];
+    protected $appends = ['sip_uri'];
 
     protected static function booted()
     {
@@ -37,6 +37,11 @@ class CallForwarding extends Model
     public function sipAccount()
     {
         return $this->hasOne(Account::class, 'id', 'sip_account_id');
+    }
+
+    public function voicemailAccount()
+    {
+        return $this->hasOne(Account::class, 'id', 'voicemail_account_id');
     }
 
     public function getForwardToAttribute(): string
@@ -68,17 +73,16 @@ class CallForwarding extends Model
         return 'sip_uri';
     }
 
-    public function getContactSipUriAttribute(): ?string
+    public function getSipUriAttribute(): ?string
     {
+        if ($this->voicemailAccount) {
+            return $this->voicemailAccount->sip_uri;
+        }
+
         if ($this->contactAccount) {
             return $this->contactAccount->sip_uri;
         }
 
-        return null;
-    }
-
-    public function getSipSipUriAttribute(): ?string
-    {
         if ($this->sipAccount) {
             return $this->sipAccount->sip_uri;
         }
