@@ -7,13 +7,14 @@
     @method('put')
     @php($callForwardings = $account->callForwardingsDefault)
     @php($contacts = resolveUserContacts($account)->get())
+    @php($status = old('status') ?? ($callForwardings['always']->enabled ? 'always' : ($callForwardings['no_answer']->enabled ? 'no_answer' : 'disabled')))
 
     <section class="block">
         <div>
             <h4>{{ __('Disabled') }}</h4>
         </div>
         <div class="radio">
-            <input name="status" value="disabled" type="radio" checked>
+            <input name="status" value="disabled" type="radio" @if ($status == 'disabled') checked @endif>
         </div>
     </section>
 
@@ -28,7 +29,7 @@
         </div>
 
         <div class="radio">
-            <input name="status" value="always" type="radio" @if (old('status') == 'always' || $callForwardings['always']->enabled) checked @endif>
+            <input name="status" value="always" type="radio" @if ($status == 'always') checked @endif>
         </div>
 
         <div class="select" data-value="{{ $callForwardings['always']->forward_to ?? 'sip_uri' }}">
@@ -65,7 +66,7 @@
         </div>
 
         <div class="radio">
-            <input name="status" value="no_answer" type="radio" @if (old('status') == 'no_answer' || $callForwardings['no_answer']->enabled)checked @endif>
+            <input name="status" value="no_answer" type="radio" @if ($status == 'no_answer') checked @endif>
         </div>
 
         <div class="select" data-value="{{ $callForwardings['no_answer']->forward_to ?? 'sip_uri' }}">
