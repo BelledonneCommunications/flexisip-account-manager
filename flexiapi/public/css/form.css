@@ -249,8 +249,13 @@ form div select {
 }
 
 form div select:has(option:only-child) {
-    opacity: 0.5;
+    background-color: color-mix(in srgb, var(--grey-1) 50%, transparent);
+    border-color: color-mix(in srgb, var(--grey-2) 50%, transparent);
     pointer-events: none;
+}
+
+form div.select:has(option:only-child):after {
+    opacity: 0.5;
 }
 
 form div.search:after,
@@ -554,7 +559,6 @@ div.select[data-value]~div.togglable {
 }
 
 div.select[data-value=voicemail]~div.togglable.voicemail,
-div.select[data-value=contact]~div.togglable.contact,
 div.select[data-value=sip_uri]~div.togglable.sip_uri {
     display: block;
 }
@@ -562,4 +566,90 @@ div.select[data-value=sip_uri]~div.togglable.sip_uri {
 form section.block div.radio:has(input:not(:checked))~div {
     opacity: 0.25;
     pointer-events: none;
+}
+
+/* Call forwarding contacts picker */
+
+form .togglable.sip_uri .sip_uri_field {
+    position: relative;
+}
+
+form .togglable.sip_uri input {
+    padding-right: 6rem;
+}
+
+form .togglable.sip_uri .contacts_picker_button {
+    position: absolute;
+    top: 2.5rem;
+    bottom: 0;
+    right: 0;
+    width: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 0 3rem 3rem 0;
+    background-color: var(--grey-2);
+    padding: 0;
+    cursor: pointer;
+}
+
+form .togglable.sip_uri .contacts_picker_button i {
+    color: var(--second-6);
+    font-size: 2rem;
+}
+
+form .togglable.sip_uri .contacts_picker_button:hover,
+form .togglable.sip_uri .contacts_picker_button:focus-visible {
+    background-color: var(--grey-3);
+}
+
+form .togglable.sip_uri .contacts_picker {
+    display: none;
+    position: absolute;
+    top: calc(100% + 1rem);
+    right: 0;
+    z-index: 10;
+    min-width: 25rem;
+    max-height: 25rem;
+    overflow: auto;
+    padding: 0.5rem;
+    background-color: var(--grey-1);
+    border: 1px solid var(--grey-2);
+    border-radius: 1rem;
+}
+
+form .togglable.sip_uri .contacts_picker .empty {
+    padding: 1rem;
+    font-size: 1.5rem;
+    color: var(--grey-4);
+}
+
+form .togglable.sip_uri .contacts_picker.open {
+    display: block;
+}
+
+form .togglable.sip_uri .contacts_picker button {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 1rem;
+    background: none;
+    text-align: left;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+form .togglable.sip_uri .contacts_picker button:hover {
+    background-color: var(--grey-2);
+}
+
+form .togglable.sip_uri .contacts_picker button span {
+    font-weight: 700;
+}
+
+form .togglable.sip_uri .contacts_picker button small {
+    display: block;
+    opacity: 0.6;
 }

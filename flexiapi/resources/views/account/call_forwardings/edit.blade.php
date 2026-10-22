@@ -36,25 +36,13 @@
             <select name="always[forward_to]" onchange="this.parentNode.dataset.value = this.value">
                 <option @if ($callForwardings['always']->forward_to == 'sip_uri') selected @endif value="sip_uri">{{ __('SIP Adress') }}</option>
                 <option @if ($callForwardings['always']->forward_to == 'voicemail') selected @endif value="voicemail" @if(!$account->space->voicemailAccount) disabled @endif>{{ __('Voicemails') }}</option>
-                <option @if ($callForwardings['always']->forward_to == 'contact') selected @endif @if($contacts->isEmpty()) disabled @endif value="contact">{{ __('Contact') }}</option>
             </select>
             <label for="always[forward_to]">{{ __('Destination') }}</label>
         </div>
         <div class="togglable sip_uri">
-            <input placeholder="sip:username@server.com" name="always[sip_uri]" type="text" id="always[sip_uri]" value="{{ old('always.sip_uri') ?? $callForwardings['always']->sipAccount?->sip_uri }}">
-            <label for="sip">{{ __('SIP Adress') }}</label>
-            @include('parts.errors', ['name' => 'always.sip_uri'])
+            @include('account.call_forwardings.sip_uri_field', ['type' => 'always'])
         </div>
         <div class="togglable voicemail"></div>
-        <div class="select togglable contact">
-            <select name="always[contact_account_id]">
-                @foreach ($contacts as $contact)
-                    <option @if ($callForwardings['always']->contact_account_id == $contact->id) selected @endif value="{{ $contact->id }}">sip:{{ $contact->identifier }}</option>
-                @endforeach
-            </select>
-            <label for="contact">{{ __('Contact') }}</label>
-            @include('parts.errors', ['name' => 'always.contact_account_id'])
-        </div>
     </section>
 
     <section class="block">
@@ -71,24 +59,12 @@
 
         <div class="select" data-value="{{ $callForwardings['no_answer']->forward_to ?? 'sip_uri' }}">
             <select name="no_answer[forward_to]" onchange="this.parentNode.dataset.value = this.value">
-                <option @if ($callForwardings['no_answer']->forward_to == null || $callForwardings['no_answer']->forward_to == 'sip_uri') selected @endif value="sip_uri">{{ __('SIP Adress') }}</option>
-                <option @if ($callForwardings['no_answer']->forward_to == 'contact') selected @endif @if($contacts->isEmpty()) disabled @endif value="contact">{{ __('Contact') }}</option>
+                <option @if ($callForwardings['no_answer']->forward_to == 'sip_uri') selected @endif value="sip_uri">{{ __('SIP Adress') }}</option>
             </select>
             <label for="no_answer[forward_to]">{{ __('Destination') }}</label>
         </div>
         <div class="togglable sip_uri">
-            <input placeholder="sip:username@server.com" name="no_answer[sip_uri]" type="text" id="no_answer[sip_uri]" value="{{ old('no_answer.sip_uri') ?? $callForwardings['no_answer']->sipAccount?->sip_uri }}">
-            <label for="sip">{{ __('SIP Adress') }}</label>
-            @include('parts.errors', ['name' => 'no_answer.sip_uri'])
-        </div>
-        <div class="select togglable contact">
-            <select name="no_answer[contact_account_id]">
-                @foreach ($contacts as $contact)
-                    <option @if ($callForwardings['no_answer']->contact_account_id == $contact->id) selected @endif value="{{ $contact->id }}">sip:{{ $contact->identifier }}</option>
-                @endforeach
-            </select>
-            <label for="contact">{{ __('Contact') }}</label>
-            @include('parts.errors', ['name' => 'no_answer.contact_account_id'])
+            @include('account.call_forwardings.sip_uri_field', ['type' => 'no_answer'])
         </div>
     </section>
 

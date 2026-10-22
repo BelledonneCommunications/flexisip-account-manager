@@ -154,84 +154,6 @@ class ApiAccountCallForwardingTest extends TestCase
                 'enabled' => true
             ])
             ->assertJsonValidationErrors(['voicemail', 'sip_account_id']);
-
-        $this->keyAuthenticated($account)
-            ->json($this->method, $this->route, [
-                'type' => 'always',
-                'voicemail' => true,
-                'contact_account_id' => $admin->id,
-                'enabled' => true
-            ])
-            ->assertJsonValidationErrors(['voicemail', 'contact_account_id']);
-    }
-
-    public function testCrudContacts()
-    {
-        $account = Account::factory()->create();
-        $account->generateUserApiKey();
-
-        $admin = Account::factory()->admin()->create();
-        $admin->generateUserApiKey();
-
-        $voicemail = Account::factory()->create();
-        $account->space->voicemail_account_id = $voicemail->id;
-        $account->space->save();
-
-        $voicemailResponse = $this->keyAuthenticated($account)
-            ->json($this->method, $this->route, [
-                'type' => 'always',
-                'voicemail' => true,
-                'enabled' => true
-            ])
-            ->assertCreated();
-
-        // Contacts
-
-        $contactAccount = Account::factory()->create();
-
-        $this->keyAuthenticated($account)
-            ->json($this->method, $this->route, [
-                'type' => 'always',
-                'contact_account_id' => 123,
-                'enabled' => true
-            ])
-            ->assertJsonValidationErrors(['contact_account_id']);
-
-        $this->keyAuthenticated($account)
-            ->json($this->method, $this->route, [
-                'type' => 'always',
-                'contact_account_id' => $contactAccount->id,
-                'enabled' => true
-            ])
-            ->assertJsonValidationErrors(['contact_account_id']);
-
-        $this->keyAuthenticated($admin)
-            ->json($this->method, '/api/accounts/' . $account->id . '/contacts/' . $contactAccount->id)
-            ->assertOk();
-
-        $this->keyAuthenticated($account)
-            ->json($this->method, $this->route, [
-                'type' => 'always',
-                'contact_account_id' => $contactAccount->id,
-                'enabled' => true
-            ])
-            ->assertJsonValidationErrorFor('type');
-
-        $this->keyAuthenticated($account)
-            ->json('DELETE', $this->route . '/' . $voicemailResponse['id'])
-            ->assertOk();
-
-        $this->keyAuthenticated($account)
-            ->json($this->method, $this->route, [
-                'type' => 'always',
-                'contact_account_id' => $contactAccount->id,
-                'enabled' => true
-            ])
-            ->assertCreated();
-
-        $this->keyAuthenticated($account)
-            ->get($this->route)
-            ->assertJsonFragment(['sip_uri' => $contactAccount->sip_uri]);
     }
 
     public function testCrudSipUri()
@@ -269,15 +191,6 @@ class ApiAccountCallForwardingTest extends TestCase
                 'enabled' => true
             ])
             ->assertJsonValidationErrors(['sip_account_id']);
-
-        $this->keyAuthenticated($account)
-            ->json($this->method, $this->route, [
-                'type' => 'always',
-                'sip_account_id' => $admin->id,
-                'contact_account_id' => $admin->id,
-                'enabled' => true
-            ])
-            ->assertJsonValidationErrors(['sip_account_id', 'contact_account_id']);
 
         $response = $this->keyAuthenticated($account)
             ->json($this->method, $this->route, [
