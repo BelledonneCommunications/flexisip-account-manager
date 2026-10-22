@@ -26,17 +26,13 @@ class CallForwardingController extends Controller
                 Rule::unique('call_forwardings', 'type')->where(fn ($query) => $query->where('account_id', $accountId))
             ],
             'enabled' => ['required', 'boolean', new CallForwardingEnable($request, $account)],
-            'voicemail' => ['boolean', 'missing_with:sip_account_id,contact_account_id', 'missing_if:type,no_answer'],
+            'voicemail' => ['boolean', 'missing_with:sip_account_id', 'missing_if:type,no_answer'],
             'sip_account_id' => [
-                'missing_with:voicemail,contact_account_id',
+                'missing_with:voicemail',
                 'not_in:' . $account->id,
                 Rule::exists('accounts', 'id')->where(function ($query) use ($account) {
                     $query->where('domain', $account->domain);
                 }),
-            ],
-            'contact_account_id' => [
-                'missing_with:voicemail,sip_account_id',
-                Rule::in(resolveUserContacts($account)->pluck('id')->toArray())
             ],
         ]);
 
@@ -45,7 +41,6 @@ class CallForwardingController extends Controller
         $callForwarding->type = $request->input('type');
         $callForwarding->enabled = $request->input('enabled');
 
-        $callForwarding->contact_account_id = $request->input('contact_account_id');
         $callForwarding->sip_account_id = $request->input('sip_account_id');
 
         if ($request->input('voicemail') == true) {
@@ -57,8 +52,7 @@ class CallForwardingController extends Controller
         }
 
         if ($callForwarding->voicemail_account_id == null
-            && $callForwarding->sip_account_id == null
-            && $callForwarding->contact_account_id == null) {
+            && $callForwarding->sip_account_id == null) {
             abort(422, 'A call forwarding must have a target');
         }
 
@@ -81,28 +75,22 @@ class CallForwardingController extends Controller
                     ->ignore($callForwarding->id)
             ],
             'enabled' => ['required', 'boolean', new CallForwardingEnable($request, $account)],
-            'voicemail' => ['boolean', 'missing_with:sip_account_id,contact_account_id', 'missing_if:type,no_answer'],
+            'voicemail' => ['boolean', 'missing_with:sip_account_id', 'missing_if:type,no_answer'],
             'sip_account_id' => [
-                'missing_with:voicemail,contact_account_id',
+                'missing_with:voicemail',
                 'not_in:' . $account->id,
                 Rule::exists('accounts', 'id')->where(function ($query) use ($account) {
                     $query->where('domain', $account->domain);
                 }),
             ],
-            'contact_account_id' => [
-                'missing_with:voicemail,sip_account_id',
-                Rule::in(resolveUserContacts($account)->pluck('id')->toArray())
-            ],
         ]);
 
-        $callForwarding->contact_account_id
-            = $callForwarding->sip_account_id
+        $callForwarding->sip_account_id
             = $callForwarding->voicemail_account_id
             = null;
 
         $callForwarding->enabled = $request->input('enabled');
 
-        $callForwarding->contact_account_id = $request->input('contact_account_id');
         $callForwarding->sip_account_id = $request->input('sip_account_id');
 
         if ($request->input('voicemail') == true) {
@@ -114,8 +102,7 @@ class CallForwardingController extends Controller
         }
 
         if ($callForwarding->voicemail_account_id == null
-            && $callForwarding->sip_account_id == null
-            && $callForwarding->contact_account_id == null) {
+            && $callForwarding->sip_account_id == null) {
             abort(422, 'A call forwarding must have a target');
         }
 

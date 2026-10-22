@@ -86,6 +86,8 @@
             </section>
         @endif
     </content>
+
+    @stack('scripts')
 </body>
 
 </html>
