@@ -42,7 +42,7 @@ class CallForwardingController extends Controller
             $alwaysForwarding->enabled = true;
             $alwaysForwarding->account_id = $account->id;
             $alwaysForwarding->type = 'always';
-            $alwaysForwarding->sip_account_id = $request->input('always')['forward_to'] == 'sip_uri' && $request->input('always')['sip_uri']
+            $alwaysForwarding->sip_account_id = $request->input('always')['forward_to'] == 'sip_uri'
                 ? Account::sip($request->input('always')['sip_uri'])->first()->id
                 : null;
             $alwaysForwarding->voicemail_account_id = $request->input('always')['forward_to'] == 'voicemail'
