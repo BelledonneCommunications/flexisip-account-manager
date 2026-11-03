@@ -26,6 +26,7 @@
         "concat_space": {
             "spacing": "one"
         },
+        "nullable_type_declaration_for_default_null_value": true,
         "new_with_parentheses": {
             "anonymous_class": false,
             "named_class": false

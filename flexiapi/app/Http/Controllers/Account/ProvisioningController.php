@@ -60,14 +60,14 @@ class ProvisioningController extends Controller
 
         $url = route('provisioning.provision', $params);
 
-        $result = Builder::create()
-            ->writer(new PngWriter)
-            ->data($url)
-            ->encoding(new Encoding('UTF-8'))
-            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
-            ->size(300)
-            ->margin(10)
-            ->build();
+        $result = (new Builder(
+            writer: new PngWriter,
+            data: $url,
+            encoding: new Encoding('UTF-8'),
+            errorCorrectionLevel: ErrorCorrectionLevel::High,
+            size: 300,
+            margin: 10
+        ))->build();
 
         return response($result->getString())
             ->header('Content-Type', $result->getMimeType())
@@ -149,7 +149,7 @@ class ProvisioningController extends Controller
         }
     }
 
-    private function generateProvisioning(Request $request, Account $account = null)
+    private function generateProvisioning(Request $request, ?Account $account = null)
     {
         // Load the hooks if they exists
         $provisioningHooks = config_path('provisioning_hooks.php');
