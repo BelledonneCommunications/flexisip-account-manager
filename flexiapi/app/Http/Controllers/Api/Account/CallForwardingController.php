@@ -8,32 +8,28 @@ use Illuminate\Http\Request;
 
 class CallForwardingController extends Controller
 {
-    public function __construct(private AdminCallForwardingController $adminCallForwardingController)
-    {
-    }
-
     public function index(Request $request)
     {
-        return $this->adminCallForwardingController->index($request, $request->user()->id);
+        return (new AdminCallForwardingController)->index($request, $request->user()->id);
     }
 
     public function store(Request $request)
     {
-        return $this->adminCallForwardingController->store($request, $request->user()->id);
+        return (new AdminCallForwardingController)->store($request, $request->user()->id);
     }
 
     public function update(Request $request, $id)
     {
-        return $this->adminCallForwardingController->update($request, $request->user()->id, $id);
+        return (new AdminCallForwardingController)->update($request, $request->user()->id, $id);
     }
 
     public function show(Request $request, string $id)
     {
-        return $this->adminCallForwardingController->show($request, $request->user()->id, $id);
+        return (new AdminCallForwardingController)->show($request, $request->user()->id, $id);
     }
 
     public function destroy(Request $request, string $id)
     {
-        return $this->adminCallForwardingController->destroy($request, $request->user()->id, $id);
+        return (new AdminCallForwardingController)->destroy($request, $request->user()->id, $id);
     }
 }

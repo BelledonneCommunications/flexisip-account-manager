@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        // The former forwardings rely on types (busy) and targets (external
-        // SIP URIs, plain contacts) that no longer exist in the reworked
-        // feature, drop them all
         DB::table('call_forwardings')->delete();
 
         Schema::table('call_forwardings', function (Blueprint $table) {
@@ -32,8 +29,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        // The forwardings created with the reworked feature cannot fit
-        // in the former schema, drop them as well
         DB::table('call_forwardings')->delete();
 
         Schema::table('call_forwardings', function (Blueprint $table) {

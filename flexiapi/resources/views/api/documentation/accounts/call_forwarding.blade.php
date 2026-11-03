@@ -36,9 +36,8 @@ Create a new Call Forwarding configuration.
 JSON parameters:
 
 * `type` **required**, must be `always` or `no_answer` one of each declaration maximum per Account
-* `sip_account_id` must be a valid `account_id` of the Space, `voicemail` must be null, cannot designate the account itself
-* `voicemail` boolean, `sip_account_id` must be null, cannot be `true` if `type: 'no_answer'`
-* one of `voicemail` or `sip_account_id` is **required**: a call forwarding must have a target
+* `sip_account_id` must be a valid `account_id` of the Space, **required if** `voicemail`, cannot point to the user account
+* `voicemail` boolean, **required if** `sip_account_id` null, cannot be `true` if `type: 'no_answer'`
 * `enabled` **required**, boolean. If `type: always` is enabled `no_answer` must be disabled. If `type: no_answer` is enabled `always` must be disabled.
 
 ### `PUT /accounts/{id/me}/call_forwardings/{call_forwarding_id}`
@@ -50,9 +49,8 @@ Update a Call Forwarding configuration.
 JSON parameters:
 
 * `type` **required**, must be `always` or `no_answer` one of each declaration maximum per Account
-* `sip_account_id` must be a valid `account_id` of the Space, `voicemail` must be null, cannot designate the account itself
-* `voicemail` boolean, `sip_account_id` must be null, cannot be `true` if `type: 'no_answer'`
-* one of `voicemail` or `sip_account_id` is **required**: a call forwarding must have a target
+* `sip_account_id` must be a valid `account_id` of the Space, **required if** `voicemail`, cannot point to the user account
+* `voicemail` boolean, **required if** `sip_account_id` null, cannot be `true` if `type: 'no_answer'`
 * `enabled` **required**, boolean. If `type: always` is enabled `no_answer` must be disabled. If `type: no_answer` is enabled `always` must be disabled.
 
 ### `DELETE /accounts/{id/me}/call_forwardings/{call_forwarding_id}`

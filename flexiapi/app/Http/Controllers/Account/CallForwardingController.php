@@ -8,12 +8,8 @@ use App\Http\Controllers\Admin\Account\CallForwardingController as AdminCallForw
 
 class CallForwardingController extends Controller
 {
-    public function __construct(private AdminCallForwardingController $adminCallForwardingController)
-    {
-    }
-
     public function update(Request $request)
     {
-        return $this->adminCallForwardingController->update($request, $request->user()->id);
+        return (new AdminCallForwardingController)->update($request, $request->user()->id);
     }
 }

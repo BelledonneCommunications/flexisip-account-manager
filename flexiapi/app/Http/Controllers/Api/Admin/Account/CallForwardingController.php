@@ -77,29 +77,10 @@ class CallForwardingController extends Controller
     private function save(Request $request, Account $account, CallForwarding $callForwarding): CallForwarding
     {
         $callForwarding->enabled = $request->input('enabled');
-
-        $this->applyTargets(
-            $callForwarding,
-            $account,
-            $request->input('sip_account_id'),
-            (bool) $request->input('voicemail')
-        );
-
-        $callForwarding->save();
-
-        return $callForwarding;
-    }
-
-    /**
-     * Apply the target of a call forwarding: exactly one of a SIP account
-     * of the Space or the voicemail account of the Space.
-     */
-    private function applyTargets(CallForwarding $callForwarding, Account $account, ?int $sipAccountId, bool $voicemail): void
-    {
-        $callForwarding->sip_account_id = $sipAccountId;
+        $callForwarding->sip_account_id = $request->input('sip_account_id');
         $callForwarding->voicemail_account_id = null;
 
-        if ($voicemail) {
+        if ((bool) $request->input('voicemail')) {
             if ($voicemailAccount = $account->space->voicemailAccount) {
                 $callForwarding->voicemail_account_id = $voicemailAccount->id;
             } else {
@@ -111,5 +92,9 @@ class CallForwardingController extends Controller
             && $callForwarding->sip_account_id == null) {
             abort(422, 'A call forwarding must have a target');
         }
+
+        $callForwarding->save();
+
+        return $callForwarding;
     }
 }
