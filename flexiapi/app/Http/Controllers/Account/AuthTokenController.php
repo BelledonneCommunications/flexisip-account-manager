@@ -37,18 +37,16 @@ class AuthTokenController extends Controller
             ->valid()
             ->firstOrFail();
 
-        $result = Builder::create()
-            ->writer(new PngWriter)
-            ->data(
-                $authToken->account_id
+        $result = (new Builder(
+            writer: new PngWriter,
+            data: $authToken->account_id
                 ? route('auth_tokens.auth', ['token' => $authToken->token])
-                : route('account.auth_tokens.auth.external', ['token' => $authToken->token])
-            )
-            ->encoding(new Encoding('UTF-8'))
-            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
-            ->size(300)
-            ->margin(10)
-            ->build();
+                : route('account.auth_tokens.auth.external', ['token' => $authToken->token]),
+            encoding: new Encoding('UTF-8'),
+            errorCorrectionLevel: ErrorCorrectionLevel::High,
+            size: 300,
+            margin: 10
+        ))->build();
 
         return response($result->getString())->header('Content-Type', $result->getMimeType());
     }

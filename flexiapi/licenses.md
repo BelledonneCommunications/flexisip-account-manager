@@ -346,7 +346,7 @@ Licenses Used: Apache-2.0
    limitations under the License.
 
 
-### composer/ca-bundle (Version 1.5.14 | 0c8abba)
+### composer/ca-bundle (Version 1.6.1 | 0c64479)
 Lets you find a path to the system CA bundle, and includes a fallback to the Mozilla CA bundle.
 Homepage: Not configured.
 Licenses Used: MIT
@@ -474,7 +474,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-### doctrine/inflector (Version 2.1.0 | 6d6c962)
+### doctrine/inflector (Version 2.1.1 | 46351b6)
 PHP Doctrine Inflector is a small library that can perform string manipulations with regard to upper/lowercase and singular/plural forms of words.
 Homepage: https://www.doctrine-project.org/projects/inflector.html
 Licenses Used: MIT
@@ -524,7 +524,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-### dragonmantank/cron-expression (Version v3.6.0 | d61a8a9)
+### dragonmantank/cron-expression (Version v3.6.1 | 4189372)
 CRON for PHP: Calculate the next or previous run date and determine if a CRON expression is due
 Homepage: Not configured.
 Licenses Used: MIT
@@ -574,11 +574,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### endroid/qr-code (Version 5.1.0 | 393fec6)
+### endroid/qr-code (Version 6.0.9 | 21e888e)
 Endroid QR Code
 Homepage: https://github.com/endroid/qr-code
 Licenses Used: MIT
-Copyright 2023 (c) Jeroen van den Enden
+Copyright 2025 (c) Jeroen van den Enden
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -740,7 +740,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### giggsey/libphonenumber-for-php-lite (Version 9.0.40 | 314fdac)
+### giggsey/libphonenumber-for-php-lite (Version 9.0.42 | 6b9f5e5)
 A lite version of giggsey/libphonenumber-for-php, which is a PHP Port of Google's libphonenumber
 Homepage: https://github.com/giggsey/libphonenumber-for-php-lite
 Licenses Used: Apache-2.0
@@ -950,7 +950,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### guzzlehttp/guzzle (Version 7.15.5 | ee80339)
+### guzzlehttp/guzzle (Version 7.16.1 | 81755d9)
 Guzzle is a PHP HTTP client library
 Homepage: Not configured.
 Licenses Used: MIT
@@ -983,7 +983,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### guzzlehttp/promises (Version 2.5.3 | cde4999)
+### guzzlehttp/promises (Version 2.6.0 | 3d88c82)
 Guzzle promises library
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1013,7 +1013,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### guzzlehttp/psr7 (Version 2.13.1 | 95e7828)
+### guzzlehttp/psr7 (Version 2.13.2 | adee536)
 PSR-7 message implementation that also provides common utility methods
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1074,7 +1074,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### hisorange/browser-detect (Version 5.0.3 | 6460325)
+### hisorange/browser-detect (Version 5.1.0 | aadef00)
 Browser & Mobile detection package for Laravel.
 Homepage: https://github.com/hisorange/browser-detect
 Licenses Used: MIT
@@ -1088,7 +1088,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-### jaybizzle/crawler-detect (Version v1.4.1 | 770e00e)
+### jaybizzle/crawler-detect (Version v1.4.2 | d4b03a9)
 CrawlerDetect is a PHP class for detecting bots/crawlers/spiders via the user agent
 Homepage: https://github.com/JayBizzle/Crawler-Detect/
 Licenses Used: MIT
@@ -1116,7 +1116,7 @@ SOFTWARE.
 
 
 
-### laravel/framework (Version v12.69.3 | 58ea544)
+### laravel/framework (Version v12.71.0 | 64dc24f)
 The Laravel Framework.
 Homepage: https://laravel.com
 Licenses Used: MIT
@@ -1143,7 +1143,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### laravel/prompts (Version v0.3.25 | 21b7b49)
+### laravel/prompts (Version v0.3.26 | 2d1e9bf)
 Add beautiful and user-friendly forms to your command-line applications.
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1278,7 +1278,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-### lcobucci/jwt (Version 4.3.0 | 4d7de2f)
+### lcobucci/jwt (Version 5.6.1 | 4827600)
 A simple library to work with JSON Web Token and JSON Web Signature
 Homepage: Not configured.
 Licenses Used: BSD-3-Clause
@@ -1311,7 +1311,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-### league/commonmark (Version 2.10.3 | 6efbd9c)
+### league/commonmark (Version 2.10.7 | 8eb53e9)
 Highly-extensible PHP Markdown parser which fully supports the CommonMark spec and GitHub-Flavored Markdown (GFM)
 Homepage: https://commonmark.thephpleague.com
 Licenses Used: BSD-3-Clause
@@ -1535,7 +1535,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-### league/uri (Version 7.8.1 | 08cf38e)
+### league/uri (Version 7.9.1 | 40403f5)
 URI manipulation library
 Homepage: https://uri.thephpleague.com
 Licenses Used: MIT
@@ -1561,7 +1561,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-### league/uri-interfaces (Version 7.8.1 | 85d5c77)
+### league/uri-interfaces (Version 7.9.1 | 994300a)
 Common tools for parsing and resolving RFC3987/RFC3986 URI
 Homepage: https://uri.thephpleague.com
 Licenses Used: MIT
@@ -1869,7 +1869,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### nesbot/carbon (Version 3.14.2 | 94cfc34)
+### nesbot/carbon (Version 3.15.1 | ce0e563)
 An API extension for DateTime that supports 281 different languages.
 Homepage: https://carbonphp.github.io/carbon/
 Licenses Used: MIT
@@ -1894,9 +1894,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### nette/schema (Version v1.3.6 | c543504)
-📐 Nette Schema: validating data structures against a given Schema.
-Homepage: https://nette.org
+### nette/schema (Version v1.4.0 | af9fa8a)
+📐 Nette Schema: validates and normalizes data such as configuration or API input against a schema described in a few readable lines of PHP, with precise error messages.
+Homepage: https://doc.nette.org/schema
 Licenses Used: BSD-3-Clause, GPL-2.0-only, GPL-3.0-only
 Licenses
 ========
@@ -1960,7 +1960,7 @@ you URLs with full text:
 - [GPL version 3](http://www.gnu.org/licenses/gpl-3.0.html)
 
 
-### nette/utils (Version v4.1.5 | b043439)
+### nette/utils (Version v4.1.6 | 6bf2451)
 🛠  Nette Utils: lightweight utilities for string & array manipulation, image handling, safe JSON encoding/decoding, validation, slug or strong password generating etc.
 Homepage: https://nette.org
 Licenses Used: BSD-3-Clause, GPL-2.0-only, GPL-3.0-only
@@ -2507,11 +2507,11 @@ Licenses Used: Apache-2.0
    See the License for the specific language governing permissions and
    limitations under the License.
 
-### phpseclib/phpseclib (Version 3.0.57 | d17e0dd)
+### phpseclib/phpseclib (Version 3.0.58 | 91f3a64)
 PHP Secure Communications Library - Pure-PHP implementations of RSA, AES, SSH2, SFTP, X.509 etc.
 Homepage: http://phpseclib.sourceforge.net
 Licenses Used: MIT
-Copyright (c) 2011-2019 TerraFrost and other contributors
+Copyright (c) 2011-2026 TerraFrost and other contributors
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -3357,7 +3357,7 @@ are permitted provided that the following conditions are met:
     POSSIBILITY OF SUCH DAMAGE.
 
 
-### sabre/vobject (Version 4.6.1 | 63613f6)
+### sabre/vobject (Version 5.0.0 | 2533eb0)
 The VObject library for PHP allows you to easily parse and manipulate iCalendar and vCard objects
 Homepage: http://sabre.io/vobject/
 Licenses Used: BSD-3-Clause
@@ -4037,7 +4037,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-### symfony/clock (Version v7.4.8 | 674fa3b)
+### symfony/clock (Version v7.4.21 | 07437f6)
 Decouples applications from the system clock
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4062,7 +4062,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/console (Version v7.4.20 | d7bca2f)
+### symfony/console (Version v7.4.22 | 8012f84)
 Eases the creation of beautiful and testable command line interfaces
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4087,7 +4087,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/css-selector (Version v7.4.18 | fecf400)
+### symfony/css-selector (Version v7.4.22 | 4cdbb4a)
 Converts CSS selectors to XPath expressions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4137,7 +4137,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/error-handler (Version v7.4.20 | 82239fe)
+### symfony/error-handler (Version v7.4.22 | 545852c)
 Provides tools to manage errors and ease debugging PHP code
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4212,7 +4212,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/finder (Version v7.4.20 | 2dd31e5)
+### symfony/finder (Version v7.4.22 | e13420a)
 Finds files and directories via an intuitive fluent interface
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4237,7 +4237,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/http-foundation (Version v7.4.20 | 9d0761c)
+### symfony/http-foundation (Version v7.4.22 | 63eda1d)
 Defines an object-oriented layer for the HTTP specification
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4262,7 +4262,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/http-kernel (Version v7.4.20 | 392784b)
+### symfony/http-kernel (Version v7.4.22 | 87e727b)
 Provides a structured process for converting a Request into a Response
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4287,7 +4287,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/mailer (Version v7.4.19 | 6f6f244)
+### symfony/mailer (Version v7.4.22 | 1aa1e2e)
 Helps sending emails
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4312,7 +4312,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/mime (Version v7.4.19 | f8ac7d0)
+### symfony/mime (Version v7.4.22 | 94a4c01)
 Allows manipulating MIME messages
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4362,7 +4362,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-intl-grapheme (Version v1.43.0 | 5cac8f4)
+### symfony/polyfill-intl-grapheme (Version v1.43.3 | 5a8f33c)
 Symfony polyfill for intl's grapheme_* functions
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4437,7 +4437,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/polyfill-mbstring (Version v1.43.0 | 4d5d331)
+### symfony/polyfill-mbstring (Version v1.43.3 | 122889e)
 Symfony polyfill for the Mbstring extension
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4562,6 +4562,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
+### symfony/polyfill-time (Version v1.42.0 | ac9f1ed)
+Symfony polyfill for the Time API added to PHP 8.6
+Homepage: https://symfony.com
+Licenses Used: MIT
+Copyright (c) 2026-present Fabien Potencier
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished
+to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+
 ### symfony/polyfill-uuid (Version v1.43.0 | b23ff82)
 Symfony polyfill for uuid functions
 Homepage: https://symfony.com
@@ -4587,7 +4612,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/process (Version v7.4.19 | ed0ae09)
+### symfony/process (Version v7.4.22 | a5a6912)
 Executes commands in sub-processes
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4612,7 +4637,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/routing (Version v7.4.20 | 2bacb72)
+### symfony/routing (Version v7.4.22 | f79ed6f)
 Maps an HTTP request to a set of configuration variables
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4662,7 +4687,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/string (Version v7.4.19 | 02731ce)
+### symfony/string (Version v7.4.22 | 8dff7da)
 Provides an object-oriented API to strings and deals with bytes, UTF-8 code points and grapheme clusters in a unified way
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4687,7 +4712,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/translation (Version v7.4.17 | 2ee1e4a)
+### symfony/translation (Version v7.4.22 | a892cd1)
 Provides tools to internationalize your application
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4737,7 +4762,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/uid (Version v7.4.20 | a96bbdb)
+### symfony/uid (Version v7.4.21 | 3e706a2)
 Provides an object-oriented API to generate and represent UIDs
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4762,7 +4787,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/var-dumper (Version v7.4.18 | e088da5)
+### symfony/var-dumper (Version v7.4.22 | 6e6ff33)
 Provides mechanisms for walking through any arbitrary PHP variable
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4868,7 +4893,7 @@ spyc-0.5, for loading the YAML, is licensed under the MIT license.
 The initial list of generic feature phones & smartphones came from Mobile Web OSP under the MIT license
 The initial list of spiders was taken from Yiibu's profile project under the MIT license.
 
-### vlucas/phpdotenv (Version v5.7.0 | 301c079)
+### vlucas/phpdotenv (Version v5.8.0 | 9614910)
 Loads environment variables from `.env` to `$_ENV` and `$_SERVER` automagically, and optionally to `getenv()`.
 Homepage: Not configured.
 Licenses Used: BSD-3-Clause
