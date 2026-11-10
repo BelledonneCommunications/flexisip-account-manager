@@ -24,7 +24,6 @@ use App\Account;
 use App\Space;
 use Closure;
 use DateTimeImmutable;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
 use Lcobucci\JWT\Encoding\JoseEncoder;
@@ -35,10 +34,11 @@ use Lcobucci\JWT\Signer\Rsa\Sha384;
 use Lcobucci\JWT\Signer\Rsa\Sha512;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Validation\Validator;
+use Illuminate\Auth\Middleware\Authenticate;
 
-class AuthenticateJWT
+class AuthenticateJWT extends Authenticate
 {
-    public function handle(Request $request, Closure $next)
+    public function handle($request, Closure $next, ...$guards)
     {
         if ($request->bearerToken() && $request->space->oidcAuthenticationConfiguration?->public_key) {
             if (!extension_loaded('sodium')) {

@@ -29,10 +29,11 @@ use Illuminate\Http\Request;
 use Closure;
 use Illuminate\Validation\Rules\Enum;
 use Validator;
+use Illuminate\Auth\Middleware\Authenticate;
 
-class AuthenticateDigest
+class AuthenticateDigest extends Authenticate
 {
-    public function handle(Request $request, Closure $next)
+    public function handle($request, Closure $next, ...$guards)
     {
         if ($request->header('x-api-key') || ($request->server('SSL_CLIENT_CERT') || $request->bearerToken()) && Auth::check()) {
             return $next($request);

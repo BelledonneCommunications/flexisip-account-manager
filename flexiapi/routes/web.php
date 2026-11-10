@@ -29,6 +29,7 @@ use App\Http\Controllers\Account\CreationRequestTokenController;
 use App\Http\Controllers\Account\DeviceController;
 use App\Http\Controllers\Account\EmailController;
 use App\Http\Controllers\Account\FileController;
+use App\Http\Controllers\Account\HomeController;
 use App\Http\Controllers\Account\PasswordController;
 use App\Http\Controllers\Account\PhoneController;
 use App\Http\Controllers\Account\ProvisioningController;
@@ -68,7 +69,6 @@ use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Middleware\IsSpaceDigest;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', 'login')->name('account.home');
 Route::get('about', [AboutController::class, 'about'])->name('about');
 Route::get('third-party-components', [AboutController::class, 'thirdPartyComponents'])->name('third_party_components');
 
@@ -76,7 +76,7 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
     Route::get('wizard/documentation', [WizardController::class, 'documentation'])->name('wizard.documentation');
     Route::get('wizard/{token?}', [WizardController::class, 'show'])->name('wizard.show');
 
-    Route::get('login', [AuthenticateController::class, 'login'])->name('account.login');
+    Route::get('login', [AuthenticateController::class, 'login'])->name('login');
     Route::post('authenticate', [AuthenticateController::class, 'authenticate'])->name('account.authenticate');
     Route::get('authenticate/qrcode/{token?}', [AuthenticateController::class, 'loginAuthToken'])->name('account.authenticate.auth_token');
     Route::get('logout', [AuthenticateController::class, 'logout'])->name('account.logout');
@@ -141,6 +141,8 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
     });
 
     Route::name('account.')->middleware(['auth', 'auth.check_blocked'])->group(function () {
+        Route::get('/', [HomeController::class, 'home'])->name('home');
+
         Route::get('blocked', [AccountController::class, 'blocked'])->name('blocked');
 
         Route::prefix('email')->controller(EmailController::class)->group(function () {

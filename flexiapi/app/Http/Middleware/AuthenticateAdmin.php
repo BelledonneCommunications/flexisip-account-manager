@@ -21,16 +21,16 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Auth\Middleware\Authenticate;
 
-class AuthenticateAdmin
+class AuthenticateAdmin extends Authenticate
 {
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, ...$guards)
     {
-        if (!$request->user()) {
-            return redirect()->route('account.login');
-        }
+        $this->authenticate($request, $guards);
 
-        if (!$request->user()->admin
+        if (
+            !$request->user()->admin
             || (!$request->user()->superAdmin && $request->user()->domain != $request->space->domain)
         ) {
             abort(403, 'Unauthorized area');

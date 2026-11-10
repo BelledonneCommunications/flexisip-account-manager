@@ -40,13 +40,7 @@ class AuthenticateController extends Controller
     public function login(Request $request)
     {
         if ($request->user()) {
-            if ($request->user()->superAdmin) {
-                return redirect()->route('admin.spaces.index');
-            } elseif ($request->user()->admin) {
-                return redirect()->route('admin.spaces.me');
-            }
-
-            return redirect()->route('account.dashboard');
+            return redirect()->route('account.home');
         }
 
         return view('account.login', config('app.show_login_counter_temp') ? [
@@ -214,9 +208,9 @@ class AuthenticateController extends Controller
         Auth::logout();
 
         if (!space()->oidcAuthenticationConfiguration) {
-            return redirect()->route('account.login');
+            return redirect()->route('login');
         }
 
-        return redirect(Socialite::driver('keycloak')->getLogoutUrl(route('account.login'), space()->oidcAuthenticationConfiguration->client_id));
+        return redirect(Socialite::driver('keycloak')->getLogoutUrl(route('login'), space()->oidcAuthenticationConfiguration->client_id));
     }
 }

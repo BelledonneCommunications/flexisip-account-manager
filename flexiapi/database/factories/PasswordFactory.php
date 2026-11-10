@@ -28,15 +28,15 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class PasswordFactory extends Factory
 {
     protected $model = Password::class;
+    public const TEST_PASSWORD = 'testtest';
 
     public function definition()
     {
         $account = Account::factory()->create();
-
         return [
             'account_id' => $account->id,
-            'password' => hash('md5', $account->username . ':' . $account->resolvedRealm . ':testtest'),
-            'algorithm' => PasswordAlgorithm::MD5->value,
+            'password' => bchash($account->username, $account->resolvedRealm, self::TEST_PASSWORD, PasswordAlgorithm::MD5),
+            'algorithm' => PasswordAlgorithm::MD5,
         ];
     }
 
@@ -57,7 +57,7 @@ class PasswordFactory extends Factory
             $account = Account::find($attributes['account_id']);
 
             return [
-                'password' => hash('sha256', $account->username . ':' . $account->resolvedRealm . ':testtest'),
+                'password' => bchash($account->username, $account->resolvedRealm, self::TEST_PASSWORD, PasswordAlgorithm::SHA256),
                 'account_id' => $account->id,
                 'algorithm' => PasswordAlgorithm::SHA256->value,
             ];
