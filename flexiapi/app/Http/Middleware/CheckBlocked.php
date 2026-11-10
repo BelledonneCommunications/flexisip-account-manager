@@ -21,11 +21,11 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
+use Illuminate\Auth\Middleware\Authenticate;
 
-class CheckBlocked
+class CheckBlocked extends Authenticate
 {
-    public function handle(Request $request, Closure $next)
+    public function handle($request, Closure $next, ...$guards)
     {
         if ($request->user()->blocked) {
             abort(403, 'Account blocked');

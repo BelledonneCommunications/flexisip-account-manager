@@ -22,14 +22,14 @@ namespace App\Http\Middleware;
 
 use App\ApiKey;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Response;
-use Illuminate\Http\Request;
 use Closure;
+use Illuminate\Auth\Middleware\Authenticate;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
-class AuthenticateKey
+class AuthenticateKey extends Authenticate
 {
-    public function handle(Request $request, Closure $next)
+    public function handle($request, Closure $next, ...$guards)
     {
         if (($request->server('SSL_CLIENT_CERT') || $request->bearerToken()) && Auth::check()) {
             return $next($request);

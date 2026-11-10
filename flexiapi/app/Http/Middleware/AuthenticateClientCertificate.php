@@ -6,12 +6,12 @@ use App\Account;
 use Closure;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Auth\Middleware\Authenticate;
 
-class AuthenticateClientCertificate
+class AuthenticateClientCertificate extends Authenticate
 {
-    public function handle(Request $request, Closure $next): Response
+    public function handle($request, Closure $next, ...$guards): Response
     {
         if ($request->server('SSL_CLIENT_CERT')) {
             if (!space()->client_certificate_authentication) {

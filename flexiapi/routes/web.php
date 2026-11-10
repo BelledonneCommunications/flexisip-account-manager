@@ -76,7 +76,7 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
     Route::get('wizard/documentation', [WizardController::class, 'documentation'])->name('wizard.documentation');
     Route::get('wizard/{token?}', [WizardController::class, 'show'])->name('wizard.show');
 
-    Route::get('login', [AuthenticateController::class, 'login'])->name('account.login');
+    Route::get('login', [AuthenticateController::class, 'login'])->name('login');
     Route::post('authenticate', [AuthenticateController::class, 'authenticate'])->name('account.authenticate');
     Route::get('authenticate/qrcode/{token?}', [AuthenticateController::class, 'loginAuthToken'])->name('account.authenticate.auth_token');
     Route::get('logout', [AuthenticateController::class, 'logout'])->name('account.logout');
