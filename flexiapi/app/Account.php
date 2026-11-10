@@ -31,6 +31,9 @@ use Awobaz\Compoships\Compoships;
 use App\Http\Controllers\Account\AuthenticateController as WebAuthenticateController;
 use stdClass;
 
+/**
+ * @method static \Database\Factories\AccountFactory factory($count = null, $state = [])
+ */
 class Account extends Authenticatable
 {
     use HasFactory;
@@ -84,6 +87,8 @@ class Account extends Authenticatable
 
     public function scopeSip($query, string $sip)
     {
+        $sip = stripSipProtocol($sip);
+
         if (\str_contains($sip, '@')) {
             list($username, $domain) = explode('@', $sip);
 
@@ -152,7 +157,6 @@ class Account extends Authenticatable
         $callForwardings = $this->callForwardings->keyBy('type');
         $resolved['always'] = $callForwardings['always'] ?? new CallForwarding(['type' => 'always']);
         $resolved['no_answer'] = $callForwardings['no_answer'] ?? new CallForwarding(['type' => 'no_answer']);
-        $resolved['busy'] = $callForwardings['busy'] ?? new CallForwarding(['type' => 'busy']);
         return $resolved;
     }
 

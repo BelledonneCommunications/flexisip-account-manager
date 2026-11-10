@@ -117,7 +117,7 @@ form,
 form section {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem 2.5rem;
+    gap: 1.5rem;
 }
 
 form.inline {
@@ -249,8 +249,11 @@ form div select {
 }
 
 form div select:has(option:only-child) {
-    opacity: 0.5;
     pointer-events: none;
+}
+
+form div.select:has(option:only-child):after {
+    opacity: 0.1;
 }
 
 form div.search:after,
@@ -323,6 +326,23 @@ input::-webkit-inner-spin-button {
 
 input[type=checkbox] {
     accent-color: var(--main-5);
+}
+
+form div:has(span.def) {
+    display: flex;
+    gap: 1rem;
+}
+
+form div:has(span.def) input {
+    flex: 1;
+}
+
+form div span.def {
+    flex: 0;
+    font-size: 1.5rem;
+    margin-top: 2.5rem;
+    line-height: 4rem;
+    color: var(--grey-8);
 }
 
 form div input[type=checkbox] {
@@ -531,6 +551,21 @@ div.checkbox>input[type="checkbox"]:checked+label:after {
     right: 0.5rem;
 }
 
+/* Radio */
+
+div.radio {
+    display: flex;
+    align-items: center;
+    justify-self: end;
+}
+
+div.radio input[type="radio"] {
+    margin: 0;
+    float: right;
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
 
 /* Telephony subselect */
 
@@ -539,12 +574,11 @@ div.select[data-value]~div.togglable {
 }
 
 div.select[data-value=voicemail]~div.togglable.voicemail,
-div.select[data-value=contact]~div.togglable.contact,
 div.select[data-value=sip_uri]~div.togglable.sip_uri {
     display: block;
 }
 
-form section.block div.checkbox:has(input:not(:checked))~div {
+form section.block div.radio:has(input:not(:checked))~div {
     opacity: 0.25;
     pointer-events: none;
 }
