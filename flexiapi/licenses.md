@@ -424,7 +424,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### doctrine/dbal (Version 4.5.0 | c435cd7)
+### doctrine/dbal (Version 4.5.1 | b281545)
 Powerful PHP database abstraction layer (DBAL) with many features for database schema introspection and management.
 Homepage: https://www.doctrine-project.org/projects/dbal.html
 Licenses Used: MIT
@@ -449,7 +449,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-### doctrine/deprecations (Version 1.1.6 | d4fe3e6)
+### doctrine/deprecations (Version 1.2.0 | d2e1665)
 A small layer on top of trigger_error(E_USER_DEPRECATED) or PSR-3 logging with options to disable all deprecations or selectively for packages.
 Homepage: https://www.doctrine-project.org/
 Licenses Used: MIT
@@ -740,7 +740,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### giggsey/libphonenumber-for-php-lite (Version 9.0.42 | 6b9f5e5)
+### giggsey/libphonenumber-for-php-lite (Version 9.0.43 | e3c20f1)
 A lite version of giggsey/libphonenumber-for-php, which is a PHP Port of Google's libphonenumber
 Homepage: https://github.com/giggsey/libphonenumber-for-php-lite
 Licenses Used: Apache-2.0
@@ -1116,7 +1116,7 @@ SOFTWARE.
 
 
 
-### laravel/framework (Version v12.71.0 | 64dc24f)
+### laravel/framework (Version v12.72.0 | b089d30)
 The Laravel Framework.
 Homepage: https://laravel.com
 Licenses Used: MIT
@@ -1143,7 +1143,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### laravel/prompts (Version v0.3.26 | 2d1e9bf)
+### laravel/prompts (Version v0.3.27 | abdfc75)
 Add beautiful and user-friendly forms to your command-line applications.
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1170,7 +1170,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### laravel/serializable-closure (Version v2.1.0 | 2d5869a)
+### laravel/serializable-closure (Version v2.2.0 | 2bfb44e)
 Laravel Serializable Closure provides an easy and secure way to serialize closures in PHP.
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1224,7 +1224,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### laravel/tinker (Version v3.0.2 | 4faba77)
+### laravel/tinker (Version v3.1.0 | 5fab251)
 Powerful REPL for the Laravel framework.
 Homepage: Not configured.
 Licenses Used: MIT
@@ -1535,7 +1535,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-### league/uri (Version 7.9.1 | 40403f5)
+### league/uri (Version 7.10.0 | be89e23)
 URI manipulation library
 Homepage: https://uri.thephpleague.com
 Licenses Used: MIT
@@ -1561,7 +1561,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-### league/uri-interfaces (Version 7.9.1 | 994300a)
+### league/uri-interfaces (Version 7.10.0 | ea66240)
 Common tools for parsing and resolving RFC3987/RFC3986 URI
 Homepage: https://uri.thephpleague.com
 Licenses Used: MIT
@@ -2061,7 +2061,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-### nunomaduro/termwind (Version v2.4.0 | 712a31b)
+### nunomaduro/termwind (Version v2.4.1 | 9b85ae4)
 It's like Tailwind CSS, but for the console.
 Homepage: Not configured.
 Licenses Used: MIT
@@ -2120,7 +2120,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 
-### paragonie/constant_time_encoding (Version v3.1.3 | d5b01a3)
+### paragonie/constant_time_encoding (Version v3.1.4 | 5efef6e)
 Constant-time Implementations of RFC 4648 Encoding (Base-64, Base-32, Base-16)
 Homepage: Not configured.
 Licenses Used: MIT
@@ -4062,7 +4062,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/console (Version v7.4.22 | 8012f84)
+### symfony/console (Version v7.4.23 | 81957c2)
 Eases the creation of beautiful and testable command line interfaces
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4112,7 +4112,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/deprecation-contracts (Version v3.7.1 | f3202fa)
+### symfony/deprecation-contracts (Version v3.8.1 | feb1edf)
 A generic function and convention to trigger deprecation notices
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4187,7 +4187,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/event-dispatcher-contracts (Version v3.7.1 | c7de7a0)
+### symfony/event-dispatcher-contracts (Version v3.8.1 | 658e297)
 Generic abstractions related to dispatching event
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4212,7 +4212,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/finder (Version v7.4.22 | e13420a)
+### symfony/finder (Version v7.4.23 | c723f99)
 Finds files and directories via an intuitive fluent interface
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4237,7 +4237,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/http-foundation (Version v7.4.22 | 63eda1d)
+### symfony/http-foundation (Version v7.4.23 | 7fb73cf)
 Defines an object-oriented layer for the HTTP specification
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4262,7 +4262,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/http-kernel (Version v7.4.22 | 87e727b)
+### symfony/http-kernel (Version v7.4.23 | 94c57f4)
 Provides a structured process for converting a Request into a Response
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4637,7 +4637,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/routing (Version v7.4.22 | f79ed6f)
+### symfony/routing (Version v7.4.23 | 0000ade)
 Maps an HTTP request to a set of configuration variables
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4662,7 +4662,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/service-contracts (Version v3.7.3 | 15e6a07)
+### symfony/service-contracts (Version v3.8.1 | 052852a)
 Generic abstractions related to writing services
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4712,7 +4712,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/translation (Version v7.4.22 | a892cd1)
+### symfony/translation (Version v7.4.23 | 00dc42a)
 Provides tools to internationalize your application
 Homepage: https://symfony.com
 Licenses Used: MIT
@@ -4737,7 +4737,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### symfony/translation-contracts (Version v3.7.1 | ccb206b)
+### symfony/translation-contracts (Version v3.8.1 | 0a3ae91)
 Generic abstractions related to translation
 Homepage: https://symfony.com
 Licenses Used: MIT

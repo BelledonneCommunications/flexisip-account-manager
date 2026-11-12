@@ -13,7 +13,50 @@ class AccountClientCertificateAuthenticationTest extends TestCase
     protected $wrongRoute = 'api/accounts/me';
     protected $method = 'GET';
 
-    public function testClientCertificateAuthenticationFlow(): void
+    public function testClientCertificateAuthenticationSubjectAltNameFlow(): void
+    {
+        $account = Account::factory()->create();
+
+        $configFile = <<<CNF
+[req]
+distinguished_name = dn
+
+[dn]
+CN = wrong
+
+[v3_req]
+subjectAltName = URI:$account->sip_uri
+CNF;
+
+        $tempFile = tempnam(sys_get_temp_dir(), 'temp');
+        file_put_contents($tempFile, $configFile);
+
+        $options = [
+            'config' => $tempFile,
+            'x509_extensions' => 'v3_req',
+            'digest_alg' => 'sha256',
+            'private_key_bits' => 2048,
+            'private_key_type' => OPENSSL_KEYTYPE_RSA,
+        ];
+
+        $csrOut = $this->generateCertificate(config: $options, cnSipUri: 'wrong');
+
+        unlink($tempFile);
+
+        $parsed = openssl_x509_parse($csrOut);
+        $this->assertStringContainsString('URI:' . $account->sip_uri, $parsed['extensions']['subjectAltName']);
+
+        Space::where('domain', $account->domain)->update(['client_certificate_authentication' => true]);
+
+        $this->provisioningRequest()
+            ->withServerVariables([
+                'SSL_CLIENT_CERT' => $csrOut
+            ])->get($this->route)
+            ->assertOk();
+        $this->assertAuthenticatedAs($account);
+    }
+
+    public function testClientCertificateAuthenticationCNFlow(): void
     {
         $account = Account::factory()->create();
         $config = [
@@ -21,6 +64,52 @@ class AccountClientCertificateAuthenticationTest extends TestCase
             'private_key_bits' => 2048,
             'private_key_type' => OPENSSL_KEYTYPE_RSA,
         ];
+        $csrOut = $this->generateCertificate(config: $config, cnSipUri: $account->sip_uri);
+
+        $this->provisioningRequest()
+            ->get($this->route)
+            ->assertUnauthorized();
+
+        $this->flushSession();
+        Auth::logout();
+
+        $this->provisioningRequest()
+            ->withServerVariables([
+                'SSL_CLIENT_CERT' => $csrOut
+            ])->get($this->route)
+            ->assertForbidden();
+
+        Space::where('domain', $account->domain)->update(['client_certificate_authentication' => true]);
+
+        $this->provisioningRequest()
+            ->withServerVariables([
+                'SSL_CLIENT_CERT' => $csrOut
+            ])->get($this->route)
+            ->assertOk();
+        $this->assertAuthenticatedAs($account);
+
+        $this->flushSession();
+        Auth::logout();
+
+        $this->provisioningRequest()
+            ->withServerVariables([
+                'SSL_CLIENT_CERT' => $csrOut
+            ])->get($this->wrongRoute)
+            ->assertUnauthorized();
+
+        // New certificate with the wrong CN
+
+        $csrOut = $this->generateCertificate(config: $config, cnSipUri: 'sip:notauser@sip.example.com');
+
+        $this->provisioningRequest()
+            ->withServerVariables([
+                'SSL_CLIENT_CERT' => $csrOut
+            ])->get($this->route)
+            ->assertForbidden();
+    }
+
+    private function generateCertificate(array $config, string $cnSipUri): string
+    {
         $expirationDays = 365;
 
         // Generate private key
@@ -31,62 +120,18 @@ class AccountClientCertificateAuthenticationTest extends TestCase
         $serverCsrRequest = openssl_csr_new(['CN' => 'server_cert'], $serverPrivateKey, $config);
         $serverCsr = openssl_csr_sign($serverCsrRequest, null, $serverPrivateKey, $expirationDays, $config);
 
-        $clientCsrRequest = openssl_csr_new(["CN" => $account->sip_uri], $clientPrivateKey, $config);
+        $clientCsrRequest = openssl_csr_new(["CN" => $cnSipUri], $clientPrivateKey, $config);
         $clientCsr = openssl_csr_sign($clientCsrRequest, $serverCsr, $serverPrivateKey, $expirationDays, $config);
 
         openssl_x509_export($clientCsr, $csrOut);
 
-        $this->call(
-            method: $this->method,
-            uri: $this->route,
-        )->assertStatus(401);
+        return $csrOut;
+    }
 
-        $serverVariables = [
-            'SSL_CLIENT_CERT' => $csrOut,
-            'HTTP_X_LINPHONE_PROVISIONING' => '',
-        ];
-
-        $this->flushSession();
-        Auth::logout();
-
-        $this->call(
-            method: $this->method,
-            uri: $this->route,
-            server: $serverVariables
-        )->assertStatus(403);
-
-        Space::where('domain', $account->domain)->update(['client_certificate_authentication' => true]);
-
-        $this->call(
-            method: $this->method,
-            uri: $this->route,
-            server: $serverVariables
-        )->assertStatus(403);
-
-        $serverVariables['SSL_CLIENT_S_DN'] = 'CN=' . $account->sip_uri;
-
-        $this->call(
-            method: $this->method,
-            uri: $this->route,
-            server: $serverVariables
-        )->assertOk();
-        $this->assertAuthenticatedAs($account);
-
-        $this->flushSession();
-        Auth::logout();
-
-        $this->call(
-            method: $this->method,
-            uri: $this->wrongRoute,
-            server: $serverVariables
-        )->assertStatus(401);
-
-        $serverVariables['SSL_CLIENT_S_DN'] = "CN=sip:notauser@sip.example.com";
-
-        $this->call(
-            method: $this->method,
-            uri: $this->route,
-            server: $serverVariables
-        )->assertStatus(403);
+    private function provisioningRequest()
+    {
+        return $this->withHeaders([
+            'x-linphone-provisioning' => true
+        ]);
     }
 }
