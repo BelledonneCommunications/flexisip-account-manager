@@ -36,57 +36,55 @@ class AccountClientCertificateAuthenticationTest extends TestCase
 
         openssl_x509_export($clientCsr, $csrOut);
 
-        $this->call(
-            method: $this->method,
-            uri: $this->route,
-        )->assertStatus(401);
-
-        $serverVariables = [
-            'SSL_CLIENT_CERT' => $csrOut,
-            'HTTP_X_LINPHONE_PROVISIONING' => '',
-        ];
+        $this->provisioningRequest()
+            ->get($this->route)
+            ->assertUnauthorized();
 
         $this->flushSession();
         Auth::logout();
 
-        $this->call(
-            method: $this->method,
-            uri: $this->route,
-            server: $serverVariables
-        )->assertStatus(403);
+        $this->provisioningRequest()
+            ->withServerVariables([
+                'SSL_CLIENT_CERT' => $csrOut
+            ])->get($this->route)
+            ->assertForbidden();
 
         Space::where('domain', $account->domain)->update(['client_certificate_authentication' => true]);
 
-        $this->call(
-            method: $this->method,
-            uri: $this->route,
-            server: $serverVariables
-        )->assertStatus(403);
-
-        $serverVariables['SSL_CLIENT_S_DN'] = 'CN=' . $account->sip_uri;
-
-        $this->call(
-            method: $this->method,
-            uri: $this->route,
-            server: $serverVariables
-        )->assertOk();
+        $this->provisioningRequest()
+            ->withServerVariables([
+                'SSL_CLIENT_CERT' => $csrOut
+            ])->get($this->route)
+            ->assertOk();
         $this->assertAuthenticatedAs($account);
 
         $this->flushSession();
         Auth::logout();
 
-        $this->call(
-            method: $this->method,
-            uri: $this->wrongRoute,
-            server: $serverVariables
-        )->assertStatus(401);
+        $this->provisioningRequest()
+            ->withServerVariables([
+                'SSL_CLIENT_CERT' => $csrOut
+            ])->get($this->wrongRoute)
+            ->assertUnauthorized();
 
-        $serverVariables['SSL_CLIENT_S_DN'] = "CN=sip:notauser@sip.example.com";
+        // New cartificate with the wrong CN
 
-        $this->call(
-            method: $this->method,
-            uri: $this->route,
-            server: $serverVariables
-        )->assertStatus(403);
+        $clientCsrRequest = openssl_csr_new(["CN" => 'sip:notauser@sip.example.com'], $clientPrivateKey, $config);
+        $clientCsr = openssl_csr_sign($clientCsrRequest, $serverCsr, $serverPrivateKey, $expirationDays, $config);
+
+        openssl_x509_export($clientCsr, $csrOut);
+
+        $this->provisioningRequest()
+            ->withServerVariables([
+                'SSL_CLIENT_CERT' => $csrOut
+            ])->get($this->route)
+            ->assertForbidden();
+    }
+
+    private function provisioningRequest()
+    {
+        return $this->withHeaders([
+            'x-linphone-provisioning' => true
+        ]);
     }
 }
