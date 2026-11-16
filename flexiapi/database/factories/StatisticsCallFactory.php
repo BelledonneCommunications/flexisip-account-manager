@@ -22,6 +22,7 @@ namespace Database\Factories;
 
 use DateInterval;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Account;
 
 class StatisticsCallFactory extends Factory
 {
@@ -38,5 +39,21 @@ class StatisticsCallFactory extends Factory
             'initiated_at' => $initiatedAt,
             'ended_at' => $this->faker->dateTimeBetween($initiatedAt, (clone $initiatedAt)->add(new DateInterval("PT1H"))),
         ];
+    }
+
+    public function toAccount(Account $account)
+    {
+        return $this->state(fn (array $attributes) => [
+            'to_username' => $account->username,
+            'to_domain' => $account->domain,
+        ]);
+    }
+
+    public function fromAccount(Account $account)
+    {
+        return $this->state(fn (array $attributes) => [
+            'from_username' => $account->username,
+            'from_domain' => $account->domain,
+        ]);
     }
 }
