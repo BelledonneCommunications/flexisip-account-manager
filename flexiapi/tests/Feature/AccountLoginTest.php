@@ -47,14 +47,14 @@ class AccountLoginTest extends TestCase
     {
         $password = Password::factory()->create();
 
-        $this->get('/statistics/call_logs?direction=1&page=2')->assertRedirect('login');
+        $this->get('/statistics/call_log?direction=1&page=2')->assertRedirect('login');
 
         $this->followingRedirects()->post('/authenticate', [
             'username' => $password->account->username,
             'password' => PasswordFactory::TEST_PASSWORD,
         ]);
 
-        $this->assertSame('/statistics/call_logs?direction=1&page=2', request()->getRequestUri());
+        $this->assertSame('/statistics/call_log?direction=1&page=2', request()->getRequestUri());
     }
 
     public function testLoginRedirectsToTheDashboardWhenNoPageWasIntended()

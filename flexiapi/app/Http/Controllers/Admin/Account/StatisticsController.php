@@ -79,9 +79,9 @@ class StatisticsController extends Controller
         ]);
     }
 
-    public function editCallLogs(Request $request, int $accountId)
+    public function editCallLog(Request $request, int $accountId)
     {
-        return redirect()->route('admin.account.statistics.show_call_logs', [
+        return redirect()->route('admin.account.statistics.show_call_log', [
             'from' => $request->input('from'),
             'to' => $request->input('to'),
             'direction' => $request->input('direction'),
@@ -89,7 +89,7 @@ class StatisticsController extends Controller
         ]);
     }
 
-    public function showCallLogs(Request $request, int $accountId, ?bool $adminView = true)
+    public function showCallLog(Request $request, int $accountId, ?bool $adminView = true)
     {
         $account = Account::findOrFail($accountId);
         $incomingCalls = StatisticsCall::query()->where('to_domain', $account->domain)
@@ -113,7 +113,7 @@ class StatisticsController extends Controller
             default => $outgoingCalls->union($incomingCalls),
         };
 
-        return view('admin.account.statistics.show_call_logs', [
+        return view('admin.account.statistics.show_call_log', [
             'account' => $account,
             'calls' => $calls->orderBy('initiated_at', 'desc')->paginate(30),
             'request' => $request,

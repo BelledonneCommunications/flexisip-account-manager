@@ -25,9 +25,9 @@ use Illuminate\Http\Request;
 
 class StatisticsController extends Controller
 {
-    public function editCallLogs(Request $request)
+    public function editCallLog(Request $request)
     {
-        return redirect()->route('account.statistics.show_call_logs', [
+        return redirect()->route('account.statistics.show_call_log', [
             'from' => $request->input('from'),
             'to' => $request->input('to'),
             'direction' => $request->input('direction'),
@@ -36,9 +36,9 @@ class StatisticsController extends Controller
         ]);
     }
 
-    public function showCallLogs(Request $request)
+    public function showCallLog(Request $request)
     {
         return (new \App\Http\Controllers\Admin\Account\StatisticsController)
-            ->showCallLogs($request, $request->user()->id, adminView: false);
+            ->showCallLog($request, $request->user()->id, adminView: false);
     }
 }

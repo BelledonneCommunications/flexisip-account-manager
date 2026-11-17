@@ -91,9 +91,9 @@ class StatisticsController extends Controller
         ]);
     }
 
-    public function editCallLogs(Request $request)
+    public function editCallLog(Request $request)
     {
-        return redirect()->route('admin.statistics.show_call_logs', [
+        return redirect()->route('admin.statistics.show_call_log', [
             'from' => $request->input('from'),
             'to' => $request->input('to'),
             'domain' => $request->input('domain'),
@@ -101,7 +101,7 @@ class StatisticsController extends Controller
         ]);
     }
 
-    public function showCallLogs(Request $request)
+    public function showCallLog(Request $request)
     {
         $fromQuery = StatisticsCall::query();
         $toQuery = StatisticsCall::query();
@@ -132,7 +132,7 @@ class StatisticsController extends Controller
 
         $calls = $fromQuery->union($toQuery);
 
-        return view('admin.statistics.show_call_logs', [
+        return view('admin.statistics.show_call_log', [
             'calls' => $calls->orderBy('initiated_at', 'desc')->paginate(30),
             'domains' => StatisticsCall::groupBy('from_domain')->pluck('from_domain'),
             'contacts_lists' => ContactsList::all()->pluck('title', 'id'),

@@ -24,7 +24,7 @@ use App\Account;
 use App\StatisticsCall;
 use Tests\TestCase;
 
-class CallLogsTest extends TestCase
+class CallLogTest extends TestCase
 {
     public function testDateFilter()
     {
@@ -60,7 +60,7 @@ class CallLogsTest extends TestCase
 
         // Both directions within the date range.
         $response = $this->actingAs($account)
-            ->get(route('account.statistics.show_call_logs', [
+            ->get(route('account.statistics.show_call_log', [
                 'from' => $from,
                 'to' => $to
             ]))
@@ -75,7 +75,7 @@ class CallLogsTest extends TestCase
 
         // 'incoming' direction.
         $response = $this->actingAs($account)
-            ->get(route('account.statistics.show_call_logs', [
+            ->get(route('account.statistics.show_call_log', [
                 'from' => $from,
                 'to' => $to,
                 'direction' => 'incoming'
@@ -91,7 +91,7 @@ class CallLogsTest extends TestCase
 
         // 'outgoing' direction.
         $response = $this->actingAs($account)
-            ->get(route('account.statistics.show_call_logs', [
+            ->get(route('account.statistics.show_call_log', [
                 'from' => $from,
                 'to' => $to,
                 'direction' => 'outgoing'

@@ -3,7 +3,7 @@
 @if ($admin_view)
     @section('breadcrumb')
         @include('admin.parts.breadcrumb.accounts.show', ['account' => $account])
-        <li class="breadcrumb-item active" aria-current="page">{{ __('Calls logs') }}</li>
+        <li class="breadcrumb-item active" aria-current="page">{{ __('Call log') }}</li>
     @endsection
 @endif
 
@@ -15,16 +15,16 @@
         @include('admin.account.parts.tabs')
     @else
         <header>
-            <h1><i class="ph ph-phone"></i> {{ __('Calls logs') }}</h1>
+            <h1><i class="ph ph-phone"></i> {{ __('Call log') }}</h1>
         </header>
     @endif
 
     <div>
         <form class="inline" method="POST"
             @if ($admin_view)
-                action="{{ route('admin.account.statistics.edit_call_logs', $account->id) }}"
+                action="{{ route('admin.account.statistics.edit_call_log', $account->id) }}"
             @else
-                action="{{ route('account.statistics.edit_call_logs') }}"
+                action="{{ route('account.statistics.edit_call_log') }}"
             @endif
             accept-charset="UTF-8">
             @csrf
@@ -58,13 +58,13 @@
             <div class="oppose">
                 <a class="btn secondary"
                     @if ($admin_view)
-                        href="{{ route('admin.account.statistics.show_call_logs', $account->id) }}"
+                        href="{{ route('admin.account.statistics.show_call_log', $account->id) }}"
                     @else
-                        href="{{ route('account.statistics.show_call_logs') }}"
+                        href="{{ route('account.statistics.show_call_log') }}"
                     @endif>{{ __('Reset') }}</a>
             </div>
         </form>
     </div>
 
-    @include('parts.call_logs.table', ['calls' => $calls, 'admin_view' => $admin_view])
+    @include('parts.call_log.table', ['calls' => $calls, 'admin_view' => $admin_view])
 @endsection

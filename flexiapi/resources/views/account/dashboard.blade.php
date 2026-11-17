@@ -150,8 +150,8 @@
     {{-- Call Logs --}}
     <div class="card">
         <header>
-            <h3><i class="ph ph-phone-list"></i> {{ __('Calls logs') }}</h3>
-            <a class="btn small oppose secondary" href="{{ route('account.statistics.show_call_logs') }}">
+            <h3><i class="ph ph-phone-list"></i> {{ __('Call log') }}</h3>
+            <a class="btn small oppose secondary" href="{{ route('account.statistics.show_call_log') }}">
                 {{ __('View all') }} <i class="ph ph-arrow-right"></i>
             </a>
         </header>

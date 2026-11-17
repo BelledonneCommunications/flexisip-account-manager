@@ -167,8 +167,8 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
         });
 
         Route::name('statistics.')->prefix('statistics')->controller(AccountStatisticsController::class)->group(function () {
-            Route::post('call_logs', 'editCallLogs')->name('edit_call_logs');
-            Route::get('call_logs', 'showCallLogs')->name('show_call_logs');
+            Route::post('call_log', 'editCallLog')->name('edit_call_log');
+            Route::get('call_log', 'showCallLog')->name('show_call_log');
         });
 
         Route::name('device.')->prefix('devices')->controller(DeviceController::class)->group(function () {
@@ -285,8 +285,8 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
 
         Route::name('statistics.')->controller(StatisticsController::class)->prefix('statistics')->group(function () {
             Route::get('/', 'index')->name('index');
-            Route::post('call_logs', 'editCallLogs')->name('edit_call_logs');
-            Route::get('call_logs', 'showCallLogs')->name('show_call_logs');
+            Route::post('call_log', 'editCallLog')->name('edit_call_log');
+            Route::get('call_log', 'showCallLog')->name('show_call_log');
             Route::get('/{type?}', 'show')->name('show');
             Route::post('/', 'edit')->name('edit');
         });
@@ -402,8 +402,8 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
 
             Route::name('statistics.')->prefix('{account}/statistics')->controller(AdminAccountStatisticsController::class)->group(function () {
                 Route::get('/', 'show')->name('show');
-                Route::post('call_logs', 'editCallLogs')->name('edit_call_logs');
-                Route::get('call_logs', 'showCallLogs')->name('show_call_logs');
+                Route::post('call_log', 'editCallLog')->name('edit_call_log');
+                Route::get('call_log', 'showCallLog')->name('show_call_log');
                 Route::post('/', 'edit')->name('edit');
             });
 

@@ -8,7 +8,7 @@
     @include('admin.statistics.parts.tabs')
 
     <div>
-        <form class="inline" method="POST" action="{{ route('admin.statistics.edit_call_logs') }}" accept-charset="UTF-8">
+        <form class="inline" method="POST" action="{{ route('admin.statistics.edit_call_log') }}" accept-charset="UTF-8">
             @csrf
             @method('post')
 
@@ -43,10 +43,10 @@
             <div class="on_desktop"></div>
 
             <div class="oppose">
-                <a class="btn secondary" href="{{ route('admin.statistics.show_call_logs') }}">{{ __('Reset') }}</a>
+                <a class="btn secondary" href="{{ route('admin.statistics.show_call_log') }}">{{ __('Reset') }}</a>
             </div>
         </form>
     </div>
 
-    @include('parts.call_logs.table', ['calls' => $calls, 'admin_view' => $admin_view])
+    @include('parts.call_log.table', ['calls' => $calls, 'admin_view' => $admin_view])
 @endsection

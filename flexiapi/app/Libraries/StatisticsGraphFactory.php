@@ -86,7 +86,7 @@ class StatisticsGraphFactory
 
             case 'calls':
                 $dateColumn = 'initiated_at';
-                $label = 'Calls';
+                $label = __('Calls');
                 $fromQuery = StatisticsCall::query();
                 $toQuery = StatisticsCall::query();
 
@@ -121,7 +121,7 @@ class StatisticsGraphFactory
                 break;
 
             case 'accounts':
-                $label = 'Accounts';
+                $label = __('Accounts');
                 $this->data = Account::orderBy($dateColumn, 'asc');
 
                 // Accounts doesn't have a from and to

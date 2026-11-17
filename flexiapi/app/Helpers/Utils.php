@@ -235,9 +235,9 @@ function maxUploadSize(): int
 function getDirections(): array
 {
     return [
-        'both' => __('Both'),
-        'incoming' => __('Incoming call'),
-        'outgoing' => __('Outgoing call'),
+        'both' => __('All the calls'),
+        'incoming' => __('Incoming calls'),
+        'outgoing' => __('Outgoing calls'),
     ];
 }
 
