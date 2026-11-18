@@ -25,7 +25,6 @@ use App\Http\Controllers\Controller;
 use App\Libraries\StatisticsGraphFactory;
 use App\StatisticsCall;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class StatisticsController extends Controller
 {
@@ -93,28 +92,26 @@ class StatisticsController extends Controller
     public function showCallLogs(Request $request, int $accountId, ?bool $adminView = true)
     {
         $account = Account::findOrFail($accountId);
-        $toQuery = DB::table('statistics_calls')
-            ->where('to_domain', $account->domain)
+        $incomingCalls = StatisticsCall::query()->where('to_domain', $account->domain)
             ->where('to_username', $account->username);
-        $calls = StatisticsCall::where('from_domain', $account->domain)
+        $outgoingCalls = StatisticsCall::query()->where('from_domain', $account->domain)
             ->where('from_username', $account->username);
 
         if ($request->input('to')) {
-            $toQuery = $toQuery->where('initiated_at', '<=', $request->input('to'));
-            $calls = $calls->where('initiated_at', '<=', $request->input('to'));
+            $incomingCalls = $incomingCalls->where('initiated_at', '<=', $request->input('to'));
+            $outgoingCalls = $outgoingCalls->where('initiated_at', '<=', $request->input('to'));
         }
 
         if ($request->input('from')) {
-            $toQuery = $toQuery->where('initiated_at', '>=', $request->input('from'));
-            $calls = $calls->where('initiated_at', '>=', $request->input('from'));
+            $incomingCalls = $incomingCalls->where('initiated_at', '>=', $request->input('from'));
+            $outgoingCalls = $outgoingCalls->where('initiated_at', '>=', $request->input('from'));
         }
 
-        if ($request->input('direction') == 'incoming') {
-            $calls = StatisticsCall::where('to_domain', $account->domain)
-                ->where('to_username', $account->username);
-        } elseif ($request->input('direction') != 'outgoing') {
-            $calls = $calls->union($toQuery);
-        }
+        $calls = match ($request->input('direction')) {
+            'incoming' => $incomingCalls,
+            'outgoing' => $outgoingCalls,
+            default => $outgoingCalls->union($incomingCalls),
+        };
 
         return view('admin.account.statistics.show_call_logs', [
             'account' => $account,
