@@ -21,11 +21,14 @@
 namespace App\Libraries;
 
 use App\Account;
+use App\Enums\StatisticsGraphDirection;
+use App\Enums\StatisticsGraphType;
 use App\StatisticsCall;
 use App\StatisticsMessage;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Carbon\CarbonPeriod;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Collection;
@@ -35,119 +38,101 @@ class StatisticsGraphFactory
 {
     private $data = null;
 
-    public function __construct(
-        private Request $request,
-        private string $type = 'messages',
-        public ?string $domain = null, // both from and to filter
-        public ?string $fromUsername = null,
-        public ?string $fromDomain = null,
-        public ?string $toUsername = null,
-        public ?string $toDomain = null
-    ) {
+    public function __construct(private Request $request)
+    {
     }
 
-    public function getConfig()
+    public function getSpaceGraphConfig(StatisticsGraphType $type, ?string $domain)
     {
-        $dateColumn = 'created_at';
-        $label = 'Label';
+        return match($type) {
+            StatisticsGraphType::MESSAGES => $this->makeGraph($this->makeSpaceEventsQuery(StatisticsMessage::query(), $domain), $type),
+            StatisticsGraphType::CALLS => $this->makeGraph($this->makeSpaceEventsQuery(StatisticsCall::query(), $domain), $type),
+            StatisticsGraphType::ACCOUNTS => $this->makeGraph($this->makeSpaceAccountsQuery($domain), $type),
+        };
+    }
 
-        switch ($this->type) {
-            case 'messages':
-                $dateColumn = 'sent_at';
-                $label = 'Messages';
-                $fromQuery = StatisticsMessage::query();
-                $toQuery = StatisticsMessage::query();
+    public function getAccountGraphConfig(StatisticsGraphType $type, string $username, string $domain, StatisticsGraphDirection $direction)
+    {
+        return match($type) {
+            StatisticsGraphType::MESSAGES => $this->makeGraph(StatisticsMessage::query()->{$direction->scope('UsernameDomain')}($username, $domain), $type),
+            StatisticsGraphType::CALLS => $this->makeGraph(StatisticsCall::query()->{$direction->scope('UsernameDomain')}($username, $domain), $type),
+        };
+    }
 
-                if (!Auth::user()?->superAdmin) {
-                    $fromQuery->where('from_domain', $this->request->space->domain);
-                    $toQuery->toDomain(space()->domain);
-                } elseif ($this->domain) {
-                    $fromQuery->where('from_domain', $this->domain);
-                    $toQuery->toDomain($this->domain);
-                } elseif ($this->fromDomain) {
-                    $fromQuery->where('from_domain', $this->fromDomain)->orderBy('from_domain');
+    public function export()
+    {
+        $file = fopen('php://output', 'w');
 
-                    if ($this->fromUsername) {
-                        $fromQuery->where('from_username', $this->fromUsername);
-                    }
-                } elseif ($this->toDomain && $this->toUsername) {
-                    $toQuery->toUsernameDomain($this->toUsername, $this->toDomain);
-                }
+        $callback = function () use ($file) {
+            foreach ($this->data as $key => $value) {
+                fputcsv($file, [$key, $value]);
+            }
 
-                if ($this->request->has('contacts_list')) {
-                    $fromQuery = $fromQuery->fromByContactsList($this->request->get('contacts_list'));
-                    $toQuery = $toQuery->toByContactsList($this->request->get('contacts_list'));
-                }
+            fclose($file);
+        };
 
-                $this->data = $fromQuery; //->union($toQuery);
-                $this->data->orderBy($dateColumn, 'asc');
+        return response()->stream($callback, 200, [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=export.csv",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ]);
+    }
 
-                break;
+    private function makeSpaceEventsQuery(Builder $query, ?string $domain): Builder
+    {
+        $domain = Auth::user()?->superAdmin ? $domain : space()->domain;
 
-            case 'calls':
-                $dateColumn = 'initiated_at';
-                $label = 'Calls';
-                $fromQuery = StatisticsCall::query();
-                $toQuery = StatisticsCall::query();
-
-                if (!Auth::user()?->superAdmin) {
-                    $fromQuery->where('from_domain', space()->domain);
-                    $toQuery->where('to_domain', space()->domain);
-                } elseif ($this->domain) {
-                    $fromQuery = $fromQuery->where('to_domain', $this->domain);
-                    $toQuery = $toQuery->where('from_domain', $this->domain);
-                } elseif ($this->fromDomain) {
-                    $fromQuery->where('from_domain', $this->fromDomain)->orderBy('from_domain');
-
-                    if ($this->fromUsername) {
-                        $fromQuery->where('from_username', $this->fromUsername);
-                    }
-                } elseif ($this->toDomain) {
-                    $toQuery->where('to_domain', $this->toDomain)->orderBy('to_domain');
-
-                    if ($this->toUsername) {
-                        $toQuery->where('to_username', $this->toUsername);
-                    }
-                }
-
-                if ($this->request->has('contacts_list')) {
-                    $fromQuery = $fromQuery->fromByContactsList($this->request->get('contacts_list'));
-                    $toQuery = $toQuery->toByContactsList($this->request->get('contacts_list'));
-                }
-
-                $this->data = $fromQuery; //->union($toQuery);
-                $this->data->orderBy($dateColumn, 'asc');
-
-                break;
-
-            case 'accounts':
-                $label = 'Accounts';
-                $this->data = Account::orderBy($dateColumn, 'asc');
-
-                // Accounts doesn't have a from and to
-                $this->domain = $this->domain ?? $this->fromDomain;
-
-                if (!Auth::user()?->admin) {
-                    $this->data->where('domain', space()->domain);
-                } elseif ($this->domain) {
-                    $this->data->where('domain', $this->domain);
-
-                    if ($this->fromUsername) {
-                        $this->data->where('username', $this->fromUsername);
-                    }
-                }
-
-                if ($this->request->has('contacts_list')) {
-                    $this->data->whereIn('id', function ($query) {
-                        $query->select('contact_id')
-                            ->from('contacts_list_contact')
-                            ->where('contacts_list_id', $this->request->get('contacts_list'));
-                    });
-                }
-
-                break;
+        if ($domain) {
+            $query = $query->involvingDomain($domain);
         }
 
+        if ($this->request->has('contacts_list')) {
+            $contactsListId = $this->request->input('contacts_list');
+            $query = $query->where(function (Builder $query) use ($contactsListId) {
+                $query->where(function (Builder $query) use ($contactsListId) {
+                    $query->fromByContactsList($contactsListId);
+                })->orWhere(function (Builder $query) use ($contactsListId) {
+                    $query->toByContactsList($contactsListId);
+                });
+            });
+        }
+
+        return $query;
+    }
+
+    private function makeSpaceAccountsQuery(?string $domain): Builder
+    {
+        $domain = Auth::user()?->superAdmin ? $domain : space()->domain;
+
+        $query = Account::query();
+
+        if ($domain) {
+            $query->where('domain', $domain);
+        }
+
+        if ($this->request->has('contacts_list')) {
+            $query->whereIn('id', function ($query) {
+                $query->select('contact_id')
+                    ->from('contacts_list_contact')
+                    ->where('contacts_list_id', $this->request->input('contacts_list'));
+            });
+        }
+
+        return $query;
+    }
+
+    private function makeGraph(Builder $query, StatisticsGraphType $type)
+    {
+        $label = ucfirst($type->value);
+        $dateColumn = match($type) {
+            StatisticsGraphType::MESSAGES => 'sent_at',
+            StatisticsGraphType::CALLS => 'initiated_at',
+            StatisticsGraphType::ACCOUNTS => 'created_at',
+        };
+
+        $this->data = $query->orderBy($dateColumn);
         $this->data = $this->data->groupBy('moment')
             ->orderBy('moment', 'desc')
             ->setEagerLoads([]);
@@ -234,31 +219,6 @@ class StatisticsGraphFactory
                 ],
             ]
         ];
-    }
-
-    public function export()
-    {
-        $file = fopen('php://output', 'w');
-
-        if ($this->data == null) {
-            $this->getConfig();
-        }
-
-        $callback = function () use ($file) {
-            foreach ($this->data as $key => $value) {
-                fputcsv($file, [$key, $value]);
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, [
-            "Content-type"        => "text/csv",
-            "Content-Disposition" => "attachment; filename=export.csv",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
-        ]);
     }
 
     private function compileStatistics(string $by, $from, $to, $data): Collection

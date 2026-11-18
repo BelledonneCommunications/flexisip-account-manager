@@ -92,6 +92,25 @@ class StatisticsCall extends Model
         return InviteTerminatedState::Error;
     }
 
+    public function scopeInvolvingDomain(Builder $query, string $domain)
+    {
+        // Count each call once, even if only one of its two endpoints belongs to this domain —
+        // it is not counted twice when both do.
+        return $query->where(function (Builder $query) use ($domain) {
+            $query->where('from_domain', $domain)->orWhere('to_domain', $domain);
+        });
+    }
+
+    public function scopeFromUsernameDomain(Builder $query, string $username, string $domain)
+    {
+        return $query->where('from_username', $username)->where('from_domain', $domain);
+    }
+
+    public function scopeToUsernameDomain(Builder $query, string $username, string $domain)
+    {
+        return $query->where('to_username', $username)->where('to_domain', $domain);
+    }
+
     public function scopeToByContactsList(Builder $query, int $contactsListId)
     {
         return $query->whereIn('to_domain', function ($query) use ($contactsListId) {
