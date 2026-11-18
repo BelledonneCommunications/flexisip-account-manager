@@ -40,24 +40,24 @@ class AccountController extends Controller
             'order_sort' => 'in:asc,desc',
         ]);
 
-        $accounts = Account::orderBy($request->get('order_by', 'updated_at'), $request->get('order_sort', 'desc'));
+        $accounts = Account::orderBy($request->input('order_by', 'updated_at'), $request->input('order_sort', 'desc'));
 
         if ($request->has('search')) {
-            $accounts = $accounts->where('username', 'like', '%' . $request->get('search') . '%');
+            $accounts = $accounts->where('username', 'like', '%' . $request->input('search') . '%');
         }
 
         if ($request->has('updated_date')) {
-            $accounts->whereDate('updated_at', $request->get('updated_date'));
+            $accounts->whereDate('updated_at', $request->input('updated_date'));
         }
 
         if ($request->has('contacts_list')) {
             $accounts->whereHas('contactsLists', function ($query) use ($request) {
-                $query->where('id', $request->get('contacts_list'));
+                $query->where('id', $request->input('contacts_list'));
             });
         }
 
         if ($request->has('domain')) {
-            $accounts->where('domain', $request->get('domain'));
+            $accounts->where('domain', $request->input('domain'));
         }
 
         return view('admin.account.index', [
@@ -94,14 +94,14 @@ class AccountController extends Controller
         }
 
         if ($request->has('domain')) {
-            $account->domain = $request->get('domain');
+            $account->domain = $request->input('domain');
         }
 
         return view('admin.account.create_edit', [
             'account' => $account,
             'domains' => $request->user()?->superAdmin
-                ? Space::notFull()->get()
-                : Space::where('domain', $request->user()->domain)->get(),
+                ? Space::notFull()->input()
+                : Space::where('domain', $request->user()->domain)->input(),
             'protocols' => [null => 'None'] + Account::$dtmfProtocols
         ]);
     }
@@ -124,7 +124,7 @@ class AccountController extends Controller
             'protocols' => [null => __('Empty')] + Account::$dtmfProtocols,
             'domains' => $request->user()?->superAdmin
                 ? Space::all()
-                : Space::where('domain', $account->domain)->get(),
+                : Space::where('domain', $account->domain)->input(),
         ]);
     }
 
@@ -159,9 +159,9 @@ class AccountController extends Controller
 
     public function destroy(Request $request)
     {
-        $account = Account::findOrFail($request->get('account_id'));
+        $account = Account::findOrFail($request->input('account_id'));
 
-        (new AccountService)->destroy($request, $request->get('account_id'));
+        (new AccountService)->destroy($request, $request->input('account_id'));
 
         Log::channel('events')->info('Web Admin: Account deleted', ['id' => $account->identifier]);
 
@@ -175,8 +175,8 @@ class AccountController extends Controller
         ]);
 
         $account = Account::findOrFail($accountId);
-        $account->contactsLists()->detach([$request->get('contacts_list_id')]);
-        $account->contactsLists()->attach([$request->get('contacts_list_id')]);
+        $account->contactsLists()->detach([$request->input('contacts_list_id')]);
+        $account->contactsLists()->attach([$request->input('contacts_list_id')]);
 
         return redirect()->route('admin.account.contact.index', $accountId)->withFragment('#contacts_lists');
     }
@@ -184,7 +184,7 @@ class AccountController extends Controller
     public function contactsListRemove(Request $request, int $accountId)
     {
         $account = Account::findOrFail($accountId);
-        $account->contactsLists()->detach([$request->get('contacts_list_id')]);
+        $account->contactsLists()->detach([$request->input('contacts_list_id')]);
 
         return redirect()->route('admin.account.contact.index', $accountId)->withFragment('#contacts_lists');
     }

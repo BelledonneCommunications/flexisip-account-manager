@@ -20,9 +20,7 @@
                     <div class="content">
                         <p>
                             {{ __('The Voicemail is enabled and can be reached at:') }}
-                            <a href="{{ route('admin.account.show', $space->voicemailAccount->id) }}">
-                                {{ $space->voicemailAccount->identifier }}
-                            </a>
+                            {{ $space->voicemailAccount->identifier }}
                         </p>
                     </div>
                 </li>

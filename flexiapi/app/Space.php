@@ -130,7 +130,7 @@ class Space extends Model
 
     public function voicemailAccount()
     {
-        return $this->hasOne(Account::class, 'id', 'voicemail_account_id');
+        return $this->hasOne(Account::class, 'id', 'voicemail_account_id')->withoutGlobalScope('no_voicemail');
     }
 
     public function voicemailEnableable(): bool
