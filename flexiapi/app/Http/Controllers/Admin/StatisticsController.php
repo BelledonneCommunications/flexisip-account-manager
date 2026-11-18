@@ -22,6 +22,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Account;
 use App\ContactsList;
+use App\Enums\StatisticsGraphType;
 use App\StatisticsMessage;
 use App\StatisticsCall;
 use App\Http\Controllers\Controller;
@@ -50,7 +51,7 @@ class StatisticsController extends Controller
         ]);
     }
 
-    public function show(Request $request, string $type = 'messages')
+    public function show(Request $request, StatisticsGraphType $type = StatisticsGraphType::MESSAGES)
     {
         $request->validate([
             'from' => 'date_format:Y-m-d|before:to',
@@ -58,8 +59,8 @@ class StatisticsController extends Controller
             'by' => 'in:day,week,month,year',
         ]);
 
-        $graph = new StatisticsGraphFactory($request, type: $type, domain: $request->input('domain'));
-        $config = $graph->getConfig();
+        $graph = new StatisticsGraphFactory($request);
+        $config = $graph->getSpaceGraphConfig($type, $request->input('domain'));
         $domains = collect();
 
         if ($request->input('export', false)) {
@@ -67,19 +68,12 @@ class StatisticsController extends Controller
         }
 
         if (Auth::user()?->superAdmin) {
-            switch ($type) {
-                case 'messages':
-                    $domains = StatisticsMessage::groupBy('from_domain')->pluck('from_domain');
-                    break;
-
-                case 'calls':
-                    $domains = StatisticsCall::groupBy('from_domain')->pluck('from_domain');
-                    break;
-
-                case 'accounts':
-                    $domains = Account::groupBy('domain')->pluck('domain');
-                    break;
-            }
+            $domains = match ($type) {
+                StatisticsGraphType::MESSAGES => StatisticsMessage::groupBy('from_domain')->pluck('from_domain'),
+                StatisticsGraphType::CALLS => StatisticsCall::groupBy('from_domain')->pluck('from_domain'),
+                StatisticsGraphType::ACCOUNTS => Account::groupBy('domain')->pluck('domain'),
+                default => collect(),
+            };
         }
 
         return view('admin.statistics.show', [
