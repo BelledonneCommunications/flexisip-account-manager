@@ -137,48 +137,41 @@ class StatisticsGraphFactory
             ->orderBy('moment', 'desc')
             ->setEagerLoads([]);
 
-        if ($this->request->get('to')) {
-            $this->data = $this->data->where($dateColumn, '<=', $this->request->get('to'));
+        if ($this->request->input('to')) {
+            $this->data = $this->data->where($dateColumn, '<=', $this->request->input('to'));
         }
 
-        $by = $this->request->get('by', 'day');
+        $by = $this->request->input('by', 'day');
 
-        switch ($by) {
-            case 'day':
-                $this->data = $this->data->where($dateColumn, '>=', $this->request->get('from', Carbon::now()->subDay()->format('Y-m-d H:i:s')))
-                    ->get([
-                        DB::raw("date_format(" . $dateColumn . ",'%Y-%m-%d %H') as moment"),
-                        DB::raw('COUNT(*) as "count"')
-                    ]);
-                break;
-            case 'week':
-                $this->data = $this->data->where($dateColumn, '>=', $this->request->get('from', Carbon::now()->subWeek()->format('Y-m-d H:i:s')))
-                    ->get([
-                        DB::raw("date_format(" . $dateColumn . ",'%Y-%m-%d') as moment"),
-                        DB::raw('COUNT(*) as "count"')
-                    ]);
-                break;
-            case 'month':
-                $this->data = $this->data->where($dateColumn, '>=', $this->request->get('from', Carbon::now()->subMonth()->format('Y-m-d H:i:s')))
-                    ->get([
-                        DB::raw("date_format(" . $dateColumn . ",'%Y-%m-%d') as moment"),
-                        DB::raw('COUNT(*) as "count"')
-                    ]);
-                break;
-            case 'year':
-                $this->data = $this->data->where($dateColumn, '>=', $this->request->get('from', Carbon::now()->subYear()->format('Y-m-d H:i:s')))
-                    ->get([
-                        DB::raw("date_format(" . $dateColumn . ",'%Y-%m') as moment"),
-                        DB::raw('COUNT(*) as "count"')
-                    ]);
-                break;
-        }
+        $this->data = match ($by) {
+            'day' => $this->data->where($dateColumn, '>=', $this->request->input('from', Carbon::now()->subDay()->format('Y-m-d H:i:s')))
+                ->get([
+                    DB::raw("date_format(" . $dateColumn . ",'%Y-%m-%d %H') as moment"),
+                    DB::raw('COUNT(*) as "count"')
+                ]),
+            'week' => $this->data->where($dateColumn, '>=', $this->request->input('from', Carbon::now()->subWeek()->format('Y-m-d H:i:s')))
+                ->get([
+                    DB::raw("date_format(" . $dateColumn . ",'%Y-%m-%d') as moment"),
+                    DB::raw('COUNT(*) as "count"')
+                ]),
+            'month' => $this->data->where($dateColumn, '>=', $this->request->input('from', Carbon::now()->subMonth()->format('Y-m-d H:i:s')))
+                ->get([
+                    DB::raw("date_format(" . $dateColumn . ",'%Y-%m-%d') as moment"),
+                    DB::raw('COUNT(*) as "count"')
+                ]),
+            'year' => $this->data->where($dateColumn, '>=', $this->request->input('from', Carbon::now()->subYear()->format('Y-m-d H:i:s')))
+                ->get([
+                    DB::raw("date_format(" . $dateColumn . ",'%Y-%m') as moment"),
+                    DB::raw('COUNT(*) as "count"')
+                ]),
+            default => $this->data,
+        };
 
         $this->data = $this->data->each->setAppends([])->pluck('count', 'moment');
         $this->data = $this->compileStatistics(
             $by,
-            $this->request->get('from'),
-            $this->request->get('to'),
+            $this->request->input('from'),
+            $this->request->input('to'),
             $this->data
         );
 
@@ -225,39 +218,27 @@ class StatisticsGraphFactory
     {
         $stats = [];
 
-        switch ($by) {
-            case 'day':
-                $period = collect(CarbonInterval::hour()->toPeriod(
-                    $from ?? Carbon::now()->subDay()->format('Y-m-d H:i:s'),
-                    $to ?? Carbon::now()->format('Y-m-d H:i:s')
-                ))->map->format('Y-m-d H');
-                break;
+        $period = match ($by) {
+            'day' => collect(CarbonInterval::hour()->toPeriod(
+                $from ?? Carbon::now()->subDay()->format('Y-m-d H:i:s'),
+                $to ?? Carbon::now()->format('Y-m-d H:i:s')
+            ))->map->format('Y-m-d H'),
 
-            case 'week':
-                $period = collect(CarbonPeriod::create(
-                    $from ?? Carbon::now()->subWeek(),
-                    $to ?? Carbon::now()
-                ))->map->format('Y-m-d');
-                break;
+            'week' => collect(CarbonPeriod::create(
+                $from ?? Carbon::now()->subWeek(),
+                $to ?? Carbon::now()
+            ))->map->format('Y-m-d'),
 
-            case 'month':
-                $period = collect(
-                    CarbonPeriod::create(
-                        $from ?? Carbon::now()->subMonth(),
-                        $to ?? Carbon::now()
-                    )
-                )->map->format('Y-m-d');
-                break;
+            'month' => collect(CarbonPeriod::create(
+                $from ?? Carbon::now()->subMonth(),
+                $to ?? Carbon::now()
+            ))->map->format('Y-m-d'),
 
-            case 'year':
-                $period = collect(
-                    CarbonPeriod::create(
-                        $from ?? Carbon::now()->subYear(),
-                        $to ?? Carbon::now()
-                    )
-                )->map->format('Y-m');
-                break;
-        }
+            'year' => collect(CarbonPeriod::create(
+                $from ?? Carbon::now()->subYear(),
+                $to ?? Carbon::now()
+            ))->map->format('Y-m'),
+        };
 
         foreach ($period as $moment) {
             $stats[$moment] = $data[$moment] ?? 0;
