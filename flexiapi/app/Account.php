@@ -83,6 +83,14 @@ class Account extends Authenticatable
              */
             $builder->where('domain', config('app.sip_domain') ?? space()->domain);
         });
+
+        static::addGlobalScope('no_voicemail', function (Builder $builder) {
+            $builder->whereNotIn('id', function ($query) {
+                $query->select('voicemail_account_id')
+                    ->from('spaces')
+                    ->whereNotNull('voicemail_account_id');
+            });
+        });
     }
 
     public function scopeSip($query, string $sip)
