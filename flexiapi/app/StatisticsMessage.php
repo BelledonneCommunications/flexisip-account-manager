@@ -39,7 +39,26 @@ class StatisticsMessage extends Model
         return $this->belongsTo(Account::class, ['username', 'domain'], ['to_username', 'to_domain']);
     }
 
-    public function scopeToUsernameDomain(Builder $query, ?string $username, ?string $domain)
+    public function scopeInvolvingDomain(Builder $query, string $domain)
+    {
+        // Count each message once, even if only one of its two endpoints belongs to this domain —
+        // it is not counted twice when both do.
+        // The to endpoint of a message lives in the statistics_message_devices rows.
+        // The where() grouping is required so that this scope composes correctly with any other constraint.
+        return $query->where(function (Builder $query) use ($domain) {
+            $query->where('from_domain', $domain)
+                ->orWhere(function (Builder $query) use ($domain) {
+                    $query->toDomain($domain);
+                });
+        });
+    }
+
+    public function scopeFromUsernameDomain(Builder $query, string $username, string $domain)
+    {
+        return $query->where('from_username', $username)->where('from_domain', $domain);
+    }
+
+    public function scopeToUsernameDomain(Builder $query, string $username, string $domain)
     {
         return $query->whereIn('id', function ($query) use ($username, $domain) {
             $query->select('message_id')

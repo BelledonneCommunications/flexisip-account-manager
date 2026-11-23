@@ -21,6 +21,8 @@
 namespace App\Http\Controllers\Admin\Account;
 
 use App\Account;
+use App\Enums\StatisticsGraphDirection;
+use App\Enums\StatisticsGraphType;
 use App\Http\Controllers\Controller;
 use App\Libraries\StatisticsGraphFactory;
 use App\StatisticsCall;
@@ -51,22 +53,22 @@ class StatisticsController extends Controller
         $account = Account::findOrFail($accountId);
 
         $messagesFromGraph = view('parts.graph', [
-            'jsonConfig' => json_encode((new StatisticsGraphFactory($request, 'messages', fromUsername: $account->username, fromDomain: $account->domain))->getConfig()),
+            'jsonConfig' => json_encode((new StatisticsGraphFactory($request))->getAccountGraphConfig(StatisticsGraphType::MESSAGES, $account->username, $account->domain, StatisticsGraphDirection::FROM)),
             'request' => $request
         ])->render();
 
         $messagesToGraph = view('parts.graph', [
-            'jsonConfig' => json_encode((new StatisticsGraphFactory($request, 'messages', toUsername: $account->username, toDomain: $account->domain))->getConfig()),
+            'jsonConfig' => json_encode((new StatisticsGraphFactory($request))->getAccountGraphConfig(StatisticsGraphType::MESSAGES, $account->username, $account->domain, StatisticsGraphDirection::TO)),
             'request' => $request
         ])->render();
 
         $callsFromGraph = view('parts.graph', [
-            'jsonConfig' => json_encode((new StatisticsGraphFactory($request, 'calls', fromUsername: $account->username, fromDomain: $account->domain))->getConfig()),
+            'jsonConfig' => json_encode((new StatisticsGraphFactory($request))->getAccountGraphConfig(StatisticsGraphType::CALLS, $account->username, $account->domain, StatisticsGraphDirection::FROM)),
             'request' => $request
         ])->render();
 
         $callsToGraph = view('parts.graph', [
-            'jsonConfig' => json_encode((new StatisticsGraphFactory($request, 'calls', toUsername: $account->username, toDomain: $account->domain))->getConfig()),
+            'jsonConfig' => json_encode((new StatisticsGraphFactory($request))->getAccountGraphConfig(StatisticsGraphType::CALLS, $account->username, $account->domain, StatisticsGraphDirection::TO)),
             'request' => $request
         ])->render();
 
