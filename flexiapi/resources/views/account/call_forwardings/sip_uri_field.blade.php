@@ -6,6 +6,6 @@
     </datalist>
 
     <span class="def">sip:</span>
-    <input placeholder="account@server.com" list="contacts" onmouseover="focus(); old = value;"  onmouseup="value = old;" name="{{ $type }}[sip_uri]" type="text" id="{{ $type }}[sip_uri]" value="{{ old($type . '.sip_uri') ?? $callForwardings[$type]->sipAccount?->identifier }}">
+    <input placeholder="account@server.com" autocomplete="off" list="contacts" onmouseover="focus(); old = value;"  onmouseup="value = old;" name="{{ $type }}[sip_uri]" type="text" id="{{ $type }}[sip_uri]" value="{{ old($type . '.sip_uri') ?? $callForwardings[$type]->sipAccount?->identifier }}">
 </div>
 @include('parts.errors', ['name' => $type . '.sip_uri'])

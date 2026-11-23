@@ -1,6 +1,4 @@
-<h3>
-    @if (auth()->user()->admin){{ __('Call Forwarding') }}@else{{ __('My Call Forwarding') }}@endif
-</h3>
+<h3>{{ __('Call Forwarding') }}</h3>
 
 <form id="edit" method="POST" action="@if (auth()->user()->admin) {{ route('admin.account.call_forwardings.update', $account->id) }}@else{{ route('account.call_forwardings.update') }}@endif" accept-charset="UTF-8">
     @csrf
