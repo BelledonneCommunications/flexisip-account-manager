@@ -185,7 +185,7 @@ class Space extends Model
     {
         if ($this->oidcAuthenticationConfiguration) {
             return
-                'authz_server="' . $this->oidcAuthenticationConfiguration->server_url . 'realms/' . $this->oidcAuthenticationConfiguration->realm . '"' .
+                'authz_server="' . $this->oidcAuthenticationConfiguration->authorization_server . '"' .
                 ',realm="' . $this->oidcAuthenticationConfiguration->realm . '"';
         }
 
@@ -247,7 +247,7 @@ class Space extends Model
                 'client_id' => $this->oidcAuthenticationConfiguration->client_id,
                 'client_secret' => $this->oidcAuthenticationConfiguration->client_secret,
                 'redirect' => route('account.login.oidc.redirect'),
-                'base_url' => $this->oidcAuthenticationConfiguration->server_url,
+                'base_url' => $this->oidcAuthenticationConfiguration->authorization_server,
                 'realms' => $this->oidcAuthenticationConfiguration->realm
             ]);
         }

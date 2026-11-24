@@ -12,14 +12,11 @@ class SpaceOIDCAuthenticationConfigurationFactory extends Factory
     public function definition(): array
     {
         return [
-            'server_url' => fake()->url(),
-            'realm' => 'Linphone',
-            'public_key' => fake()->sha256(),
-            'sip_identifier' => 'sip_identity',
+            'authorization_server' => fake()->url(),
+            'audience' => 'aud',
+            'sip_id_claim' => 'sip_identity',
             'client_secret' => fake()->uuid(),
             'client_id' => 'fam',
-            'role_provisioning' => fake()->name(),
-            'auto_provisioning' => false,
             'space_id' => 1,
         ];
     }

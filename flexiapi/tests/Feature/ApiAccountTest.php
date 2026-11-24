@@ -34,7 +34,7 @@ class ApiAccountTest extends TestCase
     {
         Account::factory()->create();
         $this->json('GET', '/api/accounts/me/api_key')
-            ->assertStatus(401);
+            ->assertUnauthorized();
     }
 
     public function testNotAdminForbidden()

@@ -86,7 +86,7 @@ class ApiAccountApiKeyTest extends TestCase
 
         $this->keyAuthenticated($account)
             ->json($this->method, '/api/accounts/me')
-            ->assertStatus(401);
+            ->assertUnauthorized();
     }
 
     public function testAuthToken()

@@ -50,7 +50,6 @@ class AdministrationUpdate extends BaseRequest
                         : [];
 
                     if ($duplicates->isNotEmpty()) {
-                        dd($duplicates);
                         $messages = [];
 
                         foreach ($duplicates as $key => $value) {

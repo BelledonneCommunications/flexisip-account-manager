@@ -54,7 +54,7 @@
             <h3 class="line"><i class="ph ph-key"></i> {{ __('OpenID Connect configuration') }}</h3>
             @if ($space->oidcAuthenticationConfiguration)
                 <p>
-                    <code>{{ $space->oidcAuthenticationConfiguration->server_url }}</code><br /><br />
+                    <code>{{ $space->oidcAuthenticationConfiguration->authorization_server }}</code><br /><br />
                 </p>
             @else
                 <div class="empty">

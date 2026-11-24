@@ -32,7 +32,7 @@ class ApiAuthenticationTest extends TestCase
     {
         Password::factory()->create();
         $response = $this->json($this->method, $this->route);
-        $response->assertStatus(401);
+        $response->assertUnauthorized();
     }
 
     public function testWrongFrom()
@@ -51,7 +51,7 @@ class ApiAuthenticationTest extends TestCase
         $response = $this->withHeaders([
             'From' => 'sip:' . $password->account->identifier,
         ])->json($this->method, $this->route);
-        $response->assertStatus(401);
+        $response->assertUnauthorized();
     }
 
     public function testAuthenticateWithKey()
@@ -78,7 +78,7 @@ class ApiAuthenticationTest extends TestCase
             'From' => 'sip:' . $passwordMD5->account->identifier,
         ])->json($this->method, $this->route);
 
-        $response->assertStatus(401);
+        $response->assertUnauthorized();
 
         $this->assertStringContainsString('algorithm=MD5', $response->headers->all()['www-authenticate'][0]);
         $this->assertStringContainsString('algorithm=SHA-256', $response->headers->all()['www-authenticate'][1]);
@@ -108,7 +108,7 @@ class ApiAuthenticationTest extends TestCase
         ])->json($this->method, $this->route);
 
         $response3->assertSee('Nonce replayed');
-        $response3->assertStatus(401);
+        $response3->assertUnauthorized();
     }
 
     public function testClearedNonce()
@@ -131,7 +131,7 @@ class ApiAuthenticationTest extends TestCase
         ])->json($this->method, $this->route);
 
         $response3->assertSee('Invalid opaque');
-        $response3->assertStatus(401);
+        $response3->assertUnauthorized();
         $this->assertStringContainsString('algorithm=MD5', $response3->headers->all()['www-authenticate'][0]);
     }
 
@@ -158,7 +158,7 @@ class ApiAuthenticationTest extends TestCase
             ->json($this->method, $this->route);
 
         $response->assertSee('Invalid opaque');
-        $response->assertStatus(401);
+        $response->assertUnauthorized();
     }
 
     public function testAuthenticationSHA265()
@@ -184,7 +184,7 @@ class ApiAuthenticationTest extends TestCase
             'Authorization' => $this->generateDigest($password, $response, 'md5'),
         ])->json($this->method, $this->route);
 
-        $response->assertStatus(401);
+        $response->assertUnauthorized();
     }
 
     public function testAuthenticationBadPassword()
@@ -197,6 +197,6 @@ class ApiAuthenticationTest extends TestCase
         $response = $this->generateSecondResponse($password, $response)
             ->json($this->method, $this->route);
 
-        $response->assertStatus(401);
+        $response->assertUnauthorized();
     }
 }

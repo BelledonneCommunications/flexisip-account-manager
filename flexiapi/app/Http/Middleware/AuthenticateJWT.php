@@ -40,12 +40,10 @@ class AuthenticateJWT extends Authenticate
 {
     public function handle($request, Closure $next, ...$guards)
     {
-        if ($request->bearerToken() && $request->space->oidcAuthenticationConfiguration?->public_key) {
+        if ($request->bearerToken() && $request->space->oidcAuthenticationConfiguration?->keys->isNotEmpty()) {
             if (!extension_loaded('sodium')) {
                 abort(403, "PHP Sodium extension isn't loaded");
             }
-
-            $publicKey = InMemory::plainText($request->space->oidcAuthenticationConfiguration->public_key);
 
             try {
                 $token = (new Parser(new JoseEncoder))->parse($request->bearerToken());
@@ -73,42 +71,43 @@ class AuthenticateJWT extends Authenticate
                 return $this->generateUnauthorizedBearerResponse($request->space, 'invalid_token', 'Unsupported RSA signature');
             }
 
-            if (!(new Validator)->validate($token, new SignedWith($signer, $publicKey))) {
-                return $this->generateUnauthorizedBearerResponse($request->space, 'invalid_token', 'Invalid JWT token signature');
-            }
-
             if ($token->isExpired(new DateTimeImmutable)) {
                 return $this->generateUnauthorizedBearerResponse($request->space, 'invalid_token', 'Expired JWT token');
             }
 
-            $account = null;
-            $identifierKey = $request->space->oidcAuthenticationConfiguration->sip_identifier;
+            // Keys validation
 
-            if ($identifierKey == '') {
-                $identifierKey = 'sip_identity';
+            $checkKeys = false;
+            $keys = $request->space->oidcAuthenticationConfiguration->keys;
+
+            foreach ($keys as $key) {
+                if ((new Validator)->validate($token, new SignedWith($signer, InMemory::plainText($key->public_key)))) {
+                    $checkKeys = true;
+                    break;
+                }
             }
 
-            if ($token->claims()->has($identifierKey)) {
-                $sip = parseSIP($token->claims()->get($identifierKey));
+            if (!$checkKeys) {
+                return $this->generateUnauthorizedBearerResponse($request->space, 'invalid_token', 'Invalid JWT token signature');
+            }
+
+            $account = null;
+
+            if ($sipAddress = $token->claims()->get($request->space->oidcAuthenticationConfiguration->sip_id_claim)) {
+                $sip = parseSIP($sipAddress);
 
                 if ($sip == null) {
                     return $this->generateUnauthorizedBearerResponse($request->space, 'invalid_token', 'Invalid SIP address');
                 }
 
-                list($username, $domain) = $sip;
-
-                $account = Account::withoutGlobalScopes()
-                    ->where('username', $username)
-                    ->where('domain', $domain)
-                    ->first();
+                $account = Account::sip($sipAddress)->first();
             } elseif ($token->claims()->has('email')) {
-                $account = Account::withoutGlobalScopes()
-                    ->where('email', $token->claims()->get('email'))
+                $account = Account::where('email', $token->claims()->get('email'))
                     ->first();
             }
 
             if (!$account) {
-                abort(403, 'The JWT token is not related to someone in the system');
+                return $this->generateUnauthorizedBearerResponse($request->space, 'invalid_token', 'The JWT token is not related to someone in the system');
             }
 
             Auth::login($account);

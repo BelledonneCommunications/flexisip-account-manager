@@ -12,39 +12,77 @@ class SpaceOIDCAuthenticationConfiguration extends Model
 {
     use HasFactory;
 
-    public ?string $refreshSsoError = null;
+    public ?string $refreshKeysErrors = null;
 
     protected $table = 'space_oidc_authentication_configurations';
-    protected $hidden = ['space_id', 'client_secret', 'id', 'created_at', 'updated_at'];
-    protected $fillable = ['server_url', 'realm', 'sip_identifier', 'client_id', 'client_secret', 'role_provisioning'];
-    protected $casts = [
-        'auto_provisioning' => 'boolean',
-    ];
+    protected $hidden = ['space_id', 'client_id', 'client_secret', 'id', 'created_at', 'updated_at'];
+    protected $fillable = ['authorization_server', 'audience', 'sip_id_claim', 'client_id', 'client_secret'];
+
+    private array $resolvedKeys = [];
+
+    public function save(array $options = [])
+    {
+        parent::save($options);
+
+        foreach ($this->resolvedKeys as $key) {
+            $key->oidc_id = $this->attributes['id'];
+            $key->save();
+        }
+    }
 
     public function space()
     {
         return $this->belongsTo(Space::class);
     }
 
-    public function refreshOIDCCertificate(): bool
+    public function keys()
     {
-        if ($this->server_url) {
+        return $this->hasMany(SpaceOIDCAuthenticationConfigurationKey::class, 'oidc_id', 'id');
+    }
+
+    public function refreshOIDCCertificate(): int
+    {
+        if ($this->authorization_server) {
             try {
-                $response = Http::get($this->server_url . 'realms/' . $this->realm . '/protocol/openid-connect/certs');
-                $jwkConverter = new JWKConverter;
+                $response = Http::get($this->authorization_server . '.well-known/openid-configuration');
 
-                if ($response->status() == '200' && $publicKey = $response->json('keys')[0]) {
-                    $this->public_key = $jwkConverter->toPEM($publicKey);
-                    $this->attributes['updated_at'] = Carbon::now();
+                if ($response->status() == '200' && $jwksURI = $response->json('jwks_uri')) {
+                    $response = Http::get($jwksURI);
+                    $jwkConverter = new JWKConverter;
 
-                    return true;
+                    if ($response->status() == '200' && $publicKeys = $response->json('keys')) {
+                        $this->keys()->delete();
+
+                        $count = 0;
+
+                        foreach ($publicKeys as $publicKey) {
+                            if ($publicKey['use'] == 'sig') {
+                                $key = new SpaceOIDCAuthenticationConfigurationKey;
+                                $key->kid = (string) $publicKey['kid'];
+                                $key->public_key = $jwkConverter->toPEM($publicKey);
+
+                                if (isset($this->attributes['id'])) {
+                                    $key->oidc_id = $this->attributes['id'];
+                                    $key->save();
+                                } else {
+                                    array_push($this->resolvedKeys, $key);
+                                }
+                            }
+
+                            $count++;
+                        }
+
+                        $this->attributes['updated_at'] = Carbon::now();
+
+                        return $count;
+                    }
                 }
             } catch (\Throwable $th) {
-                $this->refreshSsoError = $th->getMessage();
+                $this->refreshKeysErrors = $th->getMessage();
                 // Something bad happened during the query
             }
         }
 
-        return false;
+        return 0;
     }
 }

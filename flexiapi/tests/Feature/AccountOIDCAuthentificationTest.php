@@ -5,15 +5,9 @@ namespace Tests\Feature;
 use App\Account;
 use App\Space;
 use App\SpaceOIDCAuthenticationConfiguration;
-use DateTimeImmutable;
-use Lcobucci\Clock\FrozenClock;
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\JwtFacade;
-use Lcobucci\JWT\Signer\Key\InMemory;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
+use App\SpaceOIDCAuthenticationConfigurationKey;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\User as SsoUser;
-use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class AccountOIDCAuthentificationTest extends TestCase
@@ -34,9 +28,10 @@ class AccountOIDCAuthentificationTest extends TestCase
 
         $this->get($this->route)->assertStatus(403);
 
-        SpaceOIDCAuthenticationConfiguration::factory()->withSpaceId($space->id)->create([
-            'public_key' => $this->serverPublicKeyPem,
-        ]);
+        SpaceOIDCAuthenticationConfiguration::factory()
+            ->withSpaceId($space->id)
+            ->has(SpaceOIDCAuthenticationConfigurationKey::factory(['public_key' => $this->serverPublicKeyPem]), 'keys')
+            ->create();
 
         $this->get($this->route)->assertStatus(302);
     }
@@ -53,9 +48,10 @@ class AccountOIDCAuthentificationTest extends TestCase
         $this->get($this->redirectRoute)
             ->assertStatus(403);
 
-        SpaceOIDCAuthenticationConfiguration::factory()->withSpaceId($space->id)->create([
-            'public_key' => $this->serverPublicKeyPem,
-        ]);
+        SpaceOIDCAuthenticationConfiguration::factory()
+            ->withSpaceId($space->id)
+            ->has(SpaceOIDCAuthenticationConfigurationKey::factory(['public_key' => $this->serverPublicKeyPem]), 'keys')
+            ->create();
         $space->refresh();
 
         // ssoUser without email
@@ -66,10 +62,6 @@ class AccountOIDCAuthentificationTest extends TestCase
         $this->get($this->redirectRoute)
             ->assertRedirect('login')
             ->assertSessionHasErrors(['sso_not_found']);
-
-        /**
-         * Auto_provisioning off
-         */
 
         // User does not exist
         $ssoUser->email = fake()->email();
@@ -87,90 +79,6 @@ class AccountOIDCAuthentificationTest extends TestCase
             ->andReturn($ssoUser);
 
         // Existing user
-        $this->get($this->redirectRoute)
-            ->assertRedirect(route('account.home'));
-
-        /**
-         * Auto_provisioning on
-         */
-
-        SpaceOIDCAuthenticationConfiguration::where('space_id', $space->id)->update(['auto_provisioning' => true]);
-        $space->load('oidcAuthenticationConfiguration');
-
-        // Without Roles - User does not exist
-        $ssoUser->email = fake()->email();
-        $clock = new FrozenClock(new DateTimeImmutable);
-        $ssoUser->token = (new JwtFacade(clock: $clock))->issue(
-            new Sha256,
-            InMemory::plainText($this->serverPrivateKeyPem),
-            static fn (
-                Builder $builder,
-                DateTimeImmutable $issuedAt
-            ): Builder => $builder
-                ->withClaim('email', $account->email)
-        )->toString();
-
-        Socialite::shouldReceive('driver->stateless->user')
-            ->once()
-            ->andReturn($ssoUser);
-
-        $this->get($this->redirectRoute)
-            ->assertRedirect('login')
-            ->assertSessionHasErrors(['sso_not_found']);
-
-        // Without Roles - Existing user
-        $ssoUser->token = (new JwtFacade(clock: $clock))->issue(
-            new Sha256,
-            InMemory::plainText($this->serverPrivateKeyPem),
-            static fn (
-                Builder $builder,
-                DateTimeImmutable $issuedAt
-            ): Builder => $builder
-                ->withClaim('email', $account->email)
-        )->toString();
-
-        $ssoUser->email = $account->email;
-
-        Socialite::shouldReceive('driver->stateless->user')
-            ->once()
-            ->andReturn($ssoUser);
-
-        $this->get($this->redirectRoute)
-            ->assertRedirect('login')
-            ->assertSessionHasErrors(['sso_not_found']);
-        $this->assertFalse($account->fresh()->activated);
-
-        // Account creation
-        $ssoUser->email = fake()->email();
-
-        $ssoUser->token = (new JwtFacade(clock: $clock))->issue(
-            new Sha256,
-            InMemory::plainText($this->serverPrivateKeyPem),
-            static fn (
-                Builder $builder,
-                DateTimeImmutable $issuedAt
-            ): Builder => $builder
-                ->withClaim('realm_access', ['roles' => [$space->oidcAuthenticationConfiguration->role_provisioning]])
-        )->toString();
-
-        Socialite::shouldReceive('driver->stateless->user')
-            ->once()
-            ->andReturn($ssoUser);
-
-        $this->get($this->redirectRoute)
-            ->assertRedirect(route('account.home'));
-
-        $newAccount = Account::where('email', $ssoUser->email)->first();
-        $this->assertNotNull($newAccount);
-
-        // Account creation duplicate username
-        $email = Str::before($ssoUser->email, '@') . '@exemple.fr';
-        $ssoUser->email = $email;
-
-        Socialite::shouldReceive('driver->stateless->user')
-            ->once()
-            ->andReturn($ssoUser);
-
         $this->get($this->redirectRoute)
             ->assertRedirect(route('account.home'));
     }

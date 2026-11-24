@@ -20,8 +20,10 @@
 
 namespace Tests\Feature;
 
-use App\Password;
+use App\Account;
+use App\Space;
 use App\SpaceOIDCAuthenticationConfiguration;
+use App\SpaceOIDCAuthenticationConfigurationKey;
 use DateTimeImmutable;
 use Lcobucci\Clock\FrozenClock;
 use Lcobucci\JWT\Builder;
@@ -49,6 +51,27 @@ class AccountJWTAuthenticationTest extends TestCase
         $this->generateKeyPair();
     }
 
+    public function testSpaceAPI()
+    {
+        Space::factory()->create();
+
+        $admin = Account::factory()->superAdmin()->create();
+        $admin->generateUserApiKey();
+
+        $oidcConfiguration = SpaceOIDCAuthenticationConfiguration::factory()
+            ->withSpaceId($admin->space->id)
+            ->has(SpaceOIDCAuthenticationConfigurationKey::factory(['public_key' => $this->serverPublicKeyPem]), 'keys')
+            ->create();
+
+        $this->keyAuthenticated($admin)
+            ->json($this->method, '/api/spaces')
+            ->assertJsonFragment(['audience' => $oidcConfiguration->audience])
+            ->assertJsonMissing(['public_key' => $this->serverPublicKeyPem])
+            ->assertJsonMissing(['client_id' => $oidcConfiguration->client_id])
+            ->assertJsonMissing(['client_secret' => $oidcConfiguration->client_secret])
+            ->assertOk();
+    }
+
     public function testBaseProvisioning()
     {
         # JWT is disabled if Sodium is not loaded
@@ -56,19 +79,17 @@ class AccountJWTAuthenticationTest extends TestCase
             return;
         }
 
-        $password = Password::factory()->create();
-        $domain = 'sip_provisioning.example.com';
+        $account = Account::factory()->withEmail()->create();
 
-        $space = \App\Space::where('domain', $password->account->domain)->first();
-        $space->update(['host' => $domain,]);
+        $secondSpace = Space::factory()->secondDomain()->create();
+        $otherDomainAccount = Account::factory()->fromSpace($secondSpace)->create();
 
-        SpaceOIDCAuthenticationConfiguration::factory()->withSpaceId($space->id)->create([
-            'public_key' => $this->serverPublicKeyPem,
-        ]);
+        SpaceOIDCAuthenticationConfiguration::factory()
+            ->withSpaceId($account->space->id)
+            ->has(SpaceOIDCAuthenticationConfigurationKey::factory(['public_key' => $this->serverPublicKeyPem]), 'keys')
+            ->create();
 
-        $space->refresh();
-
-        config()->set('app.sip_domain', $domain);
+        $account->space->refresh();
 
         $this->get($this->route)->assertStatus(400);
 
@@ -80,10 +101,44 @@ class AccountJWTAuthenticationTest extends TestCase
             static fn (
                 Builder $builder,
                 DateTimeImmutable $issuedAt
-            ): Builder => $builder->withClaim('email', $password->account->email)
+            ): Builder => $builder->withClaim('email', $account->email)
         );
 
         $this->checkToken($token);
+
+        // Other domain account
+
+        $token = (new JwtFacade(clock: $clock))->issue(
+            new Sha256,
+            InMemory::plainText($this->serverPrivateKeyPem),
+            static fn (
+                Builder $builder,
+                DateTimeImmutable $issuedAt
+            ): Builder => $builder->withClaim('email', $otherDomainAccount->email)
+        );
+
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token->toString(),
+            'x-linphone-provisioning' => true,
+        ])
+            ->get($this->accountRoute)
+            ->assertUnauthorized();
+
+        $token = (new JwtFacade(clock: $clock))->issue(
+            new Sha256,
+            InMemory::plainText($this->serverPrivateKeyPem),
+            static fn (
+                Builder $builder,
+                DateTimeImmutable $issuedAt
+            ): Builder => $builder->withClaim('sip_identity', $otherDomainAccount->sip_uri)
+        );
+
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token->toString(),
+            'x-linphone-provisioning' => true,
+        ])
+            ->get($this->accountRoute)
+            ->assertUnauthorized();
 
         // SIP identifier
 
@@ -93,7 +148,7 @@ class AccountJWTAuthenticationTest extends TestCase
             static fn (
                 Builder $builder,
                 DateTimeImmutable $issuedAt
-            ): Builder => $builder->withClaim('sip_identity', 'sip:' . $password->account->username . '@' . $password->account->domain)
+            ): Builder => $builder->withClaim('sip_identity', $account->sip_uri)
         );
 
         $this->checkToken($token);
@@ -105,14 +160,15 @@ class AccountJWTAuthenticationTest extends TestCase
             static fn (
                 Builder $builder,
                 DateTimeImmutable $issuedAt
-            ): Builder => $builder->withClaim('sip_identity', 'sip:' . $password->account->username . '@' . $password->account->domain)
+            ): Builder => $builder->withClaim('sip_identity', $account->sip_uri)
         );
 
         $this->checkToken($token);
 
         // Custom SIP identifier
         $otherIdentifier = 'sip_other_identifier';
-        $space->oidcAuthenticationConfiguration->update(['sip_identifier' => 'sip_other_identifier']);
+
+        $account->space->oidcAuthenticationConfiguration->update(['sip_id_claim' => 'sip_other_identifier']);
 
         $token = (new JwtFacade(clock: $clock))->issue(
             new Sha256,
@@ -120,7 +176,7 @@ class AccountJWTAuthenticationTest extends TestCase
             static fn (
                 Builder $builder,
                 DateTimeImmutable $issuedAt
-            ): Builder => $builder->withClaim($otherIdentifier, 'sip:' . $password->account->username . '@' . $password->account->domain)
+            ): Builder => $builder->withClaim($otherIdentifier, $account->sip_uri)
         );
 
         $this->checkToken($token);
@@ -132,7 +188,7 @@ class AccountJWTAuthenticationTest extends TestCase
             static fn (
                 Builder $builder,
                 DateTimeImmutable $issuedAt
-            ): Builder => $builder->withClaim('email', $password->account->email)
+            ): Builder => $builder->withClaim('email', $account->email)
         );
 
         $this->checkToken($token);
@@ -146,7 +202,7 @@ class AccountJWTAuthenticationTest extends TestCase
             static fn (
                 Builder $builder,
                 DateTimeImmutable $issuedAt
-            ): Builder => $builder->withClaim('email', $password->account->email)
+            ): Builder => $builder->withClaim('email', $account->email)
         );
 
         $this->flushSession();
@@ -157,7 +213,7 @@ class AccountJWTAuthenticationTest extends TestCase
             'x-linphone-provisioning' => true,
         ])
             ->get($this->accountRoute)
-            ->assertStatus(401);
+            ->assertUnauthorized();
 
         $this->assertStringContainsString('invalid_token', $response->headers->get('WWW-Authenticate'));
 
@@ -167,9 +223,9 @@ class AccountJWTAuthenticationTest extends TestCase
             'x-linphone-provisioning' => true,
         ])
             ->get($this->accountRoute)
-            ->assertStatus(401);
+            ->assertUnauthorized();
 
-        $this->assertStringContainsString($space->oidc_authentication_bearer . ', ', $response->headers->get('WWW-Authenticate'));
+        $this->assertStringContainsString($account->space->oidc_authentication_bearer . ', ', $response->headers->get('WWW-Authenticate'));
         $this->assertStringContainsString('invalid_token', $response->headers->get('WWW-Authenticate'));
 
         // Wrong email
@@ -187,7 +243,7 @@ class AccountJWTAuthenticationTest extends TestCase
             'x-linphone-provisioning' => true,
         ])
             ->get($this->accountRoute)
-            ->assertStatus(403);
+            ->assertUnauthorized();
 
         // Wrong signature key
         $keys = openssl_pkey_new(array("private_key_bits" => 4096, "private_key_type" => OPENSSL_KEYTYPE_RSA));
@@ -199,7 +255,7 @@ class AccountJWTAuthenticationTest extends TestCase
             static fn (
                 Builder $builder,
                 DateTimeImmutable $issuedAt
-            ): Builder => $builder->withClaim('email', $password->account->email)
+            ): Builder => $builder->withClaim('email', $account->email)
         );
 
         $this->withHeaders([
@@ -207,7 +263,7 @@ class AccountJWTAuthenticationTest extends TestCase
             'x-linphone-provisioning' => true,
         ])
             ->get($this->accountRoute)
-            ->assertStatus(401);
+            ->assertUnauthorized();
     }
 
     public function testAuthBearerUrl()
@@ -217,17 +273,16 @@ class AccountJWTAuthenticationTest extends TestCase
             return;
         }
 
-        $password = Password::factory()->create();
-        $space = \App\Space::where('domain', $password->account->domain)->first();
+        $account = Account::factory()->create();
+        $space = \App\Space::where('domain', $account->domain)->first();
 
-        SpaceOIDCAuthenticationConfiguration::factory()->withSpaceId($space->id)->create([
-            'public_key' => $this->serverPublicKeyPem,
-        ]);
-
-        $space->refresh();
+        SpaceOIDCAuthenticationConfiguration::factory()
+            ->withSpaceId($space->id)
+            ->has(SpaceOIDCAuthenticationConfigurationKey::factory(['public_key' => $this->serverPublicKeyPem]), 'keys')
+            ->create();
 
         $response = $this->json($this->method, $this->routeAccountMe)
-            ->assertStatus(401);
+            ->assertUnauthorized();
 
         $this->assertStringContainsString(
             'Bearer ' . $space->oidc_authentication_bearer,
@@ -237,7 +292,7 @@ class AccountJWTAuthenticationTest extends TestCase
         // Wrong From
         $this->withHeaders(['From' => 'sip:missing@username'])
             ->json($this->method, $this->routeAccountMe)
-            ->assertStatus(401);
+            ->assertUnauthorized();
 
         $this->assertStringContainsString(
             'Bearer ' . $space->oidc_authentication_bearer,
@@ -249,7 +304,7 @@ class AccountJWTAuthenticationTest extends TestCase
             'Authorization' => 'Bearer 1234'
         ])
             ->json($this->method, $this->routeAccountMe)
-            ->assertStatus(401);
+            ->assertUnauthorized();
 
         $this->assertStringContainsString(
             'Bearer ' . $space->oidc_authentication_bearer,
@@ -266,6 +321,6 @@ class AccountJWTAuthenticationTest extends TestCase
             ->get($this->accountRoute)
             ->assertOk()
             ->assertHeader('Content-Type', 'application/xml')
-            ->assertSee('ha1');
+            ->assertSee('http://www.linphone.org/xsds/lpconfig.xsd');
     }
 }

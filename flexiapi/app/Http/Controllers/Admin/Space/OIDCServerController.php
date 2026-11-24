@@ -22,57 +22,36 @@ class OIDCServerController extends Controller
         ]);
     }
 
-    public function refreshPublicKey(Space $space)
-    {
-        $oidcAuthenticationConfiguration = SpaceOIDCAuthenticationConfiguration::where('space_id', $space->id)->firstOrFail();
-
-        if (!$oidcAuthenticationConfiguration->refreshOIDCCertificate()) {
-            return redirect()->back()->withErrors([
-                'sso_public_key' => __('The public key cannot be refreshed')
-            ]);
-        }
-
-        $oidcAuthenticationConfiguration->save();
-
-        return redirect()->back();
-    }
-
     public function store(Request $request, Space $space)
     {
         $request->validate([
-            'realm' => 'required',
-            'server_url' => 'required|url|ends_with:/',
-            'sip_identifier' => 'required',
-            'role_provisioning' => 'required_if:sso_auto_provisioning,on|nullable|string'
+            'audience' => 'required',
+            'authorization_server' => 'required|url|ends_with:/',
+            'sip_id_claim' => 'required',
+            'client_id' => 'required'
         ]);
 
         if ($space->unique_email) {
             $oidcAuthenticationConfiguration = $space->oidcAuthenticationConfiguration ?: new SpaceOIDCAuthenticationConfiguration;
 
-            $oidcAuthenticationConfiguration->server_url = $request->input('server_url');
-            $oidcAuthenticationConfiguration->sip_identifier = $request->input('sip_identifier');
-            $oidcAuthenticationConfiguration->realm = $request->input('realm');
+            $oidcAuthenticationConfiguration->authorization_server = $request->input('authorization_server');
+            $oidcAuthenticationConfiguration->sip_id_claim = $request->input('sip_id_claim');
+            $oidcAuthenticationConfiguration->audience = $request->input('audience');
             $oidcAuthenticationConfiguration->client_id = $request->input('client_id');
             $oidcAuthenticationConfiguration->client_secret = $request->input('client_secret');
-            $oidcAuthenticationConfiguration->auto_provisioning = false;
             $oidcAuthenticationConfiguration->space_id = $space->id;
 
-            if ($request->boolean('auto_provisioning')) {
-                $oidcAuthenticationConfiguration->auto_provisioning = true;
-                $oidcAuthenticationConfiguration->role_provisioning = $request->input('role_provisioning');
-            }
-
-            if ($oidcAuthenticationConfiguration->refreshOIDCCertificate()) {
+            if ($oidcAuthenticationConfiguration->refreshOIDCCertificate() > 0) {
                 $oidcAuthenticationConfiguration->save();
             } else {
-                $error = __('Unable to connect to the OIDC server. Please verify the provided settings.');
+                $error = __('Unable to connect to the OIDC server or find valid certificates. Please verify the provided settings.');
 
-                if ($oidcAuthenticationConfiguration->refreshSsoError !== null) {
-                    $error .= " (" . $oidcAuthenticationConfiguration->refreshSsoError . ')';
+                if ($oidcAuthenticationConfiguration->refreshKeysErrors !== null) {
+                    $error .= " (" . $oidcAuthenticationConfiguration->refreshKeysErrors . ')';
                 }
 
                 return redirect()->back()->withErrors([
-                    'public_key' => $error
+                    'refresh_keys_errors' => $error
                 ])->withInput();
             }
         }

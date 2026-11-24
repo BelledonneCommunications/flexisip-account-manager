@@ -48,7 +48,7 @@ class ApiSpaceAuthenticationConfigurationTest extends TestCase
 
         $this->keyAuthenticated($admin)
             ->get($this->spaceRoute . '/' . $space->domain)
-            ->assertJsonFragment(['server_url' => $oidcConfiguration->server_url]);
+            ->assertJsonFragment(['authorization_server' => $oidcConfiguration->authorization_server]);
     }
 
     public function testDigestConfiguration()

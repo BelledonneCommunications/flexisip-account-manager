@@ -226,7 +226,6 @@ Route::middleware(['feature.web_panel_enabled'])->group(function () {
                     Route::post('/', 'store')->name('store');
                     Route::get('delete', 'delete')->name('delete');
                     Route::delete('/', 'destroy')->name('destroy');
-                    Route::get('refresh_public_key', 'refreshPublicKey')->name('refresh_public_key');
                 });
                 Route::name('voicemail.')->prefix('voicemail')->controller(VoicemailController::class)->group(function () {
                     Route::get('/', 'show')->name('show');

@@ -23,15 +23,11 @@ namespace App\Http\Controllers\Account;
 use App\Account;
 use App\AuthToken;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Account\Create\Api\AsAdminRequest;
-use App\Services\AccountService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
-use Lcobucci\JWT\Encoding\JoseEncoder;
-use Lcobucci\JWT\Token\Parser;
 
 class AuthenticateController extends Controller
 {
@@ -138,57 +134,6 @@ class AuthenticateController extends Controller
                 'sso_not_found' => __('No email address associated with your OIDC account.') .
                     ' ' . __('Please contact your administrator.')
             ]);
-        }
-
-        if (space()->oidcAuthenticationConfiguration?->auto_provisioning) {
-            $token = (new Parser(new JoseEncoder))->parse($ssoUser->token);
-            $realmAccess = $token->claims()->get('realm_access');
-
-            $hasRole = $realmAccess
-                && !empty($realmAccess['roles'])
-                && in_array(space()->oidcAuthenticationConfiguration->role_provisioning, $realmAccess['roles']);
-
-            if (!$hasRole) {
-                Account::where('email', $ssoUser->email)->update(['activated' => false]);
-
-                return redirect('login')->withErrors([
-                    'sso_not_found' => __("You don't have access to this app.") .
-                        ' ' . __('Please contact your administrator.')
-                ]);
-            }
-
-            $account = Account::where('email', $ssoUser->email)->first();
-
-            if (!$account) {
-                $username = Str::before($ssoUser->email, '@');
-
-                $base = $username;
-                $i = 1;
-
-                while (Account::where('username', $username)->exists()) {
-                    $username = $base . $i++;
-                }
-
-                if (!isSip('sip:' . $username . '@' . $request->space->domain)) {
-                    return redirect('login')->withErrors([
-                        'sso_not_found' => __("Auto-provisioning is not possible because the user's email address contains invalid characters.") .
-                            ' ' . __('Please contact your administrator.')
-                    ]);
-                }
-
-                $createRequest = AsAdminRequest::create('/', 'POST', [
-                    'username' => $username,
-                    'email' => $ssoUser->email,
-                    'password' => Str::random(12),
-                ]);
-
-                $createRequest->space = $request->space;
-
-                $accountService = new AccountService;
-                $account = $accountService->store($createRequest);
-            }
-
-            return $this->loginAndRedirect($account);
         }
 
         $account = Account::where('email', $ssoUser->email)->first();
