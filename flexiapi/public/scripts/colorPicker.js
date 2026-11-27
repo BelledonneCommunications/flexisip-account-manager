@@ -108,7 +108,7 @@ let imagePicker = {
         if (!file) return;
         if (!file.type.match('image.*')) {
             console.log("Error: not an image");
-            imgInput.value = "";
+            input.value = "";
             return;
         }
 
