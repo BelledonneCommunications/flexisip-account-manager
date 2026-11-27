@@ -139,7 +139,7 @@ let imagePicker = {
 
     drawImageProp(ctx, img) {
         const canvas = ctx.canvas;
-        const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+        const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
 
         const nw = img.width * scale;
         const nh = img.height * scale;

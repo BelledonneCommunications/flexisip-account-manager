@@ -27,10 +27,16 @@
         <div class="image-picker-group">
             <div class="picker">
                 <canvas @if($space->logo) data-existing="{{ asset('storage/img/' . $space->logo) }}" @endif> </canvas>
-                <input name="logo" type="file" accept="image/*" onchange="imagePicker.onLoad(this)">
-                <input class="btn secondary" type="button" value="{{ __('Delete') }}" onclick="imagePicker.onDelete(this)" @if(!$space->logo) style="display:none;" @endif>
-                <input type="hidden" name="logo_delete" value="0">
-                @include('parts.errors', ['name' => 'logo'])
+                <div class="picker-group">
+                    <span class="supporting">{{ __('The provided file must be an image') }}.</span>
+                    <span class="supporting">{{ __('We recommend a logo with an aspect ratio of 1:1 (square)') }}.</span>
+                    <div class="picker-input">
+                        <input name="logo" type="file" accept="image/*" onchange="imagePicker.onLoad(this)">
+                        <input class="btn secondary" type="button" value="{{ __('Delete') }}" onclick="imagePicker.onDelete(this)" @if(!$space->logo) style="display:none;" @endif>
+                        <input type="hidden" name="logo_delete" value="0">
+                        @include('parts.errors', ['name' => 'logo'])
+                    </div>
+                </div>
             </div>
         </div>
         <div class="color-picker-group">

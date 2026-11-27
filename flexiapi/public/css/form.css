@@ -417,6 +417,15 @@ form .picker canvas {
     background-color: var(--grey-1);
 }
 
+form .picker-group {
+    width: 100%;
+}
+    
+form .picker-group .picker-input {
+    display: flex;
+    gap: 1rem;
+}
+
 form .picker .color-div {
     background-color: var(--main-5);
 }

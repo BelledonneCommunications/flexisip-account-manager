@@ -355,7 +355,7 @@ header nav a#logo::before {
     height: 3rem;
     padding: 1rem;
     background-image: var(--space-logo, url('../img/logo.svg'));
-    background-size: 5rem;
+    background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
     display: block;
